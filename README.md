@@ -1,24 +1,24 @@
-<center>
-
-  ![iTwinUI logo](https://itwinplatformcdn.azureedge.net/iTwinUI/iTwinUI-logo.png)
+<p align="center">
+  <img src="https://itwinplatformcdn.azureedge.net/iTwinUI/iTwinUI-logo.png" alt="iTwinUI logo" />
+</p>
 
 # iTwinUI-React
 
-[![Build Status](https://dev.azure.com/bentleycs/UX%20Design/_apis/build/status/iTwinUI-React?branchName=main)](https://dev.azure.com/bentleycs/UX%20Design/_build/latest?definitionId=4767&branchName=main)
-[![@bentley/itwinui-react package in Azure Artifacts](https://feeds.dev.azure.com/bentleycs/_apis/public/Packaging/Feeds/cddcc498-6606-47b5-b068-e9fa20167bf8/Packages/dc2d8c28-1b1d-4967-abb1-2cfa5c8ec9a7/Badge)](https://dev.azure.com/bentleycs/beconnect/_packaging?_a=package&feed=cddcc498-6606-47b5-b068-e9fa20167bf8&package=dc2d8c28-1b1d-4967-abb1-2cfa5c8ec9a7&preferRelease=true)
-[![Teams Link](https://img.shields.io/badge/Teams-iTwinUI--React-7B83EB?logo=microsoft-teams&logoColor=white)](https://teams.microsoft.com/l/channel/19%3aa697e82c0d0a43e58bbd1d01881abac0%40thread.skype/@bentley/itwinui-react?groupId=7ec5737d-780e-40e6-bf0e-e3991fd6f3a1&tenantId=067e9632-ea4c-4ed9-9e6d-e294956e284b)
+<div align="center">
+  
+  ![Build status](https://github.com/iTwin/iTwinUI-react/actions/workflows/build.yml/badge.svg?branch=main)
 
+</div>
 
-[iTwinUI documentation](https://ux.bentley.com/itwin)
+<div align="center">
+  
+  [What is iTwinUI-React](#what is iTwinUI-React?) • [Install](#install) • [Use](#use) • [Theming](#theming) • [Contributing](#contributing) • [Changelog](#changelog)
 
-[iTwinUI-React documentation and demo](https://ux.bentley.com/itwin/react)
-
-
-</center>
+</div>
 
 ## What is iTwinUI-React?
 
-[iTwinUI-React](https://dev.azure.com/bentleycs/UX%20Design/_git/iTwinUI-React) is a library built on top of the [iTwinUI](https://dev.azure.com/bentleycs/UX%20Design/_git/iTwinUI) library.
+iTwinUI-React is a library built on top of the [iTwinUI](https://github.com/iTwin/iTwinUI) library.
 The goal of this project is to provide React components for using the styles and components from the core `iTwinUI` project.
 
 ---
