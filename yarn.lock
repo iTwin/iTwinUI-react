@@ -2347,12 +2347,12 @@
     "@types/react" "*"
     "@types/reactcss" "*"
 
-"@types/react-dom@^16.0.9":
-  version "16.9.12"
-  resolved "https://pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/@types/react-dom/-/react-dom-16.9.12.tgz#55cd6b17e73922edb9545e5355a0016c1734e6f4"
-  integrity sha1-Vc1rF+c5Iu25VF5TVaABbBc05vQ=
+"@types/react-dom@^17.0.3":
+  version "17.0.3"
+  resolved "https://pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/@types/react-dom/-/react-dom-17.0.3.tgz#7fdf37b8af9d6d40127137865bb3fff8871d7ee1"
+  integrity sha1-f983uK+dbUAScTeGW7P/+IcdfuE=
   dependencies:
-    "@types/react" "^16"
+    "@types/react" "*"
 
 "@types/react-syntax-highlighter@11.0.4":
   version "11.0.4"
@@ -2375,19 +2375,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*":
+"@types/react@*", "@types/react@^17.0.3":
   version "17.0.3"
   resolved "https://pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/@types/react/-/react-17.0.3.tgz#ba6e215368501ac3826951eef2904574c262cc79"
   integrity sha1-um4hU2hQGsOCaVHu8pBFdMJizHk=
-  dependencies:
-    "@types/prop-types" "*"
-    "@types/scheduler" "*"
-    csstype "^3.0.2"
-
-"@types/react@^16", "@types/react@^16.4.18":
-  version "16.14.5"
-  resolved "https://pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/@types/react/-/react-16.14.5.tgz#2c39b5cadefaf4829818f9219e5e093325979f4d"
-  integrity sha1-LDm1yt769IKYGPkhnl4JMyWXn00=
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
