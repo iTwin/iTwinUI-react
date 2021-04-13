@@ -6,13 +6,8 @@
 
 <div align="center">
   
+  [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/iTwin/iTwinUI-react/blob/main/LICENSE.md)
   ![Build status](https://github.com/iTwin/iTwinUI-react/actions/workflows/build.yml/badge.svg?branch=main)
-
-</div>
-
-<div align="center">
-  
-  [What is iTwinUI-React](#what is iTwinUI-React?) • [Install](#install) • [Use](#use) • [Theming](#theming) • [Contributing](#contributing) • [Changelog](#changelog)
 
 </div>
 
@@ -26,11 +21,11 @@ The goal of this project is to provide React components for using the styles and
 ## Install
 
 ```
-npm install @bentley/itwinui-react
+npm install @itwinui/react
 ```
 
 ```
-yarn add @bentley/itwinui-react
+yarn add @itwinui/react
 ```
 
 ---
@@ -39,7 +34,7 @@ yarn add @bentley/itwinui-react
 Import the component you want and start using it!
 
 ```jsx
-import { Button } from '@bentley/itwinui-react';
+import { Button } from '@itwinui/react';
 
 const App = () => (
   <Button>Hello!</Button>
@@ -56,7 +51,7 @@ By default, all components use the light theme but we also provide support for s
   - `os` (which respects the color scheme of the operating system)
 
 ```jsx
-import { ThemeProvider } from '@bentley/itwinui-react';
+import { ThemeProvider } from '@itwinui/react';
 
 const App = () => (
   <>
@@ -69,7 +64,7 @@ const App = () => (
 - The `useTheme` hook also provides the same functionality as `ThemeProvider`.
 
 ```jsx
-import { useTheme } from '@bentley/itwinui-react';
+import { useTheme } from '@itwinui/react';
 
 const App = () => {
   useTheme('dark');
@@ -87,10 +82,10 @@ const App = () => {
 
 ## Contributing
 
-This project is innersourced, so we welcome you to contribute to it and make this UI design system better. You can submit ideas or bugs by creating items in [our backlog](https://dev.azure.com/bentleycs/UX%20Design/_backlogs/backlog/iTwinUI/Features/?workitem=543453).
-Please read our [CONTRIBUTING.md](https://dev.azure.com/bentleycs/UX%20Design/_git/iTwinUI-React?path=%2FCONTRIBUTING.md&_a=preview) for more information.
+This project is innersourced, so we welcome you to contribute to it and make this UI design system better. You can submit feature requests or bugs by creating an [issue](https://github.com/iTwin/iTwinUI-react/issues).
+Please read our [CONTRIBUTING.md](https://github.com/iTwin/iTwinUI-react/blob/main/CONTRIBUTING.md) for more information.
 
 ---
 
 ## Changelog
-Read our [CHANGELOG.md](https://dev.azure.com/bentleycs/UX%20Design/_git/iTwinUI-React?path=%2FCHANGELOG.md&_a=preview) to find recent changes.
+Read our [CHANGELOG.md](https://github.com/iTwin/iTwinUI-react/blob/main/CHANGELOG.md) to find recent changes.
