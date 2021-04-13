@@ -44,3 +44,9 @@ jobs:
         with:
           name: 'package'
           path: '${{ github.workspace }}/lib/bentley-itwinui-react-*.tgz'
+
+      - name: Publish storybook artifact
+        uses: actions/upload-artifact@v2.2.3
+        with:
+          name: 'storybook'
+          path: '${{ github.workspace }}/storybook-static/'
