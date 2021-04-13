@@ -2,7 +2,7 @@
   <img src="https://itwinplatformcdn.azureedge.net/iTwinUI/iTwinUI-logo.png" alt="iTwinUI logo" />
 </p>
 
-<h1 align="center">iTwinUI-React</h1>
+<h1 align="center">iTwinUI-react</h1>
 
 <div align="center">
   
@@ -11,7 +11,7 @@
 
 </div>
 
-## What is iTwinUI-React?
+## What is iTwinUI-react?
 
 iTwinUI-React is a library built on top of the [iTwinUI](https://github.com/iTwin/iTwinUI) library.
 The goal of this project is to provide React components for using the styles and components from the core `iTwinUI` project.
@@ -82,7 +82,7 @@ const App = () => {
 
 ## Contributing
 
-This project is innersourced, so we welcome you to contribute to it and make this UI design system better. You can submit feature requests or bugs by creating an [issue](https://github.com/iTwin/iTwinUI-react/issues).
+We welcome you to contribute to it and make this UI design system better. You can submit feature requests or bugs by creating an [issue](https://github.com/iTwin/iTwinUI-react/issues).
 Please read our [CONTRIBUTING.md](https://github.com/iTwin/iTwinUI-react/blob/main/CONTRIBUTING.md) for more information.
 
 ---

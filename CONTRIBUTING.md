@@ -10,7 +10,7 @@ We use yarn for package management, so be sure to have it installed
  `npm install -g yarn`
 
 1. `git clone https://github.com/iTwin/iTwinUI-react.git`
-2. `cd iTwinUI-React`
+2. `cd iTwinUI-react`
 3. `yarn install`
 
 If using vscode, our prettier and editor configs will be used.
