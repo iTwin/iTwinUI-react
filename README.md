@@ -82,7 +82,7 @@ const App = () => {
 
 ## Contributing
 
-We welcome you to contribute to it and make this UI design system better. You can submit feature requests or bugs by creating an [issue](https://github.com/iTwin/iTwinUI-react/issues).
+We welcome you to contribute and make this UI design system better. You can submit feature requests or bugs by creating an [issue](https://github.com/iTwin/iTwinUI-react/issues).
 Please read our [CONTRIBUTING.md](https://github.com/iTwin/iTwinUI-react/blob/main/CONTRIBUTING.md) for more information.
 
 ---
