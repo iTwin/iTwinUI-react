@@ -2,7 +2,7 @@
   <img src="https://itwinplatformcdn.azureedge.net/iTwinUI/iTwinUI-logo.png" alt="iTwinUI logo" />
 </p>
 
-# iTwinUI-React
+<h1 align="center">iTwinUI-React</h1>
 
 <div align="center">
   
