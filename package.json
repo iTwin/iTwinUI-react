@@ -30,9 +30,9 @@
     "refreshVSToken": "vsts-npm-auth -config .npmrc"
   },
   "dependencies": {
-    "@bentley/icons-generic-react": "^0.2.0",
-    "@bentley/illustrations": "^1.0.1",
-    "@bentley/itwinui": "^0.7.0",
+    "@itwin/itwinui-css": "^0.8.0",
+    "@itwin/itwinui-icons-react": "^0.1.0",
+    "@itwin/itwinui-illustrations-react": "^0.1.0",
     "@tippyjs/react": "^4.2.5",
     "@types/react-table": "^7.0.18",
     "classnames": "^2.2.6",
