@@ -9,6 +9,7 @@ on:
 
 jobs:
   build:
+    name: Build and run tests
     runs-on: ubuntu-latest
 
     steps:
@@ -35,15 +36,6 @@ jobs:
           comment_on_pr: false
           check_name: 'Test results'
           fail_on: 'nothing'
-
-      - run: yarn pack
-        working-directory: './lib'
-
-      - name: Publish package artifact
-        uses: actions/upload-artifact@v2.2.3
-        with:
-          name: 'package'
-          path: '${{ github.workspace }}/lib/bentley-itwinui-react-*.tgz'
 
       - name: Publish storybook artifact
         uses: actions/upload-artifact@v2.2.3
