@@ -1,3 +1,17 @@
+# Changelog
+
+## 0.7.0
+
+`2021-04-15`
+
+### What's new
+
+- **Added `getUserColor` function** that returns a data-visualization color for `UserIcon` background.
+
+### Fixes
+
+- **Fixed several icon issues.**
+
 ## 0.6.2
 
 `2021-04-12`
