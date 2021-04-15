@@ -305,7 +305,6 @@ export const DatePicker = ({
             <IconButton
               styleType='borderless'
               onClick={handleMoveToPreviousMonth}
-              role='month-previous'
             >
               <SvgChevronLeft aria-hidden={true} />
             </IconButton>
@@ -318,11 +317,7 @@ export const DatePicker = ({
               </span>
               &nbsp;{displayedYear}
             </span>
-            <IconButton
-              styleType='borderless'
-              onClick={handleMoveToNextMonth}
-              role='month-next'
-            >
+            <IconButton styleType='borderless' onClick={handleMoveToNextMonth}>
               <SvgChevronRight aria-hidden={true} />
             </IconButton>
           </div>
