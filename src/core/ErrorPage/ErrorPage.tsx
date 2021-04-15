@@ -8,7 +8,7 @@ import Svg404 from '@itwin/itwinui-illustrations-react/cjs/illustrations/404';
 import Svg500 from '@itwin/itwinui-illustrations-react/cjs/illustrations/500';
 import Svg502 from '@itwin/itwinui-illustrations-react/cjs/illustrations/502';
 import Svg503 from '@itwin/itwinui-illustrations-react/cjs/illustrations/503';
-import SvgStatusError from '@itwin/itwinui-illustrations-react/cjs/illustrations/Error';
+import SvgError from '@itwin/itwinui-illustrations-react/cjs/illustrations/Error';
 import React from 'react';
 import { Button } from '../Buttons/Button';
 import { useTheme } from '../utils/hooks/useTheme';
@@ -159,7 +159,7 @@ export const ErrorPage = ({
       case 'generic':
       default: {
         return (
-          <SvgStatusError
+          <SvgError
             className='iui-non-ideal-state-icon'
             data-testid='error-generic'
           />

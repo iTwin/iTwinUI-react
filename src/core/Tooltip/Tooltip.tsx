@@ -44,6 +44,7 @@ export const Tooltip = (props: TooltipProps) => {
           {content}
         </div>
       }
+      offset={[0, 4]}
       ref={ref}
       {...rest}
     >

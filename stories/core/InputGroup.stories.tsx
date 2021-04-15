@@ -24,8 +24,8 @@ export default {
 } as Meta<InputGroupProps>;
 
 export const RadioGroup: Story<InputGroupProps> = (args) => {
-  const option1Label = <SvgSmileyHappy style={{ width: 16, height: 16 }} />;
-  const option2Label = <SvgSmileySad style={{ width: 16, height: 16 }} />;
+  const option1Label = <SvgSmileyHappy />;
+  const option2Label = <SvgSmileySad />;
   return (
     <>
       <InputGroup
