@@ -305,7 +305,6 @@ export const DatePicker = ({
             <IconButton
               styleType='borderless'
               onClick={handleMoveToPreviousMonth}
-              tabIndex={0}
               role='month-previous'
             >
               <SvgChevronLeft aria-hidden={true} />
@@ -322,7 +321,6 @@ export const DatePicker = ({
             <IconButton
               styleType='borderless'
               onClick={handleMoveToNextMonth}
-              tabIndex={0}
               role='month-next'
             >
               <SvgChevronRight aria-hidden={true} />
