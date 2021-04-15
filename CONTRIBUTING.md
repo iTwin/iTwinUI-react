@@ -100,7 +100,7 @@ it('should be visible', () => {
 ```
 
 ### Linking
-If you want to test your changes in a local project, you can go into the `lib/` folder (which gets created when running `yarn build` or `yarn build:watch`) and run `yarn link`. Then from your test project, run `yarn link @itwinui/react`.
+If you want to test your changes in a local project, you can go into the `lib/` folder (which gets created when running `yarn build` or `yarn build:watch`) and run `yarn link`. Then from your test project, run `yarn link @itwin/itwinui-react`.
 
 You might face an "invalid hook call" error if your test project is using a different version or instance of React. You can fix this by [linking React](https://reactjs.org/warnings/invalid-hook-call-warning.html#duplicate-react) or by using [aliases](https://github.com/facebook/react/issues/13991#issuecomment-463486871) in your bundler. If it still doesn't work, you may consider using `yalc`.
 
@@ -124,7 +124,7 @@ Chokidar version:
 
 The `CHANGELOG.md` file must be updated for any new components or changes that you add. If unsure of which release your changes will go to, you can add a placeholder version and date (on the top):
 ```
-## 0.1.X
+## 0.X.X
 
 `Date`
 
