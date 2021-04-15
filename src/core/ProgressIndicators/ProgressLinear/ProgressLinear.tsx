@@ -47,7 +47,7 @@ export type ProgressLinearProps = {
  * Labeled - Left & Right
  * <ProgressLinear value={50} labels={['Loading...', '50%']} />
  * Positive / Negative. Add iui-icon class on svg icon as label
- * <ProgressLinear status='positive' labels={['Upload done!', <SvgStatusSuccessHollow className='iui-icon' />]} />
+ * <ProgressLinear status='positive' labels={['Upload done!', <SvgStatusSuccessHollow />]} />
  * <ProgressLinear status='negative' />
  */
 export const ProgressLinear = (props: ProgressLinearProps) => {
