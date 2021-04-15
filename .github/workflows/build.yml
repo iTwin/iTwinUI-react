@@ -32,7 +32,7 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
-          files: 'coverage/cobertura-coverage.xml'
+          files: 'coverage/junit.xml'
           comment_on_pr: false
           check_name: 'Test results'
           fail_on: 'nothing'
