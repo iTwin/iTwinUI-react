@@ -1,7 +1,9 @@
-name: CI
+name: Publish Storybook
 
 on:
   workflow_dispatch:
+  push:
+    branches: [vyki/publish-storybook]
 
 jobs:
   build:
