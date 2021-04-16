@@ -1,9 +1,7 @@
-name: Publish Storybook
+name: Publish storybook
 
 on:
   workflow_dispatch:
-  push:
-    branches: [vyki/publish-storybook]
 
 jobs:
   build:
@@ -20,7 +18,7 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: yarn build-storybook
           
-      - name: GitHub Pages action
+      - name: Publish storybook
         uses: peaceiris/actions-gh-pages@v3.7.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
