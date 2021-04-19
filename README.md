@@ -5,6 +5,7 @@
 <h1 align="center">iTwinUI-react</h1>
 
 <div align="center">
+  
   [![itwinui-react on npm](https://img.shields.io/npm/v/@itwin/itwinui-react)](https://www.npmjs.com/package/@itwin/itwinui-react)
   [![Build status](https://github.com/iTwin/iTwinUI-react/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/iTwin/iTwinUI-react/actions/workflows/build.yml?query=branch%3Amain)
 
