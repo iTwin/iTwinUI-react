@@ -20,7 +20,7 @@ export type DropdownButtonProps = {
    */
   menuItems: (close: () => void) => JSX.Element[];
   /**
-   * Style of the dropdown.
+   * Style of the dropdown button.
    * Use 'borderless' to hide outline.
    * @default 'default'
    */
