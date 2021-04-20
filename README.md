@@ -44,7 +44,7 @@ const App = () => (
 
 Yes, that's really all you need as you can see in this live interactive demo:
 
-[![Edit Button](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/itwinui-react-example-forked-2pgb5)
+[![Edit Button](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/itwinui-react-minimal-example-xq2t3)
 
 ---
 
