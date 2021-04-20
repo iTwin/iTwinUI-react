@@ -19,7 +19,13 @@ export type DropdownButtonProps = {
    * and returns a list of `MenuItem` components.
    */
   menuItems: (close: () => void) => JSX.Element[];
-} & Omit<ButtonProps, 'onClick' | 'styleType' | 'endIcon'>;
+  /**
+   * Style of the dropdown.
+   * Use 'borderless' to hide outline.
+   * @default 'default'
+   */
+  styleType?: 'default' | 'borderless';
+} & Omit<ButtonProps, 'onClick' | 'endIcon'>;
 
 /**
  * Button that opens a DropdownMenu.
