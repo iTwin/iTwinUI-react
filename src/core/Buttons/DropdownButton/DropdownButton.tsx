@@ -25,7 +25,7 @@ export type DropdownButtonProps = {
    * @default 'default'
    */
   styleType?: 'default' | 'borderless';
-} & Omit<ButtonProps, 'onClick' | 'endIcon'>;
+} & Omit<ButtonProps, 'onClick' | 'styleType' | 'endIcon'>;
 
 /**
  * Button that opens a DropdownMenu.
@@ -37,7 +37,7 @@ export type DropdownButtonProps = {
  * <DropdownButton menuItems={menuItems}>Default</DropdownButton>
  */
 export const DropdownButton: React.FC<DropdownButtonProps> = (props) => {
-  const { menuItems, className, size, children, ...rest } = props;
+  const { menuItems, className, size, styleType, children, ...rest } = props;
 
   useTheme();
 
@@ -50,7 +50,7 @@ export const DropdownButton: React.FC<DropdownButtonProps> = (props) => {
     if (ref.current) {
       setMenuWidth(ref.current.offsetWidth);
     }
-  }, [children, size]);
+  }, [children, size, styleType]);
 
   return (
     <DropdownMenu
@@ -62,6 +62,7 @@ export const DropdownButton: React.FC<DropdownButtonProps> = (props) => {
       <Button
         className={cx('iui-dropdown', className)}
         size={size}
+        styleType={styleType}
         endIcon={isMenuOpen ? <SvgCaretUpSmall /> : <SvgCaretDownSmall />}
         ref={ref}
         {...rest}
