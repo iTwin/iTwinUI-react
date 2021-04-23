@@ -63,13 +63,14 @@ export const Popover = React.forwardRef((props: PopoverProps, ref) => {
     arrow: false,
     duration: 0,
     interactive: true,
-    popperOptions: {
-      strategy: 'fixed',
-      modifiers: [{ name: 'flip' }],
-    },
     role: undefined,
     offset: [0, 0],
     ...props,
+    popperOptions: {
+      strategy: 'fixed',
+      modifiers: [{ name: 'flip' }],
+      ...props.popperOptions,
+    },
     plugins: [lazyLoad, removeTabIndex, hideOnEsc, ...(props.plugins || [])],
   };
 
