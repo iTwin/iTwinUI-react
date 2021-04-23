@@ -46,6 +46,14 @@ export const Tooltip = (props: TooltipProps) => {
       }
       offset={[0, 4]}
       ref={ref}
+      popperOptions={{
+        modifiers: [
+          {
+            name: 'computeStyles',
+            options: { gpuAcceleration: false },
+          },
+        ],
+      }}
       {...rest}
     >
       {React.cloneElement(children, { title: undefined })}
