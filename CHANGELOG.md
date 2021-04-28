@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.1]
+
+`2021-04-29`
+
+### What's new
+
+- **`DropdownMenu` now accepts `popoverProps`**.
+
+### Fixes
+
+- **Fixed image sizing issues in `ErrorPage`**.
+- **Fixed tooltip text blurring issues** through base CSS package.
+
 ## [1.1.0]
 
 `2021-04-21`
@@ -212,4 +225,5 @@
 - **New ThemeProvider component added.** It allows to switch between light and dark themes.
 - **iTwinUI-React is generated to `CommonJS` and `ES` modules.** Usage of `ES` modules allows bundlers to tree-shake unused code resulting in smaller bundle sizes.
 
+[1.1.1]: https://github.com/iTwin/iTwinUI-react/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.0.0...v1.1.0
