@@ -86,7 +86,7 @@ describe(ErrorPage, () => {
 
   customTests.forEach((test) => {
     it(`displays ${test.errorType} error with custom message`, () => {
-      render(
+      const { container } = render(
         <ErrorPage
           errorType={test.errorType}
           errorName={test.errorName}
@@ -96,6 +96,9 @@ describe(ErrorPage, () => {
       screen.getByText(test.errorName);
       screen.getByText(test.errorMessage);
       screen.getByTestId(`error-${test.errorType}`);
+      expect(
+        container.querySelector('.iui-non-ideal-state-illustration'),
+      ).toBeTruthy();
     });
   });
 
