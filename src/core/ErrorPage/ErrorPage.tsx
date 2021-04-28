@@ -111,7 +111,7 @@ export const ErrorPage = ({
       case '401': {
         return (
           <Svg401
-            className='iui-non-ideal-state-icon'
+            className='iui-non-ideal-state-illustration'
             data-testid='error-401'
           />
         );
@@ -119,7 +119,7 @@ export const ErrorPage = ({
       case '403': {
         return (
           <Svg403
-            className='iui-non-ideal-state-icon'
+            className='iui-non-ideal-state-illustration'
             data-testid='error-403'
           />
         );
@@ -127,7 +127,7 @@ export const ErrorPage = ({
       case '404': {
         return (
           <Svg404
-            className='iui-non-ideal-state-icon'
+            className='iui-non-ideal-state-illustration'
             data-testid='error-404'
           />
         );
@@ -135,7 +135,7 @@ export const ErrorPage = ({
       case '500': {
         return (
           <Svg500
-            className='iui-non-ideal-state-icon'
+            className='iui-non-ideal-state-illustration'
             data-testid='error-500'
           />
         );
@@ -143,7 +143,7 @@ export const ErrorPage = ({
       case '502': {
         return (
           <Svg502
-            className='iui-non-ideal-state-icon'
+            className='iui-non-ideal-state-illustration'
             data-testid='error-502'
           />
         );
@@ -151,7 +151,7 @@ export const ErrorPage = ({
       case '503': {
         return (
           <Svg503
-            className='iui-non-ideal-state-icon'
+            className='iui-non-ideal-state-illustration'
             data-testid='error-503'
           />
         );
@@ -160,7 +160,7 @@ export const ErrorPage = ({
       default: {
         return (
           <SvgError
-            className='iui-non-ideal-state-icon'
+            className='iui-non-ideal-state-illustration'
             data-testid='error-generic'
           />
         );
