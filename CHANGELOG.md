@@ -1,5 +1,17 @@
 # Changelog
 
+## [X.X.X]
+
+`2021-XX-XX`
+
+### What's new
+
+- **Added optional tooltip for `Wizard` steps.**
+
+### Fixes
+
+- **Fixed Wizard storybook issue** for Long and Localized Long stories.
+
 ## [1.1.0]
 
 `2021-04-21`
