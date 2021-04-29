@@ -45,6 +45,9 @@ export type {
 export { ExpandableBlock } from './ExpandableBlock';
 export type { ExpandableBlockProps } from './ExpandableBlock';
 
+export { FileUpload } from './FileUpload';
+export type { FileUploadProps } from './FileUpload';
+
 export { Footer } from './Footer';
 export type { FooterProps, FooterElement, TitleTranslations } from './Footer';
 
