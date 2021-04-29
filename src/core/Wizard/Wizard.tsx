@@ -15,7 +15,14 @@ export type WizardLocalization = {
 export type WizardType = 'default' | 'long' | 'workflow';
 
 export type StepProperties = {
+  /**
+   * The title/label of the step.
+   */
   name: string;
+  /**
+   * A tooltip giving detailed description to this step
+   */
+  description?: string;
 };
 
 export type WizardProps = {
@@ -96,6 +103,7 @@ export const Wizard = ({
               totalSteps={steps.length}
               type={type}
               onClick={onStepClick}
+              description={s.description}
             />
           ))}
         </div>

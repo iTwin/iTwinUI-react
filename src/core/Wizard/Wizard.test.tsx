@@ -2,8 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
+import { act } from 'react-dom/test-utils';
 import { Wizard } from './Wizard';
 
 describe('<Wizard />', () => {
@@ -207,5 +208,35 @@ describe('<Wizard />', () => {
     expect(queryByText('1')).toBeNull();
     expect(queryByText('2')).toBeNull();
     expect(queryByText('3')).toBeNull();
+  });
+
+  it('Wizard displays tooltip upon hovering step', async () => {
+    const wizard = (
+      <Wizard
+        currentStep={1}
+        steps={[
+          {
+            name: 'Step One',
+            description: 'Step one tooltip',
+          },
+          {
+            name: 'Step Two',
+            description: 'Step two tooltip',
+          },
+          {
+            name: 'Step Three',
+            description: 'Step three tooltip',
+          },
+        ]}
+      />
+    );
+
+    const { getByText, queryByText } = render(wizard);
+
+    expect(queryByText('Step one tooltip')).toBeNull();
+    await act(async () => {
+      fireEvent.mouseEnter(getByText('Step One'), { bubbles: true });
+    });
+    getByText('Step one tooltip');
   });
 });
