@@ -38,16 +38,18 @@ export type StepProps = {
   description?: string;
 };
 
-export const Step = ({
-  title,
-  index,
-  currentStepNumber,
-  totalSteps,
-  type,
-  onClick,
-  description,
-  ...rest
-}: StepProps) => {
+export const Step = (props: StepProps) => {
+  const {
+    title,
+    index,
+    currentStepNumber,
+    totalSteps,
+    type,
+    onClick,
+    description,
+    ...rest
+  } = props;
+
   const isLast = totalSteps === index + 1;
   const isPast = currentStepNumber > index;
   const isActive = currentStepNumber === index;
