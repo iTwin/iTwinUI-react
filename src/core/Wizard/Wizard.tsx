@@ -20,7 +20,7 @@ export type StepProperties = {
    */
   name: string;
   /**
-   * A tooltip giving detailed description to this step
+   * A tooltip giving detailed description to this step.
    */
   description?: string;
 };
