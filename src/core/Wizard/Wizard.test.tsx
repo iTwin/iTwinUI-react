@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { fireEvent, render, act } from '@testing-library/react';
+import { fireEvent, render, act, waitFor } from '@testing-library/react';
 import React from 'react';
 import { Wizard } from './Wizard';
 
@@ -209,7 +209,9 @@ describe('<Wizard />', () => {
     expect(queryByText('3')).toBeNull();
   });
 
-  it('Wizard displays tooltip upon hovering step', () => {
+  it('Wizard displays tooltip upon hovering step', async () => {
+    jest.useFakeTimers();
+
     const wizard = (
       <Wizard
         currentStep={1}
@@ -224,18 +226,31 @@ describe('<Wizard />', () => {
           },
           {
             name: 'Step Three',
-            description: 'Step three tooltip',
           },
         ]}
       />
     );
 
-    const { getByText, queryByText } = render(wizard);
+    const { getByText, queryByText, container } = render(wizard);
 
+    expect(container.querySelector('.iui-tooltip')).toBeNull();
     expect(queryByText('Step one tooltip')).toBeNull();
     act(() => {
       fireEvent.mouseEnter(getByText('Step One'), { bubbles: true });
     });
+    expect(container.querySelector('.iui-tooltip')).not.toBeNull();
     getByText('Step one tooltip');
+
+    await act(async () => {
+      fireEvent.mouseLeave(getByText('Step One'), { bubbles: true });
+      await waitFor(() => expect(queryByText('Step one tooltip')).toBeNull());
+    });
+
+    act(() => {
+      fireEvent.mouseEnter(getByText('Step Three'), { bubbles: true });
+    });
+    expect(container.querySelector('.iui-tooltip')).toBeNull();
+
+    jest.useRealTimers();
   });
 });
