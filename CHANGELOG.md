@@ -6,7 +6,8 @@
 
 ### What's new
 
-- **`DropdownMenu` now accepts `popoverProps`**.
+- **Added optional tooltip for `Wizard` steps.** Provide `description` property to `steps` prop.
+- **`DropdownMenu` has new `popoverProps`** for customizing popover behavior.
 
 ### Fixes
 
