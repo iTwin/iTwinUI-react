@@ -5,7 +5,7 @@
 import { action } from '@storybook/addon-actions';
 import { Meta, Story } from '@storybook/react';
 import React from 'react';
-import { Wizard, WizardProps } from '../../src/core';
+import { Wizard, WizardLocalization, WizardProps } from '../../src/core';
 
 export default {
   title: 'Core/Wizard',
@@ -13,9 +13,6 @@ export default {
   argTypes: {
     localization: { control: { disable: true } },
     onStepClick: { control: { disable: true } },
-  },
-  args: {
-    localization: undefined,
   },
 } as Meta<WizardProps>;
 
@@ -140,9 +137,12 @@ export const LocalizedLong: Story<WizardProps> = (args) => {
       { name: 'Last Step' },
     ],
     type = 'long',
-    localization,
     ...rest
   } = args;
+  const localization: WizardLocalization = {
+    stepsCountLabel: (currentStep, totalSteps) =>
+      `Localized step ${currentStep} of ${totalSteps}:`,
+  };
   const onStepClick = (index: number) => {
     action(`Clicked index: ${index}`)();
   };
@@ -168,10 +168,6 @@ LocalizedLong.args = {
     { name: 'Last Step' },
   ],
   type: 'long',
-  localization: {
-    stepsCountLabel: (currentStep, totalSteps) =>
-      `Localized step ${currentStep} of ${totalSteps}:`,
-  },
 };
 
 export const WithTooltips: Story<WizardProps> = (args) => {
