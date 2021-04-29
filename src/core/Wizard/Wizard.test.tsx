@@ -209,7 +209,7 @@ describe('<Wizard />', () => {
     expect(queryByText('3')).toBeNull();
   });
 
-  it('Wizard displays tooltip upon hovering step', async () => {
+  it('Wizard displays tooltip upon hovering step', () => {
     const wizard = (
       <Wizard
         currentStep={1}
@@ -233,7 +233,7 @@ describe('<Wizard />', () => {
     const { getByText, queryByText } = render(wizard);
 
     expect(queryByText('Step one tooltip')).toBeNull();
-    await act(async () => {
+    act(() => {
       fireEvent.mouseEnter(getByText('Step One'), { bubbles: true });
     });
     getByText('Step one tooltip');
