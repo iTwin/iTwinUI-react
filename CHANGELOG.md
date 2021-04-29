@@ -6,7 +6,7 @@
 
 ### What's new
 
-- **Added optional tooltip for `Wizard` steps.**
+- **Added optional tooltip for `Wizard` steps.** Provide `description` property to `steps` prop.
 
 ## [1.1.0]
 

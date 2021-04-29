@@ -33,7 +33,7 @@ export type StepProps = {
    */
   onClick?: (clickedIndex: number) => void;
   /**
-   * A tooltip giving detailed description to this step
+   * A tooltip giving detailed description to this step.
    */
   description?: string;
 };
