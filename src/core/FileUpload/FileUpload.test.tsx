@@ -8,13 +8,22 @@ import { render } from '@testing-library/react';
 import { FileUpload } from './FileUpload';
 
 it('should render in its most basic state', () => {
-  // TODO: Make sure all required props are passed in here
-  const { container } = render(<FileUpload />);
-  expect(container.querySelector('div')).toBeTruthy();
-});
+  const mockContent = 'Mock drag content';
+  const mockChildren = 'Mock children to wrap';
+  const { container } = render(
+    <FileUpload content={mockContent} onFileDropped={jest.fn}>
+      {mockChildren}
+    </FileUpload>,
+  );
 
-// TODO: Write tests here!
+  const component = container.querySelector('.iui-file-upload') as HTMLElement;
+  expect(component).toBeTruthy();
 
-it('should be improved', () => {
-  expect(false).toBe(true);
+  const content = container.querySelector('.iui-content') as HTMLElement;
+  expect(content).toBeTruthy();
+  expect(content.textContent).toEqual(mockContent);
+
+  const children = component.lastChild as HTMLElement;
+  expect(children).toBeTruthy();
+  expect(children.textContent).toEqual(mockChildren);
 });

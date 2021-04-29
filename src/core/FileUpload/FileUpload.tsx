@@ -6,6 +6,7 @@ import React from 'react';
 import cx from 'classnames';
 import { useTheme } from '../utils/hooks/useTheme';
 import { CommonProps } from '../utils/props';
+import { useMergedRefs } from '../utils/hooks/useMergedRefs';
 import '@itwin/itwinui-css/css/file-upload.css';
 
 export type FileUploadProps = {
@@ -36,7 +37,8 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
     useTheme();
 
     const [isDragActive, setIsDragActive] = React.useState(false);
-    const dragTargetRef = React.useRef<EventTarget>();
+    const fileUploadRef = React.useRef<HTMLDivElement>(null);
+    const refs = useMergedRefs(fileUploadRef, ref);
 
     const _onDragEnter = React.useCallback((e: React.DragEvent) => {
       e.preventDefault();
@@ -49,7 +51,6 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
         e.stopPropagation();
 
         if (!isDragActive && e.dataTransfer?.items?.[0]) {
-          dragTargetRef.current = e.target;
           setIsDragActive(true);
         }
       },
@@ -61,8 +62,10 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
         e.preventDefault();
         e.stopPropagation();
 
-        if (isDragActive && dragTargetRef.current !== e.target) {
-          dragTargetRef.current = undefined;
+        if (
+          isDragActive &&
+          !fileUploadRef.current?.contains(e.relatedTarget as Node)
+        ) {
           setIsDragActive(false);
         }
       },
@@ -77,8 +80,6 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
         if (isDragActive) {
           setIsDragActive(false);
         }
-
-        dragTargetRef.current = undefined;
         onFileDropped(e.dataTransfer?.files?.[0]);
       },
       [isDragActive, onFileDropped],
@@ -95,7 +96,7 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
         onDragOver={_onDragOver}
         onDragLeave={_onDragLeave}
         onDrop={_onDrop}
-        ref={ref}
+        ref={refs}
         {...rest}
       >
         <div className='iui-content'>{content}</div>
