@@ -32,7 +32,6 @@ export type StepProps = {
    *  Click handler on completed step.
    */
   onClick?: (clickedIndex: number) => void;
-
   /**
    * A tooltip giving detailed description to this step
    */
@@ -46,7 +45,7 @@ export const Step = ({
   totalSteps,
   type,
   onClick,
-  description: tooltip,
+  description,
   ...rest
 }: StepProps) => {
   const isLast = totalSteps === index + 1;
@@ -97,7 +96,11 @@ export const Step = ({
 
   return (
     <>
-      {tooltip ? <Tooltip content={tooltip}>{stepShape}</Tooltip> : stepShape}
+      {description ? (
+        <Tooltip content={description}>{stepShape}</Tooltip>
+      ) : (
+        stepShape
+      )}
       {!isLast && (
         <span
           className={cx(
