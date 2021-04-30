@@ -75,6 +75,30 @@ export default ${name};
   };
 };
 
+const storiesFactory = (directory, name) => {
+  return {
+    path: `${directory}/${name}.stories.tsx`,
+    template: `${copyrightHeader}
+import { Story, Meta } from '@storybook/react';
+import React from 'react';
+import { ${name}, ${name}Props } from '../../src/core';
+
+export default {
+  component: ${name},
+  argTypes: {
+    className: { control: { disable: true } },
+    style: { control: { disable: true } },
+  },
+  title: 'Core/${name}',
+} as Meta<${name}Props>;
+
+export const Basic: Story<${name}Props> = (args) => {
+  return <${name} {...args} />;
+};
+`,
+  };
+};
+
 const componentIndexFactory = (directory, name) => {
   return {
     path: `${directory}/index.ts`,
@@ -159,4 +183,8 @@ inquirer
     writeFile(componentOut);
     writeFile(componentTest);
     writeFile(componentIndex);
+
+    if (collection !== 'utils') {
+      writeFile(storiesFactory(`stories/core`, component));
+    }
   });
