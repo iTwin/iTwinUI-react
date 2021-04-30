@@ -52,7 +52,6 @@ export const WithoutChildren: Story<FileUploadProps> = (args) => {
     <FileUpload
       content={
         <>
-          <SvgUpload className='iui-icon' />
           <input
             className='iui-browse-input'
             type='file'
@@ -60,6 +59,7 @@ export const WithoutChildren: Story<FileUploadProps> = (args) => {
             onChange={(e) => setFiles(Array.from(e.target.files || []))}
             multiple
           />
+          <SvgUpload className='iui-icon' />
           <label htmlFor='file-input' className='iui-anchor'>
             {files.map((f) => f.name).join() || 'Click or drag a file'}
           </label>
