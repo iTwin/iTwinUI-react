@@ -11,7 +11,7 @@ import '@itwin/itwinui-css/css/file-upload.css';
 
 export type FileUploadProps = {
   /**
-   * Content shown when file is being dragged onto the component.
+   * Content shown over `children` when file is being dragged onto the component.
    */
   content: React.ReactNode;
   /**
@@ -26,10 +26,14 @@ export type FileUploadProps = {
 } & CommonProps;
 
 /**
- * File upload component to be used as a wrapper or standlone.
- * Provides support for dragging files.
+ * File upload component to be used as a wrapper or standalone.
+ * Provides support for dragging and dropping files.
  * @example
- * <FileUpload content={<span>Drop file to upload</span>}><Textarea /></FileUpload>
+ * <FileUpload content='Drop file here' onFileDropped={console.log}><Textarea /></FileUpload>
+ * <FileUpload
+ *   content={<><SvgUpload className='iui-icon' /> Upload file</>}
+ *   onFileDropped={console.log}
+ * />
  */
 export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
   (props, ref) => {
@@ -40,16 +44,17 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
     const fileUploadRef = React.useRef<HTMLDivElement>(null);
     const refs = useMergedRefs(fileUploadRef, ref);
 
-    const _onDragEnter = React.useCallback((e: React.DragEvent) => {
+    const onDragEnterHandler = React.useCallback((e: React.DragEvent) => {
       e.preventDefault();
       e.stopPropagation();
     }, []);
 
-    const _onDragOver = React.useCallback(
+    const onDragOverHandler = React.useCallback(
       (e: React.DragEvent) => {
         e.preventDefault();
         e.stopPropagation();
 
+        // only set active if a valid file is dragged over
         if (!isDragActive && e.dataTransfer?.items?.[0]) {
           setIsDragActive(true);
         }
@@ -57,11 +62,12 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
       [isDragActive],
     );
 
-    const _onDragLeave = React.useCallback(
+    const onDragLeaveHandler = React.useCallback(
       (e: React.DragEvent) => {
         e.preventDefault();
         e.stopPropagation();
 
+        // only set inactive if secondary target is outside the component
         if (
           isDragActive &&
           !fileUploadRef.current?.contains(e.relatedTarget as Node)
@@ -72,7 +78,7 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
       [isDragActive],
     );
 
-    const _onDrop = React.useCallback(
+    const onDropHandler = React.useCallback(
       (e: React.DragEvent) => {
         e.preventDefault();
         e.stopPropagation();
@@ -92,10 +98,10 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
           { 'iui-drag': isDragActive },
           className,
         )}
-        onDragEnter={_onDragEnter}
-        onDragOver={_onDragOver}
-        onDragLeave={_onDragLeave}
-        onDrop={_onDrop}
+        onDragEnter={onDragEnterHandler}
+        onDragOver={onDragOverHandler}
+        onDragLeave={onDragLeaveHandler}
+        onDrop={onDropHandler}
         ref={refs}
         {...rest}
       >
