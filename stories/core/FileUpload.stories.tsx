@@ -35,7 +35,7 @@ export const Basic: Story<FileUploadProps> = (args) => {
       <Textarea
         placeholder={'Drag a file here'}
         rows={1}
-        value={files.map((f) => f.name)}
+        defaultValue={files.map((f) => f.name)}
       />
     </FileUpload>
   );

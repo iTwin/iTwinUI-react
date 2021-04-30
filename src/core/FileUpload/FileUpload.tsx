@@ -55,7 +55,7 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
         e.stopPropagation();
 
         // only set active if a valid file is dragged over
-        if (!isDragActive && e.dataTransfer?.items?.[0]) {
+        if (!isDragActive && e.dataTransfer?.items?.[0]?.kind === 'file') {
           setIsDragActive(true);
         }
       },
