@@ -15,9 +15,9 @@ export type FileUploadProps = {
    */
   content: React.ReactNode;
   /**
-   * Callback fired when a file is dropped onto the component.
+   * Callback fired when files are dropped onto the component.
    */
-  onFileDropped: (file: File) => void;
+  onFileDropped: (files: FileList) => void;
   /**
    * Component to wrap `FileUpload` around.
    * `content` will be shown if `children` is not provided.
@@ -27,7 +27,7 @@ export type FileUploadProps = {
 
 /**
  * File upload component to be used as a wrapper or standalone.
- * Provides support for dragging and dropping files.
+ * Provides support for dragging and dropping multiple files.
  * @example
  * <FileUpload content='Drop file here' onFileDropped={console.log}><Textarea /></FileUpload>
  * <FileUpload
@@ -86,7 +86,7 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
         if (isDragActive) {
           setIsDragActive(false);
         }
-        onFileDropped(e.dataTransfer?.files?.[0]);
+        onFileDropped(e.dataTransfer?.files);
       },
       [isDragActive, onFileDropped],
     );
