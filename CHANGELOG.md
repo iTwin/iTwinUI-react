@@ -1,5 +1,13 @@
 # Changelog
 
+## [X.X.X]
+
+`2021-05-XX`
+
+### What's new
+
+- **Added new `FileUpload` component** with drag & drop functionality.
+
 ## [1.2.0]
 
 `2021-04-29`
