@@ -147,23 +147,14 @@ export type { ${name}Props } from './${name}';
 inquirer
   .prompt([
     {
-      name: 'collection',
-      type: 'list',
-      message: 'Which collection would you like to add to?',
-      choices: ['core', 'utils'],
-      default: 0,
-    },
-
-    {
       name: 'component',
       type: 'input',
       message: 'What is the name of the component?',
     },
   ])
-  .then((answers) => {
+  .then(({ component }) => {
     console.log();
-    let { collection, component } = answers;
-    let directory = `src/${collection}`;
+    let directory = 'src/core';
     let levels = [];
 
     directory += `/${component}`;
@@ -184,7 +175,5 @@ inquirer
     writeFile(componentTest);
     writeFile(componentIndex);
 
-    if (collection !== 'utils') {
-      writeFile(storiesFactory(`stories/core`, component));
-    }
+    writeFile(storiesFactory('src/core', component));
   });
