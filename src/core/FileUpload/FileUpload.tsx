@@ -12,32 +12,31 @@ import '@itwin/itwinui-css/css/file-upload.css';
 export type FileUploadProps = {
   /**
    * Content shown over `children` when file is being dragged onto the component.
+   * Should always be used when drag content differs from `children` being wrapped.
+   * Can be skipped if wrapping `FileUploadTemplate`.
    */
-  content: React.ReactNode;
+  dragContent?: React.ReactNode;
   /**
    * Callback fired when files are dropped onto the component.
    */
   onFileDropped: (files: FileList) => void;
   /**
    * Component to wrap `FileUpload` around.
-   * `content` will be shown if `children` is not provided.
+   * Either pass `FileUploadTemplate` (for default state) or a different component to wrap.
    */
-  children?: React.ReactNode;
+  children: React.ReactNode;
 } & CommonProps;
 
 /**
- * File upload component to be used as a wrapper or standalone.
+ * File upload component to be wrapped around `FileUploadTemplate` or any arbitrary component.
  * Provides support for dragging and dropping multiple files.
  * @example
- * <FileUpload content='Drop file here' onFileDropped={console.log}><Textarea /></FileUpload>
- * <FileUpload
- *   content={<><SvgUpload className='iui-icon' /> Upload file</>}
- *   onFileDropped={console.log}
- * />
+ * <FileUpload onFileDropped={console.log}><FileUploadTemplate /></FileUpload>
+ * <FileUpload dragContent='Drop file here' onFileDropped={console.log}><Textarea /></FileUpload>
  */
 export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
   (props, ref) => {
-    const { content, children, onFileDropped, className, ...rest } = props;
+    const { dragContent, children, onFileDropped, className, ...rest } = props;
     useTheme();
 
     const [isDragActive, setIsDragActive] = React.useState(false);
@@ -96,8 +95,8 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
         ref={refs}
         {...rest}
       >
-        <div className='iui-content'>{content}</div>
-        {children}
+        {dragContent && <div className='iui-content'>{dragContent}</div>}
+        {dragContent ? children : <div className='iui-content'>{children}</div>}
       </div>
     );
   },
