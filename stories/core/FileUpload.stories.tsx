@@ -2,12 +2,16 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { SvgUpload } from '@itwin/itwinui-icons-react';
 import { action } from '@storybook/addon-actions';
 import { useState } from '@storybook/client-api';
 import { Story, Meta } from '@storybook/react';
 import React from 'react';
-import { FileUpload, FileUploadProps, Textarea } from '../../src/core';
+import {
+  FileUpload,
+  FileUploadProps,
+  FileUploadTemplate,
+  LabeledInput,
+} from '../../src/core';
 
 export default {
   component: FileUpload,
@@ -20,56 +24,51 @@ export default {
   title: 'Core/FileUpload',
 } as Meta<FileUploadProps>;
 
-export const Basic: Story<FileUploadProps> = (args) => {
+export const Default: Story<FileUploadProps> = (args) => {
   const [files, setFiles] = useState<Array<File>>([]);
 
   return (
     <FileUpload
-      content={'Drop file to upload'}
       {...args}
       onFileDropped={(files) => {
         setFiles(Array.from(files));
         action(`${files.length} files uploaded`)();
       }}
     >
-      <Textarea
-        placeholder={'Drag a file here'}
-        rows={1}
-        defaultValue={files.map((f) => f.name)}
-      />
+      <FileUploadTemplate
+        onChange={(e) => setFiles(Array.from(e.target.files || []))}
+      >
+        {files.map((f) => f.name).join(', ')}
+      </FileUploadTemplate>
     </FileUpload>
   );
 };
 
-Basic.args = {
-  content: 'Drop file to upload',
-};
-
-export const WithoutChildren: Story<FileUploadProps> = (args) => {
+export const WrappingInput: Story<FileUploadProps> = (args) => {
   const [files, setFiles] = useState<Array<File>>([]);
 
   return (
     <FileUpload
-      content={
-        <>
-          <input
-            className='iui-browse-input'
-            type='file'
-            id='file-input'
-            onChange={(e) => setFiles(Array.from(e.target.files || []))}
-            multiple
-          />
-          <SvgUpload className='iui-icon' />
-          <label htmlFor='file-input' className='iui-anchor'>
-            {files.map((f) => f.name).join() || 'Click or drag a file'}
-          </label>
-        </>
-      }
+      dragContent='Drop file to upload'
       {...args}
       onFileDropped={(files) => {
         setFiles(Array.from(files));
         action(`${files.length} files uploaded`)();
       }}
-    />
+    >
+      <LabeledInput
+        placeholder='Type a message'
+        style={{ width: '100%' }}
+        message={
+          files.length
+            ? `Attached: ${files.map((f) => f.name)}`
+            : 'Drag files to attach'
+        }
+      />
+    </FileUpload>
   );
+};
+
+WrappingInput.args = {
+  dragContent: 'Drop file to upload',
 };
