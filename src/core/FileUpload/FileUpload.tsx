@@ -44,52 +44,43 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
     const fileUploadRef = React.useRef<HTMLDivElement>(null);
     const refs = useMergedRefs(fileUploadRef, ref);
 
-    const onDragEnterHandler = React.useCallback((e: React.DragEvent) => {
+    const onDragOverHandler = (e: React.DragEvent) => {
       e.preventDefault();
       e.stopPropagation();
-    }, []);
+    };
 
-    const onDragOverHandler = React.useCallback(
-      (e: React.DragEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
+    const onDragEnterHandler = (e: React.DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
 
-        // only set active if a valid file is dragged over
-        if (!isDragActive && e.dataTransfer?.items?.[0]?.kind === 'file') {
-          setIsDragActive(true);
-        }
-      },
-      [isDragActive],
-    );
+      // only set active if a file is dragged over
+      if (!isDragActive && e.dataTransfer?.items?.[0]?.kind === 'file') {
+        setIsDragActive(true);
+      }
+    };
 
-    const onDragLeaveHandler = React.useCallback(
-      (e: React.DragEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
+    const onDragLeaveHandler = (e: React.DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
 
-        // only set inactive if secondary target is outside the component
-        if (
-          isDragActive &&
-          !fileUploadRef.current?.contains(e.relatedTarget as Node)
-        ) {
-          setIsDragActive(false);
-        }
-      },
-      [isDragActive],
-    );
+      // only set inactive if secondary target is outside the component
+      if (
+        isDragActive &&
+        !fileUploadRef.current?.contains(e.relatedTarget as Node)
+      ) {
+        setIsDragActive(false);
+      }
+    };
 
-    const onDropHandler = React.useCallback(
-      (e: React.DragEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
+    const onDropHandler = (e: React.DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
 
-        if (isDragActive) {
-          setIsDragActive(false);
-        }
+      if (isDragActive) {
+        setIsDragActive(false);
         onFileDropped(e.dataTransfer?.files);
-      },
-      [isDragActive, onFileDropped],
-    );
+      }
+    };
 
     return (
       <div
