@@ -44,13 +44,13 @@ it('should handle drag and drop events correctly', () => {
     dataTransfer: { files: [file], items: [{ kind: 'file', type: file.type }] },
   };
 
-  fireEvent.dragOver(component, mockDataTransfer);
+  fireEvent.dragEnter(component, mockDataTransfer);
   expect(container.querySelector('.iui-file-upload.iui-drag')).toBeTruthy();
 
   fireEvent.dragLeave(component, mockDataTransfer);
   expect(container.querySelector('.iui-file-upload.iui-drag')).toBeFalsy();
 
-  fireEvent.dragOver(component, mockDataTransfer);
+  fireEvent.dragEnter(component, mockDataTransfer);
   fireEvent.drop(component, mockDataTransfer);
   expect(mockFn).toHaveBeenCalledWith([file]);
 });
