@@ -59,13 +59,13 @@ export const FileUploadTemplate = (props: FileUploadTemplateProps) => {
         multiple={acceptMultiple}
       />
       <SvgUpload className='iui-icon' />
-      <div className='iui-label'>
+      <div className='iui-template-text'>
         <label htmlFor='file-input' className='iui-anchor'>
           {label}
         </label>
         <div>{subtitle}</div>
+        {children}
       </div>
-      {children}
     </>
   );
 };
