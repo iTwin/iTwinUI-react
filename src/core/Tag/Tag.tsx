@@ -46,7 +46,12 @@ export const Tag = (props: TagProps) => {
     >
       <span className='iui-label'>{children}</span>
       {onRemove && (
-        <IconButton styleType='borderless' size='small' onClick={onRemove}>
+        <IconButton
+          styleType='borderless'
+          size='small'
+          onClick={onRemove}
+          aria-label='Delete tag'
+        >
           <SvgCloseSmall />
         </IconButton>
       )}
