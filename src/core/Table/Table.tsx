@@ -290,9 +290,9 @@ export const Table = <
                       <div className='iui-sort'>
                         <div className='iui-icon-wrapper'>
                           {column.isSorted && column.isSortedDesc ? (
-                            <SvgSortUp className='iui-icon' />
+                            <SvgSortUp className='iui-icon' aria-hidden />
                           ) : (
-                            <SvgSortDown className='iui-icon' />
+                            <SvgSortDown className='iui-icon' aria-hidden />
                           )}
                         </div>
                       </div>
