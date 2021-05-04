@@ -150,3 +150,6 @@ export { getUserColor } from './utils/common';
 
 export { useTheme } from './utils/hooks/useTheme';
 export type { ThemeType } from './utils/hooks/useTheme';
+
+export { Header } from './Header';
+export type { HeaderProps } from './Header';
