@@ -13,12 +13,22 @@ export type FileUploadTemplateProps = {
    */
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
   /**
-   * Localized version of primary label. First line gets styled like a hyperlink.
-   * @default 'Choose a file.\n Or drag & drop it here.'
+   * Whether the file input accepts multiple files.
+   * @default true
+   */
+  acceptMultiple?: boolean;
+  /**
+   * Localized version of primary clickable label. Gets styled like a hyperlink.
+   * @default 'Choose a file'
    */
   label?: React.ReactNode;
   /**
-   * Optional children appended to main label.
+   * Localized version of the secondary text shown below the label.
+   * @default 'or drag & drop it here.'
+   */
+  subtitle?: React.ReactNode;
+  /**
+   * Optional children appended to the template.
    */
   children?: React.ReactNode;
 };
@@ -30,7 +40,13 @@ export type FileUploadTemplateProps = {
  * <FileUploadTemplate onChange={(e) => console.log(e.target.files)} />
  */
 export const FileUploadTemplate = (props: FileUploadTemplateProps) => {
-  const { onChange, label, children } = props;
+  const {
+    onChange,
+    acceptMultiple = true,
+    label = 'Choose a file.',
+    subtitle = 'or drag & drop it here.',
+    children,
+  } = props;
   useTheme();
 
   return (
@@ -40,18 +56,15 @@ export const FileUploadTemplate = (props: FileUploadTemplateProps) => {
         type='file'
         id='file-input'
         onChange={onChange}
-        multiple
+        multiple={acceptMultiple}
       />
       <SvgUpload className='iui-icon' />
-      <label htmlFor='file-input' className='iui-anchor'>
-        {label ?? (
-          <>
-            {'Choose a file.'}
-            <br />
-            {'Or drag & drop it here.'}
-          </>
-        )}
-      </label>
+      <div className='iui-label'>
+        <label htmlFor='file-input' className='iui-anchor'>
+          {label}
+        </label>
+        <div>{subtitle}</div>
+      </div>
       {children}
     </>
   );
