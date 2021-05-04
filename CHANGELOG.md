@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.2.0
+
+`2021-04-21`
+
+### What's new
+
+- **Added bottom reached and row intersection callbacks to the `Table`.**
+
+### Fixes
+
+- **Fixed `Table` bug when change of `onSelection` handler would cause infinite rerendering loop.**
+
 ## [1.1.0]
 
 `2021-04-21`
