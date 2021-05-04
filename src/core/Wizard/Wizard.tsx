@@ -15,7 +15,14 @@ export type WizardLocalization = {
 export type WizardType = 'default' | 'long' | 'workflow';
 
 export type StepProperties = {
+  /**
+   * The title/label of the step.
+   */
   name: string;
+  /**
+   * A tooltip giving detailed description to this step.
+   */
+  description?: string;
 };
 
 export type WizardProps = {
@@ -61,14 +68,16 @@ const defaultWizardLocalization: WizardLocalization = {
  *  />
  */
 
-export const Wizard = ({
-  currentStep,
-  steps,
-  type = 'default',
-  localization = defaultWizardLocalization,
-  onStepClick,
-  ...rest
-}: WizardProps) => {
+export const Wizard = (props: WizardProps) => {
+  const {
+    currentStep,
+    steps,
+    type = 'default',
+    localization = defaultWizardLocalization,
+    onStepClick,
+    ...rest
+  } = props;
+
   const boundedCurrentStep = Math.min(
     Math.max(0, currentStep),
     steps.length - 1,
@@ -96,6 +105,7 @@ export const Wizard = ({
               totalSteps={steps.length}
               type={type}
               onClick={onStepClick}
+              description={s.description}
             />
           ))}
         </div>
