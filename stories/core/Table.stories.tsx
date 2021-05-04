@@ -7,7 +7,7 @@ import { CellProps } from 'react-table';
 import { Table } from '../../src/core';
 import { TableProps } from '../../src/core/Table/Table';
 import { Story, Meta } from '@storybook/react';
-import { useMemo } from '@storybook/addons';
+import { useMemo, useState } from '@storybook/addons';
 import { action } from '@storybook/addon-actions';
 
 export default {
@@ -89,6 +89,9 @@ export default {
       table: { disable: true },
     },
     autoResetSortBy: {
+      table: { disable: true },
+    },
+    autoResetHiddenColumns: {
       table: { disable: true },
     },
   },
@@ -302,6 +305,159 @@ Sortable.args = {
     { name: 'Name2', description: 'Description2' },
   ],
   isSortable: true,
+};
+
+export const LazyLoading: Story<TableProps> = (args) => {
+  const { columns, ...rest } = args;
+
+  const onClickHandler = (
+    props: CellProps<{ name: string; description: string }>,
+  ) => action(props.row.original.name)();
+
+  const tableColumns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+          },
+          {
+            id: 'click-me',
+            Header: 'Click',
+            width: 100,
+            Cell: (props: CellProps<{ name: string; description: string }>) => {
+              const onClick = () => onClickHandler(props);
+              return (
+                <a className='iui-anchor' onClick={onClick}>
+                  Click me!
+                </a>
+              );
+            },
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const generateData = (start: number, end: number) => {
+    return [...new Array(end - start)].map((_, index) => ({
+      name: `Name${start + index}`,
+      description: `Description${start + index}`,
+    }));
+  };
+
+  const [tableData, setTableData] = useState(() => generateData(1, 100));
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onBottomReached = useCallback(() => {
+    action('Bottom reached!')();
+    setIsLoading(true);
+    // Simulating request
+    setTimeout(() => {
+      setTableData(() => [
+        ...tableData,
+        ...generateData(tableData.length, tableData.length + 100),
+      ]);
+      setIsLoading(false);
+    }, 1000);
+  }, [tableData]);
+
+  return (
+    <Table
+      columns={columns || tableColumns}
+      emptyTableContent='No data.'
+      onBottomReached={onBottomReached}
+      isLoading={isLoading}
+      {...rest}
+      data={tableData}
+    />
+  );
+};
+
+LazyLoading.argTypes = {
+  data: { control: { disable: true } },
+  isLoading: { control: { disable: true } },
+};
+
+export const RowIntersection: Story<TableProps> = (args) => {
+  const { columns, ...rest } = args;
+
+  const onClickHandler = (
+    props: CellProps<{ name: string; description: string }>,
+  ) => action(props.row.original.name)();
+
+  const tableColumns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+          },
+          {
+            id: 'click-me',
+            Header: 'Click',
+            width: 100,
+            Cell: (props: CellProps<{ name: string; description: string }>) => {
+              const onClick = () => onClickHandler(props);
+              return (
+                <a className='iui-anchor' onClick={onClick}>
+                  Click me!
+                </a>
+              );
+            },
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const tableData = useMemo(
+    () =>
+      [...new Array(100)].map((_, index) => ({
+        name: `Name${index}`,
+        description: `Description${index}`,
+      })),
+    [],
+  );
+
+  const onRowIntersection = useCallback((rowData) => {
+    action(`Row in view: ${JSON.stringify(rowData)}`)();
+  }, []);
+
+  return (
+    <Table
+      columns={columns || tableColumns}
+      emptyTableContent='No data.'
+      onRowIntersection={onRowIntersection}
+      {...rest}
+      data={tableData}
+    />
+  );
+};
+
+RowIntersection.argTypes = {
+  data: { control: { disable: true } },
 };
 
 export const Loading: Story<TableProps> = (args) => {
