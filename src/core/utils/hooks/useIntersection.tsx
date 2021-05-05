@@ -7,6 +7,13 @@ import React from 'react';
 /**
  * Hook that uses `IntersectionObserver` to trigger `onIntersect` callback when element is in view.
  * Callback is called only once.
+ * Hook returns a function that you need to use to set a reference of the element you want to observe.
+ * @example
+ * const onIntersection = React.useCallback(() => {
+ *   console.log('Element is in viewport!');
+ * }, []);
+ * const setRef = useIntersection(onIntersection);
+ * return (<div ref={setRef}>One of many elements</div>);
  */
 export const useIntersection = (
   onIntersect: () => void,

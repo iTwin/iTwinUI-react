@@ -461,7 +461,7 @@ export const RowInViewport: Story<TableProps> = (args) => {
         >
           Actions
         </a>{' '}
-        tab to see when callback is called.
+        tab to see when callback is called and scroll the table.
       </div>
       <br />
       <Table
