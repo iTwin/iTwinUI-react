@@ -9,7 +9,9 @@ import { defaultStatusTitles, UserIcon, UserIconStatus } from './UserIcon';
 
 function assertBaseElements(size = 'small', backgroundColor = 'white') {
   const userIconContainer = screen.getByTitle('Terry Rivers');
-  expect(userIconContainer.className).toEqual(`iui-user-icon iui-${size}`);
+  expect(userIconContainer.className).toEqual(
+    `iui-user-icon${size !== 'medium' ? ` iui-${size}` : ''}`,
+  );
 
   const abbreviation = screen.getByText('TR');
   expect(abbreviation.className).toEqual('iui-initials');

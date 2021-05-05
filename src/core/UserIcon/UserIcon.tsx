@@ -97,7 +97,11 @@ export const UserIcon = (props: UserIconProps) => {
 
   return (
     <span
-      className={cx(`iui-user-icon iui-${size}`, className)}
+      className={cx(
+        'iui-user-icon',
+        { [`iui-${size}`]: size !== 'medium' },
+        className,
+      )}
       title={title}
       style={style}
       {...rest}
