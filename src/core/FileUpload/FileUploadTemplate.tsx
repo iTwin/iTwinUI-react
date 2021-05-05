@@ -43,7 +43,7 @@ export const FileUploadTemplate = (props: FileUploadTemplateProps) => {
   const {
     onChange,
     acceptMultiple = true,
-    label = 'Choose a file.',
+    label = 'Choose a file',
     subtitle = 'or drag & drop it here.',
     children,
   } = props;
