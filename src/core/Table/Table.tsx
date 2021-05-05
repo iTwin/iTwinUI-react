@@ -77,12 +77,12 @@ export type TableProps<
    */
   onBottomReached?: () => void;
   /**
-   * Callback function when row is viewport.
+   * Callback function when row is in viewport.
    * If you want to use it in older browsers e.g. IE, then you need to have IntersectionObserver polyfill.
    */
   onRowInViewport?: (rowData: T) => void;
   /**
-   * Margin in pixels when row is considered to be already in view. Used for `onBottomReached` and `onRowInViewport`.
+   * Margin in pixels when row is considered to be already in viewport. Used for `onBottomReached` and `onRowInViewport`.
    * @default 300
    */
   intersectionMargin?: number;

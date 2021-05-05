@@ -5,7 +5,7 @@
 import React from 'react';
 
 /**
- * Hook that uses `IntersectionObserver` to trigger `onIntersect` callback when element is in view.
+ * Hook that uses `IntersectionObserver` to trigger `onIntersect` callback when element is in viewport.
  * Callback is called only once.
  * Hook returns a function that you need to use to set a reference of the element you want to observe.
  * @example
@@ -32,6 +32,10 @@ export const useIntersection = (
         observer.current.disconnect();
       }
 
+      if (!node) {
+        return;
+      }
+
       observer.current = new IntersectionObserver(
         ([entry], obs) => {
           if (entry.isIntersecting) {
@@ -41,10 +45,7 @@ export const useIntersection = (
         },
         { root, rootMargin, threshold },
       );
-
-      if (node) {
-        observer.current.observe(node);
-      }
+      observer.current.observe(node);
     },
     [onIntersect, root, rootMargin, threshold],
   );

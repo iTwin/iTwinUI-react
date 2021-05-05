@@ -349,6 +349,10 @@ it('should trigger onBottomReached', () => {
   mockIntersection(rows[49]);
 
   expect(onBottomReached).toHaveBeenCalledTimes(1);
+  expect(IntersectionObserver).toHaveBeenCalledWith(
+    expect.any(Function),
+    expect.objectContaining({ rootMargin: '300px' }),
+  );
 });
 
 it('should trigger onRowInViewport', () => {
@@ -356,6 +360,7 @@ it('should trigger onRowInViewport', () => {
   const { container } = renderComponent({
     data: mockedData(50),
     onRowInViewport,
+    intersectionMargin: 500,
   });
 
   const rows = container.querySelectorAll('.iui-tables-body .iui-tables-row');
@@ -368,6 +373,10 @@ it('should trigger onRowInViewport', () => {
   }
 
   expect(onRowInViewport).toHaveBeenCalledTimes(10);
+  expect(IntersectionObserver).toHaveBeenCalledWith(
+    expect.any(Function),
+    expect.objectContaining({ rootMargin: '500px' }),
+  );
 });
 
 it('should not trigger onBottomReached and onRowInViewport when IntersectionObserver is missing', () => {

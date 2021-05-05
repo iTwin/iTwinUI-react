@@ -8,6 +8,12 @@ import { Row, TableRowProps, TableState } from 'react-table';
 import { useIntersection } from '../utils/hooks/useIntersection';
 import { getCellStyle } from './utils';
 
+/**
+ * Memorization is needed to avoid unnecessary re-renders of all rows when additional data is added when lazy-loading.
+ * Using `isLast` here instead of passing data length to avoid re-renders of all rows when more data is added. Now only the last row re-renders.
+ * Although state is not used it is needed for `React.memo` to check state that changes row state e.g. selection.
+ * When adding new features check whether it changes state that affects row. If it does then add equality check to `React.memo`.
+ */
 const TableRow = <T extends Record<string, unknown>>(props: {
   row: Row<T>;
   rowProps: TableRowProps;
