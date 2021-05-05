@@ -13,14 +13,6 @@ const observers = new Map<
 >();
 
 const originalIntersectionObserver = window.IntersectionObserver;
-window.IntersectionObserver = jest.fn(
-  (callback: IntersectionObserverCallback) => {
-    return ({
-      observe: (el: Element) => observers.set(el, callback),
-      disconnect: jest.fn(),
-    } as unknown) as IntersectionObserver;
-  },
-);
 
 const mockIntersection = (element: Element) => {
   observers.get(element)?.(
@@ -95,6 +87,14 @@ function assertRowsData(
 
 beforeEach(() => {
   observers.clear();
+  window.IntersectionObserver = jest.fn(
+    (callback: IntersectionObserverCallback) => {
+      return ({
+        observe: (el: Element) => observers.set(el, callback),
+        disconnect: jest.fn(),
+      } as unknown) as IntersectionObserver;
+    },
+  );
 });
 
 afterAll(() => {
@@ -368,4 +368,25 @@ it('should trigger onRowInView', () => {
   }
 
   expect(onRowInView).toHaveBeenCalledTimes(10);
+});
+
+it('should not trigger onBottomReached and onRowInView when IntersectionObserver is missing', () => {
+  (window.IntersectionObserver as unknown) = undefined;
+  const onBottomReached = jest.fn();
+  const onRowInView = jest.fn();
+  const { container } = renderComponent({
+    data: mockedData(50),
+    onBottomReached,
+    onRowInView,
+  });
+
+  const rows = container.querySelectorAll('.iui-tables-body .iui-tables-row');
+  expect(rows.length).toBe(50);
+
+  expect(onRowInView).not.toHaveBeenCalled();
+  expect(observers.size).toBe(0);
+  mockIntersection(rows[49]);
+
+  expect(onBottomReached).not.toHaveBeenCalled();
+  expect(onRowInView).not.toHaveBeenCalled();
 });

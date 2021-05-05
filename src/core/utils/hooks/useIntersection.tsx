@@ -17,6 +17,10 @@ export const useIntersection = (
 
   const setRef = React.useCallback(
     (node: HTMLElement | null) => {
+      if (!window.IntersectionObserver) {
+        return;
+      }
+
       if (observer.current) {
         observer.current.disconnect();
       }
