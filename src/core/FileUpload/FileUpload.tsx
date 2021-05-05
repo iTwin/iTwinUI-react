@@ -95,8 +95,8 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
         ref={refs}
         {...rest}
       >
-        {dragContent && <div className='iui-content'>{dragContent}</div>}
         {dragContent ? children : <div className='iui-content'>{children}</div>}
+        {dragContent && <div className='iui-content'>{dragContent}</div>}
       </div>
     );
   },
