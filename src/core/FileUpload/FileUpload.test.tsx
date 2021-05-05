@@ -23,7 +23,7 @@ it('should render dragContent and children', () => {
   expect(content).toBeTruthy();
   expect(content.textContent).toEqual(mockContent);
 
-  const children = component.lastChild as HTMLElement;
+  const children = component.firstChild as HTMLElement;
   expect(children).toBeTruthy();
   expect(children.textContent).toEqual(mockChildren);
 });
