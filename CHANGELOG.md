@@ -6,7 +6,7 @@
 
 ### What's new
 
-- **Added bottom reached and row intersection callbacks to the `Table`.**
+- **Added lazy loading to `Table`** with new `onBottomReached` and `onRowInView` props.
 
 ### Fixes
 

@@ -4,6 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 
+/**
+ * Hook that uses `IntersectionObserver` to trigger `onIntersect` callback when element is in view.
+ * Callback is called only once.
+ */
 export const useIntersection = (
   onIntersect: () => void,
   options: IntersectionObserverInit = {},

@@ -12,27 +12,27 @@ const TableRow = <T extends Record<string, unknown>>(props: {
   row: Row<T>;
   rowProps: TableRowProps;
   isLast: boolean;
-  onIntersection: React.MutableRefObject<((rowData: T) => void) | undefined>;
+  onRowInView: React.MutableRefObject<((rowData: T) => void) | undefined>;
   onBottomReached: React.MutableRefObject<(() => void) | undefined>;
-  intersectionMarginPx: number;
+  intersectionMargin: number;
   state: TableState<T>; // Needed for explicitly checking selection changes
 }) => {
   const {
     row,
     rowProps,
     isLast,
-    onIntersection,
+    onRowInView,
     onBottomReached,
-    intersectionMarginPx,
+    intersectionMargin,
   } = props;
 
   const onIntersect = React.useCallback(() => {
-    onIntersection.current?.(row.original);
+    onRowInView.current?.(row.original);
     isLast && onBottomReached.current?.();
-  }, [isLast, onBottomReached, onIntersection, row.original]);
+  }, [isLast, onBottomReached, onRowInView, row.original]);
 
   const setRef = useIntersection(onIntersect, {
-    rootMargin: `${intersectionMarginPx}px`,
+    rootMargin: `${intersectionMargin}px`,
   });
 
   return (
@@ -56,7 +56,7 @@ export const TableRowMemoized = React.memo(
   TableRow,
   (prevProp, nextProp) =>
     prevProp.isLast === nextProp.isLast &&
-    prevProp.onIntersection === nextProp.onIntersection &&
+    prevProp.onRowInView === nextProp.onRowInView &&
     prevProp.onBottomReached === nextProp.onBottomReached &&
     prevProp.row.original === nextProp.row.original &&
     prevProp.state.selectedRowIds?.[prevProp.row.id] ===

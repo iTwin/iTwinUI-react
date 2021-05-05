@@ -351,21 +351,21 @@ it('should trigger onBottomReached', () => {
   expect(onBottomReached).toHaveBeenCalledTimes(1);
 });
 
-it('should trigger onRowIntersection', () => {
-  const onRowIntersection = jest.fn();
+it('should trigger onRowInView', () => {
+  const onRowInView = jest.fn();
   const { container } = renderComponent({
     data: mockedData(50),
-    onRowIntersection,
+    onRowInView,
   });
 
   const rows = container.querySelectorAll('.iui-tables-body .iui-tables-row');
   expect(rows.length).toBe(50);
 
-  expect(onRowIntersection).not.toHaveBeenCalled();
+  expect(onRowInView).not.toHaveBeenCalled();
   expect(observers.size).toBe(50);
   for (let i = 0; i < 10; i++) {
     mockIntersection(rows[i]);
   }
 
-  expect(onRowIntersection).toHaveBeenCalledTimes(10);
+  expect(onRowInView).toHaveBeenCalledTimes(10);
 });

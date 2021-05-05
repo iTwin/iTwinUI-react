@@ -80,12 +80,12 @@ export type TableProps<
    * Callback function when row is viewport.
    * If you want to use it in older browsers e.g. IE, then you need to have IntersectionObserver polyfill.
    */
-  onRowIntersection?: (rowData: T) => void;
+  onRowInView?: (rowData: T) => void;
   /**
-   * Margin when row is considered to be already in view. Used for `onBottomReached` and `onRowIntersection`.
+   * Margin in pixels when row is considered to be already in view. Used for `onBottomReached` and `onRowInView`.
    * @default 300
    */
-  intersectionMarginPx?: number;
+  intersectionMargin?: number;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -147,8 +147,8 @@ export const Table = <
     onSort,
     stateReducer,
     onBottomReached,
-    onRowIntersection,
-    intersectionMarginPx = 300,
+    onRowInView,
+    intersectionMargin = 300,
     ...rest
   } = props;
 
@@ -166,12 +166,12 @@ export const Table = <
   // useRef prevents from rerendering when one of these callbacks changes
   const onSelectRef = React.useRef(onSelect);
   const onBottomReachedRef = React.useRef(onBottomReached);
-  const onRowIntersectionRef = React.useRef(onRowIntersection);
+  const onRowInViewRef = React.useRef(onRowInView);
   React.useEffect(() => {
     onSelectRef.current = onSelect;
     onBottomReachedRef.current = onBottomReached;
-    onRowIntersectionRef.current = onRowIntersection;
-  }, [onBottomReached, onRowIntersection, onSelect]);
+    onRowInViewRef.current = onRowInView;
+  }, [onBottomReached, onRowInView, onSelect]);
 
   const useSelectionHook = (hooks: Hooks<T>) => {
     if (!isSelectable) {
@@ -328,9 +328,9 @@ export const Table = <
                 row={row}
                 rowProps={rowProps}
                 isLast={row.index === data.length - 1}
-                onIntersection={onRowIntersectionRef}
+                onRowInView={onRowInViewRef}
                 onBottomReached={onBottomReachedRef}
-                intersectionMarginPx={intersectionMarginPx}
+                intersectionMargin={intersectionMargin}
                 state={state}
                 key={rowProps.key}
               />

@@ -390,7 +390,7 @@ LazyLoading.argTypes = {
   isLoading: { control: { disable: true } },
 };
 
-export const RowIntersection: Story<TableProps> = (args) => {
+export const RowInView: Story<TableProps> = (args) => {
   const { columns, ...rest } = args;
 
   const onClickHandler = (
@@ -441,7 +441,7 @@ export const RowIntersection: Story<TableProps> = (args) => {
     [],
   );
 
-  const onRowIntersection = useCallback((rowData) => {
+  const onRowInView = useCallback((rowData) => {
     action(`Row in view: ${JSON.stringify(rowData)}`)();
   }, []);
 
@@ -449,14 +449,14 @@ export const RowIntersection: Story<TableProps> = (args) => {
     <Table
       columns={columns || tableColumns}
       emptyTableContent='No data.'
-      onRowIntersection={onRowIntersection}
+      onRowInView={onRowInView}
       {...rest}
       data={tableData}
     />
   );
 };
 
-RowIntersection.argTypes = {
+RowInView.argTypes = {
   data: { control: { disable: true } },
 };
 
