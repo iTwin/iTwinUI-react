@@ -7,14 +7,20 @@ import React from 'react';
 import { action } from '@storybook/addon-actions';
 
 import {
+  DropdownMenu,
   getUserColor,
   Header,
   HeaderProps,
+  IconButton,
   Input,
   MenuItem,
   UserIcon,
 } from '../../src/core';
 import HeaderButton from '../../src/core/Header/HeaderButton';
+import HeaderApplicationButton from '../../src/core/Header/HeaderApplicationButton';
+import HeaderBreadcrumbs from '../../src/core/Header/HeaderBreadcrumbs';
+import SvgHelpCircularHollow from '@itwin/itwinui-icons-react/cjs/icons/HelpCircularHollow';
+import SvgNotification from '@itwin/itwinui-icons-react/cjs/icons/Notification';
 
 export default {
   title: 'Core/Header',
@@ -43,52 +49,81 @@ const buildMenu = (menu: string) => (close: () => void) => [
 
 export const full: Story<HeaderProps> = (props) => <Header {...props} />;
 full.args = {
-  appName: 'Microstation',
-  appIcon: (
-    <svg
-      viewBox='0 0 16 16'
-      xmlns='http://www.w3.org/2000/svg'
-      aria-hidden='true'
-    >
-      <path d='m12.6 13.4c-1.2-1.5-2.1-3.1-2.4-5.5-2.7 3.9-4.6 4.2-5.7 2.4l-1.2 5.7h-2.2l3.5-14.1 1.8-.4c-.1.5-1.4 6.2.6 7 2 .7 4.6-8.5 4.6-8.5l2.2.4c-1.6 3.7-1.6 7.6 1.1 10.9l-2.3 2.1' />
-    </svg>
-  ),
-  onApplication: () => action('Clicked on the application button')(),
-  userIcon: (
-    <UserIcon
-      abbreviation='TR'
-      backgroundColor={getUserColor('Terry Rivers')}
-      image={
-        <img src='https://itwinplatformcdn.azureedge.net/iTwinUI/user-placeholder.png' />
+  appButton: (
+    <HeaderApplicationButton
+      startIcon={
+        <svg
+          viewBox='0 0 16 16'
+          xmlns='http://www.w3.org/2000/svg'
+          aria-hidden='true'
+        >
+          <path d='m12.6 13.4c-1.2-1.5-2.1-3.1-2.4-5.5-2.7 3.9-4.6 4.2-5.7 2.4l-1.2 5.7h-2.2l3.5-14.1 1.8-.4c-.1.5-1.4 6.2.6 7 2 .7 4.6-8.5 4.6-8.5l2.2.4c-1.6 3.7-1.6 7.6 1.1 10.9l-2.3 2.1' />
+        </svg>
       }
-      title='Terry Rivers'
+    >
+      Microstation
+    </HeaderApplicationButton>
+  ),
+  breadcrumbs: (
+    <HeaderBreadcrumbs
+      items={[
+        <HeaderButton
+          key='project'
+          menuItems={buildMenu('Project')}
+          name={'Project A (Super Size Edition)'}
+          description={'YJC-2249'}
+        />,
+        <HeaderButton
+          key='iModel'
+          menuItems={buildMenu('IModel')}
+          name={'IModel B'}
+          //startIcon='https://itwinplatformcdn.azureedge.net/iTwinUI/stadium.png'
+          isActive={true}
+        />,
+        <HeaderButton
+          key='version'
+          name={'Version C'}
+          onClick={() => action('Clicked on the Version')()}
+        />,
+      ]}
     />
   ),
-  onNotification: () => action('Clicked on the notification bell')(),
-  userMenuItems: buildMenu('User'),
-  moreMenuItems: buildMenu('More'),
-  helpMenuItems: buildMenu('Help'),
-  breadcrumbsButtons: [
-    <HeaderButton
-      key='project'
-      menuItems={buildMenu('Project')}
-      title={'Project A (Super Size Edition)'}
-      subTitle={'YJC-2249'}
-    />,
-    <HeaderButton
-      key='iModel'
-      menuItems={buildMenu('IModel')}
-      title={'IModel B'}
-      thumbnail='https://itwinplatformcdn.azureedge.net/iTwinUI/stadium.png'
-      active={true}
-    />,
-    <HeaderButton
-      key='version'
-      menuItems={buildMenu('Version')}
-      title={'Version C'}
-    />,
+  actions: [
+    <IconButton
+      key='notif'
+      onClick={() => action('Clicked on the notification bell')()}
+      styleType='borderless'
+    >
+      <SvgNotification />
+    </IconButton>,
+    <DropdownMenu key='help' menuItems={buildMenu('Help')}>
+      <IconButton styleType='borderless'>
+        <SvgHelpCircularHollow />
+      </IconButton>
+    </DropdownMenu>,
   ],
-  centerContent: (
+  userIcon: (
+    <DropdownMenu menuItems={buildMenu('User')}>
+      {/* TODO: Validate
+       *  IconButton adds a iui-icon to the user,
+       *  Button puts the children in a iui-label which cause alignment issues.
+       */}
+      <button className='iui-button iui-dropdown iui-borderless'>
+        <UserIcon
+          className='iui-user-icon'
+          size='medium'
+          abbreviation='TR'
+          backgroundColor={getUserColor('Terry Rivers')}
+          image={
+            <img src='https://itwinplatformcdn.azureedge.net/iTwinUI/user-placeholder.png' />
+          }
+          title='Terry Rivers'
+        />
+      </button>
+    </DropdownMenu>
+  ),
+  menuItems: buildMenu('More'),
+  children: (
     /** TODO: Validate
      * Should handle `iui-slim` with css classes,
      * but I don't know if we want to add classes for Storybook stories */
