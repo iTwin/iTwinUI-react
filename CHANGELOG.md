@@ -6,7 +6,7 @@
 
 ### What's new
 
-- **Added lazy loading to `Table`** with new `onBottomReached` and `onRowInView` props.
+- **Added lazy loading to `Table`** with new `onBottomReached` and `onRowInViewport` props.
 
 ### Fixes
 

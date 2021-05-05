@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React, { useCallback } from 'react';
 import { CellProps } from 'react-table';
-import { Table } from '../../src/core';
+import { Code, Table } from '../../src/core';
 import { TableProps } from '../../src/core/Table/Table';
 import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
@@ -390,7 +390,7 @@ LazyLoading.argTypes = {
   isLoading: { control: { disable: true } },
 };
 
-export const RowInView: Story<TableProps> = (args) => {
+export const RowInViewport: Story<TableProps> = (args) => {
   const { columns, ...rest } = args;
 
   const onClickHandler = (
@@ -441,22 +441,41 @@ export const RowInView: Story<TableProps> = (args) => {
     [],
   );
 
-  const onRowInView = useCallback((rowData) => {
+  const onRowInViewport = useCallback((rowData) => {
     action(`Row in view: ${JSON.stringify(rowData)}`)();
   }, []);
 
   return (
-    <Table
-      columns={columns || tableColumns}
-      emptyTableContent='No data.'
-      onRowInView={onRowInView}
-      {...rest}
-      data={tableData}
-    />
+    <>
+      <div>
+        Demo of <Code>IntersectionObserver</Code> hook that triggers{' '}
+        <Code>onRowInViewport</Code> callback once the row is visible.
+      </div>
+      <div>
+        Open{' '}
+        <a
+          className='iui-anchor'
+          onClick={() =>
+            parent.document.getElementById('tabbutton-actions')?.click()
+          }
+        >
+          Actions
+        </a>{' '}
+        tab to see when callback is called.
+      </div>
+      <br />
+      <Table
+        columns={columns || tableColumns}
+        emptyTableContent='No data.'
+        onRowInViewport={onRowInViewport}
+        {...rest}
+        data={tableData}
+      />
+    </>
   );
 };
 
-RowInView.argTypes = {
+RowInViewport.argTypes = {
   data: { control: { disable: true } },
 };
 

@@ -351,42 +351,42 @@ it('should trigger onBottomReached', () => {
   expect(onBottomReached).toHaveBeenCalledTimes(1);
 });
 
-it('should trigger onRowInView', () => {
-  const onRowInView = jest.fn();
+it('should trigger onRowInViewport', () => {
+  const onRowInViewport = jest.fn();
   const { container } = renderComponent({
     data: mockedData(50),
-    onRowInView,
+    onRowInViewport,
   });
 
   const rows = container.querySelectorAll('.iui-tables-body .iui-tables-row');
   expect(rows.length).toBe(50);
 
-  expect(onRowInView).not.toHaveBeenCalled();
+  expect(onRowInViewport).not.toHaveBeenCalled();
   expect(observers.size).toBe(50);
   for (let i = 0; i < 10; i++) {
     mockIntersection(rows[i]);
   }
 
-  expect(onRowInView).toHaveBeenCalledTimes(10);
+  expect(onRowInViewport).toHaveBeenCalledTimes(10);
 });
 
-it('should not trigger onBottomReached and onRowInView when IntersectionObserver is missing', () => {
+it('should not trigger onBottomReached and onRowInViewport when IntersectionObserver is missing', () => {
   (window.IntersectionObserver as unknown) = undefined;
   const onBottomReached = jest.fn();
-  const onRowInView = jest.fn();
+  const onRowInViewport = jest.fn();
   const { container } = renderComponent({
     data: mockedData(50),
     onBottomReached,
-    onRowInView,
+    onRowInViewport,
   });
 
   const rows = container.querySelectorAll('.iui-tables-body .iui-tables-row');
   expect(rows.length).toBe(50);
 
-  expect(onRowInView).not.toHaveBeenCalled();
+  expect(onRowInViewport).not.toHaveBeenCalled();
   expect(observers.size).toBe(0);
   mockIntersection(rows[49]);
 
   expect(onBottomReached).not.toHaveBeenCalled();
-  expect(onRowInView).not.toHaveBeenCalled();
+  expect(onRowInViewport).not.toHaveBeenCalled();
 });

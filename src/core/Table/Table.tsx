@@ -80,9 +80,9 @@ export type TableProps<
    * Callback function when row is viewport.
    * If you want to use it in older browsers e.g. IE, then you need to have IntersectionObserver polyfill.
    */
-  onRowInView?: (rowData: T) => void;
+  onRowInViewport?: (rowData: T) => void;
   /**
-   * Margin in pixels when row is considered to be already in view. Used for `onBottomReached` and `onRowInView`.
+   * Margin in pixels when row is considered to be already in view. Used for `onBottomReached` and `onRowInViewport`.
    * @default 300
    */
   intersectionMargin?: number;
@@ -147,7 +147,7 @@ export const Table = <
     onSort,
     stateReducer,
     onBottomReached,
-    onRowInView,
+    onRowInViewport,
     intersectionMargin = 300,
     ...rest
   } = props;
@@ -166,12 +166,12 @@ export const Table = <
   // useRef prevents from rerendering when one of these callbacks changes
   const onSelectRef = React.useRef(onSelect);
   const onBottomReachedRef = React.useRef(onBottomReached);
-  const onRowInViewRef = React.useRef(onRowInView);
+  const onRowInViewportRef = React.useRef(onRowInViewport);
   React.useEffect(() => {
     onSelectRef.current = onSelect;
     onBottomReachedRef.current = onBottomReached;
-    onRowInViewRef.current = onRowInView;
-  }, [onBottomReached, onRowInView, onSelect]);
+    onRowInViewportRef.current = onRowInViewport;
+  }, [onBottomReached, onRowInViewport, onSelect]);
 
   const useSelectionHook = (hooks: Hooks<T>) => {
     if (!isSelectable) {
@@ -328,7 +328,7 @@ export const Table = <
                 row={row}
                 rowProps={rowProps}
                 isLast={row.index === data.length - 1}
-                onRowInView={onRowInViewRef}
+                onRowInViewport={onRowInViewportRef}
                 onBottomReached={onBottomReachedRef}
                 intersectionMargin={intersectionMargin}
                 state={state}
