@@ -37,12 +37,12 @@ const TableRow = <T extends Record<string, unknown>>(props: {
     isLast && onBottomReached.current?.();
   }, [isLast, onBottomReached, onRowInViewport, row.original]);
 
-  const setRef = useIntersection(onIntersect, {
+  const rowRef = useIntersection(onIntersect, {
     rootMargin: `${intersectionMargin}px`,
   });
 
   return (
-    <div {...rowProps} key={rowProps.key} ref={setRef}>
+    <div {...rowProps} key={rowProps.key} ref={rowRef}>
       {row.cells.map((cell) => {
         const cellProps = cell.getCellProps({
           className: cx('iui-tables-cell', cell.column.cellClassName),

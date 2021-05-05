@@ -12,8 +12,8 @@ import React from 'react';
  * const onIntersection = React.useCallback(() => {
  *   console.log('Element is in viewport!');
  * }, []);
- * const setRef = useIntersection(onIntersection);
- * return (<div ref={setRef}>One of many elements</div>);
+ * const ref = useIntersection(onIntersection);
+ * return (<div ref={ref}>One of many elements</div>);
  */
 export const useIntersection = (
   onIntersect: () => void,
