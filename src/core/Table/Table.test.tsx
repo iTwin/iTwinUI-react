@@ -4,21 +4,18 @@
  *--------------------------------------------------------------------------------------------*/
 import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
-
 import { Table, TableProps } from './Table';
+import * as IntersectionHooks from '../utils/hooks/useIntersection';
 
-const observers = new Map<
-  Element,
-  (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => void
->();
-
-const originalIntersectionObserver = window.IntersectionObserver;
+const intersectionCallbacks = new Map<Element, () => void>();
+jest
+  .spyOn(IntersectionHooks, 'useIntersection')
+  .mockImplementation((onIntersect) => {
+    return (el: HTMLElement) => intersectionCallbacks.set(el, onIntersect);
+  });
 
 const mockIntersection = (element: Element) => {
-  observers.get(element)?.(
-    [{ isIntersecting: true } as IntersectionObserverEntry],
-    ({ disconnect: jest.fn() } as unknown) as IntersectionObserver,
-  );
+  intersectionCallbacks.get(element)?.();
 };
 
 const columns = (onViewClick: () => void = jest.fn()) => [
@@ -86,19 +83,7 @@ function assertRowsData(
 }
 
 beforeEach(() => {
-  observers.clear();
-  window.IntersectionObserver = jest.fn(
-    (callback: IntersectionObserverCallback) => {
-      return ({
-        observe: (el: Element) => observers.set(el, callback),
-        disconnect: jest.fn(),
-      } as unknown) as IntersectionObserver;
-    },
-  );
-});
-
-afterAll(() => {
-  window.IntersectionObserver = originalIntersectionObserver;
+  intersectionCallbacks.clear();
 });
 
 it('should render table with data', () => {
@@ -345,14 +330,10 @@ it('should trigger onBottomReached', () => {
   expect(rows.length).toBe(50);
 
   expect(onBottomReached).not.toHaveBeenCalled();
-  expect(observers.size).toBe(50);
+  expect(intersectionCallbacks.size).toBe(50);
   mockIntersection(rows[49]);
 
   expect(onBottomReached).toHaveBeenCalledTimes(1);
-  expect(IntersectionObserver).toHaveBeenCalledWith(
-    expect.any(Function),
-    expect.objectContaining({ rootMargin: '300px' }),
-  );
 });
 
 it('should trigger onRowInViewport', () => {
@@ -360,42 +341,16 @@ it('should trigger onRowInViewport', () => {
   const { container } = renderComponent({
     data: mockedData(50),
     onRowInViewport,
-    intersectionMargin: 500,
   });
 
   const rows = container.querySelectorAll('.iui-tables-body .iui-tables-row');
   expect(rows.length).toBe(50);
 
   expect(onRowInViewport).not.toHaveBeenCalled();
-  expect(observers.size).toBe(50);
+  expect(intersectionCallbacks.size).toBe(50);
   for (let i = 0; i < 10; i++) {
     mockIntersection(rows[i]);
   }
 
   expect(onRowInViewport).toHaveBeenCalledTimes(10);
-  expect(IntersectionObserver).toHaveBeenCalledWith(
-    expect.any(Function),
-    expect.objectContaining({ rootMargin: '500px' }),
-  );
-});
-
-it('should not trigger onBottomReached and onRowInViewport when IntersectionObserver is missing', () => {
-  (window.IntersectionObserver as unknown) = undefined;
-  const onBottomReached = jest.fn();
-  const onRowInViewport = jest.fn();
-  const { container } = renderComponent({
-    data: mockedData(50),
-    onBottomReached,
-    onRowInViewport,
-  });
-
-  const rows = container.querySelectorAll('.iui-tables-body .iui-tables-row');
-  expect(rows.length).toBe(50);
-
-  expect(onRowInViewport).not.toHaveBeenCalled();
-  expect(observers.size).toBe(0);
-  mockIntersection(rows[49]);
-
-  expect(onBottomReached).not.toHaveBeenCalled();
-  expect(onRowInViewport).not.toHaveBeenCalled();
 });
