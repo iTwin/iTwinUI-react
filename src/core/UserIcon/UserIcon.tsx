@@ -89,9 +89,9 @@ export const UserIcon = (props: UserIconProps) => {
   const statusTitles = { ...defaultStatusTitles, ...translatedStatusTitles };
 
   const iconMap: { [key in UserIconStatus]: JSX.Element } = {
-    away: <SvgAway className='iui-status-symbol' />,
-    offline: <SvgCloseSmall className='iui-status-symbol' />,
-    online: <SvgCheckmark className='iui-status-symbol' />,
+    away: <SvgAway className='iui-status-symbol' aria-hidden />,
+    offline: <SvgCloseSmall className='iui-status-symbol' aria-hidden />,
+    online: <SvgCheckmark className='iui-status-symbol' aria-hidden />,
     busy: <></>,
   };
 
@@ -114,6 +114,7 @@ export const UserIcon = (props: UserIconProps) => {
           className={cx('iui-status', {
             [`iui-${status}`]: !!status,
           })}
+          aria-label={statusTitles[status]}
         >
           {iconMap[status]}
         </span>

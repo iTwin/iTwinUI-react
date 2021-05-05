@@ -181,7 +181,7 @@ export const Modal = (props: ModalProps) => {
                 onClick={onClose}
                 aria-label='Close'
               >
-                <SvgClose aria-hidden />
+                <SvgClose />
               </IconButton>
             )}
           </div>

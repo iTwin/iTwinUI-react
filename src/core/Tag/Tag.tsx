@@ -52,7 +52,7 @@ export const Tag = (props: TagProps) => {
           onClick={onRemove}
           aria-label='Delete tag'
         >
-          <SvgCloseSmall />
+          <SvgCloseSmall aria-hidden />
         </IconButton>
       )}
     </span>
