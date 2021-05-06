@@ -1,12 +1,17 @@
 # Changelog
 
-## [X.X.X]
+## 1.X.X
 
 `2021-05-XX`
 
 ### What's new
 
 - **Added new `FileUpload` component** with drag & drop functionality.
+- **Added lazy loading to `Table`** with new `onBottomReached` and `onRowInViewport` props.
+
+### Fixes
+
+- **Fixed `Table` bug when change of `onSelection` handler would cause infinite rerendering loop.**
 
 ## [1.2.0]
 
