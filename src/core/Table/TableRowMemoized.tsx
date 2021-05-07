@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import React from 'react';
+import React, { ReactNode } from 'react';
 import cx from 'classnames';
 import { Row, TableRowProps, TableState } from 'react-table';
 import { useIntersection } from '../utils/hooks/useIntersection';
@@ -22,6 +22,8 @@ const TableRow = <T extends Record<string, unknown>>(props: {
   onBottomReached: React.MutableRefObject<(() => void) | undefined>;
   intersectionMargin: number;
   state: TableState<T>; // Needed for explicitly checking selection changes
+  expandedSubComponent?: (row: Row<T>) => ReactNode;
+  isExpanded: boolean;
 }) => {
   const {
     row,
@@ -30,6 +32,8 @@ const TableRow = <T extends Record<string, unknown>>(props: {
     onRowInViewport,
     onBottomReached,
     intersectionMargin,
+    expandedSubComponent,
+    isExpanded,
   } = props;
 
   const onIntersect = React.useCallback(() => {
@@ -42,18 +46,21 @@ const TableRow = <T extends Record<string, unknown>>(props: {
   });
 
   return (
-    <div {...rowProps} key={rowProps.key} ref={rowRef}>
-      {row.cells.map((cell) => {
-        const cellProps = cell.getCellProps({
-          className: cx('iui-tables-cell', cell.column.cellClassName),
-          style: getCellStyle(cell.column),
-        });
-        return (
-          <div {...cellProps} key={cellProps.key}>
-            {cell.render('Cell')}
-          </div>
-        );
-      })}
+    <div className='iui-tables-rowgroup'>
+      <div {...rowProps} key={rowProps.key} ref={rowRef}>
+        {row.cells.map((cell) => {
+          const cellProps = cell.getCellProps({
+            className: cx('iui-tables-cell', cell.column.cellClassName),
+            style: getCellStyle(cell.column),
+          });
+          return (
+            <div {...cellProps} key={cellProps.key}>
+              {cell.render('Cell')}
+            </div>
+          );
+        })}
+      </div>
+      {isExpanded && expandedSubComponent?.(row)}
     </div>
   );
 };
@@ -66,5 +73,7 @@ export const TableRowMemoized = React.memo(
     prevProp.onBottomReached === nextProp.onBottomReached &&
     prevProp.row.original === nextProp.row.original &&
     prevProp.state.selectedRowIds?.[prevProp.row.id] ===
-      nextProp.state.selectedRowIds?.[nextProp.row.id],
+      nextProp.state.selectedRowIds?.[nextProp.row.id] &&
+    prevProp.expandedSubComponent === nextProp.expandedSubComponent &&
+    prevProp.isExpanded === nextProp.isExpanded,
 ) as typeof TableRow;

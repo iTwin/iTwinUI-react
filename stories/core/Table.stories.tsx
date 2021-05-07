@@ -4,11 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 import React, { useCallback } from 'react';
 import { CellProps } from 'react-table';
-import { Code, Table } from '../../src/core';
+import { Code, IconButton, Leading, Table } from '../../src/core';
 import { TableProps } from '../../src/core/Table/Table';
 import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
 import { action } from '@storybook/addon-actions';
+import { SvgChevronDown, SvgChevronRight } from '@itwin/itwinui-icons-react';
 
 export default {
   title: 'Core/Table',
@@ -305,6 +306,98 @@ Sortable.args = {
     { name: 'Name2', description: 'Description2' },
   ],
   isSortable: true,
+};
+
+export const Expandable: Story<TableProps> = (args) => {
+  const { columns, data, ...rest } = args;
+
+  const onExpand = useCallback(
+    (state) => action(`Expanded. Table state: ${JSON.stringify(state)}`)(),
+    [],
+  );
+
+  const tableColumns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'expander',
+            Cell: (props: CellProps<{ name: string; description: string }>) => (
+              <IconButton
+                styleType='borderless'
+                size='small'
+                onClick={() => {
+                  props.row.toggleRowExpanded();
+                }}
+              >
+                {props.row.isExpanded ? (
+                  <SvgChevronDown />
+                ) : (
+                  <SvgChevronRight />
+                )}
+              </IconButton>
+            ),
+            width: 60,
+          },
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const tableData = useMemo(
+    () => [
+      { name: 'Name1', description: 'Description1' },
+      { name: 'Name3', description: 'Description3' },
+      { name: 'Name2', description: 'Description2' },
+    ],
+    [],
+  );
+
+  const expandedSubComponent = useCallback(
+    (row) => (
+      <div style={{ padding: 16 }}>
+        <Leading>Extra information</Leading>
+        <pre>
+          <code>{JSON.stringify({ values: row.values }, null, 2)}</code>
+        </pre>
+      </div>
+    ),
+    [],
+  );
+
+  return (
+    <Table
+      columns={columns || tableColumns}
+      data={data || tableData}
+      emptyTableContent='No data.'
+      expandedSubComponent={expandedSubComponent}
+      onExpand={(newState) => {
+        onExpand(newState);
+      }}
+      {...rest}
+    />
+  );
+};
+
+Expandable.args = {
+  data: [
+    { name: 'Name1', description: 'Description1' },
+    { name: 'Name3', description: 'Description3' },
+    { name: 'Name2', description: 'Description2' },
+  ],
 };
 
 export const LazyLoading: Story<TableProps> = (args) => {

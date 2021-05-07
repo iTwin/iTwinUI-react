@@ -2,10 +2,11 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, act } from '@testing-library/react';
 import React from 'react';
 import { Table, TableProps } from './Table';
 import * as IntersectionHooks from '../utils/hooks/useIntersection';
+import { CellProps } from 'react-table';
 
 const intersectionCallbacks = new Map<Element, () => void>();
 jest
@@ -353,4 +354,62 @@ it('should trigger onRowInViewport', () => {
   }
 
   expect(onRowInViewport).toHaveBeenCalledTimes(10);
+});
+
+it('should expand correctly', () => {
+  const onExpandMock = jest.fn();
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'expander',
+          Cell: (props: CellProps<{ name: string; description: string }>) => {
+            return (
+              <button
+                onClick={() => {
+                  props.row.toggleRowExpanded();
+                }}
+              >
+                Expand {props.row.original.name}
+              </button>
+            );
+          },
+        },
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+      ],
+    },
+  ];
+  const { getByText, queryByText } = renderComponent({
+    columns: mockedColumns,
+    expandedSubComponent: (row) => (
+      <div>{`Expanded component, name: ${row.original.name}`}</div>
+    ),
+    onExpand: onExpandMock,
+  });
+
+  expect(queryByText('Expanded component, name: Name1')).toBeNull();
+  expect(queryByText('Expanded component, name: Name3')).toBeNull();
+
+  act(() => {
+    fireEvent.click(getByText('Expand Name1'));
+    fireEvent.click(getByText('Expand Name2'));
+  });
+
+  getByText('Expanded component, name: Name1');
+  getByText('Expanded component, name: Name2');
+
+  act(() => {
+    fireEvent.click(getByText('Expand Name1'));
+    fireEvent.click(getByText('Expand Name3'));
+  });
+
+  expect(queryByText('Expanded component, name: Name1')).toBeNull();
+  getByText('Expanded component, name: Name2');
+  getByText('Expanded component, name: Name3');
+  expect(onExpandMock).toHaveBeenCalledTimes(4);
 });

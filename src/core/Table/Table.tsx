@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import React from 'react';
+import React, { ReactNode } from 'react';
 import cx from 'classnames';
 import {
   actions as TableActions,
@@ -21,6 +21,7 @@ import {
   useTable,
   ActionType,
   TableInstance,
+  useExpanded,
 } from 'react-table';
 import { Checkbox } from '../Checkbox';
 import { ProgressRadial } from '../ProgressIndicators';
@@ -86,6 +87,20 @@ export type TableProps<
    * @default 300
    */
   intersectionMargin?: number;
+  /**
+   * A function that will be used for rendering a component for each row if that row is expanded.
+   * Component will be placed right after the row, in the same row group div.
+   */
+  expandedSubComponent?: (row: Row<T>) => ReactNode;
+  /**
+   * Handler for row expand events. Will trigger when expanding and condensing rows.
+   */
+  onExpand?: (
+    newState: TableState<T>,
+    action: ActionType,
+    previousState: TableState<T>,
+    instance?: TableInstance<T>,
+  ) => void;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -149,6 +164,8 @@ export const Table = <
     onBottomReached,
     onRowInViewport,
     intersectionMargin = 300,
+    expandedSubComponent,
+    onExpand,
     ...rest
   } = props;
 
@@ -214,6 +231,8 @@ export const Table = <
   ): TableState<T> => {
     if (action.type === TableActions.toggleSortBy) {
       onSort?.(newState);
+    } else if (action.type === TableActions.toggleRowExpanded) {
+      onExpand?.(newState, action, previousState, instance);
     }
     return stateReducer
       ? stateReducer(newState, action, previousState, instance)
@@ -230,6 +249,7 @@ export const Table = <
     },
     useFlexLayout,
     useSortBy,
+    useExpanded,
     useRowSelect,
     useSelectionHook,
   );
@@ -321,6 +341,7 @@ export const Table = <
             const rowProps = row.getRowProps({
               className: cx('iui-tables-row', {
                 'iui-tables-row-active': row.isSelected,
+                'iui-tables-expanded': row.isExpanded,
               }),
             });
             return (
@@ -333,6 +354,8 @@ export const Table = <
                 intersectionMargin={intersectionMargin}
                 state={state}
                 key={rowProps.key}
+                expandedSubComponent={expandedSubComponent}
+                isExpanded={row.isExpanded}
               />
             );
           })}
