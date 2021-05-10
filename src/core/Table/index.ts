@@ -5,11 +5,11 @@
 export { Table } from './Table';
 export type { TableProps } from './Table';
 
-export { FilterButtonBar, TableFilters } from './Filters';
+export { FilterButtonBar, TableFilters } from './filters';
 export type {
   FilterButtonBarProps,
   TableFilterProps,
   TableFilterValue,
-} from './Filters';
+} from './filters';
 
 export default './Table';

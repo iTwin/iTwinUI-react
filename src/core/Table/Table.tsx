@@ -32,7 +32,7 @@ import SvgSortDown from '@itwin/itwinui-icons-react/cjs/icons/SortDown';
 import SvgSortUp from '@itwin/itwinui-icons-react/cjs/icons/SortUp';
 import { getCellStyle } from './utils';
 import { TableRowMemoized } from './TableRowMemoized';
-import { FilterIcon, TableFilterValue } from './Filters';
+import { FilterIcon, TableFilterValue } from './filters';
 
 /**
  * Table props.
