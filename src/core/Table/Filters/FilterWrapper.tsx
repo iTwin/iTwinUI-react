@@ -4,10 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import '@itwin/itwinui-css/css/table.css';
-import Popover from '../../../utils/Popover';
-import { useTheme } from '../../../utils/hooks/useTheme';
+import Popover from '../../utils/Popover';
+import { useTheme } from '../../utils/hooks/useTheme';
 import { ColumnInstance, HeaderGroup } from 'react-table';
-import { TableFilterValue } from '../types';
+import { TableFilterValue } from './types';
 
 export type FilterWrapperProps<T extends Record<string, unknown>> = {
   column: HeaderGroup<T>;

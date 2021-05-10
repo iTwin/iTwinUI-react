@@ -1,3 +1,7 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import { FieldType, FilterType, HeaderGroup } from 'react-table';
 
 export interface TableFilterValue<T extends Record<string, unknown>> {

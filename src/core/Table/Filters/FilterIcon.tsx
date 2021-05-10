@@ -8,7 +8,7 @@ import React from 'react';
 import { ColumnInstance, HeaderGroup } from 'react-table';
 import '@itwin/itwinui-css/css/table.css';
 import { useTheme } from '../../utils/hooks/useTheme';
-import { FilterWrapper } from './FilterWrapper/FilterWrapper';
+import { FilterWrapper } from './FilterWrapper';
 
 export type FilterIconProps<T extends Record<string, unknown>> = {
   column: HeaderGroup<T>;
