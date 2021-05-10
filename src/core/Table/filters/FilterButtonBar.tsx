@@ -7,6 +7,16 @@ import '@itwin/itwinui-css/css/table.css';
 import { useTheme } from '../../utils/hooks/useTheme';
 import { Button } from '../../Buttons';
 
+export type FilterButtonBarLocalization = {
+  filter: string;
+  clear: string;
+};
+
+const defaultStrings: FilterButtonBarLocalization = {
+  filter: 'Filter',
+  clear: 'Clear',
+};
+
 export type FilterButtonBarProps = {
   /**
    * Additional content that you want to be shown on the right of the buttons.
@@ -20,6 +30,10 @@ export type FilterButtonBarProps = {
    * Callback used for Clear button click.
    */
   clearFilter: () => void;
+  /**
+   * Localized strings used in buttons.
+   */
+  localization?: FilterButtonBarLocalization;
 };
 
 /**
@@ -28,7 +42,9 @@ export type FilterButtonBarProps = {
  * <FilterButtonBar setFilter={() => setFilter(text)} clearFilter={clearFilter} />
  */
 export const FilterButtonBar = (props: FilterButtonBarProps) => {
-  const { children, setFilter, clearFilter } = props;
+  const { children, setFilter, clearFilter, localization } = props;
+
+  const localizedStrings = { ...defaultStrings, ...localization };
 
   useTheme();
 
@@ -36,9 +52,9 @@ export const FilterButtonBar = (props: FilterButtonBarProps) => {
     <div className='iui-button-bar'>
       {children}
       <Button styleType='high-visibility' onClick={setFilter}>
-        Filter
+        {localizedStrings.filter}
       </Button>
-      <Button onClick={clearFilter}>Clear</Button>
+      <Button onClick={clearFilter}>{localizedStrings.clear}</Button>
     </div>
   );
 };

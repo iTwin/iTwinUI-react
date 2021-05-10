@@ -317,6 +317,15 @@ export const Filters: Story<TableProps> = (args) => {
   const onClickHandler = (
     props: CellProps<{ name: string; description: string; ids: number[] }>,
   ) => action(props.row.original.name)();
+
+  const localizedStrings = useMemo(
+    () => ({
+      filter: 'Filter',
+      clear: 'Clear',
+    }),
+    [],
+  );
+
   const tableColumns = useMemo(
     (): Column[] => [
       {
@@ -327,14 +336,14 @@ export const Filters: Story<TableProps> = (args) => {
             Header: 'Name',
             accessor: 'name',
             fieldType: 'text',
-            Filter: TableFilters.TextFilter,
+            Filter: TableFilters.TextFilter(localizedStrings),
           },
           {
             id: 'description',
             Header: 'Description',
             accessor: 'description',
             fieldType: 'text',
-            Filter: TableFilters.TextFilter,
+            Filter: TableFilters.TextFilter(localizedStrings),
             maxWidth: 200,
           },
           {
@@ -350,7 +359,7 @@ export const Filters: Story<TableProps> = (args) => {
             ) => {
               return props.row.original.ids.join(', ');
             },
-            Filter: TableFilters.TextFilter,
+            Filter: TableFilters.TextFilter(localizedStrings),
             filter: 'includes',
           },
           {
@@ -375,7 +384,7 @@ export const Filters: Story<TableProps> = (args) => {
         ],
       },
     ],
-    [],
+    [localizedStrings],
   );
 
   const tableData = useMemo(

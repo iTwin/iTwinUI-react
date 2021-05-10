@@ -6,13 +6,22 @@ import React from 'react';
 import '@itwin/itwinui-css/css/table.css';
 import { useTheme } from '../../../utils/hooks/useTheme';
 import { Input } from '../../../Input';
-import { FilterButtonBar } from '../FilterButtonBar';
+import {
+  FilterButtonBar,
+  FilterButtonBarLocalization,
+} from '../FilterButtonBar';
 import { TableFilterProps } from '../types';
 
+export type TextFilterProps<
+  T extends Record<string, unknown>
+> = TableFilterProps<T> & {
+  localization?: FilterButtonBarLocalization;
+};
+
 export const TextFilter = <T extends Record<string, unknown>>(
-  props: TableFilterProps<T>,
+  props: TextFilterProps<T>,
 ) => {
-  const { column, setFilter, clearFilter } = props;
+  const { column, setFilter, clearFilter, localization } = props;
 
   useTheme();
 
@@ -35,6 +44,7 @@ export const TextFilter = <T extends Record<string, unknown>>(
       <FilterButtonBar
         setFilter={() => setFilter(text)}
         clearFilter={clearFilter}
+        localization={localization}
       />
     </>
   );

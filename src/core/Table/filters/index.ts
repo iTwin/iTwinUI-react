@@ -9,6 +9,9 @@ export type { TableFilterProps, TableFilterValue } from './types';
 export { TableFilters } from './TableFilters';
 
 export { FilterButtonBar } from './FilterButtonBar';
-export type { FilterButtonBarProps } from './FilterButtonBar';
+export type {
+  FilterButtonBarProps,
+  FilterButtonBarLocalization,
+} from './FilterButtonBar';
 
 export { FilterIcon } from './FilterIcon';
