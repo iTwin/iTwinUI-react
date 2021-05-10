@@ -60,6 +60,7 @@ function renderComponent(
     columns: columns(onViewClick),
     data: mockedData(),
     emptyTableContent: 'Empty table',
+    emptyFilteredTableContent: 'No results. Clear filter.',
   };
 
   const props = { ...defaultProps, ...initialsProps };
@@ -522,4 +523,43 @@ it('should not show filter icon when filter component is not set', () => {
 
   const filterIcon = container.querySelector('.iui-filter') as HTMLElement;
   expect(filterIcon).toBeFalsy();
+});
+
+it('should show message when there is no data after filtering', () => {
+  const onFilter = jest.fn();
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          Filter: TableFilters.TextFilter,
+          fieldType: 'text',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({ columns: mockedColumns, onFilter });
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  let rows = container.querySelectorAll('.iui-tables-body .iui-tables-row');
+  expect(rows.length).toBe(3);
+
+  const filterIcon = container.querySelector('.iui-filter') as HTMLElement;
+  expect(filterIcon).toBeTruthy();
+  fireEvent.click(filterIcon);
+
+  const filterInput = container.querySelector(
+    '.iui-column-filter input',
+  ) as HTMLInputElement;
+  expect(filterInput).toBeTruthy();
+
+  fireEvent.change(filterInput, { target: { value: 'invalid value' } });
+  screen.getByText('Filter').click();
+
+  rows = container.querySelectorAll('.iui-tables-body .iui-tables-row');
+  expect(rows.length).toBe(0);
+  screen.getByText('No results. Clear filter.');
 });

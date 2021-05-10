@@ -88,7 +88,8 @@ export type TableProps<
    * @default 300
    */
   intersectionMargin?: number;
-  /** Callback function when filters change.
+  /**
+   * Callback function when filters change.
    * Use with `manualFilters` to handle filtering yourself e.g. filter in server-side.
    * Must be memoized.
    */
@@ -248,11 +249,15 @@ export const Table = <
     previousState: TableState<T>,
     instance?: TableInstance<T>,
   ): TableState<T> => {
-    if (action.type === TableActions.toggleSortBy) {
-      onSort?.(newState);
-    }
-    if (action.type === TableActions.setFilter) {
-      onFilterHandler(newState, action, previousState, instance);
+    switch (action.type) {
+      case TableActions.toggleSortBy:
+        onSort?.(newState);
+        break;
+      case TableActions.setFilter:
+        onFilterHandler(newState, action, previousState, instance);
+        break;
+      default:
+        break;
     }
     return stateReducer
       ? stateReducer(newState, action, previousState, instance)
@@ -306,7 +311,7 @@ export const Table = <
     {} as Record<string, string>,
   );
 
-  const isFiltersSet = allColumns.some((column) => !!column.filterValue);
+  const areFiltersSet = allColumns.some((column) => !!column.filterValue);
 
   return (
     <div
@@ -402,14 +407,14 @@ export const Table = <
             </div>
           </div>
         )}
-        {!isLoading && data.length === 0 && !isFiltersSet && (
+        {!isLoading && data.length === 0 && !areFiltersSet && (
           <div className={'iui-tables-message-container'}>
             {emptyTableContent}
           </div>
         )}
         {!isLoading &&
           (data.length === 0 || filteredFlatRows.length === 0) &&
-          isFiltersSet && (
+          areFiltersSet && (
             <div className={'iui-tables-message-container'}>
               {emptyFilteredTableContent}
             </div>
