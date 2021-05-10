@@ -6,6 +6,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 import { Table, TableProps } from './Table';
 import * as IntersectionHooks from '../utils/hooks/useIntersection';
+import { TableFilters } from './Filters';
 
 const intersectionCallbacks = new Map<Element, () => void>();
 jest
@@ -353,4 +354,157 @@ it('should trigger onRowInViewport', () => {
   }
 
   expect(onRowInViewport).toHaveBeenCalledTimes(10);
+});
+
+it('should filter table', () => {
+  const onFilter = jest.fn();
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          Filter: TableFilters.TextFilter,
+          fieldType: 'text',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({ columns: mockedColumns, onFilter });
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  let rows = container.querySelectorAll('.iui-tables-body .iui-tables-row');
+  expect(rows.length).toBe(3);
+
+  const filterIcon = container.querySelector('.iui-filter') as HTMLElement;
+  expect(filterIcon).toBeTruthy();
+  fireEvent.click(filterIcon);
+
+  const filterInput = container.querySelector(
+    '.iui-column-filter input',
+  ) as HTMLInputElement;
+  expect(filterInput).toBeTruthy();
+
+  fireEvent.change(filterInput, { target: { value: '2' } });
+  screen.getByText('Filter').click();
+
+  rows = container.querySelectorAll('.iui-tables-body .iui-tables-row');
+  expect(rows.length).toBe(1);
+  expect(onFilter).toHaveBeenCalledWith(
+    [{ fieldType: 'text', filterType: 'text', id: 'name', value: '2' }],
+    expect.objectContaining({ filters: [{ id: 'name', value: '2' }] }),
+  );
+});
+
+it('should clear filter', () => {
+  const onFilter = jest.fn();
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          Filter: TableFilters.TextFilter,
+          fieldType: 'text',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns: mockedColumns,
+    onFilter,
+    initialState: { filters: [{ id: 'name', value: '2' }] },
+  });
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  let rows = container.querySelectorAll('.iui-tables-body .iui-tables-row');
+  expect(rows.length).toBe(1);
+
+  const filterIcon = container.querySelector('.iui-filter') as HTMLElement;
+  expect(filterIcon).toBeTruthy();
+  fireEvent.click(filterIcon);
+
+  screen.getByText('Clear').click();
+
+  rows = container.querySelectorAll('.iui-tables-body .iui-tables-row');
+  expect(rows.length).toBe(3);
+  expect(onFilter).toHaveBeenCalledWith(
+    [],
+    expect.objectContaining({ filters: [] }),
+  );
+});
+
+it('should filter table when manualFilters flag is on', () => {
+  const onFilter = jest.fn();
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          Filter: TableFilters.TextFilter,
+          fieldType: 'text',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns: mockedColumns,
+    onFilter,
+    manualFilters: true,
+  });
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  let rows = container.querySelectorAll('.iui-tables-body .iui-tables-row');
+  expect(rows.length).toBe(3);
+
+  const filterIcon = container.querySelector('.iui-filter') as HTMLElement;
+  expect(filterIcon).toBeTruthy();
+  fireEvent.click(filterIcon);
+
+  const filterInput = container.querySelector(
+    '.iui-column-filter input',
+  ) as HTMLInputElement;
+  expect(filterInput).toBeTruthy();
+
+  fireEvent.change(filterInput, { target: { value: '2' } });
+  screen.getByText('Filter').click();
+
+  rows = container.querySelectorAll('.iui-tables-body .iui-tables-row');
+  expect(rows.length).toBe(3);
+  expect(onFilter).toHaveBeenCalledWith(
+    [{ fieldType: 'text', filterType: 'text', id: 'name', value: '2' }],
+    expect.objectContaining({ filters: [{ id: 'name', value: '2' }] }),
+  );
+});
+
+it('should not show filter icon when filter component is not set', () => {
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns: mockedColumns,
+  });
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  const rows = container.querySelectorAll('.iui-tables-body .iui-tables-row');
+  expect(rows.length).toBe(3);
+
+  const filterIcon = container.querySelector('.iui-filter') as HTMLElement;
+  expect(filterIcon).toBeFalsy();
 });

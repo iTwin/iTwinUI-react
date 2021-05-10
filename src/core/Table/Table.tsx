@@ -235,11 +235,10 @@ export const Table = <
         return {
           id: f.id,
           value: f.value,
-          fieldType: column?.fieldType,
-          filterType: column?.filter,
+          fieldType: column?.fieldType ?? 'text',
+          filterType: column?.filter ?? 'text',
         };
       }) as TableFilterValue<T>[];
-      console.log(filters);
       onFilter?.(filters, newState);
     }
   };
@@ -343,7 +342,7 @@ export const Table = <
                   <div {...columnProps} key={columnProps.key}>
                     {column.render('Header')}
                     {!isLoading && data.length != 0 && (
-                      <FilterIcon column={column} />
+                      <FilterIcon column={column} allColumns={allColumns} />
                     )}
                     {!isLoading && data.length != 0 && column.canSort && (
                       <div className='iui-sort'>

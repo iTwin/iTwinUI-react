@@ -16,7 +16,7 @@ export const TextFilter = <T extends Record<string, unknown>>(
 
   useTheme();
 
-  const [text, setText] = React.useState(column.filterValue);
+  const [text, setText] = React.useState(column.filterValue ?? '');
 
   return (
     <>

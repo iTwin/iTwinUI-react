@@ -5,7 +5,7 @@
 export { Table } from './Table';
 export type { TableProps } from './Table';
 
-export { BaseFilter, FilterButtonBar, TableFilters } from './Filters';
+export { FilterButtonBar, TableFilters } from './Filters';
 export type {
   FilterButtonBarProps,
   TableFilterProps,

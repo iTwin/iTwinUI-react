@@ -87,7 +87,7 @@ export type { RadioTileGroupProps, RadioTileProps } from './RadioTiles';
 export { Select } from './Select';
 export type { SelectProps, SelectOption, ItemRendererProps } from './Select';
 
-export { BaseFilter, Table, TableFilters, FilterButtonBar } from './Table';
+export { Table, TableFilters, FilterButtonBar } from './Table';
 export type {
   TableProps,
   TableFilterProps,

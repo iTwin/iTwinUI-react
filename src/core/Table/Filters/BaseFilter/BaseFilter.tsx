@@ -6,7 +6,12 @@ import React from 'react';
 import '@itwin/itwinui-css/css/table.css';
 import Popover from '../../../utils/Popover';
 import { useTheme } from '../../../utils/hooks/useTheme';
-import { FieldType, FilterType, HeaderGroup } from 'react-table';
+import {
+  ColumnInstance,
+  FieldType,
+  FilterType,
+  HeaderGroup,
+} from 'react-table';
 
 export interface TableFilterValue<T extends Record<string, unknown>> {
   id: string;
@@ -23,6 +28,7 @@ export type TableFilterProps<T extends Record<string, unknown>> = {
 
 export type BaseFilterProps<T extends Record<string, unknown>> = {
   column: HeaderGroup<T>;
+  allColumns: ColumnInstance<T>[];
   children: JSX.Element;
   filterBody: React.ReactNode;
   onShow: () => void;
@@ -32,7 +38,7 @@ export type BaseFilterProps<T extends Record<string, unknown>> = {
 export const BaseFilter = <T extends Record<string, unknown>>(
   props: BaseFilterProps<T>,
 ) => {
-  const { column, children, filterBody, onShow, onHide } = props;
+  const { column, children, filterBody, onShow, onHide, allColumns } = props;
 
   useTheme();
 
@@ -52,6 +58,18 @@ export const BaseFilter = <T extends Record<string, unknown>>(
     close();
   }, [close, column]);
 
+  const placement = React.useMemo(() => {
+    const columnIndex = allColumns.findIndex((c) => c.id === column.id);
+    const columnsCount = allColumns.length;
+    if (columnIndex === 0) {
+      return 'bottom-start';
+    }
+    if (columnIndex === columnsCount - 1) {
+      return 'bottom-end';
+    }
+    return 'bottom';
+  }, [allColumns, column.id]);
+
   return (
     <Popover
       content={
@@ -60,7 +78,7 @@ export const BaseFilter = <T extends Record<string, unknown>>(
             React.cloneElement(filterBody, { setFilter, clearFilter })}
         </div>
       }
-      placement='bottom'
+      placement={placement}
       visible={isVisible}
       onClickOutside={close}
       onShow={onShow}
