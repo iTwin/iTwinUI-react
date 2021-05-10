@@ -26,7 +26,7 @@ export type TableFilterProps<T extends Record<string, unknown>> = {
   clearFilter: () => void;
 };
 
-export type BaseFilterProps<T extends Record<string, unknown>> = {
+export type FilterWrapperProps<T extends Record<string, unknown>> = {
   column: HeaderGroup<T>;
   allColumns: ColumnInstance<T>[];
   children: JSX.Element;
@@ -35,8 +35,8 @@ export type BaseFilterProps<T extends Record<string, unknown>> = {
   onHide: () => void;
 };
 
-export const BaseFilter = <T extends Record<string, unknown>>(
-  props: BaseFilterProps<T>,
+export const FilterWrapper = <T extends Record<string, unknown>>(
+  props: FilterWrapperProps<T>,
 ) => {
   const { column, children, filterBody, onShow, onHide, allColumns } = props;
 

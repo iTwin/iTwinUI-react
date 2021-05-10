@@ -8,7 +8,7 @@ import React from 'react';
 import { ColumnInstance, HeaderGroup } from 'react-table';
 import '@itwin/itwinui-css/css/table.css';
 import { useTheme } from '../../utils/hooks/useTheme';
-import { BaseFilter } from './BaseFilter/BaseFilter';
+import { FilterWrapper } from './FilterWrapper/FilterWrapper';
 
 export type FilterIconProps<T extends Record<string, unknown>> = {
   column: HeaderGroup<T>;
@@ -29,7 +29,7 @@ export const FilterIcon = <T extends Record<string, unknown>>(
   return (
     <>
       {column.canFilter && column.Filter && (
-        <BaseFilter
+        <FilterWrapper
           column={column}
           allColumns={allColumns}
           onHide={onHide}
@@ -45,7 +45,7 @@ export const FilterIcon = <T extends Record<string, unknown>>(
           >
             {column.filterValue ? <SvgFilter /> : <SvgFilterHollow />}
           </div>
-        </BaseFilter>
+        </FilterWrapper>
       )}
     </>
   );

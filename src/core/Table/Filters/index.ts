@@ -2,13 +2,15 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-export { BaseFilter } from './BaseFilter/BaseFilter';
+export { FilterWrapper } from './FilterWrapper/FilterWrapper';
 export type {
   TableFilterProps,
   TableFilterValue,
-} from './BaseFilter/BaseFilter';
+} from './FilterWrapper/FilterWrapper';
 
 export { TableFilters } from './TableFilters';
 
 export { FilterButtonBar } from './FilterButtonBar';
 export type { FilterButtonBarProps } from './FilterButtonBar';
+
+export { FilterIcon } from './FilterIcon';
