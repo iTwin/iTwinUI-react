@@ -428,6 +428,12 @@ it('should clear filter', () => {
   expect(filterIcon).toBeTruthy();
   fireEvent.click(filterIcon);
 
+  const filterInput = container.querySelector(
+    '.iui-column-filter input',
+  ) as HTMLInputElement;
+  expect(filterInput).toBeTruthy();
+  expect(filterInput.value).toEqual('2');
+
   screen.getByText('Clear').click();
 
   rows = container.querySelectorAll('.iui-tables-body .iui-tables-row');
@@ -438,7 +444,7 @@ it('should clear filter', () => {
   );
 });
 
-it('should filter table when manualFilters flag is on', () => {
+it('should not filter table when manualFilters flag is on', () => {
   const onFilter = jest.fn();
   const mockedColumns = [
     {
