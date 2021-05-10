@@ -6,25 +6,8 @@ import React from 'react';
 import '@itwin/itwinui-css/css/table.css';
 import Popover from '../../../utils/Popover';
 import { useTheme } from '../../../utils/hooks/useTheme';
-import {
-  ColumnInstance,
-  FieldType,
-  FilterType,
-  HeaderGroup,
-} from 'react-table';
-
-export interface TableFilterValue<T extends Record<string, unknown>> {
-  id: string;
-  value: unknown;
-  fieldType: FieldType;
-  filterType: FilterType<T>;
-}
-
-export type TableFilterProps<T extends Record<string, unknown>> = {
-  column: HeaderGroup<T>;
-  setFilter: (filterValue: TableFilterValue<T> | undefined) => void;
-  clearFilter: () => void;
-};
+import { ColumnInstance, HeaderGroup } from 'react-table';
+import { TableFilterValue } from '../types';
 
 export type FilterWrapperProps<T extends Record<string, unknown>> = {
   column: HeaderGroup<T>;

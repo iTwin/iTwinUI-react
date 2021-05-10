@@ -3,10 +3,8 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 export { FilterWrapper } from './FilterWrapper/FilterWrapper';
-export type {
-  TableFilterProps,
-  TableFilterValue,
-} from './FilterWrapper/FilterWrapper';
+
+export type { TableFilterProps, TableFilterValue } from './types';
 
 export { TableFilters } from './TableFilters';
 

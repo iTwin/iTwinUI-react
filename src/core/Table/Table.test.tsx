@@ -390,6 +390,9 @@ it('should filter table', () => {
   fireEvent.change(filterInput, { target: { value: '2' } });
   screen.getByText('Filter').click();
 
+  const tippy = document.querySelector('[data-tippy-root]') as HTMLElement;
+  expect(tippy.style.visibility).toEqual('hidden');
+
   rows = container.querySelectorAll('.iui-tables-body .iui-tables-row');
   expect(rows.length).toBe(1);
   expect(onFilter).toHaveBeenCalledWith(
@@ -436,6 +439,9 @@ it('should clear filter', () => {
 
   screen.getByText('Clear').click();
 
+  const tippy = document.querySelector('[data-tippy-root]') as HTMLElement;
+  expect(tippy.style.visibility).toEqual('hidden');
+
   rows = container.querySelectorAll('.iui-tables-body .iui-tables-row');
   expect(rows.length).toBe(3);
   expect(onFilter).toHaveBeenCalledWith(
@@ -481,6 +487,9 @@ it('should not filter table when manualFilters flag is on', () => {
 
   fireEvent.change(filterInput, { target: { value: '2' } });
   screen.getByText('Filter').click();
+
+  const tippy = document.querySelector('[data-tippy-root]') as HTMLElement;
+  expect(tippy.style.visibility).toEqual('hidden');
 
   rows = container.querySelectorAll('.iui-tables-body .iui-tables-row');
   expect(rows.length).toBe(3);
