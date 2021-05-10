@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import React, { ReactNode } from 'react';
+import React from 'react';
 import cx from 'classnames';
 import {
   actions as TableActions,
@@ -32,6 +32,8 @@ import SvgSortDown from '@itwin/itwinui-icons-react/cjs/icons/SortDown';
 import SvgSortUp from '@itwin/itwinui-icons-react/cjs/icons/SortUp';
 import { getCellStyle } from './utils';
 import { TableRowMemoized } from './TableRowMemoized';
+import { IconButton } from '../Buttons';
+import { SvgChevronDown, SvgChevronRight } from '@itwin/itwinui-icons-react';
 
 /**
  * Table props.
@@ -91,7 +93,7 @@ export type TableProps<
    * A function that will be used for rendering a component for each row if that row is expanded.
    * Component will be placed right after the row, in the same row group div.
    */
-  expandedSubComponent?: (row: Row<T>) => ReactNode;
+  expandedSubComponent?: (row: Row<T>) => React.ReactNode;
   /**
    * Handler for row expand events. Will trigger when expanding and condensing rows.
    */
@@ -101,6 +103,10 @@ export type TableProps<
     previousState: TableState<T>,
     instance?: TableInstance<T>,
   ) => void;
+  /**
+   * Flag whether to provide default expander column
+   */
+  provideDefaultExpander?: boolean;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -166,6 +172,7 @@ export const Table = <
     intersectionMargin = 300,
     expandedSubComponent,
     onExpand,
+    provideDefaultExpander: provideExpanderColumn = true,
     ...rest
   } = props;
 
@@ -189,6 +196,36 @@ export const Table = <
     onBottomReachedRef.current = onBottomReached;
     onRowInViewportRef.current = onRowInViewport;
   }, [onBottomReached, onRowInViewport, onSelect]);
+
+  const useExpanderHook = (hooks: Hooks<T>) => {
+    if (!(expandedSubComponent && provideExpanderColumn)) {
+      return;
+    }
+    hooks.allColumns.push((columns: ColumnInstance<T>[]) => [
+      {
+        id: 'iui-table-expander',
+        disableResizing: true,
+        disableGroupBy: true,
+        minWidth: 48,
+        width: 48,
+        maxWidth: 48,
+        columnClassName: 'iui-tables-slot',
+        cellClassName: 'iui-tables-slot',
+        Cell: ({ row }: CellProps<T>) => (
+          <IconButton
+            styleType='borderless'
+            size='small'
+            onClick={() => {
+              row.toggleRowExpanded();
+            }}
+          >
+            {row.isExpanded ? <SvgChevronDown /> : <SvgChevronRight />}
+          </IconButton>
+        ),
+      },
+      ...columns,
+    ]);
+  };
 
   const useSelectionHook = (hooks: Hooks<T>) => {
     if (!isSelectable) {
@@ -252,6 +289,7 @@ export const Table = <
     useExpanded,
     useRowSelect,
     useSelectionHook,
+    useExpanderHook,
   );
 
   const {

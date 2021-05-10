@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import React, { ReactNode } from 'react';
+import React from 'react';
 import cx from 'classnames';
 import { Row, TableRowProps, TableState } from 'react-table';
 import { useIntersection } from '../utils/hooks/useIntersection';
@@ -22,7 +22,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
   onBottomReached: React.MutableRefObject<(() => void) | undefined>;
   intersectionMargin: number;
   state: TableState<T>; // Needed for explicitly checking selection changes
-  expandedSubComponent?: (row: Row<T>) => ReactNode;
+  expandedSubComponent?: (row: Row<T>) => React.ReactNode;
   isExpanded: boolean;
 }) => {
   const {

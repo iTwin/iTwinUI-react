@@ -398,6 +398,97 @@ Expandable.args = {
     { name: 'Name3', description: 'Description3' },
     { name: 'Name2', description: 'Description2' },
   ],
+  provideDefaultExpander: false,
+};
+
+export const MultipleFeatures: Story<TableProps> = (args) => {
+  const { columns, data, ...rest } = args;
+
+  const onExpand = useCallback(
+    (state) => action(`Expanded. Table state: ${JSON.stringify(state)}`)(),
+    [],
+  );
+  const onSort = useCallback(
+    (state) => action(`Sort changed. Table state: ${JSON.stringify(state)}`)(),
+    [],
+  );
+  const onSelect = useCallback(
+    (rows, state) =>
+      action(
+        `Selected rows: ${JSON.stringify(rows)}, Table state: ${JSON.stringify(
+          state,
+        )}`,
+      )(),
+    [],
+  );
+
+  const tableColumns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const tableData = useMemo(
+    () => [
+      { name: 'Name1', description: 'Description1' },
+      { name: 'Name3', description: 'Description3' },
+      { name: 'Name2', description: 'Description2' },
+    ],
+    [],
+  );
+
+  const expandedSubComponent = useCallback(
+    (row) => (
+      <div style={{ padding: 16 }}>
+        <Leading>Extra information</Leading>
+        <pre>
+          <code>{JSON.stringify({ values: row.values }, null, 2)}</code>
+        </pre>
+      </div>
+    ),
+    [],
+  );
+
+  return (
+    <Table
+      columns={columns || tableColumns}
+      data={data || tableData}
+      emptyTableContent='No data.'
+      expandedSubComponent={expandedSubComponent}
+      onExpand={(newState) => {
+        onExpand(newState);
+      }}
+      onSort={onSort}
+      onSelect={onSelect}
+      {...rest}
+    />
+  );
+};
+
+MultipleFeatures.args = {
+  data: [
+    { name: 'Name1', description: 'Description1' },
+    { name: 'Name3', description: 'Description3' },
+    { name: 'Name2', description: 'Description2' },
+  ],
+  isSortable: true,
+  isSelectable: true,
 };
 
 export const LazyLoading: Story<TableProps> = (args) => {
