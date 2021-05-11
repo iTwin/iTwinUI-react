@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { FilterButtonBarLocalization } from './FilterButtonBar';
+import { FilterButtonBarTranslation } from './FilterButtonBar';
 import { TextFilter } from './TextFilter/TextFilter';
 import { TableFilterProps } from './types';
 
@@ -11,9 +11,9 @@ export const TableFilters = {
   /**
    * Basic filter with a single input field.
    */
-  TextFilter: (localization?: FilterButtonBarLocalization) => <
+  TextFilter: (translatedLabels?: FilterButtonBarTranslation) => <
     T extends Record<string, unknown>
   >(
     props: TableFilterProps<T>,
-  ) => <TextFilter {...props} localization={localization} />,
+  ) => <TextFilter {...props} translatedLabels={translatedLabels} />,
 };

@@ -3,16 +3,18 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
+import cx from 'classnames';
 import '@itwin/itwinui-css/css/table.css';
 import { useTheme } from '../../utils/hooks/useTheme';
 import { Button } from '../../Buttons';
+import { CommonProps } from '../../utils/props';
 
-export type FilterButtonBarLocalization = {
+export type FilterButtonBarTranslation = {
   filter: string;
   clear: string;
 };
 
-const defaultStrings: FilterButtonBarLocalization = {
+const defaultStrings: FilterButtonBarTranslation = {
   filter: 'Filter',
   clear: 'Clear',
 };
@@ -33,8 +35,8 @@ export type FilterButtonBarProps = {
   /**
    * Localized strings used in buttons.
    */
-  localization?: FilterButtonBarLocalization;
-};
+  translatedLabels?: FilterButtonBarTranslation;
+} & Omit<CommonProps, 'title'>;
 
 /**
  * Button bar component that should be used in a filter. It already has Filter and Clear buttons.
@@ -42,19 +44,26 @@ export type FilterButtonBarProps = {
  * <FilterButtonBar setFilter={() => setFilter(text)} clearFilter={clearFilter} />
  */
 export const FilterButtonBar = (props: FilterButtonBarProps) => {
-  const { children, setFilter, clearFilter, localization } = props;
+  const {
+    children,
+    setFilter,
+    clearFilter,
+    translatedLabels,
+    className,
+    style,
+  } = props;
 
-  const localizedStrings = { ...defaultStrings, ...localization };
+  const translatedStrings = { ...defaultStrings, ...translatedLabels };
 
   useTheme();
 
   return (
-    <div className='iui-button-bar'>
+    <div className={cx('iui-button-bar', className)} style={style}>
       {children}
       <Button styleType='high-visibility' onClick={setFilter}>
-        {localizedStrings.filter}
+        {translatedStrings.filter}
       </Button>
-      <Button onClick={clearFilter}>{localizedStrings.clear}</Button>
+      <Button onClick={clearFilter}>{translatedStrings.clear}</Button>
     </div>
   );
 };

@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { FieldType, FilterType, HeaderGroup } from 'react-table';
+import { FieldType, FilterProps, FilterType, HeaderGroup } from 'react-table';
 
 export interface TableFilterValue<T extends Record<string, unknown>> {
   /**
@@ -23,7 +23,9 @@ export interface TableFilterValue<T extends Record<string, unknown>> {
   filterType: FilterType<T>;
 }
 
-export type TableFilterProps<T extends Record<string, unknown>> = {
+export type TableFilterProps<
+  T extends Record<string, unknown>
+> = FilterProps<T> & {
   /**
    * Data of column on which filter is opened. It is provided by the table it self.
    */

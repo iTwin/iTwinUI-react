@@ -14,6 +14,9 @@ export type FilterIconProps<T extends Record<string, unknown>> = {
   column: HeaderGroup<T>;
 };
 
+/**
+ * Handles showing filter icon and opening filter component.
+ */
 export const FilterIcon = <T extends Record<string, unknown>>(
   props: FilterIconProps<T>,
 ) => {
@@ -41,7 +44,11 @@ export const FilterIcon = <T extends Record<string, unknown>>(
             }}
             onClick={() => setIsVisible((v) => !v)}
           >
-            {column.filterValue ? <SvgFilter /> : <SvgFilterHollow />}
+            {column.filterValue ? (
+              <SvgFilter style={{ fill: '#008BE1' }} />
+            ) : (
+              <SvgFilterHollow />
+            )}
           </div>
         </Popover>
       )}

@@ -9,7 +9,7 @@ export { BaseFilter, FilterButtonBar, TableFilters } from './filters';
 export type {
   BaseFilterProps,
   FilterButtonBarProps,
-  FilterButtonBarLocalization,
+  FilterButtonBarTranslation,
   TableFilterProps,
   TableFilterValue,
 } from './filters';

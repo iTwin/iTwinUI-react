@@ -10,15 +10,16 @@ import { TextFilter } from './TextFilter';
 
 const setFilter = jest.fn() as (value: unknown) => void;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const renderComponent = (initialProps?: Partial<TableFilterProps<any>>) => {
   const props = {
     column: { setFilter } as HeaderGroup,
     close: jest.fn(),
     ...initialProps,
-  };
+  } as TableFilterProps<any>;
   return render(<TextFilter {...props} />);
 };
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 beforeEach(() => {
   jest.clearAllMocks();

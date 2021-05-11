@@ -12,7 +12,7 @@ export type { TableFilterProps, TableFilterValue } from './types';
 export { FilterButtonBar } from './FilterButtonBar';
 export type {
   FilterButtonBarProps,
-  FilterButtonBarLocalization,
+  FilterButtonBarTranslation,
 } from './FilterButtonBar';
 
 export { FilterIcon } from './FilterIcon';

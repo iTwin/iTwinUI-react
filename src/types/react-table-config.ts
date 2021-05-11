@@ -116,7 +116,7 @@ declare module 'react-table' {
      */
     fieldType?: FieldType;
     /**
-     * Filter component used as a column filter.
+     * Filter component used as a column filter. Should use filters from `TableFilters`.
      */
     Filter?: Renderer<FilterProps<D>>;
     /**

@@ -8,7 +8,7 @@ import { useTheme } from '../../../utils/hooks/useTheme';
 import { Input } from '../../../Input';
 import {
   FilterButtonBar,
-  FilterButtonBarLocalization,
+  FilterButtonBarTranslation,
 } from '../FilterButtonBar';
 import { BaseFilter } from '../BaseFilter';
 import { TableFilterProps } from '../types';
@@ -16,13 +16,13 @@ import { TableFilterProps } from '../types';
 export type TextFilterProps<
   T extends Record<string, unknown>
 > = TableFilterProps<T> & {
-  localization?: FilterButtonBarLocalization;
+  translatedLabels?: FilterButtonBarTranslation;
 };
 
 export const TextFilter = <T extends Record<string, unknown>>(
   props: TextFilterProps<T>,
 ) => {
-  const { column, localization, ...rest } = props;
+  const { column, translatedLabels, ...rest } = props;
 
   useTheme();
 
@@ -50,7 +50,7 @@ export const TextFilter = <T extends Record<string, unknown>>(
           <FilterButtonBar
             setFilter={() => setFilter(text)}
             clearFilter={clearFilter}
-            localization={localization}
+            translatedLabels={translatedLabels}
           />
         </>
       )}
