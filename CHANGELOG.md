@@ -2,7 +2,7 @@
 
 ## [1.3.0]
 
-`2021-05-10`
+`2021-05-11`
 
 ### What's new
 
@@ -12,6 +12,7 @@
 ### Fixes
 
 - **Fixed `Table` bug when change of `onSelection` handler would cause infinite rerendering loop.**
+- **Bumped @itwin/itwinui-icons-react to 1.1.1** which fixes relative path exports.
 
 ## [1.2.0]
 
