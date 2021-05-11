@@ -483,7 +483,7 @@ export const LazyLoading: Story<TableProps> = (args) => {
     }));
   };
 
-  const [tableData, setTableData] = useState(() => generateData(1, 100));
+  const [tableData, setTableData] = useState(() => generateData(0, 100));
 
   const [isLoading, setIsLoading] = useState(false);
 
