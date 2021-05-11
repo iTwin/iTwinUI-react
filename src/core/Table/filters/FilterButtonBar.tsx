@@ -19,15 +19,15 @@ const defaultStrings: FilterButtonBarLocalization = {
 
 export type FilterButtonBarProps = {
   /**
-   * Additional content that you want to be shown on the right of the buttons.
+   * Additional content that you want to be shown on the left of the buttons.
    */
   children?: React.ReactNode;
   /**
-   * Callback used for Filter button click.
+   * Callback used for Filter button click. Should come from `BaseFilter`.
    */
   setFilter: () => void;
   /**
-   * Callback used for Clear button click.
+   * Callback used for Clear button click. Should come from `BaseFilter`.
    */
   clearFilter: () => void;
   /**

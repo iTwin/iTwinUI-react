@@ -346,7 +346,7 @@ export const Table = <
                   <div {...columnProps} key={columnProps.key}>
                     {column.render('Header')}
                     {!isLoading && data.length != 0 && (
-                      <FilterIcon column={column} allColumns={allColumns} />
+                      <FilterIcon column={column} />
                     )}
                     {!isLoading && data.length != 0 && column.canSort && (
                       <div className='iui-sort'>

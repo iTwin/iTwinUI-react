@@ -5,8 +5,9 @@
 export { Table } from './Table';
 export type { TableProps } from './Table';
 
-export { FilterButtonBar, TableFilters } from './filters';
+export { BaseFilter, FilterButtonBar, TableFilters } from './filters';
 export type {
+  BaseFilterProps,
   FilterButtonBarProps,
   FilterButtonBarLocalization,
   TableFilterProps,

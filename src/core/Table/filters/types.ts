@@ -29,11 +29,8 @@ export type TableFilterProps<T extends Record<string, unknown>> = {
    */
   column: HeaderGroup<T>;
   /**
-   * Callback function to set the filter. It is provided by the table it self.
-   */
-  setFilter: (filterValue: TableFilterValue<T> | undefined) => void;
   /**
-   * Callback function to clear the filter. It is provided by the table it self.
+   * Function to close the filter. It is provided by the table it self.
    */
-  clearFilter: () => void;
+  close: () => void;
 };

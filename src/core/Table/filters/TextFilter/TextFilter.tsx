@@ -10,6 +10,7 @@ import {
   FilterButtonBar,
   FilterButtonBarLocalization,
 } from '../FilterButtonBar';
+import { BaseFilter } from '../BaseFilter';
 import { TableFilterProps } from '../types';
 
 export type TextFilterProps<
@@ -21,31 +22,38 @@ export type TextFilterProps<
 export const TextFilter = <T extends Record<string, unknown>>(
   props: TextFilterProps<T>,
 ) => {
-  const { column, setFilter, clearFilter, localization } = props;
+  const { column, localization, ...rest } = props;
 
   useTheme();
 
   const [text, setText] = React.useState(column.filterValue ?? '');
 
-  const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+  const onKeyDown = (
+    event: React.KeyboardEvent<HTMLDivElement>,
+    setFilter: (filterValue: unknown | undefined) => void,
+  ) => {
     if (event.key === 'Enter') {
       setFilter(text);
     }
   };
 
   return (
-    <>
-      <Input
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        setFocus
-        onKeyDown={onKeyDown}
-      />
-      <FilterButtonBar
-        setFilter={() => setFilter(text)}
-        clearFilter={clearFilter}
-        localization={localization}
-      />
-    </>
+    <BaseFilter {...rest} column={column}>
+      {(setFilter, clearFilter) => (
+        <>
+          <Input
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) => onKeyDown(e, setFilter)}
+            setFocus
+          />
+          <FilterButtonBar
+            setFilter={() => setFilter(text)}
+            clearFilter={clearFilter}
+            localization={localization}
+          />
+        </>
+      )}
+    </BaseFilter>
   );
 };
