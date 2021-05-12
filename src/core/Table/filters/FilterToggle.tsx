@@ -56,7 +56,11 @@ export const FilterToggle = <T extends Record<string, unknown>>(
             })}
             onClick={() => setIsVisible((v) => !v)}
           >
-            {column.filterValue ? <SvgFilter /> : <SvgFilterHollow />}
+            {column.filterValue ? (
+              <SvgFilter className='iui-icon' />
+            ) : (
+              <SvgFilterHollow className='iui-icon' />
+            )}
           </div>
         </Popover>
       )}
