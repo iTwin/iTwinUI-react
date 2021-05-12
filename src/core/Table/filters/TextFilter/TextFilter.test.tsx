@@ -9,11 +9,14 @@ import { TableFilterProps } from '../types';
 import { TextFilter } from './TextFilter';
 
 const setFilter = jest.fn() as (value: unknown) => void;
+const clearFilter = jest.fn() as () => void;
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const renderComponent = (initialProps?: Partial<TableFilterProps<any>>) => {
   const props = {
-    column: { setFilter } as HeaderGroup,
+    column: {} as HeaderGroup,
+    setFilter,
+    clearFilter,
     close: jest.fn(),
     ...initialProps,
   } as TableFilterProps<any>;
@@ -54,7 +57,7 @@ it('should call setFilter when Enter is pressed', () => {
 
 it('should load filter with set value and clear it', () => {
   const { container } = renderComponent({
-    column: { filterValue: 'test filter', setFilter } as HeaderGroup,
+    column: { filterValue: 'test filter' } as HeaderGroup,
   });
 
   const input = container.querySelector('input') as HTMLInputElement;
@@ -63,5 +66,5 @@ it('should load filter with set value and clear it', () => {
 
   screen.getByText('Clear').click();
 
-  expect(setFilter).toHaveBeenCalledWith(undefined);
+  expect(clearFilter).toHaveBeenCalled();
 });

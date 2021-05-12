@@ -27,11 +27,24 @@ export const FilterIcon = <T extends Record<string, unknown>>(
   const [isVisible, setIsVisible] = React.useState(false);
   const close = React.useCallback(() => setIsVisible(false), []);
 
+  const setFilter = React.useCallback(
+    (filterValue: unknown | undefined) => {
+      column.setFilter(filterValue);
+      close();
+    },
+    [close, column],
+  );
+
+  const clearFilter = React.useCallback(() => {
+    column.setFilter(undefined);
+    close();
+  }, [close, column]);
+
   return (
     <>
       {column.canFilter && column.Filter && (
         <Popover
-          content={column.render('Filter', { close })}
+          content={column.render('Filter', { close, setFilter, clearFilter })}
           placement='bottom'
           visible={isVisible}
           onClickOutside={close}

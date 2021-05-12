@@ -31,8 +31,15 @@ export type TableFilterProps<
    */
   column: HeaderGroup<T>;
   /**
-  /**
    * Function to close the filter. It is provided by the table it self.
    */
   close: () => void;
+  /**
+   * Function to set the filter value. It is provided by the table it self.
+   */
+  setFilter: (filterValue: unknown | undefined) => void;
+  /**
+   * Function to clear the filter value. It is provided by the table it self.
+   */
+  clearFilter: () => void;
 };

@@ -22,38 +22,31 @@ export type TextFilterProps<
 export const TextFilter = <T extends Record<string, unknown>>(
   props: TextFilterProps<T>,
 ) => {
-  const { column, translatedLabels, ...rest } = props;
+  const { column, translatedLabels, setFilter, clearFilter } = props;
 
   useTheme();
 
   const [text, setText] = React.useState(column.filterValue ?? '');
 
-  const onKeyDown = (
-    event: React.KeyboardEvent<HTMLDivElement>,
-    setFilter: (filterValue: unknown | undefined) => void,
-  ) => {
+  const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter') {
       setFilter(text);
     }
   };
 
   return (
-    <BaseFilter {...rest} column={column}>
-      {(setFilter, clearFilter) => (
-        <>
-          <Input
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            onKeyDown={(e) => onKeyDown(e, setFilter)}
-            setFocus
-          />
-          <FilterButtonBar
-            setFilter={() => setFilter(text)}
-            clearFilter={clearFilter}
-            translatedLabels={translatedLabels}
-          />
-        </>
-      )}
+    <BaseFilter>
+      <Input
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        onKeyDown={onKeyDown}
+        setFocus
+      />
+      <FilterButtonBar
+        setFilter={() => setFilter(text)}
+        clearFilter={clearFilter}
+        translatedLabels={translatedLabels}
+      />
     </BaseFilter>
   );
 };
