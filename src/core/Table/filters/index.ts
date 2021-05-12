@@ -15,4 +15,4 @@ export type {
   FilterButtonBarTranslation,
 } from './FilterButtonBar';
 
-export { FilterIcon } from './FilterIcon';
+export { FilterToggle } from './FilterToggle';

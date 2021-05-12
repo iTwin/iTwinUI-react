@@ -32,7 +32,7 @@ import SvgSortDown from '@itwin/itwinui-icons-react/cjs/icons/SortDown';
 import SvgSortUp from '@itwin/itwinui-icons-react/cjs/icons/SortUp';
 import { getCellStyle } from './utils';
 import { TableRowMemoized } from './TableRowMemoized';
-import { FilterIcon, TableFilterValue } from './filters';
+import { FilterToggle, TableFilterValue } from './filters';
 
 /**
  * Table props.
@@ -346,7 +346,7 @@ export const Table = <
                   <div {...columnProps} key={columnProps.key}>
                     {column.render('Header')}
                     {!isLoading && data.length != 0 && (
-                      <FilterIcon column={column} />
+                      <FilterToggle column={column} />
                     )}
                     {!isLoading && data.length != 0 && column.canSort && (
                       <div className='iui-sort'>

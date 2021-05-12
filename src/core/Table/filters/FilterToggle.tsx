@@ -10,15 +10,15 @@ import '@itwin/itwinui-css/css/table.css';
 import { useTheme } from '../../utils/hooks/useTheme';
 import { Popover } from '../../utils/Popover';
 
-export type FilterIconProps<T extends Record<string, unknown>> = {
+export type FilterToggleProps<T extends Record<string, unknown>> = {
   column: HeaderGroup<T>;
 };
 
 /**
  * Handles showing filter icon and opening filter component.
  */
-export const FilterIcon = <T extends Record<string, unknown>>(
-  props: FilterIconProps<T>,
+export const FilterToggle = <T extends Record<string, unknown>>(
+  props: FilterToggleProps<T>,
 ) => {
   const { column } = props;
 
