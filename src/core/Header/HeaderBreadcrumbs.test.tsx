@@ -5,16 +5,46 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import { Header } from './Header';
+import HeaderBreadcrumbs from './HeaderBreadcrumbs';
 
 it('should render in its most basic state', () => {
-  // TODO: Make sure all required props are passed in here
-  const { container } = render(<Header />);
-  expect(container.querySelector('div')).toBeTruthy();
+  const { container } = render(<HeaderBreadcrumbs items={[]} />);
+  expect(container).toMatchInlineSnapshot(`<div />`);
 });
 
-// TODO: Write tests here!
+it('renders single element alone', () => {
+  const { container } = render(
+    <HeaderBreadcrumbs items={[<div key='item1'>singleItem</div>]} />,
+  );
+  const item = container.querySelector('div:only-child');
+  expect(item?.textContent).toEqual('singleItem');
+});
 
-it('should be improved', () => {
-  expect(false).toBe(true);
+it('renders multiple elements with chevrons', () => {
+  const { container } = render(
+    <HeaderBreadcrumbs
+      items={[
+        <div key='item1'>Item1</div>,
+        <div key='item2'>Item2</div>,
+        <div key='item3'>Item3</div>,
+      ]}
+    />,
+  );
+  const item1 = container.querySelector('div:nth-child(1):first-child');
+  expect(item1).toBeTruthy();
+  expect(item1?.textContent).toEqual('Item1');
+
+  const chevron1 = container.querySelector('svg.iui-chevron:nth-child(2)');
+  expect(chevron1).toBeTruthy();
+
+  const item2 = container.querySelector('div:nth-child(3)');
+  expect(item2).toBeTruthy();
+  expect(item2?.textContent).toEqual('Item2');
+
+  const chevron2 = container.querySelector('svg.iui-chevron:nth-child(4)');
+  expect(chevron2).toBeTruthy();
+
+  const item3 = container.querySelector('div:nth-child(5):last-child');
+  expect(item3).toBeTruthy();
+  expect(item3?.textContent).toEqual('Item3');
 });

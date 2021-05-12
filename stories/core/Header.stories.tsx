@@ -17,9 +17,11 @@ import {
   UserIcon,
 } from '../../src/core';
 import HeaderButton from '../../src/core/Header/HeaderButton';
-import HeaderApplicationButton from '../../src/core/Header/HeaderApplicationButton';
+import HeaderTitle from '../../src/core/Header/HeaderTitle';
 import HeaderBreadcrumbs from '../../src/core/Header/HeaderBreadcrumbs';
 import SvgHelpCircularHollow from '@itwin/itwinui-icons-react/cjs/icons/HelpCircularHollow';
+import SvgVersion from '@itwin/itwinui-icons-react/cjs/icons/Pin';
+import SvgNetwork from '@itwin/itwinui-icons-react/cjs/icons/Network';
 import SvgNotification from '@itwin/itwinui-icons-react/cjs/icons/Notification';
 
 export default {
@@ -49,9 +51,9 @@ const buildMenu = (menu: string) => (close: () => void) => [
 
 export const full: Story<HeaderProps> = (props) => <Header {...props} />;
 full.args = {
-  appButton: (
-    <HeaderApplicationButton
-      startIcon={
+  appTitle: (
+    <HeaderTitle
+      logo={
         <svg
           viewBox='0 0 16 16'
           xmlns='http://www.w3.org/2000/svg'
@@ -60,9 +62,10 @@ full.args = {
           <path d='m12.6 13.4c-1.2-1.5-2.1-3.1-2.4-5.5-2.7 3.9-4.6 4.2-5.7 2.4l-1.2 5.7h-2.2l3.5-14.1 1.8-.4c-.1.5-1.4 6.2.6 7 2 .7 4.6-8.5 4.6-8.5l2.2.4c-1.6 3.7-1.6 7.6 1.1 10.9l-2.3 2.1' />
         </svg>
       }
+      onClick={() => action('Clicked on the title')()}
     >
       Microstation
-    </HeaderApplicationButton>
+    </HeaderTitle>
   ),
   breadcrumbs: (
     <HeaderBreadcrumbs
@@ -72,18 +75,22 @@ full.args = {
           menuItems={buildMenu('Project')}
           name={'Project A (Super Size Edition)'}
           description={'YJC-2249'}
+          startIcon={<SvgNetwork />}
         />,
         <HeaderButton
           key='iModel'
           menuItems={buildMenu('IModel')}
           name={'IModel B'}
-          //startIcon='https://itwinplatformcdn.azureedge.net/iTwinUI/stadium.png'
+          startIcon={
+            <img src='https://itwinplatformcdn.azureedge.net/iTwinUI/stadium.png' />
+          }
           isActive={true}
         />,
         <HeaderButton
           key='version'
           name={'Version C'}
           onClick={() => action('Clicked on the Version')()}
+          startIcon={<SvgVersion />}
         />,
       ]}
     />
@@ -104,11 +111,7 @@ full.args = {
   ],
   userIcon: (
     <DropdownMenu menuItems={buildMenu('User')}>
-      {/* TODO: Validate
-       *  IconButton adds a iui-icon to the user,
-       *  Button puts the children in a iui-label which cause alignment issues.
-       */}
-      <button className='iui-button iui-dropdown iui-borderless'>
+      <IconButton styleType='borderless'>
         <UserIcon
           className='iui-user-icon'
           size='medium'
@@ -119,18 +122,22 @@ full.args = {
           }
           title='Terry Rivers'
         />
-      </button>
+      </IconButton>
     </DropdownMenu>
   ),
   menuItems: buildMenu('More'),
   children: (
-    /** TODO: Validate
-     * Should handle `iui-slim` with css classes,
-     * but I don't know if we want to add classes for Storybook stories */
     <div>
+      <style>{`.iui-slim .center-input { padding-top: 0; padding-bottom: 0}`}</style>
       <Input
+        className='center-input'
         placeholder='Search within Model Beta...'
-        style={{ borderRadius: 22, width: '20vw', margin: 12 }}
+        style={{
+          borderRadius: 22,
+          width: '20vw',
+          margin: 12,
+          transition: 'all 0.2s ease',
+        }}
       />
     </div>
   ),

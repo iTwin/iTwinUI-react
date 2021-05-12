@@ -19,9 +19,9 @@ export type HeaderTranslations = {
 export type HeaderProps = {
   /**
    * Application title.
-   * (expects `HeaderApplicationButton`)
+   * (expects `HeaderTitle`)
    */
-  appButton: React.ReactNode;
+  appTitle: React.ReactNode;
   /**
    * Content on the right of the application button
    * (expects `HeaderBreadcrumbs`)
@@ -65,7 +65,7 @@ const headerTranslations: HeaderTranslations = {
  */
 export const Header = (props: HeaderProps) => {
   const {
-    appButton,
+    appTitle,
     breadcrumbs,
     isSlim = false,
     actions,
@@ -84,7 +84,7 @@ export const Header = (props: HeaderProps) => {
       {...rest}
     >
       <div className='iui-left'>
-        {appButton}
+        {appTitle}
         <div className='iui-divider' />
         {breadcrumbs}
       </div>

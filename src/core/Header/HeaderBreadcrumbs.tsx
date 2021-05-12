@@ -18,8 +18,8 @@ export type HeaderBreadcrumbsProps = {
  * @example
  * <HeaderBreadcrumbs
  *   items={[
- *     <HeaderButton ... />
- *     <HeaderButton ... />
+ *     <HeaderButton key={...} ... />
+ *     <HeaderButton key={...} ... />
  *   ]}
  * />
  */
@@ -34,7 +34,11 @@ export const HeaderBreadcrumbs = (props: HeaderBreadcrumbsProps) => {
           ...previous,
           current,
           index !== items.length - 1 && (
-            <SvgChevronRight aria-hidden={true} className='iui-chevron' />
+            <SvgChevronRight
+              key={`chevron${index}`}
+              aria-hidden={true}
+              className='iui-chevron'
+            />
           ),
         ],
         [],

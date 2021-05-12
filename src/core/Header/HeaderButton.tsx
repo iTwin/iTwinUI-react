@@ -40,17 +40,33 @@ export type HeaderButtonProps = {
  * Example to come when we are set for the props.
  */
 export const HeaderButton = (props: HeaderButtonProps) => {
-  const { name, description, isActive, menuItems, ...rest } = props;
+  const {
+    name,
+    description,
+    isActive,
+    menuItems,
+    className,
+    startIcon,
+    ...rest
+  } = props;
   const buttonProps: ButtonProps & { styleType: 'borderless' } = {
+    startIcon: React.isValidElement<{ className: string }>(startIcon)
+      ? React.cloneElement(startIcon, {
+          className: cx('iui-header-button-icon', startIcon.props.className),
+        })
+      : undefined,
     styleType: 'borderless',
-    className: cx('iui-header-button', {
-      'iui-detailed': !!description,
-      'iui-active': isActive,
-    }),
+    className: cx(
+      'iui-header-button',
+      {
+        'iui-active': isActive,
+      },
+      className,
+    ),
     children: (
       <>
-        <div className='iui-name'>{name}</div>
-        {description && <div className='iui-id'>{description}</div>}
+        <div>{name}</div>
+        {description && <div className='iui-description'>{description}</div>}
       </>
     ),
     ...rest,

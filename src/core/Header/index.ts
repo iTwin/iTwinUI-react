@@ -9,8 +9,8 @@ export default './Header';
 export { HeaderButton } from './HeaderButton';
 export type { HeaderButtonProps } from './HeaderButton';
 
-export { HeaderApplicationButton } from './HeaderApplicationButton';
-export type { HeaderApplicationButtonProps } from './HeaderApplicationButton';
+export { HeaderTitle } from './HeaderTitle';
+export type { HeaderTitleProps } from './HeaderTitle';
 
 export { HeaderBreadcrumbs } from './HeaderBreadcrumbs';
 export type { HeaderBreadcrumbsProps } from './HeaderBreadcrumbs';
