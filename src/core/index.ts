@@ -90,7 +90,7 @@ export type { RadioTileGroupProps, RadioTileProps } from './RadioTiles';
 export { Select } from './Select';
 export type { SelectProps, SelectOption, ItemRendererProps } from './Select';
 
-export { Table, TableFilters, FilterButtonBar } from './Table';
+export { Table, tableFilters, FilterButtonBar } from './Table';
 export type {
   TableProps,
   TableFilterProps,

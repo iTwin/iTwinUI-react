@@ -7,7 +7,7 @@ import { CellProps, Column, TableState } from 'react-table';
 import {
   Code,
   Table,
-  TableFilters,
+  tableFilters,
   TableFilterValue,
   TableProps,
 } from '../../src/core';
@@ -336,14 +336,14 @@ export const Filters: Story<TableProps> = (args) => {
             Header: 'Name',
             accessor: 'name',
             fieldType: 'text',
-            Filter: TableFilters.TextFilter(localizedStrings),
+            Filter: tableFilters.TextFilter(localizedStrings),
           },
           {
             id: 'description',
             Header: 'Description',
             accessor: 'description',
             fieldType: 'text',
-            Filter: TableFilters.TextFilter(localizedStrings),
+            Filter: tableFilters.TextFilter(localizedStrings),
             maxWidth: 200,
           },
           {
@@ -359,7 +359,7 @@ export const Filters: Story<TableProps> = (args) => {
             ) => {
               return props.row.original.ids.join(', ');
             },
-            Filter: TableFilters.TextFilter(localizedStrings),
+            Filter: tableFilters.TextFilter(localizedStrings),
             filter: 'includes',
           },
           {

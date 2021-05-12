@@ -7,7 +7,7 @@ import { FilterButtonBarTranslation } from './FilterButtonBar';
 import { TextFilter } from './TextFilter/TextFilter';
 import { TableFilterProps } from './types';
 
-export const TableFilters = {
+export const tableFilters = {
   /**
    * Basic filter with a single input field.
    */

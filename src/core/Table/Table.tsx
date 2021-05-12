@@ -96,7 +96,7 @@ export type TableProps<
   onFilter?: (filters: TableFilterValue<T>[], state: TableState<T>) => void;
   /**
    * Content shown when there is no data after filtering.
-   * */
+   */
   emptyFilteredTableContent?: React.ReactNode;
 } & Omit<CommonProps, 'title'>;
 

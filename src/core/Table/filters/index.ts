@@ -5,7 +5,7 @@
 export { BaseFilter } from './BaseFilter';
 export type { BaseFilterProps } from './BaseFilter';
 
-export { TableFilters } from './TableFilters';
+export { tableFilters } from './tableFilters';
 
 export type { TableFilterProps, TableFilterValue } from './types';
 
