@@ -5,6 +5,7 @@
 import SvgFilterHollow from '@itwin/itwinui-icons-react/cjs/icons/FilterHollow';
 import SvgFilter from '@itwin/itwinui-icons-react/cjs/icons/Filter';
 import React from 'react';
+import cx from 'classnames';
 import { HeaderGroup } from 'react-table';
 import '@itwin/itwinui-css/css/table.css';
 import { useTheme } from '../../utils/hooks/useTheme';
@@ -50,18 +51,12 @@ export const FilterToggle = <T extends Record<string, unknown>>(
           onClickOutside={close}
         >
           <div
-            className='iui-filter'
-            style={{
-              visibility:
-                isVisible || column.filterValue ? 'visible' : undefined,
-            }}
+            className={cx('iui-filter', {
+              'iui-active': isVisible || column.filterValue,
+            })}
             onClick={() => setIsVisible((v) => !v)}
           >
-            {column.filterValue ? (
-              <SvgFilter style={{ fill: '#008BE1' }} />
-            ) : (
-              <SvgFilterHollow />
-            )}
+            {column.filterValue ? <SvgFilter /> : <SvgFilterHollow />}
           </div>
         </Popover>
       )}
