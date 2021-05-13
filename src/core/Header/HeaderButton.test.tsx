@@ -101,7 +101,7 @@ it('render menuItems correctly', () => {
 
   const {
     container: { firstChild: downArrow },
-  } = render(<SvgCaretDownSmall className='iui-icon' />);
+  } = render(<SvgCaretDownSmall className='iui-icon' aria-hidden />);
   expect(container.querySelector('.iui-icon:last-child')).toEqual(downArrow);
 
   let menu = document.querySelector('.iui-menu') as HTMLUListElement;
@@ -111,7 +111,7 @@ it('render menuItems correctly', () => {
 
   const {
     container: { firstChild: upArrow },
-  } = render(<SvgCaretUpSmall className='iui-icon' />);
+  } = render(<SvgCaretUpSmall className='iui-icon' aria-hidden />);
   expect(container.querySelector('.iui-icon:last-child')).toEqual(upArrow);
 
   let tippy = document.querySelector('[data-tippy-root]') as HTMLElement;
