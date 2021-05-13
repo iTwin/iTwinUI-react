@@ -15,6 +15,7 @@ import {
   Row,
   TableState,
   useFlexLayout,
+  useFilters,
   useMountedLayoutEffect,
   useRowSelect,
   useSortBy,
@@ -34,6 +35,7 @@ import { getCellStyle } from './utils';
 import { TableRowMemoized } from './TableRowMemoized';
 import { IconButton } from '../Buttons';
 import { SvgChevronDown, SvgChevronRight } from '@itwin/itwinui-icons-react';
+import { FilterToggle, TableFilterValue } from './filters';
 
 /**
  * Table props.
@@ -107,6 +109,16 @@ export type TableProps<
    * Flag whether to provide default expander column
    */
   provideDefaultExpander?: boolean;
+  /**
+   * Callback function when filters change.
+   * Use with `manualFilters` to handle filtering yourself e.g. filter in server-side.
+   * Must be memoized.
+   */
+  onFilter?: (filters: TableFilterValue<T>[], state: TableState<T>) => void;
+  /**
+   * Content shown when there is no data after filtering.
+   */
+  emptyFilteredTableContent?: React.ReactNode;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -173,6 +185,8 @@ export const Table = <
     subComponent,
     onExpand,
     provideDefaultExpander = false,
+    onFilter,
+    emptyFilteredTableContent,
     ...rest
   } = props;
 
@@ -260,16 +274,47 @@ export const Table = <
     });
   };
 
+  const onFilterHandler = (
+    newState: TableState<T>,
+    action: ActionType,
+    previousState: TableState<T>,
+    instance?: TableInstance<T>,
+  ) => {
+    const previousFilter = previousState.filters.find(
+      (f) => f.id === action.columnId,
+    );
+    if (previousFilter?.value != action.filterValue) {
+      const filters = newState.filters.map((f) => {
+        const column = instance?.allColumns.find((c) => c.id === f.id);
+        return {
+          id: f.id,
+          value: f.value,
+          fieldType: column?.fieldType ?? 'text',
+          filterType: column?.filter ?? 'text',
+        };
+      }) as TableFilterValue<T>[];
+      onFilter?.(filters, newState);
+    }
+  };
+
   const tableStateReducer = (
     newState: TableState<T>,
     action: ActionType,
     previousState: TableState<T>,
     instance?: TableInstance<T>,
   ): TableState<T> => {
-    if (action.type === TableActions.toggleSortBy) {
-      onSort?.(newState);
-    } else if (action.type === TableActions.toggleRowExpanded) {
-      onExpand?.(newState, action, previousState, instance);
+    switch (action.type) {
+      case TableActions.toggleSortBy:
+        onSort?.(newState);
+        break;
+      case TableActions.setFilter:
+        onFilterHandler(newState, action, previousState, instance);
+        break;
+      case TableActions.toggleRowExpanded:
+        onExpand?.(newState, action, previousState, instance);
+        break;
+      default:
+        break;
     }
     return stateReducer
       ? stateReducer(newState, action, previousState, instance)
@@ -285,6 +330,7 @@ export const Table = <
       stateReducer: tableStateReducer,
     },
     useFlexLayout,
+    useFilters,
     useSortBy,
     useExpanded,
     useRowSelect,
@@ -301,6 +347,8 @@ export const Table = <
     data,
     selectedFlatRows,
     state,
+    allColumns,
+    filteredFlatRows,
   } = instance;
 
   useMountedLayoutEffect(() => {
@@ -321,6 +369,8 @@ export const Table = <
     },
     {} as Record<string, string>,
   );
+
+  const areFiltersSet = allColumns.some((column) => !!column.filterValue);
 
   return (
     <div
@@ -354,6 +404,9 @@ export const Table = <
                 return (
                   <div {...columnProps} key={columnProps.key}>
                     {column.render('Header')}
+                    {!isLoading && data.length != 0 && (
+                      <FilterToggle column={column} />
+                    )}
                     {!isLoading && data.length != 0 && column.canSort && (
                       <div className='iui-sort'>
                         <div className='iui-icon-wrapper'>
@@ -416,11 +469,18 @@ export const Table = <
             </div>
           </div>
         )}
-        {!isLoading && data.length === 0 && (
+        {!isLoading && data.length === 0 && !areFiltersSet && (
           <div className={'iui-tables-message-container'}>
             {emptyTableContent}
           </div>
         )}
+        {!isLoading &&
+          (data.length === 0 || filteredFlatRows.length === 0) &&
+          areFiltersSet && (
+            <div className={'iui-tables-message-container'}>
+              {emptyFilteredTableContent}
+            </div>
+          )}
       </div>
     </div>
   );
