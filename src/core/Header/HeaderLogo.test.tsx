@@ -3,14 +3,14 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import SvgPlaceholder from '@itwin/itwinui-icons-react/cjs/icons/Placeholder';
 
-import HeaderTitle from './HeaderTitle';
+import HeaderLogo from './HeaderLogo';
 
 it('renders default correctly', () => {
   const { container } = render(
-    <HeaderTitle logo={<SvgPlaceholder />}>Application</HeaderTitle>,
+    <HeaderLogo logo={<SvgPlaceholder />}>Application</HeaderLogo>,
   );
 
   const root = container.querySelector('.iui-header-logo') as HTMLDivElement;
@@ -31,9 +31,9 @@ it('renders default correctly', () => {
 it('renders with onClick correctly', () => {
   const onClickMock = jest.fn();
   const { container } = render(
-    <HeaderTitle logo={<SvgPlaceholder />} onClick={onClickMock}>
+    <HeaderLogo logo={<SvgPlaceholder />} onClick={onClickMock}>
       Application
-    </HeaderTitle>,
+    </HeaderLogo>,
   );
 
   const root = container.querySelector('.iui-header-logo') as HTMLDivElement;
@@ -44,8 +44,30 @@ it('renders with onClick correctly', () => {
   expect(onClickMock).toHaveBeenCalled();
 });
 
+it('handles keypress with onClick correctly', () => {
+  const onClickMock = jest.fn();
+  const { container } = render(
+    <HeaderLogo logo={<SvgPlaceholder />} onClick={onClickMock}>
+      Application
+    </HeaderLogo>,
+  );
+
+  const root = container.querySelector('.iui-header-logo') as HTMLDivElement;
+  expect(root).toBeTruthy();
+  expect(root.getAttribute('role')).toBe('button');
+
+  fireEvent.keyDown(root, { key: 'Enter' });
+  expect(onClickMock).toHaveBeenCalledTimes(1);
+
+  fireEvent.keyDown(root, { key: ' ' });
+  expect(onClickMock).toHaveBeenCalledTimes(2);
+
+  fireEvent.keyDown(root, { key: 'a' });
+  expect(onClickMock).toHaveBeenCalledTimes(2);
+});
+
 it('renders with no children correctly', () => {
-  const { container } = render(<HeaderTitle logo={<SvgPlaceholder />} />);
+  const { container } = render(<HeaderLogo logo={<SvgPlaceholder />} />);
 
   const logo = container.querySelector(
     '.iui-header-button-icon:only-child',
@@ -58,9 +80,9 @@ it('renders with no children correctly', () => {
 
 it('trashes wrong logo type (JS only)', () => {
   const { container } = render(
-    <HeaderTitle logo={('myLogo' as unknown) as JSX.Element}>
+    <HeaderLogo logo={('myLogo' as unknown) as JSX.Element}>
       Application
-    </HeaderTitle>,
+    </HeaderLogo>,
   );
 
   const root = container.querySelector('.iui-header-logo') as HTMLDivElement;

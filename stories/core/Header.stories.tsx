@@ -17,7 +17,7 @@ import {
   UserIcon,
 } from '../../src/core';
 import HeaderButton from '../../src/core/Header/HeaderButton';
-import HeaderTitle from '../../src/core/Header/HeaderTitle';
+import HeaderTitle from '../../src/core/Header/HeaderLogo';
 import HeaderBreadcrumbs from '../../src/core/Header/HeaderBreadcrumbs';
 import SvgHelpCircularHollow from '@itwin/itwinui-icons-react/cjs/icons/HelpCircularHollow';
 import SvgVersion from '@itwin/itwinui-icons-react/cjs/icons/Pin';
@@ -51,7 +51,7 @@ const buildMenu = (menu: string) => (close: () => void) => [
 
 export const full: Story<HeaderProps> = (props) => <Header {...props} />;
 full.args = {
-  appTitle: (
+  appLogo: (
     <HeaderTitle
       logo={
         <svg

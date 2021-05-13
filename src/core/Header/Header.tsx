@@ -11,48 +11,75 @@ import { IconButton } from '../Buttons';
 
 import { useTheme } from '../utils/hooks/useTheme';
 import { DropdownMenu } from '../DropdownMenu';
+import { CommonProps } from '../utils/props';
 
 export type HeaderTranslations = {
   moreOptions: string;
 };
 
-export type HeaderProps = {
-  /**
-   * Application title.
-   * (expects `HeaderTitle`)
-   */
-  appTitle: React.ReactNode;
-  /**
-   * Content on the right of the application button
-   * (expects `HeaderBreadcrumbs`)
-   */
-  breadcrumbs?: React.ReactNode;
-  /**
-   * Content displayed to the left of the user icon
-   * (expects array of `IconButton`, potentially wrapped in a `DropdownMenu`)
-   */
-  actions?: React.ReactNode[];
-  /**
-   * User icon
-   * (expects a `UserIcon`, potentially wrapped in a `DropdownMenu`)
-   */
-  userIcon?: React.ReactNode;
-  /**
-   * Items in the more dropdown menu.
-   * Pass a function that takes the `close` argument (to close the menu),
-   * and returns a list of `MenuItem` components.
-   */
-  menuItems?: (close: () => void) => JSX.Element[];
-  /**
-   * If true, the header height is reduced, typically used when viewing 3D content.
-   * @default false
-   */
-  isSlim?: boolean;
-  /**
-   * Provide localized strings.
-   */
-  translatedStrings?: HeaderTranslations;
-} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
+export type HeaderProps = React.PropsWithChildren<
+  {
+    /**
+     * Application logo.
+     * (expects `HeaderLogo`)
+     * @example
+     * <HeaderLogo logo={<SvgImodelHollow />}>iTwin Application</HeaderLogo>
+     */
+    appLogo: React.ReactNode;
+    /**
+     * Content on the right of the application button
+     * (expects `HeaderBreadcrumbs`)
+     * @example
+     * <HeaderBreadcrumbs items={[
+     *   <HeaderButton key='project' name='Project A' />
+     *   <HeaderButton key='imodel' name='IModel X' />
+     * ]} />
+     */
+    breadcrumbs?: React.ReactNode;
+    /**
+     * Content displayed to the left of the user icon
+     * (expects array of `IconButton`, potentially wrapped in a `DropdownMenu`)
+     * @example
+     * [
+     *  <IconButton><SvgNotification /></IconButton>,
+     *  <DropdownMenu>
+     *   <IconButton>
+     *    <SvgHelpCircularHollow />
+     *   </IconButton>
+     *  </DropdownMenu>
+     * ]
+     */
+    actions?: React.ReactNode[];
+    /**
+     * User icon
+     * It's size and transition will be handled between slim/not slim state of the
+     * Header
+     * (expects `UserIcon`, can be wrapped in `IconButton` and `DropdownMenu` if needed)
+     * @example
+     * <DropdownMenu menuItems={...}>
+     *   <IconButton styleType='borderless'>
+     *     <UserIcon ... />
+     *   </IconButton>
+     * </DropdownMenu>
+     */
+    userIcon?: React.ReactNode;
+    /**
+     * Items in the more dropdown menu.
+     * Pass a function that takes the `close` argument (to close the menu),
+     * and returns a list of `MenuItem` components.
+     */
+    menuItems?: (close: () => void) => JSX.Element[];
+    /**
+     * If true, the header height is reduced, typically used when viewing 3D content.
+     * @default false
+     */
+    isSlim?: boolean;
+    /**
+     * Provide localized strings.
+     */
+    defaultTranslations?: HeaderTranslations;
+  } & Omit<CommonProps, 'title'>
+>;
 
 const headerTranslations: HeaderTranslations = {
   moreOptions: 'More options',
@@ -61,31 +88,55 @@ const headerTranslations: HeaderTranslations = {
 /**
  * Application header
  * @example
- * Example to come when we are set for the props.
+ * <Header
+ *  appLogo={<HeaderLogo logo={<SvgImodelHollow />}>iTwin Application</HeaderLogo>}
+ *  breadcrumbs={
+ *   <HeaderBreadcrumbs items={[
+ *    <HeaderButton key='project' name='Project A' />
+ *    <HeaderButton key='imodel' name='IModel X' />
+ *   ]} />
+ *  }
+ *  actions={[
+ *   <IconButton><SvgNotification /></IconButton>,
+ *   <DropdownMenu>
+ *    <IconButton>
+ *     <SvgHelpCircularHollow />
+ *    </IconButton>
+ *   </DropdownMenu>
+ *  ]}
+ *  userIcon={
+ *   <DropdownMenu menuItems={...}>
+ *    <IconButton styleType='borderless'>
+ *     <UserIcon ... />
+ *    </IconButton>
+ *   </DropdownMenu>
+ *  }
+ *  isSlim
+ * />
  */
 export const Header = (props: HeaderProps) => {
   const {
-    appTitle,
+    appLogo,
     breadcrumbs,
     isSlim = false,
     actions,
     userIcon,
     menuItems,
-    translatedStrings,
+    defaultTranslations,
     className,
     children,
     ...rest
   } = props;
   useTheme();
-  const strings = { ...headerTranslations, ...translatedStrings };
+  const translatedStrings = { ...headerTranslations, ...defaultTranslations };
   return (
     <header
-      className={cx(className, 'iui-header', { 'iui-slim': isSlim })}
+      className={cx('iui-header', { 'iui-slim': isSlim }, className)}
       {...rest}
     >
       <div className='iui-left'>
-        {appTitle}
-        <div className='iui-divider' />
+        {appLogo}
+        {breadcrumbs && <div className='iui-divider' />}
         {breadcrumbs}
       </div>
       {children && <div className='iui-center'>{children}</div>}
@@ -94,8 +145,11 @@ export const Header = (props: HeaderProps) => {
         {userIcon}
         {menuItems && (
           <DropdownMenu menuItems={menuItems}>
-            <IconButton styleType='borderless' aria-label={strings.moreOptions}>
-              <SvgMoreVertical aria-hidden='true' />
+            <IconButton
+              styleType='borderless'
+              aria-label={translatedStrings.moreOptions}
+            >
+              <SvgMoreVertical aria-hidden />
             </IconButton>
           </DropdownMenu>
         )}

@@ -10,7 +10,7 @@ import { MenuItem } from '../Menu';
 
 it('should render in its most basic state', () => {
   const { container } = render(
-    <Header appTitle={<div className='app-title-container'>AppTitle</div>} />,
+    <Header appLogo={<div className='app-title-container'>AppTitle</div>} />,
   );
   expect(container.querySelector('.iui-header')).toBeTruthy();
   expect(
@@ -25,7 +25,7 @@ it('should render in its most basic state', () => {
     container.querySelector(
       '.iui-header > .iui-left > .iui-divider:nth-child(2)',
     ),
-  ).toBeTruthy();
+  ).toBeNull();
   expect(
     container.querySelector('.iui-header > .iui-right:last-child'),
   ).toBeTruthy();
@@ -34,7 +34,7 @@ it('should render in its most basic state', () => {
 
 it('renders isSlim correctly', () => {
   const { container } = render(
-    <Header appTitle={<div>AppTitle</div>} isSlim={true} />,
+    <Header appLogo={<div>AppTitle</div>} isSlim={true} />,
   );
 
   expect(container.querySelector('.iui-header.iui-slim')).toBeTruthy();
@@ -43,7 +43,7 @@ it('renders isSlim correctly', () => {
 it('renders breadcrumbs correctly', () => {
   const { container } = render(
     <Header
-      appTitle={<div>AppTitle</div>}
+      appLogo={<div>AppTitle</div>}
       breadcrumbs={<div>BreadcrumbContent</div>}
     />,
   );
@@ -55,7 +55,7 @@ it('renders breadcrumbs correctly', () => {
 
 it('renders children correctly', () => {
   const { container } = render(
-    <Header appTitle={<div>AppTitle</div>}>ChildContent</Header>,
+    <Header appLogo={<div>AppTitle</div>}>ChildContent</Header>,
   );
 
   const center = container.querySelector(
@@ -68,7 +68,7 @@ it('renders children correctly', () => {
 it('renders actions alone correctly', () => {
   const { container } = render(
     <Header
-      appTitle={<div>AppTitle</div>}
+      appLogo={<div>AppTitle</div>}
       actions={[<div key='1'>ActionsContent</div>]}
     />,
   );
@@ -80,7 +80,7 @@ it('renders actions alone correctly', () => {
 it('renders userIcon alone correctly', () => {
   const { container } = render(
     <Header
-      appTitle={<div>AppTitle</div>}
+      appLogo={<div>AppTitle</div>}
       userIcon={<div>UserIconContent</div>}
     />,
   );
@@ -95,7 +95,7 @@ it('renders moreMenu alone correctly', () => {
 
   const { container } = render(
     <Header
-      appTitle={<div>AppTitle</div>}
+      appLogo={<div>AppTitle</div>}
       menuItems={(close) => [
         <MenuItem
           key={0}
@@ -145,7 +145,7 @@ it('renders moreMenu alone correctly', () => {
 it('renders multiple right items in the correct order', () => {
   const { container } = render(
     <Header
-      appTitle={<div>AppTitle</div>}
+      appLogo={<div>AppTitle</div>}
       actions={[<div key='1'>ActionsContent</div>]}
       userIcon={<div>UserIconContent</div>}
       menuItems={() => []}

@@ -35,9 +35,15 @@ export type HeaderButtonProps = {
 >;
 
 /**
- * Header button
+ * Header button that handles slim state of the `Header` it's in.
+ * When in slim mode, will only display the name and reduce icon size.
+ * Will display an arrow on the right if `menuItems` prop is provided.
  * @example
- * Example to come when we are set for the props.
+ * <HeaderButton name='Project A' description='0n00434' />
+ * <HeaderButton name='Project B' description='0n00434' startIcon={<SvgImodelHollow />}/>
+ * <HeaderButton name='Project C' startIcon={<img src='project.png' />}/>
+ * <HeaderButton name='Project D' isActive />
+ * <HeaderButton name='Project D' isActive menuItems={...}/>
  */
 export const HeaderButton = (props: HeaderButtonProps) => {
   const {
