@@ -17,7 +17,7 @@ import {
   UserIcon,
 } from '../../src/core';
 import HeaderButton from '../../src/core/Header/HeaderButton';
-import HeaderTitle from '../../src/core/Header/HeaderLogo';
+import HeaderLogo from '../../src/core/Header/HeaderLogo';
 import HeaderBreadcrumbs from '../../src/core/Header/HeaderBreadcrumbs';
 import SvgHelpCircularHollow from '@itwin/itwinui-icons-react/cjs/icons/HelpCircularHollow';
 import SvgVersion from '@itwin/itwinui-icons-react/cjs/icons/Pin';
@@ -27,7 +27,19 @@ import SvgNotification from '@itwin/itwinui-icons-react/cjs/icons/Notification';
 export default {
   title: 'Core/Header',
   component: Header,
-  argTypes: {},
+  subcomponents: {
+    HeaderBreadcrumbs,
+    HeaderLogo,
+    HeaderButton,
+  },
+  argTypes: {
+    appLogo: { control: { disable: true } },
+    breadcrumbs: { control: { disable: true } },
+    actions: { control: { disable: true } },
+    userIcon: { control: { disable: true } },
+    menuItems: { control: { disable: true } },
+    children: { control: { disable: true } },
+  },
 } as Meta<HeaderProps>;
 
 const buildClickHandler = (menu: string, close: () => void) => (
@@ -49,96 +61,149 @@ const buildMenu = (menu: string) => (close: () => void) => [
   </MenuItem>,
 ];
 
-export const full: Story<HeaderProps> = (props) => <Header {...props} />;
-full.args = {
-  appLogo: (
-    <HeaderTitle
-      logo={
-        <svg
-          viewBox='0 0 16 16'
-          xmlns='http://www.w3.org/2000/svg'
-          aria-hidden='true'
-        >
-          <path d='m12.6 13.4c-1.2-1.5-2.1-3.1-2.4-5.5-2.7 3.9-4.6 4.2-5.7 2.4l-1.2 5.7h-2.2l3.5-14.1 1.8-.4c-.1.5-1.4 6.2.6 7 2 .7 4.6-8.5 4.6-8.5l2.2.4c-1.6 3.7-1.6 7.6 1.1 10.9l-2.3 2.1' />
-        </svg>
-      }
-      onClick={() => action('Clicked on the title')()}
-    >
-      Microstation
-    </HeaderTitle>
-  ),
-  breadcrumbs: (
-    <HeaderBreadcrumbs
-      items={[
-        <HeaderButton
-          key='project'
-          menuItems={buildMenu('Project')}
-          name={'Project A (Super Size Edition)'}
-          description={'YJC-2249'}
-          startIcon={<SvgNetwork />}
-        />,
-        <HeaderButton
-          key='iModel'
-          menuItems={buildMenu('IModel')}
-          name={'IModel B'}
-          startIcon={
-            <img src='https://itwinplatformcdn.azureedge.net/iTwinUI/stadium.png' />
+export const full: Story<HeaderProps> = (args) => {
+  return (
+    <Header
+      appLogo={
+        <HeaderLogo
+          logo={
+            <svg
+              viewBox='0 0 16 16'
+              xmlns='http://www.w3.org/2000/svg'
+              aria-hidden='true'
+            >
+              <path d='m12.6 13.4c-1.2-1.5-2.1-3.1-2.4-5.5-2.7 3.9-4.6 4.2-5.7 2.4l-1.2 5.7h-2.2l3.5-14.1 1.8-.4c-.1.5-1.4 6.2.6 7 2 .7 4.6-8.5 4.6-8.5l2.2.4c-1.6 3.7-1.6 7.6 1.1 10.9l-2.3 2.1' />
+            </svg>
           }
-          isActive={true}
-        />,
-        <HeaderButton
-          key='version'
-          name={'Version C'}
-          onClick={() => action('Clicked on the Version')()}
-          startIcon={<SvgVersion />}
-        />,
+          onClick={() => action('Clicked on the title')()}
+        >
+          Microstation
+        </HeaderLogo>
+      }
+      breadcrumbs={
+        <HeaderBreadcrumbs
+          items={[
+            <HeaderButton
+              key='project'
+              menuItems={buildMenu('Project')}
+              name={'Project A (Super Size Edition)'}
+              description={'YJC-2249'}
+              startIcon={<SvgNetwork />}
+            />,
+            <HeaderButton
+              key='iModel'
+              menuItems={buildMenu('IModel')}
+              name={'IModel B'}
+              startIcon={
+                <img src='https://itwinplatformcdn.azureedge.net/iTwinUI/stadium.png' />
+              }
+              isActive={true}
+            />,
+            <HeaderButton
+              key='version'
+              name={'Version C'}
+              onClick={() => action('Clicked on the Version')()}
+              startIcon={<SvgVersion />}
+            />,
+          ]}
+        />
+      }
+      actions={[
+        <IconButton
+          key='notif'
+          onClick={() => action('Clicked on the notification bell')()}
+          styleType='borderless'
+        >
+          <SvgNotification />
+        </IconButton>,
+        <DropdownMenu key='help' menuItems={buildMenu('Help')}>
+          <IconButton styleType='borderless'>
+            <SvgHelpCircularHollow />
+          </IconButton>
+        </DropdownMenu>,
       ]}
-    />
-  ),
-  actions: [
-    <IconButton
-      key='notif'
-      onClick={() => action('Clicked on the notification bell')()}
-      styleType='borderless'
+      userIcon={
+        <DropdownMenu menuItems={buildMenu('User')}>
+          <IconButton styleType='borderless'>
+            <UserIcon
+              size='medium'
+              abbreviation='TR'
+              backgroundColor={getUserColor('Terry Rivers')}
+              image={
+                <img src='https://itwinplatformcdn.azureedge.net/iTwinUI/user-placeholder.png' />
+              }
+              title='Terry Rivers'
+            />
+          </IconButton>
+        </DropdownMenu>
+      }
+      menuItems={buildMenu('More')}
+      {...args}
     >
-      <SvgNotification />
-    </IconButton>,
-    <DropdownMenu key='help' menuItems={buildMenu('Help')}>
-      <IconButton styleType='borderless'>
-        <SvgHelpCircularHollow />
-      </IconButton>
-    </DropdownMenu>,
-  ],
-  userIcon: (
-    <DropdownMenu menuItems={buildMenu('User')}>
-      <IconButton styleType='borderless'>
+      <div>
+        <style>{`.iui-slim .center-input { padding-top: 0; padding-bottom: 0}`}</style>
+        <Input
+          className='center-input'
+          placeholder='Search within Model Beta...'
+          style={{
+            borderRadius: 22,
+            width: '20vw',
+            margin: 12,
+            transition: 'all 0.2s ease',
+          }}
+        />
+      </div>
+    </Header>
+  );
+};
+
+export const basic: Story<HeaderProps> = (args) => {
+  return (
+    <Header
+      appLogo={
+        <HeaderLogo
+          logo={
+            <svg
+              viewBox='0 0 16 16'
+              xmlns='http://www.w3.org/2000/svg'
+              aria-hidden='true'
+            >
+              <path d='m12.6 13.4c-1.2-1.5-2.1-3.1-2.4-5.5-2.7 3.9-4.6 4.2-5.7 2.4l-1.2 5.7h-2.2l3.5-14.1 1.8-.4c-.1.5-1.4 6.2.6 7 2 .7 4.6-8.5 4.6-8.5l2.2.4c-1.6 3.7-1.6 7.6 1.1 10.9l-2.3 2.1' />
+            </svg>
+          }
+        />
+      }
+      {...args}
+    />
+  );
+};
+
+export const simpleUserIcon: Story<HeaderProps> = (args) => {
+  return (
+    <Header
+      appLogo={
+        <HeaderLogo
+          logo={
+            <svg
+              viewBox='0 0 16 16'
+              xmlns='http://www.w3.org/2000/svg'
+              aria-hidden='true'
+            >
+              <path d='m12.6 13.4c-1.2-1.5-2.1-3.1-2.4-5.5-2.7 3.9-4.6 4.2-5.7 2.4l-1.2 5.7h-2.2l3.5-14.1 1.8-.4c-.1.5-1.4 6.2.6 7 2 .7 4.6-8.5 4.6-8.5l2.2.4c-1.6 3.7-1.6 7.6 1.1 10.9l-2.3 2.1' />
+            </svg>
+          }
+          onClick={() => action('Clicked on the title')()}
+        />
+      }
+      userIcon={
         <UserIcon
-          className='iui-user-icon'
           size='medium'
           abbreviation='TR'
           backgroundColor={getUserColor('Terry Rivers')}
-          image={
-            <img src='https://itwinplatformcdn.azureedge.net/iTwinUI/user-placeholder.png' />
-          }
           title='Terry Rivers'
         />
-      </IconButton>
-    </DropdownMenu>
-  ),
-  menuItems: buildMenu('More'),
-  children: (
-    <div>
-      <style>{`.iui-slim .center-input { padding-top: 0; padding-bottom: 0}`}</style>
-      <Input
-        className='center-input'
-        placeholder='Search within Model Beta...'
-        style={{
-          borderRadius: 22,
-          width: '20vw',
-          margin: 12,
-          transition: 'all 0.2s ease',
-        }}
-      />
-    </div>
-  ),
+      }
+      {...args}
+    />
+  );
 };

@@ -10,19 +10,21 @@ import React from 'react';
 import { useTheme } from '../utils/hooks/useTheme';
 import { CommonProps } from '../utils/props';
 
-export type HeaderLogoProps = React.PropsWithChildren<
-  {
-    /**
-     * Logo shown before the main content.
-     */
-    logo: JSX.Element;
-    /**
-     * Click event handler.
-     * Will update the Logo to have mouse and keyboard interaction if provided.
-     */
-    onClick?: () => void;
-  } & CommonProps
->;
+export type HeaderLogoProps = {
+  /**
+   * Logo shown before the main content.
+   */
+  logo: JSX.Element;
+  /**
+   * Click event handler.
+   * Will update the Logo to have mouse and keyboard interaction if provided.
+   */
+  onClick?: () => void;
+  /**
+   * Children is put on the right of the logo.
+   */
+  children?: React.ReactNode;
+} & CommonProps;
 
 /**
  * Header Title section
@@ -34,17 +36,12 @@ export type HeaderLogoProps = React.PropsWithChildren<
  */
 export const HeaderLogo = (props: HeaderLogoProps) => {
   const { className, children, logo, onClick, ...rest } = props;
-  const keyDownHandler = React.useCallback<
-    React.KeyboardEventHandler<HTMLDivElement>
-  >(
-    (e) => {
-      if (onClick && (e.key === 'Enter' || e.key === ' ')) {
-        e.preventDefault();
-        onClick();
-      }
-    },
-    [onClick],
-  );
+  const keyDownHandler = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      onClick();
+    }
+  };
   useTheme();
   return (
     <div

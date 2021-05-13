@@ -17,69 +17,71 @@ export type HeaderTranslations = {
   moreOptions: string;
 };
 
-export type HeaderProps = React.PropsWithChildren<
-  {
-    /**
-     * Application logo.
-     * (expects `HeaderLogo`)
-     * @example
-     * <HeaderLogo logo={<SvgImodelHollow />}>iTwin Application</HeaderLogo>
-     */
-    appLogo: React.ReactNode;
-    /**
-     * Content on the right of the application button
-     * (expects `HeaderBreadcrumbs`)
-     * @example
-     * <HeaderBreadcrumbs items={[
-     *   <HeaderButton key='project' name='Project A' />
-     *   <HeaderButton key='imodel' name='IModel X' />
-     * ]} />
-     */
-    breadcrumbs?: React.ReactNode;
-    /**
-     * Content displayed to the left of the user icon
-     * (expects array of `IconButton`, potentially wrapped in a `DropdownMenu`)
-     * @example
-     * [
-     *  <IconButton><SvgNotification /></IconButton>,
-     *  <DropdownMenu>
-     *   <IconButton>
-     *    <SvgHelpCircularHollow />
-     *   </IconButton>
-     *  </DropdownMenu>
-     * ]
-     */
-    actions?: React.ReactNode[];
-    /**
-     * User icon
-     * It's size and transition will be handled between slim/not slim state of the
-     * Header
-     * (expects `UserIcon`, can be wrapped in `IconButton` and `DropdownMenu` if needed)
-     * @example
-     * <DropdownMenu menuItems={...}>
-     *   <IconButton styleType='borderless'>
-     *     <UserIcon ... />
-     *   </IconButton>
-     * </DropdownMenu>
-     */
-    userIcon?: React.ReactNode;
-    /**
-     * Items in the more dropdown menu.
-     * Pass a function that takes the `close` argument (to close the menu),
-     * and returns a list of `MenuItem` components.
-     */
-    menuItems?: (close: () => void) => JSX.Element[];
-    /**
-     * If true, the header height is reduced, typically used when viewing 3D content.
-     * @default false
-     */
-    isSlim?: boolean;
-    /**
-     * Provide localized strings.
-     */
-    translatedStrings?: HeaderTranslations;
-  } & Omit<CommonProps, 'title'>
->;
+export type HeaderProps = {
+  /**
+   * Application logo.
+   * (expects `HeaderLogo`)
+   * @example
+   * <HeaderLogo logo={<SvgImodelHollow />}>iTwin Application</HeaderLogo>
+   */
+  appLogo: React.ReactNode;
+  /**
+   * Content on the right of the application button
+   * (expects `HeaderBreadcrumbs`)
+   * @example
+   * <HeaderBreadcrumbs items={[
+   *   <HeaderButton key='project' name='Project A' />
+   *   <HeaderButton key='imodel' name='IModel X' />
+   * ]} />
+   */
+  breadcrumbs?: React.ReactNode;
+  /**
+   * Content displayed to the left of the user icon
+   * (expects array of `IconButton`, potentially wrapped in a `DropdownMenu`)
+   * @example
+   * [
+   *  <IconButton><SvgNotification /></IconButton>,
+   *  <DropdownMenu>
+   *   <IconButton>
+   *    <SvgHelpCircularHollow />
+   *   </IconButton>
+   *  </DropdownMenu>
+   * ]
+   */
+  actions?: React.ReactNode[];
+  /**
+   * Children is put in the center of the Header.
+   */
+  children?: React.ReactNode;
+  /**
+   * User icon
+   * It's size and transition will be handled between slim/not slim state of the
+   * Header
+   * (expects `UserIcon`, can be wrapped in `IconButton` and `DropdownMenu` if needed)
+   * @example
+   * <DropdownMenu menuItems={...}>
+   *   <IconButton styleType='borderless'>
+   *     <UserIcon ... />
+   *   </IconButton>
+   * </DropdownMenu>
+   */
+  userIcon?: React.ReactNode;
+  /**
+   * Items in the more dropdown menu.
+   * Pass a function that takes the `close` argument (to close the menu),
+   * and returns a list of `MenuItem` components.
+   */
+  menuItems?: (close: () => void) => JSX.Element[];
+  /**
+   * If true, the header height is reduced, typically used when viewing 3D content.
+   * @default false
+   */
+  isSlim?: boolean;
+  /**
+   * Provide localized strings.
+   */
+  translatedStrings?: HeaderTranslations;
+} & Omit<CommonProps, 'title'>;
 
 const defaultTranslations: HeaderTranslations = {
   moreOptions: 'More options',
