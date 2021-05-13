@@ -15,6 +15,7 @@ import {
   Row,
   TableState,
   useFlexLayout,
+  useFilters,
   useMountedLayoutEffect,
   useRowSelect,
   useSortBy,
@@ -29,6 +30,9 @@ import '@itwin/itwinui-css/css/table.css';
 import { CommonProps } from '../utils/props';
 import SvgSortDown from '@itwin/itwinui-icons-react/cjs/icons/SortDown';
 import SvgSortUp from '@itwin/itwinui-icons-react/cjs/icons/SortUp';
+import { getCellStyle } from './utils';
+import { TableRowMemoized } from './TableRowMemoized';
+import { FilterToggle, TableFilterValue } from './filters';
 
 /**
  * Table props.
@@ -69,6 +73,31 @@ export type TableProps<
    * Must be memoized.
    */
   onSort?: (state: TableState<T>) => void;
+  /**
+   * Callback function when scroll reaches bottom. Can be used for lazy-loading the data.
+   * If you want to use it in older browsers e.g. IE, then you need to have IntersectionObserver polyfill.
+   */
+  onBottomReached?: () => void;
+  /**
+   * Callback function when row is in viewport.
+   * If you want to use it in older browsers e.g. IE, then you need to have IntersectionObserver polyfill.
+   */
+  onRowInViewport?: (rowData: T) => void;
+  /**
+   * Margin in pixels when row is considered to be already in viewport. Used for `onBottomReached` and `onRowInViewport`.
+   * @default 300
+   */
+  intersectionMargin?: number;
+  /**
+   * Callback function when filters change.
+   * Use with `manualFilters` to handle filtering yourself e.g. filter in server-side.
+   * Must be memoized.
+   */
+  onFilter?: (filters: TableFilterValue<T>[], state: TableState<T>) => void;
+  /**
+   * Content shown when there is no data after filtering.
+   */
+  emptyFilteredTableContent?: React.ReactNode;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -129,6 +158,11 @@ export const Table = <
     isSortable = false,
     onSort,
     stateReducer,
+    onBottomReached,
+    onRowInViewport,
+    intersectionMargin = 300,
+    onFilter,
+    emptyFilteredTableContent,
     ...rest
   } = props;
 
@@ -142,6 +176,16 @@ export const Table = <
     }),
     [],
   );
+
+  // useRef prevents from rerendering when one of these callbacks changes
+  const onSelectRef = React.useRef(onSelect);
+  const onBottomReachedRef = React.useRef(onBottomReached);
+  const onRowInViewportRef = React.useRef(onRowInViewport);
+  React.useEffect(() => {
+    onSelectRef.current = onSelect;
+    onBottomReachedRef.current = onBottomReached;
+    onRowInViewportRef.current = onRowInViewport;
+  }, [onBottomReached, onRowInViewport, onSelect]);
 
   const useSelectionHook = (hooks: Hooks<T>) => {
     if (!isSelectable) {
@@ -176,14 +220,44 @@ export const Table = <
     });
   };
 
+  const onFilterHandler = (
+    newState: TableState<T>,
+    action: ActionType,
+    previousState: TableState<T>,
+    instance?: TableInstance<T>,
+  ) => {
+    const previousFilter = previousState.filters.find(
+      (f) => f.id === action.columnId,
+    );
+    if (previousFilter?.value != action.filterValue) {
+      const filters = newState.filters.map((f) => {
+        const column = instance?.allColumns.find((c) => c.id === f.id);
+        return {
+          id: f.id,
+          value: f.value,
+          fieldType: column?.fieldType ?? 'text',
+          filterType: column?.filter ?? 'text',
+        };
+      }) as TableFilterValue<T>[];
+      onFilter?.(filters, newState);
+    }
+  };
+
   const tableStateReducer = (
     newState: TableState<T>,
     action: ActionType,
     previousState: TableState<T>,
     instance?: TableInstance<T>,
   ): TableState<T> => {
-    if (action.type === TableActions.toggleSortBy) {
-      onSort?.(newState);
+    switch (action.type) {
+      case TableActions.toggleSortBy:
+        onSort?.(newState);
+        break;
+      case TableActions.setFilter:
+        onFilterHandler(newState, action, previousState, instance);
+        break;
+      default:
+        break;
     }
     return stateReducer
       ? stateReducer(newState, action, previousState, instance)
@@ -199,6 +273,7 @@ export const Table = <
       stateReducer: tableStateReducer,
     },
     useFlexLayout,
+    useFilters,
     useSortBy,
     useRowSelect,
     useSelectionHook,
@@ -213,36 +288,18 @@ export const Table = <
     data,
     selectedFlatRows,
     state,
+    allColumns,
+    filteredFlatRows,
   } = instance;
 
   useMountedLayoutEffect(() => {
     if (isSelectable && selectedFlatRows) {
-      onSelect?.(
+      onSelectRef.current?.(
         selectedFlatRows.map((row) => row.original),
         state,
       );
     }
-  }, [selectedFlatRows, onSelect]);
-
-  const getStyle = (
-    column: ColumnInstance<T>,
-  ): React.CSSProperties | undefined => {
-    const style = {} as React.CSSProperties;
-    style.flex = `1 1 145px`;
-    if (column.width) {
-      const width =
-        typeof column.width === 'string' ? column.width : `${column.width}px`;
-      style.width = width;
-      style.flex = `0 0 ${width}`;
-    }
-    if (column.maxWidth) {
-      style.maxWidth = `${column.maxWidth}px`;
-    }
-    if (column.minWidth) {
-      style.minWidth = `${column.minWidth}px`;
-    }
-    return style;
-  };
+  }, [selectedFlatRows, onSelectRef]);
 
   const ariaDataAttributes = Object.entries(rest).reduce(
     (result, [key, value]) => {
@@ -253,6 +310,8 @@ export const Table = <
     },
     {} as Record<string, string>,
   );
+
+  const areFiltersSet = allColumns.some((column) => !!column.filterValue);
 
   return (
     <div
@@ -279,20 +338,23 @@ export const Table = <
                     column.columnClassName,
                   ),
                   style: {
-                    ...getStyle(column),
+                    ...getCellStyle(column),
                     cursor: column.canSort ? 'pointer' : undefined,
                   },
                 });
                 return (
                   <div {...columnProps} key={columnProps.key}>
                     {column.render('Header')}
+                    {!isLoading && data.length != 0 && (
+                      <FilterToggle column={column} />
+                    )}
                     {!isLoading && data.length != 0 && column.canSort && (
                       <div className='iui-sort'>
                         <div className='iui-icon-wrapper'>
                           {column.isSorted && column.isSortedDesc ? (
-                            <SvgSortUp />
+                            <SvgSortUp className='iui-icon' aria-hidden />
                           ) : (
-                            <SvgSortDown />
+                            <SvgSortDown className='iui-icon' aria-hidden />
                           )}
                         </div>
                       </div>
@@ -305,8 +367,7 @@ export const Table = <
         })}
       </div>
       <div {...getTableBodyProps({ className: 'iui-tables-body' })}>
-        {!isLoading &&
-          data.length !== 0 &&
+        {data.length !== 0 &&
           rows.map((row: Row<T>) => {
             prepareRow(row);
             const rowProps = row.getRowProps({
@@ -315,31 +376,49 @@ export const Table = <
               }),
             });
             return (
-              <div {...rowProps} key={rowProps.key}>
-                {row.cells.map((cell) => {
-                  const cellProps = cell.getCellProps({
-                    className: cx('iui-tables-cell', cell.column.cellClassName),
-                    style: getStyle(cell.column),
-                  });
-                  return (
-                    <div {...cellProps} key={cellProps.key}>
-                      {cell.render('Cell')}
-                    </div>
-                  );
-                })}
-              </div>
+              <TableRowMemoized
+                row={row}
+                rowProps={rowProps}
+                isLast={row.index === data.length - 1}
+                onRowInViewport={onRowInViewportRef}
+                onBottomReached={onBottomReachedRef}
+                intersectionMargin={intersectionMargin}
+                state={state}
+                key={rowProps.key}
+              />
             );
           })}
-        {isLoading && (
+        {isLoading && data.length === 0 && (
           <div className={'iui-tables-message-container'}>
             <ProgressRadial indeterminate={true} />
           </div>
         )}
-        {!isLoading && data.length === 0 && (
+        {isLoading && data.length !== 0 && (
+          <div className='iui-tables-row'>
+            <div
+              className='iui-tables-cell'
+              style={{ justifyContent: 'center' }}
+            >
+              <ProgressRadial
+                indeterminate={true}
+                size='small'
+                style={{ float: 'none', marginLeft: 0 }}
+              />
+            </div>
+          </div>
+        )}
+        {!isLoading && data.length === 0 && !areFiltersSet && (
           <div className={'iui-tables-message-container'}>
             {emptyTableContent}
           </div>
         )}
+        {!isLoading &&
+          (data.length === 0 || filteredFlatRows.length === 0) &&
+          areFiltersSet && (
+            <div className={'iui-tables-message-container'}>
+              {emptyFilteredTableContent}
+            </div>
+          )}
       </div>
     </div>
   );
