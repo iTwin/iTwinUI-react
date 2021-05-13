@@ -77,11 +77,11 @@ export type HeaderProps = React.PropsWithChildren<
     /**
      * Provide localized strings.
      */
-    defaultTranslations?: HeaderTranslations;
+    translatedStrings?: HeaderTranslations;
   } & Omit<CommonProps, 'title'>
 >;
 
-const headerTranslations: HeaderTranslations = {
+const defaultTranslations: HeaderTranslations = {
   moreOptions: 'More options',
 };
 
@@ -122,13 +122,13 @@ export const Header = (props: HeaderProps) => {
     actions,
     userIcon,
     menuItems,
-    defaultTranslations,
+    translatedStrings,
     className,
     children,
     ...rest
   } = props;
   useTheme();
-  const translatedStrings = { ...headerTranslations, ...defaultTranslations };
+  const headerTranslations = { ...defaultTranslations, ...translatedStrings };
   return (
     <header
       className={cx('iui-header', { 'iui-slim': isSlim }, className)}
@@ -147,7 +147,7 @@ export const Header = (props: HeaderProps) => {
           <DropdownMenu menuItems={menuItems}>
             <IconButton
               styleType='borderless'
-              aria-label={translatedStrings.moreOptions}
+              aria-label={headerTranslations.moreOptions}
             >
               <SvgMoreVertical aria-hidden />
             </IconButton>
