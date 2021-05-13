@@ -43,3 +43,16 @@ export const getUserColor = (emailOrName: string) => {
   }
   return USER_COLORS[hash];
 };
+
+/**
+ * Get the portal container, or create one if it doesn't exist.
+ */
+export const getContainer = (containerId: string) => {
+  let container = document.getElementById(containerId);
+  if (container === null) {
+    container = document.createElement('div');
+    container.setAttribute('id', containerId);
+    document.body.appendChild(container);
+  }
+  return container;
+};

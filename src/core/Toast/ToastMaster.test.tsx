@@ -3,60 +3,36 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { render, act } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
-import { ToastMaster, ToastSettings } from './ToastMaster';
+import { ToastMaster } from './ToastMaster';
+import { ToastProps } from './Toast';
 
 const mockToastObject1 = {
   category: 'informational',
-  duration: 7000,
-  hasCloseButton: true,
-  link: {
-    title: 'mockTitle',
-    onClick: () => {},
-  },
-  content: 'mockText',
-  type: 'persisting',
-} as ToastSettings;
+  content: 'mockText1',
+  id: 1,
+  isVisible: true,
+} as ToastProps;
 
 const mockToastObject2 = {
   category: 'negative',
-  link: {
-    title: 'mockTitle',
-    onClick: () => {},
-  },
   content: 'mockText2',
-  type: 'temporary',
-} as ToastSettings;
+  id: 2,
+  isVisible: true,
+} as ToastProps;
 
-it('should add two toasts and then close them', () => {
-  jest.useFakeTimers();
-
-  let addToast: (settings: ToastSettings) => void;
-  let closeAll: () => void;
+it('should render toasts', () => {
   const { container } = render(
-    <ToastMaster
-      addToastHandler={(handler) => (addToast = handler)}
-      closeAllHandler={(handler) => (closeAll = handler)}
-    />,
+    <ToastMaster toasts={[mockToastObject1, mockToastObject2]} />,
   );
 
   expect(container.querySelector('.iui-toast-wrapper')).toBeTruthy();
 
-  act(() => {
-    addToast(mockToastObject1);
-  });
-  act(() => {
-    addToast(mockToastObject2);
-  });
-  expect(container.querySelector('.iui-toast.iui-negative')).toBeTruthy();
-  expect(container.querySelector('.iui-toast.iui-informational')).toBeTruthy();
-
-  act(() => {
-    closeAll();
-  });
-  jest.runAllTimers();
-  expect(container.querySelectorAll('.iui-toast-all').length).toBe(0);
-
-  jest.useRealTimers();
+  const toasts = container.querySelectorAll('.iui-toast');
+  expect(toasts.length).toBe(2);
+  expect(toasts.item(0).classList).toContain('iui-informational');
+  expect(toasts.item(0).textContent).toBe('mockText1');
+  expect(toasts.item(1).classList).toContain('iui-negative');
+  expect(toasts.item(1).textContent).toBe('mockText2');
 });

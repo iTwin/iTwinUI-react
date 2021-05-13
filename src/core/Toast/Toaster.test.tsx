@@ -8,7 +8,6 @@ import { ToastOptions } from './Toaster';
 
 const mockOnClick = jest.fn();
 const mockAddToast = jest.fn();
-toaster['_addHandler'](mockAddToast);
 
 function mockedOptions(): ToastOptions {
   return {
@@ -42,11 +41,6 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-afterAll(() => {
-  toaster['_addHandler'](() => {});
-  toaster['_closeAllHandler'](() => {});
-});
-
 it('should add toast with succuss', () => {
   toaster.positive('mockContent', mockedOptions());
   assertAddToast('positive');
@@ -64,7 +58,6 @@ it('should add toast with informational', () => {
 
 it('should call closeAll handler', () => {
   const mockCloseAllHandler = jest.fn();
-  toaster['_closeAllHandler'](mockCloseAllHandler);
 
   toaster.closeAll();
 
