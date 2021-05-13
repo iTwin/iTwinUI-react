@@ -1,16 +1,26 @@
 # Changelog
 
-## 1.3.0
+## [1.4.0]
 
-`2021-05-XX`
+`2021-05-12`
 
 ### What's new
 
+- **Added filtering to `Table`.** Use `Filter` and `filter` fields in columns. All filters can be found in `tableFilters` object.
+
+## [1.3.0]
+
+`2021-05-11`
+
+### What's new
+
+- **Added new `FileUpload` component** with drag & drop functionality.
 - **Added lazy loading to `Table`** with new `onBottomReached` and `onRowInViewport` props.
 
 ### Fixes
 
 - **Fixed `Table` bug when change of `onSelection` handler would cause infinite rerendering loop.**
+- **Bumped @itwin/itwinui-icons-react to 1.1.1** which fixes relative path exports.
 
 ## [1.2.0]
 
@@ -238,5 +248,7 @@
 - **New ThemeProvider component added.** It allows to switch between light and dark themes.
 - **iTwinUI-React is generated to `CommonJS` and `ES` modules.** Usage of `ES` modules allows bundlers to tree-shake unused code resulting in smaller bundle sizes.
 
+[1.4.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.3.0...v1.4.0
+[1.3.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.0.0...v1.1.0
