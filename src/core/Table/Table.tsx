@@ -93,7 +93,7 @@ export type TableProps<
    * A function that will be used for rendering a component for each row if that row is expanded.
    * Component will be placed right after the row, in the same row group div.
    */
-  expandedSubComponent?: (row: Row<T>) => React.ReactNode;
+  subComponent?: (row: Row<T>) => React.ReactNode;
   /**
    * Handler for row expand events. Will trigger when expanding and condensing rows.
    */
@@ -170,9 +170,9 @@ export const Table = <
     onBottomReached,
     onRowInViewport,
     intersectionMargin = 300,
-    expandedSubComponent,
+    subComponent,
     onExpand,
-    provideDefaultExpander: provideExpanderColumn = true,
+    provideDefaultExpander = false,
     ...rest
   } = props;
 
@@ -198,7 +198,7 @@ export const Table = <
   }, [onBottomReached, onRowInViewport, onSelect]);
 
   const useExpanderHook = (hooks: Hooks<T>) => {
-    if (!(expandedSubComponent && provideExpanderColumn)) {
+    if (!(subComponent && provideDefaultExpander)) {
       return;
     }
     hooks.allColumns.push((columns: ColumnInstance<T>[]) => [
@@ -392,7 +392,7 @@ export const Table = <
                 intersectionMargin={intersectionMargin}
                 state={state}
                 key={rowProps.key}
-                expandedSubComponent={expandedSubComponent}
+                subComponent={subComponent}
                 isExpanded={row.isExpanded}
               />
             );

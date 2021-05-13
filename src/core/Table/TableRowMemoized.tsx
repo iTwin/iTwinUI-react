@@ -22,7 +22,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
   onBottomReached: React.MutableRefObject<(() => void) | undefined>;
   intersectionMargin: number;
   state: TableState<T>; // Needed for explicitly checking selection changes
-  expandedSubComponent?: (row: Row<T>) => React.ReactNode;
+  subComponent?: (row: Row<T>) => React.ReactNode;
   isExpanded: boolean;
 }) => {
   const {
@@ -32,7 +32,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
     onRowInViewport,
     onBottomReached,
     intersectionMargin,
-    expandedSubComponent,
+    subComponent,
     isExpanded,
   } = props;
 
@@ -60,7 +60,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
           );
         })}
       </div>
-      {isExpanded && expandedSubComponent?.(row)}
+      {isExpanded && subComponent?.(row)}
     </div>
   );
 };
@@ -74,6 +74,6 @@ export const TableRowMemoized = React.memo(
     prevProp.row.original === nextProp.row.original &&
     prevProp.state.selectedRowIds?.[prevProp.row.id] ===
       nextProp.state.selectedRowIds?.[nextProp.row.id] &&
-    prevProp.expandedSubComponent === nextProp.expandedSubComponent &&
+    prevProp.subComponent === nextProp.subComponent &&
     prevProp.isExpanded === nextProp.isExpanded,
 ) as typeof TableRow;

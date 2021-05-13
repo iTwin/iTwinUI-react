@@ -386,7 +386,7 @@ it('should expand correctly', () => {
   ];
   const { getByText, queryByText } = renderComponent({
     columns: mockedColumns,
-    expandedSubComponent: (row) => (
+    subComponent: (row) => (
       <div>{`Expanded component, name: ${row.original.name}`}</div>
     ),
     onExpand: onExpandMock,
