@@ -2,12 +2,12 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import '@itwin/itwinui-css/css/header.css';
 
 import cx from 'classnames';
 import React from 'react';
 
 import { useTheme } from '../utils/hooks/useTheme';
+import '@itwin/itwinui-css/css/header.css';
 import { CommonProps } from '../utils/props';
 
 export type HeaderLogoProps = {
@@ -21,7 +21,7 @@ export type HeaderLogoProps = {
    */
   onClick?: () => void;
   /**
-   * Children is put on the right of the logo.
+   * Expects the app name, is put on the right of the logo.
    */
   children?: React.ReactNode;
 } & CommonProps;
@@ -32,12 +32,15 @@ export type HeaderLogoProps = {
  * <HeaderLogo logo={<SvgImodelHollow />}>iTwin Application</HeaderLogo>
  * <HeaderLogo logo={<SvgImodelHollow />} />
  * <HeaderLogo logo={<img src='image.png' />} />
- * <HeaderLogo logo={<img src='data:image/png;base64,...' />} >Downloaded Image</HeaderLogo>
+ * <HeaderLogo logo={<img src='data:image/png;base64,...' />}>Downloaded Image</HeaderLogo>
  */
 export const HeaderLogo = (props: HeaderLogoProps) => {
   const { className, children, logo, onClick, ...rest } = props;
   const keyDownHandler = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+    if (
+      onClick &&
+      (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar')
+    ) {
       e.preventDefault();
       onClick();
     }
@@ -46,9 +49,9 @@ export const HeaderLogo = (props: HeaderLogoProps) => {
   return (
     <div
       className={cx('iui-header-logo', className)}
-      role={onClick ? 'button' : undefined}
-      tabIndex={onClick ? 0 : undefined}
-      onKeyDown={onClick ? keyDownHandler : undefined}
+      role={onClick && 'button'}
+      tabIndex={onClick && 0}
+      onKeyDown={keyDownHandler}
       onClick={onClick}
       {...rest}
     >

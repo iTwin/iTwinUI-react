@@ -2,7 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import '@itwin/itwinui-css/css/header.css';
 
 import cx from 'classnames';
 import React from 'react';
@@ -14,6 +13,8 @@ import {
 } from '../Buttons';
 
 import { useTheme } from '../utils/hooks/useTheme';
+import '@itwin/itwinui-css/css/header.css';
+import { ClassNameProps } from '../utils/props';
 
 export type HeaderButtonProps = {
   /**
@@ -21,7 +22,7 @@ export type HeaderButtonProps = {
    */
   name: React.ReactNode;
   /**
-   * Description
+   * Description shown below the name, will be hidden in `Header` slim mode.
    */
   description?: React.ReactNode;
   /**
@@ -39,24 +40,23 @@ export type HeaderButtonProps = {
  * When in slim mode, will only display the name and reduce icon size.
  * Will display an arrow on the right if `menuItems` prop is provided.
  * @example
- * <HeaderButton name='Project A' description='0n00434' />
- * <HeaderButton name='Project B' description='0n00434' startIcon={<SvgImodelHollow />}/>
- * <HeaderButton name='Project C' startIcon={<img src='project.png' />}/>
+ * <HeaderButton name='Project A' description='0n00434' menuItems={...} />
+ * <HeaderButton name='Project B' description='0n00434' startIcon={<SvgImodelHollow />} />
+ * <HeaderButton name='Project C' startIcon={<img src='project.png' />} />
  * <HeaderButton name='Project D' isActive />
- * <HeaderButton name='Project D' isActive menuItems={...}/>
  */
 export const HeaderButton = (props: HeaderButtonProps) => {
   const {
     name,
     description,
-    isActive,
+    isActive = false,
     menuItems,
     className,
     startIcon,
     ...rest
   } = props;
   const buttonProps: ButtonProps & { styleType: 'borderless' } = {
-    startIcon: React.isValidElement<{ className: string }>(startIcon)
+    startIcon: React.isValidElement<ClassNameProps>(startIcon)
       ? React.cloneElement(startIcon, {
           className: cx('iui-header-button-icon', startIcon.props.className),
         })

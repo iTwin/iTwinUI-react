@@ -2,14 +2,23 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import '@itwin/itwinui-css/css/header.css';
 import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 
 import React from 'react';
 
 import { useTheme } from '../utils/hooks/useTheme';
+import '@itwin/itwinui-css/css/header.css';
 
 export type HeaderBreadcrumbsProps = {
+  /**
+   * Array of elements, chevrons will be put between them.
+   * (expects HeaderButton[])
+   * @example
+   * [
+   *  <HeaderButton key={...} ... />
+   *  <HeaderButton key={...} ... />
+   * ]
+   */
   items: React.ReactNode[];
 };
 

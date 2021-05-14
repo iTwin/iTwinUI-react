@@ -10,15 +10,15 @@ import {
   DropdownMenu,
   getUserColor,
   Header,
+  HeaderBreadcrumbs,
+  HeaderButton,
+  HeaderLogo,
   HeaderProps,
   IconButton,
   Input,
   MenuItem,
   UserIcon,
 } from '../../src/core';
-import HeaderButton from '../../src/core/Header/HeaderButton';
-import HeaderLogo from '../../src/core/Header/HeaderLogo';
-import HeaderBreadcrumbs from '../../src/core/Header/HeaderBreadcrumbs';
 import SvgHelpCircularHollow from '@itwin/itwinui-icons-react/cjs/icons/HelpCircularHollow';
 import SvgVersion from '@itwin/itwinui-icons-react/cjs/icons/Pin';
 import SvgNetwork from '@itwin/itwinui-icons-react/cjs/icons/Network';
@@ -39,6 +39,8 @@ export default {
     userIcon: { control: { disable: true } },
     menuItems: { control: { disable: true } },
     children: { control: { disable: true } },
+    style: { control: { disable: true } },
+    className: { control: { disable: true } },
   },
 } as Meta<HeaderProps>;
 
@@ -61,7 +63,7 @@ const buildMenu = (menu: string) => (close: () => void) => [
   </MenuItem>,
 ];
 
-export const full: Story<HeaderProps> = (args) => {
+export const Full: Story<HeaderProps> = (args) => {
   return (
     <Header
       appLogo={
@@ -86,14 +88,14 @@ export const full: Story<HeaderProps> = (args) => {
             <HeaderButton
               key='project'
               menuItems={buildMenu('Project')}
-              name={'Project A (Super Size Edition)'}
-              description={'YJC-2249'}
+              name='Project A (Super Size Edition)'
+              description='YJC-2249'
               startIcon={<SvgNetwork />}
             />,
             <HeaderButton
               key='iModel'
-              menuItems={buildMenu('IModel')}
-              name={'IModel B'}
+              menuItems={buildMenu('iModel')}
+              name='iModel B'
               startIcon={
                 <img src='https://itwinplatformcdn.azureedge.net/iTwinUI/stadium.png' />
               }
@@ -101,7 +103,7 @@ export const full: Story<HeaderProps> = (args) => {
             />,
             <HeaderButton
               key='version'
-              name={'Version C'}
+              name='Version C'
               onClick={() => action('Clicked on the Version')()}
               startIcon={<SvgVersion />}
             />,
@@ -157,7 +159,7 @@ export const full: Story<HeaderProps> = (args) => {
   );
 };
 
-export const basic: Story<HeaderProps> = (args) => {
+export const Basic: Story<HeaderProps> = (args) => {
   return (
     <Header
       appLogo={
@@ -173,26 +175,30 @@ export const basic: Story<HeaderProps> = (args) => {
           }
         />
       }
-      {...args}
-    />
-  );
-};
-
-export const simpleUserIcon: Story<HeaderProps> = (args) => {
-  return (
-    <Header
-      appLogo={
-        <HeaderLogo
-          logo={
-            <svg
-              viewBox='0 0 16 16'
-              xmlns='http://www.w3.org/2000/svg'
-              aria-hidden='true'
-            >
-              <path d='m12.6 13.4c-1.2-1.5-2.1-3.1-2.4-5.5-2.7 3.9-4.6 4.2-5.7 2.4l-1.2 5.7h-2.2l3.5-14.1 1.8-.4c-.1.5-1.4 6.2.6 7 2 .7 4.6-8.5 4.6-8.5l2.2.4c-1.6 3.7-1.6 7.6 1.1 10.9l-2.3 2.1' />
-            </svg>
-          }
-          onClick={() => action('Clicked on the title')()}
+      breadcrumbs={
+        <HeaderBreadcrumbs
+          items={[
+            <HeaderButton
+              key='project'
+              name='Project A (Super Size Edition)'
+              description='YJC-2249'
+              startIcon={<SvgNetwork />}
+            />,
+            <HeaderButton
+              key='iModel'
+              name='iModel B'
+              startIcon={
+                <img src='https://itwinplatformcdn.azureedge.net/iTwinUI/stadium.png' />
+              }
+            />,
+            <HeaderButton
+              key='version'
+              name='Version C'
+              onClick={() => action('Clicked on the Version')()}
+              startIcon={<SvgVersion />}
+              isActive={true}
+            />,
+          ]}
         />
       }
       userIcon={
