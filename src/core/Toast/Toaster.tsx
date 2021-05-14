@@ -47,7 +47,7 @@ export default class Toaster {
         category,
         onRemove: () => {
           this.removeToast(currentId);
-          settings?.onRemove;
+          settings?.onRemove?.();
         },
         id: currentId,
         isVisible: true,
