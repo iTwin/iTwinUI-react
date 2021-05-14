@@ -183,6 +183,7 @@ export const Basic: Story<HeaderProps> = (args) => {
               name='Project A (Super Size Edition)'
               description='YJC-2249'
               startIcon={<SvgNetwork />}
+              onClick={() => action('Clicked on the Project')()}
             />,
             <HeaderButton
               key='iModel'
@@ -190,6 +191,7 @@ export const Basic: Story<HeaderProps> = (args) => {
               startIcon={
                 <img src='https://itwinplatformcdn.azureedge.net/iTwinUI/stadium.png' />
               }
+              onClick={() => action('Clicked on the iModel')()}
             />,
             <HeaderButton
               key='version'
