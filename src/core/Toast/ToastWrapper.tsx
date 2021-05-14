@@ -6,11 +6,11 @@ import '@itwin/itwinui-css/css/toast-notification.css';
 import React from 'react';
 import Toast, { ToastProps } from './Toast';
 
-type ToastMasterProps = {
+type ToastWrapperProps = {
   toasts: ToastProps[];
 };
 
-export const ToastMaster = (props: ToastMasterProps) => {
+export const ToastWrapper = (props: ToastWrapperProps) => {
   const { toasts } = props;
 
   return (

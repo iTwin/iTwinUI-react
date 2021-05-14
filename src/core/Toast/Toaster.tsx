@@ -6,7 +6,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { getContainer } from '../utils/common';
 import { ToastCategory, ToastProps } from './Toast';
-import { ToastMaster } from './ToastMaster';
+import { ToastWrapper } from './ToastWrapper';
 
 const TOASTS_CONTAINER_ID = 'iui-toasts-container';
 
@@ -65,7 +65,7 @@ export default class Toaster {
 
   private updateView() {
     ReactDOM.render(
-      <ToastMaster toasts={this.toasts} />,
+      <ToastWrapper toasts={this.toasts} />,
       getContainer(TOASTS_CONTAINER_ID),
     );
   }

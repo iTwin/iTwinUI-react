@@ -5,7 +5,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import { ToastMaster } from './ToastMaster';
+import { ToastWrapper } from './ToastWrapper';
 import { ToastProps } from './Toast';
 import { act } from 'react-dom/test-utils';
 
@@ -26,7 +26,7 @@ const mockToastObject2 = {
 
 it('should render toasts', () => {
   const { container } = render(
-    <ToastMaster toasts={[mockToastObject1, mockToastObject2]} />,
+    <ToastWrapper toasts={[mockToastObject1, mockToastObject2]} />,
   );
 
   expect(container.querySelector('.iui-toast-wrapper')).toBeTruthy();
@@ -42,7 +42,7 @@ it('should render toasts', () => {
 it('should remove toast with close icon click', () => {
   jest.useFakeTimers();
   const { container } = render(
-    <ToastMaster toasts={[mockToastObject1, mockToastObject2]} />,
+    <ToastWrapper toasts={[mockToastObject1, mockToastObject2]} />,
   );
 
   expect(container.querySelector('.iui-toast-wrapper')).toBeTruthy();
@@ -64,7 +64,7 @@ it('should remove toast with close icon click', () => {
 it('should remove all toasts', () => {
   jest.useFakeTimers();
   const { container, rerender } = render(
-    <ToastMaster toasts={[mockToastObject1, mockToastObject2]} />,
+    <ToastWrapper toasts={[mockToastObject1, mockToastObject2]} />,
   );
 
   expect(container.querySelector('.iui-toast-wrapper')).toBeTruthy();
@@ -72,7 +72,7 @@ it('should remove all toasts', () => {
   let toasts = container.querySelectorAll('.iui-toast');
   expect(toasts.length).toBe(2);
   act(() => {
-    rerender(<ToastMaster toasts={[]} />);
+    rerender(<ToastWrapper toasts={[]} />);
   });
   jest.advanceTimersByTime(400);
   toasts = container.querySelectorAll('.iui-toast');
