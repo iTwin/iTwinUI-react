@@ -142,19 +142,17 @@ export const Full: Story<HeaderProps> = (args) => {
       menuItems={buildMenu('More')}
       {...args}
     >
-      <div>
-        <style>{`.iui-slim .center-input { padding-top: 0; padding-bottom: 0}`}</style>
-        <Input
-          className='center-input'
-          placeholder='Search within Model Beta...'
-          style={{
-            borderRadius: 22,
-            width: '20vw',
-            margin: 12,
-            transition: 'all 0.2s ease',
-          }}
-        />
-      </div>
+      <style>{`.iui-slim .center-input { padding-top: 0; padding-bottom: 0}`}</style>
+      <Input
+        className='center-input'
+        placeholder='Search within Model Beta...'
+        style={{
+          borderRadius: 22,
+          width: '20vw',
+          margin: 12,
+          transition: 'all 0.2s ease',
+        }}
+      />
     </Header>
   );
 };
