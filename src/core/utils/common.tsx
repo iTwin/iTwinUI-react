@@ -45,11 +45,12 @@ export const getUserColor = (emailOrName: string) => {
 };
 
 /**
- * Get the portal container, or create one if it doesn't exist.
+ * Get the container as a child of body, or create one if it doesn't exist.
+ * Mostly used for dynamic components like Modal or Toast.
  */
 export const getContainer = (containerId: string) => {
   let container = document.getElementById(containerId);
-  if (container === null) {
+  if (container == null) {
     container = document.createElement('div');
     container.setAttribute('id', containerId);
     document.body.appendChild(container);
