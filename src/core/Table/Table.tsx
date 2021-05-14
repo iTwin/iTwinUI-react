@@ -99,12 +99,7 @@ export type TableProps<
   /**
    * Handler for row expand events. Will trigger when expanding and condensing rows.
    */
-  onExpand?: (
-    newState: TableState<T>,
-    action: ActionType,
-    previousState: TableState<T>,
-    instance?: TableInstance<T>,
-  ) => void;
+  onExpand?: (state: TableState<T>) => void;
   /**
    * Flag whether to provide default expander column
    */
@@ -311,7 +306,7 @@ export const Table = <
         onFilterHandler(newState, action, previousState, instance);
         break;
       case TableActions.toggleRowExpanded:
-        onExpand?.(newState, action, previousState, instance);
+        onExpand?.(newState);
         break;
       default:
         break;

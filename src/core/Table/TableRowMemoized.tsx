@@ -78,6 +78,7 @@ export const TableRowMemoized = React.memo(
     prevProp.row.original === nextProp.row.original &&
     prevProp.state.selectedRowIds?.[prevProp.row.id] ===
       nextProp.state.selectedRowIds?.[nextProp.row.id] &&
-    prevProp.subComponent === nextProp.subComponent &&
-    prevProp.isExpanded === nextProp.isExpanded,
+    prevProp.state.expanded?.[prevProp.row.id] ===
+      nextProp.state.expanded?.[nextProp.row.id] &&
+    prevProp.subComponent === nextProp.subComponent,
 ) as typeof TableRow;

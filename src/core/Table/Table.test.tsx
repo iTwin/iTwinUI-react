@@ -329,7 +329,9 @@ it('should trigger onBottomReached', () => {
     onBottomReached,
   });
 
-  const rows = container.querySelectorAll('.iui-tables-body .iui-tables-row');
+  const rows = container.querySelectorAll(
+    '.iui-tables-body .iui-tables-rowgroup',
+  );
   expect(rows.length).toBe(50);
 
   expect(onBottomReached).not.toHaveBeenCalled();
@@ -346,7 +348,9 @@ it('should trigger onRowInViewport', () => {
     onRowInViewport,
   });
 
-  const rows = container.querySelectorAll('.iui-tables-body .iui-tables-row');
+  const rows = container.querySelectorAll(
+    '.iui-tables-body .iui-tables-rowgroup',
+  );
   expect(rows.length).toBe(50);
 
   expect(onRowInViewport).not.toHaveBeenCalled();
