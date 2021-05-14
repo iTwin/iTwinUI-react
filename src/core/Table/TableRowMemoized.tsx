@@ -17,6 +17,7 @@ import { getCellStyle } from './utils';
 const TableRow = <T extends Record<string, unknown>>(props: {
   row: Row<T>;
   rowProps: TableRowProps;
+  rowGroupProps: React.HTMLAttributes<HTMLDivElement>;
   isLast: boolean;
   onRowInViewport: React.MutableRefObject<((rowData: T) => void) | undefined>;
   onBottomReached: React.MutableRefObject<(() => void) | undefined>;
@@ -28,6 +29,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
   const {
     row,
     rowProps,
+    rowGroupProps,
     isLast,
     onRowInViewport,
     onBottomReached,
@@ -46,8 +48,8 @@ const TableRow = <T extends Record<string, unknown>>(props: {
   });
 
   return (
-    <div className='iui-tables-rowgroup'>
-      <div {...rowProps} key={rowProps.key} ref={rowRef}>
+    <div {...rowGroupProps} key={rowProps.key} ref={rowRef}>
+      <div {...rowProps}>
         {row.cells.map((cell) => {
           const cellProps = cell.getCellProps({
             className: cx('iui-tables-cell', cell.column.cellClassName),
@@ -60,7 +62,9 @@ const TableRow = <T extends Record<string, unknown>>(props: {
           );
         })}
       </div>
-      {isExpanded && subComponent?.(row)}
+      {isExpanded && (
+        <div className='iui-tables-subcomponent'>{subComponent?.(row)}</div>
+      )}
     </div>
   );
 };

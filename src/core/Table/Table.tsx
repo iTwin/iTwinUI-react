@@ -380,7 +380,7 @@ export const Table = <
       })}
       {...ariaDataAttributes}
     >
-      <div>
+      <div className='iui-tables-rowgroup'>
         {headerGroups.slice(1).map((headerGroup: HeaderGroup<T>) => {
           const headerGroupProps = headerGroup.getHeaderGroupProps({
             className: 'iui-tables-row',
@@ -432,13 +432,20 @@ export const Table = <
             const rowProps = row.getRowProps({
               className: cx('iui-tables-row', {
                 'iui-tables-row-active': row.isSelected,
-                'iui-tables-expanded': row.isExpanded,
+                'iui-tables-row-expanded': row.isExpanded,
               }),
             });
+            const rowGroupProps = {
+              className: cx('iui-tables-rowgroup', {
+                'iui-tables-rowgroup-active': row.isSelected,
+                'iui-tables-rowgroup-expanded': row.isExpanded,
+              }),
+            };
             return (
               <TableRowMemoized
                 row={row}
                 rowProps={rowProps}
+                rowGroupProps={rowGroupProps}
                 isLast={row.index === data.length - 1}
                 onRowInViewport={onRowInViewportRef}
                 onBottomReached={onBottomReachedRef}
