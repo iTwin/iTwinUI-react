@@ -9,6 +9,7 @@ import React from 'react';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/side-navigation.css';
 import { Button, ButtonProps } from '../Buttons';
+import { Tooltip } from '../Tooltip';
 
 export type SidebarButtonProps = {
   /**
@@ -26,17 +27,19 @@ export const SidebarButton = (props: SidebarButtonProps) => {
   useTheme();
 
   return (
-    <Button
-      className={cx(
-        '.iui-sidenav-button',
-        { '.iui-active': isActive },
-        className,
-      )}
-      size='large'
-      {...rest}
-    >
-      {children}
-    </Button>
+    <Tooltip content={children} placement='right'>
+      <Button
+        className={cx(
+          'iui-sidenav-button',
+          { 'iui-active': isActive },
+          className,
+        )}
+        size='large'
+        {...rest}
+      >
+        {children}
+      </Button>
+    </Tooltip>
   );
 };
 

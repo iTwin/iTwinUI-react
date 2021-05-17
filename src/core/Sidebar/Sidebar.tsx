@@ -7,6 +7,8 @@ import cx from 'classnames';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/side-navigation.css';
 import { CommonProps } from '../utils/props';
+import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
+import { IconButton } from '../Buttons';
 
 export type SidebarProps = {
   /**
@@ -38,13 +40,38 @@ export const Sidebar = (props: SidebarProps) => {
     className,
     ...rest
   } = props;
+
   useTheme();
 
+  const [isExpanded, setIsExpanded] = React.useState(false);
+
+  const ExpandButton = (
+    <IconButton
+      className='iui-sidenav-button iui-expand'
+      onClick={() => setIsExpanded((expanded) => !expanded)}
+    >
+      <SvgChevronRight />
+    </IconButton>
+  );
+
   return (
-    <div className={cx('.iui-side-navigation', className)} {...rest}>
-      {expanderVisibility === 'top'}
-      {mainItems}
-      {secondaryItems}
+    <div
+      className={cx(
+        'iui-side-navigation',
+        {
+          'iui-expanded': isExpanded,
+          'iui-collapsed': !isExpanded,
+        },
+        className,
+      )}
+      {...rest}
+    >
+      {expanderVisibility === 'top' && ExpandButton}
+      <div className='iui-sidenav-content'>
+        <div className='iui-top'>{mainItems}</div>
+        <div className='iui-bottom'>{secondaryItems}</div>
+      </div>
+      {expanderVisibility === 'bottom' && ExpandButton}
     </div>
   );
 };
