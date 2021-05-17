@@ -5,11 +5,11 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import { SideNavigation } from './SideNavigation';
+import { Sidebar } from './Sidebar';
 
 it('should render in its most basic state', () => {
   // TODO: Make sure all required props are passed in here
-  const { container } = render(<SideNavigation />);
+  const { container } = render(<Sidebar />);
   expect(container.querySelector('div')).toBeTruthy();
 });
 
