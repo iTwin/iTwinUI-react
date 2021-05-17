@@ -6,10 +6,9 @@
 
 ### What's new
 
-- **Added new `Header` component.** Use `HeaderLogo`, `HeaderBreadcrumbs` and `HeaderButton` to build application header, support `isSlim` for 3D content.
-- **Added new `HeaderLogo` component.** Use within `Header` component, support size adjusting logo for `isSlim` header mode.
-- **Added new `HeaderBreadcrumbs` component.** Use within `Header` component, adds chevrons between items.
-- **Added new `HeaderButton` component.** Use within `HeaderBreadcrumbs` component, support size adjusting `startIcon` and `description` display depending on `Header` `isSlim` prop.
+- **Added new `Header` component,** with a condensed version available through `isSlim` prop.
+  - **Added new `HeaderLogo` component** for use with the Header `appLogo` prop.
+  - **Added new `HeaderBreadcrumbs` and `HeaderButton` component** for use with the Header `breadcrumbs` prop.
 
 ## [1.4.0]
 
