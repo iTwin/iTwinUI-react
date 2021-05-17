@@ -9,13 +9,29 @@ import HeaderBreadcrumbs from './HeaderBreadcrumbs';
 
 it('should render in its most basic state', () => {
   const { container } = render(<HeaderBreadcrumbs items={[]} />);
-  expect(container).toMatchInlineSnapshot(`<div />`);
+  const nav = container.querySelector('nav') as HTMLElement;
+  expect(nav).toBeTruthy();
+  expect(nav.getAttribute('aria-label')).toEqual('breadcrumbs');
+});
+
+it('should render translated strings', () => {
+  const { container } = render(
+    <HeaderBreadcrumbs
+      items={[]}
+      translatedStrings={{ breadcrumbs: 'MockBreadcrumbs' }}
+    />,
+  );
+  const nav = container.querySelector('nav') as HTMLElement;
+  expect(nav).toBeTruthy();
+  expect(nav.getAttribute('aria-label')).toEqual('MockBreadcrumbs');
 });
 
 it('renders single element alone', () => {
   const { container } = render(
     <HeaderBreadcrumbs items={[<div key='item1'>singleItem</div>]} />,
   );
+  expect(container.querySelector('nav')).toBeTruthy();
+
   const item = container.querySelector('div:only-child');
   expect(item?.textContent).toEqual('singleItem');
 });

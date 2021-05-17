@@ -119,6 +119,7 @@ it('renders moreMenu alone correctly', () => {
     '.iui-right > .iui-button.iui-borderless:last-child',
   ) as HTMLButtonElement;
   expect(button).toBeTruthy();
+  expect(button.getAttribute('aria-label')).toEqual('More options');
 
   let menu = document.querySelector('.iui-menu') as HTMLUListElement;
   expect(menu).toBeFalsy();
@@ -142,6 +143,24 @@ it('renders moreMenu alone correctly', () => {
 
   expect(itemOneOnClick).toHaveBeenCalled();
 });
+
+it('renders translatedStrings correctly', () => {
+  const { container } = render(
+    <Header
+      appLogo={<div>AppTitle</div>}
+      isSlim={true}
+      menuItems={() => []}
+      translatedStrings={{ moreOptions: 'MockOptions' }}
+    />,
+  );
+
+  const button = container.querySelector(
+    '.iui-right > .iui-button.iui-borderless:last-child',
+  ) as HTMLButtonElement;
+  expect(button).toBeTruthy();
+  expect(button.getAttribute('aria-label')).toEqual('MockOptions');
+});
+
 it('renders multiple right items in the correct order', () => {
   const { container } = render(
     <Header

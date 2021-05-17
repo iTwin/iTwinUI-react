@@ -14,6 +14,9 @@ import { DropdownMenu } from '../DropdownMenu';
 import { CommonProps } from '../utils/props';
 
 export type HeaderTranslations = {
+  /**
+   * 'More' menu button aria-label.
+   */
   moreOptions: string;
 };
 
