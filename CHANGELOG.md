@@ -10,6 +10,14 @@
   - **Added new `HeaderLogo` component** for use with the Header `appLogo` prop.
   - **Added new `HeaderBreadcrumbs` and `HeaderButton` component** for use with the Header `breadcrumbs` prop.
 
+## [1.4.1]
+
+`2021-05-17`
+
+### Fixes
+
+- **`toaster` now creates container element only when used.**
+
 ## [1.4.0]
 
 `2021-05-12`
@@ -258,6 +266,7 @@
 - **New ThemeProvider component added.** It allows to switch between light and dark themes.
 - **iTwinUI-React is generated to `CommonJS` and `ES` modules.** Usage of `ES` modules allows bundlers to tree-shake unused code resulting in smaller bundle sizes.
 
+[1.4.1]: https://github.com/iTwin/iTwinUI-react/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.1.0...v1.2.0
