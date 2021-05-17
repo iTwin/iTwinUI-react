@@ -7,8 +7,12 @@
 ### What's new
 
 - **Added new `Header` component,** with a condensed version available through `isSlim` prop.
-  - **Added new `HeaderLogo` component** for use with the Header `appLogo` prop.
-  - **Added new `HeaderBreadcrumbs` and `HeaderButton` component** for use with the Header `breadcrumbs` prop.
+- **Added new `HeaderLogo` component** for use with the Header `appLogo` prop.
+- **Added new `HeaderBreadcrumbs` and `HeaderButton` component** for use with the Header `breadcrumbs` prop.
+
+### Fixes
+
+- **Fixed `Table` bug when column gets sorted inadvertently with any filter action to the same column**
 
 ## [1.4.1]
 
