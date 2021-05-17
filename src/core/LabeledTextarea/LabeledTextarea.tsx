@@ -78,6 +78,7 @@ export const LabeledTextarea = React.forwardRef<
     textareaStyle,
     displayStyle = 'default',
     svgIcon,
+    required = false,
     ...textareaProps
   } = props;
 
@@ -98,7 +99,15 @@ export const LabeledTextarea = React.forwardRef<
       )}
       style={style}
     >
-      {label && <div className='iui-label'>{label}</div>}
+      {label && (
+        <div
+          className={cx('iui-label', {
+            'iui-required': required,
+          })}
+        >
+          {label}
+        </div>
+      )}
       <Textarea
         disabled={disabled}
         className={textareaClassName}
