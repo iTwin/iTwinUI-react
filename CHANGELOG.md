@@ -12,7 +12,7 @@
 
 ### Fixes
 
-- **Fixed `Table` bug when column gets sorted inadvertently with any filter action to the same column**
+- **Fixed `Table` bug where filter actions would also trigger sorting.**
 
 ## [1.4.1]
 
