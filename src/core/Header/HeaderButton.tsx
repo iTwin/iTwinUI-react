@@ -69,7 +69,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
       },
       className,
     ),
-    ['aria-current']: isActive ? 'location' : undefined,
+    'aria-current': isActive ? 'location' : undefined,
     children: (
       <>
         <div>{name}</div>
