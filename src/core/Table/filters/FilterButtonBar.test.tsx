@@ -75,3 +75,17 @@ it('should call callbacks on clicks', () => {
   screen.getByText('Clear').click();
   expect(clearFilter).toHaveBeenCalled();
 });
+
+it('should call consume the click event and stop its propagation', () => {
+  const parentClick = jest.fn();
+  render(
+    <div onClick={parentClick}>
+      <FilterButtonBar setFilter={setFilter} clearFilter={clearFilter} />
+    </div>,
+  );
+
+  screen.getByText('Filter').click();
+
+  screen.getByText('Clear').click();
+  expect(parentClick).not.toHaveBeenCalled();
+});

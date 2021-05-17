@@ -54,7 +54,10 @@ export const FilterToggle = <T extends Record<string, unknown>>(
             className={cx('iui-filter', {
               'iui-active': isVisible || column.filterValue,
             })}
-            onClick={() => setIsVisible((v) => !v)}
+            onClick={(e: React.MouseEvent) => {
+              e.stopPropagation();
+              setIsVisible((v) => !v);
+            }}
           >
             {column.filterValue ? (
               <SvgFilter className='iui-icon' />
