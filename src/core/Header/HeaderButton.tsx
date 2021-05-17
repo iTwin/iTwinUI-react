@@ -16,13 +16,6 @@ import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/header.css';
 import { ClassNameProps } from '../utils/props';
 
-export type HeaderButtonTranslations = {
-  /**
-   * Active button aria-label.
-   */
-  page: string;
-};
-
 export type HeaderButtonProps = {
   /**
    * Name.
@@ -37,18 +30,10 @@ export type HeaderButtonProps = {
    * @default false
    */
   isActive?: boolean;
-  /**
-   * Provide localized strings.
-   */
-  translatedStrings?: HeaderButtonTranslations;
 } & Omit<
   Partial<DropdownButtonProps> & Partial<ButtonProps>,
   'children' | 'styleType'
 >;
-
-const defaultTranslations: HeaderButtonTranslations = {
-  page: 'page',
-};
 
 /**
  * Header button that handles slim state of the `Header` it's in.
@@ -68,10 +53,8 @@ export const HeaderButton = (props: HeaderButtonProps) => {
     menuItems,
     className,
     startIcon,
-    translatedStrings,
     ...rest
   } = props;
-  const buttonTranslations = { ...defaultTranslations, ...translatedStrings };
   const buttonProps: ButtonProps & { styleType: 'borderless' } = {
     startIcon: React.isValidElement<ClassNameProps>(startIcon)
       ? React.cloneElement(startIcon, {
@@ -86,7 +69,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
       },
       className,
     ),
-    ['aria-label']: isActive ? buttonTranslations.page : undefined,
+    ['aria-current']: isActive ? 'location' : undefined,
     children: (
       <>
         <div>{name}</div>

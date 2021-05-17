@@ -52,21 +52,7 @@ it('render isActive correctly', () => {
 
   const activeButton = container.querySelector('.iui-header-button.iui-active');
   expect(activeButton).toBeTruthy();
-  expect(activeButton?.getAttribute('aria-label')).toEqual('page');
-});
-
-it('render translated strings correctly', () => {
-  const { container } = render(
-    <HeaderButton
-      name={'MockName'}
-      isActive={true}
-      translatedStrings={{ page: 'MockPage' }}
-    />,
-  );
-
-  const activeButton = container.querySelector('.iui-header-button.iui-active');
-  expect(activeButton).toBeTruthy();
-  expect(activeButton?.getAttribute('aria-label')).toEqual('MockPage');
+  expect(activeButton?.getAttribute('aria-current')).toEqual('location');
 });
 
 it('render startIcon correctly', () => {
