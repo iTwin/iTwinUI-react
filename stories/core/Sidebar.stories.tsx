@@ -27,7 +27,7 @@ export const Basic: Story<SidebarProps> = (args) => {
         <SidebarButton startIcon={<SvgPlaceholder />} key={1}>
           App 2
         </SidebarButton>,
-        <SidebarButton startIcon={<SvgPlaceholder />} key={2}>
+        <SidebarButton startIcon={<SvgPlaceholder />} key={2} disabled>
           App 3
         </SidebarButton>,
       ]}

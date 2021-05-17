@@ -16,30 +16,49 @@ export type SidebarButtonProps = {
    * Whether the sidebar button is active.
    */
   isActive?: boolean;
+  /**
+   * If true, button label will also be shown as a tooltip.
+   * By default, tooltip is shown when sidebar is collapsed, and hidden when expanded.
+   */
+  showTooltip?: boolean;
 } & Omit<ButtonProps, 'styleType' | 'size'>;
 
 /**
  * Sidebar button
  */
 export const SidebarButton = (props: SidebarButtonProps) => {
-  const { className, children, isActive = false, ...rest } = props;
+  const {
+    className,
+    children,
+    isActive = false,
+    disabled = false,
+    showTooltip,
+    ...rest
+  } = props;
 
   useTheme();
 
-  return (
+  const button = (
+    <Button
+      className={cx(
+        'iui-sidenav-button',
+        { 'iui-active': isActive },
+        className,
+      )}
+      size='large'
+      disabled={disabled}
+      {...rest}
+    >
+      {children}
+    </Button>
+  );
+
+  return showTooltip ? (
     <Tooltip content={children} placement='right'>
-      <Button
-        className={cx(
-          'iui-sidenav-button',
-          { 'iui-active': isActive },
-          className,
-        )}
-        size='large'
-        {...rest}
-      >
-        {children}
-      </Button>
+      {button}
     </Tooltip>
+  ) : (
+    button
   );
 };
 
