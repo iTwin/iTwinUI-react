@@ -64,6 +64,7 @@ export const LabeledInput = React.forwardRef<
     inputClassName,
     inputStyle,
     displayStyle = 'default',
+    required = false,
     ...rest
   } = props;
 
@@ -84,7 +85,15 @@ export const LabeledInput = React.forwardRef<
       )}
       style={style}
     >
-      {label && <div className='iui-label'>{label}</div>}
+      {label && (
+        <div
+          className={cx('iui-label', {
+            'iui-required': required,
+          })}
+        >
+          {label}
+        </div>
+      )}
       <Input
         disabled={disabled}
         className={inputClassName}
