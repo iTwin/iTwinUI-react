@@ -36,7 +36,7 @@ export const Sidebar = (props: SidebarProps) => {
   const {
     mainItems,
     secondaryItems,
-    expanderVisibility,
+    expanderVisibility = 'top',
     className,
     ...rest
   } = props;
