@@ -17,6 +17,7 @@ export type ToastOptions = Omit<
 
 export default class Toaster {
   private toasts: ToastProps[] = [];
+  private lastId = 0;
 
   public positive(content: React.ReactNode, settings?: ToastOptions): void {
     this.createToast(content, 'positive', settings);
@@ -38,8 +39,8 @@ export default class Toaster {
     category: ToastCategory,
     settings?: ToastOptions,
   ) {
-    const lastId = this.toasts[0]?.id ?? 0;
-    const currentId = lastId + 1;
+    ++this.lastId;
+    const currentId = this.lastId;
     this.toasts = [
       {
         ...settings,

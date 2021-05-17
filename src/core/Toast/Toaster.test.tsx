@@ -56,6 +56,7 @@ function assertRemovedToast(
 
 afterEach(() => {
   toaster['toasts'] = [];
+  toaster['lastId'] = 0;
   jest.clearAllMocks();
 });
 
