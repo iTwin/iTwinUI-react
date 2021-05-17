@@ -9,13 +9,6 @@ import React from 'react';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/header.css';
 
-export type HeaderBreadcrumbsTranslations = {
-  /**
-   * `nav` element aria-label.
-   */
-  breadcrumbs: string;
-};
-
 export type HeaderBreadcrumbsProps = {
   /**
    * Array of elements, chevrons will be put between them.
@@ -27,14 +20,6 @@ export type HeaderBreadcrumbsProps = {
    * ]
    */
   items: React.ReactNode[];
-  /**
-   * Provide localized strings.
-   */
-  translatedStrings?: HeaderBreadcrumbsTranslations;
-};
-
-const defaultTranslations: HeaderBreadcrumbsTranslations = {
-  breadcrumbs: 'breadcrumbs',
 };
 
 /**
@@ -48,15 +33,11 @@ const defaultTranslations: HeaderBreadcrumbsTranslations = {
  * />
  */
 export const HeaderBreadcrumbs = (props: HeaderBreadcrumbsProps) => {
-  const { items, translatedStrings } = props;
-  const breadcrumbsTranslations = {
-    ...defaultTranslations,
-    ...translatedStrings,
-  };
+  const { items, ...rest } = props;
 
   useTheme();
   return (
-    <nav aria-label={breadcrumbsTranslations.breadcrumbs}>
+    <nav aria-label='breadcrumbs' {...rest}>
       {items.reduce(
         (previous: React.ReactNode[], current, index) => [
           ...previous,

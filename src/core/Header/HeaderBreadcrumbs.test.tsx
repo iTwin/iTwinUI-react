@@ -14,12 +14,9 @@ it('should render in its most basic state', () => {
   expect(nav.getAttribute('aria-label')).toEqual('breadcrumbs');
 });
 
-it('should render translated strings', () => {
+it('should support additional aria-* props to allow user overrides', () => {
   const { container } = render(
-    <HeaderBreadcrumbs
-      items={[]}
-      translatedStrings={{ breadcrumbs: 'MockBreadcrumbs' }}
-    />,
+    <HeaderBreadcrumbs items={[]} aria-label='MockBreadcrumbs' />,
   );
   const nav = container.querySelector('nav') as HTMLElement;
   expect(nav).toBeTruthy();
