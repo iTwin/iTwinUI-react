@@ -57,12 +57,17 @@ const DatePickerInput = (props: DatePickerInputProps) => {
       content={<DatePicker date={date} onChange={onDateSelected} setFocus />}
       placement='bottom'
       visible={isVisible}
-      onClickOutside={close}
+      onClickOutside={(_, e) => {
+        if (!buttonRef.current?.contains(e.target as Node)) {
+          close();
+        }
+      }}
     >
       <LabeledInput
         displayStyle='inline'
         value={inputValue}
         onChange={onInputChange}
+        onClick={close}
         svgIcon={
           <IconButton
             styleType='borderless'

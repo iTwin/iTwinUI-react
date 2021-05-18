@@ -11,9 +11,31 @@ import { FilterButtonBarTranslation } from './FilterButtonBar';
 import { TextFilter } from './TextFilter/TextFilter';
 import { TableFilterProps } from './types';
 
+export type DateRangeFilterOptions = {
+  /**
+   * Function that formats date into string.
+   */
+  formatDate?: (date: Date) => string;
+  /**
+   * Function that parses string into date.
+   * If string is invalid, return invalid `Date` object (`new Date('')`)
+   * Recommended to use pattern matching in order to parse string when date is fully entered.
+   */
+  parseInput?: (text: string) => Date;
+  /**
+   * Placeholder shown in input field. It is recommended to show date format.
+   */
+  placeholder?: string;
+  /**
+   * Translated filter labels.
+   */
+  translatedLabels?: DateRangeTranslation & FilterButtonBarTranslation;
+};
+
 export const tableFilters = {
   /**
    * Basic filter with a single input field.
+   * @param translatedLabels Translated filter labels.
    */
   TextFilter: (translatedLabels?: FilterButtonBarTranslation) => <
     T extends Record<string, unknown>
@@ -23,18 +45,9 @@ export const tableFilters = {
   /**
    * Date range filter.
    */
-  DateRangeFilter: (
-    formatDate: (date: Date) => string,
-    parseInput: (text: string) => Date,
-    placeholder?: string,
-    translatedLabels?: DateRangeTranslation & FilterButtonBarTranslation,
-  ) => <T extends Record<string, unknown>>(props: TableFilterProps<T>) => (
-    <DateRangeFilter
-      {...props}
-      translatedLabels={translatedLabels}
-      formatDate={formatDate}
-      parseInput={parseInput}
-      placeholder={placeholder}
-    />
-  ),
+  DateRangeFilter: (options?: DateRangeFilterOptions) => <
+    T extends Record<string, unknown>
+  >(
+    props: TableFilterProps<T>,
+  ) => <DateRangeFilter {...props} {...options} />,
 };

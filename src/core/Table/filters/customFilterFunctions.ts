@@ -10,10 +10,9 @@ const isValidDate = (date: Date | undefined) =>
 const betweenDate = <T extends Record<string, unknown>>(
   rows: Row<T>[],
   ids: IdType<T>[],
-  filterValue: [Date?, Date?],
+  filterValue: [Date?, Date?] | undefined,
 ) => {
   const [min, max] = filterValue || [];
-  console.log(filterValue);
 
   const MAX_DATE_VALUE = 8640000000000000;
   const minValue = (isValidDate(min) ? min : new Date(-MAX_DATE_VALUE)) as Date;
@@ -30,7 +29,7 @@ const betweenDate = <T extends Record<string, unknown>>(
   });
 };
 
-betweenDate.autoRemove = (val: [Date?, Date?]) => {
+betweenDate.autoRemove = (val: [Date?, Date?] | undefined) => {
   return !val || (!isValidDate(val[0]) && !isValidDate(val[1]));
 };
 

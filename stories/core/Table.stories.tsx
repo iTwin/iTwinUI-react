@@ -323,7 +323,7 @@ export const Filters: Story<TableProps> = (args) => {
     }>,
   ) => action(props.row.original.name)();
 
-  const localizedStrings = useMemo(
+  const translatedLabels = useMemo(
     () => ({
       filter: 'Filter',
       clear: 'Clear',
@@ -350,10 +350,6 @@ export const Filters: Story<TableProps> = (args) => {
     [formatter],
   );
 
-  const parseInput = useCallback((text: string) => {
-    return new Date(text);
-  }, []);
-
   const tableColumns = useMemo(
     (): Column[] => [
       {
@@ -364,14 +360,14 @@ export const Filters: Story<TableProps> = (args) => {
             Header: 'Name',
             accessor: 'name',
             fieldType: 'text',
-            Filter: tableFilters.TextFilter(localizedStrings),
+            Filter: tableFilters.TextFilter(translatedLabels),
           },
           {
             id: 'description',
             Header: 'Description',
             accessor: 'description',
             fieldType: 'text',
-            Filter: tableFilters.TextFilter(localizedStrings),
+            Filter: tableFilters.TextFilter(translatedLabels),
             maxWidth: 200,
           },
           {
@@ -387,7 +383,7 @@ export const Filters: Story<TableProps> = (args) => {
             ) => {
               return props.row.original.ids.join(', ');
             },
-            Filter: tableFilters.TextFilter(localizedStrings),
+            Filter: tableFilters.TextFilter(translatedLabels),
             filter: 'includes',
           },
           {
@@ -404,12 +400,9 @@ export const Filters: Story<TableProps> = (args) => {
             ) => {
               return formatDate(props.row.original.date);
             },
-            Filter: tableFilters.DateRangeFilter(
-              formatDate,
-              parseInput,
-              'MMM DD, YYYY',
-              localizedStrings,
-            ),
+            Filter: tableFilters.DateRangeFilter({
+              translatedLabels,
+            }),
             filter: 'betweenDate',
           },
           {
@@ -435,7 +428,7 @@ export const Filters: Story<TableProps> = (args) => {
         ],
       },
     ],
-    [formatDate, localizedStrings, parseInput],
+    [formatDate, translatedLabels],
   );
 
   const tableData = useMemo(

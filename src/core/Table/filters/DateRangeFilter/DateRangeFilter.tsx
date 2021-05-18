@@ -23,11 +23,27 @@ const defaultStrings: DateRangeTranslation = {
   to: 'To',
 };
 
+const defaultFormatDate = (date: Date) => {
+  const formatter = new Intl.DateTimeFormat('en-us', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+  return formatter.format(date);
+};
+
+const defaultParseInput = (text: string) => {
+  if (/^[a-z]{3}\s\d{1,2},\s\d{4}$/gi.test(text)) {
+    return new Date(text);
+  }
+  return new Date('');
+};
+
 export type DateRangeFilterProps<
   T extends Record<string, unknown>
 > = TableFilterProps<T> & {
-  formatDate: (date: Date) => string;
-  parseInput: (text: string) => Date;
+  formatDate?: (date: Date) => string;
+  parseInput?: (text: string) => Date;
   placeholder?: string;
   translatedLabels?: DateRangeTranslation & FilterButtonBarTranslation;
 };
@@ -40,8 +56,8 @@ export const DateRangeFilter = <T extends Record<string, unknown>>(
     translatedLabels,
     setFilter,
     clearFilter,
-    formatDate,
-    parseInput,
+    formatDate = defaultFormatDate,
+    parseInput = defaultParseInput,
     placeholder,
   } = props;
 
