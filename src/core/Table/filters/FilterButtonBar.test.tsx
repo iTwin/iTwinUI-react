@@ -5,6 +5,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { FilterButtonBar, FilterButtonBarProps } from './FilterButtonBar';
+import { BaseFilter } from './BaseFilter';
 
 const setFilter = jest.fn();
 const clearFilter = jest.fn();
@@ -80,7 +81,9 @@ it('should consume the click event and stop its propagation', () => {
   const parentClick = jest.fn();
   render(
     <div onClick={parentClick}>
-      <FilterButtonBar setFilter={setFilter} clearFilter={clearFilter} />
+      <BaseFilter>
+        <FilterButtonBar setFilter={setFilter} clearFilter={clearFilter} />
+      </BaseFilter>
     </div>,
   );
 
