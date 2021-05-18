@@ -75,9 +75,11 @@ export const Sidebar = (props: SidebarProps) => {
       {expanderVisibility === 'top' && ExpandButton}
       <div className='iui-sidenav-content'>
         <div className='iui-top'>
-          {mainItems.map((sidebarButton) =>
-            React.cloneElement(sidebarButton as JSX.Element, {
-              showTooltip: !isExpanded,
+          {mainItems.map((sidebarButton: JSX.Element) =>
+            React.cloneElement(sidebarButton, {
+              title:
+                sidebarButton.props.title ||
+                (!isExpanded ? sidebarButton.props.children : undefined),
             }),
           )}
         </div>

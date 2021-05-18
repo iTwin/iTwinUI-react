@@ -9,18 +9,12 @@ import React from 'react';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/side-navigation.css';
 import { Button, ButtonProps } from '../Buttons';
-import { Tooltip } from '../Tooltip';
 
 export type SidebarButtonProps = {
   /**
    * Whether the sidebar button is active.
    */
   isActive?: boolean;
-  /**
-   * If true, button label will also be shown as a tooltip.
-   * By default, tooltip is shown when sidebar is collapsed, and hidden when expanded.
-   */
-  showTooltip?: boolean;
 } & Omit<ButtonProps, 'styleType' | 'size'>;
 
 /**
@@ -32,13 +26,12 @@ export const SidebarButton = (props: SidebarButtonProps) => {
     children,
     isActive = false,
     disabled = false,
-    showTooltip,
     ...rest
   } = props;
 
   useTheme();
 
-  const button = (
+  return (
     <Button
       className={cx(
         'iui-sidenav-button',
@@ -51,14 +44,6 @@ export const SidebarButton = (props: SidebarButtonProps) => {
     >
       {children}
     </Button>
-  );
-
-  return showTooltip ? (
-    <Tooltip content={children} placement='right'>
-      {button}
-    </Tooltip>
-  ) : (
-    button
   );
 };
 
