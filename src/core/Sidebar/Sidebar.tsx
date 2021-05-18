@@ -26,6 +26,15 @@ export type SidebarProps = {
    * @default 'top'
    */
   expanderVisibility?: 'top' | 'bottom' | 'hidden';
+  /**
+   * Controlled flag to expand/collapse the sidebar.
+   * Use with `onExpanderClick` to manage your own state.
+   */
+  isExpanded?: boolean;
+  /**
+   * Callback fired when the "expander" icon is clicked.
+   */
+  onExpanderClick?: () => void;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -37,6 +46,9 @@ export type SidebarProps = {
  *    <SidebarButton startIcon={<SvgPlaceholder />}>App 2</SidebarButton>,
  *    <SidebarButton startIcon={<SvgPlaceholder />}>App 3</SidebarButton>,
  *  ]}
+ * secondaryItems={[
+ *  <SidebarButton
+ * ]}
  * />
  */
 export const Sidebar = (props: SidebarProps) => {
@@ -45,17 +57,22 @@ export const Sidebar = (props: SidebarProps) => {
     secondaryItems,
     expanderVisibility = 'top',
     className,
+    isExpanded,
+    onExpanderClick,
     ...rest
   } = props;
 
   useTheme();
 
-  const [isExpanded, setIsExpanded] = React.useState(false);
+  const [_isExpanded, _setIsExpanded] = React.useState(false);
 
   const ExpandButton = (
     <IconButton
       className='iui-sidenav-button iui-expand'
-      onClick={() => setIsExpanded((expanded) => !expanded)}
+      onClick={React.useCallback(() => {
+        _setIsExpanded((expanded) => !expanded);
+        onExpanderClick?.();
+      }, [onExpanderClick])}
     >
       <SvgChevronRight />
     </IconButton>
@@ -66,8 +83,8 @@ export const Sidebar = (props: SidebarProps) => {
       className={cx(
         'iui-side-navigation',
         {
-          'iui-expanded': isExpanded,
-          'iui-collapsed': !isExpanded,
+          'iui-expanded': isExpanded ?? _isExpanded,
+          'iui-collapsed': !(isExpanded ?? _isExpanded),
         },
         className,
       )}
