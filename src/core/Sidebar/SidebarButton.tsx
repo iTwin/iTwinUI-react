@@ -20,31 +20,34 @@ export type SidebarButtonProps = {
 /**
  * Wrapper around Button to be used as Sidebar items.
  */
-export const SidebarButton = (props: SidebarButtonProps) => {
-  const {
-    className,
-    children,
-    isActive = false,
-    disabled = false,
-    ...rest
-  } = props;
+export const SidebarButton = React.forwardRef<HTMLButtonElement>(
+  (props: SidebarButtonProps, ref) => {
+    const {
+      className,
+      children,
+      isActive = false,
+      disabled = false,
+      ...rest
+    } = props;
 
-  useTheme();
+    useTheme();
 
-  return (
-    <Button
-      className={cx(
-        'iui-sidenav-button',
-        { 'iui-active': isActive },
-        className,
-      )}
-      size='large'
-      disabled={disabled}
-      {...rest}
-    >
-      {children}
-    </Button>
-  );
-};
+    return (
+      <Button
+        className={cx(
+          'iui-sidenav-button',
+          { 'iui-active': isActive },
+          className,
+        )}
+        size='large'
+        disabled={disabled}
+        ref={ref}
+        {...rest}
+      >
+        {children}
+      </Button>
+    );
+  },
+);
 
 export default SidebarButton;
