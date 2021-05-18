@@ -28,7 +28,6 @@ export type SidebarProps = {
   expanderVisibility?: 'top' | 'bottom' | 'hidden';
   /**
    * Controlled flag to expand/collapse the sidebar.
-   * Use with `onExpanderClick` to manage your own state.
    */
   isExpanded?: boolean;
   /**
@@ -64,7 +63,10 @@ export const Sidebar = (props: SidebarProps) => {
 
   useTheme();
 
-  const [_isExpanded, _setIsExpanded] = React.useState(false);
+  const [_isExpanded, _setIsExpanded] = React.useState(isExpanded ?? false);
+  React.useEffect(() => {
+    _setIsExpanded(isExpanded ?? false);
+  }, [isExpanded]);
 
   const ExpandButton = (
     <IconButton
@@ -83,8 +85,8 @@ export const Sidebar = (props: SidebarProps) => {
       className={cx(
         'iui-side-navigation',
         {
-          'iui-expanded': isExpanded ?? _isExpanded,
-          'iui-collapsed': !(isExpanded ?? _isExpanded),
+          'iui-expanded': _isExpanded,
+          'iui-collapsed': !_isExpanded,
         },
         className,
       )}
@@ -94,7 +96,7 @@ export const Sidebar = (props: SidebarProps) => {
       <div className='iui-sidenav-content'>
         <div className='iui-top'>
           {mainItems.map((sidebarButton: JSX.Element) =>
-            !isExpanded ? (
+            !_isExpanded ? (
               <Tooltip content={sidebarButton.props.children} placement='right'>
                 {sidebarButton}
               </Tooltip>
@@ -105,7 +107,7 @@ export const Sidebar = (props: SidebarProps) => {
         </div>
         <div className='iui-bottom'>
           {secondaryItems?.map((sidebarButton: JSX.Element) =>
-            !isExpanded ? (
+            !_isExpanded ? (
               <Tooltip content={sidebarButton.props.children} placement='right'>
                 {sidebarButton}
               </Tooltip>
