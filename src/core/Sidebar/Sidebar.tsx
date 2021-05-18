@@ -5,11 +5,11 @@
 import React from 'react';
 import cx from 'classnames';
 import { useTheme } from '../utils/hooks/useTheme';
-import '@itwin/itwinui-css/css/side-navigation.css';
 import { CommonProps } from '../utils/props';
 import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import { IconButton } from '../Buttons';
 import { Tooltip } from '../Tooltip';
+import '@itwin/itwinui-css/css/side-navigation.css';
 
 export type SidebarProps = {
   /**
@@ -95,9 +95,13 @@ export const Sidebar = (props: SidebarProps) => {
       {expanderVisibility === 'top' && ExpandButton}
       <div className='iui-sidenav-content'>
         <div className='iui-top'>
-          {mainItems.map((sidebarButton: JSX.Element) =>
+          {mainItems.map((sidebarButton: JSX.Element, index) =>
             !_isExpanded ? (
-              <Tooltip content={sidebarButton.props.children} placement='right'>
+              <Tooltip
+                content={sidebarButton.props.children}
+                placement='right'
+                key={index}
+              >
                 {sidebarButton}
               </Tooltip>
             ) : (
@@ -106,9 +110,13 @@ export const Sidebar = (props: SidebarProps) => {
           )}
         </div>
         <div className='iui-bottom'>
-          {secondaryItems?.map((sidebarButton: JSX.Element) =>
+          {secondaryItems?.map((sidebarButton: JSX.Element, index) =>
             !_isExpanded ? (
-              <Tooltip content={sidebarButton.props.children} placement='right'>
+              <Tooltip
+                content={sidebarButton.props.children}
+                placement='right'
+                key={index}
+              >
                 {sidebarButton}
               </Tooltip>
             ) : (
