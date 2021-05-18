@@ -9,6 +9,7 @@ import { Sidebar, SidebarButton, SidebarProps } from '../../src/core';
 
 export default {
   component: Sidebar,
+  subcomponents: { SidebarButton },
   argTypes: {
     className: { control: { disable: true } },
     style: { control: { disable: true } },

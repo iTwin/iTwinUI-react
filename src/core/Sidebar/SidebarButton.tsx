@@ -24,7 +24,7 @@ export type SidebarButtonProps = {
 } & Omit<ButtonProps, 'styleType' | 'size'>;
 
 /**
- * Sidebar button
+ * Wrapper around Button to be used as Sidebar items.
  */
 export const SidebarButton = (props: SidebarButtonProps) => {
   const {

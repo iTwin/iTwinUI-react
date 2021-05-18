@@ -12,12 +12,12 @@ import { IconButton } from '../Buttons';
 
 export type SidebarProps = {
   /**
-   * Buttons shown in the top portion sidebar.
-   * Recommended to use `SidenavButton`s.
+   * Buttons shown in the top portion of sidebar.
+   * Recommended to use `SidebarButton` components.
    */
   mainItems: React.ReactNode[];
   /**
-   * Buttons shown at the bottom of the sidebar.
+   * Buttons shown at the bottom of sidebar.
    */
   secondaryItems?: React.ReactNode[];
   /**
@@ -28,9 +28,15 @@ export type SidebarProps = {
 } & Omit<CommonProps, 'title'>;
 
 /**
- * Describe me here!
+ * Sidebar component.
  * @example
- * Example usages go here!
+ * <Sidebar
+ *  mainItems={[
+ *    <SidebarButton startIcon={<SvgPlaceholder />}>App 1</SidebarButton>,
+ *    <SidebarButton startIcon={<SvgPlaceholder />}>App 2</SidebarButton>,
+ *    <SidebarButton startIcon={<SvgPlaceholder />}>App 3</SidebarButton>,
+ *  ]}
+ * />
  */
 export const Sidebar = (props: SidebarProps) => {
   const {
