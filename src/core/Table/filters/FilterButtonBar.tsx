@@ -60,23 +60,10 @@ export const FilterButtonBar = (props: FilterButtonBarProps) => {
   return (
     <div className={cx('iui-button-bar', className)} style={style}>
       {children}
-      <Button
-        styleType='high-visibility'
-        onClick={(e: React.MouseEvent) => {
-          e.stopPropagation();
-          setFilter();
-        }}
-      >
+      <Button styleType='high-visibility' onClick={setFilter}>
         {translatedStrings.filter}
       </Button>
-      <Button
-        onClick={(e: React.MouseEvent) => {
-          e.stopPropagation();
-          clearFilter();
-        }}
-      >
-        {translatedStrings.clear}
-      </Button>
+      <Button onClick={clearFilter}>{translatedStrings.clear}</Button>
     </div>
   );
 };
