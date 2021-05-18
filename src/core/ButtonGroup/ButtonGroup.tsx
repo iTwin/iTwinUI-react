@@ -4,16 +4,16 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { CommonProps } from '../utils/props';
+import { ClassNameProps } from '../utils/props';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/button.css';
 
-export type ButtonGroupProps = CommonProps & {
+export type ButtonGroupProps = {
   /**
    * Buttons in the ButtonGroup.
    */
   children: React.ReactNode;
-};
+} & ClassNameProps;
 
 /**
  * Group buttons together for common actions
