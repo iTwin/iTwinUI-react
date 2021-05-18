@@ -9,6 +9,7 @@ import '@itwin/itwinui-css/css/side-navigation.css';
 import { CommonProps } from '../utils/props';
 import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import { IconButton } from '../Buttons';
+import { Tooltip } from '../Tooltip';
 
 export type SidebarProps = {
   /**
@@ -76,14 +77,26 @@ export const Sidebar = (props: SidebarProps) => {
       <div className='iui-sidenav-content'>
         <div className='iui-top'>
           {mainItems.map((sidebarButton: JSX.Element) =>
-            React.cloneElement(sidebarButton, {
-              title:
-                sidebarButton.props.title ||
-                (!isExpanded ? sidebarButton.props.children : undefined),
-            }),
+            !isExpanded ? (
+              <Tooltip content={sidebarButton.props.children} placement='right'>
+                {sidebarButton}
+              </Tooltip>
+            ) : (
+              sidebarButton
+            ),
           )}
         </div>
-        <div className='iui-bottom'>{secondaryItems}</div>
+        <div className='iui-bottom'>
+          {secondaryItems?.map((sidebarButton: JSX.Element) =>
+            !isExpanded ? (
+              <Tooltip content={sidebarButton.props.children} placement='right'>
+                {sidebarButton}
+              </Tooltip>
+            ) : (
+              sidebarButton
+            ),
+          )}
+        </div>
       </div>
       {expanderVisibility === 'bottom' && ExpandButton}
     </div>
