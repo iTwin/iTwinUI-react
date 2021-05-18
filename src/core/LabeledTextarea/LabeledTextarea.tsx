@@ -112,6 +112,7 @@ export const LabeledTextarea = React.forwardRef<
         disabled={disabled}
         className={textareaClassName}
         style={textareaStyle}
+        required={required}
         {...textareaProps}
         ref={ref}
       />
