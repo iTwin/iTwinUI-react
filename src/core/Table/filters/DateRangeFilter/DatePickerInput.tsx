@@ -44,6 +44,10 @@ const DatePickerInput = (props: DatePickerInputProps) => {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
       setInputValue(value);
+      if (!value) {
+        onChange(undefined);
+      }
+
       const parsedDate = parseInput(value);
       if (parsedDate && !isNaN(parsedDate.valueOf())) {
         onChange(parsedDate);

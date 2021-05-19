@@ -102,3 +102,27 @@ it('should call onChange when selected day from calendar', () => {
   expect(document.activeElement).toEqual(iconButton);
   expect(onChange).toHaveBeenCalledWith(new Date(2021, 4, 7));
 });
+
+it('should call onChange with undefined when input field is cleared', () => {
+  const onChange = jest.fn();
+  const { container } = renderComponent({
+    onChange,
+    date: new Date(2021, 4, 18),
+  });
+
+  const iconButton = container.querySelector(
+    '.iui-message .iui-button.iui-borderless',
+  ) as HTMLButtonElement;
+  expect(iconButton).toBeTruthy();
+  iconButton.click();
+
+  screen.getByText('7').click();
+  expect(onChange).toHaveBeenNthCalledWith(1, new Date(2021, 4, 7));
+
+  const input = container.querySelector(
+    '.iui-input-container input',
+  ) as HTMLInputElement;
+  expect(input).toBeTruthy();
+  fireEvent.change(input, { target: { value: '' } });
+  expect(onChange).toHaveBeenNthCalledWith(2, undefined);
+});
