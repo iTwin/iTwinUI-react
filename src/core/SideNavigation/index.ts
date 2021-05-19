@@ -2,9 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-export { Sidebar } from './Sidebar';
-export type { SidebarProps } from './Sidebar';
-export default './Sidebar';
+export { SideNavigation } from './SideNavigation';
+export type { SideNavigationProps } from './SideNavigation';
+export default './SideNavigation';
 
-export { SidebarButton } from './SidebarButton';
-export type { SidebarButtonProps } from './SidebarButton';
+export { SidenavButton } from './SidenavButton';
+export type { SidenavButtonProps } from './SidenavButton';

@@ -10,7 +10,7 @@ import { useTheme } from '../utils/hooks/useTheme';
 import { Button, ButtonProps } from '../Buttons';
 import '@itwin/itwinui-css/css/side-navigation.css';
 
-export type SidebarButtonProps = {
+export type SidenavButtonProps = {
   /**
    * Whether the sidebar button is active.
    */
@@ -18,11 +18,11 @@ export type SidebarButtonProps = {
 } & Omit<ButtonProps, 'styleType' | 'size'>;
 
 /**
- * Wrapper around Button to be used as Sidebar items.
+ * Wrapper around Button to be used as SideNavigation items.
  */
-export const SidebarButton = React.forwardRef<
+export const SidenavButton = React.forwardRef<
   HTMLButtonElement,
-  SidebarButtonProps
+  SidenavButtonProps
 >((props, ref) => {
   const {
     className,
@@ -51,4 +51,4 @@ export const SidebarButton = React.forwardRef<
   );
 });
 
-export default SidebarButton;
+export default SidenavButton;

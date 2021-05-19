@@ -98,8 +98,8 @@ export type { RadioTileGroupProps, RadioTileProps } from './RadioTiles';
 export { Select } from './Select';
 export type { SelectProps, SelectOption, ItemRendererProps } from './Select';
 
-export { Sidebar, SidebarButton } from './Sidebar';
-export type { SidebarProps, SidebarButtonProps } from './Sidebar';
+export { SideNavigation, SidenavButton } from './SideNavigation';
+export type { SideNavigationProps, SidenavButtonProps } from './SideNavigation';
 
 export { Table, tableFilters, FilterButtonBar } from './Table';
 export type {

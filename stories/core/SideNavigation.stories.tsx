@@ -6,11 +6,15 @@ import { SvgPlaceholder, SvgSettings } from '@itwin/itwinui-icons-react';
 import { useState } from '@storybook/addons';
 import { Story, Meta } from '@storybook/react';
 import React from 'react';
-import { Sidebar, SidebarButton, SidebarProps } from '../../src/core';
+import {
+  SideNavigation,
+  SidenavButton,
+  SideNavigationProps,
+} from '../../src/core';
 
 export default {
-  component: Sidebar,
-  subcomponents: { SidebarButton },
+  component: SideNavigation,
+  subcomponents: { SidenavButton },
   argTypes: {
     className: { control: { disable: true } },
     style: { control: { disable: true } },
@@ -18,55 +22,55 @@ export default {
     secondaryItems: { control: { disable: true } },
   },
   args: { style: { height: 'calc(100vh - 24px) ' } },
-  title: 'Core/Sidebar',
-} as Meta<SidebarProps>;
+  title: 'Core/SideNavigation',
+} as Meta<SideNavigationProps>;
 
-export const Basic: Story<SidebarProps> = (args) => {
+export const Basic: Story<SideNavigationProps> = (args) => {
   return (
-    <Sidebar
+    <SideNavigation
       {...args}
       mainItems={[
-        <SidebarButton startIcon={<SvgPlaceholder />} key={0}>
+        <SidenavButton startIcon={<SvgPlaceholder />} key={0}>
           App 1
-        </SidebarButton>,
-        <SidebarButton startIcon={<SvgPlaceholder />} key={1}>
+        </SidenavButton>,
+        <SidenavButton startIcon={<SvgPlaceholder />} key={1}>
           App 2
-        </SidebarButton>,
-        <SidebarButton startIcon={<SvgPlaceholder />} key={2} disabled>
+        </SidenavButton>,
+        <SidenavButton startIcon={<SvgPlaceholder />} key={2} disabled>
           App 3
-        </SidebarButton>,
+        </SidenavButton>,
       ]}
       secondaryItems={[
-        <SidebarButton startIcon={<SvgSettings />} key={3}>
+        <SidenavButton startIcon={<SvgSettings />} key={3}>
           Settings
-        </SidebarButton>,
+        </SidenavButton>,
       ]}
     />
   );
 };
 
-export const ActiveItem: Story<SidebarProps> = (args) => {
+export const ActiveItem: Story<SideNavigationProps> = (args) => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
   const mainItems = [...new Array(3)].map((_, index) => (
-    <SidebarButton
+    <SidenavButton
       startIcon={<SvgPlaceholder />}
       key={index}
       isActive={activeIndex === index}
       onClick={() => setActiveIndex(index)}
     >
       {`App ${index}`}
-    </SidebarButton>
+    </SidenavButton>
   ));
 
   return (
-    <Sidebar
+    <SideNavigation
       {...args}
       mainItems={mainItems}
       secondaryItems={[
-        <SidebarButton startIcon={<SvgSettings />} key={3}>
+        <SidenavButton startIcon={<SvgSettings />} key={3}>
           Settings
-        </SidebarButton>,
+        </SidenavButton>,
       ]}
     />
   );

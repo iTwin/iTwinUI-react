@@ -5,24 +5,24 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 
-import { Sidebar, SidebarProps } from './Sidebar';
-import { SidebarButton } from './SidebarButton';
+import { SideNavigation, SideNavigationProps } from './SideNavigation';
+import { SidenavButton } from './SidenavButton';
 import SvgPlaceholder from '@itwin/itwinui-icons-react/cjs/icons/Placeholder';
 import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 
-function renderComponent(props?: Partial<SidebarProps>) {
+function renderComponent(props?: Partial<SideNavigationProps>) {
   return render(
-    <Sidebar
+    <SideNavigation
       mainItems={[
-        <SidebarButton startIcon={<SvgPlaceholder />} key={0}>
+        <SidenavButton startIcon={<SvgPlaceholder />} key={0}>
           mockbutton 0
-        </SidebarButton>,
-        <SidebarButton startIcon={<SvgPlaceholder />} key={1}>
+        </SidenavButton>,
+        <SidenavButton startIcon={<SvgPlaceholder />} key={1}>
           mockbutton 1
-        </SidebarButton>,
-        <SidebarButton startIcon={<SvgPlaceholder />} key={2}>
+        </SidenavButton>,
+        <SidenavButton startIcon={<SvgPlaceholder />} key={2}>
           mockbutton 2
-        </SidebarButton>,
+        </SidenavButton>,
       ]}
       {...props}
     />,
@@ -53,12 +53,12 @@ it('should render in its most basic state', () => {
 it('should render secondary items', () => {
   const { container } = renderComponent({
     secondaryItems: [
-      <SidebarButton startIcon={<SvgPlaceholder />} key={0}>
+      <SidenavButton startIcon={<SvgPlaceholder />} key={0}>
         mock secondary 0
-      </SidebarButton>,
-      <SidebarButton startIcon={<SvgPlaceholder />} key={1}>
+      </SidenavButton>,
+      <SidenavButton startIcon={<SvgPlaceholder />} key={1}>
         mock secondary 1
-      </SidebarButton>,
+      </SidenavButton>,
     ],
   });
   expect(container.querySelector('.iui-side-navigation')).toBeTruthy();
@@ -177,12 +177,12 @@ it('should only add tooltips to items when collapsed', () => {
 it('should render active and disabled sidebar buttons', () => {
   const { container } = renderComponent({
     mainItems: [
-      <SidebarButton startIcon={<SvgPlaceholder />} key={0} isActive>
+      <SidenavButton startIcon={<SvgPlaceholder />} key={0} isActive>
         mockbutton 0
-      </SidebarButton>,
-      <SidebarButton startIcon={<SvgPlaceholder />} key={1} disabled>
+      </SidenavButton>,
+      <SidenavButton startIcon={<SvgPlaceholder />} key={1} disabled>
         mockbutton 1
-      </SidebarButton>,
+      </SidenavButton>,
     ],
   });
   expect(container.querySelector('.iui-side-navigation')).toBeTruthy();

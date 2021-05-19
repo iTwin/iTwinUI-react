@@ -11,10 +11,10 @@ import { IconButton } from '../Buttons';
 import { Tooltip } from '../Tooltip';
 import '@itwin/itwinui-css/css/side-navigation.css';
 
-export type SidebarProps = {
+export type SideNavigationProps = {
   /**
    * Buttons shown in the top portion of sidebar.
-   * Recommended to use `SidebarButton` components.
+   * Recommended to use `SidenavButton` components.
    */
   mainItems: React.ReactNode[];
   /**
@@ -37,20 +37,20 @@ export type SidebarProps = {
 } & Omit<CommonProps, 'title'>;
 
 /**
- * Sidebar component.
+ * Left side navigation menu component.
  * @example
- * <Sidebar
- *  mainItems={[
- *    <SidebarButton startIcon={<SvgPlaceholder />}>App 1</SidebarButton>,
- *    <SidebarButton startIcon={<SvgPlaceholder />}>App 2</SidebarButton>,
- *    <SidebarButton startIcon={<SvgPlaceholder />}>App 3</SidebarButton>,
- *  ]}
- * secondaryItems={[
- *  <SidebarButton
- * ]}
+ * <SideNavigation
+ *   mainItems={[
+ *     <SidenavButton startIcon={<SvgPlaceholder />}>App 1</SidenavButton>,
+ *     <SidenavButton startIcon={<SvgPlaceholder />}>App 2</SidenavButton>,
+ *     <SidenavButton startIcon={<SvgPlaceholder />}>App 3</SidenavButton>,
+ *   ]}
+ *   secondaryItems={[
+ *     <SidenavButton startIcon={<SvgSettings />}>Settings</SidenavButton>,
+ *   ]}
  * />
  */
-export const Sidebar = (props: SidebarProps) => {
+export const SideNavigation = (props: SideNavigationProps) => {
   const {
     mainItems,
     secondaryItems,
@@ -130,4 +130,4 @@ export const Sidebar = (props: SidebarProps) => {
   );
 };
 
-export default Sidebar;
+export default SideNavigation;
