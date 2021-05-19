@@ -12,13 +12,14 @@ import '@itwin/itwinui-css/css/side-navigation.css';
 
 export type SidenavButtonProps = {
   /**
-   * Whether the sidebar button is active.
+   * Whether the sidenav button is active.
    */
   isActive?: boolean;
 } & Omit<ButtonProps, 'styleType' | 'size'>;
 
 /**
  * Wrapper around Button to be used as SideNavigation items.
+ * Label is hidden when sidenav is collapsed.
  */
 export const SidenavButton = React.forwardRef<
   HTMLButtonElement,

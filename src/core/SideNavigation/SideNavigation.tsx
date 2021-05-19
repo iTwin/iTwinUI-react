@@ -13,12 +13,12 @@ import '@itwin/itwinui-css/css/side-navigation.css';
 
 export type SideNavigationProps = {
   /**
-   * Buttons shown in the top portion of sidebar.
+   * Buttons shown in the top portion of sidenav.
    * Recommended to use `SidenavButton` components.
    */
   mainItems: React.ReactNode[];
   /**
-   * Buttons shown at the bottom of sidebar.
+   * Buttons shown at the bottom of sidenav.
    */
   secondaryItems?: React.ReactNode[];
   /**
@@ -27,7 +27,7 @@ export type SideNavigationProps = {
    */
   expanderVisibility?: 'top' | 'bottom' | 'hidden';
   /**
-   * Controlled flag to expand/collapse the sidebar.
+   * Controlled flag to expand/collapse the sidenav.
    */
   isExpanded?: boolean;
   /**
@@ -95,32 +95,32 @@ export const SideNavigation = (props: SideNavigationProps) => {
       {expanderVisibility === 'top' && ExpandButton}
       <div className='iui-sidenav-content'>
         <div className='iui-top'>
-          {mainItems.map((sidebarButton: JSX.Element, index) =>
+          {mainItems.map((sidenavButton: JSX.Element, index) =>
             !_isExpanded ? (
               <Tooltip
-                content={sidebarButton.props.children}
+                content={sidenavButton.props.children}
                 placement='right'
                 key={index}
               >
-                {sidebarButton}
+                {sidenavButton}
               </Tooltip>
             ) : (
-              sidebarButton
+              sidenavButton
             ),
           )}
         </div>
         <div className='iui-bottom'>
-          {secondaryItems?.map((sidebarButton: JSX.Element, index) =>
+          {secondaryItems?.map((sidenavButton: JSX.Element, index) =>
             !_isExpanded ? (
               <Tooltip
-                content={sidebarButton.props.children}
+                content={sidenavButton.props.children}
                 placement='right'
                 key={index}
               >
-                {sidebarButton}
+                {sidenavButton}
               </Tooltip>
             ) : (
-              sidebarButton
+              sidenavButton
             ),
           )}
         </div>
