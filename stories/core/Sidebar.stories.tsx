@@ -17,6 +17,7 @@ export default {
     mainItems: { control: { disable: true } },
     secondaryItems: { control: { disable: true } },
   },
+  args: { style: { height: 'calc(100vh - 24px) ' } },
   title: 'Core/Sidebar',
 } as Meta<SidebarProps>;
 
@@ -40,7 +41,6 @@ export const Basic: Story<SidebarProps> = (args) => {
           Settings
         </SidebarButton>,
       ]}
-      style={{ height: 'calc(100vh - 24px)' }}
     />
   );
 };
@@ -68,7 +68,6 @@ export const ActiveItem: Story<SidebarProps> = (args) => {
           Settings
         </SidebarButton>,
       ]}
-      style={{ height: 'calc(100vh - 24px)' }}
     />
   );
 };
