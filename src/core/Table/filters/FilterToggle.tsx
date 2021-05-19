@@ -49,6 +49,7 @@ export const FilterToggle = <T extends Record<string, unknown>>(
           placement='bottom'
           visible={isVisible}
           onClickOutside={close}
+          appendTo={document.body}
         >
           <div
             className={cx('iui-filter', {
