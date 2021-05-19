@@ -562,3 +562,42 @@ it('should show message when there is no data after filtering', () => {
   expect(rows.length).toBe(0);
   screen.getByText('No results. Clear filter.');
 });
+
+it('should not trigger sorting when filter is clicked', () => {
+  const onFilter = jest.fn();
+  const onSort = jest.fn();
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          Filter: tableFilters.TextFilter(),
+          fieldType: 'text',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns: mockedColumns,
+    onFilter,
+    onSort,
+  });
+
+  const filterIcon = container.querySelector('.iui-filter') as HTMLElement;
+  expect(filterIcon).toBeTruthy();
+  fireEvent.click(filterIcon);
+
+  const filterInput = document.querySelector(
+    '.iui-column-filter input',
+  ) as HTMLInputElement;
+  expect(filterInput).toBeTruthy();
+
+  fireEvent.change(filterInput, { target: { value: 'invalid value' } });
+  screen.getByText('Filter').click();
+
+  expect(onFilter).toHaveBeenCalled();
+  expect(onSort).not.toHaveBeenCalled();
+});
