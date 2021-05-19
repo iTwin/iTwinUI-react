@@ -164,7 +164,7 @@ export const Table = <
     intersectionMargin = 300,
     onFilter,
     emptyFilteredTableContent,
-    filterTypes: userFilterFunctions,
+    filterTypes: filterFunctions,
     ...rest
   } = props;
 
@@ -273,7 +273,7 @@ export const Table = <
       defaultColumn,
       disableSortBy: !isSortable,
       stateReducer: tableStateReducer,
-      filterTypes: { ...customFilterFunctions, ...userFilterFunctions },
+      filterTypes: { ...customFilterFunctions, ...filterFunctions },
     },
     useFlexLayout,
     useFilters,

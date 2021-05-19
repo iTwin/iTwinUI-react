@@ -33,6 +33,7 @@ const defaultFormatDate = (date: Date) => {
 };
 
 const defaultParseInput = (text: string) => {
+  // Checks whether date is in correct format e.g. Feb 11, 2021
   if (/^[a-z]{3}\s\d{1,2},\s\d{4}$/gi.test(text)) {
     return new Date(text);
   }
@@ -58,7 +59,7 @@ export const DateRangeFilter = <T extends Record<string, unknown>>(
     clearFilter,
     formatDate = defaultFormatDate,
     parseInput = defaultParseInput,
-    placeholder = 'MMM DD, YYYY',
+    placeholder = 'Mon DD, YYYY',
   } = props;
 
   useTheme();
