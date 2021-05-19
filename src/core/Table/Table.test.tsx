@@ -383,7 +383,7 @@ it('should filter table', () => {
   expect(filterIcon).toBeTruthy();
   fireEvent.click(filterIcon);
 
-  const filterInput = container.querySelector(
+  const filterInput = document.querySelector(
     '.iui-column-filter input',
   ) as HTMLInputElement;
   expect(filterInput).toBeTruthy();
@@ -432,7 +432,7 @@ it('should clear filter', () => {
   expect(filterIcon).toBeTruthy();
   fireEvent.click(filterIcon);
 
-  const filterInput = container.querySelector(
+  const filterInput = document.querySelector(
     '.iui-column-filter input',
   ) as HTMLInputElement;
   expect(filterInput).toBeTruthy();
@@ -481,7 +481,7 @@ it('should not filter table when manualFilters flag is on', () => {
   expect(filterIcon).toBeTruthy();
   fireEvent.click(filterIcon);
 
-  const filterInput = container.querySelector(
+  const filterInput = document.querySelector(
     '.iui-column-filter input',
   ) as HTMLInputElement;
   expect(filterInput).toBeTruthy();
@@ -526,7 +526,6 @@ it('should not show filter icon when filter component is not set', () => {
 });
 
 it('should show message when there is no data after filtering', () => {
-  const onFilter = jest.fn();
   const mockedColumns = [
     {
       Header: 'Header name',
@@ -541,7 +540,7 @@ it('should show message when there is no data after filtering', () => {
       ],
     },
   ];
-  const { container } = renderComponent({ columns: mockedColumns, onFilter });
+  const { container } = renderComponent({ columns: mockedColumns });
 
   expect(screen.queryByText('Header name')).toBeFalsy();
   let rows = container.querySelectorAll('.iui-tables-body .iui-tables-row');
@@ -551,7 +550,7 @@ it('should show message when there is no data after filtering', () => {
   expect(filterIcon).toBeTruthy();
   fireEvent.click(filterIcon);
 
-  const filterInput = container.querySelector(
+  const filterInput = document.querySelector(
     '.iui-column-filter input',
   ) as HTMLInputElement;
   expect(filterInput).toBeTruthy();
