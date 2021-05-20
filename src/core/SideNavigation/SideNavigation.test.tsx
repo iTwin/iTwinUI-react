@@ -13,7 +13,7 @@ import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 function renderComponent(props?: Partial<SideNavigationProps>) {
   return render(
     <SideNavigation
-      mainItems={[
+      items={[
         <SidenavButton startIcon={<SvgPlaceholder />} key={0}>
           mockbutton 0
         </SidenavButton>,
@@ -176,7 +176,7 @@ it('should only add tooltips to items when collapsed', () => {
 
 it('should render active and disabled sidebar buttons', () => {
   const { container } = renderComponent({
-    mainItems: [
+    items: [
       <SidenavButton startIcon={<SvgPlaceholder />} key={0} isActive>
         mockbutton 0
       </SidenavButton>,

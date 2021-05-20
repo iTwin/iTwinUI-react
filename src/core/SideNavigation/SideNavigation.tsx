@@ -16,7 +16,7 @@ export type SideNavigationProps = {
    * Buttons shown in the top portion of sidenav.
    * Recommended to use `SidenavButton` components.
    */
-  mainItems: React.ReactNode[];
+  items: React.ReactNode[];
   /**
    * Buttons shown at the bottom of sidenav.
    */
@@ -40,7 +40,7 @@ export type SideNavigationProps = {
  * Left side navigation menu component.
  * @example
  * <SideNavigation
- *   mainItems={[
+ *   items={[
  *     <SidenavButton startIcon={<SvgPlaceholder />}>App 1</SidenavButton>,
  *     <SidenavButton startIcon={<SvgPlaceholder />}>App 2</SidenavButton>,
  *     <SidenavButton startIcon={<SvgPlaceholder />}>App 3</SidenavButton>,
@@ -52,7 +52,7 @@ export type SideNavigationProps = {
  */
 export const SideNavigation = (props: SideNavigationProps) => {
   const {
-    mainItems,
+    items,
     secondaryItems,
     expanderVisibility = 'top',
     className,
@@ -95,7 +95,7 @@ export const SideNavigation = (props: SideNavigationProps) => {
       {expanderVisibility === 'top' && ExpandButton}
       <div className='iui-sidenav-content'>
         <div className='iui-top'>
-          {mainItems.map((sidenavButton: JSX.Element, index) =>
+          {items.map((sidenavButton: JSX.Element, index) =>
             !_isExpanded ? (
               <Tooltip
                 content={sidenavButton.props.children}
