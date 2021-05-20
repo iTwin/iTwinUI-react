@@ -10,7 +10,7 @@
   - **Added new `HeaderLogo` component** for use with the Header `appLogo` prop.
   - **Added new `HeaderBreadcrumbs` and `HeaderButton` component** for use with the Header `breadcrumbs` prop.
 - **Added new `SideNavigation` component** and `SidenavButton` subcomponent.
-- **Added date filter for the `Table`.**
+- **Added date filter to `Table`.** Use `tableFilters.DateRangeFilter`.
 
 ### Fixes
 
