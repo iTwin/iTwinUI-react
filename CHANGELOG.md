@@ -1,14 +1,14 @@
 # Changelog
 
-## 1.5.0
+## [1.5.0]
 
-`Date`
+`2021-05-20`
 
 ### What's new
 
 - **Added new `Header` component,** with a condensed version available through `isSlim` prop.
-- **Added new `HeaderLogo` component** for use with the Header `appLogo` prop.
-- **Added new `HeaderBreadcrumbs` and `HeaderButton` component** for use with the Header `breadcrumbs` prop.
+  - **Added new `HeaderLogo` component** for use with the Header `appLogo` prop.
+  - **Added new `HeaderBreadcrumbs` and `HeaderButton` component** for use with the Header `breadcrumbs` prop.
 - **Added date filter for the `Table`.**
 
 ### Fixes
