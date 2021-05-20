@@ -56,16 +56,16 @@ export const SideNavigation = (props: SideNavigationProps) => {
     secondaryItems,
     expanderVisibility = 'top',
     className,
-    isExpanded,
+    isExpanded = false,
     onExpanderClick,
     ...rest
   } = props;
 
   useTheme();
 
-  const [_isExpanded, _setIsExpanded] = React.useState(isExpanded ?? false);
+  const [_isExpanded, _setIsExpanded] = React.useState(isExpanded);
   React.useEffect(() => {
-    _setIsExpanded(isExpanded ?? false);
+    _setIsExpanded(isExpanded);
   }, [isExpanded]);
 
   const ExpandButton = (
