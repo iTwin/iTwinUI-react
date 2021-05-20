@@ -2,7 +2,13 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { SvgPlaceholder, SvgSettings } from '@itwin/itwinui-icons-react';
+import {
+  SvgFlag,
+  SvgFolderOpened,
+  SvgHome,
+  SvgPlaceholder,
+  SvgSettings,
+} from '@itwin/itwinui-icons-react';
 import { useState } from '@storybook/addons';
 import { Story, Meta } from '@storybook/react';
 import React from 'react';
@@ -29,15 +35,15 @@ export const Basic: Story<SideNavigationProps> = (args) => {
   return (
     <SideNavigation
       {...args}
-      mainItems={[
-        <SidenavButton startIcon={<SvgPlaceholder />} key={0}>
-          App 1
+      items={[
+        <SidenavButton startIcon={<SvgHome />} key={0}>
+          Home
         </SidenavButton>,
-        <SidenavButton startIcon={<SvgPlaceholder />} key={1}>
-          App 2
+        <SidenavButton startIcon={<SvgFlag />} key={1}>
+          Issues
         </SidenavButton>,
-        <SidenavButton startIcon={<SvgPlaceholder />} key={2} disabled>
-          App 3
+        <SidenavButton startIcon={<SvgFolderOpened />} key={2} disabled>
+          Documents
         </SidenavButton>,
       ]}
       secondaryItems={[
@@ -66,7 +72,7 @@ export const ActiveItem: Story<SideNavigationProps> = (args) => {
   return (
     <SideNavigation
       {...args}
-      mainItems={mainItems}
+      items={mainItems}
       secondaryItems={[
         <SidenavButton startIcon={<SvgSettings />} key={3}>
           Settings
