@@ -59,7 +59,7 @@ export const DateRangeFilter = <T extends Record<string, unknown>>(
     clearFilter,
     formatDate = defaultFormatDate,
     parseInput = defaultParseInput,
-    placeholder = 'Mon DD, YYYY',
+    placeholder = 'MMM dd, yyyy',
   } = props;
 
   useTheme();
