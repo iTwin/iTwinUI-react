@@ -106,6 +106,7 @@ export type {
   TableProps,
   TableFilterProps,
   TableFilterValue,
+  DateRangeFilterOptions,
   FilterButtonBarProps,
 } from './Table';
 
