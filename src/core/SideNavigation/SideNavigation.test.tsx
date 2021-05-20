@@ -94,7 +94,7 @@ it('should place expand button correctly in the DOM tree', () => {
 
   // bottom
   const { container: root2 } = renderComponent({
-    expanderVisibility: 'bottom',
+    expanderPlacement: 'bottom',
   });
   const sidebar2 = root2.querySelector('.iui-side-navigation') as HTMLElement;
   expect(sidebar2).toBeTruthy();
@@ -104,7 +104,7 @@ it('should place expand button correctly in the DOM tree', () => {
 
   // hidden
   const { container: root3 } = renderComponent({
-    expanderVisibility: 'hidden',
+    expanderPlacement: 'hidden',
   });
   expect(root3.querySelector('.iui-side-navigation')).toBeTruthy();
   expect(root3.querySelector('.iui-expand')).toBeFalsy();

@@ -22,10 +22,10 @@ export type SideNavigationProps = {
    */
   secondaryItems?: React.ReactNode[];
   /**
-   * Control the visibility of "expander" icon button.
+   * Control the placement of "expander" icon button (or hide it).
    * @default 'top'
    */
-  expanderVisibility?: 'top' | 'bottom' | 'hidden';
+  expanderPlacement?: 'top' | 'bottom' | 'hidden';
   /**
    * Controlled flag to expand/collapse the sidenav.
    */
@@ -54,7 +54,7 @@ export const SideNavigation = (props: SideNavigationProps) => {
   const {
     items,
     secondaryItems,
-    expanderVisibility = 'top',
+    expanderPlacement = 'top',
     className,
     isExpanded = false,
     onExpanderClick,
@@ -92,7 +92,7 @@ export const SideNavigation = (props: SideNavigationProps) => {
       )}
       {...rest}
     >
-      {expanderVisibility === 'top' && ExpandButton}
+      {expanderPlacement === 'top' && ExpandButton}
       <div className='iui-sidenav-content'>
         <div className='iui-top'>
           {items.map((sidenavButton: JSX.Element, index) =>
@@ -125,7 +125,7 @@ export const SideNavigation = (props: SideNavigationProps) => {
           )}
         </div>
       </div>
-      {expanderVisibility === 'bottom' && ExpandButton}
+      {expanderPlacement === 'bottom' && ExpandButton}
     </div>
   );
 };
