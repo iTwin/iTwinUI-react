@@ -44,7 +44,7 @@ export const tableFilters = {
   ) => <TextFilter {...props} translatedLabels={translatedLabels} />,
   /**
    * Date range filter.
-   * By default it handles `en-us` date format if you want to use other format
+   * By default it handles `en-us` date format. If you want to use other format
    * please provide `formatDate`, `parseInput` and `placeholder`.
    */
   DateRangeFilter: (options?: DateRangeFilterOptions) => <
