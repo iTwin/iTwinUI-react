@@ -9,6 +9,7 @@
 - **Added new `Header` component,** with a condensed version available through `isSlim` prop.
   - **Added new `HeaderLogo` component** for use with the Header `appLogo` prop.
   - **Added new `HeaderBreadcrumbs` and `HeaderButton` component** for use with the Header `breadcrumbs` prop.
+- **Added new `SideNavigation` component** and `SidenavButton` subcomponent.
 - **Added date filter for the `Table`.**
 
 ### Fixes
