@@ -7,6 +7,13 @@ import { IdType, Row } from 'react-table';
 const isValidDate = (date: Date | undefined) =>
   !!date && !isNaN(date.valueOf());
 
+/**
+ * Filters dates.
+ * @param rows Table rows
+ * @param ids Property names of data object to use for filtering
+ * @param filterValue Filter value
+ * @returns Filtered rows
+ */
 const betweenDate = <T extends Record<string, unknown>>(
   rows: Row<T>[],
   ids: IdType<T>[],
@@ -29,6 +36,9 @@ const betweenDate = <T extends Record<string, unknown>>(
   });
 };
 
+/**
+ * Filter is not being set if filter value is invalid.
+ */
 betweenDate.autoRemove = (val: [Date?, Date?] | undefined) => {
   return !val || (!isValidDate(val[0]) && !isValidDate(val[1]));
 };
