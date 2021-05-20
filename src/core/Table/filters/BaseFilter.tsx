@@ -38,7 +38,9 @@ export const BaseFilter = (props: BaseFilterProps) => {
     <div
       className={cx('iui-column-filter', className)}
       style={style}
-      onClick={(event) => event.stopPropagation()}
+      onClick={(e: React.MouseEvent) => {
+        e.stopPropagation();
+      }}
     >
       {children}
     </div>

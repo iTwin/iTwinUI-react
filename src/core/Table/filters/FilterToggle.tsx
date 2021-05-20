@@ -55,7 +55,7 @@ export const FilterToggle = <T extends Record<string, unknown>>(
             className={cx('iui-filter', {
               'iui-active': isVisible || column.filterValue,
             })}
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
               setIsVisible((v) => !v);
             }}
