@@ -45,9 +45,9 @@ export const NumberRangeFilter = <T extends Record<string, unknown>>(
     column.filterValue?.[1] ?? '',
   );
 
-  const parseInputValue = React.useCallback((value: string | undefined) => {
+  const parseInputValue = (value: string | undefined) => {
     return !value || isNaN(Number(value)) ? undefined : Number(value);
-  }, []);
+  };
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter') {

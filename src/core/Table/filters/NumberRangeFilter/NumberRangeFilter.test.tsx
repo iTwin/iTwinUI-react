@@ -126,7 +126,7 @@ it('should set filter when both values entered and Enter is pressed', () => {
   expect(setFilter).toHaveBeenCalledWith([1, 3]);
 });
 
-it('should set filter with empty values when invalid date is entered', () => {
+it('should set filter with empty values when invalid number is entered', () => {
   const setFilter = jest.fn();
   const { container } = renderComponent({ setFilter });
 
