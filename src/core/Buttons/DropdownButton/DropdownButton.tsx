@@ -11,6 +11,7 @@ import SvgCaretUpSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretUpSmall';
 
 import { useTheme } from '../../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/button.css';
+import { useWindowSize } from '../../utils/hooks/useWindowSize';
 
 export type DropdownButtonProps = {
   /**
@@ -43,6 +44,8 @@ export const DropdownButton: React.FC<DropdownButtonProps> = (props) => {
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
+  const windowSize = useWindowSize(500);
+
   const [menuWidth, setMenuWidth] = React.useState(0);
   const ref = React.useRef<HTMLButtonElement>(null);
 
@@ -50,7 +53,7 @@ export const DropdownButton: React.FC<DropdownButtonProps> = (props) => {
     if (ref.current) {
       setMenuWidth(ref.current.offsetWidth);
     }
-  }, [children, size, styleType]);
+  }, [children, size, styleType, windowSize]);
 
   return (
     <DropdownMenu
