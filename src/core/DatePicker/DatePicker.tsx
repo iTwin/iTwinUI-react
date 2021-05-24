@@ -10,6 +10,7 @@ import { CommonProps } from '../utils/props';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/date-picker.css';
 import { IconButton } from '../Buttons/IconButton';
+import { TimePicker, TimePickerProps } from '../TimePicker';
 
 const isSameDay = (a: Date | undefined, b: Date | undefined) => {
   return (
@@ -124,7 +125,9 @@ export type DatePickerProps = {
    * @default false
    */
   setFocus?: boolean;
-} & Omit<CommonProps, 'title'>;
+  showTime?: boolean;
+} & Omit<CommonProps, 'title'> &
+  Omit<TimePickerProps, 'date' | 'onChange'>;
 
 /**
  * Date picker component
@@ -139,6 +142,12 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
     className,
     style,
     setFocus = false,
+    showTime = false,
+    use12Hours = false,
+    precision,
+    hourStep,
+    minuteStep,
+    secondStep,
     ...rest
   } = props;
 
@@ -376,6 +385,17 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
           })}
         </div>
       </div>
+      {showTime && (
+        <TimePicker
+          date={selectedDay}
+          use12Hours={use12Hours}
+          precision={precision}
+          hourStep={hourStep}
+          minuteStep={minuteStep}
+          secondStep={secondStep}
+          onChange={(date) => onDayClick(date)}
+        />
+      )}
     </div>
   );
 };

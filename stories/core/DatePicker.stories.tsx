@@ -47,6 +47,7 @@ export const Basic: Story<DatePickerProps> = (args) => {
       {opened && (
         <div style={{ marginTop: 4 }}>
           <DatePicker
+            showTime
             date={currentDate}
             onChange={onChange}
             localizedNames={localizedNames}
