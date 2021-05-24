@@ -321,10 +321,6 @@ export const Filters: Story<TableProps> = (args) => {
     ids: number[];
     date: Date;
   };
-  const onClickHandler = useCallback(
-    (props: CellProps<TableStoryDataType>) => action(props.row.original.name)(),
-    [],
-  );
 
   const translatedLabels = useMemo(
     () => ({
@@ -404,23 +400,10 @@ export const Filters: Story<TableProps> = (args) => {
             }),
             filter: 'betweenDate',
           },
-          {
-            id: 'click-me',
-            Header: 'Click',
-            width: 100,
-            Cell: (props: CellProps<TableStoryDataType>) => {
-              const onClick = () => onClickHandler(props);
-              return (
-                <a className='iui-anchor' onClick={onClick}>
-                  Click me!
-                </a>
-              );
-            },
-          },
         ],
       },
     ],
-    [formatDate, onClickHandler, translatedLabels],
+    [formatDate, translatedLabels],
   );
 
   const tableData = useMemo(
