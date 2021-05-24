@@ -1,14 +1,20 @@
 # Changelog
 
-## 1.x.x
+## [1.5.0]
 
-`Date`
+`2021-05-20`
 
 ### What's new
 
 - **Added new `Header` component,** with a condensed version available through `isSlim` prop.
   - **Added new `HeaderLogo` component** for use with the Header `appLogo` prop.
   - **Added new `HeaderBreadcrumbs` and `HeaderButton` component** for use with the Header `breadcrumbs` prop.
+- **Added new `SideNavigation` component** and `SidenavButton` subcomponent.
+- **Added date filter to `Table`.** Use `tableFilters.DateRangeFilter`.
+
+### Fixes
+
+- **Fixed `Table` bug where filter actions would also trigger sorting.**
 
 ## [1.4.1]
 
@@ -266,6 +272,7 @@
 - **New ThemeProvider component added.** It allows to switch between light and dark themes.
 - **iTwinUI-React is generated to `CommonJS` and `ES` modules.** Usage of `ES` modules allows bundlers to tree-shake unused code resulting in smaller bundle sizes.
 
+[1.5.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.4.1...v1.5.0
 [1.4.1]: https://github.com/iTwin/iTwinUI-react/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.2.0...v1.3.0
