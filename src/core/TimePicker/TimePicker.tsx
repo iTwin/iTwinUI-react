@@ -149,7 +149,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
   };
 
   const getTimeTemplate = (
-    size: number,
+    data: number[],
     step: number,
     isSame: (number: number, date: Date | undefined) => boolean,
     onClick: (number: number) => void,
@@ -157,24 +157,22 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
     return (
       <div className='iui-time'>
         <ol>
-          {[...new Array(size)]
+          {data
             .filter((_, index) => index % step === 0)
-            .map((_, index: number) => {
-              const adjustedValue =
-                use12Hours && size === 12 ? index + 1 : index;
+            .map((value) => {
               return (
                 <li
                   className={cx({
-                    'iui-selected': isSame(adjustedValue, selectedTime),
+                    'iui-selected': isSame(value, selectedTime),
                   })}
-                  key={adjustedValue}
-                  tabIndex={isSame(adjustedValue, selectedTime) ? 0 : undefined}
+                  key={value}
+                  tabIndex={isSame(value, selectedTime) ? 0 : undefined}
                   ref={(ref) => {
-                    scrollIntoView(ref, isSame(adjustedValue, selectedTime));
+                    scrollIntoView(ref, isSame(value, selectedTime));
                   }}
-                  onClick={() => onClick(adjustedValue)}
+                  onClick={() => onClick(value)}
                 >
-                  {`0${adjustedValue}`.slice(-2)}
+                  {`0${value}`.slice(-2)}
                 </li>
               );
             })}
@@ -185,11 +183,28 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
 
   return (
     <>
-      {getTimeTemplate(use12Hours ? 12 : 24, hourStep, isSameHour, onHourClick)}
+      {getTimeTemplate(
+        use12Hours
+          ? [...new Array(12)].map((_, index) => (index === 0 ? 12 : index))
+          : [...new Array(24)].map((_, index) => index),
+        hourStep,
+        isSameHour,
+        onHourClick,
+      )}
       {precision != 'hours' &&
-        getTimeTemplate(60, minuteStep, areSameMinutes, onMinutesClick)}
+        getTimeTemplate(
+          [...new Array(60)].map((_, index) => index),
+          minuteStep,
+          areSameMinutes,
+          onMinutesClick,
+        )}
       {precision == 'seconds' &&
-        getTimeTemplate(60, secondStep, areSameSeconds, onSecondsClick)}
+        getTimeTemplate(
+          [...new Array(60)].map((_, index) => index),
+          secondStep,
+          areSameSeconds,
+          onSecondsClick,
+        )}
       {use12Hours && (
         <div className='iui-time'>
           <ol>
