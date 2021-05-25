@@ -21,7 +21,7 @@ To clone and build iTwinUI, you'll need [Git](https://git-scm.com) and [Yarn 1](
 If using vscode, our prettier and editor configs will be used.
 Please make sure to install all recommended extensions in [extensions.json](./.vscode/extensions.json).
 
-## Preview using Storybook
+### Preview using Storybook
 
 We use [Storybook](https://storybook.js.org) to test and demo the components. You can run it locally with `yarn storybook`.
 Be sure to add stories for your newly added component or feature. Read more [here](./stories/README.md) about storybook and how we write stories.
