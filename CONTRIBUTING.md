@@ -38,32 +38,46 @@ If you are creating a new component, use this script:
 
 It ensures all needed imports are added and files are created.
 
-> Note: Every component needs to use `useTheme()` hook to ensure styling (theming) works fine. The script mentioned above adds it automatically.
+> Note: Every component needs to use `useTheme()` hook to ensure styling (theming) works fine. The `createComponent` script mentioned above adds it automatically.
 
-### Intended Folder Structure
+### Creating components
 
-Given a component named `Alert`
+For a component named `Alert`, the `createComponent` script will add/modify the following files:
+
+<details>
+<summary>Directory structure</summary>
 
 ```
 iTwinUI-react
 |
 + - src
-    |
-    + - core
-        |
-        + - Alert
-        |   + - > Alert.test.tsx
-        |   + - > Alert.tsx
-        |   + - > index.ts
-        |
-        + - > index.ts
+|   |
+|   + - core
+|       |
+|       + - Alert
+|       |   + - > Alert.test.tsx
+|       |   + - > Alert.tsx
+|       |   + - > index.ts
+|       |
+|       + - > index.ts
++ - stories
+|   |
+|   + - core
+|       |
+|       + - > Alert.stories.tsx
 ```
 
-**Alert/Alert.tsx**
+</details>
 
-- Implements the React component and exports it, both named and by default
+src/core/**Alert/Alert.tsx**
 
-**Alert/index.ts**
+- Implements the React component and exports it, both named and by default.
+
+src/core/**Alert/Alert.test.tsx**
+
+- Contains all test cases for the component.
+
+src/core/**Alert/index.ts**
 
 ```jsx
 export { Alert } from './Alert';
@@ -71,7 +85,7 @@ export type { AlertProps } from './Alert';
 export default './Alert';
 ```
 
-**core/index.ts**
+src/core/**index.ts**
 
 ```jsx
 ---
@@ -79,6 +93,12 @@ export { Alert } from './Alert';
 export type { AlertProps } from './Alert';
 ---
 ```
+
+> Note: The script will add the exports to index.ts but you will need to manually sort them alphabetically.
+
+stories/core/**Alert.stories.tsx**
+
+- Contains common demo states and examples for the component.
 
 ### Unit Testing
 
@@ -148,11 +168,14 @@ To enable us to quickly review and accept your pull requests, always create one 
 ### Checklist
 
 - Component added or modified using [guidelines](#Developing) above.
-  - Tests added for all new code.
+  - All required files and exports added.
   - Proper inline documentation added.
-  - Stories added for new features.
   - Code follows style guide and has no linting errors (pre-commit hook will run linter).
-- All existing and new tests should pass.
+- Tests added for all new code.
+  - All existing and new tests should pass.
+- Stories added to demonstrate new features.
 - Updated changelog.
 
-After verifying that your changes are ready, you can [create a pull request from your fork](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork). Make sure that an issue is linked to the pull request and that you have a proper description with screenshots.
+Verify that your changes are ready, then [create a pull request from your fork](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork). Make sure that an issue is linked to the pull request and that you have a proper description with screenshots.
+
+Your pull request will be reviewed by one or more maintainers who might leave some comments/suggestions to help improve the quality and consistency of your code. Once approved, your changes will be accepted into the repository.
