@@ -2,30 +2,35 @@
 
 We welcome all types of contribution.
 
-Need a feature or found a bug? Please create an [issue.](https://github.com/iTwin/iTwinUI-react/issues)
+Need a feature or found a bug? Please create an [issue](https://github.com/iTwin/iTwinUI-react/issues).
 
-Want to contribute by creating a PR? Great! Then read further.
+Have a question or suggestion? Please create a [discussion](https://github.com/iTwin/iTwinUI-react/discussions).
 
-## Getting Started
+Want to contribute by creating a pull request? Great! [Fork iTwinUI-react](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/working-with-forks) to get started.
 
-We use yarn for package management, so be sure to have it installed
-`npm install -g yarn`
+---
 
-1. `git clone https://github.com/iTwin/iTwinUI-react.git`
-2. `cd iTwinUI-react`
-3. `yarn install`
+## How to setup
+
+To clone and build iTwinUI, you'll need [Git](https://git-scm.com) and [Yarn 1](https://yarnpkg.com/getting-started/install) installed on your computer.
+
+1. [Create a local clone](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo#step-2-create-a-local-clone-of-your-fork) of your forked repository. You can do this from the command line or using the Github Desktop app.
+2. Go to the directory where you cloned iTwinUI. e.g. `cd iTwinUI-react`.
+3. Run `yarn install` from that directory.
 
 If using vscode, our prettier and editor configs will be used.
 Please make sure to install all recommended extensions in [extensions.json](./.vscode/extensions.json).
 
-## Storybook
+## Preview using Storybook
 
 We use [Storybook](https://storybook.js.org) to test and demo the components. You can run it locally with `yarn storybook`.
 Be sure to add stories for your newly added component or feature. Read more [here](./stories/README.md) about storybook and how we write stories.
 
+---
+
 ## Developing
 
-Before developing, please read our [style guide](./STYLEGUIDE.md)
+Before developing, please read our [style guide](./STYLEGUIDE.md).
 
 If you are creating a new component, use this script:
 
@@ -34,10 +39,6 @@ If you are creating a new component, use this script:
 It ensures all needed imports are added and files are created.
 
 > Note: Every component needs to use `useTheme()` hook to ensure styling (theming) works fine. The script mentioned above adds it automatically.
-
-Be sure to develop on your branch. We want to keep branch naming with developer name scope:
-
-`git checkout -b yourName/your-feature-name`
 
 ### Intended Folder Structure
 
@@ -51,21 +52,18 @@ iTwinUI-react
     + - core
         |
         + - Alert
-        |   |
-        |   + - > Alert.react.test.tsx
-        |   |
+        |   + - > Alert.test.tsx
         |   + - > Alert.tsx
-        |   |
         |   + - > index.ts
         |
         + - > index.ts
 ```
 
-Alert/Alert.tsx
+**Alert/Alert.tsx**
 
 - Implements the React component and exports it, both named and by default
 
-Alert/index.ts
+**Alert/index.ts**
 
 ```jsx
 export { Alert } from './Alert';
@@ -73,7 +71,7 @@ export type { AlertProps } from './Alert';
 export default './Alert';
 ```
 
-core/index.ts
+**core/index.ts**
 
 ```jsx
 ---
@@ -125,15 +123,21 @@ Chokidar version:
 
 ### Changelog
 
-The `CHANGELOG.md` file must be updated for any new components or changes that you add. If unsure of which release your changes will go to, you can add a placeholder version and date (on the top):
+The `CHANGELOG.md` file must be updated for any new components or changes that you add. At the top of the file, create an "unreleased" section with a placeholder date (if not already present).
+
+<details>
+<summary>Example</summary>
 
 ```
-## 1.X.X
+## Unreleased
 
 `Date`
 
 ### What's new
 ```
+</details>
+
+---
 
 ## Pull Requests
 
@@ -156,3 +160,15 @@ To enable us to quickly review and accept your pull requests, always create one 
 11. Create a Pull Request
 12. Pending code review, your changes will be accepted into the repository.
 13. When completing your pull request, you might want to add a custom merge message (available in completion step) to summarize the changes your commit brings.
+
+### Checklist
+
+- Component added or modified using [guidelines](#Developing) above.
+  - Tests added for all new code.
+  - Proper inline documentation added.
+  - Stories added for new features.
+  - Code follows style guide and has no linting errors (pre-commit hook will run linter).
+- All existing and new tests should pass.
+- Updated changelog.
+
+After verifying that your changes are ready, you can [create a pull request from your fork](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork). Make sure that an issue is linked to the pull request and that you have a proper description with screenshots.
