@@ -145,22 +145,6 @@ Before creating a pull request, make sure your changes address a specific issue.
 
 To enable us to quickly review and accept your pull requests, always create one pull request per issue. Never merge multiple requests in one unless they have the same root cause. Be sure to follow best practices and keep code changes as small as possible. Avoid pure formatting changes or random "fixes" that are unrelated to the linked issue.
 
-#### Checklist
-
-1. Component created following project structure
-2. Component contains proper inline documentation
-3. Tests have been added for component
-4. Update changelog.
-5. Create a branch `git checkout -b yourName/your-feature-name`
-6. Stage `git add -A`
-7. Commit `git commit -m"<commit_message>"`
-8. Before the changes are committed, the formatter is run.
-9. After ensuring the changes are committed, `git push`
-10. Navigate to [the github page](https://github.com/iTwin/iTwinUI-react/pulls)
-11. Create a Pull Request
-12. Pending code review, your changes will be accepted into the repository.
-13. When completing your pull request, you might want to add a custom merge message (available in completion step) to summarize the changes your commit brings.
-
 ### Checklist
 
 - Component added or modified using [guidelines](#Developing) above.
