@@ -80,7 +80,12 @@ export const Step = (props: StepProps) => {
       )}
 
       {type !== 'workflow' && (
-        <span className='iui-wizards-step-title'>{title}</span>
+        <span
+          className='iui-wizards-step-title'
+          style={{ width: `${100 / totalSteps}vw` }}
+        >
+          {title}
+        </span>
       )}
       {!isLast && (
         <span
