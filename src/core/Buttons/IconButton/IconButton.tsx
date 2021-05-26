@@ -37,6 +37,12 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
 
     useTheme();
 
+    const isUserIcon = () => {
+      return (
+        (React.Children.only(children) as JSX.Element).type.name === 'UserIcon'
+      );
+    };
+
     return (
       <button
         ref={ref}
@@ -53,7 +59,10 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
         {...rest}
       >
         {React.cloneElement(children as JSX.Element, {
-          className: cx('iui-icon', (children as JSX.Element).props.className),
+          className: cx(
+            { 'iui-icon': !isUserIcon() },
+            (children as JSX.Element).props.className,
+          ),
           'aria-hidden': true,
         })}
       </button>
