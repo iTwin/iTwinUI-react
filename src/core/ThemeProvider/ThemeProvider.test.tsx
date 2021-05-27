@@ -41,6 +41,11 @@ it('should set light theme', () => {
   expectLightTheme();
 });
 
+it('should set light theme specifying owningDocument', () => {
+  render(<ThemeProvider theme='light' owningDocument={document} />);
+  expectLightTheme();
+});
+
 it('should set dark theme', () => {
   render(<ThemeProvider theme='dark' />);
   expectDarkTheme();

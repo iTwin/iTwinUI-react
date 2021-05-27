@@ -12,42 +12,47 @@ export type ThemeType = 'light' | 'dark' | 'os';
  * Defaults to light theme if none provided or set elsewhere.
  * @param theme Light, dark, or based on OS setting.
  */
-export const useTheme = (theme?: ThemeType): void => {
+export const useTheme = (
+  theme?: ThemeType,
+  owningDocument = document,
+): void => {
   React.useLayoutEffect(() => {
-    if (!document.body.classList.contains('iui-body')) {
-      document.body.classList.add('iui-body');
+    if (!owningDocument.body.classList.contains('iui-body')) {
+      owningDocument.body.classList.add('iui-body');
     }
-  }, []);
+  }, [owningDocument]);
 
   React.useLayoutEffect(() => {
     switch (theme) {
       case 'light':
-        addLightTheme();
+        addLightTheme(owningDocument);
         break;
       case 'dark':
-        addDarkTheme();
+        addDarkTheme(owningDocument);
         break;
       case 'os':
         if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
-          addDarkTheme();
+          addDarkTheme(owningDocument);
         } else {
-          addLightTheme();
+          addLightTheme(owningDocument);
         }
         break;
       default:
-        if (!document.documentElement.classList.value.includes('iui-theme')) {
-          addLightTheme();
+        if (
+          !owningDocument.documentElement.classList.value.includes('iui-theme')
+        ) {
+          addLightTheme(owningDocument);
         }
     }
-  }, [theme]);
+  }, [owningDocument, theme]);
 };
 
-const addLightTheme = () => {
-  document.documentElement.classList.add('iui-theme-light');
-  document.documentElement.classList.remove('iui-theme-dark');
+const addLightTheme = (ownerDocument: Document) => {
+  ownerDocument.documentElement.classList.add('iui-theme-light');
+  ownerDocument.documentElement.classList.remove('iui-theme-dark');
 };
 
-const addDarkTheme = () => {
-  document.documentElement.classList.add('iui-theme-dark');
-  document.documentElement.classList.remove('iui-theme-light');
+const addDarkTheme = (ownerDocument: Document) => {
+  ownerDocument.documentElement.classList.add('iui-theme-dark');
+  ownerDocument.documentElement.classList.remove('iui-theme-light');
 };
