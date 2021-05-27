@@ -6,7 +6,9 @@
 
 ### What's new
 
-- **Added number range filter to `Table`.** Use `tableFilters.NumberRangeFilter`.
+- **Added number range filter to `Table`.** Use `tableFilters.NumberRangeFilter`.\*\*
+- **Update `ThemeProvider` component to allow optional owningDocument prop** to allow use in popup browser windows.
+- **Update `useTheme` hook to allow specification of owningDocument** to allow use in popup browser windows.
 
 ## [1.5.0]
 
