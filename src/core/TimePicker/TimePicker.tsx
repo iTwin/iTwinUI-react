@@ -35,18 +35,18 @@ const formatHourFrom12 = (hour: number, period: 'AM' | 'PM' | undefined) => {
   return period === 'PM' ? adjustedHour + 12 : adjustedHour;
 };
 
-const formatHourTo12 = (hour: number) => {
-  const adjustedHour = hour % 12;
-  return adjustedHour === 0 ? 12 : adjustedHour;
-};
+// const formatHourTo12 = (hour: number) => {
+//   const adjustedHour = hour % 12;
+//   return adjustedHour === 0 ? 12 : adjustedHour;
+// };
 
 export type TimePickerProps = {
   /**
-   * Selected date.
+   * Selected date. Only time is used from Date object.
    */
   date?: Date;
   /**
-   * Callback when date is changed.
+   * Callback when time is changed.
    */
   onChange?: (date: Date) => void;
   /**
@@ -215,7 +215,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
         />
       )}
       {use12Hours && (
-        <div className='iui-time'>
+        <div className='iui-period'>
           <ol>
             {['AM', 'PM'].map((value) => (
               <li
@@ -335,6 +335,7 @@ const TimePickerColumn = (props: TimePickerColumnProps): JSX.Element => {
         {data
           .filter((_, index) => index % step === 0)
           .map((value, index) => {
+            const isSameFocused = isSame(value, focusedTime);
             return (
               <li
                 onKeyDown={(event) => {
@@ -350,12 +351,10 @@ const TimePickerColumn = (props: TimePickerColumnProps): JSX.Element => {
                   'iui-selected': isSame(value, selectedTime),
                 })}
                 key={value}
-                tabIndex={isSame(value, focusedTime) ? 0 : undefined}
+                tabIndex={isSameFocused ? 0 : undefined}
                 ref={(ref) => {
-                  scrollIntoView(ref, isSame(value, focusedTime));
-                  needFocus.current &&
-                    isSame(value, focusedTime) &&
-                    ref?.focus();
+                  scrollIntoView(ref, isSameFocused);
+                  needFocus.current && isSameFocused && ref?.focus();
                 }}
                 onClick={() => onSelectChange?.(value)}
                 onBlur={() => {
