@@ -165,6 +165,8 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
   const [displayedYear, setDisplayedYear] = React.useState(
     selectedDay ? selectedDay.getFullYear() : new Date().getFullYear(),
   );
+  // Used to focus days only when days are changed
+  // e.g. without this, when changing months day would be focused
   const needFocus = React.useRef(setFocus);
 
   React.useEffect(() => {
@@ -224,10 +226,10 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
   }, [days]);
 
   const getNewFocusedDate = (newYear: number, newMonth: number) => {
-    return selectedDay?.getMonth() === newMonth &&
-      selectedDay?.getFullYear() === newYear
-      ? selectedDay
-      : new Date(newYear, newMonth, 1);
+    const newDate = new Date(selectedDay ?? new Date());
+    newDate?.setFullYear(newYear);
+    newDate?.setMonth(newMonth);
+    return newDate;
   };
 
   const handleMoveToPreviousMonth = () => {
@@ -250,9 +252,11 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
     if (day.getMonth() !== selectedDay?.getMonth()) {
       setMonthAndYear(day.getMonth(), day.getFullYear());
     }
-    setSelectedDay(day);
-    setFocusedDay(day);
-    onChange?.(day);
+    const newDate = new Date(selectedDay ?? new Date());
+    newDate.setDate(day.getDate());
+    setSelectedDay(newDate);
+    setFocusedDay(newDate);
+    onChange?.(newDate);
   };
 
   const handleCalendarKeyDown = (
@@ -393,7 +397,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
           hourStep={hourStep}
           minuteStep={minuteStep}
           secondStep={secondStep}
-          onChange={(date) => onDayClick(date)}
+          onChange={(date) => onChange?.(date)}
         />
       )}
     </div>
