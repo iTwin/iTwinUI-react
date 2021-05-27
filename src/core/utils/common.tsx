@@ -47,13 +47,16 @@ export const getUserColor = (emailOrName: string) => {
 /**
  * Get the container as a child of body, or create one if it doesn't exist.
  * Mostly used for dynamic components like Modal or Toast.
+ *
+ * @param containerId id of the container to find or create
+ * @param hostDocument Defaults to document but can be changed to support popup windows.
  */
-export const getContainer = (containerId: string) => {
-  let container = document.getElementById(containerId);
+export const getContainer = (containerId: string, hostDocument = document) => {
+  let container = hostDocument.getElementById(containerId);
   if (container == null) {
-    container = document.createElement('div');
+    container = hostDocument.createElement('div');
     container.setAttribute('id', containerId);
-    document.body.appendChild(container);
+    hostDocument.body.appendChild(container);
   }
   return container;
 };
