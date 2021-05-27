@@ -227,7 +227,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
 
   const getNewFocusedDate = (newYear: number, newMonth: number) => {
     const newDate = new Date(selectedDay ?? new Date());
-    newDate?.setFullYear(newYear);
+    newDate.setFullYear(newYear);
     newDate?.setMonth(newMonth);
     return newDate;
   };
@@ -253,6 +253,8 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
       setMonthAndYear(day.getMonth(), day.getFullYear());
     }
     const newDate = new Date(selectedDay ?? new Date());
+    newDate.setFullYear(displayedYear);
+    newDate.setMonth(displayedMonthIndex);
     newDate.setDate(day.getDate());
     setSelectedDay(newDate);
     setFocusedDay(newDate);
