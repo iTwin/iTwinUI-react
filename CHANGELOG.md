@@ -6,9 +6,8 @@
 
 ### What's new
 
-- **Added number range filter to `Table`.** Use `tableFilters.NumberRangeFilter`.\*\*
-- **Update `ThemeProvider` component to allow optional owningDocument prop** to allow use in popup browser windows.
-- **Update `useTheme` hook to allow specification of owningDocument** to allow use in popup browser windows.
+- **Added number range filter to `Table`.** Use `tableFilters.NumberRangeFilter`.
+- **Updated `ThemeProvider` component and `useTheme` hook to allow specification of ownerDocument**. This provides support for theme in popup browser windows.
 
 ## [1.5.0]
 

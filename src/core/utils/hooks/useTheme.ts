@@ -11,40 +11,38 @@ export type ThemeType = 'light' | 'dark' | 'os';
  * Hook that applies styling and theme to all components.
  * Defaults to light theme if none provided or set elsewhere.
  * @param theme Light, dark, or based on OS setting.
+ * @param ownerDocument Document to which the theme will be applied. Defaults to `document`.
  */
-export const useTheme = (
-  theme?: ThemeType,
-  owningDocument = document,
-): void => {
+export const useTheme = (theme?: ThemeType, ownerDocument = document): void => {
   React.useLayoutEffect(() => {
-    if (!owningDocument.body.classList.contains('iui-body')) {
-      owningDocument.body.classList.add('iui-body');
+    if (!ownerDocument.body.classList.contains('iui-body')) {
+      ownerDocument.body.classList.add('iui-body');
     }
-  }, [owningDocument]);
+  }, [ownerDocument]);
 
   React.useLayoutEffect(() => {
     switch (theme) {
       case 'light':
-        addLightTheme(owningDocument);
+        addLightTheme(ownerDocument);
         break;
       case 'dark':
-        addDarkTheme(owningDocument);
+        addDarkTheme(ownerDocument);
         break;
       case 'os':
         if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
-          addDarkTheme(owningDocument);
+          addDarkTheme(ownerDocument);
         } else {
-          addLightTheme(owningDocument);
+          addLightTheme(ownerDocument);
         }
         break;
       default:
         if (
-          !owningDocument.documentElement.classList.value.includes('iui-theme')
+          !ownerDocument.documentElement.classList.value.includes('iui-theme')
         ) {
-          addLightTheme(owningDocument);
+          addLightTheme(ownerDocument);
         }
     }
-  }, [owningDocument, theme]);
+  }, [ownerDocument, theme]);
 };
 
 const addLightTheme = (ownerDocument: Document) => {

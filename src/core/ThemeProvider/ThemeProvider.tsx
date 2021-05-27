@@ -15,18 +15,20 @@ export type ThemeProviderProps = {
    */
   children?: React.ReactNode;
   /**
-   * Optional document specification to support popup windows.
+   * Document to which the theme will be applied.
+   * Can be specified to handle popup windows.
+   * @default document
    */
-  owningDocument?: Document;
+  ownerDocument?: Document;
 };
 
 /**
  * Component providing global styles that are required for all components and allows changing theme.
  */
 export const ThemeProvider = (props: ThemeProviderProps) => {
-  const { theme, children, owningDocument } = props;
+  const { theme, children, ownerDocument } = props;
 
-  useTheme(theme, owningDocument);
+  useTheme(theme, ownerDocument);
   return <>{children}</>;
 };
 
