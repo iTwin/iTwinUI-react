@@ -174,7 +174,7 @@ it('should work with portal container properly', () => {
   expect(container.children.length).toBe(2);
 });
 
-it('should handle overflow on body', () => {
+it('should reset body overflow on closing and unmounting', () => {
   const { rerender, unmount } = render(
     <Modal title='Test title' isOpen>
       Test Content
