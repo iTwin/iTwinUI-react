@@ -44,9 +44,12 @@ it('should set light theme', () => {
 });
 
 it('should set light theme specifying ownerDocument', () => {
-  const ownerDocument = new Document();
-  render(<ThemeProvider theme='light' ownerDocument={ownerDocument} />);
-  expectLightTheme(ownerDocument);
+  const testDocument = new DOMParser().parseFromString(
+    `<!DOCTYPE html><body><p>Test</p></body>`,
+    'text/html',
+  );
+  render(<ThemeProvider theme='light' ownerDocument={testDocument} />);
+  expectLightTheme(testDocument);
 });
 
 it('should set dark theme', () => {
