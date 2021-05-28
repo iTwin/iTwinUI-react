@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import '@itwin/itwinui-css/css/global.css';
+import { ThemeOptions } from '../../ThemeProvider/ThemeProvider';
 
 export type ThemeType = 'light' | 'dark' | 'os';
 
@@ -11,9 +12,13 @@ export type ThemeType = 'light' | 'dark' | 'os';
  * Hook that applies styling and theme to all components.
  * Defaults to light theme if none provided or set elsewhere.
  * @param theme Light, dark, or based on OS setting.
- * @param ownerDocument Document to which the theme will be applied. Defaults to `document`.
+ * @param themeOptions Options that override default theming behavior.
  */
-export const useTheme = (theme?: ThemeType, ownerDocument = document): void => {
+export const useTheme = (
+  theme?: ThemeType,
+  themeOptions?: ThemeOptions,
+): void => {
+  const ownerDocument = themeOptions?.ownerDocument ?? document;
   React.useLayoutEffect(() => {
     if (!ownerDocument.body.classList.contains('iui-body')) {
       ownerDocument.body.classList.add('iui-body');

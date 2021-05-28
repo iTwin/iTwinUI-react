@@ -48,7 +48,12 @@ it('should set light theme specifying ownerDocument', () => {
     `<!DOCTYPE html><body><p>Test</p></body>`,
     'text/html',
   );
-  render(<ThemeProvider theme='light' ownerDocument={testDocument} />);
+  render(
+    <ThemeProvider
+      theme='light'
+      themeOptions={{ ownerDocument: testDocument }}
+    />,
+  );
   expectLightTheme(testDocument);
 });
 
