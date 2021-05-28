@@ -81,7 +81,7 @@ export const Step = (props: StepProps) => {
       onClick={onCompletedClick}
       {...rest}
     >
-      {index !== 0 && (
+      {index !== 0 && type === 'default' && (
         <span
           className={cx(
             'iui-wizards-step-track',
@@ -93,7 +93,7 @@ export const Step = (props: StepProps) => {
       {type !== 'workflow' && (
         <span className='iui-wizards-step-title'>{title}</span>
       )}
-      {!isLast && (
+      {!isLast && type === 'default' && (
         <span
           className={cx(
             'iui-wizards-step-track',
