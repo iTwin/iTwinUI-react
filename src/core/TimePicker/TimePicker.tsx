@@ -8,20 +8,22 @@ import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/date-picker.css';
 
 const isSameHour = (
-  hours: number,
-  date: Date | undefined,
+  date1: Date,
+  date2: Date | undefined,
   period?: 'AM' | 'PM',
 ) => {
-  const adjustedHours = period ? formatHourFrom12(hours, period) : hours;
-  return !!date && adjustedHours === date.getHours();
+  const adjustedHours = period
+    ? formatHourFrom12(date1.getHours(), period)
+    : date1.getHours();
+  return !!date2 && adjustedHours === date2.getHours();
 };
 
-const areSameMinutes = (minutes: number, date: Date | undefined) => {
-  return !!date && minutes === date.getMinutes();
+const areSameMinutes = (date1: Date, date2: Date | undefined) => {
+  return !!date2 && date1.getMinutes() === date2.getMinutes();
 };
 
-const areSameSeconds = (seconds: number, date: Date | undefined) => {
-  return !!date && seconds === date.getSeconds();
+const areSameSeconds = (date1: Date, date2: Date | undefined) => {
+  return !!date2 && date1.getSeconds() === date2.getSeconds();
 };
 
 const isSamePeriod = (period: string, date: Date | undefined) => {
@@ -45,33 +47,6 @@ const setHours = (hour: number, date: Date) => {
     date.getSeconds(),
   );
 };
-
-const setMinutes = (minutes: number, date: Date) => {
-  return new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate(),
-    date.getHours(),
-    minutes,
-    date.getSeconds(),
-  );
-};
-
-const setSeconds = (seconds: number, date: Date) => {
-  return new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate(),
-    date.getHours(),
-    date.getMinutes(),
-    seconds,
-  );
-};
-
-// const formatHourTo12 = (hour: number) => {
-//   const adjustedHour = hour % 12;
-//   return adjustedHour === 0 ? 12 : adjustedHour;
-// };
 
 export type TimePickerProps = {
   /**
@@ -146,26 +121,12 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
     setSelectedTime(date);
   }, [date]);
 
-  const onHourClick = (hour: number) => {
-    const adjustedHour = use12Hours ? formatHourFrom12(hour, period) : hour;
+  const onHourClick = (date: Date) => {
+    const adjustedHour = use12Hours
+      ? formatHourFrom12(date.getHours(), period)
+      : date.getHours();
     const adjustedSelectedTime = setHours(
       adjustedHour,
-      selectedTime ?? new Date(),
-    );
-    updateCurrentTime(adjustedSelectedTime);
-  };
-
-  const onMinutesClick = (minutes: number) => {
-    const adjustedSelectedTime = setMinutes(
-      minutes,
-      selectedTime ?? new Date(),
-    );
-    updateCurrentTime(adjustedSelectedTime);
-  };
-
-  const onSecondsClick = (seconds: number) => {
-    const adjustedSelectedTime = setSeconds(
-      seconds,
       selectedTime ?? new Date(),
     );
     updateCurrentTime(adjustedSelectedTime);
@@ -191,30 +152,82 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
     onChange?.(time);
   };
 
-  const onHourFocus = (hour: number) => {
-    const adjustedHour =
-      use12Hours && hour ? formatHourFrom12(hour, period) : hour;
+  const onHourFocus = (date: Date) => {
+    const adjustedHour = use12Hours
+      ? formatHourFrom12(date.getHours(), period)
+      : date.getHours();
     setFocusedTime(setHours(adjustedHour, focusedTime));
   };
 
-  const onMinuteFocus = (minute: number) => {
-    setFocusedTime(setMinutes(minute, focusedTime));
+  const generateDataList = (
+    size: number,
+    value: (index: number) => Date,
+    step: number,
+  ) => {
+    const data = [];
+    for (let i = 0; i < size; ++i) {
+      if (i % step === 0) {
+        data.push(value(i));
+      }
+    }
+    return data;
   };
 
-  const onSecondFocus = (second: number) => {
-    setFocusedTime(setSeconds(second, focusedTime));
-  };
+  const hours = React.useMemo(() => {
+    const time = selectedTime ?? new Date();
+    return generateDataList(
+      use12Hours ? 12 : 24,
+      (i: number) =>
+        new Date(
+          time.getFullYear(),
+          time.getMonth(),
+          time.getDate(),
+          i,
+          time.getMinutes(),
+          time.getSeconds(),
+        ),
+      hourStep,
+    );
+  }, [hourStep, selectedTime, use12Hours]);
 
-  const getHoursList = () => {
-    return use12Hours
-      ? [...new Array(12)].map((_, index) => (index === 0 ? 12 : index))
-      : [...new Array(24)].map((_, index) => index);
-  };
+  const minutes = React.useMemo(() => {
+    const time = selectedTime ?? new Date();
+    return generateDataList(
+      60,
+      (i: number) =>
+        new Date(
+          time.getFullYear(),
+          time.getMonth(),
+          time.getDate(),
+          time.getHours(),
+          i,
+          time.getSeconds(),
+        ),
+      minuteStep,
+    );
+  }, [minuteStep, selectedTime]);
+
+  const seconds = React.useMemo(() => {
+    const time = selectedTime ?? new Date();
+    return generateDataList(
+      60,
+      (i: number) =>
+        new Date(
+          time.getFullYear(),
+          time.getMonth(),
+          time.getDate(),
+          time.getHours(),
+          time.getMinutes(),
+          i,
+        ),
+      secondStep,
+    );
+  }, [secondStep, selectedTime]);
 
   return (
     <>
       <TimePickerColumn
-        data={getHoursList()}
+        data={hours}
         focusedTime={focusedTime}
         selectedTime={selectedTime}
         onFocusChange={onHourFocus}
@@ -222,29 +235,29 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
         isSame={(value, date) =>
           isSameHour(value, date, use12Hours ? period : undefined)
         }
-        step={hourStep}
         setFocus={setFocusHour}
+        valueRenderer={(date: Date) => <>{date.getHours()}</>}
       />
       {precision != 'hours' && (
         <TimePickerColumn
-          data={[...new Array(60)].map((_, index) => index)}
+          data={minutes}
           focusedTime={focusedTime}
           selectedTime={selectedTime}
-          onFocusChange={onMinuteFocus}
-          onSelectChange={onMinutesClick}
+          onFocusChange={(date) => setFocusedTime(date)}
+          onSelectChange={(date) => updateCurrentTime(date)}
           isSame={areSameMinutes}
-          step={minuteStep}
+          valueRenderer={(date: Date) => <>{date.getMinutes()}</>}
         />
       )}
       {precision == 'seconds' && (
         <TimePickerColumn
-          data={[...new Array(60)].map((_, index) => index)}
+          data={seconds}
           focusedTime={focusedTime}
           selectedTime={selectedTime}
-          onFocusChange={onSecondFocus}
-          onSelectChange={onSecondsClick}
+          onFocusChange={(date) => setFocusedTime(date)}
+          onSelectChange={(date) => updateCurrentTime(date)}
           isSame={areSameSeconds}
-          step={secondStep}
+          valueRenderer={(date: Date) => <>{date.getSeconds()}</>}
         />
       )}
       {use12Hours && (
@@ -276,7 +289,7 @@ type TimePickerColumnProps = {
   /**
    * Data to render in column.
    */
-  data: number[];
+  data: Date[];
   /**
    * Current focused time.
    */
@@ -288,23 +301,23 @@ type TimePickerColumnProps = {
   /**
    * Callback when focus is changed.
    */
-  onFocusChange: (value: number) => void;
+  onFocusChange: (value: Date) => void;
   /**
    * Callback when date is changed.
    */
-  onSelectChange: (value: number) => void;
+  onSelectChange: (value: Date) => void;
   /**
    * Compare function.
    */
-  isSame: (value: number, date: Date | undefined) => boolean;
-  /**
-   * Step.
-   */
-  step?: number;
+  isSame: (date1: Date, date2: Date | undefined) => boolean;
   /**
    * Set initial focus.
    */
   setFocus?: boolean;
+  /**
+   * What value to display in every cell.
+   */
+  valueRenderer: (date: Date) => JSX.Element;
 };
 
 const TimePickerColumn = (props: TimePickerColumnProps): JSX.Element => {
@@ -315,8 +328,8 @@ const TimePickerColumn = (props: TimePickerColumnProps): JSX.Element => {
     onFocusChange,
     onSelectChange,
     isSame,
-    step = 0,
     setFocus = false,
+    valueRenderer,
   } = props;
   const needFocus = React.useRef(setFocus);
 
@@ -368,36 +381,38 @@ const TimePickerColumn = (props: TimePickerColumnProps): JSX.Element => {
   return (
     <div className='iui-time'>
       <ol>
-        {data
-          .filter((_, index) => index % step === 0)
-          .map((value, index) => {
-            const isSameFocused = isSame(value, focusedTime);
-            return (
-              <li
-                onKeyDown={(event) => {
-                  handleTimeKeyDown(
-                    event,
-                    data.length - 1,
-                    (index) => onFocusChange(data[index]),
-                    (index) => onSelectChange(data[index]),
-                    index,
-                  );
-                }}
-                className={cx({
-                  'iui-selected': isSame(value, selectedTime),
-                })}
-                key={value}
-                tabIndex={isSameFocused ? 0 : undefined}
-                ref={(ref) => {
-                  scrollIntoView(ref, isSameFocused);
-                  needFocus.current && isSameFocused && ref?.focus();
-                }}
-                onClick={() => onSelectChange(value)}
-              >
-                {`0${value}`.slice(-2)}
-              </li>
-            );
-          })}
+        {data.map((value, index) => {
+          const isSameFocused = isSame(value, focusedTime);
+          return (
+            <li
+              onKeyDown={(event) => {
+                handleTimeKeyDown(
+                  event,
+                  data.length - 1,
+                  (index) => onFocusChange(data[index]),
+                  (index) => onSelectChange(data[index]),
+                  index,
+                );
+              }}
+              className={cx({
+                'iui-selected': isSame(value, selectedTime),
+              })}
+              key={index}
+              tabIndex={isSameFocused ? 0 : undefined}
+              ref={(ref) => {
+                scrollIntoView(ref, isSameFocused);
+                needFocus.current && isSameFocused && ref?.focus();
+              }}
+              onClick={() => {
+                // needFocus.current = true;
+                onSelectChange(value);
+                console.log(document.activeElement);
+              }}
+            >
+              {valueRenderer(value)}
+            </li>
+          );
+        })}
       </ol>
     </div>
   );

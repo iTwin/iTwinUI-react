@@ -110,7 +110,7 @@ it('should navigate with keyboard', () => {
   // go up
   fireEvent.keyDown(nextMinute, { key: 'ArrowUp' });
   nextMinute = nextMinute.previousSibling as Node;
-  expect(nextMinute?.textContent).toBe('09');
+  expect(nextMinute?.textContent).toBe('9');
   expect(document.activeElement).toEqual(nextMinute);
 
   // go down
