@@ -318,3 +318,33 @@ describe('Wizard step (workflow)', () => {
     expect(container.querySelector('.iui-wizards-step-track-main')).toBeNull();
   });
 });
+
+it('should set dynamic percentage width based on total steps', () => {
+  const { container: container1 } = render(
+    <Step
+      title='Mock step'
+      index={1}
+      currentStepNumber={0}
+      totalSteps={4}
+      type={'default'}
+    />,
+  );
+
+  const step1 = container1.querySelector('.iui-wizards-step') as HTMLElement;
+  expect(step1).toBeTruthy();
+  expect(step1.style.width).toEqual('25%');
+
+  const { container: container2 } = render(
+    <Step
+      title='Mock step'
+      index={1}
+      currentStepNumber={1}
+      totalSteps={8}
+      type={'default'}
+    />,
+  );
+
+  const step2 = container2.querySelector('.iui-wizards-step') as HTMLElement;
+  expect(step2).toBeTruthy();
+  expect(step2.style.width).toEqual('12.5%');
+});
