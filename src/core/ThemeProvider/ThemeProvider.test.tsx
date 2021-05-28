@@ -54,7 +54,7 @@ it('should set default theme', () => {
   expectDarkTheme();
 
   render(<ThemeProvider />);
-  expectDarkTheme();
+  expectLightTheme();
 });
 
 it('should set body class', () => {
