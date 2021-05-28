@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import { TimePicker } from './TimePicker';
 
@@ -53,72 +53,78 @@ it('should return selected time', () => {
   expect(selectedHours.textContent).toBe('17');
 });
 
-// it('should navigate with keyboard', () => {
-//   const onClick = jest.fn();
-//   const { container, getAllByText } = render(
-//     <DatePicker date={new Date(2020, 1, 1)} onChange={onClick} setFocus />,
-//   );
-//   assertMonthYear(container, 'February', '2020');
-//   let day = container.querySelector('.iui-date.iui-selected') as HTMLElement;
-//   expect(day.textContent).toBe('1');
-//   expect(document.activeElement).toEqual(day);
+it('should navigate with keyboard', () => {
+  const onClick = jest.fn();
+  const { container } = render(
+    <TimePicker
+      date={new Date(2020, 1, 1, 22, 11)}
+      onChange={onClick}
+      setFocusHour
+    />,
+  );
+  let selectedHours = container.querySelector(
+    '.iui-time:first-child .iui-selected',
+  ) as HTMLElement;
+  expect(selectedHours.textContent).toBe('22');
+  expect(document.activeElement).toEqual(selectedHours);
 
-//   // go left
-//   const calendar = container.querySelector('.iui-dates') as HTMLElement;
-//   fireEvent.keyDown(calendar, { key: 'ArrowLeft' });
-//   assertMonthYear(container, 'January', '2020');
-//   day = getAllByText('31').find(
-//     (el) => !el.className.includes('iui-outside-month'),
-//   ) as HTMLDivElement;
-//   expect(day).toBeTruthy();
-//   expect(document.activeElement).toEqual(day);
+  // go down
+  fireEvent.keyDown(selectedHours, { key: 'ArrowDown' });
+  let nextHour = selectedHours.nextSibling;
+  expect(nextHour?.textContent).toBe('23');
+  expect(document.activeElement).toEqual(nextHour);
 
-//   // go right
-//   fireEvent.keyDown(calendar, { key: 'ArrowRight' });
-//   assertMonthYear(container, 'February', '2020');
-//   day = container.querySelector('.iui-date.iui-selected') as HTMLElement;
-//   expect(day.textContent).toBe('1');
-//   expect(document.activeElement).toEqual(day);
+  // go up
+  fireEvent.keyDown(nextHour as Node, { key: 'ArrowUp' });
+  expect(document.activeElement).toEqual(selectedHours);
 
-//   // go up
-//   fireEvent.keyDown(calendar, { key: 'ArrowUp' });
-//   assertMonthYear(container, 'January', '2020');
-//   day = getAllByText('25').find(
-//     (el) => !el.className.includes('iui-outside-month'),
-//   ) as HTMLDivElement;
-//   expect(day).toBeTruthy();
-//   expect(document.activeElement).toEqual(day);
+  // go up
+  fireEvent.keyDown(selectedHours, { key: 'ArrowUp' });
+  nextHour = selectedHours.previousSibling;
+  expect(nextHour?.textContent).toBe('21');
+  expect(document.activeElement).toEqual(nextHour);
 
-//   // go down
-//   fireEvent.keyDown(calendar, { key: 'ArrowDown' });
-//   assertMonthYear(container, 'February', '2020');
-//   day = container.querySelector('.iui-date.iui-selected') as HTMLElement;
-//   expect(day.textContent).toBe('1');
-//   expect(document.activeElement).toEqual(day);
+  // select
+  fireEvent.keyDown(nextHour as Node, { key: 'Enter' });
+  selectedHours = container.querySelector(
+    '.iui-time:first-child .iui-selected',
+  ) as HTMLElement;
+  expect(selectedHours.textContent).toBe('21');
+  expect(document.activeElement).toEqual(selectedHours);
+  expect(onClick).toHaveBeenCalledWith(new Date(2020, 1, 1, 21, 11));
 
-//   // go right and select with enter
-//   fireEvent.keyDown(calendar, { key: 'ArrowRight' });
-//   assertMonthYear(container, 'February', '2020');
-//   day = getAllByText('2').find(
-//     (el) => !el.className.includes('iui-outside-month'),
-//   ) as HTMLDivElement;
-//   expect(day).toBeTruthy();
-//   expect(document.activeElement).toEqual(day);
-//   fireEvent.keyDown(calendar, { key: 'Enter' });
-//   day = container.querySelector('.iui-date.iui-selected') as HTMLElement;
-//   expect(day.textContent).toBe('2');
-//   expect(onClick).toHaveBeenCalledTimes(1);
+  // go to minutes
+  let selectedMinutes = container.querySelector(
+    '.iui-time:last-child .iui-selected',
+  ) as HTMLElement;
+  selectedMinutes.focus();
+  expect(selectedMinutes.textContent).toBe('11');
+  expect(document.activeElement).toEqual(selectedMinutes);
 
-//   // go right and select with space
-//   fireEvent.keyDown(calendar, { key: 'ArrowRight' });
-//   assertMonthYear(container, 'February', '2020');
-//   day = getAllByText('3').find(
-//     (el) => !el.className.includes('iui-outside-month'),
-//   ) as HTMLDivElement;
-//   expect(day).toBeTruthy();
-//   expect(document.activeElement).toEqual(day);
-//   fireEvent.keyDown(calendar, { key: ' ' });
-//   day = container.querySelector('.iui-date.iui-selected') as HTMLElement;
-//   expect(day.textContent).toBe('3');
-//   expect(onClick).toHaveBeenCalledTimes(2);
-// });
+  // go up
+  fireEvent.keyDown(selectedMinutes, { key: 'ArrowUp' });
+  let nextMinute = selectedMinutes.previousSibling as Node;
+  expect(nextMinute?.textContent).toBe('10');
+  expect(document.activeElement).toEqual(nextMinute);
+
+  // go up
+  fireEvent.keyDown(nextMinute, { key: 'ArrowUp' });
+  nextMinute = nextMinute.previousSibling as Node;
+  expect(nextMinute?.textContent).toBe('09');
+  expect(document.activeElement).toEqual(nextMinute);
+
+  // go down
+  fireEvent.keyDown(nextMinute, { key: 'ArrowDown' });
+  nextMinute = nextMinute.nextSibling as Node;
+  expect(nextMinute?.textContent).toBe('10');
+  expect(document.activeElement).toEqual(nextMinute);
+
+  // select
+  fireEvent.keyDown(nextMinute, { key: ' ' });
+  selectedMinutes = container.querySelector(
+    '.iui-time:last-child .iui-selected',
+  ) as HTMLElement;
+  expect(selectedMinutes.textContent).toBe('10');
+  expect(document.activeElement).toEqual(selectedMinutes);
+  expect(onClick).toHaveBeenCalledWith(new Date(2020, 1, 1, 21, 10));
+});

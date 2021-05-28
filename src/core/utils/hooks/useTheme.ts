@@ -35,7 +35,7 @@ export const useTheme = (theme?: ThemeType): void => {
         }
         break;
       default:
-        if (!document.documentElement.classList.contains('iui-theme')) {
+        if (document.documentElement.className.indexOf('iui-theme') === -1) {
           addLightTheme();
         }
     }

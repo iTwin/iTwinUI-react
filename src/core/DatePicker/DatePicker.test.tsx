@@ -171,7 +171,6 @@ it('should switch to other month if day selected from other month', () => {
   const days = getAllByText('30');
   days[0].click();
   assertMonthYear(container, 'December', '2019');
-  console.log(container.innerHTML);
   day = container.querySelector('.iui-date.iui-selected') as HTMLElement;
   expect(day).toBeTruthy();
   expect(day.textContent).toBe('30');

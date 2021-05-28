@@ -107,6 +107,11 @@ export type TimePickerProps = {
    * @default 1
    */
   secondStep?: number;
+  /**
+   * Set focus on hour.
+   * @default false
+   */
+  setFocusHour?: boolean;
 };
 
 /**
@@ -123,6 +128,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
     hourStep = 1,
     minuteStep = 1,
     secondStep = 1,
+    setFocusHour = false,
   } = props;
 
   useTheme();
@@ -188,22 +194,15 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
   const onHourFocus = (hour: number) => {
     const adjustedHour =
       use12Hours && hour ? formatHourFrom12(hour, period) : hour;
-    applyFocus(adjustedHour, (value, date) => setHours(value, date));
+    setFocusedTime(setHours(adjustedHour, focusedTime));
   };
 
   const onMinuteFocus = (minute: number) => {
-    applyFocus(minute, (value, date) => setMinutes(value, date));
+    setFocusedTime(setMinutes(minute, focusedTime));
   };
 
   const onSecondFocus = (second: number) => {
-    applyFocus(second, (value, date) => setSeconds(value, date));
-  };
-
-  const applyFocus = (
-    value: number,
-    callback: (value: number, date: Date) => Date,
-  ) => {
-    setFocusedTime(callback(value, focusedTime));
+    setFocusedTime(setSeconds(second, focusedTime));
   };
 
   const getHoursList = () => {
@@ -224,6 +223,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
           isSameHour(value, date, use12Hours ? period : undefined)
         }
         step={hourStep}
+        setFocus={setFocusHour}
       />
       {precision != 'hours' && (
         <TimePickerColumn
@@ -301,6 +301,10 @@ type TimePickerColumnProps = {
    * Step.
    */
   step?: number;
+  /**
+   * Set initial focus.
+   */
+  setFocus?: boolean;
 };
 
 const TimePickerColumn = (props: TimePickerColumnProps): JSX.Element => {
@@ -312,8 +316,9 @@ const TimePickerColumn = (props: TimePickerColumnProps): JSX.Element => {
     onSelectChange,
     isSame,
     step = 0,
+    setFocus = false,
   } = props;
-  const needFocus = React.useRef(false);
+  const needFocus = React.useRef(setFocus);
 
   // Used to focus row only when changed (keyboard navigation)
   // e.g. without this on every rerender it would be focused
