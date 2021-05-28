@@ -14,11 +14,7 @@ export type StylingProps = {
    * Custom CSS style properties.
    */
   style?: React.CSSProperties;
-  /**
-   * Custom CSS class name.
-   */
-  className?: string;
-};
+} & ClassNameProps;
 
 export type CommonProps = {
   /**
