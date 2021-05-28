@@ -171,6 +171,7 @@ it('should switch to other month if day selected from other month', () => {
   const days = getAllByText('30');
   days[0].click();
   assertMonthYear(container, 'December', '2019');
+  console.log(container.innerHTML);
   day = container.querySelector('.iui-date.iui-selected') as HTMLElement;
   expect(day).toBeTruthy();
   expect(day.textContent).toBe('30');
@@ -259,4 +260,12 @@ it('should navigate with keyboard', () => {
   day = container.querySelector('.iui-date.iui-selected') as HTMLElement;
   expect(day.textContent).toBe('3');
   expect(onClick).toHaveBeenCalledTimes(2);
+});
+
+it('should show time selection', () => {
+  const { container } = render(
+    <DatePicker date={new Date(2020, 0, 10)} showTime />,
+  );
+  expect(container.querySelector('.iui-date-picker')).toBeTruthy();
+  expect(container.querySelector('.iui-time')).toBeTruthy();
 });

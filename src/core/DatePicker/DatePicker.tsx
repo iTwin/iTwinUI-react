@@ -125,6 +125,10 @@ export type DatePickerProps = {
    * @default false
    */
   setFocus?: boolean;
+  /**
+   * Show time picker near the calendar.
+   * @default false
+   */
   showTime?: boolean;
 } & Omit<CommonProps, 'title'> &
   Omit<TimePickerProps, 'date' | 'onChange'>;
@@ -226,9 +230,15 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
   }, [days]);
 
   const getNewFocusedDate = (newYear: number, newMonth: number) => {
-    const newDate = new Date(selectedDay ?? new Date());
-    newDate.setFullYear(newYear);
-    newDate?.setMonth(newMonth);
+    const currentDate = selectedDay ?? new Date();
+    const newDate = new Date(
+      newYear,
+      newMonth,
+      currentDate.getDate(),
+      currentDate.getHours(),
+      currentDate.getMinutes(),
+      currentDate.getSeconds(),
+    );
     return newDate;
   };
 
@@ -252,10 +262,15 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
     if (day.getMonth() !== selectedDay?.getMonth()) {
       setMonthAndYear(day.getMonth(), day.getFullYear());
     }
-    const newDate = new Date(selectedDay ?? new Date());
-    newDate.setFullYear(displayedYear);
-    newDate.setMonth(displayedMonthIndex);
-    newDate.setDate(day.getDate());
+    const currentDate = selectedDay ?? new Date();
+    const newDate = new Date(
+      day.getFullYear(),
+      day.getMonth(),
+      day.getDate(),
+      currentDate.getHours(),
+      currentDate.getMinutes(),
+      currentDate.getSeconds(),
+    );
     setSelectedDay(newDate);
     setFocusedDay(newDate);
     onChange?.(newDate);

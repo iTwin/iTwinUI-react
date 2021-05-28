@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { act, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import React from 'react';
 import { TimePicker } from './TimePicker';
 
@@ -45,29 +45,13 @@ it('should return selected time', () => {
   ) as HTMLElement;
   expect(selectedHours.textContent).toBe('14');
   const newHour = getByText('17', { selector: '.iui-time:first-child li' });
-  console.log(newHour);
-  act(() => newHour.click());
+  newHour.click();
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 17, 21, 33));
   selectedHours = container.querySelector(
     '.iui-time:first-child .iui-selected',
   ) as HTMLElement;
   expect(selectedHours.textContent).toBe('17');
 });
-
-// it('should apply custom class and style', () => {
-//   const { container } = render(
-//     <DatePicker
-//       date={new Date(2020, 0, 10)}
-//       className='my-class'
-//       style={{ width: 300 }}
-//     />,
-//   );
-//   const picker = container.querySelector(
-//     '.iui-date-picker.my-class',
-//   ) as HTMLElement;
-//   expect(picker).toBeTruthy();
-//   picker.style.width = '300px';
-// });
 
 // it('should navigate with keyboard', () => {
 //   const onClick = jest.fn();

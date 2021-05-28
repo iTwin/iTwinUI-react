@@ -35,6 +35,39 @@ const formatHourFrom12 = (hour: number, period: 'AM' | 'PM' | undefined) => {
   return period === 'PM' ? adjustedHour + 12 : adjustedHour;
 };
 
+const setHours = (hour: number, date: Date) => {
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    hour,
+    date.getMinutes(),
+    date.getSeconds(),
+  );
+};
+
+const setMinutes = (minutes: number, date: Date) => {
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    date.getHours(),
+    minutes,
+    date.getSeconds(),
+  );
+};
+
+const setSeconds = (seconds: number, date: Date) => {
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    date.getHours(),
+    date.getMinutes(),
+    seconds,
+  );
+};
+
 // const formatHourTo12 = (hour: number) => {
 //   const adjustedHour = hour % 12;
 //   return adjustedHour === 0 ? 12 : adjustedHour;
@@ -109,33 +142,39 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
 
   const onHourClick = (hour: number) => {
     const adjustedHour = use12Hours ? formatHourFrom12(hour, period) : hour;
-    const adjustedSelectedTime = selectedTime ?? new Date();
-    adjustedSelectedTime.setHours(adjustedHour);
+    const adjustedSelectedTime = setHours(
+      adjustedHour,
+      selectedTime ?? new Date(),
+    );
     updateCurrentTime(adjustedSelectedTime);
   };
 
   const onMinutesClick = (minutes: number) => {
-    const adjustedSelectedTime = selectedTime ?? new Date();
-    adjustedSelectedTime.setMinutes(minutes);
+    const adjustedSelectedTime = setMinutes(
+      minutes,
+      selectedTime ?? new Date(),
+    );
     updateCurrentTime(adjustedSelectedTime);
   };
 
   const onSecondsClick = (seconds: number) => {
-    const adjustedSelectedTime = selectedTime ?? new Date();
-    adjustedSelectedTime.setSeconds(seconds);
+    const adjustedSelectedTime = setSeconds(
+      seconds,
+      selectedTime ?? new Date(),
+    );
     updateCurrentTime(adjustedSelectedTime);
   };
 
   const onPeriodClick = (value: string) => {
-    const adjustedSelectedTime = selectedTime ?? new Date();
+    let adjustedSelectedTime = selectedTime ?? new Date();
     const currentHours = adjustedSelectedTime.getHours();
     if (value === 'AM' && currentHours > 11) {
       setPeriod(value);
-      adjustedSelectedTime.setHours(currentHours - 12);
+      adjustedSelectedTime = setHours(currentHours - 12, adjustedSelectedTime);
     }
     if (value === 'PM' && currentHours <= 12) {
       setPeriod(value);
-      adjustedSelectedTime.setHours(currentHours + 12);
+      adjustedSelectedTime = setHours(currentHours + 12, adjustedSelectedTime);
     }
     updateCurrentTime(adjustedSelectedTime);
   };
@@ -146,31 +185,25 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
     onChange?.(time);
   };
 
-  const onHourFocus = (hour: number | undefined) => {
+  const onHourFocus = (hour: number) => {
     const adjustedHour =
       use12Hours && hour ? formatHourFrom12(hour, period) : hour;
-    applyFocus(adjustedHour, (value, date) => date.setHours(value));
+    applyFocus(adjustedHour, (value, date) => setHours(value, date));
   };
 
-  const onMinuteFocus = (minute: number | undefined) => {
-    applyFocus(minute, (value, date) => date.setMinutes(value));
+  const onMinuteFocus = (minute: number) => {
+    applyFocus(minute, (value, date) => setMinutes(value, date));
   };
 
-  const onSecondFocus = (second: number | undefined) => {
-    applyFocus(second, (value, date) => date.setSeconds(value));
+  const onSecondFocus = (second: number) => {
+    applyFocus(second, (value, date) => setSeconds(value, date));
   };
 
   const applyFocus = (
-    value: number | undefined,
-    callback: (value: number, date: Date) => void,
+    value: number,
+    callback: (value: number, date: Date) => Date,
   ) => {
-    if (!!value) {
-      const date = new Date(focusedTime);
-      callback(value, date);
-      setFocusedTime(date);
-    } else {
-      setFocusedTime(selectedTime ?? new Date());
-    }
+    setFocusedTime(callback(value, focusedTime));
   };
 
   const getHoursList = () => {
@@ -239,7 +272,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
   );
 };
 
-export type TimePickerColumnProps = {
+type TimePickerColumnProps = {
   /**
    * Data to render in column.
    */
@@ -255,11 +288,11 @@ export type TimePickerColumnProps = {
   /**
    * Callback when focus is changed.
    */
-  onFocusChange?: (value?: number) => void;
+  onFocusChange: (value: number) => void;
   /**
    * Callback when date is changed.
    */
-  onSelectChange?: (value: number) => void;
+  onSelectChange: (value: number) => void;
   /**
    * Compare function.
    */
@@ -282,10 +315,11 @@ const TimePickerColumn = (props: TimePickerColumnProps): JSX.Element => {
   } = props;
   const needFocus = React.useRef(false);
 
+  // Used to focus row only when changed (keyboard navigation)
+  // e.g. without this on every rerender it would be focused
   React.useEffect(() => {
     if (needFocus.current) {
       needFocus.current = false;
-      // onFocusChange?.(undefined);
     }
   });
 
@@ -298,11 +332,8 @@ const TimePickerColumn = (props: TimePickerColumnProps): JSX.Element => {
     maxValue: number,
     onFocus: (value: number) => void,
     onSelect: (value: number) => void,
-    currentValue?: number,
+    currentValue: number,
   ) => {
-    if (currentValue == null) {
-      return;
-    }
     switch (event.key) {
       case 'ArrowDown':
         if (currentValue + 1 > maxValue) {
@@ -342,8 +373,8 @@ const TimePickerColumn = (props: TimePickerColumnProps): JSX.Element => {
                   handleTimeKeyDown(
                     event,
                     data.length - 1,
-                    (index) => onFocusChange?.(data[index]),
-                    (index) => onSelectChange?.(data[index]),
+                    (index) => onFocusChange(data[index]),
+                    (index) => onSelectChange(data[index]),
                     index,
                   );
                 }}
@@ -356,12 +387,7 @@ const TimePickerColumn = (props: TimePickerColumnProps): JSX.Element => {
                   scrollIntoView(ref, isSameFocused);
                   needFocus.current && isSameFocused && ref?.focus();
                 }}
-                onClick={() => onSelectChange?.(value)}
-                onBlur={() => {
-                  console.log('on blur');
-                  // needFocus.current = false;
-                  onFocusChange?.(undefined);
-                }}
+                onClick={() => onSelectChange(value)}
               >
                 {`0${value}`.slice(-2)}
               </li>
