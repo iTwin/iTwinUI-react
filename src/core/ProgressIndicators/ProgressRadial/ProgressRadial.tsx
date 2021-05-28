@@ -26,7 +26,7 @@ export type ProgressRadialProps = {
    */
   status?: 'positive' | 'negative';
   /**
-   * Size of the progress indicator. If undefined or '', medium size will be used.
+   * Size of the progress indicator. Defaults to medium size.
    * @default ''
    */
   size?: '' | 'x-small' | 'small' | 'large';
