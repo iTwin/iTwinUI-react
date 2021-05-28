@@ -319,7 +319,7 @@ describe('Wizard step (workflow)', () => {
   });
 });
 
-it('should set dynamic percentage width based on total steps', () => {
+it('should set dynamic inline width based on total steps', () => {
   const { container: container1 } = render(
     <Step
       title='Mock step'
@@ -347,4 +347,34 @@ it('should set dynamic percentage width based on total steps', () => {
   const step2 = container2.querySelector('.iui-wizards-step') as HTMLElement;
   expect(step2).toBeTruthy();
   expect(step2.style.width).toEqual('12.5%');
+});
+
+it('should not set dynamic inline width for long and workflow wizard types', () => {
+  const { container: container1 } = render(
+    <Step
+      title='Mock step'
+      index={1}
+      currentStepNumber={0}
+      totalSteps={4}
+      type={'long'}
+    />,
+  );
+
+  const step1 = container1.querySelector('.iui-wizards-step') as HTMLElement;
+  expect(step1).toBeTruthy();
+  expect(step1.style.width).toBeFalsy(); // not 25%
+
+  const { container: container2 } = render(
+    <Step
+      title='Mock step'
+      index={1}
+      currentStepNumber={1}
+      totalSteps={8}
+      type={'workflow'}
+    />,
+  );
+
+  const step2 = container2.querySelector('.iui-wizards-step') as HTMLElement;
+  expect(step2).toBeTruthy();
+  expect(step2.style.width).toBeFalsy(); // not 12.5%
 });
