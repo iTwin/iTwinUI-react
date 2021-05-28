@@ -378,3 +378,24 @@ it('should not set dynamic inline width for long and workflow wizard types', () 
   expect(step2).toBeTruthy();
   expect(step2.style.width).toBeFalsy(); // not 12.5%
 });
+
+it('should add className and style props correctly', () => {
+  const { container } = render(
+    <Step
+      title='Mock step'
+      index={1}
+      currentStepNumber={0}
+      totalSteps={4}
+      type={'default'}
+      className='custom-class'
+      style={{ width: 50, color: 'red' }}
+    />,
+  );
+
+  const step = container.querySelector(
+    '.iui-wizards-step.custom-class',
+  ) as HTMLElement;
+  expect(step).toBeTruthy();
+  expect(step.style.width).toEqual('50px');
+  expect(step.style.color).toEqual('red');
+});
