@@ -4,7 +4,15 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import '@itwin/itwinui-css/css/global.css';
-import { ThemeOptions } from '../../ThemeProvider/ThemeProvider';
+
+export type ThemeOptions = {
+  /**
+   * Document to which the theme will be applied.
+   * Can be specified to handle popup windows.
+   * @default document
+   */
+  ownerDocument?: Document;
+};
 
 export type ThemeType = 'light' | 'dark' | 'os';
 

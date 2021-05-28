@@ -3,16 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { ThemeType, useTheme } from '../utils/hooks/useTheme';
-
-export type ThemeOptions = {
-  /**
-   * Document to which the theme will be applied.
-   * Can be specified to handle popup windows.
-   * @default document
-   */
-  ownerDocument?: Document;
-};
+import { ThemeOptions, ThemeType, useTheme } from '../utils/hooks/useTheme';
 
 export type ThemeProviderProps = {
   /**
