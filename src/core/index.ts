@@ -51,6 +51,14 @@ export type { FileUploadProps, FileUploadTemplateProps } from './FileUpload';
 export { Footer } from './Footer';
 export type { FooterProps, FooterElement, TitleTranslations } from './Footer';
 
+export { Header, HeaderBreadcrumbs, HeaderButton, HeaderLogo } from './Header';
+export type {
+  HeaderProps,
+  HeaderBreadcrumbsProps,
+  HeaderButtonProps,
+  HeaderLogoProps,
+} from './Header';
+
 export { HorizontalTabs } from './HorizontalTabs';
 export type { HorizontalTabsProps } from './HorizontalTabs';
 
@@ -90,11 +98,15 @@ export type { RadioTileGroupProps, RadioTileProps } from './RadioTiles';
 export { Select } from './Select';
 export type { SelectProps, SelectOption, ItemRendererProps } from './Select';
 
+export { SideNavigation, SidenavButton } from './SideNavigation';
+export type { SideNavigationProps, SidenavButtonProps } from './SideNavigation';
+
 export { Table, tableFilters, FilterButtonBar } from './Table';
 export type {
   TableProps,
   TableFilterProps,
   TableFilterValue,
+  DateRangeFilterOptions,
   FilterButtonBarProps,
 } from './Table';
 
