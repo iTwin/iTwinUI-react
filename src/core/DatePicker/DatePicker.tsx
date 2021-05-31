@@ -152,6 +152,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
     hourStep,
     minuteStep,
     secondStep,
+    setFocusHour,
     ...rest
   } = props;
 
@@ -415,6 +416,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
           minuteStep={minuteStep}
           secondStep={secondStep}
           onChange={(date) => onChange?.(date)}
+          setFocusHour={setFocusHour}
         />
       )}
     </div>
