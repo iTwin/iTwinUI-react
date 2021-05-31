@@ -6,7 +6,7 @@ import { action } from '@storybook/addon-actions';
 import { useEffect, useState } from '@storybook/addons';
 import { Meta, Story } from '@storybook/react';
 import React from 'react';
-import { DatePicker, IconButton } from '../../src/core';
+import { DatePicker, IconButton, TimePicker } from '../../src/core';
 import {
   DatePickerProps,
   generateLocalizedStrings,
@@ -16,6 +16,7 @@ import SvgCalendar from '@itwin/itwinui-icons-react/cjs/icons/Calendar';
 export default {
   title: 'Core/DatePicker',
   component: DatePicker,
+  subcomponents: { TimePicker },
   argTypes: {
     onChange: { control: { disable: true } },
     className: { control: { disable: true } },
@@ -26,7 +27,7 @@ export default {
 } as Meta<DatePickerProps>;
 
 export const Basic: Story<DatePickerProps> = (args) => {
-  const { date = new Date(), setFocus = true, localizedNames } = args;
+  const { date = new Date(), setFocus = true, localizedNames, ...rest } = args;
   const [opened, setOpened] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date(date));
   const onChange = (date: Date) => {
@@ -47,7 +48,7 @@ export const Basic: Story<DatePickerProps> = (args) => {
       {opened && (
         <div style={{ marginTop: 4 }}>
           <DatePicker
-            showTime
+            {...rest}
             date={currentDate}
             onChange={onChange}
             localizedNames={localizedNames}
@@ -68,6 +69,7 @@ export const Localized: Story<DatePickerProps> = (args) => {
     date = new Date(),
     setFocus = true,
     localizedNames = generateLocalizedStrings('ja'),
+    ...rest
   } = args;
   const [opened, setOpened] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date(date));
@@ -89,6 +91,7 @@ export const Localized: Story<DatePickerProps> = (args) => {
       {opened && (
         <div style={{ marginTop: 4 }}>
           <DatePicker
+            {...rest}
             date={currentDate}
             onChange={onChange}
             localizedNames={localizedNames}

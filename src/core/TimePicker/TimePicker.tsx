@@ -15,6 +15,9 @@ const isSameHour = (
   const adjustedHours = period
     ? formatHourFrom12(date1.getHours(), period)
     : date1.getHours();
+  if (!!period) {
+    return !!date2 && adjustedHours % 12 === date2.getHours() % 12;
+  }
   return !!date2 && adjustedHours === date2.getHours();
 };
 
@@ -159,6 +162,20 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
     setFocusedTime(setHours(adjustedHour, focusedTime));
   };
 
+  const onPeriodFocus = (value: string) => {
+    let adjustedSelectedTime = selectedTime ?? new Date();
+    const currentHours = adjustedSelectedTime.getHours();
+    if (value === 'AM' && currentHours > 11) {
+      setPeriod(value);
+      adjustedSelectedTime = setHours(currentHours - 12, adjustedSelectedTime);
+    }
+    if (value === 'PM' && currentHours <= 12) {
+      setPeriod(value);
+      adjustedSelectedTime = setHours(currentHours + 12, adjustedSelectedTime);
+    }
+    setFocusedTime(adjustedSelectedTime);
+  };
+
   const generateDataList = (
     size: number,
     value: (index: number) => Date,
@@ -182,7 +199,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
           time.getFullYear(),
           time.getMonth(),
           time.getDate(),
-          i,
+          use12Hours && i === 0 ? 12 : i,
           time.getMinutes(),
           time.getSeconds(),
         ),
@@ -228,88 +245,73 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
     <>
       <TimePickerColumn
         data={hours}
-        focusedTime={focusedTime}
-        selectedTime={selectedTime}
+        isSameFocused={(val) =>
+          isSameHour(val, focusedTime, use12Hours ? period : undefined)
+        }
+        isSameSelected={(val) =>
+          isSameHour(val, selectedTime, use12Hours ? period : undefined)
+        }
         onFocusChange={onHourFocus}
         onSelectChange={onHourClick}
-        isSame={(value, date) =>
-          isSameHour(value, date, use12Hours ? period : undefined)
-        }
         setFocus={setFocusHour}
         valueRenderer={(date: Date) => <>{date.getHours()}</>}
       />
       {precision != 'hours' && (
         <TimePickerColumn
           data={minutes}
-          focusedTime={focusedTime}
-          selectedTime={selectedTime}
+          isSameFocused={(val) => areSameMinutes(val, focusedTime)}
+          isSameSelected={(val) => areSameMinutes(val, selectedTime)}
           onFocusChange={(date) => setFocusedTime(date)}
           onSelectChange={(date) => updateCurrentTime(date)}
-          isSame={areSameMinutes}
           valueRenderer={(date: Date) => <>{date.getMinutes()}</>}
         />
       )}
       {precision == 'seconds' && (
         <TimePickerColumn
           data={seconds}
-          focusedTime={focusedTime}
-          selectedTime={selectedTime}
+          isSameFocused={(val) => areSameSeconds(val, focusedTime)}
+          isSameSelected={(val) => areSameSeconds(val, selectedTime)}
           onFocusChange={(date) => setFocusedTime(date)}
           onSelectChange={(date) => updateCurrentTime(date)}
-          isSame={areSameSeconds}
           valueRenderer={(date: Date) => <>{date.getSeconds()}</>}
         />
       )}
       {use12Hours && (
-        <div className='iui-period'>
-          <ol>
-            {['AM', 'PM'].map((value) => (
-              <li
-                className={cx({
-                  'iui-selected': isSamePeriod(value, selectedTime),
-                })}
-                key={value}
-                tabIndex={isSamePeriod(value, selectedTime) ? 0 : undefined}
-                // ref={(ref) => {
-                //   scrollIntoView(ref, isSamePeriod(value, selectedTime));
-                // }}
-                onClick={() => onPeriodClick(value)}
-              >
-                {value}
-              </li>
-            ))}
-          </ol>
-        </div>
+        <TimePickerColumn<string>
+          data={['AM', 'PM']}
+          isSameFocused={(val) => isSamePeriod(val, focusedTime)}
+          isSameSelected={(val) => isSamePeriod(val, selectedTime)}
+          onFocusChange={(date) => onPeriodFocus(date)}
+          onSelectChange={(value) => onPeriodClick(value)}
+          valueRenderer={(value: string) => <>{value}</>}
+          className='iui-period'
+        />
       )}
     </>
   );
 };
 
-type TimePickerColumnProps = {
+type TimePickerColumnProps<T = Date> = {
   /**
    * Data to render in column.
    */
-  data: Date[];
+  data: T[];
   /**
-   * Current focused time.
+   * Compare function for focus.
    */
-  focusedTime: Date;
+  isSameFocused: (date1: T) => boolean;
   /**
-   * Current selected time.
+   * Compare function for select.
    */
-  selectedTime?: Date;
+  isSameSelected: (date1: T) => boolean;
   /**
    * Callback when focus is changed.
    */
-  onFocusChange: (value: Date) => void;
+  onFocusChange: (value: T) => void;
   /**
    * Callback when date is changed.
    */
-  onSelectChange: (value: Date) => void;
-  /**
-   * Compare function.
-   */
-  isSame: (date1: Date, date2: Date | undefined) => boolean;
+  onSelectChange: (value: T) => void;
   /**
    * Set initial focus.
    */
@@ -317,19 +319,23 @@ type TimePickerColumnProps = {
   /**
    * What value to display in every cell.
    */
-  valueRenderer: (date: Date) => JSX.Element;
+  valueRenderer: (date: T) => JSX.Element;
+  /**
+   * Class to apply on root.
+   */
+  className?: string;
 };
 
-const TimePickerColumn = (props: TimePickerColumnProps): JSX.Element => {
+const TimePickerColumn = <T,>(props: TimePickerColumnProps<T>): JSX.Element => {
   const {
     data,
-    focusedTime,
-    selectedTime,
     onFocusChange,
     onSelectChange,
-    isSame,
+    isSameFocused,
+    isSameSelected,
     setFocus = false,
     valueRenderer,
+    className = 'iui-time',
   } = props;
   const needFocus = React.useRef(setFocus);
 
@@ -379,10 +385,10 @@ const TimePickerColumn = (props: TimePickerColumnProps): JSX.Element => {
   };
 
   return (
-    <div className='iui-time'>
+    <div className={className}>
       <ol>
         {data.map((value, index) => {
-          const isSameFocused = isSame(value, focusedTime);
+          const isSameFocus = isSameFocused(value);
           return (
             <li
               onKeyDown={(event) => {
@@ -395,13 +401,13 @@ const TimePickerColumn = (props: TimePickerColumnProps): JSX.Element => {
                 );
               }}
               className={cx({
-                'iui-selected': isSame(value, selectedTime),
+                'iui-selected': isSameSelected(value),
               })}
               key={index}
-              tabIndex={isSameFocused ? 0 : undefined}
+              tabIndex={isSameFocus ? 0 : undefined}
               ref={(ref) => {
-                scrollIntoView(ref, isSameFocused);
-                needFocus.current && isSameFocused && ref?.focus();
+                scrollIntoView(ref, isSameFocus);
+                needFocus.current && isSameFocus && ref?.focus();
               }}
               onClick={() => {
                 // needFocus.current = true;
