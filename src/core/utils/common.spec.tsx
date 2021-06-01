@@ -15,7 +15,7 @@ it('should return color for given user email', () => {
 it('should create container', () => {
   const container = getContainer('test-id');
   expect(document.getElementById('test-id')).toBeTruthy();
-  expect(getContainer('test-id')).toEqual(container);
+  expect(getContainer('test-id')).toBe(container);
 });
 
 it('should respect ownerDocument arg', () => {
@@ -26,5 +26,6 @@ it('should respect ownerDocument arg', () => {
 
   const container = getContainer('test-id', mockDocument);
   expect(mockDocument.getElementById('test-id')).toBeTruthy();
-  expect(getContainer('test-id')).toEqual(container);
+  expect(getContainer('test-id', mockDocument)).toBe(container);
+  expect(getContainer('test-id', document)).not.toBe(container);
 });
