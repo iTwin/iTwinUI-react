@@ -3,6 +3,8 @@ Thank you for your contribution to the iTwinUI-react project!
 Please describe your PR here and make sure to complete all of the items below before submitting.
 -->
 
+Closes issue #
+
 ## Checklist
 
 - [ ] Add meaningful tests for your component (verify that all lines are covered)
