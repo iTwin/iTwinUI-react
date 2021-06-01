@@ -410,9 +410,7 @@ const TimePickerColumn = <T,>(props: TimePickerColumnProps<T>): JSX.Element => {
                 needFocus.current && isSameFocus && ref?.focus();
               }}
               onClick={() => {
-                // needFocus.current = true;
                 onSelectChange(value);
-                console.log(document.activeElement);
               }}
             >
               {valueRenderer(value)}
