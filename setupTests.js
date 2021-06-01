@@ -3,4 +3,3 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 window.HTMLElement.prototype.scrollIntoView = () => {};
-Element.prototype.scrollIntoView = () => {};
