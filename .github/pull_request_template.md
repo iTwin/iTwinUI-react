@@ -1,4 +1,7 @@
-<!-- Thank you for your contribution to the iTwinUi-react project! Please make sure to complete all of the items below before submitting the PR. -->
+<!--
+Thank you for your contribution to the iTwinUI-react project!
+Please describe your PR here and make sure to complete all of the items below before submitting.
+-->
 
 ## Checklist
 
