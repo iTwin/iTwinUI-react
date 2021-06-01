@@ -112,18 +112,14 @@ export const hideOnBlur = {
   fn(instance: Instance) {
     return {
       onCreate() {
-        instance.popper.addEventListener(
-          'focusout',
-          (event) => {
-            if (
-              event.relatedTarget && // only hide when focus is on a valid target
-              !instance.popper.contains(event.relatedTarget as Node)
-            ) {
-              instance.hide();
-            }
-          },
-          { capture: true },
-        );
+        instance.popper.addEventListener('focusout', (event) => {
+          if (
+            event.relatedTarget && // only hide when focus is on a valid target
+            !instance.popper.contains(event.relatedTarget as Node)
+          ) {
+            setTimeout(() => instance.hide(), 100);
+          }
+        });
       },
     };
   },
