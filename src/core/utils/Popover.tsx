@@ -70,7 +70,13 @@ export const Popover = React.forwardRef((props: PopoverProps, ref) => {
     role: undefined,
     offset: [0, 0],
     ...props,
-    plugins: [lazyLoad, removeTabIndex, hideOnEsc, ...(props.plugins || [])],
+    plugins: [
+      lazyLoad,
+      removeTabIndex,
+      hideOnEsc,
+      hideOnBlur,
+      ...(props.plugins || []),
+    ],
   };
 
   if (props.render) {
@@ -97,6 +103,27 @@ export const hideOnEsc = {
       },
       onHide() {
         document.removeEventListener('keydown', onKeyDown);
+      },
+    };
+  },
+};
+
+export const hideOnBlur = {
+  fn(instance: Instance) {
+    return {
+      onCreate() {
+        instance.popper.addEventListener(
+          'focusout',
+          (event) => {
+            if (
+              event.relatedTarget && // only hide when focus is on a valid target
+              !instance.popper.contains(event.relatedTarget as Node)
+            ) {
+              instance.hide();
+            }
+          },
+          { capture: true },
+        );
       },
     };
   },
