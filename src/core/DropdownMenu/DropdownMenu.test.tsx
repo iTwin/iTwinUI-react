@@ -18,10 +18,7 @@ function assertBaseElement(menu: HTMLUListElement, role = 'menu') {
   });
 }
 
-function renderComponent(
-  props?: Partial<DropdownMenuProps>,
-  renderContainer?: HTMLElement,
-) {
+function renderComponent(props?: Partial<DropdownMenuProps>) {
   return render(
     <DropdownMenu
       menuItems={(close) => [
@@ -39,7 +36,6 @@ function renderComponent(
     >
       <Button>Click here</Button>
     </DropdownMenu>,
-    renderContainer && { container: renderContainer },
   );
 }
 
