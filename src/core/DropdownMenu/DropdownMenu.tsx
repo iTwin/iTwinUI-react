@@ -68,6 +68,8 @@ export const DropdownMenu = (props: DropdownMenuProps) => {
   const open = React.useCallback(() => setIsVisible(true), []);
   const close = React.useCallback(() => setIsVisible(false), []);
 
+  const [closedByBlur, setClosedByBlur] = React.useState(false);
+
   const targetRef = React.useRef<HTMLElement>(null);
 
   const onShowHandler = React.useCallback(
@@ -92,12 +94,18 @@ export const DropdownMenu = (props: DropdownMenuProps) => {
   return (
     <Popover
       content={
-        <Menu className={className} style={style} role={role}>
-          {React.useMemo(() => menuItems(close), [menuItems, close])}
-        </Menu>
+        <div
+          onBlur={(event) => {
+            close();
+            setClosedByBlur(event.relatedTarget === targetRef.current);
+          }}
+        >
+          <Menu className={className} style={style} role={role}>
+            {React.useMemo(() => menuItems(close), [menuItems, close])}
+          </Menu>
+        </div>
       }
       visible={trigger === undefined ? isVisible : undefined}
-      onClickOutside={close}
       placement={placement}
       onShow={onShowHandler}
       onHide={onHideHandler}
@@ -108,7 +116,10 @@ export const DropdownMenu = (props: DropdownMenuProps) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ref: mergeRefs(targetRef, (props.children as any).ref),
         onClick: (args: unknown) => {
-          trigger === undefined && (isVisible ? close() : open());
+          if (trigger === undefined && !closedByBlur) {
+            isVisible ? close() : open();
+          }
+          setClosedByBlur(false);
           (children as JSX.Element).props.onClick?.(args);
         },
       })}
