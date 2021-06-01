@@ -17,3 +17,14 @@ it('should create container', () => {
   expect(document.getElementById('test-id')).toBeTruthy();
   expect(getContainer('test-id')).toEqual(container);
 });
+
+it('should respect ownerDocument arg', () => {
+  const mockDocument = new DOMParser().parseFromString(
+    `<!DOCTYPE html><html><body></body></html>`,
+    'text/html',
+  );
+
+  const container = getContainer('test-id', mockDocument);
+  expect(mockDocument.getElementById('test-id')).toBeTruthy();
+  expect(getContainer('test-id')).toEqual(container);
+});
