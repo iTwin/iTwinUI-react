@@ -146,23 +146,3 @@ it('should close menu on pressing escape key', () => {
   const tippy = document.querySelector('[data-tippy-root]') as HTMLElement;
   expect(tippy.style.visibility).toEqual('hidden');
 });
-
-it('should not respond to events in the wrong document', () => {
-  const mockDocument = new DOMParser().parseFromString(
-    `<!DOCTYPE html><html><body></body></html>`,
-    'text/html',
-  );
-
-  const { container } = renderComponent(
-    undefined,
-    mockDocument.documentElement.appendChild(mockDocument.createElement('div')),
-  );
-
-  const button = container.querySelector('.iui-button') as HTMLButtonElement;
-  button.click();
-
-  // Pressing Esc on `document` should not close menu
-  fireEvent.keyDown(document, { key: 'Escape' });
-  const tippy = mockDocument.querySelector('[data-tippy-root]') as HTMLElement;
-  expect(tippy.style.visibility).toEqual('visible');
-});

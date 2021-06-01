@@ -85,9 +85,6 @@ export const Popover = React.forwardRef((props: PopoverProps, ref) => {
 
 export const hideOnEsc = {
   fn(instance: Instance) {
-    // will always refer to the correct document instance (e.g. in a popout window)
-    const _document = instance.reference?.ownerDocument ?? document;
-
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         instance.hide();
@@ -96,10 +93,10 @@ export const hideOnEsc = {
 
     return {
       onShow() {
-        _document.addEventListener('keydown', onKeyDown);
+        instance.popper.addEventListener('keydown', onKeyDown);
       },
       onHide() {
-        _document.removeEventListener('keydown', onKeyDown);
+        instance.popper.removeEventListener('keydown', onKeyDown);
       },
     };
   },
