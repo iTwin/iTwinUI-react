@@ -29,7 +29,7 @@ const isSameSecond = (date1: Date, date2: Date | undefined) => {
   return !!date2 && date1.getSeconds() === date2.getSeconds();
 };
 
-const isSamePeriod = (period: string, date: Date | undefined) => {
+const isSamePeriod = (period: PeriodType, date: Date | undefined) => {
   return (
     !!date && (period === 'AM' ? date.getHours() < 12 : date.getHours() >= 12)
   );
@@ -92,6 +92,26 @@ export type TimePickerProps = {
    * @default false
    */
   setFocusHour?: boolean;
+  /**
+   * Custom hour cell renderer.
+   * @default (date: Date) => <>{date.getHours()}</>
+   */
+  hourRenderer?: (date: Date) => JSX.Element;
+  /**
+   * Custom minute cell renderer.
+   * @default (date: Date) => <>{date.getMinutes()}</>
+   */
+  minuteRenderer?: (date: Date) => JSX.Element;
+  /**
+   * Custom second cell renderer.
+   * @default (date: Date) => <>{date.getSeconds()}</>
+   */
+  secondRenderer?: (date: Date) => JSX.Element;
+  /**
+   * Custom period cell renderer.
+   * @default (period: PeriodType) => <>{period}</>
+   */
+  periodRenderer?: (period: PeriodType) => JSX.Element;
 };
 
 /**
@@ -109,6 +129,10 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
     minuteStep = 1,
     secondStep = 1,
     setFocusHour = false,
+    hourRenderer = (date: Date) => <>{date.getHours()}</>,
+    minuteRenderer = (date: Date) => <>{date.getMinutes()}</>,
+    secondRenderer = (date: Date) => <>{date.getSeconds()}</>,
+    periodRenderer = (period: PeriodType) => <>{period}</>,
   } = props;
 
   useTheme();
@@ -163,7 +187,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
     setFocusedTime(setHours(adjustedHour, focusedTime));
   };
 
-  const onPeriodFocus = (value: string) => {
+  const onPeriodFocus = (value: PeriodType) => {
     let adjustedSelectedTime = selectedTime ?? new Date();
     const currentHours = adjustedSelectedTime.getHours();
     if (value === 'AM' && currentHours > 11) {
@@ -255,7 +279,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
         onFocusChange={onHourFocus}
         onSelectChange={onHourClick}
         setFocus={setFocusHour}
-        valueRenderer={(date: Date) => <>{date.getHours()}</>}
+        valueRenderer={hourRenderer}
       />
       {precision != 'hours' && (
         <TimePickerColumn
@@ -264,7 +288,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
           isSameSelected={(val) => isSameMinute(val, selectedTime)}
           onFocusChange={(date) => setFocusedTime(date)}
           onSelectChange={(date) => updateCurrentTime(date)}
-          valueRenderer={(date: Date) => <>{date.getMinutes()}</>}
+          valueRenderer={minuteRenderer}
         />
       )}
       {precision == 'seconds' && (
@@ -274,7 +298,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
           isSameSelected={(val) => isSameSecond(val, selectedTime)}
           onFocusChange={(date) => setFocusedTime(date)}
           onSelectChange={(date) => updateCurrentTime(date)}
-          valueRenderer={(date: Date) => <>{date.getSeconds()}</>}
+          valueRenderer={secondRenderer}
         />
       )}
       {use12Hours && (
@@ -284,7 +308,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
           isSameSelected={(val) => isSamePeriod(val, selectedTime)}
           onFocusChange={(date) => onPeriodFocus(date)}
           onSelectChange={(value) => onPeriodClick(value)}
-          valueRenderer={(value: string) => <>{value}</>}
+          valueRenderer={periodRenderer}
           className='iui-period'
         />
       )}

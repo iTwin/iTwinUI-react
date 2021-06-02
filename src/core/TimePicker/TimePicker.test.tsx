@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
-import { TimePicker } from './TimePicker';
+import { PeriodType, TimePicker } from './TimePicker';
 
 it('should display passed time', () => {
   const { container } = render(
@@ -369,4 +369,31 @@ it('should show values with applied steps', () => {
   selectedMinutes = getByText('30', { selector: '.iui-time:nth-child(2) li' });
   selectedMinutes.click();
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 18, 30, 20));
+});
+
+it('should show values using custom renderers', () => {
+  const { getByText } = render(
+    <TimePicker
+      date={new Date(2020, 5, 5, 9, 10, 40)}
+      precision='seconds'
+      use12Hours
+      hourRenderer={(date: Date) => <>{`0${date.getHours()}`.slice(-2)}</>}
+      minuteRenderer={(date: Date) => <>{`${date.getMinutes()}mins`}</>}
+      secondRenderer={(date: Date) => <>{`${date.getSeconds()}secs`}</>}
+      periodRenderer={(period: PeriodType) => (
+        <>{period === 'AM' ? 'Before' : 'After'}</>
+      )}
+    />,
+  );
+  expect(
+    getByText('01', { selector: '.iui-time:first-child li' }),
+  ).toBeTruthy();
+  expect(
+    getByText('35mins', { selector: '.iui-time:nth-child(2) li' }),
+  ).toBeTruthy();
+  expect(
+    getByText('20secs', { selector: '.iui-time:nth-child(3) li' }),
+  ).toBeTruthy();
+  expect(getByText('Before', { selector: '.iui-period li' })).toBeTruthy();
+  expect(getByText('After', { selector: '.iui-period li' })).toBeTruthy();
 });
