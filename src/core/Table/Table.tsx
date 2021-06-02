@@ -170,7 +170,7 @@ export const Table = <
 
   useTheme();
 
-  const tableRef = React.useRef<HTMLDivElement>(null);
+  const [ownerDocument, setOwnerDocument] = React.useState<Document>();
 
   const defaultColumn = React.useMemo(
     () => ({
@@ -320,7 +320,7 @@ export const Table = <
 
   return (
     <div
-      ref={tableRef}
+      ref={(element) => setOwnerDocument(element?.ownerDocument)}
       {...getTableProps({
         className: cx('iui-tables-table', className),
         style,
@@ -354,7 +354,7 @@ export const Table = <
                     {!isLoading && data.length != 0 && (
                       <FilterToggle
                         column={column}
-                        ownerDocument={tableRef.current?.ownerDocument}
+                        ownerDocument={ownerDocument}
                       />
                     )}
                     {!isLoading && data.length != 0 && column.canSort && (
