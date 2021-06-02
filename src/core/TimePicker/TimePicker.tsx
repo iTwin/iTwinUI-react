@@ -10,7 +10,7 @@ import '@itwin/itwinui-css/css/date-picker.css';
 const isSameHour = (
   date1: Date,
   date2: Date | undefined,
-  period?: 'AM' | 'PM',
+  period?: PeriodType,
 ) => {
   const adjustedHours = period
     ? formatHourFrom12(date1.getHours(), period)
@@ -21,11 +21,11 @@ const isSameHour = (
   return !!date2 && adjustedHours === date2.getHours();
 };
 
-const areSameMinutes = (date1: Date, date2: Date | undefined) => {
+const isSameMinute = (date1: Date, date2: Date | undefined) => {
   return !!date2 && date1.getMinutes() === date2.getMinutes();
 };
 
-const areSameSeconds = (date1: Date, date2: Date | undefined) => {
+const isSameSecond = (date1: Date, date2: Date | undefined) => {
   return !!date2 && date1.getSeconds() === date2.getSeconds();
 };
 
@@ -35,7 +35,7 @@ const isSamePeriod = (period: string, date: Date | undefined) => {
   );
 };
 
-const formatHourFrom12 = (hour: number, period: 'AM' | 'PM' | undefined) => {
+const formatHourFrom12 = (hour: number, period: PeriodType | undefined) => {
   const adjustedHour = hour % 12;
   return period === 'PM' ? adjustedHour + 12 : adjustedHour;
 };
@@ -50,6 +50,8 @@ const setHours = (hour: number, date: Date) => {
     date.getSeconds(),
   );
 };
+
+export type PeriodType = 'AM' | 'PM';
 
 export type TimePickerProps = {
   /**
@@ -135,15 +137,14 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
     updateCurrentTime(adjustedSelectedTime);
   };
 
-  const onPeriodClick = (value: string) => {
+  const onPeriodClick = (value: PeriodType) => {
     let adjustedSelectedTime = selectedTime ?? new Date();
     const currentHours = adjustedSelectedTime.getHours();
+    setPeriod(value);
     if (value === 'AM' && currentHours > 11) {
-      setPeriod(value);
       adjustedSelectedTime = setHours(currentHours - 12, adjustedSelectedTime);
     }
     if (value === 'PM' && currentHours <= 12) {
-      setPeriod(value);
       adjustedSelectedTime = setHours(currentHours + 12, adjustedSelectedTime);
     }
     updateCurrentTime(adjustedSelectedTime);
@@ -259,8 +260,8 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
       {precision != 'hours' && (
         <TimePickerColumn
           data={minutes}
-          isSameFocused={(val) => areSameMinutes(val, focusedTime)}
-          isSameSelected={(val) => areSameMinutes(val, selectedTime)}
+          isSameFocused={(val) => isSameMinute(val, focusedTime)}
+          isSameSelected={(val) => isSameMinute(val, selectedTime)}
           onFocusChange={(date) => setFocusedTime(date)}
           onSelectChange={(date) => updateCurrentTime(date)}
           valueRenderer={(date: Date) => <>{date.getMinutes()}</>}
@@ -269,15 +270,15 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
       {precision == 'seconds' && (
         <TimePickerColumn
           data={seconds}
-          isSameFocused={(val) => areSameSeconds(val, focusedTime)}
-          isSameSelected={(val) => areSameSeconds(val, selectedTime)}
+          isSameFocused={(val) => isSameSecond(val, focusedTime)}
+          isSameSelected={(val) => isSameSecond(val, selectedTime)}
           onFocusChange={(date) => setFocusedTime(date)}
           onSelectChange={(date) => updateCurrentTime(date)}
           valueRenderer={(date: Date) => <>{date.getSeconds()}</>}
         />
       )}
       {use12Hours && (
-        <TimePickerColumn<string>
+        <TimePickerColumn<PeriodType>
           data={['AM', 'PM']}
           isSameFocused={(val) => isSamePeriod(val, focusedTime)}
           isSameSelected={(val) => isSamePeriod(val, selectedTime)}
@@ -299,11 +300,11 @@ type TimePickerColumnProps<T = Date> = {
   /**
    * Compare function for focus.
    */
-  isSameFocused: (date1: T) => boolean;
+  isSameFocused: (value: T) => boolean;
   /**
    * Compare function for select.
    */
-  isSameSelected: (date1: T) => boolean;
+  isSameSelected: (value: T) => boolean;
   /**
    * Callback when focus is changed.
    */
@@ -319,7 +320,7 @@ type TimePickerColumnProps<T = Date> = {
   /**
    * What value to display in every cell.
    */
-  valueRenderer: (date: T) => JSX.Element;
+  valueRenderer: (value: T) => JSX.Element;
   /**
    * Class to apply on root.
    */

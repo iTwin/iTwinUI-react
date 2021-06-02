@@ -120,7 +120,7 @@ export { Tile } from './Tile';
 export type { TileProps } from './Tile';
 
 export { TimePicker } from './TimePicker';
-export type { TimePickerProps } from './TimePicker';
+export type { PeriodType, TimePickerProps } from './TimePicker';
 
 export { default as toaster } from './Toast';
 export type { ToastOptions } from './Toast';

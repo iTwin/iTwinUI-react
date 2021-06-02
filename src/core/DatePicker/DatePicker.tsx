@@ -131,7 +131,7 @@ export type DatePickerProps = {
    */
   showTime?: boolean;
 } & Omit<CommonProps, 'title'> &
-  Omit<TimePickerProps, 'date' | 'onChange'>;
+  Omit<TimePickerProps, 'date' | 'onChange' | 'setFocusHour'>;
 
 /**
  * Date picker component
@@ -152,7 +152,6 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
     hourStep,
     minuteStep,
     secondStep,
-    setFocusHour,
     ...rest
   } = props;
 
@@ -416,7 +415,6 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
           minuteStep={minuteStep}
           secondStep={secondStep}
           onChange={(date) => onChange?.(date)}
-          setFocusHour={setFocusHour}
         />
       )}
     </div>
