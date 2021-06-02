@@ -606,7 +606,7 @@ it('should not trigger sorting when filter is clicked', () => {
   expect(onSort).not.toHaveBeenCalled();
 });
 
-it('should render filter toggle in the correct document', () => {
+it('should render filter dropdown in the correct document', () => {
   const mockDocument = new DOMParser().parseFromString(
     `<!DOCTYPE html><html><body><div></div></body></html>`,
     'text/html',
@@ -638,8 +638,6 @@ it('should render filter toggle in the correct document', () => {
   const filterIcon = container.querySelector('.iui-filter') as HTMLElement;
   expect(filterIcon).toBeTruthy();
   filterIcon.click();
-
-  console.log(container.ownerDocument.body.innerHTML);
 
   expect(mockDocument.querySelector('.iui-column-filter')).toBeTruthy();
   expect(document.querySelector('.iui-column-filter')).toBeFalsy();
