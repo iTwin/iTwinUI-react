@@ -10,6 +10,7 @@ it('should display passed time', () => {
   const { container } = render(
     <TimePicker date={new Date(2020, 0, 5, 11, 55)} />,
   );
+  expect(container.querySelector('.iui-time-picker')).toBeTruthy();
   const hour = container.querySelector(
     '.iui-time:first-child .iui-selected',
   ) as HTMLElement;
@@ -51,6 +52,23 @@ it('should return selected time', () => {
     '.iui-time:first-child .iui-selected',
   ) as HTMLElement;
   expect(selectedHours.textContent).toBe('17');
+});
+
+it('should propagate custom className and style props', () => {
+  const { container } = render(
+    <TimePicker
+      date={new Date()}
+      className='custom-class'
+      style={{ color: 'hotpink', scrollBehavior: 'smooth' }}
+    />,
+  );
+
+  const timePicker = container.querySelector(
+    '.iui-time-picker.custom-class',
+  ) as HTMLElement;
+  expect(timePicker).toBeTruthy();
+  expect(timePicker.style.color).toEqual('hotpink');
+  expect(timePicker.style.scrollBehavior).toEqual('smooth');
 });
 
 it('should navigate with keyboard', () => {
