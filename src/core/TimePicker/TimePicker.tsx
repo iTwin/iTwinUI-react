@@ -5,7 +5,8 @@
 import cx from 'classnames';
 import React from 'react';
 import { useTheme } from '../utils/hooks/useTheme';
-import '@itwin/itwinui-css/css/date-picker.css';
+import '@itwin/itwinui-css/css/time-picker.css';
+import { StylingProps } from '../utils/props';
 
 const isSameHour = (
   date1: Date,
@@ -112,7 +113,7 @@ export type TimePickerProps = {
    * @default (period: PeriodType) => <>{period}</>
    */
   periodRenderer?: (period: PeriodType) => JSX.Element;
-};
+} & StylingProps;
 
 /**
  * Time picker component
@@ -133,6 +134,8 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
     minuteRenderer = (date: Date) => <>{date.getMinutes()}</>,
     secondRenderer = (date: Date) => <>{date.getSeconds()}</>,
     periodRenderer = (period: PeriodType) => <>{period}</>,
+    className,
+    ...rest
   } = props;
 
   useTheme();
@@ -267,7 +270,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
   }, [secondStep, selectedTime]);
 
   return (
-    <>
+    <div className={cx('iui-time-picker', className)} {...rest}>
       <TimePickerColumn
         data={hours}
         isSameFocused={(val) =>
@@ -312,7 +315,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
           className='iui-period'
         />
       )}
-    </>
+    </div>
   );
 };
 
