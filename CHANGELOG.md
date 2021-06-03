@@ -6,7 +6,7 @@
 
 ### Fixes
 
-- **Fixed `ExpandableBlock` breaking some components when used together** through base CSS package.
+- **Fixed `ExpandableBlock` breaking some components when used together,** through base CSS package.
 
 ## [1.6.0]
 
