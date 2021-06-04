@@ -54,6 +54,50 @@ it('should return selected time', () => {
   expect(selectedHours.textContent).toBe('17');
 });
 
+it('should return selected time (minutes)', () => {
+  const onClick = jest.fn();
+  const { container, getByText } = render(
+    <TimePicker
+      date={new Date(2020, 5, 5, 14, 21, 33)}
+      precision='minutes'
+      onChange={onClick}
+    />,
+  );
+  let selectedMinutes = container.querySelector(
+    '.iui-time:last-child .iui-selected',
+  ) as HTMLElement;
+  expect(selectedMinutes.textContent).toBe('21');
+  const newHour = getByText('43', { selector: '.iui-time:last-child li' });
+  newHour.click();
+  expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 14, 43, 0));
+  selectedMinutes = container.querySelector(
+    '.iui-time:last-child .iui-selected',
+  ) as HTMLElement;
+  expect(selectedMinutes.textContent).toBe('43');
+});
+
+it('should return selected time (hours)', () => {
+  const onClick = jest.fn();
+  const { container, getByText } = render(
+    <TimePicker
+      date={new Date(2020, 5, 5, 14, 21, 33)}
+      precision='hours'
+      onChange={onClick}
+    />,
+  );
+  let selectedHours = container.querySelector(
+    '.iui-time:first-child .iui-selected',
+  ) as HTMLElement;
+  expect(selectedHours.textContent).toBe('14');
+  const newHour = getByText('02', { selector: '.iui-time:first-child li' });
+  newHour.click();
+  expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 2, 0, 0));
+  selectedHours = container.querySelector(
+    '.iui-time:first-child .iui-selected',
+  ) as HTMLElement;
+  expect(selectedHours.textContent).toBe('02');
+});
+
 it('should propagate custom className and style props', () => {
   const { container } = render(
     <TimePicker
@@ -129,7 +173,7 @@ it('should navigate with keyboard', () => {
   // go up
   fireEvent.keyDown(nextMinute, { key: 'ArrowUp' });
   nextMinute = nextMinute.previousElementSibling as Element;
-  expect(nextMinute.textContent).toBe('9');
+  expect(nextMinute.textContent).toBe('09');
   expect(document.activeElement).toEqual(nextMinute);
 
   // go down
@@ -323,7 +367,7 @@ it('should show 12 hours', () => {
     '.iui-time:nth-child(2) .iui-selected',
   ) as HTMLElement;
   expect(selectedMinutes.textContent).toBe('21');
-  selectedMinutes = getByText('2', { selector: '.iui-time:nth-child(2) li' });
+  selectedMinutes = getByText('02', { selector: '.iui-time:nth-child(2) li' });
   selectedMinutes.click();
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 2, 2, 11));
   // select new hours

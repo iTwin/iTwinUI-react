@@ -135,8 +135,20 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
         {date.getHours().toLocaleString(undefined, { minimumIntegerDigits: 2 })}
       </>
     ),
-    minuteRenderer = (date: Date) => <>{date.getMinutes()}</>,
-    secondRenderer = (date: Date) => <>{date.getSeconds()}</>,
+    minuteRenderer = (date: Date) => (
+      <>
+        {date
+          .getMinutes()
+          .toLocaleString(undefined, { minimumIntegerDigits: 2 })}
+      </>
+    ),
+    secondRenderer = (date: Date) => (
+      <>
+        {date
+          .getSeconds()
+          .toLocaleString(undefined, { minimumIntegerDigits: 2 })}
+      </>
+    ),
     periodRenderer = (period: PeriodType) => <>{period}</>,
     className,
     ...rest
@@ -182,9 +194,31 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
   };
 
   const updateCurrentTime = (time: Date) => {
-    setFocusedTime(time);
-    setSelectedTime(time);
-    onChange?.(time);
+    let adjustedTime = time;
+    // Nullify other values, according to precision
+    if (precision === 'hours') {
+      adjustedTime = new Date(
+        time.getFullYear(),
+        time.getMonth(),
+        time.getDate(),
+        time.getHours(),
+        0,
+        0,
+      );
+    }
+    if (precision === 'minutes') {
+      adjustedTime = new Date(
+        time.getFullYear(),
+        time.getMonth(),
+        time.getDate(),
+        time.getHours(),
+        time.getMinutes(),
+        0,
+      );
+    }
+    setFocusedTime(adjustedTime);
+    setSelectedTime(adjustedTime);
+    onChange?.(adjustedTime);
   };
 
   const onHourFocus = (date: Date) => {
