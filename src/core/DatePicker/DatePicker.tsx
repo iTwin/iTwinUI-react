@@ -6,7 +6,6 @@ import SvgChevronLeft from '@itwin/itwinui-icons-react/cjs/icons/ChevronLeft';
 import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import cx from 'classnames';
 import React from 'react';
-import { CommonProps } from '../utils/props';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/date-picker.css';
 import { IconButton } from '../Buttons/IconButton';
@@ -130,8 +129,7 @@ export type DatePickerProps = {
    * @default false
    */
   showTime?: boolean;
-} & Omit<CommonProps, 'title'> &
-  Omit<TimePickerProps, 'date' | 'onChange' | 'setFocusHour'>;
+} & Omit<TimePickerProps, 'date' | 'onChange' | 'setFocusHour'>;
 
 /**
  * Date picker component

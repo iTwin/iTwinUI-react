@@ -6,7 +6,7 @@ import cx from 'classnames';
 import React from 'react';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/time-picker.css';
-import { StylingProps } from '../utils/props';
+import { ClassNameProps, StylingProps } from '../utils/props';
 
 const isSameHour = (
   date1: Date,
@@ -95,24 +95,24 @@ export type TimePickerProps = {
   setFocusHour?: boolean;
   /**
    * Custom hour cell renderer.
-   * @default (date: Date) => <>{date.getHours().toLocaleString(undefined, { minimumIntegerDigits: 2 })}</>
+   * @default (date: Date) => date.getHours().toLocaleString(undefined, { minimumIntegerDigits: 2 })
    */
-  hourRenderer?: (date: Date) => JSX.Element;
+  hourRenderer?: (date: Date) => React.ReactNode;
   /**
    * Custom minute cell renderer.
-   * @default (date: Date) => <>{date.getMinutes()}</>
+   * @default (date: Date) => date.getMinutes().toLocaleString(undefined, { minimumIntegerDigits: 2 })
    */
-  minuteRenderer?: (date: Date) => JSX.Element;
+  minuteRenderer?: (date: Date) => React.ReactNode;
   /**
    * Custom second cell renderer.
-   * @default (date: Date) => <>{date.getSeconds()}</>
+   * @default (date: Date) => date.getSeconds().toLocaleString(undefined, { minimumIntegerDigits: 2 })
    */
-  secondRenderer?: (date: Date) => JSX.Element;
+  secondRenderer?: (date: Date) => React.ReactNode;
   /**
    * Custom AM/PM cell renderer.
-   * @default (meridiem: MeridiemType) => <>{meridiem}</>
+   * @default (meridiem: MeridiemType) => meridiem
    */
-  meridiemRenderer?: (meridiem: MeridiemType) => JSX.Element;
+  meridiemRenderer?: (meridiem: MeridiemType) => React.ReactNode;
 } & StylingProps;
 
 /**
@@ -130,26 +130,13 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
     minuteStep = 1,
     secondStep = 1,
     setFocusHour = false,
-    hourRenderer = (date: Date) => (
-      <>
-        {date.getHours().toLocaleString(undefined, { minimumIntegerDigits: 2 })}
-      </>
-    ),
-    minuteRenderer = (date: Date) => (
-      <>
-        {date
-          .getMinutes()
-          .toLocaleString(undefined, { minimumIntegerDigits: 2 })}
-      </>
-    ),
-    secondRenderer = (date: Date) => (
-      <>
-        {date
-          .getSeconds()
-          .toLocaleString(undefined, { minimumIntegerDigits: 2 })}
-      </>
-    ),
-    meridiemRenderer = (meridiem: MeridiemType) => <>{meridiem}</>,
+    hourRenderer = (date: Date) =>
+      date.getHours().toLocaleString(undefined, { minimumIntegerDigits: 2 }),
+    minuteRenderer = (date: Date) =>
+      date.getMinutes().toLocaleString(undefined, { minimumIntegerDigits: 2 }),
+    secondRenderer = (date: Date) =>
+      date.getSeconds().toLocaleString(undefined, { minimumIntegerDigits: 2 }),
+    meridiemRenderer = (meridiem: MeridiemType) => meridiem,
     className,
     ...rest
   } = props;
@@ -385,12 +372,8 @@ type TimePickerColumnProps<T = Date> = {
   /**
    * What value to display in every cell.
    */
-  valueRenderer: (value: T) => JSX.Element;
-  /**
-   * Class to apply on root.
-   */
-  className?: string;
-};
+  valueRenderer: (value: T) => React.ReactNode;
+} & ClassNameProps;
 
 const TimePickerColumn = <T,>(props: TimePickerColumnProps<T>): JSX.Element => {
   const {

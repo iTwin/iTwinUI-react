@@ -22,36 +22,7 @@ export default {
     onChange: { control: { disable: true } },
     className: { control: { disable: true } },
     style: { control: { disable: true } },
-    hourRenderer: {
-      defaultValue: (date: Date) => (
-        <>
-          {date
-            .getHours()
-            .toLocaleString(undefined, { minimumIntegerDigits: 2 })}
-        </>
-      ),
-    },
-    minuteRenderer: {
-      defaultValue: (date: Date) => (
-        <>
-          {date
-            .getMinutes()
-            .toLocaleString(undefined, { minimumIntegerDigits: 2 })}
-        </>
-      ),
-    },
-    secondRenderer: {
-      defaultValue: (date: Date) => (
-        <>
-          {date
-            .getSeconds()
-            .toLocaleString(undefined, { minimumIntegerDigits: 2 })}
-        </>
-      ),
-    },
-    meridiemRenderer: {
-      defaultValue: (meridiem: MeridiemType) => <>{meridiem}</>,
-    },
+    date: { control: { type: 'date' } },
   },
 } as Meta<TimePickerProps>;
 
@@ -72,7 +43,7 @@ export const Basic: Story<TimePickerProps> = (args) => {
     <>
       <LabeledInput
         displayStyle='inline'
-        value={`${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`}
+        value={currentDate.toLocaleTimeString()}
         svgIcon={
           <IconButton
             styleType='borderless'
@@ -82,6 +53,7 @@ export const Basic: Story<TimePickerProps> = (args) => {
           </IconButton>
         }
         style={{ width: 150 }}
+        readOnly
       />
       {opened && (
         <div>
@@ -94,4 +66,11 @@ export const Basic: Story<TimePickerProps> = (args) => {
 
 Basic.args = {
   date: new Date(),
+  hourRenderer: (date: Date) =>
+    date.getHours().toLocaleString(undefined, { minimumIntegerDigits: 2 }),
+  minuteRenderer: (date: Date) =>
+    date.getMinutes().toLocaleString(undefined, { minimumIntegerDigits: 2 }),
+  secondRenderer: (date: Date) =>
+    date.getSeconds().toLocaleString(undefined, { minimumIntegerDigits: 2 }),
+  meridiemRenderer: (meridiem: MeridiemType) => meridiem,
 };
