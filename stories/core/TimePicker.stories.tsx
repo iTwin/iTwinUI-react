@@ -11,7 +11,7 @@ import {
   TimePickerProps,
   IconButton,
   LabeledInput,
-  PeriodType,
+  MeridiemType,
 } from '../../src/core';
 import SvgCalendar from '@itwin/itwinui-icons-react/cjs/icons/Calendar';
 
@@ -49,7 +49,9 @@ export default {
         </>
       ),
     },
-    periodRenderer: { defaultValue: (period: PeriodType) => <>{period}</> },
+    meridiemRenderer: {
+      defaultValue: (meridiem: MeridiemType) => <>{meridiem}</>,
+    },
   },
 } as Meta<TimePickerProps>;
 

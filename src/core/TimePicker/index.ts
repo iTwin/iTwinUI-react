@@ -3,5 +3,5 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 export { TimePicker } from './TimePicker';
-export type { PeriodType, TimePickerProps } from './TimePicker';
+export type { MeridiemType, TimePickerProps } from './TimePicker';
 export default './TimePicker';

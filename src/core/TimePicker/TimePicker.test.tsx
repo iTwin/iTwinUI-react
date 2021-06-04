@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
-import { PeriodType, TimePicker } from './TimePicker';
+import { MeridiemType, TimePicker } from './TimePicker';
 
 it('should display passed time', () => {
   const { container } = render(
@@ -281,47 +281,47 @@ it('should navigate with keyboard (12 hours)', () => {
   expect(document.activeElement).toEqual(selectedMinutes);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 1, 1, 21, 21));
 
-  // go to period
-  let selectedPeriod = container.querySelector(
+  // go to meridiem
+  let selectedMeridiem = container.querySelector(
     '.iui-period .iui-selected',
   ) as HTMLElement;
-  selectedPeriod.focus();
-  expect(selectedPeriod.textContent).toBe('PM');
-  expect(document.activeElement).toEqual(selectedPeriod);
+  selectedMeridiem.focus();
+  expect(selectedMeridiem.textContent).toBe('PM');
+  expect(document.activeElement).toEqual(selectedMeridiem);
 
   // go up
-  fireEvent.keyDown(selectedPeriod, { key: 'ArrowUp' });
-  let nextPeriod = selectedPeriod.previousElementSibling as Element;
-  expect(nextPeriod.textContent).toBe('AM');
-  expect(document.activeElement).toEqual(nextPeriod);
+  fireEvent.keyDown(selectedMeridiem, { key: 'ArrowUp' });
+  let nextMeridiem = selectedMeridiem.previousElementSibling as Element;
+  expect(nextMeridiem.textContent).toBe('AM');
+  expect(document.activeElement).toEqual(nextMeridiem);
 
   // go up (already top, no move)
-  fireEvent.keyDown(nextPeriod, { key: 'ArrowUp' });
-  expect(nextPeriod.previousElementSibling).toBeFalsy();
-  expect(document.activeElement).toEqual(nextPeriod);
+  fireEvent.keyDown(nextMeridiem, { key: 'ArrowUp' });
+  expect(nextMeridiem.previousElementSibling).toBeFalsy();
+  expect(document.activeElement).toEqual(nextMeridiem);
 
   // select
-  fireEvent.keyDown(nextPeriod, { key: 'Spacebar' });
-  selectedPeriod = container.querySelector(
+  fireEvent.keyDown(nextMeridiem, { key: 'Spacebar' });
+  selectedMeridiem = container.querySelector(
     '.iui-period .iui-selected',
   ) as HTMLElement;
-  expect(selectedPeriod.textContent).toBe('AM');
-  expect(document.activeElement).toEqual(selectedPeriod);
+  expect(selectedMeridiem.textContent).toBe('AM');
+  expect(document.activeElement).toEqual(selectedMeridiem);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 1, 1, 9, 21));
 
   // go down
-  fireEvent.keyDown(selectedPeriod, { key: 'ArrowDown' });
-  nextPeriod = selectedPeriod.nextElementSibling as Element;
-  expect(nextPeriod.textContent).toBe('PM');
-  expect(document.activeElement).toEqual(nextPeriod);
+  fireEvent.keyDown(selectedMeridiem, { key: 'ArrowDown' });
+  nextMeridiem = selectedMeridiem.nextElementSibling as Element;
+  expect(nextMeridiem.textContent).toBe('PM');
+  expect(document.activeElement).toEqual(nextMeridiem);
 
   // select
-  fireEvent.keyDown(nextPeriod, { key: 'Spacebar' });
-  selectedPeriod = container.querySelector(
+  fireEvent.keyDown(nextMeridiem, { key: 'Spacebar' });
+  selectedMeridiem = container.querySelector(
     '.iui-period .iui-selected',
   ) as HTMLElement;
-  expect(selectedPeriod.textContent).toBe('PM');
-  expect(document.activeElement).toEqual(selectedPeriod);
+  expect(selectedMeridiem.textContent).toBe('PM');
+  expect(document.activeElement).toEqual(selectedMeridiem);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 1, 1, 21, 21));
 });
 
@@ -346,13 +346,13 @@ it('should show 12 hours', () => {
   expect(container.querySelectorAll('.iui-time:nth-child(3) li').length).toBe(
     60,
   );
-  // select different period
-  let selectedPeriod = container.querySelector(
+  // select different meridiem
+  let selectedMeridiem = container.querySelector(
     '.iui-period .iui-selected',
   ) as HTMLElement;
-  expect(selectedPeriod.textContent).toBe('PM');
-  selectedPeriod = getByText('AM');
-  selectedPeriod.click();
+  expect(selectedMeridiem.textContent).toBe('PM');
+  selectedMeridiem = getByText('AM');
+  selectedMeridiem.click();
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 2, 21, 33));
   // select new seconds
   let selectedSeconds = container.querySelector(
@@ -378,13 +378,13 @@ it('should show 12 hours', () => {
   selectedHour = getByText('12', { selector: '.iui-time:first-child li' });
   selectedHour.click();
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 0, 2, 11));
-  // select different period
-  selectedPeriod = container.querySelector(
+  // select different meridiem
+  selectedMeridiem = container.querySelector(
     '.iui-period .iui-selected',
   ) as HTMLElement;
-  expect(selectedPeriod.textContent).toBe('AM');
-  selectedPeriod = getByText('PM');
-  selectedPeriod.click();
+  expect(selectedMeridiem.textContent).toBe('AM');
+  selectedMeridiem = getByText('PM');
+  selectedMeridiem.click();
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 12, 2, 11));
 });
 
@@ -442,8 +442,8 @@ it('should show values using custom renderers', () => {
       hourRenderer={(date: Date) => <>{`0${date.getHours()}`.slice(-2)}</>}
       minuteRenderer={(date: Date) => <>{`${date.getMinutes()}mins`}</>}
       secondRenderer={(date: Date) => <>{`${date.getSeconds()}secs`}</>}
-      periodRenderer={(period: PeriodType) => (
-        <>{period === 'AM' ? 'Before' : 'After'}</>
+      meridiemRenderer={(meridiem: MeridiemType) => (
+        <>{meridiem === 'AM' ? 'Before' : 'After'}</>
       )}
     />,
   );

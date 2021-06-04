@@ -11,12 +11,12 @@ import { StylingProps } from '../utils/props';
 const isSameHour = (
   date1: Date,
   date2: Date | undefined,
-  period?: PeriodType,
+  meridiem?: MeridiemType,
 ) => {
-  const adjustedHours = period
-    ? formatHourFrom12(date1.getHours(), period)
+  const adjustedHours = meridiem
+    ? formatHourFrom12(date1.getHours(), meridiem)
     : date1.getHours();
-  if (!!period) {
+  if (!!meridiem) {
     return !!date2 && adjustedHours % 12 === date2.getHours() % 12;
   }
   return !!date2 && adjustedHours === date2.getHours();
@@ -30,15 +30,15 @@ const isSameSecond = (date1: Date, date2: Date | undefined) => {
   return !!date2 && date1.getSeconds() === date2.getSeconds();
 };
 
-const isSamePeriod = (period: PeriodType, date: Date | undefined) => {
+const isSameMeridiem = (meridiem: MeridiemType, date: Date | undefined) => {
   return (
-    !!date && (period === 'AM' ? date.getHours() < 12 : date.getHours() >= 12)
+    !!date && (meridiem === 'AM' ? date.getHours() < 12 : date.getHours() >= 12)
   );
 };
 
-const formatHourFrom12 = (hour: number, period: PeriodType | undefined) => {
+const formatHourFrom12 = (hour: number, meridiem: MeridiemType | undefined) => {
   const adjustedHour = hour % 12;
-  return period === 'PM' ? adjustedHour + 12 : adjustedHour;
+  return meridiem === 'PM' ? adjustedHour + 12 : adjustedHour;
 };
 
 const setHours = (hour: number, date: Date) => {
@@ -52,7 +52,7 @@ const setHours = (hour: number, date: Date) => {
   );
 };
 
-export type PeriodType = 'AM' | 'PM';
+export type MeridiemType = 'AM' | 'PM';
 
 export type TimePickerProps = {
   /**
@@ -109,10 +109,10 @@ export type TimePickerProps = {
    */
   secondRenderer?: (date: Date) => JSX.Element;
   /**
-   * Custom period cell renderer.
-   * @default (period: PeriodType) => <>{period}</>
+   * Custom AM/PM cell renderer.
+   * @default (meridiem: MeridiemType) => <>{meridiem}</>
    */
-  periodRenderer?: (period: PeriodType) => JSX.Element;
+  meridiemRenderer?: (meridiem: MeridiemType) => JSX.Element;
 } & StylingProps;
 
 /**
@@ -149,7 +149,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
           .toLocaleString(undefined, { minimumIntegerDigits: 2 })}
       </>
     ),
-    periodRenderer = (period: PeriodType) => <>{period}</>,
+    meridiemRenderer = (meridiem: MeridiemType) => <>{meridiem}</>,
     className,
     ...rest
   } = props;
@@ -160,7 +160,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
   const [focusedTime, setFocusedTime] = React.useState(
     selectedTime ?? new Date(),
   );
-  const [period, setPeriod] = React.useState<PeriodType | undefined>(
+  const [meridiem, setMeridiem] = React.useState<MeridiemType | undefined>(
     use12Hours ? (focusedTime?.getHours() > 11 ? 'PM' : 'AM') : undefined,
   );
 
@@ -171,7 +171,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
 
   const onHourClick = (date: Date) => {
     const adjustedHour = use12Hours
-      ? formatHourFrom12(date.getHours(), period)
+      ? formatHourFrom12(date.getHours(), meridiem)
       : date.getHours();
     const adjustedSelectedTime = setHours(
       adjustedHour,
@@ -180,10 +180,10 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
     updateCurrentTime(adjustedSelectedTime);
   };
 
-  const onPeriodClick = (value: PeriodType) => {
+  const onMeridiemClick = (value: MeridiemType) => {
     let adjustedSelectedTime = selectedTime ?? new Date();
     const currentHours = adjustedSelectedTime.getHours();
-    setPeriod(value);
+    setMeridiem(value);
     if (value === 'AM' && currentHours > 11) {
       adjustedSelectedTime = setHours(currentHours - 12, adjustedSelectedTime);
     }
@@ -223,20 +223,20 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
 
   const onHourFocus = (date: Date) => {
     const adjustedHour = use12Hours
-      ? formatHourFrom12(date.getHours(), period)
+      ? formatHourFrom12(date.getHours(), meridiem)
       : date.getHours();
     setFocusedTime(setHours(adjustedHour, focusedTime));
   };
 
-  const onPeriodFocus = (value: PeriodType) => {
+  const onMeridiemFocus = (value: MeridiemType) => {
     let adjustedSelectedTime = selectedTime ?? new Date();
     const currentHours = adjustedSelectedTime.getHours();
     if (value === 'AM' && currentHours > 11) {
-      setPeriod(value);
+      setMeridiem(value);
       adjustedSelectedTime = setHours(currentHours - 12, adjustedSelectedTime);
     }
     if (value === 'PM' && currentHours <= 12) {
-      setPeriod(value);
+      setMeridiem(value);
       adjustedSelectedTime = setHours(currentHours + 12, adjustedSelectedTime);
     }
     setFocusedTime(adjustedSelectedTime);
@@ -312,10 +312,10 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
       <TimePickerColumn
         data={hours}
         isSameFocused={(val) =>
-          isSameHour(val, focusedTime, use12Hours ? period : undefined)
+          isSameHour(val, focusedTime, use12Hours ? meridiem : undefined)
         }
         isSameSelected={(val) =>
-          isSameHour(val, selectedTime, use12Hours ? period : undefined)
+          isSameHour(val, selectedTime, use12Hours ? meridiem : undefined)
         }
         onFocusChange={onHourFocus}
         onSelectChange={onHourClick}
@@ -343,13 +343,13 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
         />
       )}
       {use12Hours && (
-        <TimePickerColumn<PeriodType>
+        <TimePickerColumn<MeridiemType>
           data={['AM', 'PM']}
-          isSameFocused={(val) => isSamePeriod(val, focusedTime)}
-          isSameSelected={(val) => isSamePeriod(val, selectedTime)}
-          onFocusChange={(date) => onPeriodFocus(date)}
-          onSelectChange={(value) => onPeriodClick(value)}
-          valueRenderer={periodRenderer}
+          isSameFocused={(val) => isSameMeridiem(val, focusedTime)}
+          isSameSelected={(val) => isSameMeridiem(val, selectedTime)}
+          onFocusChange={(date) => onMeridiemFocus(date)}
+          onSelectChange={(value) => onMeridiemClick(value)}
+          valueRenderer={meridiemRenderer}
           className='iui-period'
         />
       )}
