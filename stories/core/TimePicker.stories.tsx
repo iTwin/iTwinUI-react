@@ -27,7 +27,7 @@ export default {
 } as Meta<TimePickerProps>;
 
 export const Basic: Story<TimePickerProps> = (args) => {
-  const { date = new Date(), ...rest } = args;
+  const { date = new Date(), setFocusHour = true, ...rest } = args;
   const [opened, setOpened] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date(date));
   const onChange = (date: Date) => {
@@ -57,7 +57,12 @@ export const Basic: Story<TimePickerProps> = (args) => {
       />
       {opened && (
         <div>
-          <TimePicker date={currentDate} onChange={onChange} {...rest} />
+          <TimePicker
+            {...rest}
+            date={currentDate}
+            onChange={onChange}
+            setFocusHour={setFocusHour}
+          />
         </div>
       )}
     </>
@@ -66,6 +71,7 @@ export const Basic: Story<TimePickerProps> = (args) => {
 
 Basic.args = {
   date: new Date(),
+  setFocusHour: true,
   hourRenderer: (date: Date) =>
     date.getHours().toLocaleString(undefined, { minimumIntegerDigits: 2 }),
   minuteRenderer: (date: Date) =>
