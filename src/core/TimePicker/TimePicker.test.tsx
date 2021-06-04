@@ -202,7 +202,7 @@ it('should navigate with keyboard (12 hours)', () => {
   // go up
   fireEvent.keyDown(nextHour, { key: 'ArrowUp' });
   nextHour = nextHour.previousElementSibling as Element;
-  expect(nextHour.textContent).toBe('9');
+  expect(nextHour.textContent).toBe('09');
   expect(document.activeElement).toEqual(nextHour);
 
   // select
@@ -210,7 +210,7 @@ it('should navigate with keyboard (12 hours)', () => {
   selectedHours = container.querySelector(
     '.iui-time:first-child .iui-selected',
   ) as HTMLElement;
-  expect(selectedHours.textContent).toBe('9');
+  expect(selectedHours.textContent).toBe('09');
   expect(document.activeElement).toEqual(selectedHours);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 1, 1, 21, 22));
 
@@ -330,7 +330,7 @@ it('should show 12 hours', () => {
   let selectedHour = container.querySelector(
     '.iui-time:first-child .iui-selected',
   ) as HTMLElement;
-  expect(selectedHour.textContent).toBe('2');
+  expect(selectedHour.textContent).toBe('02');
   selectedHour = getByText('12', { selector: '.iui-time:first-child li' });
   selectedHour.click();
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 0, 2, 11));
@@ -367,7 +367,7 @@ it('should show values with applied steps', () => {
   let selectedHour = container.querySelector(
     '.iui-time:first-child .iui-selected',
   ) as HTMLElement;
-  expect(selectedHour.textContent).toBe('9');
+  expect(selectedHour.textContent).toBe('09');
   selectedHour = getByText('18', { selector: '.iui-time:first-child li' });
   selectedHour.click();
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 18, 10, 40));

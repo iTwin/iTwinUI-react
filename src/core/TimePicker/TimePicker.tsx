@@ -95,7 +95,7 @@ export type TimePickerProps = {
   setFocusHour?: boolean;
   /**
    * Custom hour cell renderer.
-   * @default (date: Date) => <>{date.getHours()}</>
+   * @default (date: Date) => <>{date.getHours().toLocaleString(undefined, { minimumIntegerDigits: 2 })}</>
    */
   hourRenderer?: (date: Date) => JSX.Element;
   /**
@@ -130,7 +130,11 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
     minuteStep = 1,
     secondStep = 1,
     setFocusHour = false,
-    hourRenderer = (date: Date) => <>{date.getHours()}</>,
+    hourRenderer = (date: Date) => (
+      <>
+        {date.getHours().toLocaleString(undefined, { minimumIntegerDigits: 2 })}
+      </>
+    ),
     minuteRenderer = (date: Date) => <>{date.getMinutes()}</>,
     secondRenderer = (date: Date) => <>{date.getSeconds()}</>,
     periodRenderer = (period: PeriodType) => <>{period}</>,
@@ -144,7 +148,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
   const [focusedTime, setFocusedTime] = React.useState(
     selectedTime ?? new Date(),
   );
-  const [period, setPeriod] = React.useState<'PM' | 'AM' | undefined>(
+  const [period, setPeriod] = React.useState<PeriodType | undefined>(
     use12Hours ? (focusedTime?.getHours() > 11 ? 'PM' : 'AM') : undefined,
   );
 
