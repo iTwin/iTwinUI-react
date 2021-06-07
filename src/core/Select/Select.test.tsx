@@ -244,7 +244,7 @@ it('should show menu with disabled item', () => {
 });
 
 it('should show selected item in menu', () => {
-  spyOn(window.HTMLElement.prototype, 'scrollIntoView');
+  const scrollSpy = spyOn(window.HTMLElement.prototype, 'scrollIntoView');
   const { container } = renderComponent({
     value: 1,
     options: [...new Array(3)].map((_, index) => ({
@@ -259,9 +259,7 @@ it('should show selected item in menu', () => {
   fireEvent.click(select.querySelector('.iui-select-button') as HTMLElement);
   const menu = document.querySelector('.iui-menu') as HTMLUListElement;
   assertMenu(menu, { selectedIndex: 1 });
-  expect(
-    container.querySelector('.iui-active')?.scrollIntoView,
-  ).toHaveBeenCalledTimes(1);
+  expect(scrollSpy).toHaveBeenCalledTimes(1);
 });
 
 it('should call onChange on item click', () => {
