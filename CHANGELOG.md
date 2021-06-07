@@ -7,6 +7,7 @@
 ### What's new
 
 - **Added `TimePicker` component** for standalone use or within `DatePicker` (through `showTime` prop).
+- **Improved popup window support** by removing `document` references in `Popover` and adding `ownerDocument` prop to `Modal`.
 
 ### Fixes
 
