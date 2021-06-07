@@ -97,6 +97,7 @@ export const DropdownMenu = (props: DropdownMenuProps) => {
         </Menu>
       }
       visible={trigger === undefined ? isVisible : undefined}
+      onClickOutside={close}
       placement={placement}
       onShow={onShowHandler}
       onHide={onHideHandler}
