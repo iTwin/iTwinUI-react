@@ -15,6 +15,7 @@ export type FileUploadTemplateProps = {
   /**
    * Whether the file input accepts multiple files.
    * @default true
+   * @deprecated Use `inputProps` instead
    */
   acceptMultiple?: boolean;
   /**
@@ -31,6 +32,10 @@ export type FileUploadTemplateProps = {
    * Optional children appended to the template.
    */
   children?: React.ReactNode;
+  /**
+   * Attributes applied on the native input element.
+   */
+  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
 };
 
 /**
@@ -46,6 +51,7 @@ export const FileUploadTemplate = (props: FileUploadTemplateProps) => {
     label = 'Choose a file',
     subtitle = 'or drag & drop it here.',
     children,
+    inputProps,
   } = props;
   useTheme();
 
@@ -57,6 +63,7 @@ export const FileUploadTemplate = (props: FileUploadTemplateProps) => {
         id='file-input'
         onChange={onChange}
         multiple={acceptMultiple}
+        {...inputProps}
       />
       <SvgUpload className='iui-icon' aria-hidden />
       <div className='iui-template-text'>
