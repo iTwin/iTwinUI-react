@@ -94,17 +94,21 @@ export const Popover = React.forwardRef((props: PopoverProps, ref) => {
  */
 export const hideOnEscOrTab = {
   fn(instance: Instance) {
+    /** @returns true if none of the children are tabbable */
+    const shouldHideOnTab = () => {
+      const descendents = Array.from<HTMLElement>(
+        instance.popper.querySelectorAll('*'),
+      );
+      return !descendents.some((el) => el?.tabIndex >= 0);
+    };
+
     const onKeyDown = (event: KeyboardEvent) => {
       switch (event.key) {
         case 'Escape':
           instance.hide();
           break;
         case 'Tab':
-          const descendents = Array.from<HTMLElement>(
-            instance.popper.querySelectorAll('*'),
-          );
-          if (!descendents.some((el) => el?.tabIndex >= 0)) {
-            event.preventDefault();
+          if (shouldHideOnTab()) {
             instance.hide();
           }
           break;
