@@ -155,8 +155,7 @@ export const Modal = (props: ModalProps) => {
     }
   };
 
-  return (
-    !!container &&
+  return !!container ? (
     ReactDOM.createPortal(
       isOpen && (
         <div
@@ -194,6 +193,8 @@ export const Modal = (props: ModalProps) => {
       ),
       container,
     )
+  ) : (
+    <></>
   );
 };
 
