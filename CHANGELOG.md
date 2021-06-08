@@ -2,6 +2,8 @@
 
 ## [1.7.2]
 
+`2021-06-09`
+
 ### Fixes
 
 - **Fixed `DropdownMenu` not closing when tabbing out.**
