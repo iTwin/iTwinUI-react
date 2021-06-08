@@ -155,42 +155,45 @@ export const Modal = (props: ModalProps) => {
     }
   };
 
-  return ReactDOM.createPortal(
-    isOpen && (
-      <div
-        className={cx('iui-modal', 'iui-modal-visible', className)}
-        tabIndex={-1}
-        onKeyDown={handleKeyDown}
-        ref={overlayRef}
-        onMouseDown={handleMouseDown}
-        {...rest}
-      >
+  return (
+    !!container &&
+    ReactDOM.createPortal(
+      isOpen && (
         <div
-          className='iui-modal-dialog'
-          id={id}
-          style={style}
-          role='dialog'
-          aria-modal='true'
-          onMouseDown={(event) => event.stopPropagation()}
+          className={cx('iui-modal', 'iui-modal-visible', className)}
+          tabIndex={-1}
+          onKeyDown={handleKeyDown}
+          ref={overlayRef}
+          onMouseDown={handleMouseDown}
+          {...rest}
         >
-          <div className='iui-title-bar'>
-            <div className='iui-title'>{title}</div>
-            {isDismissible && (
-              <IconButton
-                size='small'
-                styleType='borderless'
-                onClick={onClose}
-                aria-label='Close'
-              >
-                <SvgClose />
-              </IconButton>
-            )}
+          <div
+            className='iui-modal-dialog'
+            id={id}
+            style={style}
+            role='dialog'
+            aria-modal='true'
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <div className='iui-title-bar'>
+              <div className='iui-title'>{title}</div>
+              {isDismissible && (
+                <IconButton
+                  size='small'
+                  styleType='borderless'
+                  onClick={onClose}
+                  aria-label='Close'
+                >
+                  <SvgClose />
+                </IconButton>
+              )}
+            </div>
+            {children}
           </div>
-          {children}
         </div>
-      </div>
-    ),
-    container,
+      ),
+      container,
+    )
   );
 };
 

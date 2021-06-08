@@ -55,7 +55,7 @@ export const getContainer = (
   containerId: string,
   ownerDocument = getDocument(),
 ) => {
-  let container = ownerDocument?.getElementById(containerId);
+  let container = ownerDocument?.getElementById(containerId) ?? undefined;
   if (container == null && !!ownerDocument) {
     container = ownerDocument.createElement('div');
     container.setAttribute('id', containerId);
