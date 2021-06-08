@@ -89,7 +89,7 @@ export const Popover = React.forwardRef((props: PopoverProps, ref) => {
 });
 
 /**
- * Plugin to hide tippy when either Esc key is pressed,
+ * Plugin to hide Popover when either Esc key is pressed,
  * or when the content inside is not tabbable and Tab key is pressed.
  */
 export const hideOnEscOrTab = {
@@ -109,6 +109,7 @@ export const hideOnEscOrTab = {
           break;
         case 'Tab':
           if (shouldHideOnTab()) {
+            event.shiftKey && event.preventDefault(); // focus popover target on Shift+Tab
             instance.hide();
           }
           break;
