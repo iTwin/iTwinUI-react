@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import '@itwin/itwinui-css/css/global.css';
+import { getWindow } from '../common';
 
 export type ThemeOptions = {
   /**
@@ -42,7 +43,7 @@ export const useTheme = (
         addDarkTheme(ownerDocument);
         break;
       case 'os':
-        if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
+        if (getWindow()?.matchMedia?.('(prefers-color-scheme: dark)').matches) {
           addDarkTheme(ownerDocument);
         } else {
           addLightTheme(ownerDocument);

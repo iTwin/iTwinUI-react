@@ -60,3 +60,19 @@ export const getContainer = (containerId: string, ownerDocument = document) => {
   }
   return container;
 };
+
+/**
+ * Get document if it is defined.
+ * Used to support SSR/SSG applications.
+ */
+export const getDocument = () => {
+  return typeof document === 'undefined' ? undefined : document;
+};
+
+/**
+ * Get window if it is defined.
+ * Used to support SSR/SSG applications.
+ */
+export const getWindow = () => {
+  return typeof window === 'undefined' ? undefined : window;
+};

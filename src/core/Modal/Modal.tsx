@@ -10,7 +10,7 @@ import { CommonProps } from '../utils/props';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/modal.css';
 import { IconButton } from '../Buttons/IconButton';
-import { getContainer } from '../utils/common';
+import { getContainer, getDocument } from '../utils/common';
 
 export type ModalProps = {
   /**
@@ -101,7 +101,7 @@ export const Modal = (props: ModalProps) => {
     style,
     children,
     modalRootId = 'iui-react-portal-container',
-    ownerDocument = document,
+    ownerDocument = getDocument(),
     ...rest
   } = props;
 
@@ -121,6 +121,10 @@ export const Modal = (props: ModalProps) => {
   }, [isOpen]);
 
   React.useEffect(() => {
+    if (!ownerDocument) {
+      return;
+    }
+
     if (isOpen) {
       originalBodyOverflow.current = ownerDocument.body.style.overflow;
       ownerDocument.body.style.overflow = 'hidden';
