@@ -57,6 +57,9 @@ jobs:
 
       - run: yarn test --coverage
 
+      - run: yarn storybook &
+      - run: yarn creevey
+
       - name: Publish test results
         uses: EnricoMi/publish-unit-test-result-action@v1.16
         if: always()
