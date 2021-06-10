@@ -7,7 +7,7 @@ import cx from 'classnames';
 import { Row, TableRowProps, TableState } from 'react-table';
 import { useIntersection } from '../utils/hooks/useIntersection';
 import { getCellStyle } from './utils';
-import { SearchHighlightedCell } from './HighlightableTableUtils';
+import { SearchHighlightTextDecorator } from './HighlightableTableUtils';
 
 /**
  * Memorization is needed to avoid unnecessary re-renders of all rows when additional data is added when lazy-loading.
@@ -22,6 +22,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
   onRowInViewport: React.MutableRefObject<((rowData: T) => void) | undefined>;
   onBottomReached: React.MutableRefObject<(() => void) | undefined>;
   intersectionMargin: number;
+  highlightRegex?: RegExp;
   state: TableState<T>; // Needed for explicitly checking selection changes
 }) => {
   const {
@@ -31,6 +32,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
     onRowInViewport,
     onBottomReached,
     intersectionMargin,
+    highlightRegex,
   } = props;
 
   const onIntersect = React.useCallback(() => {
@@ -51,7 +53,9 @@ const TableRow = <T extends Record<string, unknown>>(props: {
         });
         return (
           <div {...cellProps} key={cellProps.key}>
-            <SearchHighlightedCell>{cell.render('Cell')}</SearchHighlightedCell>
+            <SearchHighlightTextDecorator highlightRegex={highlightRegex}>
+              {cell.render('Cell')}
+            </SearchHighlightTextDecorator>
           </div>
         );
       })}

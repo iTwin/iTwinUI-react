@@ -22,7 +22,6 @@ import {
   useTable,
   ActionType,
   TableInstance,
-  Cell,
 } from 'react-table';
 import { Checkbox } from '../Checkbox';
 import { ProgressRadial } from '../ProgressIndicators';
@@ -399,6 +398,7 @@ export const Table = <
                 intersectionMargin={intersectionMargin}
                 state={state}
                 key={rowProps.key}
+                highlightRegex={props.highlightRegex}
               />
             );
           })}
