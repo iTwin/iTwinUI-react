@@ -14,6 +14,11 @@ import {
 import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
 import { action } from '@storybook/addon-actions';
+import { setUncaughtExceptionCaptureCallback } from 'process';
+import {
+  HighlightingCell,
+  highlightText,
+} from '../../src/core/Table/HighlightingTable';
 
 export default {
   title: 'Core/Table',
@@ -717,4 +722,182 @@ export const NoData: Story<TableProps> = ({ columns, data, ...rest }) => {
 
 NoData.args = {
   data: [],
+};
+
+export const HighlightedSearch: Story<TableProps> = ({
+  columns,
+  data,
+  ...rest
+}) => {
+  type TableStoryDataType = {
+    index: number;
+    name: string;
+    description: string;
+    ids: number[];
+    date: Date;
+  };
+
+  const formatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat('en-us', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      }),
+    [],
+  );
+
+  const formatDate = useCallback(
+    (date: Date) => {
+      return formatter.format(date);
+    },
+    [formatter],
+  );
+
+  const [input, setInput] = React.useState('');
+
+  const regex = useMemo(() => {
+    try {
+      return RegExp(input, 'i');
+    } catch (_err) {
+      // regex was invalid and compilation threw syntax error
+      return undefined;
+    }
+  }, [input]);
+
+  const defaultColumn: Partial<Column> = React.useMemo(
+    () => ({
+      Cell: HighlightingCell,
+    }),
+    [],
+  );
+
+  const tableColumns = useMemo(
+    (): Column[] => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'index',
+            Header: '#',
+            accessor: 'index',
+            width: 80,
+            fieldType: 'number',
+          },
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+            fieldType: 'text',
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            fieldType: 'text',
+            maxWidth: 200,
+          },
+          {
+            id: 'date',
+            Header: 'Date',
+            accessor: 'date',
+            Cell: ({ highlightRegex, row }: CellProps<TableStoryDataType>) => {
+              const formattedDate = formatDate(row.original.date);
+              return highlightRegex
+                ? highlightText(formattedDate, highlightRegex)
+                : formattedDate;
+            },
+          },
+        ],
+      },
+    ],
+    [formatDate],
+  );
+
+  const tableData = useMemo(
+    () => [
+      {
+        index: 1,
+        name: 'Name1',
+        description: 'Description1',
+        data: new Date(),
+      },
+      {
+        index: 2,
+        name: 'Name2',
+        description: 'Description2',
+        date: new Date(Date.now() - 1000),
+      },
+      {
+        index: 3,
+        name: 'Name3',
+        description: 'Description3',
+        data: new Date(Date.now() - 10000),
+      },
+    ],
+    [],
+  );
+
+  const onFilter = React.useCallback(
+    (filters: TableFilterValue<TableStoryDataType>[], state: TableState) => {
+      action(
+        `Filter changed. Filters: ${JSON.stringify(
+          filters,
+        )}, State: ${JSON.stringify(state)}`,
+      )();
+    },
+    [],
+  );
+
+  return (
+    <>
+      <label>
+        Enter a regular expression to highlight searches in the table:
+        <br />
+        <input
+          value={input}
+          onChange={(e) => {
+            action('Search Regex changes');
+            setInput(e.target.value);
+          }}
+        />
+      </label>
+      <Table
+        columns={columns || tableColumns}
+        data={data || tableData}
+        emptyTableContent='No data.'
+        onFilter={onFilter}
+        highlightRegex={regex}
+        defaultColumn={defaultColumn}
+        {...rest}
+      />
+    </>
+  );
+};
+
+Filters.args = {
+  data: [
+    {
+      index: 1,
+      name: 'Name1',
+      description: 'Description1',
+      ids: ['1'],
+      date: new Date('May 1, 2021'),
+    },
+    {
+      index: 2,
+      name: 'Name2',
+      description: 'Description2',
+      ids: ['2', '3', '4'],
+      date: new Date('May 2, 2021'),
+    },
+    {
+      index: 3,
+      name: 'Name3',
+      description: 'Description3',
+      ids: ['3', '4'],
+      date: new Date('May 3, 2021'),
+    },
+  ],
+  emptyFilteredTableContent: 'No results found. Clear or try another filter.',
 };
