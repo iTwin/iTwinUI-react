@@ -107,7 +107,6 @@ export const Full: Story<HeaderProps> = (args) => {
                 <img
                   src='https://itwinplatformcdn.azureedge.net/iTwinUI/stadium.png'
                   style={{ objectFit: 'cover' }}
-                  id='stadium-image'
                 />
               }
               isActive={true}

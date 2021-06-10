@@ -6,41 +6,30 @@ import React from 'react';
 import { action } from '@storybook/addon-actions';
 import { Story, Meta } from '@storybook/react';
 import { IdeasButton, IdeasButtonProps } from '../../../src/core';
-import { CreeveyStory } from 'creevey';
+import { CreeveyMeta } from 'creevey';
 
 export default {
   title: 'Buttons/IdeasButton',
   component: IdeasButton,
   parameters: {
     docs: { inlineStories: false },
+    creevey: {
+      captureElement: null,
+    },
   },
   argTypes: {
     onClick: { control: { disable: true } },
   },
-} as Meta<IdeasButtonProps>;
+} as Meta<IdeasButtonProps> & CreeveyMeta;
 
-export const Ideas: Story<IdeasButtonProps> & CreeveyStory = (args) => {
+export const Ideas: Story<IdeasButtonProps> = (args) => {
   return <IdeasButton onClick={action('clicked')} {...args} />;
 };
 
-Ideas.parameters = {
-  creevey: {
-    captureElement: null,
-  },
-};
-
-export const LocalizedIdeas: Story<IdeasButtonProps> & CreeveyStory = (
-  args,
-) => {
+export const LocalizedIdeas: Story<IdeasButtonProps> = (args) => {
   return <IdeasButton onClick={action('clicked')} {...args} />;
 };
 
 LocalizedIdeas.args = {
   feedbackLabel: 'Localized feedback',
-};
-
-LocalizedIdeas.parameters = {
-  creevey: {
-    captureElement: null,
-  },
 };
