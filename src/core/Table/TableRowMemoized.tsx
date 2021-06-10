@@ -7,6 +7,7 @@ import cx from 'classnames';
 import { Row, TableRowProps, TableState } from 'react-table';
 import { useIntersection } from '../utils/hooks/useIntersection';
 import { getCellStyle } from './utils';
+import { SearchHighlightedCell } from './HighlightableTableUtils';
 
 /**
  * Memorization is needed to avoid unnecessary re-renders of all rows when additional data is added when lazy-loading.
@@ -50,7 +51,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
         });
         return (
           <div {...cellProps} key={cellProps.key}>
-            {cell.render('Cell')}
+            <SearchHighlightedCell>{cell.render('Cell')}</SearchHighlightedCell>
           </div>
         );
       })}

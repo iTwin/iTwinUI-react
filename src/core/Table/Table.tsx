@@ -22,6 +22,7 @@ import {
   useTable,
   ActionType,
   TableInstance,
+  Cell,
 } from 'react-table';
 import { Checkbox } from '../Checkbox';
 import { ProgressRadial } from '../ProgressIndicators';
@@ -99,6 +100,10 @@ export type TableProps<
    * Content shown when there is no data after filtering.
    */
   emptyFilteredTableContent?: React.ReactNode;
+  /**
+   * Regex of text within the table to apply a highlight to. Useful for visual feedback while searching on a table.
+   */
+  highlightRegex?: RegExp;
 } & Omit<CommonProps, 'title'>;
 
 /**
