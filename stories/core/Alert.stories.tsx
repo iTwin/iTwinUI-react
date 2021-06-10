@@ -36,7 +36,7 @@ export const Informational: Story<AlertProps> = (args) => {
 };
 
 Informational.args = {
-  children: 'This is an informational message1.',
+  children: 'This is an informational message.',
   clickableText: 'More Info.',
   type: 'informational',
 };
