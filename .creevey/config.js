@@ -7,4 +7,12 @@ module.exports = {
   diffOptions: { threshold: 0.1 },
   // How many times test should be retried before to consider it as failed
   maxRetries: 3,
+  // Describe browsers and their options
+  browsers: {
+    chrome: {
+      browserName: 'chrome',
+      // Increase parallel sessions
+      limit: 5,
+    },
+  },
 };
