@@ -29,6 +29,7 @@ export default {
       { value: 2, label: 'Item #2' },
       { value: 3, label: 'Item #3' },
     ],
+    size: undefined,
   },
   argTypes: {
     style: { control: { disable: true } },

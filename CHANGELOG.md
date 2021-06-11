@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+`2021-06-XX`
+
+### What's new
+
+- **Added `size` prop to `Input` and `Select` components.** Supports small and large sizes.
+
 ## [1.7.2]
 
 `2021-06-09`

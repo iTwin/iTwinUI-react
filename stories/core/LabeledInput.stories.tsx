@@ -20,6 +20,9 @@ export default {
     disabled: { type: 'boolean' },
     required: { type: 'boolean' },
   },
+  args: {
+    size: undefined,
+  },
 } as Meta<LabeledInputProps>;
 
 export const Basic: Story<LabeledInputProps> = (args) => {
