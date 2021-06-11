@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.7.3]
+
+### What's new
+
+- **Added `highlightRegex` prop to** `Table` for optional visual feedback while searching/filtering rows
+
 ## [1.7.2]
 
 `2021-06-09`
