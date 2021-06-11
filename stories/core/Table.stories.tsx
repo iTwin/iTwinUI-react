@@ -759,12 +759,22 @@ export const HighlightedSearch: Story<TableProps> = ({
     if (input === '') {
       return undefined;
     }
-    try {
-      return RegExp(input, 'i');
-    } catch (_err) {
-      // regex was invalid and compilation threw syntax error
-      return undefined;
-    }
+    /** translate an asterisk-wildcard search to a regex
+     * e.g. "Mic*l" matches "Michael" but not "Michae l"
+     */
+    const compileSimpleSearchQuery = (query: string) => {
+      const escapeChr = (chr: string, str: string) =>
+        str.replace(new RegExp(`\\${chr}`, 'g'), `\\${chr}`);
+      const regexMetacharList = Array.from('\\$^()[]{}|?.+:');
+      const escapedQuery = regexMetacharList.reduce(
+        (prev, chr) => escapeChr(chr, prev),
+        query,
+      );
+      // convert wildcard character to valid regex repeated non-space text definition
+      const queryWithWildcards = escapedQuery.replace(/\*/g, '\\S*');
+      return RegExp(queryWithWildcards, 'gi');
+    };
+    return compileSimpleSearchQuery(input);
   }, [input]);
 
   const defaultColumn: Partial<Column> = React.useMemo(
