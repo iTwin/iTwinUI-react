@@ -57,17 +57,16 @@ export const FileUploadTemplate = (props: FileUploadTemplateProps) => {
 
   return (
     <>
-      <input
-        className='iui-browse-input'
-        type='file'
-        id='file-input'
-        onChange={onChange}
-        multiple={acceptMultiple}
-        {...inputProps}
-      />
       <SvgUpload className='iui-icon' aria-hidden />
       <div className='iui-template-text'>
-        <label htmlFor='file-input' className='iui-anchor'>
+        <label className='iui-anchor'>
+          <input
+            className='iui-browse-input'
+            type='file'
+            onChange={onChange}
+            multiple={acceptMultiple}
+            {...inputProps}
+          />
           {label}
         </label>
         <div>{subtitle}</div>
