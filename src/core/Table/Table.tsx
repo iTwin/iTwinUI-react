@@ -205,8 +205,8 @@ export const Table = <
         minWidth: 48,
         width: 48,
         maxWidth: 48,
-        columnClassName: 'iui-tables-slot',
-        cellClassName: 'iui-tables-slot',
+        columnClassName: 'iui-slot',
+        cellClassName: 'iui-slot',
         Header: ({ getToggleAllRowsSelectedProps }: HeaderProps<T>) => (
           <Checkbox {...getToggleAllRowsSelectedProps()} />
         ),
@@ -322,7 +322,7 @@ export const Table = <
     <div
       ref={(element) => setOwnerDocument(element?.ownerDocument)}
       {...getTableProps({
-        className: cx('iui-tables-table', className),
+        className: cx('iui-table', className),
         style,
       })}
       {...ariaDataAttributes}
@@ -330,7 +330,7 @@ export const Table = <
       <div>
         {headerGroups.slice(1).map((headerGroup: HeaderGroup<T>) => {
           const headerGroupProps = headerGroup.getHeaderGroupProps({
-            className: 'iui-tables-row',
+            className: cx('iui-table-header', 'iui-row'),
           });
           return (
             <div {...headerGroupProps} key={headerGroupProps.key}>
@@ -338,15 +338,11 @@ export const Table = <
                 const columnProps = column.getHeaderProps({
                   ...column.getSortByToggleProps(),
                   className: cx(
-                    'iui-tables-cell',
-                    'iui-tables-head',
-                    { 'iui-active-sort': column.isSorted },
+                    'iui-cell',
+                    { 'iui-sorted': column.isSorted },
                     column.columnClassName,
                   ),
-                  style: {
-                    ...getCellStyle(column),
-                    cursor: column.canSort ? 'pointer' : undefined,
-                  },
+                  style: { ...getCellStyle(column) },
                 });
                 return (
                   <div {...columnProps} key={columnProps.key}>
@@ -358,14 +354,18 @@ export const Table = <
                       />
                     )}
                     {!isLoading && data.length != 0 && column.canSort && (
-                      <div className='iui-sort'>
-                        <div className='iui-icon-wrapper'>
-                          {column.isSorted && column.isSortedDesc ? (
-                            <SvgSortUp className='iui-icon' aria-hidden />
-                          ) : (
-                            <SvgSortDown className='iui-icon' aria-hidden />
-                          )}
-                        </div>
+                      <div className='iui-cell-end-icon'>
+                        {column.isSorted && column.isSortedDesc ? (
+                          <SvgSortUp
+                            className='iui-icon iui-sort'
+                            aria-hidden
+                          />
+                        ) : (
+                          <SvgSortDown
+                            className='iui-icon iui-sort'
+                            aria-hidden
+                          />
+                        )}
                       </div>
                     )}
                   </div>
@@ -375,13 +375,13 @@ export const Table = <
           );
         })}
       </div>
-      <div {...getTableBodyProps({ className: 'iui-tables-body' })}>
+      <div {...getTableBodyProps({ className: 'iui-table-body' })}>
         {data.length !== 0 &&
           rows.map((row: Row<T>) => {
             prepareRow(row);
             const rowProps = row.getRowProps({
-              className: cx('iui-tables-row', {
-                'iui-tables-row-active': row.isSelected,
+              className: cx('iui-row', {
+                'iui-selected': row.isSelected,
               }),
             });
             return (
@@ -398,16 +398,13 @@ export const Table = <
             );
           })}
         {isLoading && data.length === 0 && (
-          <div className={'iui-tables-message-container'}>
+          <div className={'iui-table-empty'}>
             <ProgressRadial indeterminate={true} />
           </div>
         )}
         {isLoading && data.length !== 0 && (
-          <div className='iui-tables-row'>
-            <div
-              className='iui-tables-cell'
-              style={{ justifyContent: 'center' }}
-            >
+          <div className='iui-row'>
+            <div className='iui-cell' style={{ justifyContent: 'center' }}>
               <ProgressRadial
                 indeterminate={true}
                 size='small'
@@ -417,16 +414,12 @@ export const Table = <
           </div>
         )}
         {!isLoading && data.length === 0 && !areFiltersSet && (
-          <div className={'iui-tables-message-container'}>
-            {emptyTableContent}
-          </div>
+          <div className={'iui-table-empty'}>{emptyTableContent}</div>
         )}
         {!isLoading &&
           (data.length === 0 || filteredFlatRows.length === 0) &&
           areFiltersSet && (
-            <div className={'iui-tables-message-container'}>
-              {emptyFilteredTableContent}
-            </div>
+            <div className={'iui-table-empty'}>{emptyFilteredTableContent}</div>
           )}
       </div>
     </div>
