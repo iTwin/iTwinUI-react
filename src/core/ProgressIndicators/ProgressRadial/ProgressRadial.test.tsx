@@ -19,15 +19,15 @@ it('renders determinate ProgressRadial', () => {
   expect(spinnerFill.style.strokeDashoffset).toBe('50.16');
 });
 
-it('renders ProgressRadial className', () => {
+it('should add className and style props correctly', () => {
   const { container } = render(
-    <ProgressRadial value={43} className='additional-class-name' />,
+    <ProgressRadial className='custom-class' style={{ fill: 'hotpink' }} />,
   );
-
   const spinner = container.querySelector(
-    '.iui-progress-indicator-radial.iui-determinate.additional-class-name',
+    '.iui-progress-indicator-radial.custom-class',
   ) as HTMLElement;
   expect(spinner).toBeTruthy();
+  expect(spinner.style.fill).toEqual('hotpink');
 });
 
 it('renders indeterminate ProgressRadial', () => {
