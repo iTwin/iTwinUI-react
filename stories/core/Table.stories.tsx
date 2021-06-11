@@ -14,7 +14,6 @@ import {
 import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
 import { action } from '@storybook/addon-actions';
-import { setUncaughtExceptionCaptureCallback } from 'process';
 import {
   HighlightingCell,
   highlightText,
@@ -757,6 +756,9 @@ export const HighlightedSearch: Story<TableProps> = ({
   const [input, setInput] = React.useState('');
 
   const regex = useMemo(() => {
+    if (input === '') {
+      return undefined;
+    }
     try {
       return RegExp(input, 'i');
     } catch (_err) {
@@ -802,6 +804,7 @@ export const HighlightedSearch: Story<TableProps> = ({
             Header: 'Date',
             accessor: 'date',
             Cell: ({ highlightRegex, row }: CellProps<TableStoryDataType>) => {
+              console.log(row, row.original.date);
               const formattedDate = formatDate(row.original.date);
               return highlightRegex
                 ? highlightText(formattedDate, highlightRegex)
@@ -812,41 +815,6 @@ export const HighlightedSearch: Story<TableProps> = ({
       },
     ],
     [formatDate],
-  );
-
-  const tableData = useMemo(
-    () => [
-      {
-        index: 1,
-        name: 'Name1',
-        description: 'Description1',
-        data: new Date(),
-      },
-      {
-        index: 2,
-        name: 'Name2',
-        description: 'Description2',
-        date: new Date(Date.now() - 1000),
-      },
-      {
-        index: 3,
-        name: 'Name3',
-        description: 'Description3',
-        data: new Date(Date.now() - 10000),
-      },
-    ],
-    [],
-  );
-
-  const onFilter = React.useCallback(
-    (filters: TableFilterValue<TableStoryDataType>[], state: TableState) => {
-      action(
-        `Filter changed. Filters: ${JSON.stringify(
-          filters,
-        )}, State: ${JSON.stringify(state)}`,
-      )();
-    },
-    [],
   );
 
   return (
@@ -864,9 +832,8 @@ export const HighlightedSearch: Story<TableProps> = ({
       </label>
       <Table
         columns={columns || tableColumns}
-        data={data || tableData}
+        data={data}
         emptyTableContent='No data.'
-        onFilter={onFilter}
         highlightRegex={regex}
         defaultColumn={defaultColumn}
         {...rest}
@@ -875,7 +842,7 @@ export const HighlightedSearch: Story<TableProps> = ({
   );
 };
 
-Filters.args = {
+HighlightedSearch.args = {
   data: [
     {
       index: 1,
@@ -899,5 +866,4 @@ Filters.args = {
       date: new Date('May 3, 2021'),
     },
   ],
-  emptyFilteredTableContent: 'No results found. Clear or try another filter.',
 };

@@ -181,8 +181,9 @@ export const Table = <
       maxWidth: 0,
       minWidth: 0,
       width: 0,
+      ...props.defaultColumn,
     }),
-    [],
+    [props.defaultColumn],
   );
 
   // useRef prevents from rerendering when one of these callbacks changes

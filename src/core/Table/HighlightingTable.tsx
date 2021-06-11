@@ -7,13 +7,18 @@ export const searchKeepWS: React.CSSProperties = {
 };
 
 export const searchMatch: React.CSSProperties = {
-  backgroundColor: 'var(--bwc-yellow)',
+  backgroundColor: '#ffcf00',
 };
 
 export const highlightText = (text: string, pattern: RegExp) => {
+  // Unfortunately, reactStringReplace requires a capture group so we add one for you
+  // we can remove this if we patch or replace reactStringReplace.
+  // We also grab the space around the result and give it `white-space: pre` since tag
+  // boundary changes may eliminate space.
+  pattern = RegExp(`(\\s*${pattern.source}\\s*)`, pattern.flags);
+
   return typeof text === 'string'
     ? reactStringReplace(text, pattern, (match, i) => {
-        console.log(match, i);
         const leftWhitespace = (/^\s*/.exec(match) as RegExpExecArray)[0];
         const rightWhitespace = (/\s*$/.exec(match) as RegExpExecArray)[0];
         return (
@@ -47,6 +52,9 @@ export const HighlightingCell = <D extends object, V = any>({
   value,
   highlightRegex,
 }: CellProps<D, V>) => {
+  if (value === undefined) {
+    return null;
+  }
   return typeof value === 'string' && highlightRegex
     ? highlightText(value, highlightRegex)
     : value;

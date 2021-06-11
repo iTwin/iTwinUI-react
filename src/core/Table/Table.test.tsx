@@ -50,6 +50,7 @@ const mockedData = (count = 3) =>
   [...new Array(count)].map((_, index) => ({
     name: `Name${index + 1}`,
     description: `Description${index + 1}`,
+    spacedText: 'text test here',
   }));
 
 function renderComponent(
@@ -684,4 +685,21 @@ it('should rerender table when columns change', () => {
     />,
   );
   expect(screen.getAllByText('test2').length).toBe(3);
+});
+
+it('should put neighboring whitespace in spans with whitespace:pre', () => {
+  const { container } = renderComponent({ highlightRegex: /test/ });
+
+  const highlighted = container.querySelector('mark');
+  expect(highlighted).not.toBeNull();
+
+  const cell = highlighted?.parentElement;
+  expect(highlighted).not.toBeNull();
+
+  expect(cell?.children.length).toBe(3);
+  expect((cell?.children[0] as HTMLElement)?.style?.whiteSpace).toBe('pre');
+  expect((cell?.children[1] as HTMLElement)?.tagName).toBe('MARK');
+  expect((cell?.children[1] as HTMLElement)?.innerText).toBe('test');
+  expect((cell?.children[2] as HTMLElement)?.style?.whiteSpace).toBe('pre');
+  expect(cell?.textContent).toBe('test test here');
 });
