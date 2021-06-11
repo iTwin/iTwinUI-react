@@ -8,6 +8,10 @@
 
 - **Added `size` prop to `Input` and `Select` components.** Supports small and large sizes.
 
+### Fixes
+
+- **Fixed `ProgressRadial` not using `className` prop correctly.**
+
 ## [1.7.2]
 
 `2021-06-09`
