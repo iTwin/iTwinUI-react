@@ -47,7 +47,6 @@
     "@tippyjs/react": "^4.2.5",
     "@types/react-table": "^7.0.18",
     "classnames": "^2.2.6",
-    "react-string-replace": "^0.4.4",
     "react-table": "^7.1.0",
     "react-transition-group": "^4.1.1"
   },
