@@ -3,23 +3,72 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import * as React from 'react';
-import reactStringReplace from 'react-string-replace';
 import { CellProps } from 'react-table';
+
+/** polyfill for Array.prototype.flat with a depth of 1 */
+const flat1 = <T extends unknown>(array: T[]) => {
+  if ('flat' in Array.prototype) {
+    return (array as T[] & { flat(i: number): T[] }).flat(1);
+  } else {
+    const result: T[] = [];
+    for (const item of array) {
+      if (Array.isArray(item)) {
+        array.push(...item);
+      } else {
+        array.push(item);
+      }
+    }
+    return result;
+  }
+};
+
+// based on the npm package reactStringReplace at https://github.com/iansinnott/react-string-replace
+const reactStringReplace = (
+  nodeOrNodes: string | React.ReactNode | React.ReactNodeArray,
+  pattern: RegExp,
+  replacer: (match: string, index: number) => typeof nodeOrNodes,
+): React.ReactNodeArray => {
+  const asArray = (a: typeof nodeOrNodes): React.ReactNodeArray =>
+    Array.isArray(a) ? a : [a];
+
+  const nodes = asArray(nodeOrNodes);
+
+  // we add a capture group around the pattern because `String.prototype.split` requires it
+  // this should be fast enough due to caching and string interning
+  pattern = RegExp(`(${pattern.source})`, pattern.flags);
+
+  return flat1(
+    nodes.map((node) => {
+      if (typeof node !== 'string') {
+        return node;
+      }
+      const parts = node.split(pattern);
+      const result = parts.map((part, i) => {
+        const isOdd = i % 2 === 1;
+        const isDelimiter = isOdd;
+        if (!isDelimiter) {
+          return part;
+        }
+        const delimiterIndex = Math.ceil(i / 2);
+        return replacer(part, delimiterIndex);
+      });
+      return result;
+    }),
+  );
+};
 
 export const searchKeepWS: React.CSSProperties = {
   whiteSpace: 'pre',
 };
 
 export const searchMatch: React.CSSProperties = {
-  backgroundColor: '#ffcf00',
+  backgroundColor: 'rgba(255, 207, 0, 0.75)',
 };
 
 export const highlightText = (text: string, pattern: RegExp) => {
-  // Unfortunately, reactStringReplace requires a capture group so we add one for you
-  // we can remove this if we patch or replace reactStringReplace.
-  // We also grab the space around the result and give it `white-space: pre` since tag
+  // We grab the space around the result and give it `white-space: pre` since tag
   // boundary changes may eliminate space.
-  pattern = RegExp(`(\\s*${pattern.source}\\s*)`, pattern.flags);
+  pattern = RegExp(`\\s*${pattern.source}\\s*`, pattern.flags);
 
   return typeof text === 'string'
     ? reactStringReplace(text, pattern, (match, i) => {

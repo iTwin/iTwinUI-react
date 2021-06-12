@@ -814,7 +814,6 @@ export const HighlightedSearch: Story<TableProps> = ({
             Header: 'Date',
             accessor: 'date',
             Cell: ({ highlightRegex, row }: CellProps<TableStoryDataType>) => {
-              console.log(row, row.original.date);
               const formattedDate = formatDate(row.original.date);
               return highlightRegex
                 ? highlightText(formattedDate, highlightRegex)
