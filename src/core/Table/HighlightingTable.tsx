@@ -57,8 +57,8 @@ const reactStringReplace = (
   );
 };
 
-export const searchKeepWS: React.CSSProperties = {
-  whiteSpace: 'pre',
+export const keepWhitespace: React.CSSProperties = {
+  whiteSpace: 'break-spaces',
 };
 
 export const searchMatch: React.CSSProperties = {
@@ -68,26 +68,14 @@ export const searchMatch: React.CSSProperties = {
 export const highlightText = (text: string, pattern: RegExp) => {
   // We grab the space around the result and give it `white-space: pre` since tag
   // boundary changes may eliminate space.
-  pattern = RegExp(`\\s*${pattern.source}\\s*`, pattern.flags);
+  //pattern = RegExp(`${pattern.source}`, pattern.flags);
 
   return typeof text === 'string'
-    ? reactStringReplace(text, pattern, (match, i) => {
-        const leftWhitespace = (/^\s*/.exec(match) as RegExpExecArray)[0];
-        const rightWhitespace = (/\s*$/.exec(match) as RegExpExecArray)[0];
-        return (
-          <>
-            {leftWhitespace && (
-              <span style={searchKeepWS}>{leftWhitespace}</span>
-            )}
-            <mark style={searchMatch} key={i}>
-              {match.trim()}
-            </mark>
-            {rightWhitespace && (
-              <span style={searchKeepWS}>{rightWhitespace}</span>
-            )}
-          </>
-        );
-      })
+    ? reactStringReplace(text, pattern, (match, i) => (
+        <mark style={searchMatch} key={i}>
+          {match}
+        </mark>
+      ))
     : text;
 };
 
@@ -108,7 +96,9 @@ export const HighlightingCell = <D extends object, V = any>({
   if (value === undefined) {
     return null;
   }
-  return typeof value === 'string' && highlightRegex
-    ? highlightText(value, highlightRegex)
-    : value;
+  return typeof value === 'string' && highlightRegex ? (
+    <div style={keepWhitespace}>{highlightText(value, highlightRegex)}</div>
+  ) : (
+    value
+  );
 };

@@ -17,6 +17,7 @@ import { action } from '@storybook/addon-actions';
 import {
   HighlightingCell,
   highlightText,
+  keepWhitespace,
 } from '../../src/core/Table/HighlightingTable';
 
 export default {
@@ -815,9 +816,13 @@ export const HighlightedSearch: Story<TableProps> = ({
             accessor: 'date',
             Cell: ({ highlightRegex, row }: CellProps<TableStoryDataType>) => {
               const formattedDate = formatDate(row.original.date);
-              return highlightRegex
-                ? highlightText(formattedDate, highlightRegex)
-                : formattedDate;
+              return highlightRegex ? (
+                <div style={keepWhitespace}>
+                  {highlightText(formattedDate, highlightRegex)}
+                </div>
+              ) : (
+                formattedDate
+              );
             },
           },
         ],
