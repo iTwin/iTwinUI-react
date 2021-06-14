@@ -327,10 +327,10 @@ export const Table = <
       })}
       {...ariaDataAttributes}
     >
-      <div>
+      <div className='iui-table-header'>
         {headerGroups.slice(1).map((headerGroup: HeaderGroup<T>) => {
           const headerGroupProps = headerGroup.getHeaderGroupProps({
-            className: cx('iui-table-header', 'iui-row'),
+            className: 'iui-row',
           });
           return (
             <div {...headerGroupProps} key={headerGroupProps.key}>
