@@ -337,6 +337,7 @@ export const Table = <
                   ...column.getSortByToggleProps(),
                   className: cx(
                     'iui-cell',
+                    { 'iui-actionable': column.canSort },
                     { 'iui-sorted': column.isSorted },
                     column.columnClassName,
                   ),
