@@ -14,7 +14,7 @@ export type FileUploadTemplateProps = {
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
   /**
    * Whether the file input accepts multiple files.
-   * @default true
+   * Passed to the `multiple` attribute of native file input.
    * @deprecated Use `inputProps` instead
    */
   acceptMultiple?: boolean;
@@ -47,7 +47,7 @@ export type FileUploadTemplateProps = {
 export const FileUploadTemplate = (props: FileUploadTemplateProps) => {
   const {
     onChange,
-    acceptMultiple = true,
+    acceptMultiple,
     label = 'Choose a file',
     subtitle = 'or drag & drop it here.',
     children,

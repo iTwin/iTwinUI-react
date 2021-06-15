@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+`2021-06-XX`
+
+### What's new
+
+- **Added `inputProps` to `FileUploadTemplate`.** Also deprecated `acceptMultiple` and removed its default value.
+
 ## [1.8.0]
 
 `2021-06-15`
