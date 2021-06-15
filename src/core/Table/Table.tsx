@@ -174,6 +174,7 @@ export const Table = <
 
   const defaultColumn = React.useMemo(
     () => ({
+      // Remove dynamic width values set by react-table
       maxWidth: undefined,
       minWidth: undefined,
       width: undefined,
@@ -344,7 +345,7 @@ export const Table = <
                   style: { ...getCellStyle(column) },
                 });
                 return (
-                  <div {...columnProps} key={columnProps.key}>
+                  <div {...columnProps} key={columnProps.key} title={undefined}>
                     {column.render('Header')}
                     {!isLoading && data.length != 0 && (
                       <FilterToggle
