@@ -11,15 +11,6 @@ object-assign
 */
 
 /*!
- * Fuse.js v3.6.1 - Lightweight fuzzy-search (http://fusejs.io)
- * 
- * Copyright (c) 2012-2017 Kirollos Risk (http://kiro.me)
- * All Rights Reserved. Apache Software License 2.0
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- */
-
-/*!
  * OverlayScrollbars
  * https://github.com/KingSora/OverlayScrollbars
  *
@@ -30,6 +21,13 @@ object-assign
  *
  * Released under the MIT license.
  * Date: 02.08.2020
+ */
+
+/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * @license  MIT
  */
 
 /*!
@@ -49,6 +47,13 @@ object-assign
  */
 
 /*!
+ * is-plain-object <https://github.com/jonschlinkert/is-plain-object>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+/*!
  * isobject <https://github.com/jonschlinkert/isobject>
  *
  * Copyright (c) 2014-2017, Jon Schlinkert.
@@ -62,6 +67,12 @@ object-assign
  * @author Lea Verou <https://lea.verou.me>
  * @namespace
  * @public
+ */
+
+/** @license
+ * eventsource.js
+ * Available under MIT License (MIT)
+ * https://github.com/Yaffle/EventSource/
  */
 
 /** @license React v0.20.2
@@ -92,7 +103,7 @@ object-assign
  */
 
 /** @license React v17.0.2
- * react-is.production.min.js
+ * react-jsx-runtime.production.min.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
  *
