@@ -6,7 +6,7 @@
 
 ### What's new
 
-- **Added `inputProps` to `FileUploadTemplate`.** Also deprecated `acceptMultiple` and removed its default value.
+- **Added `acceptType` prop to `FileUploadTemplate`.**
 
 ## [1.8.0]
 

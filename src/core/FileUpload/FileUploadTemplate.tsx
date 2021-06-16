@@ -15,9 +15,14 @@ export type FileUploadTemplateProps = {
   /**
    * Whether the file input accepts multiple files.
    * Passed to the `multiple` attribute of native file input.
-   * @deprecated Use `inputProps` instead
+   * @default true
    */
   acceptMultiple?: boolean;
+  /**
+   * File types allowed.
+   * Passed to the `accept` attribute of native file input.
+   */
+  acceptType?: string;
   /**
    * Localized version of primary clickable label. Gets styled like a hyperlink.
    * @default 'Choose a file'
@@ -32,10 +37,6 @@ export type FileUploadTemplateProps = {
    * Optional children appended to the template.
    */
   children?: React.ReactNode;
-  /**
-   * Attributes applied on the native input element.
-   */
-  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
 };
 
 /**
@@ -47,11 +48,11 @@ export type FileUploadTemplateProps = {
 export const FileUploadTemplate = (props: FileUploadTemplateProps) => {
   const {
     onChange,
-    acceptMultiple,
+    acceptMultiple = true,
+    acceptType,
     label = 'Choose a file',
     subtitle = 'or drag & drop it here.',
     children,
-    inputProps,
   } = props;
   useTheme();
 
@@ -65,7 +66,7 @@ export const FileUploadTemplate = (props: FileUploadTemplateProps) => {
             type='file'
             onChange={onChange}
             multiple={acceptMultiple}
-            {...inputProps}
+            accept={acceptType}
           />
           {label}
         </label>

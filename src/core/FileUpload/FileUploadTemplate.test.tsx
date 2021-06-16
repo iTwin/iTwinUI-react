@@ -40,11 +40,12 @@ it('should render FileUploadTemplate', () => {
   expect(svg).toEqual(uploadIcon.firstChild);
 });
 
-it('should accept inputProps', () => {
+it('should accept input props', () => {
   const { container } = render(
     <FileUploadTemplate
       onChange={jest.fn}
-      inputProps={{ multiple: false, accept: '.txt, .png' }}
+      acceptMultiple={false}
+      acceptType='.txt, .png'
     />,
   );
 
