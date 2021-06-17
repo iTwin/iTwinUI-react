@@ -121,6 +121,27 @@ it('should be visible', () => {
 });
 ```
 
+### Visual Testing
+
+We reuse our stories for visual tests (through [Creevey](https://github.com/wKich/creevey)). By default, the stories will be rendered as-is, but interaction can be added using the `creevey` parameter of story, where you have access to a [Selenium WebDriver](https://www.selenium.dev/selenium/docs/api/javascript/module/selenium-webdriver/index_exports_WebDriver.html) instance.
+
+```jsx
+parameters: {
+  creevey: {
+    tests: {
+      async open() {
+        const button = await this.browser.findElement({ css: '.iui-button' });
+        const closed = await this.takeScreenshot();
+
+        await button.sendKeys(' ');
+        const opened = await this.takeScreenshot();
+        await this.expect({ closed, opened }).to.matchImages();
+      },
+    },
+  },
+},
+```
+
 ### Linking
 
 If you want to test your changes in a local project, you can go into the `lib/` folder (which gets created when running `yarn build` or `yarn build:watch`) and run `yarn link`. Then from your test project, run `yarn link @itwin/itwinui-react`.
@@ -172,7 +193,7 @@ To enable us to quickly review and accept your pull requests, always create one 
   - All required files and exports added.
   - Proper inline documentation added.
   - Code follows style guide and has no linting errors (pre-commit hook will run linter).
-- Tests added for all new code.
+- Tests added for all new code. 
   - All existing and new tests should pass.
 - Stories added to demonstrate new features.
 - Updated changelog.
