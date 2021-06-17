@@ -60,10 +60,8 @@ const TableRow = <T extends Record<string, unknown>>(props: {
           );
         })}
       </div>
-      {isExpanded && (
-        <div className='iui-row iui-expanded-content'>
-          {subComponent?.(row)}
-        </div>
+      {isExpanded && subComponent && (
+        <div className='iui-row iui-expanded-content'>{subComponent(row)}</div>
       )}
     </>
   );

@@ -436,7 +436,7 @@ export const Table = <
             const rowProps = row.getRowProps({
               className: cx('iui-row', {
                 'iui-selected': row.isSelected,
-                'iui-row-expanded': row.isExpanded,
+                'iui-row-expanded': row.isExpanded && subComponent,
               }),
             });
             return (

@@ -472,7 +472,7 @@ Filters.args = {
   emptyFilteredTableContent: 'No results found. Clear or try another filter.',
 };
 
-export const Expandable: Story<TableProps> = (args) => {
+export const ExpandableSubcomponent: Story<TableProps> = (args) => {
   const { columns, data, ...rest } = args;
 
   const onClickHandler = (
@@ -573,13 +573,159 @@ export const Expandable: Story<TableProps> = (args) => {
   );
 };
 
-Expandable.args = {
+ExpandableSubcomponent.args = {
   data: [
     { name: 'Name1', description: 'Description1' },
     { name: 'Name2', description: 'Description2' },
     { name: 'Name3', description: 'Description3' },
   ],
   isSelectable: true,
+};
+
+export const ExpandableSubrows: Story<TableProps> = (args) => {
+  type TableDataType = {
+    name: string;
+    description: string;
+    subRows: TableDataType[];
+  };
+  const { data, ...rest } = args;
+
+  const onClickHandler = (
+    props: CellProps<{ name: string; description: string }>,
+  ) => action(props.row.original.name)();
+  const onExpand = useCallback(
+    (state) => action(`Expanded. Table state: ${JSON.stringify(state)}`)(),
+    [],
+  );
+
+  const tableColumns = useMemo<Column<TableDataType>[]>(
+    () => [
+      {
+        id: 'expander',
+        Header: 'Name',
+        Cell: (props: CellProps<TableDataType>) => (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              paddingLeft: props.row.depth * 20,
+            }}
+          >
+            {props.row.canExpand && (
+              <IconButton
+                style={{ position: 'absolute' }}
+                styleType='borderless'
+                size='small'
+                onClick={() => {
+                  props.row.toggleRowExpanded();
+                }}
+              >
+                {props.row.isExpanded ? (
+                  <SvgChevronDown />
+                ) : (
+                  <SvgChevronRight />
+                )}
+              </IconButton>
+            )}
+            <div style={{ marginLeft: 32 }}>{props.row.original.name}</div>
+          </div>
+        ),
+        maxWidth: 400,
+        minWidth: 400,
+      },
+      {
+        id: 'description',
+        Header: 'Description',
+        accessor: 'description',
+      },
+      {
+        id: 'click-me',
+        Header: 'Click',
+        maxWidth: 100,
+        Cell: (props: CellProps<{ name: string; description: string }>) => {
+          const onClick = () => onClickHandler(props);
+          return (
+            <a className='iui-anchor' onClick={onClick}>
+              Click me!
+            </a>
+          );
+        },
+      },
+    ],
+    [],
+  );
+
+  const tableColumnsWithHeaders = useMemo<Column<TableDataType>[]>(
+    () => [
+      {
+        Header: 'Table',
+        columns: tableColumns,
+      },
+    ],
+    [tableColumns],
+  );
+
+  return (
+    <Table
+      {...rest}
+      columns={tableColumnsWithHeaders}
+      data={data}
+      emptyTableContent='No data.'
+      onExpand={(newState) => {
+        onExpand(newState);
+      }}
+    />
+  );
+};
+
+ExpandableSubrows.args = {
+  data: [
+    {
+      name: 'Row 1',
+      description: 'Description 1',
+      subRows: [
+        { name: 'Row 1.1', description: 'Description 1.1', subRows: [] },
+        {
+          name: 'Row 1.2',
+          description: 'Description 1.2',
+          subRows: [
+            {
+              name: 'Row 1.2.1',
+              description: 'Description 1.2.1',
+              subRows: [],
+            },
+            {
+              name: 'Row 1.2.2',
+              description: 'Description 1.2.2',
+              subRows: [],
+            },
+            {
+              name: 'Row 1.2.3',
+              description: 'Description 1.2.3',
+              subRows: [],
+            },
+            {
+              name: 'Row 1.2.4',
+              description: 'Description 1.2.4',
+              subRows: [],
+            },
+          ],
+        },
+        { name: 'Row 1.3', description: 'Description 1.3', subRows: [] },
+        { name: 'Row 1.4', description: 'Description 1.4', subRows: [] },
+      ],
+    },
+    {
+      name: 'Row 2',
+      description: 'Description 2',
+      subRows: [
+        { name: 'Row 2.1', description: 'Description 2.1', subRows: [] },
+        { name: 'Row 2.2', description: 'Description 2.2', subRows: [] },
+        { name: 'Row 2.3', description: 'Description 2.3', subRows: [] },
+      ],
+    },
+    { name: 'Row 3', description: 'Description 3', subRows: [] },
+  ],
 };
 
 export const LazyLoading: Story<TableProps> = (args) => {
