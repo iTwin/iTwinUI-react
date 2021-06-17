@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.X.X]
+
+`2021-06-X`
+
+### What's new
+
+- **Added expanding functionality for `Table`.** Provide `subComponent` prop or insert `subRows` field in `data` prop.
+
 ## [1.8.1]
 
 `2021-06-17`
