@@ -123,7 +123,9 @@ it('should be visible', () => {
 
 ### Visual Testing
 
-We reuse our stories for visual tests (through [Creevey](https://github.com/wKich/creevey)). By default, the stories will be rendered as-is, but interaction can be added using the `creevey` parameter of story, where you have access to a [Selenium WebDriver](https://www.selenium.dev/selenium/docs/api/javascript/module/selenium-webdriver/index_exports_WebDriver.html) instance.
+We reuse our stories for visual tests (through [Creevey](https://github.com/wKich/creevey)). Start storybook and run `yarn creevey --ui` to open the test UI. You can run tests and approve images here.
+
+By default, the stories will be rendered as-is, but interaction can be added using the `creevey` parameter of story, where you have access to a [Selenium WebDriver](https://www.selenium.dev/selenium/docs/api/javascript/module/selenium-webdriver/index_exports_WebDriver.html) instance.
 
 ```jsx
 parameters: {
