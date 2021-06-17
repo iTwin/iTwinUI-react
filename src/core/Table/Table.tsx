@@ -16,7 +16,6 @@ import {
   TableState,
   useFlexLayout,
   useFilters,
-  useMountedLayoutEffect,
   useRowSelect,
   useSortBy,
   useTable,
@@ -202,14 +201,12 @@ export const Table = <
   );
 
   // useRef prevents from rerendering when one of these callbacks changes
-  const onSelectRef = React.useRef(onSelect);
   const onBottomReachedRef = React.useRef(onBottomReached);
   const onRowInViewportRef = React.useRef(onRowInViewport);
   React.useEffect(() => {
-    onSelectRef.current = onSelect;
     onBottomReachedRef.current = onBottomReached;
     onRowInViewportRef.current = onRowInViewport;
-  }, [onBottomReached, onRowInViewport, onSelect]);
+  }, [onBottomReached, onRowInViewport]);
 
   const useExpanderHook = (hooks: Hooks<T>) => {
     if (!(subComponent && provideDefaultExpander)) {
@@ -295,6 +292,24 @@ export const Table = <
     }
   };
 
+  const onSelectHandler = (
+    newState: TableState<T>,
+    instance?: TableInstance<T>,
+  ) => {
+    if (!instance?.rows.length) {
+      onSelect?.([], newState);
+      return;
+    }
+
+    const selectedData: T[] = [];
+    instance.rows.forEach((row) => {
+      if (newState.selectedRowIds[row.id]) {
+        selectedData.push(row.original);
+      }
+    });
+    onSelect?.(selectedData, newState);
+  };
+
   const tableStateReducer = (
     newState: TableState<T>,
     action: ActionType,
@@ -311,6 +326,12 @@ export const Table = <
       case TableActions.toggleRowExpanded:
         onExpand?.(newState);
         break;
+      case TableActions.toggleRowSelected:
+      case TableActions.toggleAllRowsSelected:
+      case TableActions.toggleAllPageRowsSelected: {
+        onSelectHandler(newState, instance);
+        break;
+      }
       default:
         break;
     }
@@ -344,20 +365,10 @@ export const Table = <
     getTableBodyProps,
     prepareRow,
     data,
-    selectedFlatRows,
     state,
     allColumns,
     filteredFlatRows,
   } = instance;
-
-  useMountedLayoutEffect(() => {
-    if (isSelectable && selectedFlatRows) {
-      onSelectRef.current?.(
-        selectedFlatRows.map((row) => row.original),
-        state,
-      );
-    }
-  }, [selectedFlatRows, onSelectRef]);
 
   const ariaDataAttributes = Object.entries(rest).reduce(
     (result, [key, value]) => {
