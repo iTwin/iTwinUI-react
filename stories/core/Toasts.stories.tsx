@@ -5,7 +5,8 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
 import { Button, toaster } from '../../src/core';
-import { ToastSettings } from '../../src/core/Toast/ToastMaster';
+import { ToastProps } from '../../src/core/Toast/Toast';
+import { CreeveyMeta } from 'creevey';
 
 export default {
   argTypes: {
@@ -72,11 +73,31 @@ export default {
   },
   parameters: {
     controls: { expanded: true },
+    creevey: {
+      captureElement: null,
+      tests: {
+        async open() {
+          const button = await this.browser.findElement({
+            className: 'iui-button',
+          });
+
+          await button.click();
+          const opened = await this.takeScreenshot();
+
+          await (
+            await this.browser.findElement({
+              css: '.iui-button:last-child',
+            })
+          ).click();
+          await this.expect({ opened }).to.matchImages();
+        },
+      },
+    },
   },
   title: 'Core/Toasts',
-} as Meta<ToastSettings>;
+} as Meta<ToastProps> & CreeveyMeta;
 
-export const Positive: Story<ToastSettings> = ({
+export const Positive: Story<ToastProps> = ({
   content,
   duration,
   hasCloseButton,
@@ -115,7 +136,7 @@ Positive.argTypes = {
   },
 };
 
-export const Negative: Story<ToastSettings> = ({
+export const Negative: Story<ToastProps> = ({
   duration,
   hasCloseButton,
   content,
@@ -154,7 +175,7 @@ Negative.argTypes = {
   },
 };
 
-export const Informational: Story<ToastSettings> = ({
+export const Informational: Story<ToastProps> = ({
   duration,
   hasCloseButton,
   content,

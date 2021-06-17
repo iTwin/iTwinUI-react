@@ -48,11 +48,16 @@ const TableRow = <T extends Record<string, unknown>>(props: {
   });
 
   return (
-    <div {...rowGroupProps} key={rowProps.key} ref={rowRef}>
-      <div {...rowProps}>
+    <>
+      <div
+        {...rowProps}
+        className={cx({ 'iui-row-expanded': isExpanded }, rowProps.className)}
+        key={rowProps.key}
+        ref={rowRef}
+      >
         {row.cells.map((cell) => {
           const cellProps = cell.getCellProps({
-            className: cx('iui-tables-cell', cell.column.cellClassName),
+            className: cx('iui-cell', cell.column.cellClassName),
             style: getCellStyle(cell.column),
           });
           return (
@@ -63,9 +68,9 @@ const TableRow = <T extends Record<string, unknown>>(props: {
         })}
       </div>
       {isExpanded && (
-        <div className='iui-tables-subcomponent'>{subComponent?.(row)}</div>
+        <div className='iui-expanded-content'>{subComponent?.(row)}</div>
       )}
-    </div>
+    </>
   );
 };
 
@@ -80,5 +85,8 @@ export const TableRowMemoized = React.memo(
       nextProp.state.selectedRowIds?.[nextProp.row.id] &&
     prevProp.state.expanded?.[prevProp.row.id] ===
       nextProp.state.expanded?.[nextProp.row.id] &&
-    prevProp.subComponent === nextProp.subComponent,
+    prevProp.subComponent === nextProp.subComponent &&
+    prevProp.row.cells.every(
+      (cell, index) => nextProp.row.cells[index].column === cell.column,
+    ),
 ) as typeof TableRow;

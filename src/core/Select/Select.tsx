@@ -65,6 +65,10 @@ export type SelectProps<T> = {
    */
   disabled?: boolean;
   /**
+   * Modify size of select.
+   */
+  size?: 'small' | 'large';
+  /**
    * Set focus on select.
    * @default false
    */
@@ -155,6 +159,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
     onChange,
     placeholder,
     disabled = false,
+    size,
     setFocus = false,
     itemRenderer,
     selectedItemRenderer,
@@ -254,24 +259,29 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
   }, [options, value]);
 
   return (
-    <DropdownMenu
-      menuItems={menuItems}
-      placement='bottom-start'
-      className={menuClassName}
-      style={{ minWidth, maxHeight: `300px`, overflowY: 'auto', ...menuStyle }}
-      role='listbox'
-      onShow={onShowHandler}
-      onHide={onHideHandler}
-      visible={isOpen}
-      disabled={disabled}
-      {...popoverProps}
+    <div
+      className={cx('iui-select', { [`iui-${size}`]: !!size }, className)}
+      aria-expanded={isOpen}
+      aria-haspopup='listbox'
+      style={style}
+      {...rest}
     >
-      <div
-        className={cx('iui-select', className)}
-        aria-expanded={isOpen}
-        aria-haspopup='listbox'
-        style={style}
-        {...rest}
+      <DropdownMenu
+        menuItems={menuItems}
+        placement='bottom-start'
+        className={menuClassName}
+        style={{
+          minWidth,
+          maxHeight: `300px`,
+          overflowY: 'auto',
+          ...menuStyle,
+        }}
+        role='listbox'
+        onShow={onShowHandler}
+        onHide={onHideHandler}
+        visible={isOpen}
+        disabled={disabled}
+        {...popoverProps}
       >
         <div
           ref={selectRef}
@@ -298,8 +308,8 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
             </>
           )}
         </div>
-      </div>
-    </DropdownMenu>
+      </DropdownMenu>
+    </div>
   );
 };
 

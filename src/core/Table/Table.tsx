@@ -36,6 +36,7 @@ import { TableRowMemoized } from './TableRowMemoized';
 import { IconButton } from '../Buttons';
 import { SvgChevronDown, SvgChevronRight } from '@itwin/itwinui-icons-react';
 import { FilterToggle, TableFilterValue } from './filters';
+import { customFilterFunctions } from './filters/customFilterFunctions';
 
 /**
  * Table props.
@@ -182,16 +183,20 @@ export const Table = <
     provideDefaultExpander = false,
     onFilter,
     emptyFilteredTableContent,
+    filterTypes: filterFunctions,
     ...rest
   } = props;
 
   useTheme();
 
+  const [ownerDocument, setOwnerDocument] = React.useState<Document>();
+
   const defaultColumn = React.useMemo(
     () => ({
-      maxWidth: 0,
-      minWidth: 0,
-      width: 0,
+      // Remove dynamic width values set by react-table
+      maxWidth: undefined,
+      minWidth: undefined,
+      width: undefined,
     }),
     [],
   );
@@ -247,11 +252,9 @@ export const Table = <
         id: 'iui-table-checkbox-selector',
         disableResizing: true,
         disableGroupBy: true,
-        minWidth: 48,
-        width: 48,
         maxWidth: 48,
-        columnClassName: 'iui-tables-slot',
-        cellClassName: 'iui-tables-slot',
+        columnClassName: 'iui-slot',
+        cellClassName: 'iui-slot',
         Header: ({ getToggleAllRowsSelectedProps }: HeaderProps<T>) => (
           <Checkbox {...getToggleAllRowsSelectedProps()} />
         ),
@@ -323,6 +326,7 @@ export const Table = <
       defaultColumn,
       disableSortBy: !isSortable,
       stateReducer: tableStateReducer,
+      filterTypes: { ...customFilterFunctions, ...filterFunctions },
     },
     useFlexLayout,
     useFilters,
@@ -369,16 +373,17 @@ export const Table = <
 
   return (
     <div
+      ref={(element) => setOwnerDocument(element?.ownerDocument)}
       {...getTableProps({
-        className: cx('iui-tables-table', className),
+        className: cx('iui-table', className),
         style,
       })}
       {...ariaDataAttributes}
     >
-      <div className='iui-tables-rowgroup'>
+      <div className='iui-table-header'>
         {headerGroups.slice(1).map((headerGroup: HeaderGroup<T>) => {
           const headerGroupProps = headerGroup.getHeaderGroupProps({
-            className: 'iui-tables-row',
+            className: 'iui-row',
           });
           return (
             <div {...headerGroupProps} key={headerGroupProps.key}>
@@ -386,31 +391,35 @@ export const Table = <
                 const columnProps = column.getHeaderProps({
                   ...column.getSortByToggleProps(),
                   className: cx(
-                    'iui-tables-cell',
-                    'iui-tables-head',
-                    { 'iui-active-sort': column.isSorted },
+                    'iui-cell',
+                    { 'iui-actionable': column.canSort },
+                    { 'iui-sorted': column.isSorted },
                     column.columnClassName,
                   ),
-                  style: {
-                    ...getCellStyle(column),
-                    cursor: column.canSort ? 'pointer' : undefined,
-                  },
+                  style: { ...getCellStyle(column) },
                 });
                 return (
-                  <div {...columnProps} key={columnProps.key}>
+                  <div {...columnProps} key={columnProps.key} title={undefined}>
                     {column.render('Header')}
                     {!isLoading && data.length != 0 && (
-                      <FilterToggle column={column} />
+                      <FilterToggle
+                        column={column}
+                        ownerDocument={ownerDocument}
+                      />
                     )}
                     {!isLoading && data.length != 0 && column.canSort && (
-                      <div className='iui-sort'>
-                        <div className='iui-icon-wrapper'>
-                          {column.isSorted && column.isSortedDesc ? (
-                            <SvgSortUp className='iui-icon' aria-hidden />
-                          ) : (
-                            <SvgSortDown className='iui-icon' aria-hidden />
-                          )}
-                        </div>
+                      <div className='iui-cell-end-icon'>
+                        {column.isSorted && column.isSortedDesc ? (
+                          <SvgSortUp
+                            className='iui-icon iui-sort'
+                            aria-hidden
+                          />
+                        ) : (
+                          <SvgSortDown
+                            className='iui-icon iui-sort'
+                            aria-hidden
+                          />
+                        )}
                       </div>
                     )}
                   </div>
@@ -420,12 +429,12 @@ export const Table = <
           );
         })}
       </div>
-      <div {...getTableBodyProps({ className: 'iui-tables-body' })}>
+      <div {...getTableBodyProps({ className: 'iui-table-body' })}>
         {data.length !== 0 &&
           rows.map((row: Row<T>) => {
             prepareRow(row);
             const rowProps = row.getRowProps({
-              className: cx('iui-tables-row', {
+              className: cx('iui-row', {
                 'iui-tables-row-active': row.isSelected,
                 'iui-tables-row-expanded': row.isExpanded,
               }),
@@ -453,16 +462,13 @@ export const Table = <
             );
           })}
         {isLoading && data.length === 0 && (
-          <div className={'iui-tables-message-container'}>
+          <div className={'iui-table-empty'}>
             <ProgressRadial indeterminate={true} />
           </div>
         )}
         {isLoading && data.length !== 0 && (
-          <div className='iui-tables-row'>
-            <div
-              className='iui-tables-cell'
-              style={{ justifyContent: 'center' }}
-            >
+          <div className='iui-row'>
+            <div className='iui-cell' style={{ justifyContent: 'center' }}>
               <ProgressRadial
                 indeterminate={true}
                 size='small'
@@ -472,16 +478,12 @@ export const Table = <
           </div>
         )}
         {!isLoading && data.length === 0 && !areFiltersSet && (
-          <div className={'iui-tables-message-container'}>
-            {emptyTableContent}
-          </div>
+          <div className={'iui-table-empty'}>{emptyTableContent}</div>
         )}
         {!isLoading &&
           (data.length === 0 || filteredFlatRows.length === 0) &&
           areFiltersSet && (
-            <div className={'iui-tables-message-container'}>
-              {emptyFilteredTableContent}
-            </div>
+            <div className={'iui-table-empty'}>{emptyFilteredTableContent}</div>
           )}
       </div>
     </div>

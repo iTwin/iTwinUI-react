@@ -19,6 +19,17 @@ it('renders determinate ProgressRadial', () => {
   expect(spinnerFill.style.strokeDashoffset).toBe('50.16');
 });
 
+it('should add className and style props correctly', () => {
+  const { container } = render(
+    <ProgressRadial className='custom-class' style={{ fill: 'hotpink' }} />,
+  );
+  const spinner = container.querySelector(
+    '.iui-progress-indicator-radial.custom-class',
+  ) as HTMLElement;
+  expect(spinner).toBeTruthy();
+  expect(spinner.style.fill).toEqual('hotpink');
+});
+
 it('renders indeterminate ProgressRadial', () => {
   const { container } = render(<ProgressRadial indeterminate={true} />);
 
@@ -95,4 +106,16 @@ it('renders determinate small  ProgressRadial', () => {
   expect(spinner).toBeTruthy();
   const spinnerFill = container.querySelector('.iui-fill') as SVGCircleElement;
   expect(spinnerFill.style.strokeDashoffset).toBe('44');
+});
+
+it('should render all sizes of ProgressRadial', () => {
+  const sizes = ['small', 'x-small', 'large'] as const;
+
+  sizes.forEach((size) => {
+    const { container } = render(<ProgressRadial size={size} />);
+    const spinner = container.querySelector(
+      `.iui-progress-indicator-radial.iui-determinate.iui-${size}`,
+    ) as HTMLElement;
+    expect(spinner).toBeTruthy();
+  });
 });
