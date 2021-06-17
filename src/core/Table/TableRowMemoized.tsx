@@ -45,7 +45,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
     <div {...rowProps} key={rowProps.key} ref={rowRef}>
       {row.cells.map((cell) => {
         const cellProps = cell.getCellProps({
-          className: cx('iui-tables-cell', cell.column.cellClassName),
+          className: cx('iui-cell', cell.column.cellClassName),
           style: getCellStyle(cell.column),
         });
         return (
@@ -66,5 +66,8 @@ export const TableRowMemoized = React.memo(
     prevProp.onBottomReached === nextProp.onBottomReached &&
     prevProp.row.original === nextProp.row.original &&
     prevProp.state.selectedRowIds?.[prevProp.row.id] ===
-      nextProp.state.selectedRowIds?.[nextProp.row.id],
+      nextProp.state.selectedRowIds?.[nextProp.row.id] &&
+    prevProp.row.cells.every(
+      (cell, index) => nextProp.row.cells[index].column === cell.column,
+    ),
 ) as typeof TableRow;

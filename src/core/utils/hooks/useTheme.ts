@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import '@itwin/itwinui-css/css/global.css';
+import { getDocument, getWindow } from '../common';
 
 export type ThemeOptions = {
   /**
@@ -26,14 +27,19 @@ export const useTheme = (
   theme?: ThemeType,
   themeOptions?: ThemeOptions,
 ): void => {
-  const ownerDocument = themeOptions?.ownerDocument ?? document;
+  const ownerDocument = themeOptions?.ownerDocument ?? getDocument();
+
   React.useLayoutEffect(() => {
-    if (!ownerDocument.body.classList.contains('iui-body')) {
-      ownerDocument.body.classList.add('iui-body');
+    if (!ownerDocument?.body.classList.contains('iui-body')) {
+      ownerDocument?.body.classList.add('iui-body');
     }
   }, [ownerDocument]);
 
   React.useLayoutEffect(() => {
+    if (!ownerDocument) {
+      return;
+    }
+
     switch (theme) {
       case 'light':
         addLightTheme(ownerDocument);
@@ -42,7 +48,7 @@ export const useTheme = (
         addDarkTheme(ownerDocument);
         break;
       case 'os':
-        if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
+        if (getWindow()?.matchMedia?.('(prefers-color-scheme: dark)').matches) {
           addDarkTheme(ownerDocument);
         } else {
           addLightTheme(ownerDocument);

@@ -1,5 +1,58 @@
 # Changelog
 
+## [1.8.0]
+
+`2021-06-15`
+
+### What's new
+
+- **Added `size` prop to `Input` and `Select` components.** Supports small and large sizes.
+- **Updated `Table` styles** through base CSS package.
+
+### Fixes
+
+- **Fixed `ProgressRadial` not using `className` prop correctly.**
+
+## [1.7.2]
+
+`2021-06-09`
+
+### Fixes
+
+- **Fixed `DropdownMenu` not closing when tabbing out.**
+  - Also fixed in derived components: `DropdownButton`, `SplitButton`, and `Select`.
+
+## [1.7.1]
+
+`2021-06-08`
+
+### Fixes
+
+- **Replaced all `document` and `window` with get functions to support SSR.**
+
+## [1.7.0]
+
+`2021-06-07`
+
+### What's new
+
+- **Added `TimePicker` component** for standalone use or within `DatePicker` (through `showTime` prop).
+- **Improved popup window support** by removing `document` references in `Popover` and adding `ownerDocument` prop to `Modal`.
+
+### Fixes
+
+- **Fixed `ownerDocument` in `useTheme` breaking SSR build.**
+- **Fixed when `Table` columns change doesn't cause rows to re-render.**
+- **Fixed `SidenavButton` styling issues** through base CSS package.
+
+## [1.6.1]
+
+`2021-06-03`
+
+### Fixes
+
+- **Fixed `ExpandableBlock` breaking some components when used together**, through base CSS package.
+
 ## [1.6.0]
 
 `2021-05-31`
@@ -288,6 +341,11 @@
 - **New ThemeProvider component added.** It allows to switch between light and dark themes.
 - **iTwinUI-React is generated to `CommonJS` and `ES` modules.** Usage of `ES` modules allows bundlers to tree-shake unused code resulting in smaller bundle sizes.
 
+[1.8.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.7.2...v1.8.0
+[1.7.2]: https://github.com/iTwin/iTwinUI-react/compare/v1.7.1...v1.7.2
+[1.7.1]: https://github.com/iTwin/iTwinUI-react/compare/v1.7.0...v1.7.1
+[1.7.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.6.1...v1.7.0
+[1.6.1]: https://github.com/iTwin/iTwinUI-react/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.4.1...v1.5.0
 [1.4.1]: https://github.com/iTwin/iTwinUI-react/compare/v1.4.0...v1.4.1
