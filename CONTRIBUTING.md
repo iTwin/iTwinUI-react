@@ -195,7 +195,7 @@ To enable us to quickly review and accept your pull requests, always create one 
   - All required files and exports added.
   - Proper inline documentation added.
   - Code follows style guide and has no linting errors (pre-commit hook will run linter).
-- Tests added for all new code. 
+- Tests added for all new code.
   - All existing and new tests should pass.
 - Stories added to demonstrate new features.
 - Updated changelog.
