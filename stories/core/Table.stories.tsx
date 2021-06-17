@@ -505,7 +505,7 @@ export const Expandable: Story<TableProps> = (args) => {
                 )}
               </IconButton>
             ),
-            cellClassName: 'iui-tables-slot',
+            cellClassName: 'iui-slot',
             width: 60,
           },
           {
@@ -579,6 +579,7 @@ Expandable.args = {
     { name: 'Name2', description: 'Description2' },
     { name: 'Name3', description: 'Description3' },
   ],
+  isSelectable: true,
 };
 
 export const LazyLoading: Story<TableProps> = (args) => {

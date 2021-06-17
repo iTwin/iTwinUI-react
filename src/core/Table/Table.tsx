@@ -435,21 +435,14 @@ export const Table = <
             prepareRow(row);
             const rowProps = row.getRowProps({
               className: cx('iui-row', {
-                'iui-tables-row-active': row.isSelected,
-                'iui-tables-row-expanded': row.isExpanded,
+                'iui-selected': row.isSelected,
+                'iui-row-expanded': row.isExpanded,
               }),
             });
-            const rowGroupProps = {
-              className: cx('iui-tables-rowgroup', {
-                'iui-tables-rowgroup-active': row.isSelected,
-                'iui-tables-rowgroup-expanded': row.isExpanded,
-              }),
-            };
             return (
               <TableRowMemoized
                 row={row}
                 rowProps={rowProps}
-                rowGroupProps={rowGroupProps}
                 isLast={row.index === data.length - 1}
                 onRowInViewport={onRowInViewportRef}
                 onBottomReached={onBottomReachedRef}
