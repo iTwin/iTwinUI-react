@@ -32,4 +32,4 @@ Link to a minimal repro: <!-- fork this sandbox: https://codesandbox.io/s/itwinu
 <!-- A clear and concise description of what you expected to happen. -->
 
 #### Additional information
-<!-- Add anything else you want to mention (additional context, possible solution, etc.) -->
+<!-- Add anything else you want to mention (additional context, possible solution, etc) -->
