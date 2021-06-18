@@ -100,7 +100,10 @@ export type TableProps<
   /**
    * Handler for row expand events. Will trigger when expanding and condensing rows.
    */
-  onExpand?: (state: TableState<T>) => void;
+  onExpand?: (
+    selectedData: T[] | undefined,
+    tableState?: TableState<T>,
+  ) => void;
   /**
    * Flag whether to provide default expander column
    */
@@ -311,6 +314,24 @@ export const Table = <
     onSelect?.(selectedData, newState);
   };
 
+  const onExpandHandler = (
+    newState: TableState<T>,
+    instance?: TableInstance<T>,
+  ) => {
+    if (!instance?.rows.length) {
+      onExpand?.([], newState);
+      return;
+    }
+
+    const expandedData: T[] = [];
+    instance.rows.forEach((row) => {
+      if (newState.expanded[row.id]) {
+        expandedData.push(row.original);
+      }
+    });
+    onExpand?.(expandedData, newState);
+  };
+
   const tableStateReducer = (
     newState: TableState<T>,
     action: ActionType,
@@ -326,7 +347,7 @@ export const Table = <
         break;
       case TableActions.toggleRowExpanded:
       case TableActions.toggleAllRowsExpanded:
-        onExpand?.(newState);
+        onExpandHandler(newState, instance);
         break;
       case TableActions.toggleRowSelected:
       case TableActions.toggleAllRowsSelected:

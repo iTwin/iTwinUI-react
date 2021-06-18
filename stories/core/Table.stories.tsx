@@ -480,7 +480,12 @@ export const ExpandableSubcomponent: Story<TableProps> = (args) => {
     props: CellProps<{ name: string; description: string }>,
   ) => action(props.row.original.name)();
   const onExpand = useCallback(
-    (state) => action(`Expanded. Table state: ${JSON.stringify(state)}`)(),
+    (rows, state) =>
+      action(
+        `Expanded rows: ${JSON.stringify(rows)}. Table state: ${JSON.stringify(
+          state,
+        )}`,
+      )(),
     [],
   );
 
@@ -615,7 +620,12 @@ export const ExpandableSubrows: Story<TableProps> = (args) => {
     props: CellProps<{ name: string; description: string }>,
   ) => action(props.row.original.name)();
   const onExpand = useCallback(
-    (state) => action(`Expanded. Table state: ${JSON.stringify(state)}`)(),
+    (rows, state) =>
+      action(
+        `Expanded rows: ${JSON.stringify(rows)}. Table state: ${JSON.stringify(
+          state,
+        )}`,
+      )(),
     [],
   );
 
