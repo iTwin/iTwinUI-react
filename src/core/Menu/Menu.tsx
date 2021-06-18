@@ -4,9 +4,11 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { CommonProps } from '../utils/props';
+import { StylingProps } from '../utils/props';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/menu.css';
+import { MenuItemProps } from './MenuItem';
+import { DropdownMenu } from '../DropdownMenu';
 
 export type MenuProps = {
   /**
@@ -18,7 +20,7 @@ export type MenuProps = {
    * Menu items. Recommended to use `MenuItem` components.
    */
   children: React.ReactNode;
-} & Omit<CommonProps, 'title'>;
+} & StylingProps;
 
 /**
  * Basic menu component. Can be used for select or dropdown components.
@@ -91,7 +93,34 @@ export const Menu = (props: MenuProps) => {
       ref={menuRef}
       {...rest}
     >
-      {children}
+      {React.Children.map(children, (item) => {
+        if (React.isValidElement(item)) {
+          const subItems = (item.props as MenuItemProps)?.subMenuItems ?? [];
+          if (subItems.length === 0) {
+            return item;
+          } else {
+            return (
+              <DropdownMenu
+                placement='right-start'
+                trigger='mouseenter focus'
+                menuItems={(close) =>
+                  subItems.map((item) =>
+                    React.cloneElement(item, {
+                      onClick: (args: unknown) => {
+                        close();
+                        item.props.onClick?.(args);
+                      },
+                    }),
+                  )
+                }
+              >
+                {item}
+              </DropdownMenu>
+            );
+          }
+        }
+        return item;
+      })}
     </ul>
   );
 };

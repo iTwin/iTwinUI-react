@@ -7,6 +7,7 @@ import cx from 'classnames';
 import { CommonProps } from '../utils/props';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/menu.css';
+import SvgCaretRightSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretRightSmall';
 
 export type MenuItemProps = {
   /**
@@ -41,6 +42,10 @@ export type MenuItemProps = {
    */
   role?: string;
   /**
+   * Items to be shown in the submenu when hovered over the item.
+   */
+  subMenuItems?: JSX.Element[];
+  /**
    * Content of the menu item.
    */
   children?: React.ReactNode;
@@ -62,6 +67,7 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
       className,
       style,
       role = 'menuitem',
+      subMenuItems = [],
       ...rest
     } = props;
 
@@ -103,6 +109,9 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
             className: cx(icon.props.className, 'iui-icon'),
           })}
         <span className='iui-content'>{children}</span>
+        {!badge && subMenuItems.length > 0 && (
+          <SvgCaretRightSmall className='iui-icon' />
+        )}
         {badge &&
           React.cloneElement(badge, {
             className: cx(badge.props.className, 'iui-icon'),

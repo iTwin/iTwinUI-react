@@ -127,3 +127,42 @@ export const WithBadges: Story<DropdownMenuProps> = (args) => {
     </div>
   );
 };
+
+export const Submenu: Story<DropdownMenuProps> = (args) => {
+  const { menuItems, ...rest } = args;
+  const onClick = (index: number, close: () => void) => () => {
+    action(`Item #${index} clicked!`)();
+    close();
+  };
+  const dropdownMenuItems = (close: () => void) => [
+    <MenuItem key={1} onClick={onClick(1, close)}>
+      Item #1
+    </MenuItem>,
+    <MenuItem key={2} onClick={onClick(2, close)}>
+      Item #2
+    </MenuItem>,
+    <MenuItem
+      key={3}
+      onClick={onClick(3, close)}
+      subMenuItems={[
+        <MenuItem key={4} onClick={onClick(4, close)}>
+          Item #4
+        </MenuItem>,
+        <MenuItem key={5} onClick={onClick(5, close)}>
+          Item #5
+        </MenuItem>,
+      ]}
+    >
+      Item #3
+    </MenuItem>,
+  ];
+  return (
+    <div style={{ minHeight: 150 }}>
+      <DropdownMenu menuItems={menuItems || dropdownMenuItems} {...rest}>
+        <IconButton>
+          <SvgMore />
+        </IconButton>
+      </DropdownMenu>
+    </div>
+  );
+};
