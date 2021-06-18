@@ -18,7 +18,7 @@ The goal of this project is to provide React components for using the styles and
 
 ---
 
-## Install
+## Installation
 
 ```
 npm install @itwin/itwinui-react
