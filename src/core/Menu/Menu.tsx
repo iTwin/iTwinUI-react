@@ -8,9 +8,14 @@ import { StylingProps } from '../utils/props';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/menu.css';
 import { MenuItemProps } from './MenuItem';
-import { DropdownMenu } from '../DropdownMenu';
+import Popover from '../utils/Popover';
 
 export type MenuProps = {
+  /**
+   * Control whether the first menu item is automatically focused when menu opens.
+   * @default true;
+   */
+  bringFocusInside?: boolean;
   /**
    * ARIA role. For menu use 'menu', for select use 'listbox'.
    * @default 'menu'
@@ -26,7 +31,14 @@ export type MenuProps = {
  * Basic menu component. Can be used for select or dropdown components.
  */
 export const Menu = (props: MenuProps) => {
-  const { children, role = 'menu', className, style, ...rest } = props;
+  const {
+    bringFocusInside = true,
+    children,
+    role = 'menu',
+    className,
+    style,
+    ...rest
+  } = props;
 
   useTheme();
 
@@ -40,15 +52,17 @@ export const Menu = (props: MenuProps) => {
       return;
     }
 
-    const childrenArray = React.Children.toArray(children);
-    const selectedIndex = childrenArray.findIndex(
-      (child: JSX.Element) => child.props.isSelected,
-    );
-    const firstEnabledIndex = childrenArray.findIndex(
-      (child: JSX.Element) => !child.props.disabled,
-    );
-    setFocusedIndex(selectedIndex > -1 ? selectedIndex : firstEnabledIndex);
-  }, [children, focusedIndex]);
+    if (bringFocusInside) {
+      const childrenArray = React.Children.toArray(children);
+      const selectedIndex = childrenArray.findIndex(
+        (child: JSX.Element) => child.props.isSelected,
+      );
+      const firstEnabledIndex = childrenArray.findIndex(
+        (child: JSX.Element) => !child.props.disabled,
+      );
+      setFocusedIndex(selectedIndex > -1 ? selectedIndex : firstEnabledIndex);
+    }
+  }, [children, focusedIndex, bringFocusInside]);
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLUListElement>) => {
     const items = menuRef.current?.children;
@@ -68,6 +82,7 @@ export const Menu = (props: MenuProps) => {
         }
         !isItemDisabled(newIndex) && setFocusedIndex(newIndex);
         event.preventDefault();
+        event.stopPropagation();
         break;
       }
       case 'ArrowUp': {
@@ -77,6 +92,7 @@ export const Menu = (props: MenuProps) => {
         }
         !isItemDisabled(newIndex) && setFocusedIndex(newIndex);
         event.preventDefault();
+        event.stopPropagation();
         break;
       }
       default:
@@ -100,22 +116,23 @@ export const Menu = (props: MenuProps) => {
             return item;
           } else {
             return (
-              <DropdownMenu
+              <Popover
                 placement='right-start'
-                trigger='mouseenter focus'
-                menuItems={(close) =>
-                  subItems.map((item) =>
-                    React.cloneElement(item, {
-                      onClick: (args: unknown) => {
-                        close();
-                        item.props.onClick?.(args);
-                      },
-                    }),
-                  )
+                content={
+                  <Menu bringFocusInside={false}>
+                    {subItems.map((item) =>
+                      React.cloneElement(item, {
+                        onClick: (args: unknown) => {
+                          close();
+                          item.props.onClick?.(args);
+                        },
+                      }),
+                    )}
+                  </Menu>
                 }
               >
                 {item}
-              </DropdownMenu>
+              </Popover>
             );
           }
         }
