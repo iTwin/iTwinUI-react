@@ -17,6 +17,7 @@ import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
 import { action } from '@storybook/addon-actions';
 import { SvgChevronDown, SvgChevronRight } from '@itwin/itwinui-icons-react';
+import { CreeveyStoryParams } from 'creevey';
 
 export default {
   title: 'Core/Table',
@@ -582,6 +583,28 @@ ExpandableSubcomponent.args = {
   isSelectable: true,
 };
 
+ExpandableSubcomponent.parameters = {
+  creevey: {
+    tests: {
+      async open() {
+        const closed = await this.takeScreenshot();
+        const table = await this.browser.findElement({
+          css: '.iui-table',
+        });
+
+        const expanderButtons = await table.findElements({
+          css: '.iui-button',
+        });
+        await expanderButtons[0].click();
+        await expanderButtons[2].click();
+
+        const expanded = await this.takeScreenshot();
+        await this.expect({ closed, expanded }).to.matchImages();
+      },
+    },
+  } as CreeveyStoryParams,
+};
+
 export const ExpandableSubrows: Story<TableProps> = (args) => {
   type TableDataType = {
     name: string;
@@ -726,6 +749,30 @@ ExpandableSubrows.args = {
     },
     { name: 'Row 3', description: 'Description 3', subRows: [] },
   ],
+};
+ExpandableSubrows.parameters = {
+  creevey: {
+    tests: {
+      async open() {
+        const closed = await this.takeScreenshot();
+        const table = await this.browser.findElement({
+          css: '.iui-table',
+        });
+
+        let expanderButtons = await table.findElements({
+          css: '.iui-button',
+        });
+        await expanderButtons[0].click();
+        expanderButtons = await table.findElements({
+          css: '.iui-button',
+        });
+        await expanderButtons[1].click();
+
+        const expanded = await this.takeScreenshot();
+        await this.expect({ closed, expanded }).to.matchImages();
+      },
+    },
+  } as CreeveyStoryParams,
 };
 
 export const LazyLoading: Story<TableProps> = (args) => {
