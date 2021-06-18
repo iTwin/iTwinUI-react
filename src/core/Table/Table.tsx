@@ -33,7 +33,8 @@ import SvgSortUp from '@itwin/itwinui-icons-react/cjs/icons/SortUp';
 import { getCellStyle } from './utils';
 import { TableRowMemoized } from './TableRowMemoized';
 import { IconButton } from '../Buttons';
-import { SvgChevronDown, SvgChevronRight } from '@itwin/itwinui-icons-react';
+import SvgChevronDown from '@itwin/itwinui-icons-react/cjs/icons/ChevronDown';
+import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import { FilterToggle, TableFilterValue } from './filters';
 import { customFilterFunctions } from './filters/customFilterFunctions';
 
@@ -324,6 +325,7 @@ export const Table = <
         onFilterHandler(newState, action, previousState, instance);
         break;
       case TableActions.toggleRowExpanded:
+      case TableActions.toggleAllRowsExpanded:
         onExpand?.(newState);
         break;
       case TableActions.toggleRowSelected:

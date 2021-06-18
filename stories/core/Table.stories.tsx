@@ -566,9 +566,7 @@ export const ExpandableSubcomponent: Story<TableProps> = (args) => {
       data={data || tableData}
       emptyTableContent='No data.'
       subComponent={expandedSubComponent}
-      onExpand={(newState) => {
-        onExpand(newState);
-      }}
+      onExpand={onExpand}
       {...rest}
     />
   );
@@ -694,9 +692,7 @@ export const ExpandableSubrows: Story<TableProps> = (args) => {
       columns={tableColumnsWithHeaders}
       data={data}
       emptyTableContent='No data.'
-      onExpand={(newState) => {
-        onExpand(newState);
-      }}
+      onExpand={onExpand}
     />
   );
 };
