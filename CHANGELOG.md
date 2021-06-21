@@ -1,11 +1,12 @@
 # Changelog
 
-## [1.X.X]
+## Unreleased
 
-`2021-06-X`
+`2021-06-XX`
 
 ### What's new
 
+- **Added `acceptType` prop to `FileUploadTemplate`.**
 - **Added expanding functionality for `Table`.** Provide `subComponent` prop or insert `subRows` field in `data` prop.
 
 ## [1.8.1]
