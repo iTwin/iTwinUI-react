@@ -84,6 +84,8 @@ export const Toast = (props: ToastProps) => {
 
   useTheme();
 
+  const StatusIcon = StatusIconMap[category];
+
   const closeTimeout = React.useRef(0);
 
   const [visible, setVisible] = React.useState(isVisible);
@@ -150,7 +152,7 @@ export const Toast = (props: ToastProps) => {
           <div ref={onRef}>
             <div className={`iui-toast iui-${category}`}>
               <div className='iui-status-area'>
-                {StatusIconMap[category]({ className: 'iui-icon' })}
+                {<StatusIcon className='iui-icon' />}
               </div>
               <div className='iui-message'>{content}</div>
               {link && (

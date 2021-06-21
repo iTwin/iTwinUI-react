@@ -64,6 +64,8 @@ export const Alert = (props: AlertProps) => {
 
   useTheme();
 
+  const StatusIcon = StatusIconMap[type];
+
   return (
     <div
       className={cx(
@@ -75,7 +77,7 @@ export const Alert = (props: AlertProps) => {
       style={style}
       {...rest}
     >
-      {StatusIconMap[type]({ className: 'iui-icon' })}
+      {<StatusIcon className='iui-icon' />}
       <span className='iui-message'>
         {children}
         {clickableText && (
