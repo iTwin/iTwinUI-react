@@ -101,7 +101,7 @@ export type TableProps<
    * Handler for row expand events. Will trigger when expanding and condensing rows.
    */
   onExpand?: (
-    selectedData: T[] | undefined,
+    expandedData: T[] | undefined,
     tableState?: TableState<T>,
   ) => void;
   /**
