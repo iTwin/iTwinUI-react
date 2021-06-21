@@ -7,8 +7,6 @@ import cx from 'classnames';
 import { StylingProps } from '../utils/props';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/menu.css';
-import { MenuItemProps } from './MenuItem';
-import Popover from '../utils/Popover';
 
 export type MenuProps = {
   /**
@@ -25,6 +23,10 @@ export type MenuProps = {
    * Menu items. Recommended to use `MenuItem` components.
    */
   children: React.ReactNode;
+  /**
+   * Native html attributes. Useful for handling events, etc.
+   */
+  nativeProps?: React.HTMLAttributes<HTMLUListElement>;
 } & StylingProps;
 
 /**
@@ -37,6 +39,7 @@ export const Menu = (props: MenuProps) => {
     role = 'menu',
     className,
     style,
+    nativeProps,
     ...rest
   } = props;
 
@@ -107,37 +110,10 @@ export const Menu = (props: MenuProps) => {
       role={role}
       onKeyDown={onKeyDown}
       ref={menuRef}
+      {...nativeProps}
       {...rest}
     >
-      {React.Children.map(children, (item) => {
-        if (React.isValidElement(item)) {
-          const subItems = (item.props as MenuItemProps)?.subMenuItems ?? [];
-          if (subItems.length === 0) {
-            return item;
-          } else {
-            return (
-              <Popover
-                placement='right-start'
-                content={
-                  <Menu bringFocusInside={false}>
-                    {subItems.map((item) =>
-                      React.cloneElement(item, {
-                        onClick: (args: unknown) => {
-                          close();
-                          item.props.onClick?.(args);
-                        },
-                      }),
-                    )}
-                  </Menu>
-                }
-              >
-                {item}
-              </Popover>
-            );
-          }
-        }
-        return item;
-      })}
+      {children}
     </ul>
   );
 };

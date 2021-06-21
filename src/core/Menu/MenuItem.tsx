@@ -8,6 +8,9 @@ import { CommonProps } from '../utils/props';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/menu.css';
 import SvgCaretRightSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretRightSmall';
+import { Popover } from '../utils/Popover';
+import { Menu } from './Menu';
+import { useMergedRefs } from '../utils/hooks/useMergedRefs';
 
 export type MenuItemProps = {
   /**
@@ -73,6 +76,11 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
 
     useTheme();
 
+    const menuItemRef = React.useRef<HTMLLIElement>(null);
+    const refs = useMergedRefs(menuItemRef, ref);
+
+    const [isSubMenuFocused, setIsSubMenuFocused] = React.useState(false);
+
     const onKeyDown = (event: React.KeyboardEvent<HTMLLIElement>) => {
       switch (event.key) {
         case 'Enter':
@@ -81,12 +89,18 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
           !disabled && onClick?.(value);
           event.preventDefault();
           break;
+        case 'ArrowRight':
+          if (subMenuItems.length > 0) {
+            setIsSubMenuFocused(true);
+            event.preventDefault();
+            event.stopPropagation();
+          }
         default:
           break;
       }
     };
 
-    return (
+    const listItem = (
       <li
         className={cx(
           {
@@ -96,7 +110,7 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
           className,
         )}
         onClick={() => !disabled && onClick?.(value)}
-        ref={ref}
+        ref={refs}
         style={style}
         role={role}
         tabIndex={disabled ? undefined : -1}
@@ -117,6 +131,39 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
             className: cx(badge.props.className, 'iui-icon'),
           })}
       </li>
+    );
+
+    return subMenuItems.length === 0 ? (
+      listItem
+    ) : (
+      <Popover
+        placement='right-start'
+        content={
+          <Menu
+            bringFocusInside={isSubMenuFocused}
+            nativeProps={{
+              onKeyDown: (event) => {
+                if (event.key === 'ArrowLeft') {
+                  menuItemRef.current?.focus();
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
+              },
+            }}
+          >
+            {subMenuItems.map((subItem) =>
+              React.cloneElement(subItem, {
+                onClick: (args: unknown) => {
+                  close();
+                  subItem.props.onClick?.(args);
+                },
+              }),
+            )}
+          </Menu>
+        }
+      >
+        {listItem}
+      </Popover>
     );
   },
 );
