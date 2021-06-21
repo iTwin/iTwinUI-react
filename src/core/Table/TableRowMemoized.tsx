@@ -9,7 +9,7 @@ import { useIntersection } from '../utils/hooks/useIntersection';
 import { getCellStyle } from './utils';
 
 /**
- * Memorization is needed to avoid unnecessary re-renders of all rows when additional data is added when lazy-loading.
+ * Memoization is needed to avoid unnecessary re-renders of all rows when additional data is added when lazy-loading.
  * Using `isLast` here instead of passing data length to avoid re-renders of all rows when more data is added. Now only the last row re-renders.
  * Although state is not used it is needed for `React.memo` to check state that changes row state e.g. selection.
  * When adding new features check whether it changes state that affects row. If it does then add equality check to `React.memo`.
@@ -22,6 +22,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
   onBottomReached: React.MutableRefObject<(() => void) | undefined>;
   intersectionMargin: number;
   state: TableState<T>; // Needed for explicitly checking selection changes
+  onClick?: (row: Row<T>) => void;
 }) => {
   const {
     row,
@@ -30,6 +31,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
     onRowInViewport,
     onBottomReached,
     intersectionMargin,
+    onClick,
   } = props;
 
   const onIntersect = React.useCallback(() => {
@@ -42,7 +44,14 @@ const TableRow = <T extends Record<string, unknown>>(props: {
   });
 
   return (
-    <div {...rowProps} key={rowProps.key} ref={rowRef}>
+    <div
+      {...rowProps}
+      key={rowProps.key}
+      ref={rowRef}
+      onClick={() => {
+        onClick?.(row);
+      }}
+    >
       {row.cells.map((cell) => {
         const cellProps = cell.getCellProps({
           className: cx('iui-cell', cell.column.cellClassName),

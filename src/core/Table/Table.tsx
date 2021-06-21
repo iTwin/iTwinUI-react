@@ -63,6 +63,10 @@ export type TableProps<
     tableState?: TableState<T>,
   ) => void;
   /**
+   * Handler for when a row is clicked.
+   */
+  onRowClick?: (row: Row<T>) => void;
+  /**
    * Flag whether table columns can be sortable.
    * @default false
    */
@@ -156,6 +160,7 @@ export const Table = <
     id,
     isSelectable = false,
     onSelect,
+    onRowClick,
     isSortable = false,
     onSort,
     stateReducer,
@@ -261,6 +266,13 @@ export const Table = <
     });
     onSelect?.(selectedData, newState);
   };
+
+  const onRowClickHandler = React.useCallback(
+    (row) => {
+      onRowClick?.(row);
+    },
+    [onRowClick],
+  );
 
   const tableStateReducer = (
     newState: TableState<T>,
@@ -407,6 +419,7 @@ export const Table = <
                 intersectionMargin={intersectionMargin}
                 state={state}
                 key={rowProps.key}
+                onClick={onRowClickHandler}
               />
             );
           })}
