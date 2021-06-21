@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { Meta, Story } from '@storybook/react';
+import { CreeveyMeta } from 'creevey';
 import React from 'react';
 import { getUserColor, UserIcon } from '../../src/core';
 import { UserIconProps } from '../../src/core/UserIcon/UserIcon';
@@ -22,7 +23,12 @@ export default {
     style: { control: { disable: true } },
     image: { control: { disable: true } },
   },
-} as Meta<UserIconProps>;
+  parameters: {
+    creevey: {
+      delay: 1000,
+    },
+  },
+} as Meta<UserIconProps> & CreeveyMeta;
 
 export const Small: Story<UserIconProps> = (args) => {
   return (
