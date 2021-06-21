@@ -3,16 +3,13 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import SvgCloseSmall from '@itwin/itwinui-icons-react/cjs/icons/CloseSmall';
-import SvgInfoCircular from '@itwin/itwinui-icons-react/cjs/icons/InfoCircular';
-import SvgStatusError from '@itwin/itwinui-icons-react/cjs/icons/StatusError';
-import SvgStatusSuccess from '@itwin/itwinui-icons-react/cjs/icons/StatusSuccess';
-import SvgStatusWarning from '@itwin/itwinui-icons-react/cjs/icons/StatusWarning';
 import cx from 'classnames';
 import React from 'react';
 import { CommonProps } from '../utils/props';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/alert.css';
 import { IconButton } from '../Buttons/IconButton';
+import { StatusIconMap } from '../utils/common';
 
 export type AlertProps = {
   /**
@@ -67,13 +64,6 @@ export const Alert = (props: AlertProps) => {
 
   useTheme();
 
-  const iconMap = {
-    negative: <SvgStatusError className='iui-icon' aria-hidden />,
-    informational: <SvgInfoCircular className='iui-icon' aria-hidden />,
-    positive: <SvgStatusSuccess className='iui-icon' aria-hidden />,
-    warning: <SvgStatusWarning className='iui-icon' aria-hidden />,
-  };
-
   return (
     <div
       className={cx(
@@ -85,7 +75,7 @@ export const Alert = (props: AlertProps) => {
       style={style}
       {...rest}
     >
-      {iconMap[type]}
+      {StatusIconMap[type]({ className: 'iui-icon' })}
       <span className='iui-message'>
         {children}
         {clickableText && (

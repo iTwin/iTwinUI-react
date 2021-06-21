@@ -14,6 +14,7 @@ it('renders the category classes & icons correctly', () => {
     'negative',
     'informational',
     'positive',
+    'warning',
   ];
   categories.forEach((category) => {
     const { container } = render(
