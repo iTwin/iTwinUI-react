@@ -484,7 +484,6 @@ export const Table = <
                 state={state}
                 key={rowProps.key}
                 subComponent={subComponent}
-                isExpanded={row.isExpanded}
               />
             );
           })}

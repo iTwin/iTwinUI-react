@@ -23,7 +23,6 @@ const TableRow = <T extends Record<string, unknown>>(props: {
   intersectionMargin: number;
   state: TableState<T>; // Needed for explicitly checking selection changes
   subComponent?: (row: Row<T>) => React.ReactNode;
-  isExpanded: boolean;
 }) => {
   const {
     row,
@@ -33,7 +32,6 @@ const TableRow = <T extends Record<string, unknown>>(props: {
     onBottomReached,
     intersectionMargin,
     subComponent,
-    isExpanded,
   } = props;
 
   const onIntersect = React.useCallback(() => {
@@ -60,7 +58,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
           );
         })}
       </div>
-      {isExpanded && subComponent && (
+      {row.isExpanded && subComponent && (
         <div className='iui-row iui-expanded-content'>{subComponent(row)}</div>
       )}
     </>
