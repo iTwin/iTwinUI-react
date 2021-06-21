@@ -21,7 +21,6 @@ import SvgInfo from '@itwin/itwinui-icons-react/cjs/icons/Info';
 import SvgStar from '@itwin/itwinui-icons-react/cjs/icons/Star';
 import SvgTag from '@itwin/itwinui-icons-react/cjs/icons/Tag';
 import { LargeWithImageAndStatusOnline } from './UserIcons.stories';
-import { CreeveyStoryParams } from 'creevey';
 
 export default {
   component: Tile,
@@ -90,11 +89,6 @@ Basic.argTypes = {
   rightIcon: { control: { disable: true } },
   badge: { control: { disable: true } },
 };
-Basic.parameters = {
-  creevey: {
-    ignoreElements: ['[style^="background-image"]'],
-  } as CreeveyStoryParams,
-};
 
 export const AllProps: Story<TileProps> = (props) => {
   const {
@@ -151,11 +145,6 @@ AllProps.args = {
     </Button>,
   ],
 };
-AllProps.parameters = {
-  creevey: {
-    ignoreElements: ['[style^="background-image"]'],
-  } as CreeveyStoryParams,
-};
 
 export const Condensed: Story<TileProps> = (props) => {
   const { name, thumbnail, moreOptions, ...rest } = props;
@@ -204,11 +193,6 @@ UserIcon.args = {
   description: 'User description',
   metadata: undefined,
   thumbnail: <LargeWithImageAndStatusOnline />,
-};
-UserIcon.parameters = {
-  creevey: {
-    ignoreElements: ['.iui-user-icon'],
-  } as CreeveyStoryParams,
 };
 
 export const Folder: Story<TileProps> = (props) => {
