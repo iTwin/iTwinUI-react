@@ -101,7 +101,7 @@ export type TableProps<
 } & Omit<CommonProps, 'title'>;
 
 /**
- * Table based on react-table
+ * Table based on [react-table](https://react-table.tanstack.com/docs/api/overview).
  * @example
  * const columns = React.useMemo(() => [
  *  {
