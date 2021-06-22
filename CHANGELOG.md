@@ -1,5 +1,13 @@
 # Changelog
 
+## Version
+
+`Date`
+
+### What's new
+
+- **Improved `Table` documentation.**
+
 ## [1.9.0]
 
 `2021-06-21`
