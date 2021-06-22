@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React, { useCallback } from 'react';
-import { CellProps, Column, TableState } from 'react-table';
+import { CellProps, Column, Row, TableState } from 'react-table';
 import {
   Code,
   Table,
@@ -297,7 +297,7 @@ export const SelectOnRowClick: Story<TableProps> = (args) => {
     [],
   );
 
-  const onRowClick = useCallback((row) => {
+  const onRowClick = useCallback((event: React.MouseEvent, row: Row) => {
     row.toggleRowSelected();
   }, []);
 
@@ -317,6 +317,7 @@ export const SelectOnRowClick: Story<TableProps> = (args) => {
     />
   );
 };
+SelectOnRowClick.args = { isSelectable: true };
 
 export const Sortable: Story<TableProps> = (args) => {
   const { columns, data, isSortable, ...rest } = args;

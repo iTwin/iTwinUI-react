@@ -22,7 +22,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
   onBottomReached: React.MutableRefObject<(() => void) | undefined>;
   intersectionMargin: number;
   state: TableState<T>; // Needed for explicitly checking selection changes
-  onClick?: (row: Row<T>) => void;
+  onClick?: (event: React.MouseEvent, row: Row<T>) => void;
 }) => {
   const {
     row,
@@ -48,8 +48,8 @@ const TableRow = <T extends Record<string, unknown>>(props: {
       {...rowProps}
       key={rowProps.key}
       ref={rowRef}
-      onClick={() => {
-        onClick?.(row);
+      onClick={(event) => {
+        onClick?.(event, row);
       }}
     >
       {row.cells.map((cell) => {
