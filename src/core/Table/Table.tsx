@@ -63,7 +63,7 @@ export type TableProps<
     tableState?: TableState<T>,
   ) => void;
   /**
-   * Handler for when a row is clicked.
+   * Handler for when a row is clicked. Must be memoized.
    */
   onRowClick?: (row: Row<T>) => void;
   /**

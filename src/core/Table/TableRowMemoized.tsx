@@ -73,6 +73,7 @@ export const TableRowMemoized = React.memo(
     prevProp.isLast === nextProp.isLast &&
     prevProp.onRowInViewport === nextProp.onRowInViewport &&
     prevProp.onBottomReached === nextProp.onBottomReached &&
+    prevProp.onClick === nextProp.onClick &&
     prevProp.row.original === nextProp.row.original &&
     prevProp.state.selectedRowIds?.[prevProp.row.id] ===
       nextProp.state.selectedRowIds?.[nextProp.row.id] &&
