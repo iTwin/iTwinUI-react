@@ -8,6 +8,7 @@ import {
   ActionType,
   CellProps,
   Column,
+  Row
   TableInstance,
   TableState,
 } from 'react-table';
@@ -16,6 +17,7 @@ import {
   Code,
   InputGroup,
   Table,
+  Leading,
   tableFilters,
   TableFilterValue,
   TableProps,
@@ -23,6 +25,7 @@ import {
 import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
 import { action } from '@storybook/addon-actions';
+import { CreeveyStoryParams } from 'creevey';
 
 export default {
   title: 'Core/Table',
@@ -509,6 +512,105 @@ Filters.args = {
     },
   ],
   emptyFilteredTableContent: 'No results found. Clear or try another filter.',
+};
+
+export const Expandable: Story<TableProps> = (args) => {
+  const { columns, data, ...rest } = args;
+
+  const onExpand = useCallback(
+    (rows, state) =>
+      action(
+        `Expanded rows: ${JSON.stringify(rows)}. Table state: ${JSON.stringify(
+          state,
+        )}`,
+      )(),
+    [],
+  );
+
+  const tableColumns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const tableData = useMemo(
+    () => [
+      { name: 'Name1', description: 'Description1' },
+      { name: 'Name2', description: 'Description2' },
+      { name: 'Name3', description: 'Description3' },
+    ],
+    [],
+  );
+
+  const expandedSubComponent = useCallback(
+    (row: Row) => (
+      <div style={{ padding: 16 }}>
+        <Leading>Extra information</Leading>
+        <pre>
+          <code>{JSON.stringify({ values: row.values }, null, 2)}</code>
+        </pre>
+      </div>
+    ),
+    [],
+  );
+
+  return (
+    <Table
+      columns={columns || tableColumns}
+      data={data || tableData}
+      emptyTableContent='No data.'
+      subComponent={expandedSubComponent}
+      onExpand={onExpand}
+      {...rest}
+    />
+  );
+};
+
+Expandable.args = {
+  data: [
+    { name: 'Name1', description: 'Description1' },
+    { name: 'Name2', description: 'Description2' },
+    { name: 'Name3', description: 'Description3' },
+  ],
+  isSelectable: true,
+};
+
+Expandable.parameters = {
+  creevey: {
+    tests: {
+      async open() {
+        const closed = await this.takeScreenshot();
+        const table = await this.browser.findElement({
+          css: '.iui-table',
+        });
+
+        const expanderButtons = await table.findElements({
+          css: '.iui-button',
+        });
+        await expanderButtons[0].click();
+        await expanderButtons[2].click();
+
+        const expanded = await this.takeScreenshot();
+        await this.expect({ closed, expanded }).to.matchImages();
+      },
+    },
+  } as CreeveyStoryParams,
 };
 
 export const LazyLoading: Story<TableProps> = (args) => {
