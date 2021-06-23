@@ -471,7 +471,7 @@ Filters.args = {
   emptyFilteredTableContent: 'No results found. Clear or try another filter.',
 };
 
-export const ExpandableSubcomponent: Story<TableProps> = (args) => {
+export const Expandable: Story<TableProps> = (args) => {
   const { columns, data, ...rest } = args;
 
   const onExpand = useCallback(
@@ -539,17 +539,16 @@ export const ExpandableSubcomponent: Story<TableProps> = (args) => {
   );
 };
 
-ExpandableSubcomponent.args = {
+Expandable.args = {
   data: [
     { name: 'Name1', description: 'Description1' },
     { name: 'Name2', description: 'Description2' },
     { name: 'Name3', description: 'Description3' },
   ],
   isSelectable: true,
-  provideDefaultExpander: true,
 };
 
-ExpandableSubcomponent.parameters = {
+Expandable.parameters = {
   creevey: {
     tests: {
       async open() {

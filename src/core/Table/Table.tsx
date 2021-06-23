@@ -94,20 +94,21 @@ export type TableProps<
   intersectionMargin?: number;
   /**
    * A function that will be used for rendering a component for each row if that row is expanded.
-   * Component will be placed right after the row. Can return false/null if no component should be placed for a particular row.
+   * Component will be placed right after the row. Can return false/null if row should not be expandable.
    */
   subComponent?: (row: Row<T>) => React.ReactNode;
   /**
-   * Handler for row expand events. Will trigger when expanding and condensing rows.
+   * A function used for overriding default expander cell. `subComponent` must be present.
+   * Make sure to trigger `row.toggleRowExpanded()`.
+   */
+  expanderCell?: (row: Row<T>) => React.ReactNode;
+  /**
+   * Handler for row expand events. Will trigger when expanding and collapsing rows.
    */
   onExpand?: (
     expandedData: T[] | undefined,
     tableState?: TableState<T>,
   ) => void;
-  /**
-   * Flag whether to provide default expander column
-   */
-  provideDefaultExpander?: boolean;
   /**
    * Callback function when filters change.
    * Use with `manualFilters` to handle filtering yourself e.g. filter in server-side.
@@ -184,10 +185,10 @@ export const Table = <
     intersectionMargin = 300,
     subComponent,
     onExpand,
-    provideDefaultExpander = false,
     onFilter,
     emptyFilteredTableContent,
     filterTypes: filterFunctions,
+    expanderCell,
     ...rest
   } = props;
 
@@ -214,7 +215,7 @@ export const Table = <
   }, [onBottomReached, onRowInViewport]);
 
   const useExpanderHook = (hooks: Hooks<T>) => {
-    if (!(subComponent && provideDefaultExpander)) {
+    if (!subComponent) {
       return;
     }
     hooks.allColumns.push((columns: ColumnInstance<T>[]) => [
@@ -225,19 +226,27 @@ export const Table = <
         minWidth: 48,
         width: 48,
         maxWidth: 48,
+        columnClassName: 'iui-slot',
         cellClassName: 'iui-slot',
-        Cell: ({ row }: CellProps<T>) =>
-          subComponent(row) ? (
-            <IconButton
-              styleType='borderless'
-              size='small'
-              onClick={() => {
-                row.toggleRowExpanded();
-              }}
-            >
-              {row.isExpanded ? <SvgChevronDown /> : <SvgChevronRight />}
-            </IconButton>
-          ) : null,
+        Cell: ({ row }: CellProps<T>) => {
+          if (!subComponent(row)) {
+            return null;
+          } else if (expanderCell) {
+            return expanderCell(row);
+          } else {
+            return (
+              <IconButton
+                styleType='borderless'
+                size='small'
+                onClick={() => {
+                  row.toggleRowExpanded();
+                }}
+              >
+                {row.isExpanded ? <SvgChevronDown /> : <SvgChevronRight />}
+              </IconButton>
+            );
+          }
+        },
       },
       ...columns,
     ]);
@@ -378,8 +387,8 @@ export const Table = <
     useSortBy,
     useExpanded,
     useRowSelect,
-    useSelectionHook,
     useExpanderHook,
+    useSelectionHook,
   );
 
   const {
