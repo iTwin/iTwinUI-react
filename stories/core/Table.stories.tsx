@@ -978,7 +978,6 @@ export const ControlledState: Story<TableProps> = (args) => {
         emptyTableContent='No data.'
         useControlledState={controlledState}
         stateReducer={tableStateReducer}
-        initialState={{ selectedRowIds: { '1': true } }}
         isSelectable
         {...rest}
       />
