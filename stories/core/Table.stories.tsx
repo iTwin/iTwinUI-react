@@ -8,6 +8,7 @@ import {
   ActionType,
   CellProps,
   Column,
+  TableInstance,
   TableState,
 } from 'react-table';
 import {
@@ -765,14 +766,6 @@ export const ControlledState: Story<TableProps> = (args) => {
 
   const [selectedRows, setSelectedRows] = useState<Record<string, boolean>>({});
 
-  const onSelect = useCallback((rows, state) => {
-    action(
-      `Selected rows: ${JSON.stringify(rows)}, Table state: ${JSON.stringify(
-        state,
-      )}`,
-    )();
-  }, []);
-
   const tableColumns = useMemo(
     () => [
       {
@@ -818,6 +811,8 @@ export const ControlledState: Story<TableProps> = (args) => {
   const tableStateReducer = (
     newState: TableState,
     action: ActionType,
+    previousState: TableState,
+    instance?: TableInstance,
   ): TableState => {
     switch (action.type) {
       case actions.toggleRowSelected: {
@@ -828,6 +823,20 @@ export const ControlledState: Story<TableProps> = (args) => {
           newSelectedRows[action.id] = true;
         } else {
           delete newSelectedRows[action.id];
+        }
+        setSelectedRows(newSelectedRows);
+        newState.selectedRowIds = newSelectedRows;
+        break;
+      }
+      case actions.toggleAllRowsSelected: {
+        if (!instance?.rowsById) {
+          break;
+        }
+        const newSelectedRows = {} as Record<string, boolean>;
+        if (action.value) {
+          Object.keys(instance.rowsById).forEach(
+            (id) => (newSelectedRows[id] = true),
+          );
         }
         setSelectedRows(newSelectedRows);
         newState.selectedRowIds = newSelectedRows;
@@ -865,9 +874,10 @@ export const ControlledState: Story<TableProps> = (args) => {
         columns={columns || tableColumns}
         data={data || tableData}
         emptyTableContent='No data.'
-        onSelect={onSelect}
         useControlledState={controlledState}
         stateReducer={tableStateReducer}
+        initialState={{ selectedRowIds: { '1': true } }}
+        isSelectable
         {...rest}
       />
     </>
