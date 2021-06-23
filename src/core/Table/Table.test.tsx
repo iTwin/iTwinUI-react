@@ -8,6 +8,7 @@ import { Table, TableProps } from './Table';
 import * as IntersectionHooks from '../utils/hooks/useIntersection';
 import { tableFilters } from './filters';
 import { CellProps } from 'react-table';
+import { SvgChevronDown, SvgChevronRight } from '@itwin/itwinui-icons-react';
 
 const intersectionCallbacks = new Map<Element, () => void>();
 jest
@@ -754,64 +755,36 @@ it('should rerender table when columns change', () => {
 
 it('should expand correctly', () => {
   const onExpandMock = jest.fn();
-  const mockedColumns = [
-    {
-      Header: 'Header name',
-      columns: [
-        {
-          id: 'name',
-          Header: 'Name',
-          accessor: 'name',
-        },
-      ],
-    },
-  ];
-  const { container, getByText, queryByText } = renderComponent({
-    columns: mockedColumns,
+  const { container, getByText } = renderComponent({
     subComponent: (row) => (
       <div>{`Expanded component, name: ${row.original.name}`}</div>
     ),
     onExpand: onExpandMock,
   });
+  const {
+    container: { firstChild: expandedIconHtml },
+  } = render(<SvgChevronDown className='iui-icon' aria-hidden />);
+  const {
+    container: { firstChild: collapsedIconHtml },
+  } = render(<SvgChevronRight className='iui-icon' aria-hidden />);
 
-  expect(queryByText('Expanded component, name: Name1')).toBeNull();
-  expect(queryByText('Expanded component, name: Name3')).toBeNull();
+  expect(
+    container.querySelectorAll('.iui-button.iui-borderless > .iui-icon')[0],
+  ).toEqual(collapsedIconHtml);
 
   act(() => {
     fireEvent.click(container.querySelectorAll('.iui-button')[0]);
-    fireEvent.click(container.querySelectorAll('.iui-button')[1]);
   });
 
   getByText('Expanded component, name: Name1');
-  getByText('Expanded component, name: Name2');
-
-  act(() => {
-    fireEvent.click(container.querySelectorAll('.iui-button')[0]);
-    fireEvent.click(container.querySelectorAll('.iui-button')[2]);
-  });
-
-  expect(queryByText('Expanded component, name: Name1')).toBeNull();
-  getByText('Expanded component, name: Name2');
-  getByText('Expanded component, name: Name3');
-  expect(onExpandMock).toHaveBeenCalledTimes(4);
+  expect(
+    container.querySelectorAll('.iui-button.iui-borderless > .iui-icon')[0],
+  ).toEqual(expandedIconHtml);
 });
 
 it('should expand correctly with a custom expander cell', () => {
   const onExpandMock = jest.fn();
-  const mockedColumns = [
-    {
-      Header: 'Header name',
-      columns: [
-        {
-          id: 'name',
-          Header: 'Name',
-          accessor: 'name',
-        },
-      ],
-    },
-  ];
   const { getByText, queryByText } = renderComponent({
-    columns: mockedColumns,
     subComponent: (row) => (
       <div>{`Expanded component, name: ${row.original.name}`}</div>
     ),
