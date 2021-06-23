@@ -237,21 +237,25 @@ export const Table = <
           const { row } = props;
           if (!subComponent(row)) {
             return null;
-          } else if (expanderCell) {
-            return expanderCell(props);
-          } else {
-            return (
-              <IconButton
-                styleType='borderless'
-                size='small'
-                onClick={() => {
-                  row.toggleRowExpanded();
-                }}
-              >
-                {row.isExpanded ? <SvgChevronDown /> : <SvgChevronRight />}
-              </IconButton>
-            );
           }
+
+          return (
+            <span onClick={(e) => e.stopPropagation()}>
+              {expanderCell ? (
+                expanderCell(props)
+              ) : (
+                <IconButton
+                  styleType='borderless'
+                  size='small'
+                  onClick={() => {
+                    row.toggleRowExpanded();
+                  }}
+                >
+                  {row.isExpanded ? <SvgChevronDown /> : <SvgChevronRight />}
+                </IconButton>
+              )}
+            </span>
+          );
         },
       },
       ...columns,
