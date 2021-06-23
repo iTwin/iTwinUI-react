@@ -435,7 +435,7 @@ export const Table = <
         if (!row.isSelected && !event.ctrlKey) {
           instance.toggleAllRowsSelected(false);
         }
-        row.toggleRowSelected();
+        row.toggleRowSelected(!row.isSelected);
       }
       onRowClick?.(event, row);
     },
