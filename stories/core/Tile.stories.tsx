@@ -21,7 +21,6 @@ import SvgInfo from '@itwin/itwinui-icons-react/cjs/icons/Info';
 import SvgStar from '@itwin/itwinui-icons-react/cjs/icons/Star';
 import SvgTag from '@itwin/itwinui-icons-react/cjs/icons/Tag';
 import { LargeWithImageAndStatusOnline } from './UserIcons.stories';
-import { CreeveyMeta } from 'creevey';
 
 export default {
   component: Tile,
@@ -30,12 +29,7 @@ export default {
     style: { control: { disable: true } },
   },
   title: 'Core/Tile',
-  parameters: {
-    creevey: {
-      delay: 1000,
-    },
-  },
-} as Meta<TileProps> & CreeveyMeta;
+} as Meta<TileProps>;
 
 export const Basic: Story<TileProps> = (props) => {
   const {
