@@ -175,9 +175,6 @@ export const Basic: Story<TableProps> = (args) => {
 
 export const Selectable: Story<TableProps> = (args) => {
   const { columns, data, ...rest } = args;
-  const onClickHandler = (
-    props: CellProps<{ name: string; description: string }>,
-  ) => action(props.row.original.name)();
 
   const onSelect = useCallback(
     (rows, state) =>
@@ -210,11 +207,23 @@ export const Selectable: Story<TableProps> = (args) => {
             Header: 'Click',
             width: 100,
             Cell: (props: CellProps<{ name: string; description: string }>) => {
-              const onClick = () => onClickHandler(props);
               return (
-                <a className='iui-anchor' onClick={onClick}>
-                  Click me!
-                </a>
+                <span
+                  style={{
+                    display: 'flex',
+                    width: '100%',
+                    height: '100%',
+                    alignItems: 'center',
+                  }}
+                  onClick={(e) => e.stopPropagation()} // prevent row selection when this cell is clicked
+                >
+                  <a
+                    className='iui-anchor'
+                    onClick={() => action(props.row.original.name)()}
+                  >
+                    Click me!
+                  </a>
+                </span>
               );
             },
           },
