@@ -759,19 +759,49 @@ it('should expand correctly', () => {
       Header: 'Header name',
       columns: [
         {
-          id: 'expander',
-          Cell: (props: CellProps<{ name: string; description: string }>) => {
-            return (
-              <button
-                onClick={() => {
-                  props.row.toggleRowExpanded();
-                }}
-              >
-                Expand {props.row.original.name}
-              </button>
-            );
-          },
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
         },
+      ],
+    },
+  ];
+  const { container, getByText, queryByText } = renderComponent({
+    columns: mockedColumns,
+    subComponent: (row) => (
+      <div>{`Expanded component, name: ${row.original.name}`}</div>
+    ),
+    onExpand: onExpandMock,
+  });
+
+  expect(queryByText('Expanded component, name: Name1')).toBeNull();
+  expect(queryByText('Expanded component, name: Name3')).toBeNull();
+
+  act(() => {
+    fireEvent.click(container.querySelectorAll('.iui-button')[0]);
+    fireEvent.click(container.querySelectorAll('.iui-button')[1]);
+  });
+
+  getByText('Expanded component, name: Name1');
+  getByText('Expanded component, name: Name2');
+
+  act(() => {
+    fireEvent.click(container.querySelectorAll('.iui-button')[0]);
+    fireEvent.click(container.querySelectorAll('.iui-button')[2]);
+  });
+
+  expect(queryByText('Expanded component, name: Name1')).toBeNull();
+  getByText('Expanded component, name: Name2');
+  getByText('Expanded component, name: Name3');
+  expect(onExpandMock).toHaveBeenCalledTimes(4);
+});
+
+it('should expand correctly with a custom expander cell', () => {
+  const onExpandMock = jest.fn();
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
         {
           id: 'name',
           Header: 'Name',
@@ -786,6 +816,17 @@ it('should expand correctly', () => {
       <div>{`Expanded component, name: ${row.original.name}`}</div>
     ),
     onExpand: onExpandMock,
+    expanderCell: (props: CellProps<{ name: string; description: string }>) => {
+      return (
+        <button
+          onClick={() => {
+            props.row.toggleRowExpanded();
+          }}
+        >
+          Expand {props.row.original.name}
+        </button>
+      );
+    },
   });
 
   expect(queryByText('Expanded component, name: Name1')).toBeNull();
