@@ -8,7 +8,7 @@ import {
   ActionType,
   CellProps,
   Column,
-  Row
+  Row,
   TableInstance,
   TableState,
 } from 'react-table';
