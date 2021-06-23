@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+`2021-06-XX`
+
+### What's new
+
+- **Added expanding functionality for `Table`.** Provide `subComponent` prop.
+- **Improved `Table` documentation.**
+
 ## [1.9.0]
 
 `2021-06-21`
