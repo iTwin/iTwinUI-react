@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React, { useCallback } from 'react';
-import { CellProps, Column, Row, TableState } from 'react-table';
+import { CellProps, Column, TableState } from 'react-table';
 import {
   Code,
   Table,
@@ -234,90 +234,6 @@ export const Selectable: Story<TableProps> = (args) => {
 };
 
 Selectable.args = { isSelectable: true };
-
-export const SelectOnRowClick: Story<TableProps> = (args) => {
-  const onClickHandler = (
-    event: React.MouseEvent,
-    props: CellProps<{ name: string; description: string }>,
-  ) => {
-    event.stopPropagation();
-    action(props.row.original.name)();
-  };
-
-  const tableColumns = useMemo(
-    () => [
-      {
-        Header: 'Table',
-        columns: [
-          {
-            id: 'name',
-            Header: 'Name',
-            accessor: 'name',
-          },
-          {
-            id: 'description',
-            Header: 'Description',
-            accessor: 'description',
-            maxWidth: 200,
-          },
-          {
-            id: 'click-me',
-            Header: 'Action',
-            width: 100,
-            Cell: (props: CellProps<{ name: string; description: string }>) => {
-              const onClick = (e: React.MouseEvent) => onClickHandler(e, props);
-              return (
-                <span
-                  className='iui-anchor'
-                  onClick={onClick}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
-                >
-                  Click me!
-                </span>
-              );
-            },
-          },
-        ],
-      },
-    ],
-    [],
-  );
-
-  const tableData = useMemo(
-    () =>
-      [...Array(3)].map((_, index) => ({
-        name: `Name${index}`,
-        description: `Description${index}`,
-      })),
-    [],
-  );
-
-  const onRowClick = useCallback((event: React.MouseEvent, row: Row) => {
-    row.toggleRowSelected();
-  }, []);
-
-  const initialSelectedState = {
-    selectedRowIds: { 1: true },
-  };
-
-  return (
-    <Table
-      {...args}
-      columns={tableColumns}
-      data={tableData}
-      emptyTableContent='No data.'
-      onRowClick={onRowClick}
-      isSelectable
-      initialState={initialSelectedState}
-    />
-  );
-};
-SelectOnRowClick.args = { isSelectable: true };
 
 export const Sortable: Story<TableProps> = (args) => {
   const { columns, data, isSortable, ...rest } = args;

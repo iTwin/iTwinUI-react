@@ -212,9 +212,13 @@ export const Table = <
         Header: ({ getToggleAllRowsSelectedProps }: HeaderProps<T>) => (
           <Checkbox {...getToggleAllRowsSelectedProps()} />
         ),
-        Cell: ({ row }: CellProps<T>) => (
-          <Checkbox {...row.getToggleRowSelectedProps()} />
-        ),
+        Cell: ({ row }: CellProps<T>) => {
+          return (
+            <span onClick={(e) => e.stopPropagation()}>
+              <Checkbox {...row.getToggleRowSelectedProps()} />
+            </span>
+          );
+        },
       },
       ...columns,
     ]);
@@ -334,6 +338,19 @@ export const Table = <
 
   const areFiltersSet = allColumns.some((column) => !!column.filterValue);
 
+  const onRowClickHandler = React.useCallback(
+    (event: React.MouseEvent, row: Row<T>) => {
+      if (isSelectable) {
+        if (!row.isSelected && !event.ctrlKey) {
+          instance.toggleAllRowsSelected(false);
+        }
+        row.toggleRowSelected();
+      }
+      onRowClick?.(event, row);
+    },
+    [instance, isSelectable, onRowClick],
+  );
+
   return (
     <div
       ref={(element) => setOwnerDocument(element?.ownerDocument)}
@@ -412,7 +429,7 @@ export const Table = <
                 intersectionMargin={intersectionMargin}
                 state={state}
                 key={rowProps.key}
-                onClick={onRowClick}
+                onClick={onRowClickHandler}
               />
             );
           })}
