@@ -3,11 +3,10 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React, { useCallback } from 'react';
-import { CellProps, Column, TableState } from 'react-table';
+import { CellProps, Column, Row, TableState } from 'react-table';
 import {
   Code,
   Table,
-  IconButton,
   Leading,
   tableFilters,
   TableFilterValue,
@@ -16,7 +15,6 @@ import {
 import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
 import { action } from '@storybook/addon-actions';
-import { SvgChevronDown, SvgChevronRight } from '@itwin/itwinui-icons-react';
 import { CreeveyStoryParams } from 'creevey';
 
 export default {
@@ -476,9 +474,6 @@ Filters.args = {
 export const ExpandableSubcomponent: Story<TableProps> = (args) => {
   const { columns, data, ...rest } = args;
 
-  const onClickHandler = (
-    props: CellProps<{ name: string; description: string }>,
-  ) => action(props.row.original.name)();
   const onExpand = useCallback(
     (rows, state) =>
       action(
@@ -495,26 +490,6 @@ export const ExpandableSubcomponent: Story<TableProps> = (args) => {
         Header: 'Table',
         columns: [
           {
-            id: 'expander',
-            Cell: (props: CellProps<{ name: string; description: string }>) => (
-              <IconButton
-                styleType='borderless'
-                size='small'
-                onClick={() => {
-                  props.row.toggleRowExpanded();
-                }}
-              >
-                {props.row.isExpanded ? (
-                  <SvgChevronDown />
-                ) : (
-                  <SvgChevronRight />
-                )}
-              </IconButton>
-            ),
-            cellClassName: 'iui-slot',
-            width: 60,
-          },
-          {
             id: 'name',
             Header: 'Name',
             accessor: 'name',
@@ -524,19 +499,6 @@ export const ExpandableSubcomponent: Story<TableProps> = (args) => {
             Header: 'Description',
             accessor: 'description',
             maxWidth: 200,
-          },
-          {
-            id: 'click-me',
-            Header: 'Click',
-            width: 100,
-            Cell: (props: CellProps<{ name: string; description: string }>) => {
-              const onClick = () => onClickHandler(props);
-              return (
-                <a className='iui-anchor' onClick={onClick}>
-                  Click me!
-                </a>
-              );
-            },
           },
         ],
       },
@@ -554,7 +516,7 @@ export const ExpandableSubcomponent: Story<TableProps> = (args) => {
   );
 
   const expandedSubComponent = useCallback(
-    (row) => (
+    (row: Row) => (
       <div style={{ padding: 16 }}>
         <Leading>Extra information</Leading>
         <pre>
@@ -584,6 +546,7 @@ ExpandableSubcomponent.args = {
     { name: 'Name3', description: 'Description3' },
   ],
   isSelectable: true,
+  provideDefaultExpander: true,
 };
 
 ExpandableSubcomponent.parameters = {

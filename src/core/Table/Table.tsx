@@ -94,7 +94,7 @@ export type TableProps<
   intersectionMargin?: number;
   /**
    * A function that will be used for rendering a component for each row if that row is expanded.
-   * Component will be placed right after the row, in the same row group div.
+   * Component will be placed right after the row. Can return false/null if no component should be placed for a particular row.
    */
   subComponent?: (row: Row<T>) => React.ReactNode;
   /**
@@ -225,19 +225,19 @@ export const Table = <
         minWidth: 48,
         width: 48,
         maxWidth: 48,
-        columnClassName: 'iui-tables-slot',
-        cellClassName: 'iui-tables-slot',
-        Cell: ({ row }: CellProps<T>) => (
-          <IconButton
-            styleType='borderless'
-            size='small'
-            onClick={() => {
-              row.toggleRowExpanded();
-            }}
-          >
-            {row.isExpanded ? <SvgChevronDown /> : <SvgChevronRight />}
-          </IconButton>
-        ),
+        cellClassName: 'iui-slot',
+        Cell: ({ row }: CellProps<T>) =>
+          subComponent(row) ? (
+            <IconButton
+              styleType='borderless'
+              size='small'
+              onClick={() => {
+                row.toggleRowExpanded();
+              }}
+            >
+              {row.isExpanded ? <SvgChevronDown /> : <SvgChevronRight />}
+            </IconButton>
+          ) : null,
       },
       ...columns,
     ]);

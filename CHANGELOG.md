@@ -6,7 +6,7 @@
 
 ### What's new
 
-- **Added expanding functionality for `Table`.** Provide `subComponent` prop or insert `subRows` field in `data` prop.
+- **Added expanding functionality for `Table`.** Provide `subComponent` prop.
 
 ## [1.9.0]
 
