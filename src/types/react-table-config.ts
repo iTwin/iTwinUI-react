@@ -114,7 +114,7 @@ declare module 'react-table' {
      */
     columnClassName?: string;
     /**
-     * Custom class name applied on each column's cell.
+     * Custom class name applied to each column's cell.
      */
     cellClassName?: string;
     /**
