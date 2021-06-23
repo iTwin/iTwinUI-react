@@ -99,9 +99,9 @@ export type TableProps<
   subComponent?: (row: Row<T>) => React.ReactNode;
   /**
    * A function used for overriding default expander cell. `subComponent` must be present.
-   * Make sure to trigger `row.toggleRowExpanded()`.
+   * Make sure to trigger `cellProps.row.toggleRowExpanded()`.
    */
-  expanderCell?: (row: Row<T>) => React.ReactNode;
+  expanderCell?: (cellProps: CellProps<T>) => React.ReactNode;
   /**
    * Handler for row expand events. Will trigger when expanding and collapsing rows.
    */
@@ -228,11 +228,12 @@ export const Table = <
         maxWidth: 48,
         columnClassName: 'iui-slot',
         cellClassName: 'iui-slot',
-        Cell: ({ row }: CellProps<T>) => {
+        Cell: (props: CellProps<T>) => {
+          const { row } = props;
           if (!subComponent(row)) {
             return null;
           } else if (expanderCell) {
-            return expanderCell(row);
+            return expanderCell(props);
           } else {
             return (
               <IconButton
