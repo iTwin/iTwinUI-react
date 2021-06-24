@@ -656,10 +656,12 @@ export const LazyLoading: Story<TableProps> = (args) => {
   );
 
   const generateData = (start: number, end: number) => {
-    return [...new Array(end - start)].map((_, index) => ({
-      name: `Name${start + index}`,
-      description: `Description${start + index}`,
-    }));
+    return Array(end - start)
+      .fill(null)
+      .map((_, index) => ({
+        name: `Name${start + index}`,
+        description: `Description${start + index}`,
+      }));
   };
 
   const [tableData, setTableData] = useState(() => generateData(0, 100));
@@ -692,7 +694,6 @@ export const LazyLoading: Story<TableProps> = (args) => {
 };
 
 LazyLoading.argTypes = {
-  data: { control: { disable: true } },
   isLoading: { control: { disable: true } },
 };
 
@@ -740,10 +741,12 @@ export const RowInViewport: Story<TableProps> = (args) => {
 
   const tableData = useMemo(
     () =>
-      [...new Array(100)].map((_, index) => ({
-        name: `Name${index}`,
-        description: `Description${index}`,
-      })),
+      Array(100)
+        .fill(null)
+        .map((_, index) => ({
+          name: `Name${index}`,
+          description: `Description${index}`,
+        })),
     [],
   );
 
@@ -779,10 +782,6 @@ export const RowInViewport: Story<TableProps> = (args) => {
       />
     </>
   );
-};
-
-RowInViewport.argTypes = {
-  data: { control: { disable: true } },
 };
 
 export const Loading: Story<TableProps> = (args) => {

@@ -193,23 +193,20 @@ DisabledWithSelectedValue.args = {
   ],
 };
 
-export const ManyItems: Story<SelectProps<number>> = (args) => {
-  const { placeholder = 'Placeholder text', options, ...rest } = args;
+export const ManyItems: Story<Partial<SelectProps<number>>> = (args) => {
+  const { placeholder = 'Placeholder text', ...rest } = args;
   const [value, setValue] = useState<number | undefined>(undefined);
   return (
     <div style={{ minHeight: 350 }}>
       <Select<number>
-        options={
-          options ||
-          [...new Array(20)].map((_, index) => ({
-            label: `Item #${index}`,
-            value: index,
-          }))
-        }
         value={value}
         onChange={setValue}
         placeholder={placeholder}
         {...rest}
+        options={[...Array(20).fill(null)].map((_, index) => ({
+          label: `Item #${index}`,
+          value: index,
+        }))}
       />
     </div>
   );
