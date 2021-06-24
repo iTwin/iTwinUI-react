@@ -174,8 +174,8 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
 
   const [isOpen, setIsOpen] = React.useState(popoverProps?.visible ?? false);
   React.useEffect(() => {
-    setIsOpen(popoverProps?.visible ?? false);
-  }, [popoverProps?.visible]);
+    setIsOpen((open) => popoverProps?.visible ?? open);
+  }, [popoverProps]);
 
   const [minWidth, setMinWidth] = React.useState(0);
   const toggle = () => setIsOpen((open) => !open);
