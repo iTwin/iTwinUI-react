@@ -14,7 +14,7 @@ import { getCellStyle } from './utils';
  * Although state is not used it is needed for `React.memo` to check state that changes row state e.g. selection.
  * When adding new features check whether it changes state that affects row. If it does then add equality check to `React.memo`.
  */
-const TableRow = <T extends Record<string, unknown>>(props: {
+export const TableRow = <T extends Record<string, unknown>>(props: {
   row: Row<T>;
   rowProps: TableRowProps;
   isLast: boolean;
@@ -77,6 +77,7 @@ export const TableRowMemoized = React.memo(
     prevProp.state.expanded?.[prevProp.row.id] ===
       nextProp.state.expanded?.[nextProp.row.id] &&
     prevProp.subComponent === nextProp.subComponent &&
+    prevProp.state.columnResizing === nextProp.state.columnResizing &&
     prevProp.row.cells.every(
       (cell, index) => nextProp.row.cells[index].column === cell.column,
     ),

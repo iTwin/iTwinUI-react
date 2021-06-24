@@ -22,6 +22,7 @@ import {
   ActionType,
   TableInstance,
   useExpanded,
+  useResizeColumns,
 } from 'react-table';
 import { Checkbox } from '../Checkbox';
 import { ProgressRadial } from '../ProgressIndicators';
@@ -199,9 +200,9 @@ export const Table = <
   const defaultColumn = React.useMemo(
     () => ({
       // Remove dynamic width values set by react-table
-      maxWidth: undefined,
-      minWidth: undefined,
-      width: undefined,
+      maxWidth: Number.POSITIVE_INFINITY,
+      minWidth: 40,
+      width: 145,
     }),
     [],
   );
@@ -384,6 +385,7 @@ export const Table = <
       filterTypes: { ...customFilterFunctions, ...filterFunctions },
     },
     useFlexLayout,
+    useResizeColumns,
     useFilters,
     useSortBy,
     useExpanded,
@@ -402,6 +404,7 @@ export const Table = <
     state,
     allColumns,
     filteredFlatRows,
+    disableResizing,
   } = instance;
 
   const ariaDataAttributes = Object.entries(rest).reduce(
@@ -466,6 +469,16 @@ export const Table = <
                             aria-hidden
                           />
                         )}
+                      </div>
+                    )}
+                    {!disableResizing && column.canResize && (
+                      <div
+                        {...column.getResizerProps()}
+                        className={cx('iui-resizer', {
+                          resizing: column.isResizing,
+                        })}
+                      >
+                        <div className='iui-resizer-bar' />
                       </div>
                     )}
                   </div>

@@ -10,16 +10,14 @@ export const getCellStyle = <T extends Record<string, unknown>>(
   const style = {} as React.CSSProperties;
   style.flex = `1 1 145px`;
   if (column.width) {
-    const width =
-      typeof column.width === 'string' ? column.width : `${column.width}px`;
-    style.width = width;
-    style.flex = `0 0 ${width}`;
+    style.width = column.width;
+    style.flex = `1 0 ${column.width}px`;
   }
   if (column.maxWidth) {
-    style.maxWidth = `${column.maxWidth}px`;
+    style.maxWidth = column.maxWidth;
   }
   if (column.minWidth) {
-    style.minWidth = `${column.minWidth}px`;
+    style.minWidth = column.minWidth;
   }
   return style;
 };

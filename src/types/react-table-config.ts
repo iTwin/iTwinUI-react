@@ -35,9 +35,9 @@ import {
   UsePaginationInstanceProps,
   // UsePaginationOptions,
   UsePaginationState,
-  // UseResizeColumnsColumnOptions,
+  UseResizeColumnsColumnOptions,
   UseResizeColumnsColumnProps,
-  // UseResizeColumnsOptions,
+  UseResizeColumnsOptions,
   UseResizeColumnsState,
   UseRowSelectHooks,
   UseRowSelectInstanceProps,
@@ -70,7 +70,7 @@ declare module 'react-table' {
       // UseGlobalFiltersOptions<D>,
       // UseGroupByOptions<D>,
       // UsePaginationOptions<D>,
-      // UseResizeColumnsOptions<D>,
+      UseResizeColumnsOptions<D>,
       // UseRowStateOptions<D>,
       UseSortByOptions<D> {}
 
@@ -106,8 +106,8 @@ declare module 'react-table' {
   export interface ColumnInterface<D extends object = {}>
     // extends UseGlobalFiltersColumnOptions<D>,
     // UseGroupByColumnOptions<D>,
-    // UseResizeColumnsColumnOptions<D>,
     extends UseSortByColumnOptions<D>,
+      UseResizeColumnsColumnOptions<D>,
       UseFiltersColumnOptions<D> {
     /**
      * Custom class name applied to header column cell.

@@ -141,7 +141,7 @@ export const Basic: Story<TableProps> = (args) => {
           {
             id: 'click-me',
             Header: 'Click',
-            width: 100,
+            maxWidth: 100,
             Cell: (props: CellProps<{ name: string; description: string }>) => {
               const onClick = () => onClickHandler(props);
               return (
@@ -211,7 +211,7 @@ export const Selectable: Story<TableProps> = (args) => {
           {
             id: 'click-me',
             Header: 'Click',
-            width: 100,
+            maxWidth: 100,
             Cell: (props: CellProps<{ name: string; description: string }>) => {
               const onClick = () => onClickHandler(props);
               return (
@@ -281,7 +281,7 @@ export const Sortable: Story<TableProps> = (args) => {
           {
             id: 'click-me',
             Header: 'Click',
-            width: 100,
+            maxWidth: 100,
             Cell: (props: CellProps<{ name: string; description: string }>) => {
               const onClick = () => onClickHandler(props);
               return (
@@ -374,7 +374,7 @@ export const Filters: Story<TableProps> = (args) => {
             id: 'index',
             Header: '#',
             accessor: 'index',
-            width: 80,
+            maxWidth: 80,
             fieldType: 'number',
             Filter: tableFilters.NumberRangeFilter(translatedLabels),
             filter: 'between',
@@ -642,7 +642,7 @@ export const LazyLoading: Story<TableProps> = (args) => {
           {
             id: 'click-me',
             Header: 'Click',
-            width: 100,
+            maxWidth: 100,
             Cell: (props: CellProps<{ name: string; description: string }>) => {
               const onClick = () => onClickHandler(props);
               return (
@@ -725,7 +725,7 @@ export const RowInViewport: Story<TableProps> = (args) => {
           {
             id: 'click-me',
             Header: 'Click',
-            width: 100,
+            maxWidth: 100,
             Cell: (props: CellProps<{ name: string; description: string }>) => {
               const onClick = () => onClickHandler(props);
               return (
