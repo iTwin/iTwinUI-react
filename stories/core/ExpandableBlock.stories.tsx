@@ -91,7 +91,7 @@ export const Accordion: Story<ExpandableBlockProps> = (args) => {
 
   return (
     <>
-      {[...new Array(3)].map((_, index) => (
+      {[...Array(3).fill(null)].map((_, index) => (
         <ExpandableBlock
           key={index}
           title={`Basic Block #${index + 1}`}
