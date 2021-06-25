@@ -73,7 +73,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
             node.style.height = `0px`;
           }}
           onEntering={(node) => (node.style.height = `${expandedHeight}px`)}
-          onExiting={(node) => (node.style.height = `$0px`)}
+          onExiting={(node) => (node.style.height = `0px`)}
           classNames='iui'
         >
           <div className='iui-row iui-expanded-content'>
