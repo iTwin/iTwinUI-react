@@ -44,6 +44,8 @@ const TableRow = <T extends Record<string, unknown>>(props: {
     rootMargin: `${intersectionMargin}px`,
   });
 
+  const [expandedHeight, setExpandedHeight] = React.useState(0);
+
   return (
     <>
       <div {...rowProps} ref={rowRef}>
@@ -65,14 +67,15 @@ const TableRow = <T extends Record<string, unknown>>(props: {
           timeout={200}
           unmountOnExit={true}
           onEnter={(node) => {
+            setExpandedHeight(node.getBoundingClientRect().height);
             node.style.height = `0px`;
           }}
-          onEntering={(node) => {
-            node.style.height = `${node.getBoundingClientRect().height}px`;
+          onEntered={(node) => {
+            node.style.height = `${expandedHeight}px`;
           }}
-          onExiting={(node) => {
-            node.style.height = `${node.getBoundingClientRect().height}px`;
-          }}
+          // onExiting={(node) => {
+          //   node.style.height = `${node.getBoundingClientRect().height}px`;
+          // }}
         >
           <div className='iui-row iui-expanded-content'>
             {subComponent(row)}
