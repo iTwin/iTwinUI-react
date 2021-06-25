@@ -64,10 +64,10 @@ const TableRow = <T extends Record<string, unknown>>(props: {
           in={row.isExpanded}
           timeout={200}
           unmountOnExit={true}
-          onEntered={(node) => {
+          onEntering={(node) => {
             node.style.height = `${node.getBoundingClientRect().height}px`;
           }}
-          onExited={(node) => {
+          onExiting={(node) => {
             node.style.height = `${node.getBoundingClientRect().height}px`;
           }}
         >
