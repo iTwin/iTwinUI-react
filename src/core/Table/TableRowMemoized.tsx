@@ -67,15 +67,14 @@ const TableRow = <T extends Record<string, unknown>>(props: {
           timeout={200}
           unmountOnExit={true}
           onEnter={(node) => {
-            setExpandedHeight(node.getBoundingClientRect().height);
+            if (expandedHeight === 0) {
+              setExpandedHeight(node.getBoundingClientRect().height);
+            }
             node.style.height = `0px`;
           }}
-          onEntered={(node) => {
-            node.style.height = `${expandedHeight}px`;
-          }}
-          // onExiting={(node) => {
-          //   node.style.height = `${node.getBoundingClientRect().height}px`;
-          // }}
+          onEntering={(node) => (node.style.height = `${expandedHeight}px`)}
+          onExiting={(node) => (node.style.height = `$0px`)}
+          classNames='iui'
         >
           <div className='iui-row iui-expanded-content'>
             {subComponent(row)}
