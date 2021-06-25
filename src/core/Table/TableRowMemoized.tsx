@@ -64,6 +64,9 @@ const TableRow = <T extends Record<string, unknown>>(props: {
           in={row.isExpanded}
           timeout={200}
           unmountOnExit={true}
+          onEnter={(node) => {
+            node.style.height = `0px`;
+          }}
           onEntering={(node) => {
             node.style.height = `${node.getBoundingClientRect().height}px`;
           }}
