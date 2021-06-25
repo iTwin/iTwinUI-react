@@ -60,7 +60,17 @@ const TableRow = <T extends Record<string, unknown>>(props: {
         })}
       </div>
       {subComponent && (
-        <CSSTransition in={row.isExpanded} timeout={200} unmountOnExit={true}>
+        <CSSTransition
+          in={row.isExpanded}
+          timeout={200}
+          unmountOnExit={true}
+          onEntered={(node) => {
+            node.style.height = `${node.getBoundingClientRect().height}px`;
+          }}
+          onExited={(node) => {
+            node.style.height = `${node.getBoundingClientRect().height}px`;
+          }}
+        >
           <div className='iui-row iui-expanded-content'>
             {subComponent(row)}
           </div>
