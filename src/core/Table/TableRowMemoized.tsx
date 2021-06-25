@@ -7,6 +7,7 @@ import cx from 'classnames';
 import { Row, TableRowProps, TableState } from 'react-table';
 import { useIntersection } from '../utils/hooks/useIntersection';
 import { getCellStyle } from './utils';
+import { CSSTransition } from 'react-transition-group';
 
 /**
  * Memorization is needed to avoid unnecessary re-renders of all rows when additional data is added when lazy-loading.
@@ -58,8 +59,12 @@ const TableRow = <T extends Record<string, unknown>>(props: {
           );
         })}
       </div>
-      {row.isExpanded && subComponent && (
-        <div className='iui-row iui-expanded-content'>{subComponent(row)}</div>
+      {subComponent && (
+        <CSSTransition in={row.isExpanded} timeout={200} unmountOnExit={true}>
+          <div className='iui-row iui-expanded-content'>
+            {subComponent(row)}
+          </div>
+        </CSSTransition>
       )}
     </>
   );
