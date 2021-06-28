@@ -79,13 +79,22 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
     return index;
   }, [activeIndex, labels.length]);
 
+  const tablistRef = React.useRef<HTMLUListElement>(null);
+
   const [currentIndex, setCurrentIndex] = React.useState(getValidIndex());
+  const [stripeStyle, setStripeStyle] = React.useState<React.CSSProperties>({});
 
   React.useEffect(() => {
     if (activeIndex != null && currentIndex !== activeIndex) {
       setCurrentIndex(getValidIndex());
     }
-  }, [activeIndex, currentIndex, getValidIndex]);
+    const activeTab = tablistRef.current?.children[currentIndex] as HTMLElement;
+    type !== 'default' &&
+      setStripeStyle({
+        width: activeTab?.getBoundingClientRect().width,
+        left: activeTab?.offsetLeft,
+      });
+  }, [activeIndex, currentIndex, getValidIndex, type]);
 
   const onTabClick = (index: number) => {
     if (onTabSelected) {
@@ -94,54 +103,49 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
     setCurrentIndex(index);
   };
 
-  const mainClass = React.useCallback(() => {
-    switch (type) {
-      case 'borderless':
-        return 'iui-tabs-borderless';
-      case 'pill':
-        return 'iui-tabs-pill';
-      default:
-        return 'iui-tabs-horizontal';
-    }
-  }, [type]);
-
   return (
-    <>
+    <div className='iui-tabs-wrapper'>
       <ul
         className={cx(
-          mainClass(),
-          { 'iui-green': color === 'green' },
+          'iui-tabs',
+          {
+            [`iui-${type}`]: !!type,
+            'iui-green': color === 'green',
+            'iui-animated': type !== 'default',
+          },
           tabsClassName,
         )}
+        role='tabslist'
+        ref={tablistRef}
         {...rest}
       >
         {labels.map((label, index) => {
           const onClick = () => onTabClick(index);
           return (
-            <li
-              className={cx({ 'iui-tabs-active': index === currentIndex })}
-              key={index}
-              role='tab'
-              aria-selected={index === currentIndex}
-            >
-              <a onClick={onClick} role='button'>
+            <li key={index}>
+              <button
+                className={cx('iui-tab', {
+                  'iui-active': index === currentIndex,
+                })}
+                onClick={onClick}
+                role='tab'
+                aria-selected={index === currentIndex}
+              >
                 {label}
-              </a>
+              </button>
             </li>
           );
         })}
       </ul>
+      {type !== 'default' && (
+        <div className='iui-tab-stripe' style={stripeStyle} />
+      )}
       {children && (
-        <div
-          className={cx(
-            { 'iui-tabs-content-area': type === 'default' },
-            contentClassName,
-          )}
-        >
+        <div className={cx('iui-tabs-content', contentClassName)}>
           {children}
         </div>
       )}
-    </>
+    </div>
   );
 };
 
