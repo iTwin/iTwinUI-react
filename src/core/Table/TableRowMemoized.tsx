@@ -80,7 +80,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
               className='iui-row iui-expanded-content'
               ref={(ref) => {
                 if (ref) {
-                  expandedHeight.current = ref.getBoundingClientRect().height;
+                  expandedHeight.current = ref.offsetHeight;
                 }
               }}
             >
