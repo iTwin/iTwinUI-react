@@ -109,8 +109,8 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
       <ul
         className={cx(
           'iui-tabs',
+          `iui-${type}`,
           {
-            [`iui-${type}`]: !!type,
             'iui-green': color === 'green',
             'iui-animated': type !== 'default',
           },
