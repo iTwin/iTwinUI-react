@@ -84,16 +84,17 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
   const [currentIndex, setCurrentIndex] = React.useState(getValidIndex());
   const [stripeStyle, setStripeStyle] = React.useState<React.CSSProperties>({});
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (activeIndex != null && currentIndex !== activeIndex) {
       setCurrentIndex(getValidIndex());
     }
     const activeTab = tablistRef.current?.children[currentIndex] as HTMLElement;
-    type !== 'default' &&
+    if (type !== 'default') {
       setStripeStyle({
         width: activeTab?.getBoundingClientRect().width,
         left: activeTab?.offsetLeft,
       });
+    }
   }, [activeIndex, currentIndex, getValidIndex, type]);
 
   const onTabClick = (index: number) => {
@@ -115,7 +116,7 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
           },
           tabsClassName,
         )}
-        role='tabslist'
+        role='tablist'
         ref={tablistRef}
         {...rest}
       >
@@ -141,7 +142,10 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
         <div className='iui-tab-stripe' style={stripeStyle} />
       )}
       {children && (
-        <div className={cx('iui-tabs-content', contentClassName)}>
+        <div
+          className={cx('iui-tabs-content', contentClassName)}
+          role='tabpanel'
+        >
           {children}
         </div>
       )}
