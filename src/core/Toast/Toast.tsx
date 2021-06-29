@@ -149,14 +149,16 @@ export const Toast = (props: ToastProps) => {
           }}
         >
           <div ref={onRef}>
-            {ToastPresentation({
-              category,
-              content,
-              link,
-              type,
-              hasCloseButton,
-              onRemove: close,
-            })}
+            {
+              <ToastPresentation
+                category={category}
+                content={content}
+                link={link}
+                type={type}
+                hasCloseButton={hasCloseButton}
+                onClose={close}
+              />
+            }
           </div>
         </div>
       )}
@@ -164,20 +166,23 @@ export const Toast = (props: ToastProps) => {
   );
 };
 
+export type ToastPresentationProps = Omit<
+  ToastProps,
+  'duration' | 'id' | 'isVisible' | 'onRemove'
+> & { onClose?: () => void } & CommonProps;
+
 /**
  * The presentational part of a toast notification, without any animation or logic.
  * @private
  */
-export const ToastPresentation = (
-  props: Omit<ToastProps, 'duration' | 'id' | 'isVisible'> & CommonProps,
-) => {
+export const ToastPresentation = (props: ToastPresentationProps) => {
   const {
     content,
     category,
     type = 'temporary',
     link,
     hasCloseButton,
-    onRemove,
+    onClose,
     className,
     ...rest
   } = props;
@@ -199,7 +204,7 @@ export const ToastPresentation = (
         <IconButton
           size='small'
           styleType='borderless'
-          onClick={onRemove}
+          onClick={onClose}
           aria-label='Close'
         >
           <SvgCloseSmall />
