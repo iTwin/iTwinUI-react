@@ -149,16 +149,14 @@ export const Toast = (props: ToastProps) => {
           }}
         >
           <div ref={onRef}>
-            {
-              <ToastPresentation
-                category={category}
-                content={content}
-                link={link}
-                type={type}
-                hasCloseButton={hasCloseButton}
-                onClose={close}
-              />
-            }
+            <ToastPresentation
+              category={category}
+              content={content}
+              link={link}
+              type={type}
+              hasCloseButton={hasCloseButton}
+              onClose={close}
+            />
           </div>
         </div>
       )}
