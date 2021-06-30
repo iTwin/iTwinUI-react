@@ -3,22 +3,31 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-import { renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react-hooks';
 import { useResizeObserver } from './useResizeObserver';
 
 const observe = jest.fn();
 const disconnect = jest.fn();
 
-beforeAll(() => {
-  jest.mock('./useResizeObserver', () => () => ({
-    default: jest.fn().mockImplementation(() => ({ observe, disconnect })),
-  }));
+let resizeCallback: (entries: { contentRect: Partial<DOMRect> }[]) => void;
+const triggerResize = (e: Partial<DOMRect>) => {
+  resizeCallback([{ contentRect: e }]);
+};
 
-  window.ResizeObserver = jest.fn(() => ({
-    observe,
+beforeAll(() => {
+  window.ResizeObserver = jest.fn((cb) => ({
     disconnect,
     unobserve: jest.fn(),
+    observe: () => {
+      // @ts-expect-error: Only testing contentRect from the callback
+      resizeCallback = cb;
+      observe();
+    },
   }));
+});
+
+beforeEach(() => {
+  jest.clearAllMocks();
 });
 
 const renderResizeObserver = (size = { width: 50, height: 50 }) => {
@@ -38,8 +47,23 @@ it('should initialize ResizeObserver correctly', () => {
   expect(observe).toHaveBeenCalled();
 });
 
+it('should return updated size when element resizes', () => {
+  const { result } = renderResizeObserver();
+  expect(result.current).toMatchObject({ width: 50, height: 50 });
+
+  const newSize = { width: 101, height: 101 };
+  act(() => triggerResize(newSize));
+  expect(result.current).toMatchObject(newSize);
+});
+
+it('should not observe if elementRef is null', () => {
+  renderHook(() => useResizeObserver({ current: null }));
+  expect(observe).not.toHaveBeenCalled();
+});
+
 it('should disconnect before unmounting', () => {
   const { unmount } = renderResizeObserver();
+  expect(disconnect).not.toHaveBeenCalled();
   unmount();
   expect(disconnect).toHaveBeenCalled();
 });
