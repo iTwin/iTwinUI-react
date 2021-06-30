@@ -21,13 +21,9 @@ export const useResizeObserver = <T extends HTMLElement>(
   const resizeObserver = React.useRef<ResizeObserver | null>(null);
 
   const observe = React.useCallback(() => {
-    const updateSize = (entry: DOMRectReadOnly) => {
-      setSize({ height: entry.height, width: entry.width });
-    };
-
     if (elementRef.current) {
       resizeObserver.current = new ResizeObserver(([{ contentRect }]) =>
-        updateSize(contentRect),
+        setSize({ height: contentRect.height, width: contentRect.width }),
       );
       resizeObserver.current?.observe(elementRef.current as T);
     }
