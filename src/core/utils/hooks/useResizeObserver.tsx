@@ -7,7 +7,6 @@ import React from 'react';
 /**
  * Hook that uses `ResizeObserver` to return an element's size every time it updates.
  * @param elementRef ref of the element to observe resizes on.
- * @param delay maximum timeout in ms to debounce the update by.
  * @returns stateful object containing height and width of the element.
  */
 export const useResizeObserver = <T extends HTMLElement>(
