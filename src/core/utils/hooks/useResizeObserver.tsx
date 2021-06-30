@@ -14,10 +14,10 @@ export const useResizeObserver = <T extends HTMLElement>(
   elementRef: React.RefObject<T>,
   { delay = 0 } = {},
 ) => {
-  const [size, setSize] = React.useState({
+  const [size, setSize] = React.useState(() => ({
     height: elementRef.current?.getBoundingClientRect().height,
     width: elementRef.current?.getBoundingClientRect().width,
-  });
+  }));
 
   const resizeObserver = React.useRef<ResizeObserver | null>(null);
 
