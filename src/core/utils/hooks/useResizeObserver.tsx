@@ -12,7 +12,6 @@ import React from 'react';
  */
 export const useResizeObserver = <T extends HTMLElement>(
   elementRef: React.RefObject<T>,
-  { delay = 0 } = {},
 ) => {
   const [size, setSize] = React.useState(() => ({
     height: elementRef.current?.getBoundingClientRect().height,
@@ -25,29 +24,15 @@ export const useResizeObserver = <T extends HTMLElement>(
     const updateSize = (entry: DOMRectReadOnly) => {
       setSize({ height: entry.height, width: entry.width });
     };
-    const debouncedUpdate = delay ? debounce(updateSize, delay) : updateSize;
-    resizeObserver.current = new ResizeObserver(([{ contentRect }]) =>
-      debouncedUpdate(contentRect),
-    );
 
     if (elementRef.current) {
+      resizeObserver.current = new ResizeObserver(([{ contentRect }]) =>
+        updateSize(contentRect),
+      );
       resizeObserver.current?.observe(elementRef.current as T);
     }
     return () => resizeObserver.current?.disconnect();
-  }, [elementRef, delay]);
+  }, [elementRef]);
 
   return size;
-};
-
-/** Returns a debounced fn that waits delayed by the provided ms */
-const debounce = <F extends (...args: never[]) => unknown>(
-  fn: F,
-  ms: number,
-) => {
-  let timeoutId: ReturnType<typeof setTimeout>;
-
-  return function (this: never, ...args: never[]) {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => fn.apply(this, args), ms);
-  } as F;
 };
