@@ -9,7 +9,10 @@ import { useResizeObserver } from './useResizeObserver';
 const observe = jest.fn();
 const disconnect = jest.fn();
 
+/** gets set when ResizeObserver.observe is called */
 let resizeCallback: (entries: { contentRect: Partial<DOMRect> }[]) => void;
+
+/** calls resizeCallback with new dimensions */
 const triggerResize = (e: Partial<DOMRect>) => {
   resizeCallback([{ contentRect: e }]);
 };
@@ -18,10 +21,10 @@ beforeAll(() => {
   window.ResizeObserver = jest.fn((cb) => ({
     disconnect,
     unobserve: jest.fn(),
-    observe: () => {
+    observe: (el) => {
       // @ts-expect-error: Only testing contentRect from the callback
       resizeCallback = cb;
-      observe();
+      observe(el);
     },
   }));
 });
@@ -59,6 +62,17 @@ it('should return updated size when element resizes', () => {
 it('should not observe if elementRef is null', () => {
   renderHook(() => useResizeObserver({ current: null }));
   expect(observe).not.toHaveBeenCalled();
+});
+
+it('should disconnect if elementRef becomes null later', () => {
+  const element: HTMLDivElement = document.createElement('div');
+  const { rerender } = renderHook((r) => useResizeObserver(r), {
+    initialProps: { current: element } as React.RefObject<HTMLDivElement>,
+  });
+  expect(observe).toHaveBeenCalledWith(element);
+
+  rerender({ current: null });
+  expect(disconnect).toHaveBeenCalled();
 });
 
 it('should disconnect before unmounting', () => {
