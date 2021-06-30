@@ -19,23 +19,16 @@ export const useResizeObserver = <T extends HTMLElement>(
 
   const resizeObserver = React.useRef<ResizeObserver | null>(null);
 
-  const observe = React.useCallback(() => {
+  React.useLayoutEffect(() => {
+    resizeObserver.current?.disconnect();
     if (elementRef.current) {
       resizeObserver.current = new ResizeObserver(([{ contentRect }]) =>
         setSize({ height: contentRect.height, width: contentRect.width }),
       );
-      resizeObserver.current?.observe(elementRef.current as T);
+      resizeObserver.current?.observe(elementRef.current);
     }
+    return () => resizeObserver.current?.disconnect();
   }, [elementRef]);
-
-  const disconnect = React.useCallback(() => {
-    resizeObserver.current?.disconnect();
-  }, []);
-
-  React.useLayoutEffect(() => {
-    observe();
-    return () => disconnect();
-  }, [observe, disconnect]);
 
   return size;
 };
