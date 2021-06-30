@@ -20,7 +20,7 @@ export const useResizeObserver = <T extends HTMLElement>(
 
   const resizeObserver = React.useRef<ResizeObserver | null>(null);
 
-  React.useLayoutEffect(() => {
+  const observe = React.useCallback(() => {
     const updateSize = (entry: DOMRectReadOnly) => {
       setSize({ height: entry.height, width: entry.width });
     };
@@ -31,8 +31,16 @@ export const useResizeObserver = <T extends HTMLElement>(
       );
       resizeObserver.current?.observe(elementRef.current as T);
     }
-    return () => resizeObserver.current?.disconnect();
   }, [elementRef]);
+
+  const disconnect = React.useCallback(() => {
+    resizeObserver.current?.disconnect();
+  }, []);
+
+  React.useLayoutEffect(() => {
+    observe();
+    return () => disconnect();
+  }, [observe, disconnect]);
 
   return size;
 };
