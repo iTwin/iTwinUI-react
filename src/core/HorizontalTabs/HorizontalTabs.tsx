@@ -94,11 +94,11 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
   }, [activeIndex, currentIndex, getValidIndex]);
 
   React.useLayoutEffect(() => {
-    const activeTab = tablistRef.current?.children[currentIndex] as HTMLElement;
     if (type !== 'default') {
+      const activeTab = tablistRef.current?.children[currentIndex];
       setStripeStyle({
-        width: activeTab?.getBoundingClientRect()?.width,
-        left: activeTab?.offsetLeft,
+        width: activeTab?.getBoundingClientRect().width,
+        left: (activeTab as HTMLElement)?.offsetLeft,
       });
     }
   }, [currentIndex, type, tablistSize]);

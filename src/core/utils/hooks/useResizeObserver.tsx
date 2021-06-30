@@ -29,7 +29,10 @@ export const useResizeObserver = <T extends HTMLElement>(
     resizeObserver.current = new ResizeObserver(([{ contentRect }]) =>
       debouncedUpdate(contentRect),
     );
-    resizeObserver.current?.observe(elementRef.current as T);
+
+    if (elementRef.current) {
+      resizeObserver.current?.observe(elementRef.current as T);
+    }
     return () => resizeObserver.current?.disconnect();
   }, [elementRef, delay]);
 
