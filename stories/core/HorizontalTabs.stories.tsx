@@ -6,8 +6,8 @@ import SvgStar from '@itwin/itwinui-icons-react/cjs/icons/Star';
 import { useState } from '@storybook/addons';
 import { Meta, Story } from '@storybook/react/types-6-0';
 import React from 'react';
-import { HorizontalTabs } from '../../src/core';
-import { HorizontalTabsProps } from '../../src/core/HorizontalTabs/HorizontalTabs';
+import { HorizontalTabs, HorizontalTabsProps } from '../../src/core';
+import { HorizontalTab } from '../../src/core/HorizontalTabs/HorizontalTab';
 
 export default {
   title: 'Core/HorizontalTabs',
@@ -48,8 +48,8 @@ BorderlessTabs.args = {
 
 export const PillTabs = Template.bind({});
 PillTabs.args = {
-  labels: [...new Array(3)].map((_, index) => (
-    <SvgStar key={index} aria-hidden className='iui-tab-icon' />
+  tabs: [...new Array(3)].map((_, index) => (
+    <HorizontalTab key={index} icon={<SvgStar />} />
   )),
   type: 'pill',
 };
