@@ -3,15 +3,3 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 window.HTMLElement.prototype.scrollIntoView = () => {};
-
-window.ResizeObserver = class ResizeObserver {
-  observe() {
-    // do nothing
-  }
-  unobserve() {
-    // do nothing
-  }
-  disconnect() {
-    // do nothing
-  }
-};
