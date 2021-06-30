@@ -48,8 +48,8 @@ BorderlessTabs.args = {
 
 export const PillTabs = Template.bind({});
 PillTabs.args = {
-  labels: [...new Array(3)].map((_, index) => (
-    <SvgStar key={index} aria-hidden className='iui-tab-icon' />
-  )),
+  labels: [...new Array(3)].map((_, index) => ({
+    icon: <SvgStar key={index} />,
+  })),
   type: 'pill',
 };

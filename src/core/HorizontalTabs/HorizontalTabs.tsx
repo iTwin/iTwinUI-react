@@ -7,11 +7,38 @@ import React from 'react';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/tabs.css';
 
+export type HorizontalTab = {
+  /**
+   * The main label shown in the tab.
+   */
+  label?: React.ReactNode;
+  /**
+   * Secondary label shown below the main label.
+   * Only shown if `size` of `HorizontalTabs` is set to large.
+   */
+  sublabel?: React.ReactNode;
+  /**
+   * Svg icon shown before the labels.
+   */
+  icon?: JSX.Element;
+  /**
+   * Control whether the tab is disabled.
+   */
+  disabled?: boolean;
+};
+
 export type HorizontalTabsProps = {
   /**
    * Elements shown for each tab.
+   * Can be an array of either `HorizontalTab` elements (recommended) or `ReactNode`s.
+   * @example
+   * [
+   *   { label: 'Label with icon', icon: <SvgPlaceholder /> },
+   *   { label: 'Label with sublabel', sublabel: 'Sublabel' },
+   *   { label: 'Label with icon and disabled', icon: <SvgPlaceholder />, disabled: true },
+   * ]
    */
-  labels: React.ReactNodeArray;
+  labels: React.ReactNodeArray | HorizontalTab[];
   /**
    * Handler for activating a tab.
    */
@@ -35,11 +62,11 @@ export type HorizontalTabsProps = {
    */
   tabsClassName?: string;
   /**
-   * Custom CSS class name for content.
+   * Custom CSS class name for tabpanel.
    */
   contentClassName?: string;
   /**
-   * Content inside the tab area.
+   * Content inside the tab panel.
    */
   children?: React.ReactNode;
 };
@@ -121,6 +148,10 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
         {...rest}
       >
         {labels.map((label, index) => {
+          const tab =
+            !React.isValidElement(label) && typeof label !== 'string'
+              ? (label as HorizontalTab)
+              : undefined;
           const onClick = () => onTabClick(index);
           return (
             <li key={index}>
@@ -131,8 +162,22 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
                 onClick={onClick}
                 role='tab'
                 aria-selected={index === currentIndex}
+                disabled={tab && tab.disabled}
               >
-                {label}
+                <>
+                  {tab &&
+                    tab.icon &&
+                    React.cloneElement(tab.icon, {
+                      className: 'iui-tab-icon',
+                      'aria-hidden': true,
+                    })}
+                  <span className='iui-tab-label'>
+                    {tab ? tab.label && <div>{tab.label}</div> : label}
+                    {tab && (
+                      <div className='iui-tab-description'>{tab.sublabel}</div>
+                    )}
+                  </span>
+                </>
               </button>
             </li>
           );
