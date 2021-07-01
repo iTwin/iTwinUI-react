@@ -7,8 +7,8 @@
 ### What's new
 
 - **Added expanding functionality for `Table`.** Provide `subComponent` prop.
-- **Updated styling for `HorizontalTabs`.**
 - **Added ability to control opening `Select` menu.** Provide `visible` in `popoverProps` prop.
+- **Updated styling for `HorizontalTabs`** through base CSS package.
 - **Improved `Table` documentation.**
 
 ## [1.9.0]
