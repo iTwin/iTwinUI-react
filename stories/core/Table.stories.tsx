@@ -214,7 +214,7 @@ export const Selectable: Story<TableProps> = (args) => {
                 <a
                   className='iui-anchor'
                   onClick={(e) => {
-                    e.stopPropagation();
+                    e.stopPropagation(); // prevent row selection when clicking on link
                     action(props.row.original.name)();
                   }}
                 >
