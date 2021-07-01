@@ -33,7 +33,6 @@ import SvgSortUp from '@itwin/itwinui-icons-react/cjs/icons/SortUp';
 import { getCellStyle } from './utils';
 import { TableRowMemoized } from './TableRowMemoized';
 import { IconButton } from '../Buttons';
-import SvgChevronDown from '@itwin/itwinui-icons-react/cjs/icons/ChevronDown';
 import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import { FilterToggle, TableFilterValue } from './filters';
 import { customFilterFunctions } from './filters/customFilterFunctions';
@@ -237,25 +236,24 @@ export const Table = <
           const { row } = props;
           if (!subComponent(row)) {
             return null;
-          }
-
-          return (
-            <span onClick={(e) => e.stopPropagation()}>
-              {expanderCell ? (
-                expanderCell(props)
-              ) : (
+          } else if (expanderCell) {
+            return expanderCell(props);
+          } else {
+            return (
+              <span onClick={(e) => e.stopPropagation()}>
                 <IconButton
+                  className='iui-row-expander'
                   styleType='borderless'
                   size='small'
                   onClick={() => {
                     row.toggleRowExpanded();
                   }}
                 >
-                  {row.isExpanded ? <SvgChevronDown /> : <SvgChevronRight />}
+                  {<SvgChevronRight />}
                 </IconButton>
-              )}
-            </span>
-          );
+              </span>
+            );
+          }
         },
       },
       ...columns,
