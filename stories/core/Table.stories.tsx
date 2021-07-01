@@ -211,22 +211,15 @@ export const Selectable: Story<TableProps> = (args) => {
             width: 100,
             Cell: (props: CellProps<{ name: string; description: string }>) => {
               return (
-                <span
-                  style={{
-                    display: 'flex',
-                    width: '100%',
-                    height: '100%',
-                    alignItems: 'center',
+                <a
+                  className='iui-anchor'
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    action(props.row.original.name)();
                   }}
-                  onClick={(e) => e.stopPropagation()} // prevent row selection when this cell is clicked
                 >
-                  <a
-                    className='iui-anchor'
-                    onClick={() => action(props.row.original.name)()}
-                  >
-                    Click me!
-                  </a>
-                </span>
+                  Click me!
+                </a>
               );
             },
           },
