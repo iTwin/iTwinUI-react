@@ -65,6 +65,8 @@ export default {
     autoResetSortBy: { table: { disable: true } },
     autoResetHiddenColumns: { table: { disable: true } },
     autoResetFilters: { table: { disable: true } },
+    filterTypes: { table: { disable: true } },
+    defaultCanFilter: { table: { disable: true } },
     manualFilters: { table: { disable: true } },
     paginateExpandedRows: { table: { disable: true } },
     expandSubRows: { table: { disable: true } },
