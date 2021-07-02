@@ -37,6 +37,8 @@ import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import { FilterToggle, TableFilterValue } from './filters';
 import { customFilterFunctions } from './filters/customFilterFunctions';
 
+TableActions.singleRowSelected = 'singleRowSelected';
+
 /**
  * Table props.
  * columns and data must be memoized.
@@ -371,6 +373,15 @@ export const Table = <
       case TableActions.toggleAllRowsExpanded:
         onExpandHandler(newState, instance);
         break;
+      case TableActions.singleRowSelected: {
+        newState = {
+          ...newState,
+          selectedRowIds: { [action.id]: action.value } as Record<
+            string,
+            boolean
+          >,
+        };
+      }
       case TableActions.toggleRowSelected:
       case TableActions.toggleAllRowsSelected:
       case TableActions.toggleAllPageRowsSelected: {
@@ -413,6 +424,7 @@ export const Table = <
     state,
     allColumns,
     filteredFlatRows,
+    dispatch,
   } = instance;
 
   const ariaDataAttributes = Object.entries(rest).reduce(
@@ -431,13 +443,18 @@ export const Table = <
     (event: React.MouseEvent, row: Row<T>) => {
       if (isSelectable) {
         if (!row.isSelected && !event.ctrlKey) {
-          instance.toggleAllRowsSelected(false);
+          dispatch({
+            type: TableActions.singleRowSelected,
+            id: row.id,
+            value: true,
+          });
+        } else {
+          row.toggleRowSelected(!row.isSelected);
         }
-        row.toggleRowSelected(!row.isSelected);
       }
       onRowClick?.(event, row);
     },
-    [instance, isSelectable, onRowClick],
+    [dispatch, isSelectable, onRowClick],
   );
 
   return (

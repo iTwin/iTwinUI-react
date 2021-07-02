@@ -226,19 +226,19 @@ it('should handle row clicks', () => {
 
   fireEvent.click(getByText(mockedData()[1].name));
   expect(rows[1].classList).toContain('iui-selected');
-  // expect(onSelect).toHaveBeenCalledTimes(1);
+  expect(onSelect).toHaveBeenCalledTimes(1);
   expect(onRowClick).toHaveBeenCalledTimes(1);
 
   fireEvent.click(getByText(mockedData()[2].name));
   expect(rows[1].classList).not.toContain('iui-selected');
   expect(rows[2].classList).toContain('iui-selected');
-  // expect(onSelect).toHaveBeenCalledTimes(2);
+  expect(onSelect).toHaveBeenCalledTimes(2);
   expect(onRowClick).toHaveBeenCalledTimes(2);
 
   fireEvent.click(getByText(mockedData()[1].name), { ctrlKey: true });
   expect(rows[1].classList).toContain('iui-selected');
   expect(rows[2].classList).toContain('iui-selected');
-  // expect(onSelect).toHaveBeenCalledTimes(3);
+  expect(onSelect).toHaveBeenCalledTimes(3);
   expect(onRowClick).toHaveBeenCalledTimes(3);
 });
 
