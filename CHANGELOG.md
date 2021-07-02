@@ -1,5 +1,13 @@
 # Changelog
 
+## [Version]
+
+`Date`
+
+### What's new
+
+- **Allowing to disable specific rows in `Table`.** Provide `isRowDisabled` prop.
+
 ## [1.10.0]
 
 `2021-07-01`
