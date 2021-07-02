@@ -38,9 +38,8 @@ const renderResizeObserver = (size = { width: 50, height: 50 }) => {
   Object.defineProperties(element, {
     getBoundingClientRect: { value: () => size },
   });
-  const ref = { current: element };
 
-  return renderHook(() => useResizeObserver(ref));
+  return renderHook(() => useResizeObserver(element));
 };
 
 it('should initialize ResizeObserver correctly', () => {
@@ -59,19 +58,18 @@ it('should return updated size when element resizes', () => {
   expect(result.current).toMatchObject(newSize);
 });
 
-it('should not observe if elementRef is null', () => {
-  renderHook(() => useResizeObserver({ current: null }));
+it('should not observe if element is null', () => {
+  renderHook(() => useResizeObserver(null));
   expect(observe).not.toHaveBeenCalled();
 });
 
-it('should disconnect if elementRef becomes null later', () => {
-  const element: HTMLDivElement = document.createElement('div');
-  const { rerender } = renderHook((r) => useResizeObserver(r), {
-    initialProps: { current: element } as React.RefObject<HTMLDivElement>,
-  });
+it('should disconnect if element becomes null later', () => {
+  let element: HTMLDivElement | null = document.createElement('div');
+  const { rerender } = renderHook(() => useResizeObserver(element));
   expect(observe).toHaveBeenCalledWith(element);
 
-  rerender({ current: null });
+  element = null;
+  rerender(element);
   expect(disconnect).toHaveBeenCalled();
 });
 

@@ -82,7 +82,7 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
 
   const tablistRef = React.useRef<HTMLUListElement>(null);
 
-  const tablistSize = useResizeObserver(tablistRef);
+  const tablistSize = useResizeObserver(tablistRef.current);
 
   const [currentIndex, setCurrentIndex] = React.useState(getValidIndex());
   const [stripeStyle, setStripeStyle] = React.useState<React.CSSProperties>({});
