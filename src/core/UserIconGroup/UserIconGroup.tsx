@@ -6,30 +6,35 @@ import React from 'react';
 import { useTheme } from '../utils/hooks/useTheme';
 import cx from 'classnames';
 import { UserIcon } from '../UserIcon';
-export type UserIconGroupType = 'default' | 'animated';
-
-const defaultLength = 5;
-const maxLength = 9;
+import { CommonProps } from '../utils/props';
 
 export type UserIconGroupProps = {
   /**
-   * UserIconGroup group length
+   * UserIconGroup max number of icons unstacked
    * @default 5
    */
-  length?: number;
+  maxIcons?: number;
+  /**
+   * UserIconGroup is group needs to be stacked
+   * @default 'true'
+   */
+  stacked?: boolean;
   /**
    * UserIconGroup type
-   * @default 'default'
+   * @default 'false'
    */
-  type?: UserIconGroupType;
+  animated?: boolean;
   /**
    * User Icons in the UserIconGroup.
    */
   children: React.ReactNode;
-};
+} & CommonProps;
 
 /**
  * Group User Icons together
+ * User Icons stacking is based on maxIcons count. If you provide 8 UserIcons and keep default 5 maxIcons count,
+ * this component will show 5 UserIcons and stacked UserIcon with "+3" in it.
+ *
  * @example
  * <UserIconGroup>
  *  <UserIcon
@@ -54,40 +59,23 @@ export type UserIconGroupProps = {
  *    type="default"
  *  />
  * </UserIconGroup>
- * * @example
- * <UserIconGroup type='animated'>
- *  <UserIcon
- *    abbreviation="TR"
- *    backgroundColor="#6AB9EC"
- *    size="medium"
- *    title="Terry Rivers"
- *    type="default"
- *  />
- *  <UserIcon
- *   abbreviation="RM"
- *    backgroundColor="#C8C2B4"
- *    size="medium"
- *    title="Robin Mercer"
- *    type="default"
- *  />
- *  <UserIcon
- *    abbreviation="TR"
- *    backgroundColor="#6AB9EC"
- *    size="medium"
- *    title="Terry Rivers"
- *    type="default"
- *  />
- * </UserIconGroup>
  */
 export const UserIconGroup = (props: UserIconGroupProps) => {
-  const { children, type = 'default', length = defaultLength } = props;
+  const defaultLength = 5;
+  const maxLength = 9;
+  const {
+    children,
+    animated = false,
+    stacked = true,
+    maxIcons = defaultLength,
+  } = props;
 
   const childrenArray = React.Children.toArray(children);
   const childrenLength = React.Children.count(children);
   let additionalChildren = '';
-  if (childrenLength > length) {
+  if (childrenLength > maxIcons) {
     React.Children.forEach(children, (child: JSX.Element, index) => {
-      if (index >= length) {
+      if (index >= maxIcons) {
         additionalChildren += child.props.title + '\n';
       }
     });
@@ -98,17 +86,17 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
   return (
     <div
       className={cx('iui-user-icon-list', {
-        'iui-animated': type == 'animated',
+        'iui-animated': animated,
       })}
     >
-      {childrenLength <= length ? (
+      {childrenLength <= maxIcons + 1 || !stacked ? (
         children
       ) : (
         <>
           {childrenArray.map((child, index) =>
-            index < length
+            index < maxIcons
               ? React.cloneElement(child as JSX.Element, {
-                  status: '',
+                  status: undefined,
                   key: index,
                 })
               : null,
@@ -119,10 +107,10 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
             title={additionalChildren}
             abbreviation={
               childrenLength <= maxLength
-                ? `+${childrenLength - length}`
+                ? `+${childrenLength - maxIcons}`
                 : `${maxLength}+`
             }
-            backgroundColor=''
+            backgroundColor='#dce0e3'
           />
         </>
       )}

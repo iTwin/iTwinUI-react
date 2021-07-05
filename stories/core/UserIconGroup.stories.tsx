@@ -4,11 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { Story, Meta } from '@storybook/react';
 import React from 'react';
-import {
-  getUserColor,
-  UserIconGroup,
-  UserIconGroupProps,
-} from '../../src/core';
+import { UserIconGroup, UserIconGroupProps } from '../../src/core';
 import UserIcon from '../../src/core/UserIcon/UserIcon';
 
 export default {
@@ -26,49 +22,49 @@ export const Basic: Story<UserIconGroupProps> = (args) => {
       <UserIcon
         size='small'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#6ab9ec'
         title='Terry Rivers'
       />
       <UserIcon
         size='small'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#b1c854'
         title='Robin Mercer'
       />
       <UserIcon
         size='small'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='small'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
       <UserIcon
         size='small'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#6ab9ec'
         title='Terry Rivers'
       />
       <UserIcon
         size='small'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#b1c854'
         title='Robin Mercer'
       />
       <UserIcon
         size='small'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='small'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
     </UserIconGroup>
@@ -81,25 +77,25 @@ export const SmallIcons: Story<UserIconGroupProps> = () => {
       <UserIcon
         size='small'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#6ab9ec'
         title='Terry Rivers'
       />
       <UserIcon
         size='small'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#b1c854'
         title='Robin Mercer'
       />
       <UserIcon
         size='small'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='small'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
     </UserIconGroup>
@@ -112,73 +108,73 @@ export const SmallIconsBigTeam: Story<UserIconGroupProps> = () => {
       <UserIcon
         size='small'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#6ab9ec'
         title='Terry Rivers'
       />
       <UserIcon
         size='small'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#b1c854'
         title='Robin Mercer'
       />
       <UserIcon
         size='small'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='small'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
       <UserIcon
         size='small'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#6ab9ec'
         title='Terry Rivers'
       />
       <UserIcon
         size='small'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#b1c854'
         title='Robin Mercer'
       />
       <UserIcon
         size='small'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='small'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
       <UserIcon
         size='small'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#6ab9ec'
         title='Terry Rivers'
       />
       <UserIcon
         size='small'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#b1c854'
         title='Robin Mercer'
       />
       <UserIcon
         size='small'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='small'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
     </UserIconGroup>
@@ -187,42 +183,48 @@ export const SmallIconsBigTeam: Story<UserIconGroupProps> = () => {
 
 export const SmallIconsAnimated: Story<UserIconGroupProps> = () => {
   return (
-    <UserIconGroup type='animated'>
+    <UserIconGroup animated={true}>
       <UserIcon
         size='small'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#6ab9ec'
         title='Terry Rivers'
       />
       <UserIcon
         size='small'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#b1c854'
         title='Robin Mercer'
       />
       <UserIcon
         size='small'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='small'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
       <UserIcon
         size='small'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='small'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
         title='Robin Mercer'
+      />
+      <UserIcon
+        size='small'
+        abbreviation='TR'
+        backgroundColor='#f7706c'
+        title='Terry Rivers'
       />
     </UserIconGroup>
   );
@@ -234,25 +236,25 @@ export const MediumIcons: Story<UserIconGroupProps> = () => {
       <UserIcon
         size='medium'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#6ab9ec'
         title='Terry Rivers'
       />
       <UserIcon
         size='medium'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#b1c854'
         title='Robin Mercer'
       />
       <UserIcon
         size='medium'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='medium'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
     </UserIconGroup>
@@ -265,73 +267,73 @@ export const MediumIconsBigTeam: Story<UserIconGroupProps> = () => {
       <UserIcon
         size='medium'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#6ab9ec'
         title='Terry Rivers'
       />
       <UserIcon
         size='medium'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#b1c854'
         title='Robin Mercer'
       />
       <UserIcon
         size='medium'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='medium'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
       <UserIcon
         size='medium'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#6ab9ec'
         title='Terry Rivers'
       />
       <UserIcon
         size='medium'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#b1c854'
         title='Robin Mercer'
       />
       <UserIcon
         size='medium'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='medium'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
       <UserIcon
         size='medium'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#6ab9ec'
         title='Terry Rivers'
       />
       <UserIcon
         size='medium'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#b1c854'
         title='Robin Mercer'
       />
       <UserIcon
         size='medium'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='medium'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
     </UserIconGroup>
@@ -340,41 +342,47 @@ export const MediumIconsBigTeam: Story<UserIconGroupProps> = () => {
 
 export const MediumIconsAnimated: Story<UserIconGroupProps> = () => {
   return (
-    <UserIconGroup type='animated'>
+    <UserIconGroup animated={true}>
       <UserIcon
         size='medium'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#6ab9ec'
         title='Terry Rivers'
       />
       <UserIcon
         size='medium'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#b1c854'
         title='Robin Mercer'
       />
       <UserIcon
         size='medium'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='medium'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
       <UserIcon
         size='medium'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='medium'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
+        title='Robin Mercer'
+      />
+      <UserIcon
+        size='medium'
+        abbreviation='RM'
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
     </UserIconGroup>
@@ -387,25 +395,25 @@ export const LargeIcons: Story<UserIconGroupProps> = () => {
       <UserIcon
         size='large'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#6ab9ec'
         title='Terry Rivers'
       />
       <UserIcon
         size='large'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#b1c854'
         title='Robin Mercer'
       />
       <UserIcon
         size='large'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='large'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
     </UserIconGroup>
@@ -418,73 +426,73 @@ export const LargeIconsBigTeam: Story<UserIconGroupProps> = () => {
       <UserIcon
         size='large'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#6ab9ec'
         title='Terry Rivers'
       />
       <UserIcon
         size='large'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#b1c854'
         title='Robin Mercer'
       />
       <UserIcon
         size='large'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='large'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
       <UserIcon
         size='large'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#6ab9ec'
         title='Terry Rivers'
       />
       <UserIcon
         size='large'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#b1c854'
         title='Robin Mercer'
       />
       <UserIcon
         size='large'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='large'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
       <UserIcon
         size='large'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#6ab9ec'
         title='Terry Rivers'
       />
       <UserIcon
         size='large'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#b1c854'
         title='Robin Mercer'
       />
       <UserIcon
         size='large'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='large'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
     </UserIconGroup>
@@ -493,41 +501,47 @@ export const LargeIconsBigTeam: Story<UserIconGroupProps> = () => {
 
 export const LargeIconsAnimated: Story<UserIconGroupProps> = () => {
   return (
-    <UserIconGroup type='animated'>
+    <UserIconGroup animated={true}>
       <UserIcon
         size='large'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#6ab9ec'
         title='Terry Rivers'
       />
       <UserIcon
         size='large'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#b1c854'
         title='Robin Mercer'
       />
       <UserIcon
         size='large'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='large'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
       <UserIcon
         size='large'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='large'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
+        title='Robin Mercer'
+      />
+      <UserIcon
+        size='large'
+        abbreviation='RM'
+        backgroundColor='#b1c854'
         title='Robin Mercer'
       />
     </UserIconGroup>
@@ -540,25 +554,25 @@ export const ExtraLargeIcons: Story<UserIconGroupProps> = () => {
       <UserIcon
         size='x-large'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#6ab9ec'
         title='Terry Rivers'
       />
       <UserIcon
         size='x-large'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#b1c854'
         title='Robin Mercer'
       />
       <UserIcon
         size='x-large'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='x-large'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
     </UserIconGroup>
@@ -571,73 +585,73 @@ export const ExtraLargeIconsBigTeam: Story<UserIconGroupProps> = () => {
       <UserIcon
         size='x-large'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#6ab9ec'
         title='Terry Rivers'
       />
       <UserIcon
         size='x-large'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#b1c854'
         title='Robin Mercer'
       />
       <UserIcon
         size='x-large'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='x-large'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
       <UserIcon
         size='x-large'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#6ab9ec'
         title='Terry Rivers'
       />
       <UserIcon
         size='x-large'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#b1c854'
         title='Robin Mercer'
       />
       <UserIcon
         size='x-large'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='x-large'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
       <UserIcon
         size='x-large'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#6ab9ec'
         title='Terry Rivers'
       />
       <UserIcon
         size='x-large'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#b1c854'
         title='Robin Mercer'
       />
       <UserIcon
         size='x-large'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='x-large'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
     </UserIconGroup>
@@ -646,41 +660,47 @@ export const ExtraLargeIconsBigTeam: Story<UserIconGroupProps> = () => {
 
 export const ExtraLargeIconsAnimated: Story<UserIconGroupProps> = () => {
   return (
-    <UserIconGroup type='animated'>
+    <UserIconGroup animated={true}>
       <UserIcon
         size='x-large'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#6ab9ec'
         title='Terry Rivers'
       />
       <UserIcon
         size='x-large'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#b1c854'
         title='Robin Mercer'
       />
       <UserIcon
         size='x-large'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='x-large'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
       <UserIcon
         size='x-large'
         abbreviation='TR'
-        backgroundColor={getUserColor('Terry Rivers')}
+        backgroundColor='#f7706c'
         title='Terry Rivers'
       />
       <UserIcon
         size='x-large'
         abbreviation='RM'
-        backgroundColor={getUserColor('Robin Mercer')}
+        backgroundColor='#4585a5'
+        title='Robin Mercer'
+      />
+      <UserIcon
+        size='x-large'
+        abbreviation='RM'
+        backgroundColor='#4585a5'
         title='Robin Mercer'
       />
     </UserIconGroup>
