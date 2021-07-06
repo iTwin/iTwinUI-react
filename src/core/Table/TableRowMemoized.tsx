@@ -52,7 +52,6 @@ const TableRow = <T extends Record<string, unknown>>(props: {
     <>
       <div
         {...rowProps}
-        key={rowProps.key}
         ref={rowRef}
         onClick={(event) => {
           onClick?.(event, row);

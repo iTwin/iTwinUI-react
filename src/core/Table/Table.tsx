@@ -37,7 +37,7 @@ import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import { FilterToggle, TableFilterValue } from './filters';
 import { customFilterFunctions } from './filters/customFilterFunctions';
 
-TableActions.singleRowSelected = 'singleRowSelected';
+const singleRowSelectedAction = 'singleRowSelected';
 
 /**
  * Table props.
@@ -373,13 +373,10 @@ export const Table = <
       case TableActions.toggleAllRowsExpanded:
         onExpandHandler(newState, instance);
         break;
-      case TableActions.singleRowSelected: {
+      case singleRowSelectedAction: {
         newState = {
           ...newState,
-          selectedRowIds: { [action.id]: action.value } as Record<
-            string,
-            boolean
-          >,
+          selectedRowIds: { [action.id]: true } as Record<string, boolean>,
         };
       }
       case TableActions.toggleRowSelected:
@@ -444,9 +441,8 @@ export const Table = <
       if (isSelectable) {
         if (!row.isSelected && !event.ctrlKey) {
           dispatch({
-            type: TableActions.singleRowSelected,
+            type: singleRowSelectedAction,
             id: row.id,
-            value: true,
           });
         } else {
           row.toggleRowSelected(!row.isSelected);
