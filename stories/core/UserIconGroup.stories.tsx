@@ -4,705 +4,170 @@
  *--------------------------------------------------------------------------------------------*/
 import { Story, Meta } from '@storybook/react';
 import React from 'react';
-import { UserIconGroup, UserIconGroupProps } from '../../src/core';
-import UserIcon from '../../src/core/UserIcon/UserIcon';
+import {
+  getUserColor,
+  UserIcon,
+  UserIconGroup,
+  UserIconGroupProps,
+} from '../../src/core';
 
 export default {
   component: UserIconGroup,
+  subcomponents: { UserIcon },
   argTypes: {
     className: { control: { disable: true } },
     style: { control: { disable: true } },
+    id: { control: { disable: true } },
+    children: { control: { disable: true } },
   },
   title: 'Core/UserIconGroup',
 } as Meta<UserIconGroupProps>;
 
 export const Basic: Story<UserIconGroupProps> = (args) => {
+  const userNames = [
+    'Terry Rivers',
+    'Robin Mercer',
+    'Morgan Vera',
+    'Ace Cash',
+    'Tanner Fraser',
+    'Ashley Miles',
+    'Jean Mullins',
+  ];
+
   return (
     <UserIconGroup {...args}>
-      <UserIcon
-        size='small'
-        abbreviation='TR'
-        backgroundColor='#6ab9ec'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='RM'
-        backgroundColor='#b1c854'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='TR'
-        backgroundColor='#6ab9ec'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='RM'
-        backgroundColor='#b1c854'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
+      {userNames.map((name) => (
+        <UserIcon
+          size='medium'
+          key={name}
+          abbreviation={name
+            .split(' ')
+            .map((token) => token[0])
+            .join('')}
+          backgroundColor={getUserColor(name)}
+          title={name}
+        />
+      ))}
     </UserIconGroup>
   );
 };
+Basic.args = {
+  animated: false,
+};
 
-export const SmallIcons: Story<UserIconGroupProps> = () => {
+export const Animated: Story<UserIconGroupProps> = (args) => {
+  const userNames = [
+    'Terry Rivers',
+    'Robin Mercer',
+    'Morgan Vera',
+    'Jean Mullins',
+    'Ashley Miles',
+  ];
+
   return (
-    <UserIconGroup>
-      <UserIcon
-        size='small'
-        abbreviation='TR'
-        backgroundColor='#6ab9ec'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='RM'
-        backgroundColor='#b1c854'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
+    <UserIconGroup animated {...args}>
+      {userNames.map((name) => (
+        <UserIcon
+          size='medium'
+          key={name}
+          abbreviation={name
+            .split(' ')
+            .map((token) => token[0])
+            .join('')}
+          backgroundColor={getUserColor(name)}
+          title={name}
+        />
+      ))}
     </UserIconGroup>
   );
 };
+Animated.args = {
+  animated: true,
+};
 
-export const SmallIconsBigTeam: Story<UserIconGroupProps> = () => {
+export const ManyIcons: Story<UserIconGroupProps> = (args) => {
+  const userNames = [
+    'Terry Rivers',
+    'Robin Mercer',
+    'Morgan Vera',
+    'Ace Cash',
+    'Tanner Fraser',
+    'Ashley Miles',
+    'Jean Mullins',
+    'Nico Triplett',
+    'Drew Abel',
+    'Kendall Simons',
+    'Kennedy Gray',
+    'Charlie Mayfield',
+    'Peyton Pennington',
+    'Justice Harrington',
+    'Jessie Dodd',
+  ];
+
   return (
-    <UserIconGroup>
-      <UserIcon
-        size='small'
-        abbreviation='TR'
-        backgroundColor='#6ab9ec'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='RM'
-        backgroundColor='#b1c854'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='TR'
-        backgroundColor='#6ab9ec'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='RM'
-        backgroundColor='#b1c854'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='TR'
-        backgroundColor='#6ab9ec'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='RM'
-        backgroundColor='#b1c854'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
+    <>
+      <UserIconGroup {...args}>
+        {userNames.map((name) => (
+          <UserIcon
+            size='medium'
+            key={name}
+            abbreviation={name
+              .split(' ')
+              .map((token) => token[0])
+              .join('')}
+            backgroundColor={getUserColor(name)}
+            title={name}
+          />
+        ))}
+      </UserIconGroup>
+      <UserIconGroup {...args}>
+        {userNames.map((name) => (
+          <UserIcon
+            size='large'
+            key={name}
+            abbreviation={name
+              .split(' ')
+              .map((token) => token[0])
+              .join('')}
+            backgroundColor={getUserColor(name)}
+            title={name}
+          />
+        ))}
+      </UserIconGroup>
+    </>
+  );
+};
+ManyIcons.args = {
+  animated: false,
+};
+
+export const NonStacked: Story<UserIconGroupProps> = (args) => {
+  const userNames = [
+    'Terry Rivers',
+    'Robin Mercer',
+    'Morgan Vera',
+    'Ashley Miles',
+    'Jean Mullins',
+  ];
+
+  return (
+    <UserIconGroup stacked={false} {...args}>
+      {userNames.map((name) => (
+        <UserIcon
+          size='medium'
+          key={name}
+          abbreviation={name
+            .split(' ')
+            .map((token) => token[0])
+            .join('')}
+          backgroundColor={getUserColor(name)}
+          title={name}
+        />
+      ))}
     </UserIconGroup>
   );
 };
-
-export const SmallIconsAnimated: Story<UserIconGroupProps> = () => {
-  return (
-    <UserIconGroup animated={true}>
-      <UserIcon
-        size='small'
-        abbreviation='TR'
-        backgroundColor='#6ab9ec'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='RM'
-        backgroundColor='#b1c854'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='small'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-    </UserIconGroup>
-  );
-};
-
-export const MediumIcons: Story<UserIconGroupProps> = () => {
-  return (
-    <UserIconGroup>
-      <UserIcon
-        size='medium'
-        abbreviation='TR'
-        backgroundColor='#6ab9ec'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='medium'
-        abbreviation='RM'
-        backgroundColor='#b1c854'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='medium'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='medium'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-    </UserIconGroup>
-  );
-};
-
-export const MediumIconsBigTeam: Story<UserIconGroupProps> = () => {
-  return (
-    <UserIconGroup>
-      <UserIcon
-        size='medium'
-        abbreviation='TR'
-        backgroundColor='#6ab9ec'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='medium'
-        abbreviation='RM'
-        backgroundColor='#b1c854'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='medium'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='medium'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='medium'
-        abbreviation='TR'
-        backgroundColor='#6ab9ec'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='medium'
-        abbreviation='RM'
-        backgroundColor='#b1c854'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='medium'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='medium'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='medium'
-        abbreviation='TR'
-        backgroundColor='#6ab9ec'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='medium'
-        abbreviation='RM'
-        backgroundColor='#b1c854'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='medium'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='medium'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-    </UserIconGroup>
-  );
-};
-
-export const MediumIconsAnimated: Story<UserIconGroupProps> = () => {
-  return (
-    <UserIconGroup animated={true}>
-      <UserIcon
-        size='medium'
-        abbreviation='TR'
-        backgroundColor='#6ab9ec'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='medium'
-        abbreviation='RM'
-        backgroundColor='#b1c854'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='medium'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='medium'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='medium'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='medium'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='medium'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-    </UserIconGroup>
-  );
-};
-
-export const LargeIcons: Story<UserIconGroupProps> = () => {
-  return (
-    <UserIconGroup>
-      <UserIcon
-        size='large'
-        abbreviation='TR'
-        backgroundColor='#6ab9ec'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='large'
-        abbreviation='RM'
-        backgroundColor='#b1c854'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='large'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='large'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-    </UserIconGroup>
-  );
-};
-
-export const LargeIconsBigTeam: Story<UserIconGroupProps> = () => {
-  return (
-    <UserIconGroup>
-      <UserIcon
-        size='large'
-        abbreviation='TR'
-        backgroundColor='#6ab9ec'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='large'
-        abbreviation='RM'
-        backgroundColor='#b1c854'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='large'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='large'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='large'
-        abbreviation='TR'
-        backgroundColor='#6ab9ec'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='large'
-        abbreviation='RM'
-        backgroundColor='#b1c854'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='large'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='large'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='large'
-        abbreviation='TR'
-        backgroundColor='#6ab9ec'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='large'
-        abbreviation='RM'
-        backgroundColor='#b1c854'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='large'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='large'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-    </UserIconGroup>
-  );
-};
-
-export const LargeIconsAnimated: Story<UserIconGroupProps> = () => {
-  return (
-    <UserIconGroup animated={true}>
-      <UserIcon
-        size='large'
-        abbreviation='TR'
-        backgroundColor='#6ab9ec'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='large'
-        abbreviation='RM'
-        backgroundColor='#b1c854'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='large'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='large'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='large'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='large'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='large'
-        abbreviation='RM'
-        backgroundColor='#b1c854'
-        title='Robin Mercer'
-      />
-    </UserIconGroup>
-  );
-};
-
-export const ExtraLargeIcons: Story<UserIconGroupProps> = () => {
-  return (
-    <UserIconGroup>
-      <UserIcon
-        size='x-large'
-        abbreviation='TR'
-        backgroundColor='#6ab9ec'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='x-large'
-        abbreviation='RM'
-        backgroundColor='#b1c854'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='x-large'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='x-large'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-    </UserIconGroup>
-  );
-};
-
-export const ExtraLargeIconsBigTeam: Story<UserIconGroupProps> = () => {
-  return (
-    <UserIconGroup>
-      <UserIcon
-        size='x-large'
-        abbreviation='TR'
-        backgroundColor='#6ab9ec'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='x-large'
-        abbreviation='RM'
-        backgroundColor='#b1c854'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='x-large'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='x-large'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='x-large'
-        abbreviation='TR'
-        backgroundColor='#6ab9ec'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='x-large'
-        abbreviation='RM'
-        backgroundColor='#b1c854'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='x-large'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='x-large'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='x-large'
-        abbreviation='TR'
-        backgroundColor='#6ab9ec'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='x-large'
-        abbreviation='RM'
-        backgroundColor='#b1c854'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='x-large'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='x-large'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-    </UserIconGroup>
-  );
-};
-
-export const ExtraLargeIconsAnimated: Story<UserIconGroupProps> = () => {
-  return (
-    <UserIconGroup animated={true}>
-      <UserIcon
-        size='x-large'
-        abbreviation='TR'
-        backgroundColor='#6ab9ec'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='x-large'
-        abbreviation='RM'
-        backgroundColor='#b1c854'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='x-large'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='x-large'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='x-large'
-        abbreviation='TR'
-        backgroundColor='#f7706c'
-        title='Terry Rivers'
-      />
-      <UserIcon
-        size='x-large'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-      <UserIcon
-        size='x-large'
-        abbreviation='RM'
-        backgroundColor='#4585a5'
-        title='Robin Mercer'
-      />
-    </UserIconGroup>
-  );
+NonStacked.args = {
+  animated: false,
+  stacked: false,
 };
