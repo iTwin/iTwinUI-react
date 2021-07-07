@@ -71,3 +71,12 @@ it('should not observe if element is null', () => {
   act(() => result.current[0](null));
   expect(observe).not.toHaveBeenCalled();
 });
+
+it('should disconnect if element becomes null later', () => {
+  const { hook } = renderResizeObserver();
+  expect(observe).toHaveBeenCalled();
+  expect(disconnect).not.toHaveBeenCalled();
+
+  act(() => hook.result.current[0](null));
+  expect(disconnect).toHaveBeenCalled();
+});

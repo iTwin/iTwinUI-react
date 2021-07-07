@@ -115,7 +115,6 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
     if (type !== 'pill') {
       resizeObserver?.disconnect();
     }
-    return () => resizeObserver?.disconnect();
   }, [resizeObserver, type]);
 
   const onTabClick = (index: number) => {
