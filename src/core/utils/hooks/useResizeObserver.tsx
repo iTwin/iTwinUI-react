@@ -7,12 +7,13 @@ import { getWindow } from '../common';
 
 /**
  * Hook that uses `ResizeObserver` to access an element's size every time it updates.
- * @param onResize callback fired with the element's new dimensions on every resize.
- * @returns callback ref to be attached to the element that needs to be observed.
  * @private
+ * @param onResize callback fired with the element's new dimensions on every resize.
+ * @returns a callback ref that needs to be set on the element, and a ResizeObserver instance.
  *
  * @example
- * const [ref] = useResizeObserver((size) => console.log(size));
+ * const onResize = React.useCallback((size) => console.log(size), []);
+ * const [ref] = useResizeObserver(onResize);
  * ...
  * return <div ref={ref}>...</div>;
  */
