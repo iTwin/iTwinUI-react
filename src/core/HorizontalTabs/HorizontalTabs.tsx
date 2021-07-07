@@ -83,13 +83,15 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
 
   const tablistRef = React.useRef<HTMLUListElement>(null);
 
-  const [tablistSize, setTablistSize] = React.useState(() => ({
-    height: tablistRef.current?.getBoundingClientRect().height,
-    width: tablistRef.current?.getBoundingClientRect().width,
-  }));
-  const updateTablistSize = React.useCallback((s) => setTablistSize(s), []);
+  const [tabsWidth, setTabsWidth] = React.useState(
+    () => tablistRef.current?.getBoundingClientRect().width,
+  );
+  const updateTabsWidth = React.useCallback(
+    ({ width }) => setTabsWidth(width),
+    [],
+  );
 
-  const [tablistSizeRef, resizeObserver] = useResizeObserver(updateTablistSize);
+  const [tablistSizeRef, resizeObserver] = useResizeObserver(updateTabsWidth);
   const refs = useMergedRefs(tablistRef, tablistSizeRef);
 
   const [currentIndex, setCurrentIndex] = React.useState(getValidIndex());
@@ -109,7 +111,7 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
         left: (activeTab as HTMLElement)?.offsetLeft,
       });
     }
-  }, [currentIndex, type, tablistSize, resizeObserver]);
+  }, [currentIndex, type, tabsWidth]);
 
   React.useEffect(() => {
     if (type !== 'pill') {
