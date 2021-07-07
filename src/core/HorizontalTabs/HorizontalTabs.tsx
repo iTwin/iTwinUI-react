@@ -87,10 +87,7 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
     height: tablistRef.current?.getBoundingClientRect().height,
     width: tablistRef.current?.getBoundingClientRect().width,
   }));
-  const updateTablistSize = React.useCallback((s) => {
-    setTablistSize(s);
-    console.log(s);
-  }, []);
+  const updateTablistSize = React.useCallback((s) => setTablistSize(s), []);
 
   const [tablistSizeRef, resizeObserver] = useResizeObserver(updateTablistSize);
   const refs = useMergedRefs(tablistRef, tablistSizeRef);
