@@ -3,36 +3,40 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
+import { getWindow } from '../common';
 
 /**
- * Hook that uses `ResizeObserver` to return an element's size every time it updates.
- * @param element the element to observe resizes on. You can pass `.current` member of the element's ref.
- * @returns stateful object containing height and width of the element.
+ * Hook that uses `ResizeObserver` to access an element's size every time it updates.
+ * @param onResize callback fired with the element's new dimensions on every resize.
+ * @returns callback ref to be attached to the element that needs to be observed.
+ * @private
  *
  * @example
- * const elementRef = React.useRef<HTMLDivElement>(null);
- * const { height, width } = useResizeObserver(elementRef.current);
+ * const [ref] = useResizeObserver((size) => console.log(size));
  * ...
- * return <div ref={elementRef}>...</div>;
+ * return <div ref={ref}>...</div>;
  */
-export const useResizeObserver = <T extends HTMLElement>(element: T | null) => {
-  const [size, setSize] = React.useState(() => ({
-    height: element?.getBoundingClientRect().height,
-    width: element?.getBoundingClientRect().width,
-  }));
+export const useResizeObserver = <T extends HTMLElement>(
+  onResize: (size: DOMRectReadOnly) => void,
+) => {
+  const resizeObserver = React.useRef<ResizeObserver>();
 
-  const resizeObserver = React.useRef<ResizeObserver | null>(null);
+  const elementRef = React.useCallback(
+    (element: T | null) => {
+      if (!getWindow()?.ResizeObserver) {
+        return;
+      }
 
-  React.useLayoutEffect(() => {
-    resizeObserver.current?.disconnect();
-    if (element) {
-      resizeObserver.current = new ResizeObserver(([{ contentRect }]) =>
-        setSize({ height: contentRect.height, width: contentRect.width }),
-      );
-      resizeObserver.current?.observe(element);
-    }
-    return () => resizeObserver.current?.disconnect();
-  }, [element]);
+      resizeObserver.current?.disconnect();
+      if (element) {
+        resizeObserver.current = new ResizeObserver(([{ contentRect }]) =>
+          onResize(contentRect),
+        );
+        resizeObserver.current?.observe(element);
+      }
+    },
+    [onResize],
+  );
 
-  return size;
+  return [elementRef, resizeObserver.current] as const;
 };

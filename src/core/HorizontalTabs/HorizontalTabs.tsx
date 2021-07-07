@@ -7,6 +7,7 @@ import React from 'react';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/tabs.css';
 import { useResizeObserver } from '../utils/hooks/useResizeObserver';
+import { useMergedRefs } from '../utils/hooks/useMergedRefs';
 
 export type HorizontalTabsProps = {
   /**
@@ -82,7 +83,17 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
 
   const tablistRef = React.useRef<HTMLUListElement>(null);
 
-  const tablistSize = useResizeObserver(tablistRef.current);
+  const [tablistSize, setTablistSize] = React.useState(() => ({
+    height: tablistRef.current?.getBoundingClientRect().height,
+    width: tablistRef.current?.getBoundingClientRect().width,
+  }));
+  const updateTablistSize = React.useCallback((s) => {
+    setTablistSize(s);
+    console.log(s);
+  }, []);
+
+  const [tablistSizeRef, resizeObserver] = useResizeObserver(updateTablistSize);
+  const refs = useMergedRefs(tablistRef, tablistSizeRef);
 
   const [currentIndex, setCurrentIndex] = React.useState(getValidIndex());
   const [stripeStyle, setStripeStyle] = React.useState<React.CSSProperties>({});
@@ -101,7 +112,14 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
         left: (activeTab as HTMLElement)?.offsetLeft,
       });
     }
-  }, [currentIndex, type, tablistSize]);
+  }, [currentIndex, type, tablistSize, resizeObserver]);
+
+  React.useEffect(() => {
+    if (type !== 'pill') {
+      resizeObserver?.disconnect();
+    }
+    return () => resizeObserver?.disconnect();
+  }, [resizeObserver, type]);
 
   const onTabClick = (index: number) => {
     if (onTabSelected) {
@@ -123,7 +141,7 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
           tabsClassName,
         )}
         role='tablist'
-        ref={tablistRef}
+        ref={refs}
         {...rest}
       >
         {labels.map((label, index) => {
