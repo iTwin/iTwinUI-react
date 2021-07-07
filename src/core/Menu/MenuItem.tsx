@@ -52,6 +52,10 @@ export type MenuItemProps = {
    * Content of the menu item.
    */
   children?: React.ReactNode;
+  /**
+   * Parent `MenuItem` reference. Used in sub-menus.
+   */
+  parentMenuItemRef?: React.RefObject<HTMLLIElement>;
 } & CommonProps;
 
 /**
@@ -71,6 +75,7 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
       style,
       role = 'menuitem',
       subMenuItems = [],
+      parentMenuItemRef,
       ...rest
     } = props;
 
@@ -79,22 +84,33 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
     const menuItemRef = React.useRef<HTMLLIElement>(null);
     const refs = useMergedRefs(menuItemRef, ref);
 
-    const [isSubMenuFocused, setIsSubMenuFocused] = React.useState(false);
+    const subMenuRef = React.useRef<HTMLUListElement>(null);
+
+    const [isSubmenuVisible, setIsSubmenuVisible] = React.useState(false);
 
     const onKeyDown = (event: React.KeyboardEvent<HTMLLIElement>) => {
       switch (event.key) {
         case 'Enter':
         case ' ':
-        case 'Spacebar':
+        case 'Spacebar': {
           !disabled && onClick?.(value);
           event.preventDefault();
           break;
-        case 'ArrowRight':
+        }
+        case 'ArrowRight': {
           if (subMenuItems.length > 0) {
-            setIsSubMenuFocused(true);
+            setIsSubmenuVisible(true);
             event.preventDefault();
             event.stopPropagation();
           }
+          break;
+        }
+        case 'ArrowLeft': {
+          parentMenuItemRef?.current?.focus();
+          event.preventDefault();
+          event.stopPropagation();
+          break;
+        }
         default:
           break;
       }
@@ -116,6 +132,14 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
         tabIndex={disabled ? undefined : -1}
         aria-selected={isSelected}
         onKeyDown={onKeyDown}
+        onMouseEnter={() => setIsSubmenuVisible(true)}
+        onMouseLeave={(e) => {
+          if (!subMenuRef.current?.contains(e.relatedTarget as Node)) {
+            setIsSubmenuVisible(false);
+          }
+        }}
+        // Kind of hack to close child sub-menu
+        onFocus={() => setIsSubmenuVisible(false)}
         {...rest}
       >
         {icon &&
@@ -138,25 +162,12 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
     ) : (
       <Popover
         placement='right-start'
+        visible={isSubmenuVisible}
         content={
-          <Menu
-            bringFocusInside={isSubMenuFocused}
-            nativeProps={{
-              onKeyDown: (event) => {
-                if (event.key === 'ArrowLeft') {
-                  menuItemRef.current?.focus();
-                  event.preventDefault();
-                  event.stopPropagation();
-                }
-              },
-            }}
-          >
-            {subMenuItems.map((subItem) =>
-              React.cloneElement(subItem, {
-                onClick: (args: unknown) => {
-                  close();
-                  subItem.props.onClick?.(args);
-                },
+          <Menu ref={subMenuRef}>
+            {subMenuItems.map((item) =>
+              React.cloneElement<MenuItemProps>(item, {
+                parentMenuItemRef: menuItemRef,
               }),
             )}
           </Menu>

@@ -143,13 +143,35 @@ export const Submenu: Story<DropdownMenuProps> = (args) => {
     </MenuItem>,
     <MenuItem
       key={3}
-      onClick={onClick(3, close)}
       subMenuItems={[
-        <MenuItem key={4} onClick={onClick(4, close)}>
+        <MenuItem
+          key={4}
+          subMenuItems={[
+            <MenuItem key={7} onClick={onClick(7, close)}>
+              Item #7
+            </MenuItem>,
+            <MenuItem key={8} onClick={onClick(8, close)}>
+              Item #8
+            </MenuItem>,
+          ]}
+        >
           Item #4
         </MenuItem>,
         <MenuItem key={5} onClick={onClick(5, close)}>
           Item #5
+        </MenuItem>,
+        <MenuItem
+          key={6}
+          subMenuItems={[
+            <MenuItem key={9} onClick={onClick(9, close)}>
+              Item #9
+            </MenuItem>,
+            <MenuItem key={10} onClick={onClick(10, close)}>
+              Item #10
+            </MenuItem>,
+          ]}
+        >
+          Item #6
         </MenuItem>,
       ]}
     >
