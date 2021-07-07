@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { StylingProps } from '../utils/props';
+import { CommonProps } from '../utils/props';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/menu.css';
 import { useMergedRefs } from '../utils/hooks/useMergedRefs';
@@ -19,7 +19,7 @@ export type MenuProps = {
    * Menu items. Recommended to use `MenuItem` components.
    */
   children: React.ReactNode;
-} & StylingProps;
+} & Omit<CommonProps, 'title'>;
 
 /**
  * Basic menu component. Can be used for select or dropdown components.
