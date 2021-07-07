@@ -150,6 +150,12 @@ export const Selectable: Story<TableProps> = (args) => {
     [],
   );
 
+  const onRowClick = useCallback(
+    (event: React.MouseEvent, row: Row) =>
+      action(`Row clicked: ${JSON.stringify(row.original)}`)(),
+    [],
+  );
+
   const tableColumns = useMemo(
     () => [
       {
@@ -206,6 +212,7 @@ export const Selectable: Story<TableProps> = (args) => {
       emptyTableContent='No data.'
       isSelectable={true}
       onSelect={onSelect}
+      onRowClick={onRowClick}
       {...rest}
     />
   );
