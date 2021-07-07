@@ -21,6 +21,7 @@ import {
   useTable,
   ActionType,
   TableInstance,
+  useExpanded,
 } from 'react-table';
 import { Checkbox } from '../Checkbox';
 import { ProgressRadial } from '../ProgressIndicators';
@@ -31,6 +32,8 @@ import SvgSortDown from '@itwin/itwinui-icons-react/cjs/icons/SortDown';
 import SvgSortUp from '@itwin/itwinui-icons-react/cjs/icons/SortUp';
 import { getCellStyle } from './utils';
 import { TableRowMemoized } from './TableRowMemoized';
+import { IconButton } from '../Buttons';
+import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import { FilterToggle, TableFilterValue } from './filters';
 import { customFilterFunctions } from './filters/customFilterFunctions';
 
@@ -89,6 +92,23 @@ export type TableProps<
    */
   intersectionMargin?: number;
   /**
+   * A function that will be used for rendering a component for each row if that row is expanded.
+   * Component will be placed right after the row. Can return false/null if row should not be expandable.
+   */
+  subComponent?: (row: Row<T>) => React.ReactNode;
+  /**
+   * A function used for overriding default expander cell. `subComponent` must be present.
+   * Make sure to trigger `cellProps.row.toggleRowExpanded()`.
+   */
+  expanderCell?: (cellProps: CellProps<T>) => React.ReactNode;
+  /**
+   * Handler for row expand events. Will trigger when expanding and collapsing rows.
+   */
+  onExpand?: (
+    expandedData: T[] | undefined,
+    tableState?: TableState<T>,
+  ) => void;
+  /**
    * Callback function when filters change.
    * Use with `manualFilters` to handle filtering yourself e.g. filter in server-side.
    * Must be memoized.
@@ -101,7 +121,7 @@ export type TableProps<
 } & Omit<CommonProps, 'title'>;
 
 /**
- * Table based on react-table
+ * Table based on [react-table](https://react-table.tanstack.com/docs/api/overview).
  * @example
  * const columns = React.useMemo(() => [
  *  {
@@ -153,6 +173,7 @@ export const Table = <
     emptyTableContent,
     className,
     style,
+    id,
     isSelectable = false,
     onSelect,
     isSortable = false,
@@ -161,9 +182,12 @@ export const Table = <
     onBottomReached,
     onRowInViewport,
     intersectionMargin = 300,
+    subComponent,
+    onExpand,
     onFilter,
     emptyFilteredTableContent,
     filterTypes: filterFunctions,
+    expanderCell,
     ...rest
   } = props;
 
@@ -188,6 +212,46 @@ export const Table = <
     onBottomReachedRef.current = onBottomReached;
     onRowInViewportRef.current = onRowInViewport;
   }, [onBottomReached, onRowInViewport]);
+
+  const useExpanderHook = (hooks: Hooks<T>) => {
+    if (!subComponent) {
+      return;
+    }
+    hooks.allColumns.push((columns: ColumnInstance<T>[]) => [
+      {
+        id: 'iui-table-expander',
+        disableResizing: true,
+        disableGroupBy: true,
+        minWidth: 48,
+        width: 48,
+        maxWidth: 48,
+        columnClassName: 'iui-slot',
+        cellClassName: 'iui-slot',
+        Cell: (props: CellProps<T>) => {
+          const { row } = props;
+          if (!subComponent(row)) {
+            return null;
+          } else if (expanderCell) {
+            return expanderCell(props);
+          } else {
+            return (
+              <IconButton
+                className='iui-row-expander'
+                styleType='borderless'
+                size='small'
+                onClick={() => {
+                  row.toggleRowExpanded();
+                }}
+              >
+                {<SvgChevronRight />}
+              </IconButton>
+            );
+          }
+        },
+      },
+      ...columns,
+    ]);
+  };
 
   const useSelectionHook = (hooks: Hooks<T>) => {
     if (!isSelectable) {
@@ -261,6 +325,24 @@ export const Table = <
     onSelect?.(selectedData, newState);
   };
 
+  const onExpandHandler = (
+    newState: TableState<T>,
+    instance?: TableInstance<T>,
+  ) => {
+    if (!instance?.rows.length) {
+      onExpand?.([], newState);
+      return;
+    }
+
+    const expandedData: T[] = [];
+    instance.rows.forEach((row) => {
+      if (newState.expanded[row.id]) {
+        expandedData.push(row.original);
+      }
+    });
+    onExpand?.(expandedData, newState);
+  };
+
   const tableStateReducer = (
     newState: TableState<T>,
     action: ActionType,
@@ -273,6 +355,10 @@ export const Table = <
         break;
       case TableActions.setFilter:
         onFilterHandler(newState, action, previousState, instance);
+        break;
+      case TableActions.toggleRowExpanded:
+      case TableActions.toggleAllRowsExpanded:
+        onExpandHandler(newState, instance);
         break;
       case TableActions.toggleRowSelected:
       case TableActions.toggleAllRowsSelected:
@@ -300,7 +386,9 @@ export const Table = <
     useFlexLayout,
     useFilters,
     useSortBy,
+    useExpanded,
     useRowSelect,
+    useExpanderHook,
     useSelectionHook,
   );
 
@@ -331,6 +419,7 @@ export const Table = <
   return (
     <div
       ref={(element) => setOwnerDocument(element?.ownerDocument)}
+      id={id}
       {...getTableProps({
         className: cx('iui-table', className),
         style,
@@ -393,6 +482,7 @@ export const Table = <
             const rowProps = row.getRowProps({
               className: cx('iui-row', {
                 'iui-selected': row.isSelected,
+                'iui-row-expanded': row.isExpanded && subComponent,
               }),
             });
             return (
@@ -405,6 +495,7 @@ export const Table = <
                 intersectionMargin={intersectionMargin}
                 state={state}
                 key={rowProps.key}
+                subComponent={subComponent}
               />
             );
           })}
