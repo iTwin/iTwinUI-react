@@ -761,6 +761,12 @@ RowInViewport.argTypes = {
 export const DisabledRows: Story<TableProps> = (args) => {
   const { columns, data, ...rest } = args;
 
+  const onRowClick = useCallback(
+    (event: React.MouseEvent, row: Row) =>
+      action(`Row clicked: ${JSON.stringify(row.original)}`)(),
+    [],
+  );
+
   const isRowDisabled = useCallback(
     (rowData: { name: string; description: string }) => {
       return rowData.name === 'Name2';
@@ -836,6 +842,7 @@ export const DisabledRows: Story<TableProps> = (args) => {
       columns={columns || tableColumns}
       data={data || tableData}
       emptyTableContent='No data.'
+      onRowClick={onRowClick}
       subComponent={expandedSubComponent}
       isRowDisabled={isRowDisabled}
       {...rest}
