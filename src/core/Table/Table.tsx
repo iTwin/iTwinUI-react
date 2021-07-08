@@ -275,6 +275,9 @@ export const Table = <
         columnClassName: 'iui-slot',
         cellClassName: 'iui-slot',
         Header: ({ getToggleAllRowsSelectedProps }: HeaderProps<T>) => {
+          const disabled = instance.rows.every((row) =>
+            isRowDisabled(row.original),
+          );
           const checked =
             instance.isAllRowsSelected ||
             instance.rows.every(
@@ -285,11 +288,12 @@ export const Table = <
           return (
             <Checkbox
               {...getToggleAllRowsSelectedProps()}
-              checked={checked}
+              checked={checked && !disabled}
               indeterminate={
                 !checked &&
                 Object.keys(instance.state.selectedRowIds).length > 0
               }
+              disabled={disabled}
             />
           );
         },
