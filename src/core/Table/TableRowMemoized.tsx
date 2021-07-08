@@ -7,9 +7,10 @@ import cx from 'classnames';
 import { Row, TableRowProps, TableState } from 'react-table';
 import { useIntersection } from '../utils/hooks/useIntersection';
 import { getCellStyle } from './utils';
+import { CSSTransition } from 'react-transition-group';
 
 /**
- * Memorization is needed to avoid unnecessary re-renders of all rows when additional data is added when lazy-loading.
+ * Memoization is needed to avoid unnecessary re-renders of all rows when additional data is added when lazy-loading.
  * Using `isLast` here instead of passing data length to avoid re-renders of all rows when more data is added. Now only the last row re-renders.
  * Although state is not used it is needed for `React.memo` to check state that changes row state e.g. selection.
  * When adding new features check whether it changes state that affects row. If it does then add equality check to `React.memo`.
@@ -22,6 +23,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
   onBottomReached: React.MutableRefObject<(() => void) | undefined>;
   intersectionMargin: number;
   state: TableState<T>; // Needed for explicitly checking selection changes
+  onClick?: (event: React.MouseEvent, row: Row<T>) => void;
   subComponent?: (row: Row<T>) => React.ReactNode;
 }) => {
   const {
@@ -31,6 +33,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
     onRowInViewport,
     onBottomReached,
     intersectionMargin,
+    onClick,
     subComponent,
   } = props;
 
@@ -43,9 +46,17 @@ const TableRow = <T extends Record<string, unknown>>(props: {
     rootMargin: `${intersectionMargin}px`,
   });
 
+  const expandedHeight = React.useRef(0);
+
   return (
     <>
-      <div {...rowProps} ref={rowRef}>
+      <div
+        {...rowProps}
+        ref={rowRef}
+        onClick={(event) => {
+          onClick?.(event, row);
+        }}
+      >
         {row.cells.map((cell) => {
           const cellProps = cell.getCellProps({
             className: cx('iui-cell', cell.column.cellClassName),
@@ -58,8 +69,33 @@ const TableRow = <T extends Record<string, unknown>>(props: {
           );
         })}
       </div>
-      {row.isExpanded && subComponent && (
-        <div className='iui-row iui-expanded-content'>{subComponent(row)}</div>
+      {subComponent && (
+        <CSSTransition
+          in={row.isExpanded}
+          timeout={200}
+          unmountOnExit={true}
+          onEnter={(node) => (node.style.height = `0px`)}
+          onEntering={(node) =>
+            (node.style.height = `${expandedHeight.current}px`)
+          }
+          onEntered={(node) => (node.style.height = 'auto')}
+          onExit={(node) => (node.style.height = `${expandedHeight.current}px`)}
+          onExiting={(node) => (node.style.height = `0px`)}
+          classNames='iui'
+        >
+          {
+            <div
+              className='iui-row iui-expanded-content'
+              ref={(ref) => {
+                if (ref) {
+                  expandedHeight.current = ref.offsetHeight;
+                }
+              }}
+            >
+              {subComponent(row)}
+            </div>
+          }
+        </CSSTransition>
       )}
     </>
   );
@@ -71,6 +107,7 @@ export const TableRowMemoized = React.memo(
     prevProp.isLast === nextProp.isLast &&
     prevProp.onRowInViewport === nextProp.onRowInViewport &&
     prevProp.onBottomReached === nextProp.onBottomReached &&
+    prevProp.onClick === nextProp.onClick &&
     prevProp.row.original === nextProp.row.original &&
     prevProp.state.selectedRowIds?.[prevProp.row.id] ===
       nextProp.state.selectedRowIds?.[nextProp.row.id] &&

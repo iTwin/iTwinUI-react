@@ -6,6 +6,8 @@ import cx from 'classnames';
 import React from 'react';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/tabs.css';
+import { useResizeObserver } from '../utils/hooks/useResizeObserver';
+import { useMergedRefs } from '../utils/hooks/useMergedRefs';
 
 export type HorizontalTabsProps = {
   /**
@@ -79,13 +81,37 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
     return index;
   }, [activeIndex, labels.length]);
 
-  const [currentIndex, setCurrentIndex] = React.useState(getValidIndex());
+  const tablistRef = React.useRef<HTMLUListElement>(null);
 
-  React.useEffect(() => {
+  const [tabsWidth, setTabsWidth] = React.useState(
+    () => tablistRef.current?.getBoundingClientRect().width,
+  );
+  const updateTabsWidth = React.useCallback(
+    ({ width }) => setTabsWidth(width),
+    [],
+  );
+
+  const [tablistSizeRef] = useResizeObserver(updateTabsWidth);
+  const refs = useMergedRefs(tablistRef, tablistSizeRef);
+
+  const [currentIndex, setCurrentIndex] = React.useState(getValidIndex());
+  const [stripeStyle, setStripeStyle] = React.useState<React.CSSProperties>({});
+
+  React.useLayoutEffect(() => {
     if (activeIndex != null && currentIndex !== activeIndex) {
       setCurrentIndex(getValidIndex());
     }
   }, [activeIndex, currentIndex, getValidIndex]);
+
+  React.useLayoutEffect(() => {
+    if (type !== 'default') {
+      const activeTab = tablistRef.current?.children[currentIndex];
+      setStripeStyle({
+        width: activeTab?.getBoundingClientRect().width,
+        left: (activeTab as HTMLElement)?.offsetLeft,
+      });
+    }
+  }, [currentIndex, type, tabsWidth]);
 
   const onTabClick = (index: number) => {
     if (onTabSelected) {
@@ -94,54 +120,52 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
     setCurrentIndex(index);
   };
 
-  const mainClass = React.useCallback(() => {
-    switch (type) {
-      case 'borderless':
-        return 'iui-tabs-borderless';
-      case 'pill':
-        return 'iui-tabs-pill';
-      default:
-        return 'iui-tabs-horizontal';
-    }
-  }, [type]);
-
   return (
-    <>
+    <div className='iui-tabs-wrapper'>
       <ul
         className={cx(
-          mainClass(),
-          { 'iui-green': color === 'green' },
+          'iui-tabs',
+          `iui-${type}`,
+          {
+            'iui-green': color === 'green',
+            'iui-animated': type !== 'default',
+          },
           tabsClassName,
         )}
+        role='tablist'
+        ref={refs}
         {...rest}
       >
         {labels.map((label, index) => {
           const onClick = () => onTabClick(index);
           return (
-            <li
-              className={cx({ 'iui-tabs-active': index === currentIndex })}
-              key={index}
-              role='tab'
-              aria-selected={index === currentIndex}
-            >
-              <a onClick={onClick} role='button'>
+            <li key={index}>
+              <button
+                className={cx('iui-tab', {
+                  'iui-active': index === currentIndex,
+                })}
+                onClick={onClick}
+                role='tab'
+                aria-selected={index === currentIndex}
+              >
                 {label}
-              </a>
+              </button>
             </li>
           );
         })}
       </ul>
+      {type !== 'default' && (
+        <div className='iui-tab-stripe' style={stripeStyle} />
+      )}
       {children && (
         <div
-          className={cx(
-            { 'iui-tabs-content-area': type === 'default' },
-            contentClassName,
-          )}
+          className={cx('iui-tabs-content', contentClassName)}
+          role='tabpanel'
         >
           {children}
         </div>
       )}
-    </>
+    </div>
   );
 };
 
