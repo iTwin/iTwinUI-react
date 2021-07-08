@@ -8,10 +8,12 @@ import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/tabs.css';
 import { useResizeObserver } from '../utils/hooks/useResizeObserver';
 import { useMergedRefs } from '../utils/hooks/useMergedRefs';
+import { HorizontalTab } from './HorizontalTab';
 
 export type HorizontalTabsProps = {
   /**
    * Elements shown for each tab.
+   * Recommended to pass an array of `HorizontalTab` components.
    */
   labels: React.ReactNodeArray;
   /**
@@ -49,10 +51,26 @@ export type HorizontalTabsProps = {
 /**
  * Tabs organize and allow navigation between groups of content that are related and at the same level of hierarchy.
  * @example
- * <HorizontalTabs labels={['Label 1','Label 2','Label 3']} />
- * <HorizontalTabs labels={['Label 1','Label 2','Label 3']} type={'borderless'} />
- * <HorizontalTabs labels={['Label 1','Active Index','Label 3']} activeIndex={1} />
- * <HorizontalTabs labels={['Label 1','Label 2','Label 3']} color={'green'} />
+ * const tabs = [
+ *   <HorizontalTab label='Label 1' />,
+ *   <HorizontalTab label='Label 2' />,
+ *   <HorizontalTab label='Label 3' />,
+ * ];
+ * <HorizontalTabs labels={tabs} />
+ *
+ * @example
+ * const tabsWithSublabels = [
+ *   <HorizontalTab label='Label 1' sublabel='First tab' />,
+ *   <HorizontalTab label='Label 2' sublabel='Active tab' />,
+ * ];
+ * <HorizontalTabs labels={tabs} activeIndex={1} />
+ *
+ * @example
+ * const tabsWithIcons = [
+ *   <HorizontalTab label='Label 1' icon={<SvgPlaceholder />} />,
+ *   <HorizontalTab label='Label 2' icon={<SvgPlaceholder />} />,
+ * ];
+ * <HorizontalTabs labels={tabs} type={'pill'} />
  */
 export const HorizontalTabs = (props: HorizontalTabsProps) => {
   const {
@@ -140,16 +158,28 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
           const onClick = () => onTabClick(index);
           return (
             <li key={index}>
-              <button
-                className={cx('iui-tab', {
-                  'iui-active': index === currentIndex,
-                })}
-                onClick={onClick}
-                role='tab'
-                aria-selected={index === currentIndex}
-              >
-                <span className='iui-tab-label'>{label}</span>
-              </button>
+              {typeof label === 'string' ? (
+                <HorizontalTab
+                  label={label}
+                  className={cx('iui-tab', {
+                    'iui-active': index === currentIndex,
+                  })}
+                  onClick={onClick}
+                  role='tab'
+                  aria-selected={index === currentIndex}
+                />
+              ) : (
+                React.cloneElement(label as JSX.Element, {
+                  className: cx((label as JSX.Element).props.className, {
+                    'iui-active': index === currentIndex,
+                  }),
+                  'aria-selected': index === currentIndex,
+                  onClick: (args: unknown) => {
+                    onClick();
+                    (label as JSX.Element).props.onClick?.(args);
+                  },
+                })
+              )}
             </li>
           );
         })}
