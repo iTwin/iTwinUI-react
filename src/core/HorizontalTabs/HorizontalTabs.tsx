@@ -7,22 +7,11 @@ import React from 'react';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/tabs.css';
 
-export type HorizontalTabsProps = (
-  | {
-      /**
-       * Elements shown for each tab.
-       * @deprecated Use `tabs` prop instead.
-       */
-      labels: React.ReactNodeArray;
-    }
-  | {
-      /**
-       * Elements shown for each tab.
-       * Recommended to use `HorizontalTab` components.
-       */
-      tabs: JSX.Element[];
-    }
-) & {
+export type HorizontalTabsProps = {
+  /**
+   * Elements shown for each tab.
+   */
+  labels: React.ReactNodeArray;
   /**
    * Handler for activating a tab.
    */
@@ -65,6 +54,7 @@ export type HorizontalTabsProps = (
  */
 export const HorizontalTabs = (props: HorizontalTabsProps) => {
   const {
+    labels,
     activeIndex,
     onTabSelected,
     type = 'default',
@@ -77,15 +67,17 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
 
   useTheme();
 
-  const items = 'labels' in props ? props.labels : props.tabs;
-
   const getValidIndex = React.useCallback((): number => {
     let index = 0;
-    if (activeIndex != null && activeIndex >= 0 && activeIndex < items.length) {
+    if (
+      activeIndex != null &&
+      activeIndex >= 0 &&
+      activeIndex < labels.length
+    ) {
       index = activeIndex;
     }
     return index;
-  }, [activeIndex, items.length]);
+  }, [activeIndex, labels.length]);
 
   const tablistRef = React.useRef<HTMLUListElement>(null);
 
@@ -128,33 +120,20 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
         ref={tablistRef}
         {...rest}
       >
-        {items.map((item, index) => {
+        {labels.map((label, index) => {
           const onClick = () => onTabClick(index);
           return (
             <li key={index}>
-              {'labels' in props ? (
-                <button
-                  className={cx('iui-tab', {
-                    'iui-active': index === currentIndex,
-                  })}
-                  onClick={onClick}
-                  role='tab'
-                  aria-selected={index === currentIndex}
-                >
-                  <span className='iui-tab-label'>{item}</span>
-                </button>
-              ) : (
-                React.cloneElement(item as JSX.Element, {
-                  className: cx((item as JSX.Element).props.className, {
-                    'iui-active': index === currentIndex,
-                  }),
-                  'aria-selected': index === currentIndex,
-                  onClick: (args: unknown) => {
-                    onClick();
-                    (item as JSX.Element).props.onClick?.(args);
-                  },
-                })
-              )}
+              <button
+                className={cx('iui-tab', {
+                  'iui-active': index === currentIndex,
+                })}
+                onClick={onClick}
+                role='tab'
+                aria-selected={index === currentIndex}
+              >
+                <span className='iui-tab-label'>{label}</span>
+              </button>
             </li>
           );
         })}
