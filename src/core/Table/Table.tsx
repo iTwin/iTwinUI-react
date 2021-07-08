@@ -200,7 +200,7 @@ export const Table = <
     emptyFilteredTableContent,
     filterTypes: filterFunctions,
     expanderCell,
-    isRowDisabled = () => false,
+    isRowDisabled,
     ...rest
   } = props;
 
@@ -256,7 +256,7 @@ export const Table = <
                   e.stopPropagation();
                   row.toggleRowExpanded();
                 }}
-                disabled={isRowDisabled(props.row.original)}
+                disabled={isRowDisabled?.(props.row.original)}
               >
                 {<SvgChevronRight />}
               </IconButton>
@@ -284,14 +284,14 @@ export const Table = <
         cellClassName: 'iui-slot',
         Header: ({ getToggleAllRowsSelectedProps }: HeaderProps<T>) => {
           const disabled = instance.rows.every((row) =>
-            isRowDisabled(row.original),
+            isRowDisabled?.(row.original),
           );
           const checked =
             instance.isAllRowsSelected ||
             instance.rows.every(
               (row) =>
                 instance.state.selectedRowIds[row.id] ||
-                isRowDisabled(row.original),
+                isRowDisabled?.(row.original),
             );
           return (
             <Checkbox
@@ -309,7 +309,7 @@ export const Table = <
           <span onClick={(e) => e.stopPropagation()}>
             <Checkbox
               {...row.getToggleRowSelectedProps()}
-              disabled={isRowDisabled(row.original)}
+              disabled={isRowDisabled?.(row.original)}
             />
           </span>
         ),
@@ -361,7 +361,7 @@ export const Table = <
     Object.keys(newState.selectedRowIds).forEach((id) => {
       if (
         newState.selectedRowIds[id] &&
-        !isRowDisabled(instance.rowsById[id].original)
+        !isRowDisabled?.(instance.rowsById[id].original)
       ) {
         newSelectedRowIds[id] = true;
         selectedData.push(instance.rowsById[id].original);
@@ -471,7 +471,7 @@ export const Table = <
 
   const onRowClickHandler = React.useCallback(
     (event: React.MouseEvent, row: Row<T>) => {
-      const isDisabled = isRowDisabled(row.original);
+      const isDisabled = isRowDisabled?.(row.original);
       if (isSelectable && !isDisabled) {
         if (!row.isSelected && !event.ctrlKey) {
           dispatch({
@@ -554,7 +554,7 @@ export const Table = <
               className: cx('iui-row', {
                 'iui-selected': row.isSelected,
                 'iui-row-expanded': row.isExpanded && subComponent,
-                'iui-disabled': isRowDisabled(row.original),
+                'iui-disabled': isRowDisabled?.(row.original),
               }),
             });
             return (
