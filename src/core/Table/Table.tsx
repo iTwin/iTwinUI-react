@@ -124,6 +124,11 @@ export type TableProps<
    * Content shown when there is no data after filtering.
    */
   emptyFilteredTableContent?: React.ReactNode;
+  /**
+   * Function that should return true if a row is disabled (i.e. cannot be selected or expanded).
+   * If not specified, all rows are enabled.
+   */
+  isRowDisabled?: (rowData: T) => boolean;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -195,6 +200,7 @@ export const Table = <
     emptyFilteredTableContent,
     filterTypes: filterFunctions,
     expanderCell,
+    isRowDisabled = () => false,
     ...rest
   } = props;
 
@@ -242,18 +248,18 @@ export const Table = <
             return expanderCell(props);
           } else {
             return (
-              <span onClick={(e) => e.stopPropagation()}>
-                <IconButton
-                  className='iui-row-expander'
-                  styleType='borderless'
-                  size='small'
-                  onClick={() => {
-                    row.toggleRowExpanded();
-                  }}
-                >
-                  {<SvgChevronRight />}
-                </IconButton>
-              </span>
+              <IconButton
+                className='iui-row-expander'
+                styleType='borderless'
+                size='small'
+                onClick={(e) => {
+                  e.stopPropagation();
+                  row.toggleRowExpanded();
+                }}
+                disabled={isRowDisabled(props.row.original)}
+              >
+                {<SvgChevronRight />}
+              </IconButton>
             );
           }
         },
@@ -276,16 +282,37 @@ export const Table = <
         maxWidth: 48,
         columnClassName: 'iui-slot',
         cellClassName: 'iui-slot',
-        Header: ({ getToggleAllRowsSelectedProps }: HeaderProps<T>) => (
-          <Checkbox {...getToggleAllRowsSelectedProps()} />
-        ),
-        Cell: ({ row }: CellProps<T>) => {
+        Header: ({ getToggleAllRowsSelectedProps }: HeaderProps<T>) => {
+          const disabled = instance.rows.every((row) =>
+            isRowDisabled(row.original),
+          );
+          const checked =
+            instance.isAllRowsSelected ||
+            instance.rows.every(
+              (row) =>
+                instance.state.selectedRowIds[row.id] ||
+                isRowDisabled(row.original),
+            );
           return (
-            <span onClick={(e) => e.stopPropagation()}>
-              <Checkbox {...row.getToggleRowSelectedProps()} />
-            </span>
+            <Checkbox
+              {...getToggleAllRowsSelectedProps()}
+              checked={checked && !disabled}
+              indeterminate={
+                !checked &&
+                Object.keys(instance.state.selectedRowIds).length > 0
+              }
+              disabled={disabled}
+            />
           );
         },
+        Cell: ({ row }: CellProps<T>) => (
+          <span onClick={(e) => e.stopPropagation()}>
+            <Checkbox
+              {...row.getToggleRowSelectedProps()}
+              disabled={isRowDisabled(row.original)}
+            />
+          </span>
+        ),
       },
       ...columns,
     ]);
@@ -330,11 +357,17 @@ export const Table = <
     }
 
     const selectedData: T[] = [];
-    instance.rows.forEach((row) => {
-      if (newState.selectedRowIds[row.id]) {
-        selectedData.push(row.original);
+    const newSelectedRowIds = {} as Record<string, boolean>;
+    Object.keys(newState.selectedRowIds).forEach((id) => {
+      if (
+        newState.selectedRowIds[id] &&
+        !isRowDisabled(instance.rowsById[id].original)
+      ) {
+        newSelectedRowIds[id] = true;
+        selectedData.push(instance.rowsById[id].original);
       }
     });
+    newState.selectedRowIds = newSelectedRowIds;
     onSelect?.(selectedData, newState);
   };
 
@@ -520,6 +553,7 @@ export const Table = <
               className: cx('iui-row', {
                 'iui-selected': row.isSelected,
                 'iui-row-expanded': row.isExpanded && subComponent,
+                'iui-disabled': isRowDisabled(row.original),
               }),
             });
             return (
