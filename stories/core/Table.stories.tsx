@@ -738,7 +738,9 @@ export const RowInViewport: Story<TableProps> = (args) => {
         <a
           className='iui-anchor'
           onClick={() =>
-            parent.document.getElementById('tabbutton-actions')?.click()
+            (parent.document.querySelector(
+              '[id^="tabbutton-actions"]',
+            ) as HTMLButtonElement)?.click()
           }
         >
           Actions
