@@ -890,9 +890,11 @@ it('should disable row and handle expansion accordingly', () => {
 
 it('should disable row and handle selection accordingly', () => {
   const onSelect = jest.fn();
+  const onRowClick = jest.fn();
   const { container } = renderComponent({
     isSelectable: true,
     onSelect,
+    onRowClick,
     isRowDisabled: (rowData) => rowData.name === 'Name2',
   });
 
@@ -913,6 +915,7 @@ it('should disable row and handle selection accordingly', () => {
   // Select disabled row
   fireEvent.click(checkboxCells[2]);
   expect(onSelect).not.toHaveBeenCalled();
+  expect(onRowClick).not.toHaveBeenCalled();
 
   // Select first row
   fireEvent.click(checkboxCells[1]);
