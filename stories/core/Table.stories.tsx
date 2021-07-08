@@ -39,78 +39,39 @@ export default {
     emptyTableContent: 'No data.',
   },
   argTypes: {
-    columns: {
-      control: { disable: true },
-    },
-    isSelectable: {
-      control: { disable: true },
-    },
-    style: {
-      control: { disable: true },
-    },
-    className: {
-      control: { disable: true },
-    },
-    initialState: {
-      table: { disable: true },
-    },
-    stateReducer: {
-      table: { disable: true },
-    },
-    useControlledState: {
-      table: { disable: true },
-    },
-    defaultColumn: {
-      table: { disable: true },
-    },
-    getSubRows: {
-      table: { disable: true },
-    },
-    getRowId: {
-      table: { disable: true },
-    },
-    manualRowSelectedKey: {
-      table: { disable: true },
-    },
-    autoResetSelectedRows: {
-      table: { disable: true },
-    },
-    selectSubRows: {
-      table: { disable: true },
-    },
-    manualSortBy: {
-      table: { disable: true },
-    },
-    defaultCanSort: {
-      table: { disable: true },
-    },
-    disableMultiSort: {
-      table: { disable: true },
-    },
-    isMultiSortEvent: {
-      table: { disable: true },
-    },
-    maxMultiSortColCount: {
-      table: { disable: true },
-    },
-    disableSortRemove: {
-      table: { disable: true },
-    },
-    disabledMultiRemove: {
-      table: { disable: true },
-    },
-    orderByFn: {
-      table: { disable: true },
-    },
-    sortTypes: {
-      table: { disable: true },
-    },
-    autoResetSortBy: {
-      table: { disable: true },
-    },
-    autoResetHiddenColumns: {
-      table: { disable: true },
-    },
+    columns: { control: { disable: true } },
+    isSelectable: { control: { disable: true } },
+    style: { control: { disable: true } },
+    className: { control: { disable: true } },
+    id: { control: { disable: true } },
+    initialState: { table: { disable: true } },
+    stateReducer: { table: { disable: true } },
+    useControlledState: { table: { disable: true } },
+    defaultColumn: { table: { disable: true } },
+    getSubRows: { table: { disable: true } },
+    getRowId: { table: { disable: true } },
+    manualRowSelectedKey: { table: { disable: true } },
+    autoResetSelectedRows: { table: { disable: true } },
+    selectSubRows: { table: { disable: true } },
+    manualSortBy: { table: { disable: true } },
+    defaultCanSort: { table: { disable: true } },
+    disableMultiSort: { table: { disable: true } },
+    isMultiSortEvent: { table: { disable: true } },
+    maxMultiSortColCount: { table: { disable: true } },
+    disableSortRemove: { table: { disable: true } },
+    disabledMultiRemove: { table: { disable: true } },
+    orderByFn: { table: { disable: true } },
+    sortTypes: { table: { disable: true } },
+    autoResetSortBy: { table: { disable: true } },
+    autoResetHiddenColumns: { table: { disable: true } },
+    autoResetFilters: { table: { disable: true } },
+    filterTypes: { table: { disable: true } },
+    defaultCanFilter: { table: { disable: true } },
+    manualFilters: { table: { disable: true } },
+    paginateExpandedRows: { table: { disable: true } },
+    expandSubRows: { table: { disable: true } },
+    autoResetExpanded: { table: { disable: true } },
+    manualExpandedKey: { table: { disable: true } },
   },
   parameters: {
     creevey: { skip: { stories: ['Lazy Loading', 'Row In Viewport'] } },
@@ -178,9 +139,6 @@ export const Basic: Story<TableProps> = (args) => {
 
 export const Selectable: Story<TableProps> = (args) => {
   const { columns, data, ...rest } = args;
-  const onClickHandler = (
-    props: CellProps<{ name: string; description: string }>,
-  ) => action(props.row.original.name)();
 
   const onSelect = useCallback(
     (rows, state) =>
@@ -189,6 +147,12 @@ export const Selectable: Story<TableProps> = (args) => {
           state,
         )}`,
       )(),
+    [],
+  );
+
+  const onRowClick = useCallback(
+    (event: React.MouseEvent, row: Row) =>
+      action(`Row clicked: ${JSON.stringify(row.original)}`)(),
     [],
   );
 
@@ -213,9 +177,14 @@ export const Selectable: Story<TableProps> = (args) => {
             Header: 'Click',
             width: 100,
             Cell: (props: CellProps<{ name: string; description: string }>) => {
-              const onClick = () => onClickHandler(props);
               return (
-                <a className='iui-anchor' onClick={onClick}>
+                <a
+                  className='iui-anchor'
+                  onClick={(e) => {
+                    e.stopPropagation(); // prevent row selection when clicking on link
+                    action(props.row.original.name)();
+                  }}
+                >
                   Click me!
                 </a>
               );
@@ -243,6 +212,7 @@ export const Selectable: Story<TableProps> = (args) => {
       emptyTableContent='No data.'
       isSelectable={true}
       onSelect={onSelect}
+      onRowClick={onRowClick}
       {...rest}
     />
   );
@@ -786,6 +756,107 @@ export const RowInViewport: Story<TableProps> = (args) => {
 
 RowInViewport.argTypes = {
   data: { control: { disable: true } },
+};
+
+export const DisabledRows: Story<TableProps> = (args) => {
+  const { columns, data, ...rest } = args;
+
+  const onRowClick = useCallback(
+    (event: React.MouseEvent, row: Row) =>
+      action(`Row clicked: ${JSON.stringify(row.original)}`)(),
+    [],
+  );
+
+  const isRowDisabled = useCallback(
+    (rowData: { name: string; description: string }) => {
+      return rowData.name === 'Name2';
+    },
+    [],
+  );
+
+  const tableColumns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+          },
+        ],
+      },
+      {
+        id: 'click-me',
+        Header: 'Click',
+        width: 100,
+        // Manually handling disabled state in custom cells
+        Cell: (props: CellProps<{ name: string; description: string }>) => (
+          <>
+            {isRowDisabled(props.row.original) ? (
+              <>Click me!</>
+            ) : (
+              <a
+                className='iui-anchor'
+                onClick={action(props.row.original.name)}
+              >
+                Click me!
+              </a>
+            )}
+          </>
+        ),
+      },
+    ],
+    [isRowDisabled],
+  );
+
+  const tableData = useMemo(
+    () => [
+      { name: 'Name1', description: 'Description1' },
+      { name: 'Name2', description: 'Description2' },
+      { name: 'Name3', description: 'Description3' },
+    ],
+    [],
+  );
+
+  const expandedSubComponent = useCallback(
+    (row: Row) => (
+      <div style={{ padding: 16 }}>
+        <Leading>Extra information</Leading>
+        <pre>
+          <code>{JSON.stringify({ values: row.values }, null, 2)}</code>
+        </pre>
+      </div>
+    ),
+    [],
+  );
+
+  return (
+    <Table
+      columns={columns || tableColumns}
+      data={data || tableData}
+      emptyTableContent='No data.'
+      onRowClick={onRowClick}
+      subComponent={expandedSubComponent}
+      isRowDisabled={isRowDisabled}
+      {...rest}
+    />
+  );
+};
+
+DisabledRows.args = {
+  data: [
+    { name: 'Name1', description: 'Description1' },
+    { name: 'Name2', description: 'Description2' },
+    { name: 'Name3', description: 'Description3' },
+  ],
+  isSelectable: true,
 };
 
 export const Loading: Story<TableProps> = (args) => {
