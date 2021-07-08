@@ -119,8 +119,8 @@ export type TableProps<
    */
   emptyFilteredTableContent?: React.ReactNode;
   /**
-   * Function that returns whether row is disabled or not.
-   * It also disables selection and expansion cells.
+   * Function that should return true if a row is disabled (i.e. cannot be selected or expanded).
+   * If not specified, all rows are enabled.
    */
   isRowDisabled?: (rowData: T) => boolean;
 } & Omit<CommonProps, 'title'>;
@@ -275,20 +275,21 @@ export const Table = <
         columnClassName: 'iui-slot',
         cellClassName: 'iui-slot',
         Header: ({ getToggleAllRowsSelectedProps }: HeaderProps<T>) => {
-          const onChange = () => {
-            const isAllEnabledRowsSelected =
-              instance.isAllRowsSelected ||
-              instance.rows.every(
-                (row) =>
-                  instance.state.selectedRowIds[row.id] ||
-                  isRowDisabled(row.original),
-              );
-            instance.toggleAllRowsSelected(!isAllEnabledRowsSelected);
-          };
+          const checked =
+            instance.isAllRowsSelected ||
+            instance.rows.every(
+              (row) =>
+                instance.state.selectedRowIds[row.id] ||
+                isRowDisabled(row.original),
+            );
           return (
             <Checkbox
               {...getToggleAllRowsSelectedProps()}
-              onChange={onChange}
+              checked={checked}
+              indeterminate={
+                !checked &&
+                Object.keys(instance.state.selectedRowIds).length > 0
+              }
             />
           );
         },

@@ -879,17 +879,31 @@ it('should disable row and handle selection accordingly', () => {
   expect(checkboxCells[2].classList).toContain('iui-disabled');
   expect(checkboxCells[3].classList).not.toContain('iui-disabled');
 
+  // Select disabled row
   fireEvent.click(checkboxCells[2]);
   expect(onSelect).not.toHaveBeenCalled();
 
-  // Select all non-disabled rows
+  // Select first row
+  fireEvent.click(checkboxCells[1]);
+  expect(onSelect).toHaveBeenCalledWith([mockedData()[0]], expect.any(Object));
+  const headerCheckbox = checkboxCells[0].querySelector(
+    'input',
+  ) as HTMLInputElement;
+  expect(headerCheckbox.indeterminate).toBe(true);
+  expect(headerCheckbox.checked).toBe(false);
+
+  // Select all
   fireEvent.click(checkboxCells[0]);
   expect(onSelect).toHaveBeenCalledWith(
     [mockedData()[0], mockedData()[2]],
     expect.any(Object),
   );
+  expect(headerCheckbox.indeterminate).toBe(false);
+  expect(headerCheckbox.checked).toBe(true);
 
-  // Deselect all rows
+  // Deselect all
   fireEvent.click(checkboxCells[0]);
   expect(onSelect).toHaveBeenCalledWith([], expect.any(Object));
+  expect(headerCheckbox.indeterminate).toBe(false);
+  expect(headerCheckbox.checked).toBe(false);
 });
