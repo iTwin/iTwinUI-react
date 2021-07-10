@@ -37,6 +37,8 @@ import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import { FilterToggle, TableFilterValue } from './filters';
 import { customFilterFunctions } from './filters/customFilterFunctions';
 
+const singleRowSelectedAction = 'singleRowSelected';
+
 /**
  * Table props.
  * columns and data must be memoized.
@@ -65,6 +67,10 @@ export type TableProps<
     selectedData: T[] | undefined,
     tableState?: TableState<T>,
   ) => void;
+  /**
+   * Handler for when a row is clicked. Must be memoized.
+   */
+  onRowClick?: (event: React.MouseEvent, row: Row<T>) => void;
   /**
    * Flag whether table columns can be sortable.
    * @default false
@@ -118,6 +124,11 @@ export type TableProps<
    * Content shown when there is no data after filtering.
    */
   emptyFilteredTableContent?: React.ReactNode;
+  /**
+   * Function that should return true if a row is disabled (i.e. cannot be selected or expanded).
+   * If not specified, all rows are enabled.
+   */
+  isRowDisabled?: (rowData: T) => boolean;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -176,6 +187,7 @@ export const Table = <
     id,
     isSelectable = false,
     onSelect,
+    onRowClick,
     isSortable = false,
     onSort,
     stateReducer,
@@ -188,6 +200,7 @@ export const Table = <
     emptyFilteredTableContent,
     filterTypes: filterFunctions,
     expanderCell,
+    isRowDisabled,
     ...rest
   } = props;
 
@@ -239,9 +252,11 @@ export const Table = <
                 className='iui-row-expander'
                 styleType='borderless'
                 size='small'
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   row.toggleRowExpanded();
                 }}
+                disabled={isRowDisabled?.(props.row.original)}
               >
                 {<SvgChevronRight />}
               </IconButton>
@@ -267,11 +282,36 @@ export const Table = <
         maxWidth: 48,
         columnClassName: 'iui-slot',
         cellClassName: 'iui-slot',
-        Header: ({ getToggleAllRowsSelectedProps }: HeaderProps<T>) => (
-          <Checkbox {...getToggleAllRowsSelectedProps()} />
-        ),
+        Header: ({ getToggleAllRowsSelectedProps }: HeaderProps<T>) => {
+          const disabled = instance.rows.every((row) =>
+            isRowDisabled?.(row.original),
+          );
+          const checked =
+            instance.isAllRowsSelected ||
+            instance.rows.every(
+              (row) =>
+                instance.state.selectedRowIds[row.id] ||
+                isRowDisabled?.(row.original),
+            );
+          return (
+            <Checkbox
+              {...getToggleAllRowsSelectedProps()}
+              checked={checked && !disabled}
+              indeterminate={
+                !checked &&
+                Object.keys(instance.state.selectedRowIds).length > 0
+              }
+              disabled={disabled}
+            />
+          );
+        },
         Cell: ({ row }: CellProps<T>) => (
-          <Checkbox {...row.getToggleRowSelectedProps()} />
+          <span onClick={(e) => e.stopPropagation()}>
+            <Checkbox
+              {...row.getToggleRowSelectedProps()}
+              disabled={isRowDisabled?.(row.original)}
+            />
+          </span>
         ),
       },
       ...columns,
@@ -317,11 +357,17 @@ export const Table = <
     }
 
     const selectedData: T[] = [];
-    instance.rows.forEach((row) => {
-      if (newState.selectedRowIds[row.id]) {
-        selectedData.push(row.original);
+    const newSelectedRowIds = {} as Record<string, boolean>;
+    Object.keys(newState.selectedRowIds).forEach((id) => {
+      if (
+        newState.selectedRowIds[id] &&
+        !isRowDisabled?.(instance.rowsById[id].original)
+      ) {
+        newSelectedRowIds[id] = true;
+        selectedData.push(instance.rowsById[id].original);
       }
     });
+    newState.selectedRowIds = newSelectedRowIds;
     onSelect?.(selectedData, newState);
   };
 
@@ -360,6 +406,12 @@ export const Table = <
       case TableActions.toggleAllRowsExpanded:
         onExpandHandler(newState, instance);
         break;
+      case singleRowSelectedAction: {
+        newState = {
+          ...newState,
+          selectedRowIds: { [action.id]: true } as Record<string, boolean>,
+        };
+      }
       case TableActions.toggleRowSelected:
       case TableActions.toggleAllRowsSelected:
       case TableActions.toggleAllPageRowsSelected: {
@@ -402,6 +454,7 @@ export const Table = <
     state,
     allColumns,
     filteredFlatRows,
+    dispatch,
   } = instance;
 
   const ariaDataAttributes = Object.entries(rest).reduce(
@@ -415,6 +468,24 @@ export const Table = <
   );
 
   const areFiltersSet = allColumns.some((column) => !!column.filterValue);
+
+  const onRowClickHandler = React.useCallback(
+    (event: React.MouseEvent, row: Row<T>) => {
+      const isDisabled = isRowDisabled?.(row.original);
+      if (isSelectable && !isDisabled) {
+        if (!row.isSelected && !event.ctrlKey) {
+          dispatch({
+            type: singleRowSelectedAction,
+            id: row.id,
+          });
+        } else {
+          row.toggleRowSelected(!row.isSelected);
+        }
+      }
+      !isDisabled && onRowClick?.(event, row);
+    },
+    [dispatch, isSelectable, onRowClick, isRowDisabled],
+  );
 
   return (
     <div
@@ -483,6 +554,7 @@ export const Table = <
               className: cx('iui-row', {
                 'iui-selected': row.isSelected,
                 'iui-row-expanded': row.isExpanded && subComponent,
+                'iui-disabled': isRowDisabled?.(row.original),
               }),
             });
             return (
@@ -495,6 +567,7 @@ export const Table = <
                 intersectionMargin={intersectionMargin}
                 state={state}
                 key={rowProps.key}
+                onClick={onRowClickHandler}
                 subComponent={subComponent}
               />
             );
