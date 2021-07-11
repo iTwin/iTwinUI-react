@@ -4,7 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 import { Meta, Story } from '@storybook/react';
 import React from 'react';
-import { Slider } from '../../src/core';
+import { useCallback, useState } from '@storybook/addons';
+import { Body, Slider } from '../../src/core';
 import { SliderProps } from '../../src/core/Slider/Slider';
 import SvgSmileyHappy from '@itwin/itwinui-icons-react/cjs/icons/SmileyHappy';
 import SvgSmileySad from '@itwin/itwinui-icons-react/cjs/icons/SmileySad';
@@ -181,4 +182,28 @@ CustomTooltip.args = {
   toolTipFunction: (val) => {
     return `\$${val}.00`;
   },
+};
+
+export const HideTooltip: Story<SliderProps> = (args) => {
+  const [maxLabel, setMaxLabel] = useState('20');
+  const updateLabel = useCallback((values: ReadonlyArray<number>) => {
+    setMaxLabel(values[0].toString());
+  }, []);
+  return (
+    <Slider
+      {...args}
+      minLabel=''
+      maxLabel={<Body style={{ width: '100px' }}>{maxLabel}</Body>}
+      onUpdate={updateLabel}
+      onChange={updateLabel}
+    />
+  );
+};
+
+HideTooltip.args = {
+  containerProps: { className: 'test-class', style: { width: '60%' } },
+  railDomain: { min: 0, max: 60 },
+  values: [20],
+  tickLabels: ['0', '20', '40', '60'],
+  hideTooltip: true,
 };

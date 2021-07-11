@@ -46,12 +46,14 @@ interface SliderContextProps {
   readonly setThumbMoveIndex: (index: number) => void;
   readonly setThumbValue: (index: number, value: number) => void;
   readonly toolTipFunction?: (val: number, step: number) => string;
+  readonly hideTooltip: boolean;
 }
 
 const SliderContext = React.createContext<SliderContextProps>({
   values: [],
   step: 1,
   trackDisplayMode: 'none',
+  hideTooltip: false,
   railDomain: { min: 0, max: 100 },
   thumbMode: 'allow-crossing',
   toolTipPosition: 'top',
@@ -219,6 +221,7 @@ const Track = () => {
  * it with pointer. Whenever a Thumb is active, focused, or hovered its tooltip is shown. */
 const Thumb = ({ index, isActive }: { index: number; isActive: boolean }) => {
   const {
+    hideTooltip,
     railDomain,
     setThumbMoveIndex,
     toolTipFunction,
@@ -286,7 +289,7 @@ const Thumb = ({ index, isActive }: { index: number; isActive: boolean }) => {
     () => cx('iui-slider-thumb', isActive && 'iui-active'),
     [isActive],
   );
-  const showTooltip = isActive || hasFocus || isHovered;
+  const showTooltip = !hideTooltip && (isActive || hasFocus || isHovered);
   return (
     <Tooltip
       visible={showTooltip}
@@ -346,6 +349,11 @@ export type SliderProps = {
    *  @default false
    */
   disabled?: boolean;
+  /** Hide tooltip that is displayed by default.
+   *  @default false
+   */
+  readonly hideTooltip?: boolean;
+
   /** Optional tooltip function that can be supplied to generate tooltip text.
    *  @default undefined
    */
@@ -375,6 +383,16 @@ export type SliderProps = {
   thumbMode?: ThumbMoveMode;
   /** optional props to include on slider container */
   containerProps?: StylingProps;
+  /**
+   * Callback fired when the value(s) of the slider has changed. This will receive changes at
+   * the end of a slide as well as changes from clicks on rails and tracks.
+   */
+  onChange?: (values: ReadonlyArray<number>) => void;
+  /** Callback fired when the value(s) of the slider are internally updated during operations
+   * like dragging a Thumb. Use this callback with caution as a high-volume updates will occur
+   * when dragging.
+   */
+  onUpdate?: (values: ReadonlyArray<number>) => void;
 };
 
 /**
@@ -400,6 +418,9 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       thumbMode = 'allow-crossing',
       toolTipPosition = 'top',
       containerProps = {},
+      onChange,
+      onUpdate,
+      hideTooltip = false,
     } = props;
 
     const {
@@ -445,8 +466,12 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
     const [activeMoveIndex, setActiveMoveIndex] = React.useState<
       number | undefined
     >(undefined);
-    const handlePointerMove = React.useCallback(
-      (event: PointerEvent): void => {
+
+    const updateThumbValue = React.useCallback(
+      (
+        event: PointerEvent,
+        callback?: (values: ReadonlyArray<number>) => void,
+      ) => {
         if (containerRef.current && undefined !== activeMoveIndex) {
           const percent = getPercentageOfRectangle(
             containerRef.current.getBoundingClientRect(),
@@ -468,29 +493,43 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
           const newValues = [...currentValues];
           newValues[activeMoveIndex] = pointerValue;
           setCurrentValues(newValues);
+          callback && callback(newValues);
         }
       },
       [activeMoveIndex, railDomain, step, thumbMode, currentValues],
     );
 
+    const handlePointerMove = React.useCallback(
+      (event: PointerEvent): void => {
+        updateThumbValue(event, onUpdate);
+      },
+      [onUpdate, updateThumbValue],
+    );
+
+    // function called by Thumb keyboard processing
     const setThumbValue = React.useCallback(
       (index: number, value: number) => {
         const newValues = [...currentValues];
         newValues[index] = value;
         setCurrentValues(newValues);
+        onChange && onChange(newValues);
       },
-      [currentValues],
+      [currentValues, onChange],
     );
 
     const setThumbMoveIndex = React.useCallback((index: number) => {
       setActiveMoveIndex(index);
     }, []);
 
-    const handlePointerUp = React.useCallback((event: PointerEvent) => {
-      setActiveMoveIndex(undefined);
-      event.preventDefault();
-      event.stopPropagation();
-    }, []);
+    const handlePointerUp = React.useCallback(
+      (event: PointerEvent) => {
+        updateThumbValue(event, onChange);
+        setActiveMoveIndex(undefined);
+        event.preventDefault();
+        event.stopPropagation();
+      },
+      [onChange, updateThumbValue],
+    );
 
     const handlePointerDownOnSlider = React.useCallback(
       (event: React.PointerEvent) => {
@@ -519,9 +558,10 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
           const newValues = [...currentValues];
           newValues[closestValueIndex] = pointerValue;
           setCurrentValues(newValues);
+          onChange && onChange(newValues);
         }
       },
-      [railDomain, step, currentValues, thumbMode],
+      [railDomain, step, currentValues, thumbMode, onChange],
     );
 
     React.useEffect(() => {
@@ -552,6 +592,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
           step,
           thumbMode,
           toolTipPosition,
+          hideTooltip,
         }}
       >
         <div
