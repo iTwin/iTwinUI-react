@@ -114,7 +114,6 @@ export const MultiThumbs: Story<SliderProps> = (args) => {
 
 MultiThumbs.args = {
   values: [20, 40, 60, 80],
-  trackDisplayMode: 'even-segments',
 };
 
 export const MultiThumbsAllowCrossing: Story<SliderProps> = (args) => {
@@ -158,7 +157,7 @@ TooltipRight.args = {
   min: 0,
   max: 60,
   values: [30],
-  toolTipPosition: 'right',
+  tooltipProps: { placement: 'right' },
 };
 
 export const WithTick: Story<SliderProps> = (args) => {
@@ -181,21 +180,21 @@ CustomTooltip.args = {
   max: 60,
   values: [20],
   tickLabels: ['0', '20', '40', '60'],
-  toolTipFunction: (val) => {
+  tooltipRender: (val) => {
     return `\$${val}.00`;
   },
 };
 
 export const HideTooltip: Story<SliderProps> = (args) => {
-  const [maxLabel, setMaxLabel] = useState('20');
+  const [minLabel, setMinLabel] = useState('20');
   const updateLabel = useCallback((values: ReadonlyArray<number>) => {
-    setMaxLabel(values[0].toString());
+    setMinLabel(values[0].toString());
   }, []);
   return (
     <Slider
       {...args}
-      minLabel=''
-      maxLabel={<Body style={{ width: '100px' }}>{maxLabel}</Body>}
+      minLabel={<Body style={{ width: '60px' }}>{minLabel}</Body>}
+      maxLabel=''
       onUpdate={updateLabel}
       onChange={updateLabel}
     />
@@ -208,14 +207,14 @@ HideTooltip.args = {
   max: 60,
   values: [20],
   tickLabels: ['0', '20', '40', '60'],
-  hideTooltip: true,
+  tooltipProps: { visible: false },
 };
 
 export const DateSlider: Story<SliderProps> = (args) => {
   const dateFormatter = useMemo(() => {
     return new Intl.DateTimeFormat('default', {
-      month: 'numeric',
-      day: 'numeric',
+      month: 'short',
+      day: '2-digit',
       timeZone: 'UTC',
     } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
   }, []);
@@ -224,19 +223,28 @@ export const DateSlider: Story<SliderProps> = (args) => {
     new Date(Date.UTC(2019, 0, 1)),
   );
 
-  const updateDate = useCallback((values: ReadonlyArray<number>) => {
-    const newDate = new Date(Date.UTC(2019, 0, values[0]));
-    setCurrentDate(newDate);
-  }, []);
+  const [minLabel, setMinLabel] = useState(() =>
+    dateFormatter.format(currentDate),
+  );
 
-  const toolTipFunction = useCallback(() => {
+  const updateDate = useCallback(
+    (values: ReadonlyArray<number>) => {
+      const newDate = new Date(Date.UTC(2019, 0, values[0]));
+      setCurrentDate(newDate);
+      setMinLabel(dateFormatter.format(newDate));
+    },
+    [dateFormatter],
+  );
+
+  const tooltipRender = useCallback(() => {
     return dateFormatter.format(currentDate);
   }, [currentDate, dateFormatter]);
 
   return (
     <Slider
       {...args}
-      toolTipFunction={toolTipFunction}
+      minLabel={<Body style={{ width: '60px' }}>{minLabel}</Body>}
+      tooltipRender={tooltipRender}
       onUpdate={updateDate}
       onChange={updateDate}
     />
@@ -247,7 +255,6 @@ DateSlider.args = {
   min: 1,
   max: 365,
   values: [0],
-  minLabel: 'Jan',
-  maxLabel: 'Dec',
+  maxLabel: '',
   tickLabels: ['Jan', 'Dec'],
 };

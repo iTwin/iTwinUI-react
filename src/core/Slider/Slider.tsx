@@ -7,88 +7,40 @@ import React from 'react';
 import { useMergedRefs } from '../utils/hooks/useMergedRefs';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/slider.css';
-import { Tooltip } from '../Tooltip';
-import { Placement } from 'tippy.js';
-import { StylingProps } from '../utils/props';
+import { TooltipProps } from '../Tooltip';
+import { CommonProps } from '../utils/props';
+import { getBoundedValue } from '../utils/common';
+import { Track } from './Track';
+import { getAllowableThumbRange, Thumb } from './Thumb';
+import { SliderContext } from './SliderContext';
 
-/** Determines which segments are shown with color.
+/**
+ * Determines which segments are shown with color.
+ * 'auto' - segment display is based on number of values.
  * 'none' - no colored tracks are displayed.
- * 'odd-segments'- colored tracks shown in segments 1,3,5, etc. Default if number of thumbs values are odd.
- * 'even-segments'- colored tracks shown in segments 2,4,6, etc. Default if number of thumbs values are even.
- * 'undefined' - temporary only here because storybook sends in string 'undefined' and not value undefined
+ * 'odd-segments'- colored tracks shown in segments 1,3,5, etc. Default if number of Thumbs values are odd.
+ * 'even-segments'- colored tracks shown in segments 2,4,6, etc. Default if number of Thumbs values are even.
  */
 export type TrackDisplayMode =
+  | 'auto'
   | 'none'
   | 'odd-segments'
-  | 'even-segments'
-  | 'undefined';
+  | 'even-segments';
 
-/** The interaction mode. Default is 1. Possible values:
+/**
+ * ThumbMoveMode is only used when slider shows multiple Thumbs. It controls
+ * if a Thumb movement should be limited to only move in the segments adjacent
+ * to the Thumb. Possible modes are:
  * 'allow-crossing' - allows thumb to cross other thumbs. Default.
- * 'inhibit-crossing'- keeps the thumb from crossing and separated by a step.
+ * 'inhibit-crossing'- keeps the thumb from crossing another Thumb.
  */
 export type ThumbMoveMode = 'allow-crossing' | 'inhibit-crossing';
 
-/** Local Context set up by Slider and provided to children */
-interface SliderContextProps {
-  readonly values: number[];
-  readonly step: number;
-  readonly trackDisplayMode: TrackDisplayMode;
-  readonly min: number;
-  readonly max: number;
-  readonly thumbMode: ThumbMoveMode;
-  readonly toolTipPosition: Placement;
-  readonly setThumbMoveIndex: (index: number) => void;
-  readonly setThumbValue: (index: number, value: number) => void;
-  readonly toolTipFunction?: (val: number, step: number) => string;
-  readonly hideTooltip: boolean;
-}
-
-const SliderContext = React.createContext<SliderContextProps>({
-  values: [],
-  step: 1,
-  trackDisplayMode: 'none',
-  hideTooltip: false,
-  min: 0,
-  max: 100,
-  thumbMode: 'allow-crossing',
-  toolTipPosition: 'top',
-  setThumbMoveIndex: () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  },
-  setThumbValue: () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  },
-});
-
-const useSliderContext = (): SliderContextProps => {
-  return React.useContext(SliderContext);
-};
 
 /** Private Utility Functions */
-function getBoundedValue(val: number, min: number, max: number) {
-  return Math.min(max, Math.max(min, val));
-}
-
 function getPercentageOfRectangle(rect: DOMRect, pointer: number) {
   const position = getBoundedValue(pointer, rect.left, rect.right);
   return (position - rect.left) / rect.width;
-}
-
-function getAllowableThumbRange(
-  thumbMode: ThumbMoveMode,
-  values: number[],
-  index: number,
-  min: number,
-  max: number,
-  step: number,
-) {
-  if (thumbMode === 'inhibit-crossing') {
-    const minVal = index === 0 ? min : values[index - 1] + step;
-    const maxVal = index < values.length - 1 ? values[index + 1] - step : max;
-    return [minVal, maxVal];
-  }
-  return [min, max];
 }
 
 function getClosestValueIndex(values: number[], pointerValue: number) {
@@ -105,207 +57,16 @@ function getDefaultTrackDisplay(
   values?: number[],
 ): TrackDisplayMode {
   const numValues = values?.length ?? 0;
-  if (undefined !== trackDisplayMode) {
+  if (undefined !== trackDisplayMode && 'auto' !== trackDisplayMode) {
     return trackDisplayMode;
   }
 
-  return numValues % 2 ? 'odd-segments' : 'even-segments';
+  return numValues % 2 ? 'even-segments' : 'odd-segments';
 }
 
 function roundValueToClosestStep(value: number, step: number) {
   return Math.round(value / step) * step;
 }
-
-function formatNumberValue(value: number, step: number) {
-  if (Number.isInteger(step)) {
-    return value.toFixed(0);
-  }
-  const stepString = step.toString();
-  const decimalIndex = stepString.indexOf('.');
-  const numDecimals = stepString.length - (decimalIndex + 1);
-  return value.toFixed(numDecimals);
-}
-
-function generateSegments(
-  values: number[],
-  min: number,
-  max: number,
-): { left: number; right: number }[] {
-  const segments: { left: number; right: number }[] = [];
-  let lastValue = min;
-  for (let i = 0; i < values.length; i++) {
-    segments.push({ left: lastValue, right: values[i] });
-    lastValue = values[i];
-  }
-  segments.push({ left: lastValue, right: max });
-
-  return segments;
-}
-
-const TrackSegment = ({
-  leftPercent,
-  rightPercent,
-}: {
-  leftPercent: number;
-  rightPercent: number;
-}) => {
-  return (
-    <div
-      className='iui-slider-track'
-      style={{ left: `${leftPercent}%`, right: `${rightPercent}%` }}
-    />
-  );
-};
-
-/** Track is component shown a colored segments above Rail. */
-const Track = () => {
-  const { min, max, trackDisplayMode, values } = useSliderContext();
-  const [currentValues, setCurrentValues] = React.useState(
-    [...values].sort((a, b) => a - b),
-  );
-  React.useEffect(() => {
-    const newValues = [...values];
-    newValues.sort((a, b) => a - b);
-    setCurrentValues(newValues);
-  }, [values]);
-
-  const segments = React.useMemo(
-    () => generateSegments(currentValues, min, max),
-    [currentValues, min, max],
-  );
-
-  return (
-    <>
-      {'none' !== trackDisplayMode &&
-        segments.map((segment, index) => {
-          const leftPercent = (100.0 * (segment.left - min)) / (max - min);
-          let rightPercent = (100.0 * (segment.right - min)) / (max - min);
-          rightPercent = 100.0 - rightPercent;
-          if ('odd-segments' === trackDisplayMode && 0 !== (index + 1) % 2) {
-            return (
-              <TrackSegment
-                key={index}
-                leftPercent={leftPercent}
-                rightPercent={rightPercent}
-              />
-            );
-          } else if (
-            'even-segments' === trackDisplayMode &&
-            0 === (index + 1) % 2
-          ) {
-            return (
-              <TrackSegment
-                key={index}
-                leftPercent={leftPercent}
-                rightPercent={rightPercent}
-              />
-            );
-          }
-          return null;
-        })}
-    </>
-  );
-};
-
-/** Thumb is a local component used to show and modify the values maintained by the [[Slider]].
- * Only one Thumb can be active at a time. A Thumb is made active when the user selects
- * it with pointer. Whenever a Thumb is active, focused, or hovered its tooltip is shown. */
-const Thumb = ({ index, isActive }: { index: number; isActive: boolean }) => {
-  const {
-    hideTooltip,
-    min,
-    max,
-    setThumbMoveIndex,
-    toolTipFunction,
-    step,
-    values,
-    setThumbValue,
-    thumbMode,
-    toolTipPosition,
-  } = useSliderContext();
-  const thumbRef = React.useRef<HTMLDivElement>(null);
-  const handleOnKeyDown = React.useCallback(
-    (event: React.KeyboardEvent<HTMLDivElement>) => {
-      const [minVal, maxVal] = getAllowableThumbRange(
-        thumbMode,
-        values,
-        index,
-        min,
-        max,
-        step,
-      );
-
-      if (event.key === 'ArrowLeft') {
-        const newValue = Math.max(values[index] - step, minVal);
-        setThumbValue(index, newValue);
-      } else if (event.key === 'ArrowRight') {
-        const newValue = Math.min(values[index] + step, maxVal);
-        setThumbValue(index, newValue);
-      } else if (event.key === 'Home') {
-        setThumbValue(index, minVal);
-      } else if (event.key === 'End') {
-        setThumbValue(index, maxVal);
-      }
-    },
-    [thumbMode, values, index, min, max, step, setThumbValue],
-  );
-
-  const handlePointerDownOnThumb = React.useCallback(
-    (event: React.PointerEvent) => {
-      thumbRef.current?.focus();
-      setThumbMoveIndex(index);
-      event.preventDefault();
-      event.stopPropagation();
-    },
-    [index, setThumbMoveIndex],
-  );
-
-  const [hasFocus, setHasFocus] = React.useState(false);
-  const [isHovered, setIsHovered] = React.useState(false);
-
-  const generateTooltip = React.useCallback(
-    (val: number): string => {
-      return toolTipFunction
-        ? toolTipFunction(val, step)
-        : formatNumberValue(val, step);
-    },
-    [toolTipFunction, step],
-  );
-
-  const currentValue = values[index];
-  const tooltipContent = generateTooltip(currentValue);
-  const leftPercent = (100.0 * (currentValue - min)) / (max - min);
-
-  const thumbClassNames = React.useMemo(
-    () => cx('iui-slider-thumb', isActive && 'iui-active'),
-    [isActive],
-  );
-  const showTooltip = !hideTooltip && (isActive || hasFocus || isHovered);
-  return (
-    <Tooltip
-      visible={showTooltip}
-      content={tooltipContent}
-      placement={toolTipPosition}
-    >
-      <div
-        ref={thumbRef}
-        style={{ left: `${leftPercent}%` }}
-        className={thumbClassNames}
-        role='slider'
-        tabIndex={0}
-        aria-valuemin={min}
-        aria-valuenow={max}
-        aria-valuemax={currentValue}
-        onPointerDown={handlePointerDownOnThumb}
-        onKeyDown={handleOnKeyDown}
-        onFocus={() => setHasFocus(true)}
-        onBlur={() => setHasFocus(false)}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      />
-    </Tooltip>
-  );
-};
 
 /** Properties for [[Slider]] component */
 export type SliderProps = {
@@ -331,11 +92,12 @@ export type SliderProps = {
   /**
    *  Determines which segments are shown with color.
    * 'none' - no colored tracks are displayed.
+   * 'auto' - no colored tracks are displayed.
    * 'odd-segments'- colored tracks shown in segments 1,3,5, etc.
-   *                 Default if number of thumbs values are odd.
-   * 'even-segments'- colored tracks shown in segments 2,4,6, etc.
    *                 Default if number of thumbs values are even.
-   * @default undefined
+   * 'even-segments'- colored tracks shown in segments 0,2,4, etc.
+   *                 Default if number of thumbs values are odd.
+   * @default auto
    */
   trackDisplayMode?: TrackDisplayMode;
   /**
@@ -344,40 +106,46 @@ export type SliderProps = {
    * @default 1
    */
   step?: number;
-  /** Forces control to be displayed in a disabled state where no interactive value
+  /**
+   * Forces control to be displayed in a disabled state where no interactive value
    * changes are allowed.
    *  @default false
    */
   disabled?: boolean;
-  /** Hide tooltip that is displayed by default.
-   *  @default false
+  /**
+   * Props to override default for showing a tooltip when Thumb is active or has focus.
+   * changes are allowed.
    */
-  readonly hideTooltip?: boolean;
-
-  /** Optional tooltip function that can be supplied to generate tooltip text.
+  tooltipProps?: Partial<Omit<TooltipProps, 'content' | 'children'>>;
+  /**
+   * Optional tooltip function that can be supplied to generate tooltip text.
    *  @default undefined
    */
-  toolTipFunction?: (val: number, step: number) => string;
+  tooltipRender?: (val: number, step: number) => React.ReactNode;
   /** Preferred position of tooltip relative to thumb.
    * @default 'top'
    */
-  toolTipPosition?: Placement;
-  /** Optional array of labels that will be used to determine number of ticks
+
+  /**
+   *  Optional array of labels that will be used to determine number of ticks
    * displayed and their labels. Ticks are spaced evenly across width of Slider.
    * @default undefined
    */
   tickLabels?: (string | JSX.Element)[];
-  /** Optional label for the minimum value. If undefined then the min
+  /**
+   * Optional label for the minimum value. If undefined then the min
    * value is shown. Use empty string for no label.
    * @default undefined
    */
   minLabel?: string | JSX.Element;
-  /** Optional label for the maximum value. If undefined then the max
+  /**
+   * Optional label for the maximum value. If undefined then the max
    *  value is shown. Use empty string for no label.
    * @default undefined
    */
   maxLabel?: string | JSX.Element;
-  /** Defines the allowed behavior when moving Thumbs when multiple Thumbs are
+  /**
+   * Defines the allowed behavior when moving Thumbs when multiple Thumbs are
    * shown.  Possible values:
    * 'allow-crossing' - allows thumb to cross other thumbs. Default.
    * 'inhibit-crossing'- keeps the thumb from crossing and separated by a step.
@@ -385,13 +153,14 @@ export type SliderProps = {
    */
   thumbMode?: ThumbMoveMode;
   /** optional props to include on slider container */
-  containerProps?: StylingProps;
+  containerProps?: Omit<CommonProps, 'title'>;
   /**
    * Callback fired when the value(s) of the slider has changed. This will receive
    * changes at the end of a slide as well as changes from clicks on rails and tracks.
    */
   onChange?: (values: ReadonlyArray<number>) => void;
-  /** Callback fired when the value(s) of the slider are internally updated during
+  /**
+   * Callback fired when the value(s) of the slider are internally updated during
    * operations like dragging a Thumb. Use this callback with caution as a
    * high-volume of  updates will occur when dragging.
    */
@@ -414,18 +183,17 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       values,
       step = 1,
       setFocus = false,
-      toolTipFunction,
+      tooltipProps,
+      tooltipRender,
       disabled = false,
       tickLabels,
       minLabel,
       maxLabel,
       trackDisplayMode = undefined,
       thumbMode = 'inhibit-crossing',
-      toolTipPosition = 'top',
       containerProps = {},
       onChange,
       onUpdate,
-      hideTooltip = false,
     } = props;
 
     const {
@@ -579,30 +347,27 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       };
     }, [handlePointerMove, handlePointerUp]);
 
-    const componentContainerClassNames = cx(
-      'iui-slider-component-container',
-      disabled && 'iui-disabled',
-      containerClassName,
-    );
-
     return (
       <SliderContext.Provider
         value={{
           values: currentValues,
           trackDisplayMode: trackDisplay,
-          toolTipFunction,
+          tooltipProps,
+          tooltipRender,
           min,
           max,
           setThumbMoveIndex,
           setThumbValue,
           step,
           thumbMode,
-          toolTipPosition,
-          hideTooltip,
         }}
       >
         <div
-          className={componentContainerClassNames}
+          className={cx(
+            'iui-slider-component-container',
+            disabled && 'iui-disabled',
+            containerClassName,
+          )}
           {...remainingContainerProps}
         >
           {minValueLabel && (
