@@ -11,9 +11,6 @@ import { Tooltip } from '../Tooltip';
 import { Placement } from 'tippy.js';
 import { StylingProps } from '../utils/props';
 
-/** Specifies domain of allowable values. */
-export interface ValueDomain { }
-
 /** Determines which segments are shown with color.
  * 'none' - no colored tracks are displayed.
  * 'odd-segments'- colored tracks shown in segments 1,3,5, etc. Default if number of thumbs values are odd.
