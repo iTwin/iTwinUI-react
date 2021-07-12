@@ -5,7 +5,7 @@
 import React from 'react';
 import { useTheme } from '../utils/hooks/useTheme';
 import cx from 'classnames';
-import { UserIcon } from '../UserIcon';
+import { Tooltip } from '../Tooltip/Tooltip';
 import { CommonProps } from '../utils/props';
 
 export type UserIconGroupProps = {
@@ -25,9 +25,15 @@ export type UserIconGroupProps = {
    */
   animated?: boolean;
   /**
+   * UserIconGroup type
+   */
+  iconSize: 'small' | 'medium' | 'large' | 'x-large';
+  /**
    * User Icons in the UserIconGroup.
    */
   children: React.ReactNode;
+
+  excessIconProps?: React.HTMLAttributes<HTMLDivElement>;
 } & CommonProps;
 
 /**
@@ -62,24 +68,18 @@ export type UserIconGroupProps = {
  */
 export const UserIconGroup = (props: UserIconGroupProps) => {
   const defaultLength = 5;
-  const maxLength = 9;
+  const maxLength = 99;
   const {
     children,
     animated = false,
     stacked = true,
     maxIcons = defaultLength,
+    iconSize,
+    excessIconProps,
   } = props;
 
   const childrenArray = React.Children.toArray(children);
   const childrenLength = React.Children.count(children);
-  let additionalChildren = '';
-  if (childrenLength > maxIcons) {
-    React.Children.forEach(children, (child: JSX.Element, index) => {
-      if (index >= maxIcons) {
-        additionalChildren += child.props.title + '\n';
-      }
-    });
-  }
 
   useTheme();
 
@@ -98,20 +98,28 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
               ? React.cloneElement(child as JSX.Element, {
                   status: undefined,
                   key: index,
+                  size: iconSize,
                 })
               : null,
           )}
 
-          <UserIcon
-            size={(childrenArray[0] as JSX.Element).props.size}
-            title={additionalChildren}
-            abbreviation={
-              childrenLength <= maxLength
-                ? `+${childrenLength - maxIcons}`
-                : `${maxLength}+`
-            }
-            backgroundColor='#dce0e3'
-          />
+          <Tooltip content='text' placement='right'>
+            <div
+              {...excessIconProps} // this should be a new prop
+              className={cx(
+                'iui-user-icon',
+                `iui-${iconSize}`,
+                'iui-user-icon-count',
+              )}
+            >
+              <abbr className='iui-initials'>
+                {childrenLength <= maxLength
+                  ? `${childrenLength - maxIcons}`
+                  : `${maxLength}+`}
+              </abbr>
+              <span className='iui-stroke' />
+            </div>
+          </Tooltip>
         </>
       )}
     </div>

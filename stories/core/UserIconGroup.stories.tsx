@@ -53,6 +53,7 @@ export const Basic: Story<UserIconGroupProps> = (args) => {
 };
 Basic.args = {
   animated: false,
+  iconSize: 'medium',
 };
 
 export const Animated: Story<UserIconGroupProps> = (args) => {
@@ -83,6 +84,7 @@ export const Animated: Story<UserIconGroupProps> = (args) => {
 };
 Animated.args = {
   animated: true,
+  iconSize: 'medium',
 };
 
 export const ManyIcons: Story<UserIconGroupProps> = (args) => {
@@ -120,7 +122,7 @@ export const ManyIcons: Story<UserIconGroupProps> = (args) => {
           />
         ))}
       </UserIconGroup>
-      <UserIconGroup {...args}>
+      <UserIconGroup animated={false} iconSize='large'>
         {userNames.map((name) => (
           <UserIcon
             size='large'
@@ -137,8 +139,10 @@ export const ManyIcons: Story<UserIconGroupProps> = (args) => {
     </>
   );
 };
+
 ManyIcons.args = {
   animated: false,
+  iconSize: 'medium',
 };
 
 export const NonStacked: Story<UserIconGroupProps> = (args) => {
@@ -170,4 +174,5 @@ export const NonStacked: Story<UserIconGroupProps> = (args) => {
 NonStacked.args = {
   animated: false,
   stacked: false,
+  iconSize: 'medium',
 };
