@@ -27,9 +27,6 @@ export default {
       defaultValue: 'temporary',
       description:
         'Persisting or Temporary. Persisting Toasts will not be closed automatically, and will contain a close button. Temporary Toasts will automatically close after 7 seconds and will not contain a close button.',
-      table: {
-        defaultValue: { summary: 'temporary' },
-      },
       type: { name: 'select', required: false },
     },
     duration: {
@@ -38,9 +35,6 @@ export default {
       },
       defaultValue: 7000,
       description: 'Duration of the toast, in milliseconds.',
-      table: {
-        defaultValue: { summary: 7000 },
-      },
       type: { name: 'number', required: false },
     },
     hasCloseButton: {
@@ -49,9 +43,6 @@ export default {
       },
       defaultValue: true,
       description: 'Boolean indicating when the close button is visible.',
-      table: {
-        defaultValue: { summary: true },
-      },
       type: { name: 'boolean', required: false },
     },
     link: {
@@ -130,10 +121,8 @@ export const Positive: Story<ToastProps> = ({
   );
 };
 
-Positive.argTypes = {
-  content: {
-    defaultValue: 'This is a positive toast message',
-  },
+Positive.args = {
+  content: 'This is a positive toast message',
 };
 
 export const Negative: Story<ToastProps> = ({
@@ -169,10 +158,8 @@ export const Negative: Story<ToastProps> = ({
   );
 };
 
-Negative.argTypes = {
-  content: {
-    defaultValue: 'This is a negative toast message',
-  },
+Negative.args = {
+  content: 'This is a negative toast message',
 };
 
 export const Informational: Story<ToastProps> = ({
@@ -208,10 +195,8 @@ export const Informational: Story<ToastProps> = ({
   );
 };
 
-Informational.argTypes = {
-  content: {
-    defaultValue: 'This is an informational toast message',
-  },
+Informational.args = {
+  content: 'This is an informational toast message',
 };
 
 export const Warning: Story<ToastProps> = ({ content, ...options }) => {
