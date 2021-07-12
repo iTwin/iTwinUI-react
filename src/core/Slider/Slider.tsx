@@ -36,7 +36,6 @@ export type TrackDisplayMode =
  */
 export type ThumbMoveMode = 'allow-crossing' | 'inhibit-crossing';
 
-
 /** Private Utility Functions */
 function getPercentageOfRectangle(rect: DOMRect, pointer: number) {
   const position = getBoundedValue(pointer, rect.left, rect.right);
