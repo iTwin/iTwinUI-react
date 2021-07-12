@@ -34,7 +34,8 @@ export function getAllowableThumbRange(
   return [min, max];
 }
 
-/** Thumb is a local component used to show and modify the values maintained by the Slider.
+/**
+ * Thumb is a local component used to show and modify the values maintained by the Slider.
  * Only one Thumb can be active at a time. A Thumb is made active when the user selects
  * it with pointer. Whenever a Thumb is active, focused, or hovered its tooltip is shown. */
 export const Thumb = ({

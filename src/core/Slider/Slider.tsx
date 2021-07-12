@@ -67,7 +67,9 @@ function roundValueToClosestStep(value: number, step: number) {
   return Math.round(value / step) * step;
 }
 
-/** Properties for [[Slider]] component */
+/**
+ * Properties for Slider component
+ */
 export type SliderProps = {
   /**
    * Set focus on first thumb in slider element.
@@ -121,10 +123,10 @@ export type SliderProps = {
    *  @default undefined
    */
   tooltipRender?: (val: number, step: number) => React.ReactNode;
-  /** Preferred position of tooltip relative to thumb.
+  /**
+   * Preferred position of tooltip relative to thumb.
    * @default 'top'
    */
-
   /**
    *  Optional array of labels that will be used to determine number of ticks
    * displayed and their labels. Ticks are spaced evenly across width of Slider.
@@ -151,7 +153,9 @@ export type SliderProps = {
    * @default 'inhibit-crossing'
    */
   thumbMode?: ThumbMoveMode;
-  /** optional props to include on slider container */
+  /**
+   * Additional props to include on slider container.
+   */
   containerProps?: Omit<CommonProps, 'title'>;
   /**
    * Callback fired when the value(s) of the slider has changed. This will receive

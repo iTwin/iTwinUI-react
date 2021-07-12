@@ -32,7 +32,10 @@ function generateSegments(
   return segments;
 }
 
-/** Track is component shown a colored segments above Rail. */
+/**
+ * Track display color segments above Rail. Which, if any, segments that are
+ * colorized is based on trackDisplayMode.
+ */
 export const Track = () => {
   const { min, max, trackDisplayMode, values } = useSliderContext();
   const [currentValues, setCurrentValues] = React.useState(
