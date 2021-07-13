@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+`Date`
+
+### Fixes
+
+- **Fix Table rows rendering when selection is enabled and min width is set for columns**
+
 ## [1.11.0]
 
 `2021-07-08`
@@ -121,10 +129,6 @@
   - **Added new `HeaderBreadcrumbs` and `HeaderButton` component** for use with the Header `breadcrumbs` prop.
 - **Added new `SideNavigation` component** and `SidenavButton` subcomponent.
 - **Added date filter to `Table`.** Use `tableFilters.DateRangeFilter`.
-
-### Fixes
-
-- **Fixed `Table` bug where filter actions would also trigger sorting.**
 
 ### Fixes
 
