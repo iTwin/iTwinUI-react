@@ -31,6 +31,8 @@ export type UserIconGroupProps = {
    * User Icons in the UserIconGroup.
    */
   children: React.ReactNode;
+
+  excessIconProps?: React.HTMLAttributes<HTMLDivElement>;
 } & CommonProps;
 
 /**
@@ -72,6 +74,7 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
     stacked = true,
     maxIcons = defaultLength,
     iconSize,
+    excessIconProps,
   } = props;
 
   const childrenArray = React.Children.toArray(children);
@@ -106,6 +109,7 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
           )}
 
           <div
+            {...excessIconProps}
             className={cx(
               'iui-user-icon',
               `iui-${iconSize}`,

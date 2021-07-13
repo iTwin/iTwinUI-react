@@ -34,8 +34,15 @@ export const Basic: Story<UserIconGroupProps> = (args) => {
     'Jean Mullins',
   ];
 
+  const countProps = {
+    onMouseEnter: () => console.log('mouseenter'),
+  };
+
   return (
-    <UserIconGroup {...args}>
+    <UserIconGroup
+      {...args}
+      excessIconProps={countProps as React.HTMLAttributes<HTMLDivElement>}
+    >
       {userNames.map((name) => (
         <UserIcon
           size='medium'
@@ -156,7 +163,6 @@ export const NonStacked: Story<UserIconGroupProps> = (args) => {
     'Charlie Mayfield',
     'Peyton Pennington',
     'Justice Harrington',
-    'Jessie Dodd',
   ];
 
   return (
@@ -179,5 +185,51 @@ export const NonStacked: Story<UserIconGroupProps> = (args) => {
 NonStacked.args = {
   animated: false,
   stacked: false,
+  iconSize: 'medium',
+};
+
+export const WithTooltip: Story<UserIconGroupProps> = (args) => {
+  const userNames = [
+    'Terry Rivers',
+    'Robin Mercer',
+    'Morgan Vera',
+    'Ashley Miles',
+    'Jean Mullins',
+    'Charlie Mayfield',
+    'Peyton Pennington',
+    'Justice Harrington',
+  ];
+
+  const [tooltipVisible, setTooltipVisible] = React.useState<boolean>(false);
+
+  const excessIconProps = {
+    onMouseOver: () => setTooltipVisible(true),
+    onMouseOut: () => setTooltipVisible(false),
+  };
+
+  return (
+    <div className='iui-tooltip-container'>
+      <UserIconGroup {...args} excessIconProps={excessIconProps}>
+        {userNames.map((name) => (
+          <UserIcon
+            size='medium'
+            key={name}
+            abbreviation={name
+              .split(' ')
+              .map((token) => token[0])
+              .join('')}
+            backgroundColor={getUserColor(name)}
+            title={name}
+          />
+        ))}
+      </UserIconGroup>
+      {tooltipVisible && (
+        <span className='iui-tooltip right'>Charlie Mayfield</span>
+      )}
+    </div>
+  );
+};
+WithTooltip.args = {
+  animated: false,
   iconSize: 'medium',
 };
