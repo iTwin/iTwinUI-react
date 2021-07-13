@@ -122,6 +122,7 @@ export const ManyIcons: Story<UserIconGroupProps> = (args) => {
           />
         ))}
       </UserIconGroup>
+      <br />
       <UserIconGroup animated={false} iconSize='large'>
         {userNames.map((name) => (
           <UserIcon
@@ -152,6 +153,10 @@ export const NonStacked: Story<UserIconGroupProps> = (args) => {
     'Morgan Vera',
     'Ashley Miles',
     'Jean Mullins',
+    'Charlie Mayfield',
+    'Peyton Pennington',
+    'Justice Harrington',
+    'Jessie Dodd',
   ];
 
   return (
