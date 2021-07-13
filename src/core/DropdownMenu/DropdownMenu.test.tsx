@@ -128,3 +128,25 @@ it('should focus target after hide', () => {
   button.click();
   expect(document.activeElement).toEqual(button);
 });
+
+it('should close menu on pressing escape or tab key', () => {
+  const { container } = renderComponent();
+
+  const button = container.querySelector('.iui-button') as HTMLButtonElement;
+  button.click();
+
+  const menu = document.querySelector('.iui-menu') as HTMLUListElement;
+  assertBaseElement(menu);
+
+  const tippy = document.querySelector('[data-tippy-root]') as HTMLElement;
+  expect(tippy.style.visibility).toEqual('visible');
+
+  fireEvent.keyDown(menu, { key: 'Escape' });
+  expect(tippy.style.visibility).toEqual('hidden');
+
+  button.click();
+  expect(tippy.style.visibility).toEqual('visible');
+
+  fireEvent.keyDown(menu, { key: 'Tab' });
+  expect(tippy.style.visibility).toEqual('hidden');
+});

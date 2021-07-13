@@ -62,16 +62,8 @@ function renderComponent(props?: Partial<SelectProps<number>>) {
   );
 }
 
-const originalScrollIntoView = window.HTMLElement.prototype.scrollIntoView;
-const scrollIntoViewMock = jest.fn();
-
 beforeEach(() => {
-  window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
   jest.clearAllMocks();
-});
-
-afterAll(() => {
-  window.HTMLElement.prototype.scrollIntoView = originalScrollIntoView;
 });
 
 it('should render empty select', () => {
@@ -196,6 +188,30 @@ it('should open menu on click', () => {
   assertMenu(menu);
 });
 
+it('should respect visible prop', () => {
+  const options = [...new Array(3)].map((_, index) => ({
+    label: `Test${index}`,
+    value: index,
+  }));
+
+  const { container, rerender } = render(
+    <Select options={options} popoverProps={{ visible: true }} />,
+  );
+
+  const select = container.querySelector('.iui-select') as HTMLElement;
+  expect(select).toBeTruthy();
+
+  const tippy = document.querySelector('[data-tippy-root]') as HTMLElement;
+  expect(tippy.style.visibility).toEqual('visible');
+  assertMenu(document.querySelector('.iui-menu') as HTMLUListElement);
+
+  fireEvent.click(select.querySelector('.iui-select-button') as HTMLElement);
+  expect(tippy.style.visibility).toEqual('hidden');
+
+  rerender(<Select options={options} popoverProps={{ visible: true }} />);
+  expect(tippy.style.visibility).toEqual('visible');
+});
+
 it.each(['Enter', ' ', 'Spacebar'])(
   'should open menu on "%s" key press',
   (key) => {
@@ -252,6 +268,7 @@ it('should show menu with disabled item', () => {
 });
 
 it('should show selected item in menu', () => {
+  const scrollSpy = spyOn(window.HTMLElement.prototype, 'scrollIntoView');
   const { container } = renderComponent({
     value: 1,
     options: [...new Array(3)].map((_, index) => ({
@@ -266,7 +283,7 @@ it('should show selected item in menu', () => {
   fireEvent.click(select.querySelector('.iui-select-button') as HTMLElement);
   const menu = document.querySelector('.iui-menu') as HTMLUListElement;
   assertMenu(menu, { selectedIndex: 1 });
-  expect(scrollIntoViewMock).toHaveBeenCalledTimes(1);
+  expect(scrollSpy).toHaveBeenCalledTimes(1);
 });
 
 it('should call onChange on item click', () => {
@@ -343,3 +360,11 @@ it('should use custom renderer for menu items', () => {
   expect(menuItems[1].style.color).toEqual('green');
   expect(menuItems[2].style.color).toEqual('red');
 });
+
+it.each(['small', 'large'] as const)(
+  'should render small and large sizes',
+  (size) => {
+    const { container } = renderComponent({ size });
+    expect(container.querySelector(`.iui-select.iui-${size}`)).toBeTruthy();
+  },
+);

@@ -34,6 +34,10 @@ export default class Toaster {
     this.createToast(content, 'negative', settings);
   }
 
+  public warning(content: React.ReactNode, settings?: ToastOptions): void {
+    this.createToast(content, 'warning', settings);
+  }
+
   private createToast(
     content: React.ReactNode,
     category: ToastCategory,
@@ -65,10 +69,12 @@ export default class Toaster {
   }
 
   private updateView() {
-    ReactDOM.render(
-      <ToastWrapper toasts={this.toasts} />,
-      getContainer(TOASTS_CONTAINER_ID),
-    );
+    const container = getContainer(TOASTS_CONTAINER_ID);
+    if (!container) {
+      return;
+    }
+
+    ReactDOM.render(<ToastWrapper toasts={this.toasts} />, container);
   }
 
   public closeAll(): void {

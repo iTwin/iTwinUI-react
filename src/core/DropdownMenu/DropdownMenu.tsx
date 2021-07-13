@@ -29,6 +29,7 @@ export type DropdownMenuProps = {
 
 /**
  * Dropdown menu component.
+ * Uses the {@link Popover} component, which is a wrapper around [tippy.js](https://atomiks.github.io/tippyjs).
  * @example
  * const menuItems = (close: () => void) => [
  *   <MenuItem key={1} onClick={onClick(1, close)}>
@@ -57,6 +58,7 @@ export const DropdownMenu = (props: DropdownMenuProps) => {
     onShow,
     onHide,
     trigger,
+    id,
     ...rest
   } = props;
 
@@ -92,7 +94,7 @@ export const DropdownMenu = (props: DropdownMenuProps) => {
   return (
     <Popover
       content={
-        <Menu className={className} style={style} role={role}>
+        <Menu className={className} style={style} role={role} id={id}>
           {React.useMemo(() => menuItems(close), [menuItems, close])}
         </Menu>
       }

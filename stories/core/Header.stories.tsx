@@ -23,6 +23,8 @@ import SvgHelpCircularHollow from '@itwin/itwinui-icons-react/cjs/icons/HelpCirc
 import SvgVersion from '@itwin/itwinui-icons-react/cjs/icons/Pin';
 import SvgNetwork from '@itwin/itwinui-icons-react/cjs/icons/Network';
 import SvgNotification from '@itwin/itwinui-icons-react/cjs/icons/Notification';
+import { SvgImodel } from '@itwin/itwinui-icons-react';
+import { CreeveyMeta } from 'creevey';
 
 export default {
   title: 'Core/Header',
@@ -42,7 +44,12 @@ export default {
     style: { control: { disable: true } },
     className: { control: { disable: true } },
   },
-} as Meta<HeaderProps>;
+  parameters: {
+    creevey: {
+      delay: 1000,
+    },
+  },
+} as Meta<HeaderProps> & CreeveyMeta;
 
 const buildClickHandler = (menu: string, close: () => void) => (
   index: number,
@@ -97,7 +104,10 @@ export const Full: Story<HeaderProps> = (args) => {
               menuItems={buildMenu('iModel')}
               name='iModel B'
               startIcon={
-                <img src='https://itwinplatformcdn.azureedge.net/iTwinUI/stadium.png' />
+                <img
+                  src='https://itwinplatformcdn.azureedge.net/iTwinUI/stadium.png'
+                  style={{ objectFit: 'cover' }}
+                />
               }
               isActive={true}
             />,
@@ -141,19 +151,7 @@ export const Full: Story<HeaderProps> = (args) => {
       }
       menuItems={buildMenu('More')}
       {...args}
-    >
-      <style>{`.iui-slim .center-input { padding-top: 0; padding-bottom: 0}`}</style>
-      <Input
-        className='center-input'
-        placeholder='Search within Model Beta...'
-        style={{
-          borderRadius: 22,
-          width: '20vw',
-          margin: 12,
-          transition: 'all 0.2s ease',
-        }}
-      />
-    </Header>
+    />
   );
 };
 
@@ -187,7 +185,10 @@ export const Basic: Story<HeaderProps> = (args) => {
               key='iModel'
               name='iModel B'
               startIcon={
-                <img src='https://itwinplatformcdn.azureedge.net/iTwinUI/stadium.png' />
+                <img
+                  src='https://itwinplatformcdn.azureedge.net/iTwinUI/stadium.png'
+                  style={{ objectFit: 'cover' }}
+                />
               }
               onClick={() => action('Clicked on the iModel')()}
             />,
@@ -211,5 +212,67 @@ export const Basic: Story<HeaderProps> = (args) => {
       }
       {...args}
     />
+  );
+};
+
+export const CenterContent: Story<HeaderProps> = (args) => {
+  const searchBar = (
+    <>
+      <style>
+        {`.center-input { border-radius: 22px; width: 20vw; transition: all 0.2s ease }`}
+        {`.iui-slim .center-input { padding-top: 0; padding-bottom: 0; }`}
+        {`@media (max-width: 768px) { .center-input { display: none; } }`}
+      </style>
+      <Input className='center-input' placeholder='Search within Model B...' />
+    </>
+  );
+
+  return (
+    <Header
+      appLogo={<HeaderLogo logo={<SvgImodel />} />}
+      breadcrumbs={
+        <HeaderBreadcrumbs
+          items={[
+            <HeaderButton
+              key='project'
+              name='Project A'
+              description='YJC-2249'
+              startIcon={<SvgNetwork />}
+              onClick={() => action('Clicked on the Project')()}
+            />,
+            <HeaderButton
+              key='iModel'
+              name='iModel B'
+              startIcon={
+                <img
+                  src='https://itwinplatformcdn.azureedge.net/iTwinUI/stadium.png'
+                  style={{ objectFit: 'cover' }}
+                />
+              }
+              onClick={() => action('Clicked on the iModel')()}
+            />,
+            <HeaderButton
+              key='version'
+              name='Version C'
+              onClick={() => action('Clicked on the Version')()}
+              startIcon={<SvgVersion />}
+              isActive={true}
+            />,
+          ]}
+        />
+      }
+      userIcon={
+        <UserIcon
+          size='medium'
+          abbreviation='TR'
+          backgroundColor={getUserColor('Terry Rivers')}
+          title='Terry Rivers'
+        />
+      }
+      menuItems={buildMenu('More')}
+      {...args}
+    >
+      {searchBar}
+    </Header>
   );
 };

@@ -5,15 +5,18 @@
 import React from 'react';
 import { Transition } from 'react-transition-group';
 import SvgCloseSmall from '@itwin/itwinui-icons-react/cjs/icons/CloseSmall';
-import SvgStatusErrorHollow from '@itwin/itwinui-icons-react/cjs/icons/StatusErrorHollow';
-import SvgInfoCircularHollow from '@itwin/itwinui-icons-react/cjs/icons/InfoCircularHollow';
-import SvgStatusSuccessHollow from '@itwin/itwinui-icons-react/cjs/icons/StatusSuccessHollow';
 import cx from 'classnames';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/toast-notification.css';
 import { IconButton } from '../Buttons';
+import { getWindow, StatusIconMap } from '../utils/common';
+import { CommonProps } from '../utils/props';
 
-export type ToastCategory = 'informational' | 'negative' | 'positive';
+export type ToastCategory =
+  | 'informational'
+  | 'negative'
+  | 'positive'
+  | 'warning';
 
 export type ToastProps = {
   /**
@@ -108,26 +111,19 @@ export const Toast = (props: ToastProps) => {
   };
 
   const setCloseTimeout = (timeout: number) => {
-    closeTimeout.current = window.setTimeout(() => {
+    const definedWindow = getWindow();
+    if (!definedWindow) {
+      return;
+    }
+
+    closeTimeout.current = definedWindow.setTimeout(() => {
       close();
     }, timeout);
   };
 
   const clearCloseTimeout = () => {
-    clearTimeout(closeTimeout.current);
+    getWindow()?.clearTimeout(closeTimeout.current);
   };
-
-  const getCategoryIcon = React.useCallback(() => {
-    switch (category) {
-      case 'positive':
-        return <SvgStatusSuccessHollow className='iui-icon' aria-hidden />;
-      case 'informational':
-        return <SvgInfoCircularHollow className='iui-icon' aria-hidden />;
-      case 'negative':
-      default:
-        return <SvgStatusErrorHollow className='iui-icon' aria-hidden />;
-    }
-  }, [category]);
 
   const onRef = (ref: HTMLDivElement) => {
     if (ref) {
@@ -153,29 +149,66 @@ export const Toast = (props: ToastProps) => {
           }}
         >
           <div ref={onRef}>
-            <div className={`iui-toast iui-${category}`}>
-              <div className='iui-status-area'>{getCategoryIcon()}</div>
-              <div className='iui-message'>{content}</div>
-              {link && (
-                <a className='iui-anchor' onClick={link.onClick}>
-                  {link.title}
-                </a>
-              )}
-              {(type === 'persisting' || hasCloseButton) && (
-                <IconButton
-                  size='small'
-                  styleType='borderless'
-                  onClick={close}
-                  aria-label='Close'
-                >
-                  <SvgCloseSmall />
-                </IconButton>
-              )}
-            </div>
+            <ToastPresentation
+              category={category}
+              content={content}
+              link={link}
+              type={type}
+              hasCloseButton={hasCloseButton}
+              onClose={close}
+            />
           </div>
         </div>
       )}
     </Transition>
+  );
+};
+
+export type ToastPresentationProps = Omit<
+  ToastProps,
+  'duration' | 'id' | 'isVisible' | 'onRemove'
+> & { onClose?: () => void } & CommonProps;
+
+/**
+ * The presentational part of a toast notification, without any animation or logic.
+ * @private
+ */
+export const ToastPresentation = (props: ToastPresentationProps) => {
+  const {
+    content,
+    category,
+    type = 'temporary',
+    link,
+    hasCloseButton,
+    onClose,
+    className,
+    ...rest
+  } = props;
+
+  const StatusIcon = StatusIconMap[category];
+
+  return (
+    <div className={cx(`iui-toast iui-${category}`, className)} {...rest}>
+      <div className='iui-status-area'>
+        {<StatusIcon className='iui-icon' />}
+      </div>
+      <div className='iui-message'>{content}</div>
+      {link && (
+        <a className='iui-anchor' onClick={link.onClick}>
+          {link.title}
+        </a>
+      )}
+      {(type === 'persisting' || hasCloseButton) && (
+        <IconButton
+          size='small'
+          styleType='borderless'
+          onClick={onClose}
+          aria-label='Close'
+        >
+          <SvgCloseSmall />
+        </IconButton>
+      )}
+    </div>
   );
 };
 

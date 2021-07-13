@@ -2,17 +2,20 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import SvgInfoCircular from '@itwin/itwinui-icons-react/cjs/icons/InfoCircular';
 import SvgStatusError from '@itwin/itwinui-icons-react/cjs/icons/StatusError';
 import SvgStatusSuccess from '@itwin/itwinui-icons-react/cjs/icons/StatusSuccess';
 import SvgStatusWarning from '@itwin/itwinui-icons-react/cjs/icons/StatusWarning';
 import React from 'react';
+import { CommonProps } from './props';
 
-export const StatusIconMap: {
-  [key in 'negative' | 'positive' | 'warning']: JSX.Element;
-} = {
-  negative: <SvgStatusError aria-hidden />,
-  positive: <SvgStatusSuccess aria-hidden />,
-  warning: <SvgStatusWarning aria-hidden />,
+export const StatusIconMap = {
+  negative: (args?: CommonProps) => <SvgStatusError aria-hidden {...args} />,
+  positive: (args?: CommonProps) => <SvgStatusSuccess aria-hidden {...args} />,
+  warning: (args?: CommonProps) => <SvgStatusWarning aria-hidden {...args} />,
+  informational: (args?: CommonProps) => (
+    <SvgInfoCircular aria-hidden {...args} />
+  ),
 };
 
 const USER_COLORS = [
@@ -47,13 +50,35 @@ export const getUserColor = (emailOrName: string) => {
 /**
  * Get the container as a child of body, or create one if it doesn't exist.
  * Mostly used for dynamic components like Modal or Toast.
+ *
+ * @param containerId id of the container to find or create
+ * @param ownerDocument Can be changed if the container should be in a different document (e.g. in popup).
  */
-export const getContainer = (containerId: string) => {
-  let container = document.getElementById(containerId);
-  if (container == null) {
-    container = document.createElement('div');
+export const getContainer = (
+  containerId: string,
+  ownerDocument = getDocument(),
+) => {
+  let container = ownerDocument?.getElementById(containerId) ?? undefined;
+  if (container == null && !!ownerDocument) {
+    container = ownerDocument.createElement('div');
     container.setAttribute('id', containerId);
-    document.body.appendChild(container);
+    ownerDocument.body.appendChild(container);
   }
   return container;
+};
+
+/**
+ * Get document if it is defined.
+ * Used to support SSR/SSG applications.
+ */
+export const getDocument = () => {
+  return typeof document === 'undefined' ? undefined : document;
+};
+
+/**
+ * Get window if it is defined.
+ * Used to support SSR/SSG applications.
+ */
+export const getWindow = () => {
+  return typeof window === 'undefined' ? undefined : window;
 };

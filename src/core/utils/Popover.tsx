@@ -17,19 +17,19 @@ export type PopoverProps = {
   /**
    * Determines the events that cause the popover to show.
    * Should not be used when `visible` is set.
-   * @see tippy.js {@link https://atomiks.github.io/tippyjs/v6/all-props/#trigger trigger}.
+   * @see [tippy.js trigger prop](https://atomiks.github.io/tippyjs/v6/all-props/#trigger)
    */
   trigger?: string;
   /**
    * Placement of the popover content.
    * @default 'bottom-start'
-   * @see tippy.js {@link https://atomiks.github.io/tippyjs/v6/all-props/#placement placement}.
+   * @see [tippy.js placement prop](https://atomiks.github.io/tippyjs/v6/all-props/#placement).
    */
   placement?: Placement;
 } & Omit<TippyProps, 'placement' | 'trigger' | 'visible'>;
 
 /**
- * Wrapper around {@link https://atomiks.github.io/tippyjs tippy.js}
+ * Wrapper around [tippy.js](https://atomiks.github.io/tippyjs)
  * with pre-configured props and plugins (e.g. lazy mounting, focus, etc).
  * @private
  */
@@ -70,7 +70,12 @@ export const Popover = React.forwardRef((props: PopoverProps, ref) => {
     role: undefined,
     offset: [0, 0],
     ...props,
-    plugins: [lazyLoad, removeTabIndex, hideOnEsc, ...(props.plugins || [])],
+    plugins: [
+      lazyLoad,
+      removeTabIndex,
+      hideOnEscOrTab,
+      ...(props.plugins || []),
+    ],
   };
 
   if (props.render) {
@@ -83,20 +88,40 @@ export const Popover = React.forwardRef((props: PopoverProps, ref) => {
   return <Tippy {...computedProps} ref={refs} />;
 });
 
-export const hideOnEsc = {
+/**
+ * Plugin to hide Popover when either Esc key is pressed,
+ * or when the content inside is not tabbable and Tab key is pressed.
+ */
+export const hideOnEscOrTab = {
   fn(instance: Instance) {
+    /** @returns true if none of the children are tabbable */
+    const shouldHideOnTab = () => {
+      const descendents = Array.from<HTMLElement>(
+        instance.popper.querySelectorAll('*'),
+      );
+      return !descendents.some((el) => el?.tabIndex >= 0);
+    };
+
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        instance.hide();
+      switch (event.key) {
+        case 'Escape':
+          instance.hide();
+          break;
+        case 'Tab':
+          if (shouldHideOnTab()) {
+            event.shiftKey && event.preventDefault(); // focus popover target on Shift+Tab
+            instance.hide();
+          }
+          break;
       }
     };
 
     return {
       onShow() {
-        document.addEventListener('keydown', onKeyDown);
+        instance.popper.addEventListener('keydown', onKeyDown);
       },
       onHide() {
-        document.removeEventListener('keydown', onKeyDown);
+        instance.popper.removeEventListener('keydown', onKeyDown);
       },
     };
   },

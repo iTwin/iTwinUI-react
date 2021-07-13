@@ -10,7 +10,7 @@ import { CommonProps } from '../utils/props';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/modal.css';
 import { IconButton } from '../Buttons/IconButton';
-import { getContainer } from '../utils/common';
+import { getContainer, getDocument } from '../utils/common';
 
 export type ModalProps = {
   /**
@@ -46,15 +46,16 @@ export type ModalProps = {
    */
   onKeyDown?: React.KeyboardEventHandler;
   /**
-   * Id of the modal.
-   */
-  id?: string;
-  /**
    * Id of the root where the modal will be rendered in.
-   * If nothing set, RootId will be the default value of the Portal Component.
    * @default 'iui-react-portal-container'
    */
   modalRootId?: string;
+  /**
+   * Document where the modal will be rendered.
+   * Can be specified to render in a different document (e.g. a popup window).
+   * @default document
+   */
+  ownerDocument?: Document;
   /**
    * Content of the modal.
    */
@@ -96,12 +97,13 @@ export const Modal = (props: ModalProps) => {
     style,
     children,
     modalRootId = 'iui-react-portal-container',
+    ownerDocument = getDocument(),
     ...rest
   } = props;
 
   useTheme();
 
-  const container = getContainer(modalRootId);
+  const container = getContainer(modalRootId, ownerDocument);
 
   const overlayRef = React.useRef<HTMLDivElement>(null);
 
@@ -115,13 +117,20 @@ export const Modal = (props: ModalProps) => {
   }, [isOpen]);
 
   React.useEffect(() => {
-    if (isOpen) {
-      originalBodyOverflow.current = document.body.style.overflow;
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = originalBodyOverflow.current;
+    if (!ownerDocument) {
+      return;
     }
-  }, [isOpen]);
+
+    if (isOpen) {
+      originalBodyOverflow.current = ownerDocument.body.style.overflow;
+      ownerDocument.body.style.overflow = 'hidden';
+    } else {
+      ownerDocument.body.style.overflow = originalBodyOverflow.current;
+    }
+    return () => {
+      ownerDocument.body.style.overflow = originalBodyOverflow.current;
+    };
+  }, [isOpen, ownerDocument]);
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     // Prevents React from resetting its properties
@@ -142,42 +151,46 @@ export const Modal = (props: ModalProps) => {
     }
   };
 
-  return ReactDOM.createPortal(
-    isOpen && (
-      <div
-        className={cx('iui-modal', 'iui-modal-visible', className)}
-        tabIndex={-1}
-        onKeyDown={handleKeyDown}
-        ref={overlayRef}
-        onMouseDown={handleMouseDown}
-        {...rest}
-      >
+  return !!container ? (
+    ReactDOM.createPortal(
+      isOpen && (
         <div
-          className='iui-modal-dialog'
-          id={id}
-          style={style}
-          role='dialog'
-          aria-modal='true'
-          onMouseDown={(event) => event.stopPropagation()}
+          className={cx('iui-modal', 'iui-modal-visible', className)}
+          tabIndex={-1}
+          onKeyDown={handleKeyDown}
+          ref={overlayRef}
+          onMouseDown={handleMouseDown}
+          {...rest}
         >
-          <div className='iui-title-bar'>
-            <div className='iui-title'>{title}</div>
-            {isDismissible && (
-              <IconButton
-                size='small'
-                styleType='borderless'
-                onClick={onClose}
-                aria-label='Close'
-              >
-                <SvgClose />
-              </IconButton>
-            )}
+          <div
+            className='iui-modal-dialog'
+            id={id}
+            style={style}
+            role='dialog'
+            aria-modal='true'
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <div className='iui-title-bar'>
+              <div className='iui-title'>{title}</div>
+              {isDismissible && (
+                <IconButton
+                  size='small'
+                  styleType='borderless'
+                  onClick={onClose}
+                  aria-label='Close'
+                >
+                  <SvgClose />
+                </IconButton>
+              )}
+            </div>
+            {children}
           </div>
-          {children}
         </div>
-      </div>
-    ),
-    container,
+      ),
+      container,
+    )
+  ) : (
+    <></>
   );
 };
 

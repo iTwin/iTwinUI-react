@@ -4,6 +4,16 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import '@itwin/itwinui-css/css/global.css';
+import { getDocument, getWindow } from '../common';
+
+export type ThemeOptions = {
+  /**
+   * Document to which the theme will be applied.
+   * Can be specified to handle popup windows.
+   * @default document
+   */
+  ownerDocument?: Document;
+};
 
 export type ThemeType = 'light' | 'dark' | 'os';
 
@@ -11,43 +21,55 @@ export type ThemeType = 'light' | 'dark' | 'os';
  * Hook that applies styling and theme to all components.
  * Defaults to light theme if none provided or set elsewhere.
  * @param theme Light, dark, or based on OS setting.
+ * @param themeOptions Options that override default theming behavior.
  */
-export const useTheme = (theme?: ThemeType): void => {
-  React.useLayoutEffect(() => {
-    if (!document.body.classList.contains('iui-body')) {
-      document.body.classList.add('iui-body');
-    }
-  }, []);
+export const useTheme = (
+  theme?: ThemeType,
+  themeOptions?: ThemeOptions,
+): void => {
+  const ownerDocument = themeOptions?.ownerDocument ?? getDocument();
 
   React.useLayoutEffect(() => {
+    if (!ownerDocument?.body.classList.contains('iui-body')) {
+      ownerDocument?.body.classList.add('iui-body');
+    }
+  }, [ownerDocument]);
+
+  React.useLayoutEffect(() => {
+    if (!ownerDocument) {
+      return;
+    }
+
     switch (theme) {
       case 'light':
-        addLightTheme();
+        addLightTheme(ownerDocument);
         break;
       case 'dark':
-        addDarkTheme();
+        addDarkTheme(ownerDocument);
         break;
       case 'os':
-        if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
-          addDarkTheme();
+        if (getWindow()?.matchMedia?.('(prefers-color-scheme: dark)').matches) {
+          addDarkTheme(ownerDocument);
         } else {
-          addLightTheme();
+          addLightTheme(ownerDocument);
         }
         break;
       default:
-        if (!document.documentElement.classList.value.includes('iui-theme')) {
-          addLightTheme();
+        if (
+          ownerDocument.documentElement.className.indexOf('iui-theme') === -1
+        ) {
+          addLightTheme(ownerDocument);
         }
     }
-  }, [theme]);
+  }, [ownerDocument, theme]);
 };
 
-const addLightTheme = () => {
-  document.documentElement.classList.add('iui-theme-light');
-  document.documentElement.classList.remove('iui-theme-dark');
+const addLightTheme = (ownerDocument: Document) => {
+  ownerDocument.documentElement.classList.add('iui-theme-light');
+  ownerDocument.documentElement.classList.remove('iui-theme-dark');
 };
 
-const addDarkTheme = () => {
-  document.documentElement.classList.add('iui-theme-dark');
-  document.documentElement.classList.remove('iui-theme-light');
+const addDarkTheme = (ownerDocument: Document) => {
+  ownerDocument.documentElement.classList.add('iui-theme-dark');
+  ownerDocument.documentElement.classList.remove('iui-theme-light');
 };

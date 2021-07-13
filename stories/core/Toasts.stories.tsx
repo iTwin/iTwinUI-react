@@ -6,6 +6,7 @@ import React from 'react';
 import { Story, Meta } from '@storybook/react';
 import { Button, toaster } from '../../src/core';
 import { ToastProps } from '../../src/core/Toast/Toast';
+import { CreeveyMeta } from 'creevey';
 
 export default {
   argTypes: {
@@ -72,9 +73,29 @@ export default {
   },
   parameters: {
     controls: { expanded: true },
+    creevey: {
+      captureElement: null,
+      tests: {
+        async open() {
+          const button = await this.browser.findElement({
+            className: 'iui-button',
+          });
+
+          await button.click();
+          const opened = await this.takeScreenshot();
+
+          await (
+            await this.browser.findElement({
+              css: '.iui-button:last-child',
+            })
+          ).click();
+          await this.expect({ opened }).to.matchImages();
+        },
+      },
+    },
   },
   title: 'Core/Toasts',
-} as Meta<ToastProps>;
+} as Meta<ToastProps> & CreeveyMeta;
 
 export const Positive: Story<ToastProps> = ({
   content,
@@ -191,4 +212,28 @@ Informational.argTypes = {
   content: {
     defaultValue: 'This is an informational toast message',
   },
+};
+
+export const Warning: Story<ToastProps> = ({ content, ...options }) => {
+  const displayWarningToast = () => {
+    toaster.warning(content, { ...options });
+  };
+
+  return (
+    <>
+      <Button styleType='high-visibility' onClick={displayWarningToast}>
+        Warning
+      </Button>
+      <Button
+        style={{ display: 'block', marginTop: 16 }}
+        onClick={() => toaster.closeAll()}
+      >
+        Close All
+      </Button>
+    </>
+  );
+};
+
+Warning.args = {
+  content: 'This is an informational toast message',
 };

@@ -98,11 +98,15 @@ export type { RadioTileGroupProps, RadioTileProps } from './RadioTiles';
 export { Select } from './Select';
 export type { SelectProps, SelectOption, ItemRendererProps } from './Select';
 
+export { SideNavigation, SidenavButton } from './SideNavigation';
+export type { SideNavigationProps, SidenavButtonProps } from './SideNavigation';
+
 export { Table, tableFilters, FilterButtonBar } from './Table';
 export type {
   TableProps,
   TableFilterProps,
   TableFilterValue,
+  DateRangeFilterOptions,
   FilterButtonBarProps,
 } from './Table';
 
@@ -114,6 +118,9 @@ export type { TextareaProps } from './Textarea';
 
 export { Tile } from './Tile';
 export type { TileProps } from './Tile';
+
+export { TimePicker } from './TimePicker';
+export type { MeridiemType, TimePickerProps } from './TimePicker';
 
 export { default as toaster } from './Toast';
 export type { ToastOptions } from './Toast';

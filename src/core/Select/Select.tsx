@@ -65,6 +65,10 @@ export type SelectProps<T> = {
    */
   disabled?: boolean;
   /**
+   * Modify size of select.
+   */
+  size?: 'small' | 'large';
+  /**
    * Set focus on select.
    * @default false
    */
@@ -89,13 +93,10 @@ export type SelectProps<T> = {
    */
   menuStyle?: React.CSSProperties;
   /**
-   * Props to customize Popover behavior.
-   * @see tippy.js {@link https://atomiks.github.io/tippyjs/v6/all-props/ props}
+   * Props to customize {@link Popover} behavior.
+   * @see [tippy.js props](https://atomiks.github.io/tippyjs/v6/all-props/)
    */
-  popoverProps?: Omit<
-    PopoverProps,
-    'onShow' | 'onHide' | 'visible' | 'disabled'
-  >;
+  popoverProps?: Omit<PopoverProps, 'onShow' | 'onHide' | 'disabled'>;
 } & Pick<PopoverProps, 'onShow' | 'onHide'> &
   CommonProps;
 
@@ -155,6 +156,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
     onChange,
     placeholder,
     disabled = false,
+    size,
     setFocus = false,
     itemRenderer,
     selectedItemRenderer,
@@ -170,7 +172,11 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
 
   useTheme();
 
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState(popoverProps?.visible ?? false);
+  React.useEffect(() => {
+    setIsOpen((open) => popoverProps?.visible ?? open);
+  }, [popoverProps]);
+
   const [minWidth, setMinWidth] = React.useState(0);
   const toggle = () => setIsOpen((open) => !open);
 
@@ -254,24 +260,29 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
   }, [options, value]);
 
   return (
-    <DropdownMenu
-      menuItems={menuItems}
-      placement='bottom-start'
-      className={menuClassName}
-      style={{ minWidth, maxHeight: `300px`, overflowY: 'auto', ...menuStyle }}
-      role='listbox'
-      onShow={onShowHandler}
-      onHide={onHideHandler}
-      visible={isOpen}
-      disabled={disabled}
-      {...popoverProps}
+    <div
+      className={cx('iui-select', { [`iui-${size}`]: !!size }, className)}
+      aria-expanded={isOpen}
+      aria-haspopup='listbox'
+      style={style}
+      {...rest}
     >
-      <div
-        className={cx('iui-select', className)}
-        aria-expanded={isOpen}
-        aria-haspopup='listbox'
-        style={style}
-        {...rest}
+      <DropdownMenu
+        menuItems={menuItems}
+        placement='bottom-start'
+        className={menuClassName}
+        style={{
+          minWidth,
+          maxHeight: `300px`,
+          overflowY: 'auto',
+          ...menuStyle,
+        }}
+        role='listbox'
+        onShow={onShowHandler}
+        onHide={onHideHandler}
+        disabled={disabled}
+        {...popoverProps}
+        visible={isOpen}
       >
         <div
           ref={selectRef}
@@ -298,8 +309,8 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
             </>
           )}
         </div>
-      </div>
-    </DropdownMenu>
+      </DropdownMenu>
+    </div>
   );
 };
 
