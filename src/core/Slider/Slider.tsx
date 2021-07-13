@@ -216,11 +216,11 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       setMaxValueLabel(maxLabel ?? max.toString());
     }, [maxLabel, max]);
 
-    const [trackDisplay, setTackDisplay] = React.useState<TrackDisplayMode>(
+    const [trackDisplay, setTrackDisplay] = React.useState<TrackDisplayMode>(
       () => getDefaultTrackDisplay(trackDisplayMode, currentValues),
     );
     React.useEffect(() => {
-      setTackDisplay(getDefaultTrackDisplay(trackDisplayMode, currentValues));
+      setTrackDisplay(getDefaultTrackDisplay(trackDisplayMode, currentValues));
     }, [trackDisplayMode, currentValues]);
 
     useTheme();
