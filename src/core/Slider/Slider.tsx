@@ -121,29 +121,21 @@ export type SliderProps = {
   tooltipProps?: Partial<Omit<TooltipProps, 'content' | 'children'>>;
   /**
    * Optional tooltip function that can be supplied to generate tooltip text.
-   *  @default undefined
    */
   tooltipRenderer?: (val: number, step: number) => React.ReactNode;
   /**
-   * Preferred position of tooltip relative to thumb.
-   * @default 'top'
-   */
-  /**
    *  Optional array of labels that will be used to determine number of ticks
    * displayed and their labels. Ticks are spaced evenly across width of Slider.
-   * @default undefined
    */
   tickLabels?: React.ReactNode[];
   /**
    * Optional label for the minimum value. If undefined then the min
    * value is shown. Use empty string for no label.
-   * @default undefined
    */
   minLabel?: React.ReactNode;
   /**
    * Optional label for the maximum value. If undefined then the max
    *  value is shown. Use empty string for no label.
-   * @default undefined
    */
   maxLabel?: React.ReactNode;
   /**
