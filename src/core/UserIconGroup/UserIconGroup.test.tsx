@@ -10,7 +10,7 @@ import UserIcon from '../UserIcon/UserIcon';
 
 it('should render in its most basic state', () => {
   const { container } = render(
-    <UserIconGroup>
+    <UserIconGroup iconSize='medium'>
       <UserIcon
         abbreviation='RM'
         backgroundColor='#C8C2B4'

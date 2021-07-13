@@ -39,7 +39,7 @@ export type UserIconGroupProps = {
  * this component will show 5 UserIcons and stacked UserIcon with "3" in it.
  *
  * @example
- * <UserIconGroup>
+ * <UserIconGroup iconSize='medium'>
  *  <UserIcon
  *    abbreviation="TR"
  *    backgroundColor="#6AB9EC"
