@@ -22,28 +22,8 @@ export const Basic: Story<SliderProps> = (args) => {
 Basic.args = {
   disabled: false,
   values: [50],
-  minLabel: (
-    <SvgSmileyHappy
-      className='iui-icon'
-      style={{
-        width: '16px',
-        height: '16px',
-        marginTop: '6px',
-        marginRight: '2px',
-      }}
-    />
-  ),
-  maxLabel: (
-    <SvgSmileySad
-      className='iui-icon'
-      style={{
-        width: '16px',
-        height: '16px',
-        marginTop: '6px',
-        marginLeft: '2px',
-      }}
-    />
-  ),
+  minLabel: <SvgSmileyHappy />,
+  maxLabel: <SvgSmileySad />,
 };
 
 export const WithContainerProps: Story<SliderProps> = (args) => {
@@ -54,28 +34,8 @@ WithContainerProps.args = {
   containerProps: { className: 'test-class', style: { width: '80%' } },
   disabled: false,
   values: [50],
-  minLabel: (
-    <SvgSmileyHappy
-      className='iui-icon'
-      style={{
-        width: '16px',
-        height: '16px',
-        marginTop: '6px',
-        marginRight: '2px',
-      }}
-    />
-  ),
-  maxLabel: (
-    <SvgSmileySad
-      className='iui-icon'
-      style={{
-        width: '16px',
-        height: '16px',
-        marginTop: '6px',
-        marginLeft: '2px',
-      }}
-    />
-  ),
+  minLabel: <SvgSmileyHappy />,
+  maxLabel: <SvgSmileySad />,
 };
 
 export const Range: Story<SliderProps> = (args) => {
