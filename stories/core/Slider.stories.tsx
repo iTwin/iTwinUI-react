@@ -232,7 +232,9 @@ export const DateSlider: Story<SliderProps> = (args) => {
   return (
     <Slider
       {...args}
-      minLabel={<Body style={{ width: '60px' }}>{minLabel}</Body>}
+      minLabel={
+        <Body style={{ width: '60px', marginRight: '6px' }}>{minLabel}</Body>
+      }
       tooltipRender={tooltipRender}
       onUpdate={updateDate}
       onChange={updateDate}
