@@ -129,7 +129,7 @@ CustomTooltip.args = {
   max: 60,
   values: [20],
   tickLabels: ['0', '20', '40', '60'],
-  tooltipRender: (val) => {
+  tooltipRenderer: (val) => {
     return `\$${val}.00`;
   },
 };
@@ -185,7 +185,7 @@ export const DateSlider: Story<SliderProps> = (args) => {
     [dateFormatter],
   );
 
-  const tooltipRender = useCallback(() => {
+  const tooltipRenderer = useCallback(() => {
     return dateFormatter.format(currentDate);
   }, [currentDate, dateFormatter]);
 
@@ -195,7 +195,7 @@ export const DateSlider: Story<SliderProps> = (args) => {
       minLabel={
         <Body style={{ width: '60px', marginRight: '6px' }}>{minLabel}</Body>
       }
-      tooltipRender={tooltipRender}
+      tooltipRenderer={tooltipRenderer}
       onUpdate={updateDate}
       onChange={updateDate}
     />

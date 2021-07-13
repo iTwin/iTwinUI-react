@@ -9,7 +9,8 @@ import { Tooltip, TooltipProps } from '../Tooltip';
 /**
  * Thumb is a local component used to show and modify the values maintained by the Slider.
  * Only one Thumb can be active at a time. A Thumb is made active when the user selects
- * it with pointer. Whenever a Thumb is active, focused, or hovered its tooltip is shown. */
+ * it with pointer. Whenever a Thumb is active, focused, or hovered its tooltip is shown.
+ */
 export const Thumb = ({
   value,
   index,
@@ -40,30 +41,27 @@ export const Thumb = ({
   const thumbRef = React.useRef<HTMLDivElement>(null);
   const handleOnKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
-      if (event.key === 'ArrowLeft') {
-        const newValue = Math.max(value - step, minVal);
-        onThumbValueChanged(index, newValue);
-      } else if (event.key === 'ArrowRight') {
-        const newValue = Math.min(value + step, maxVal);
-        onThumbValueChanged(index, newValue);
-      } else if (event.key === 'Home') {
-        onThumbValueChanged(index, minVal);
-      } else if (event.key === 'End') {
-        onThumbValueChanged(index, maxVal);
+      switch (event.key) {
+        case 'ArrowLeft':
+          onThumbValueChanged(index, Math.max(value - step, minVal));
+          return;
+        case 'ArrowRight':
+          onThumbValueChanged(index, Math.min(value + step, maxVal));
+          return;
+        case 'Home':
+          onThumbValueChanged(index, minVal);
+          return;
+        case 'End':
+          onThumbValueChanged(index, maxVal);
+          return;
       }
     },
     [value, index, step, minVal, onThumbValueChanged, maxVal],
   );
 
-  const handlePointerDownOnThumb = React.useCallback(
-    (event: React.PointerEvent) => {
-      thumbRef.current?.focus();
-      event.preventDefault();
-      event.stopPropagation();
-      onThumbActivated(index);
-    },
-    [index, onThumbActivated],
-  );
+  const handlePointerDownOnThumb = React.useCallback(() => {
+    onThumbActivated(index);
+  }, [index, onThumbActivated]);
 
   const [hasFocus, setHasFocus] = React.useState(false);
   const [isHovered, setIsHovered] = React.useState(false);
@@ -80,7 +78,11 @@ export const Thumb = ({
       <div
         ref={thumbRef}
         style={{ left: `${leftPercent}%` }}
-        className={cx('iui-slider-thumb', isActive && 'iui-active')}
+        className={cx(
+          'iui-slider-thumb',
+          isActive && 'iui-active',
+          isActive && 'iui-grabbing',
+        )}
         role='slider'
         tabIndex={0}
         aria-valuemin={minVal}

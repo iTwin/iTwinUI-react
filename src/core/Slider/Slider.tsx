@@ -26,15 +26,6 @@ export type TrackDisplayMode =
   | 'odd-segments'
   | 'even-segments';
 
-/**
- * ThumbMoveMode is only used when slider shows multiple Thumbs. It controls
- * if a Thumb movement should be limited to only move in the segments adjacent
- * to the Thumb. Possible modes are:
- * 'allow-crossing' - allows thumb to cross other thumbs. Default.
- * 'inhibit-crossing'- keeps the thumb from crossing another Thumb.
- */
-export type ThumbMoveMode = 'allow-crossing' | 'inhibit-crossing';
-
 /** Private Utility Functions */
 const getPercentageOfRectangle = (rect: DOMRect, pointer: number) => {
   const position = getBoundedValue(pointer, rect.left, rect.right);
@@ -132,7 +123,7 @@ export type SliderProps = {
    * Optional tooltip function that can be supplied to generate tooltip text.
    *  @default undefined
    */
-  tooltipRender?: (val: number, step: number) => React.ReactNode;
+  tooltipRenderer?: (val: number, step: number) => React.ReactNode;
   /**
    * Preferred position of tooltip relative to thumb.
    * @default 'top'
@@ -142,27 +133,28 @@ export type SliderProps = {
    * displayed and their labels. Ticks are spaced evenly across width of Slider.
    * @default undefined
    */
-  tickLabels?: (string | JSX.Element)[];
+  tickLabels?: React.ReactNode[];
   /**
    * Optional label for the minimum value. If undefined then the min
    * value is shown. Use empty string for no label.
    * @default undefined
    */
-  minLabel?: string | JSX.Element;
+  minLabel?: React.ReactNode;
   /**
    * Optional label for the maximum value. If undefined then the max
    *  value is shown. Use empty string for no label.
    * @default undefined
    */
-  maxLabel?: string | JSX.Element;
+  maxLabel?: React.ReactNode;
   /**
    * Defines the allowed behavior when moving Thumbs when multiple Thumbs are
-   * shown.  Possible values:
+   * shown. It controls if a Thumb movement should be limited to only move in
+   * the segments adjacent to the Thumb. Possible values:
    * 'allow-crossing' - allows thumb to cross other thumbs. Default.
    * 'inhibit-crossing'- keeps the thumb from crossing and separated by a step.
    * @default 'inhibit-crossing'
    */
-  thumbMode?: ThumbMoveMode;
+  thumbMode?: 'allow-crossing' | 'inhibit-crossing';
   /**
    * Additional props to include on slider container.
    */
@@ -197,7 +189,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       step = 1,
       setFocus = false,
       tooltipProps,
-      tooltipRender,
+      tooltipRenderer,
       disabled = false,
       tickLabels,
       minLabel,
@@ -208,11 +200,6 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       onChange,
       onUpdate,
     } = props;
-
-    const {
-      className: containerClassName,
-      ...remainingContainerProps
-    } = containerProps;
 
     const [currentValues, setCurrentValues] = React.useState(values);
     React.useEffect(() => {
@@ -257,11 +244,11 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
 
     const generateTooltip = React.useCallback(
       (val: number): React.ReactNode => {
-        return tooltipRender
-          ? tooltipRender(val, step)
+        return tooltipRenderer
+          ? tooltipRenderer(val, step)
           : formatNumberValue(val, step, fractionDigits);
       },
-      [fractionDigits, step, tooltipRender],
+      [fractionDigits, step, tooltipRenderer],
     );
 
     const getAllowableThumbRange = React.useCallback(
@@ -407,12 +394,12 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
 
     return (
       <div
+        {...containerProps}
         className={cx(
           'iui-slider-component-container',
           disabled && 'iui-disabled',
-          containerClassName,
+          containerProps.className,
         )}
-        {...remainingContainerProps}
       >
         {minValueLabel && (
           <span className='iui-slider-min'>{minValueLabel}</span>
