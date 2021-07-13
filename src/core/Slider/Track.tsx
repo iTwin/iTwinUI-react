@@ -3,7 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { useSliderContext } from './SliderContext';
 import { TrackDisplayMode } from './Slider';
 
 function shouldDisplaySegment(segmentIndex: number, mode: TrackDisplayMode) {
@@ -28,7 +27,6 @@ function generateSegments(
     lastValue = values[i];
   }
   segments.push({ left: lastValue, right: max });
-
   return segments;
 }
 
@@ -36,8 +34,17 @@ function generateSegments(
  * Track display color segments above Rail. Which, if any, segments that are
  * colorized is based on trackDisplayMode.
  */
-export const Track = () => {
-  const { min, max, trackDisplayMode, values } = useSliderContext();
+export const Track = ({
+  trackDisplayMode,
+  sliderMin,
+  sliderMax,
+  values,
+}: {
+  trackDisplayMode: TrackDisplayMode;
+  sliderMin: number;
+  sliderMax: number;
+  values: number[];
+}) => {
   const [currentValues, setCurrentValues] = React.useState(
     [...values].sort((a, b) => a - b),
   );
@@ -48,16 +55,18 @@ export const Track = () => {
   }, [values]);
 
   const segments = React.useMemo(
-    () => generateSegments(currentValues, min, max),
-    [currentValues, min, max],
+    () => generateSegments(currentValues, sliderMin, sliderMax),
+    [currentValues, sliderMin, sliderMax],
   );
 
   return (
     <>
       {'none' !== trackDisplayMode &&
         segments.map((segment, index) => {
-          const leftPercent = (100.0 * (segment.left - min)) / (max - min);
-          let rightPercent = (100.0 * (segment.right - min)) / (max - min);
+          const leftPercent =
+            (100.0 * (segment.left - sliderMin)) / (sliderMax - sliderMin);
+          let rightPercent =
+            (100.0 * (segment.right - sliderMin)) / (sliderMax - sliderMin);
           rightPercent = 100.0 - rightPercent;
           if (shouldDisplaySegment(index, trackDisplayMode)) {
             return (

@@ -78,17 +78,6 @@ WithContainerProps.args = {
   ),
 };
 
-export const SmallIncrement: Story<SliderProps> = (args) => {
-  return <Slider {...args} />;
-};
-
-SmallIncrement.args = {
-  disabled: false,
-  min: 0,
-  max: 5,
-  step: 0.25,
-  values: [0.25],
-};
 export const Range: Story<SliderProps> = (args) => {
   return <Slider {...args} />;
 };
@@ -99,13 +88,13 @@ Range.args = {
   values: [20, 80],
 };
 
-export const RangeOddSegments: Story<SliderProps> = (args) => {
+export const RangeEvenSegments: Story<SliderProps> = (args) => {
   return <Slider {...args} />;
 };
 
-RangeOddSegments.args = {
+RangeEvenSegments.args = {
   values: [20, 80],
-  trackDisplayMode: 'odd-segments',
+  trackDisplayMode: 'even-segments',
 };
 
 export const MultiThumbs: Story<SliderProps> = (args) => {
@@ -257,4 +246,40 @@ DateSlider.args = {
   values: [0],
   maxLabel: '',
   tickLabels: ['Jan', 'Dec'],
+};
+
+export const SmallIncrement: Story<SliderProps> = (args) => {
+  return <Slider {...args} />;
+};
+
+SmallIncrement.args = {
+  disabled: false,
+  min: 0,
+  max: 5,
+  step: 0.25,
+  values: [0.25],
+};
+
+export const LargeIncrement: Story<SliderProps> = (args) => {
+  return <Slider {...args} />;
+};
+
+LargeIncrement.args = {
+  disabled: false,
+  min: 0,
+  max: 500,
+  step: 25,
+  values: [250],
+};
+
+export const DecimalIncrement: Story<SliderProps> = (args) => {
+  return <Slider {...args} />;
+};
+
+DecimalIncrement.args = {
+  disabled: false,
+  min: 0,
+  max: 50,
+  step: 2.5,
+  values: [25],
 };
