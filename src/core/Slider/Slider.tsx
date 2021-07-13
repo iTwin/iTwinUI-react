@@ -363,6 +363,29 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       [min, max, step, currentValues, getAllowableThumbRange, onChange],
     );
 
+    const pointerMoveFunctionRef = React.useRef<
+      (event: PointerEvent) => void
+    >();
+    React.useEffect(() => {
+      const ownerDoc = containerRef.current?.ownerDocument;
+      if (pointerMoveFunctionRef.current && ownerDoc) {
+        ownerDoc.removeEventListener(
+          'pointermove',
+          pointerMoveFunctionRef.current,
+        );
+      }
+      pointerMoveFunctionRef.current = handlePointerMove;
+    }, [handlePointerMove]);
+
+    const pointerUpFunctionRef = React.useRef<(event: PointerEvent) => void>();
+    React.useEffect(() => {
+      const ownerDoc = containerRef.current?.ownerDocument;
+      if (pointerUpFunctionRef.current && ownerDoc) {
+        ownerDoc.removeEventListener('pointerup', pointerUpFunctionRef.current);
+      }
+      pointerUpFunctionRef.current = handlePointerUp;
+    }, [handlePointerUp]);
+
     React.useEffect(() => {
       const ownerDoc = containerRef.current?.ownerDocument;
       ownerDoc?.addEventListener('pointermove', handlePointerMove);
