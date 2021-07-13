@@ -65,7 +65,7 @@ export const Tooltip = (props: TooltipProps) => {
       ref={ref}
       {...rest}
     >
-      {React.cloneElement(children, { title: undefined })}
+      {children && React.cloneElement(children, { title: undefined })}
     </Popover>
   );
 };
