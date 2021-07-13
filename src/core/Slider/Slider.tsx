@@ -62,8 +62,8 @@ const getDefaultTrackDisplay = (
   return numValues % 2 ? 'even-segments' : 'odd-segments';
 };
 
-const roundValueToClosestStep = (value: number, step: number) => {
-  return Math.round(value / step) * step;
+const roundValueToClosestStep = (value: number, step: number, min: number) => {
+  return Math.round((value - min) / step) * step + min;
 };
 
 const formatNumberValue = (
@@ -294,9 +294,12 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
             event.pageX,
           );
           let pointerValue = min + (max - min) * percent;
-          pointerValue = roundValueToClosestStep(pointerValue, step);
+          pointerValue = roundValueToClosestStep(pointerValue, step, min);
           const [minVal, maxVal] = getAllowableThumbRange(activeThumbIndex);
           pointerValue = getBoundedValue(pointerValue, minVal, maxVal);
+          if (pointerValue === currentValues[activeThumbIndex]) {
+            return;
+          }
           const newValues = [...currentValues];
           newValues[activeThumbIndex] = pointerValue;
           setCurrentValues(newValues);
@@ -316,6 +319,9 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
     // function called by Thumb keyboard processing
     const onThumbValueChanged = React.useCallback(
       (index: number, value: number) => {
+        if (currentValues[index] === value) {
+          return;
+        }
         const newValues = [...currentValues];
         newValues[index] = value;
         setCurrentValues(newValues);
@@ -346,7 +352,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
             event.pageX,
           );
           let pointerValue = min + (max - min) * percent;
-          pointerValue = roundValueToClosestStep(pointerValue, step);
+          pointerValue = roundValueToClosestStep(pointerValue, step, min);
 
           const closestValueIndex = getClosestValueIndex(
             currentValues,
@@ -354,6 +360,9 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
           );
           const [minVal, maxVal] = getAllowableThumbRange(closestValueIndex);
           pointerValue = getBoundedValue(pointerValue, minVal, maxVal);
+          if (pointerValue === currentValues[closestValueIndex]) {
+            return;
+          }
           const newValues = [...currentValues];
           newValues[closestValueIndex] = pointerValue;
           setCurrentValues(newValues);
