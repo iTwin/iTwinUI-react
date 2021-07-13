@@ -6,6 +6,7 @@ import { Story, Meta } from '@storybook/react';
 import React from 'react';
 import {
   getUserColor,
+  Tooltip,
   UserIcon,
   UserIconGroup,
   UserIconGroupProps,
@@ -200,15 +201,25 @@ export const WithTooltip: Story<UserIconGroupProps> = (args) => {
     'Justice Harrington',
   ];
 
-  const [tooltipVisible, setTooltipVisible] = React.useState<boolean>(false);
-
+  const [, setTooltipVisible] = React.useState<boolean>(false);
+  const userIconRef = React.useRef();
   const excessIconProps = {
+    id: 'someid',
+    ref: userIconRef,
     onMouseOver: () => setTooltipVisible(true),
     onMouseOut: () => setTooltipVisible(false),
   };
 
+  const arrayLength = 5;
+  const usersSubArray = userNames.slice(arrayLength);
+  const tooltipContent = usersSubArray.join(`\n`) as string;
+
   return (
-    <div className='iui-tooltip-container'>
+    <Tooltip
+      reference={userIconRef.current}
+      content={tooltipContent as string}
+      placement='right'
+    >
       <UserIconGroup {...args} excessIconProps={excessIconProps}>
         {userNames.map((name) => (
           <UserIcon
@@ -223,10 +234,7 @@ export const WithTooltip: Story<UserIconGroupProps> = (args) => {
           />
         ))}
       </UserIconGroup>
-      {tooltipVisible && (
-        <span className='iui-tooltip right'>Charlie Mayfield</span>
-      )}
-    </div>
+    </Tooltip>
   );
 };
 WithTooltip.args = {
