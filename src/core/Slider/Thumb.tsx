@@ -83,7 +83,11 @@ export const Thumb = ({
         {...rest}
         ref={thumbRef}
         style={{ ...style, left: `${leftPercent}%` }}
-        className={cx('iui-slider-thumb', isActive && 'iui-active', className)}
+        className={cx(
+          'iui-slider-thumb',
+          { 'iui-active': isActive },
+          className,
+        )}
         role='slider'
         tabIndex={0}
         aria-valuemin={minVal}

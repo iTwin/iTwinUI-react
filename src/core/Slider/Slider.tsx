@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 import cx from 'classnames';
 import React from 'react';
-import { useMergedRefs } from '../utils/hooks/useMergedRefs';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/slider.css';
 import { TooltipProps } from '../Tooltip';
@@ -219,7 +218,6 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
 
     useTheme();
     const containerRef = React.useRef<HTMLDivElement>(null);
-    const refs = useMergedRefs<HTMLDivElement>(containerRef, ref);
 
     React.useEffect(() => {
       if (containerRef.current && setFocus) {
@@ -388,9 +386,10 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
 
     return (
       <div
+        ref={ref}
         className={cx(
           'iui-slider-component-container',
-          disabled && 'iui-disabled',
+          { 'iui-disabled': disabled },
           className,
         )}
         {...rest}
@@ -399,11 +398,11 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
           <span className='iui-slider-min'>{minValueLabel}</span>
         )}
         <div
-          ref={refs}
-          className={cx(
-            'iui-slider-container',
-            undefined !== activeThumbIndex && 'iui-grabbing',
-          )}
+          ref={containerRef}
+          style={{ touchAction: 'pan-y' }} // temporary until css is updated
+          className={cx('iui-slider-container', {
+            'iui-grabbing': undefined !== activeThumbIndex,
+          })}
           onPointerDown={handlePointerDownOnSlider}
         >
           <div className='iui-slider-rail' />
