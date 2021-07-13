@@ -99,7 +99,7 @@ export type SliderProps = {
    *                 Default if number of thumbs values are even.
    * 'even-segments'- colored tracks shown in segments 0,2,4, etc.
    *                 Default if number of thumbs values are odd.
-   * @default auto
+   * @default 'auto'
    */
   trackDisplayMode?: TrackDisplayMode;
   /**
@@ -156,9 +156,9 @@ export type SliderProps = {
    */
   thumbMode?: 'allow-crossing' | 'inhibit-crossing';
   /**
-   * Additional props to include on slider container.
+   * Additional props to include on each thumb container.
    */
-  containerProps?: Omit<CommonProps, 'title'>;
+  thumbProps?: Omit<CommonProps, 'title'>;
   /**
    * Callback fired when the value(s) of the slider has changed. This will receive
    * changes at the end of a slide as well as changes from clicks on rails and tracks.
@@ -170,7 +170,7 @@ export type SliderProps = {
    * high-volume of updates will occur when dragging.
    */
   onUpdate?: (values: ReadonlyArray<number>) => void;
-};
+} & Omit<CommonProps, 'title'>;
 
 /**
  * Slider component that display Thumbs for each value specified along a Rail.
@@ -196,9 +196,11 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       maxLabel,
       trackDisplayMode = undefined,
       thumbMode = 'inhibit-crossing',
-      containerProps = {},
       onChange,
       onUpdate,
+      thumbProps,
+      className,
+      ...rest
     } = props;
 
     const [currentValues, setCurrentValues] = React.useState(values);
@@ -394,19 +396,22 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
 
     return (
       <div
-        {...containerProps}
         className={cx(
           'iui-slider-component-container',
           disabled && 'iui-disabled',
-          containerProps.className,
+          className,
         )}
+        {...rest}
       >
         {minValueLabel && (
           <span className='iui-slider-min'>{minValueLabel}</span>
         )}
         <div
           ref={refs}
-          className='iui-slider-container'
+          className={cx(
+            'iui-slider-container',
+            undefined !== activeThumbIndex && 'iui-grabbing',
+          )}
           onPointerDown={handlePointerDownOnSlider}
         >
           <div className='iui-slider-rail' />
@@ -424,6 +429,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
                 value={thumbValue}
                 tooltipContent={generateTooltip(thumbValue)}
                 tooltipProps={tooltipProps}
+                thumbProps={thumbProps}
                 step={step}
                 sliderMin={min}
                 sliderMax={max}

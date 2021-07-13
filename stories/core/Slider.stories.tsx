@@ -26,12 +26,28 @@ Basic.args = {
   maxLabel: <SvgSmileySad />,
 };
 
-export const WithContainerProps: Story<SliderProps> = (args) => {
+export const WithProps: Story<SliderProps> = (args) => {
   return <Slider {...args} />;
 };
 
-WithContainerProps.args = {
-  containerProps: { className: 'test-class', style: { width: '80%' } },
+WithProps.args = {
+  className: 'test-class',
+  style: { width: '80%' },
+  disabled: false,
+  values: [50],
+  minLabel: <SvgSmileyHappy />,
+  maxLabel: <SvgSmileySad />,
+};
+
+export const WithThumbProps: Story<SliderProps> = (args) => {
+  return <Slider {...args} />;
+};
+
+WithThumbProps.args = {
+  thumbProps: {
+    className: 'thumb-test-class',
+    style: { backgroundColor: 'red' },
+  },
   disabled: false,
   values: [50],
   minLabel: <SvgSmileyHappy />,
@@ -151,7 +167,8 @@ export const HideTooltip: Story<SliderProps> = (args) => {
 };
 
 HideTooltip.args = {
-  containerProps: { className: 'test-class', style: { width: '60%' } },
+  className: 'test-class',
+  style: { width: '60%' },
   min: 0,
   max: 60,
   values: [20],

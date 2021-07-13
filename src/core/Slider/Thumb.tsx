@@ -5,6 +5,7 @@
 import React from 'react';
 import cx from 'classnames';
 import { Tooltip, TooltipProps } from '../Tooltip';
+import { CommonProps } from '../utils/props';
 
 /**
  * Thumb is a local component used to show and modify the values maintained by the Slider.
@@ -24,6 +25,7 @@ export const Thumb = ({
   onThumbValueChanged,
   tooltipContent,
   tooltipProps,
+  thumbProps,
 }: {
   value: number;
   index: number;
@@ -37,6 +39,7 @@ export const Thumb = ({
   onThumbValueChanged: (index: number, value: number) => void;
   tooltipContent: React.ReactNode;
   tooltipProps?: Partial<Omit<TooltipProps, 'content' | 'children'>>;
+  thumbProps?: Omit<CommonProps, 'title'>;
 }) => {
   const thumbRef = React.useRef<HTMLDivElement>(null);
   const handleOnKeyDown = React.useCallback(
@@ -67,6 +70,7 @@ export const Thumb = ({
   const [isHovered, setIsHovered] = React.useState(false);
 
   const leftPercent = (100.0 * (value - sliderMin)) / (sliderMax - sliderMin);
+  const { style, className, ...rest } = thumbProps || {};
 
   return (
     <Tooltip
@@ -76,13 +80,10 @@ export const Thumb = ({
       {...tooltipProps}
     >
       <div
+        {...rest}
         ref={thumbRef}
-        style={{ left: `${leftPercent}%` }}
-        className={cx(
-          'iui-slider-thumb',
-          isActive && 'iui-active',
-          isActive && 'iui-grabbing',
-        )}
+        style={{ ...style, left: `${leftPercent}%` }}
+        className={cx('iui-slider-thumb', isActive && 'iui-active', className)}
         role='slider'
         tabIndex={0}
         aria-valuemin={minVal}
