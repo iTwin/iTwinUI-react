@@ -30,8 +30,8 @@ export type TooltipProps = {
  * @example
  * const buttonRef = React.useRef();
  * ...
- * <Tooltip content='tooltip text' reference={buttonRef} />
  * <Button ref={buttonRef} />
+ * <Tooltip content='tooltip text' reference={buttonRef.current} />
  */
 export const Tooltip = (props: TooltipProps) => {
   const {
