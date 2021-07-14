@@ -194,7 +194,7 @@ export const WithTooltip: Story<UserIconGroupProps> = (args) => {
     'Justice Harrington',
   ];
 
-  const [, setTooltipVisible] = React.useState<boolean>(false);
+  const [, setDoSomething] = React.useState<boolean>(false);
 
   /**
    * User Icon ref is needed for Tooltip positioning.
@@ -203,8 +203,8 @@ export const WithTooltip: Story<UserIconGroupProps> = (args) => {
 
   const countIconProps = {
     ref: userIconRef,
-    onMouseOver: () => setTooltipVisible(true),
-    onMouseOut: () => setTooltipVisible(false),
+    onMouseOver: () => setDoSomething(true),
+    onMouseOut: () => setDoSomething(false),
   };
 
   const arrayLength = args.maxIcons;
