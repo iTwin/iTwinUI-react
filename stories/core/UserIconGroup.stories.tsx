@@ -212,11 +212,7 @@ export const WithTooltip: Story<UserIconGroupProps> = (args) => {
   const tooltipContent = usersSubArray.join(`\n`) as string;
 
   return (
-    <Tooltip
-      reference={userIconRef.current}
-      content={tooltipContent as string}
-      placement='right'
-    >
+    <>
       <UserIconGroup {...args} countIconProps={countIconProps}>
         {userNames.map((name) => (
           <UserIcon
@@ -231,7 +227,12 @@ export const WithTooltip: Story<UserIconGroupProps> = (args) => {
           />
         ))}
       </UserIconGroup>
-    </Tooltip>
+      <Tooltip
+        reference={userIconRef.current}
+        content={tooltipContent as string}
+        placement='right'
+      />
+    </>
   );
 };
 WithTooltip.args = {
