@@ -35,15 +35,8 @@ export const Basic: Story<UserIconGroupProps> = (args) => {
     'Jean Mullins',
   ];
 
-  const countProps = {
-    onMouseEnter: () => console.log('mouseenter'),
-  };
-
   return (
-    <UserIconGroup
-      {...args}
-      excessIconProps={countProps as React.HTMLAttributes<HTMLDivElement>}
-    >
+    <UserIconGroup {...args}>
       {userNames.map((name) => (
         <UserIcon
           size='medium'
@@ -202,15 +195,19 @@ export const WithTooltip: Story<UserIconGroupProps> = (args) => {
   ];
 
   const [, setTooltipVisible] = React.useState<boolean>(false);
+
+  /**
+   * User Icon ref is needed for Tooltip positioning.
+   */
   const userIconRef = React.useRef();
-  const excessIconProps = {
-    id: 'someid',
+
+  const countIconProps = {
     ref: userIconRef,
     onMouseOver: () => setTooltipVisible(true),
     onMouseOut: () => setTooltipVisible(false),
   };
 
-  const arrayLength = 5;
+  const arrayLength = args.maxIcons;
   const usersSubArray = userNames.slice(arrayLength);
   const tooltipContent = usersSubArray.join(`\n`) as string;
 
@@ -220,7 +217,7 @@ export const WithTooltip: Story<UserIconGroupProps> = (args) => {
       content={tooltipContent as string}
       placement='right'
     >
-      <UserIconGroup {...args} excessIconProps={excessIconProps}>
+      <UserIconGroup {...args} countIconProps={countIconProps}>
         {userNames.map((name) => (
           <UserIcon
             size='medium'

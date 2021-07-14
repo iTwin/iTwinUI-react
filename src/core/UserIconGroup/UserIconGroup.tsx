@@ -32,13 +32,19 @@ export type UserIconGroupProps = {
    */
   children: React.ReactNode;
 
-  excessIconProps?: React.HTMLAttributes<HTMLDivElement>;
+  /**
+   * User count icon props
+   */
+  countIconProps?: React.HTMLAttributes<HTMLDivElement>;
 } & CommonProps;
 
 /**
  * Group User Icons together.
+ *
  * User Icons stacking is based on maxIcons count. If you provide 8 UserIcons and keep default 5 maxIcons count,
  * this component will show 5 UserIcons and stacked UserIcon with "3" in it.
+ *
+ * You can add custom User Count Icon behavior, eg. onClick or onMouseOver, by using countIconProps.
  *
  * @example
  * <UserIconGroup iconSize='medium'>
@@ -74,7 +80,7 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
     stacked = true,
     maxIcons = defaultLength,
     iconSize,
-    excessIconProps,
+    countIconProps,
   } = props;
 
   const childrenArray = React.Children.toArray(children);
@@ -95,7 +101,15 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
       )}
     >
       {childrenLength <= maxIcons + 1 ? (
-        children
+        <>
+          {childrenArray.map((child, index) =>
+            React.cloneElement(child as JSX.Element, {
+              status: undefined,
+              key: index,
+              size: iconSize,
+            }),
+          )}
+        </>
       ) : (
         <>
           {childrenArray.map((child, index) =>
@@ -109,7 +123,7 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
           )}
 
           <div
-            {...excessIconProps}
+            {...countIconProps}
             className={cx(
               'iui-user-icon',
               `iui-${iconSize}`,
