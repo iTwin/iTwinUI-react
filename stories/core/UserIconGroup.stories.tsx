@@ -11,6 +11,7 @@ import {
   UserIconGroup,
   UserIconGroupProps,
 } from '../../src/core';
+import { CreeveyMeta } from 'creevey';
 
 export default {
   component: UserIconGroup,
@@ -22,7 +23,7 @@ export default {
     children: { control: { disable: true } },
   },
   title: 'Core/UserIconGroup',
-} as Meta<UserIconGroupProps>;
+} as Meta<UserIconGroupProps> & CreeveyMeta;
 
 export const Basic: Story<UserIconGroupProps> = (args) => {
   const userNames = [
