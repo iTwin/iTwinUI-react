@@ -10,9 +10,8 @@ function shouldDisplaySegment(segmentIndex: number, mode: TrackDisplayMode) {
     return true;
   } else if ('even-segments' === mode && 0 === segmentIndex % 2) {
     return true;
-  } else {
-    return false;
   }
+  return false;
 }
 
 function generateSegments(
@@ -31,8 +30,8 @@ function generateSegments(
 }
 
 /**
- * Track display color segments above Rail. Which, if any, segments that are
- * colorized is based on trackDisplayMode.
+ * Track displays color segments above Rail. Which, if any, segments that are
+ * colorized is based on `trackDisplayMode`.
  */
 export const Track = ({
   trackDisplayMode,

@@ -25,7 +25,6 @@ export type TrackDisplayMode =
   | 'odd-segments'
   | 'even-segments';
 
-/** Private Utility Functions */
 const getPercentageOfRectangle = (rect: DOMRect, pointer: number) => {
   const position = getBoundedValue(pointer, rect.left, rect.right);
   return (position - rect.left) / rect.width;
@@ -119,21 +118,21 @@ export type SliderProps = {
    */
   tooltipProps?: Partial<Omit<TooltipProps, 'content' | 'children'>>;
   /**
-   * Optional tooltip function that can be supplied to generate tooltip text.
+   * Function that can generate tooltip content.
    */
   tooltipRenderer?: (val: number, step: number) => React.ReactNode;
   /**
-   *  Optional array of labels that will be used to determine number of ticks
+   *  Array of labels that will be used to determine number of ticks
    * displayed and their labels. Ticks are spaced evenly across width of Slider.
    */
   tickLabels?: React.ReactNode[];
   /**
-   * Optional label for the minimum value. If undefined then the min
+   * Label for the minimum value. If undefined then the min
    * value is shown. Use empty string for no label.
    */
   minLabel?: React.ReactNode;
   /**
-   * Optional label for the maximum value. If undefined then the max
+   * Label for the maximum value. If undefined then the max
    *  value is shown. Use empty string for no label.
    */
   maxLabel?: React.ReactNode;
