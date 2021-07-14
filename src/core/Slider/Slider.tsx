@@ -14,10 +14,6 @@ import { Thumb } from './Thumb';
 
 /**
  * Determines which segments are shown with color.
- * 'auto' - segment display is based on number of values.
- * 'none' - no colored tracks are displayed.
- * 'odd-segments'- colored tracks shown in segments 1,3,5, etc. Default if number of Thumbs values are odd.
- * 'even-segments'- colored tracks shown in segments 2,4,6, etc. Default if number of Thumbs values are even.
  */
 export type TrackDisplayMode =
   | 'auto'
@@ -40,11 +36,11 @@ const getClosestValueIndex = (values: number[], pointerValue: number) => {
 };
 
 const getDefaultTrackDisplay = (
-  trackDisplayMode?: TrackDisplayMode,
+  trackDisplayMode: TrackDisplayMode,
   values?: number[],
 ) => {
   const numValues = values?.length ?? 0;
-  if (undefined !== trackDisplayMode && 'auto' !== trackDisplayMode) {
+  if ('auto' !== trackDisplayMode) {
     return trackDisplayMode;
   }
 
@@ -105,7 +101,7 @@ export type SliderProps = {
   /**
    *  Determines which segments are shown with color.
    * 'none' - no colored tracks are displayed.
-   * 'auto' - no colored tracks are displayed.
+   * 'auto' - segment display is based on number of values.
    * 'odd-segments'- colored tracks shown in segments 1,3,5, etc.
    *                 Default if number of thumbs values are even.
    * 'even-segments'- colored tracks shown in segments 0,2,4, etc.
@@ -135,7 +131,7 @@ export type SliderProps = {
    */
   tooltipRenderer?: (val: number, step: number) => React.ReactNode;
   /**
-   *  Array of labels that will be used to determine number of ticks
+   * Array of labels that will be used to determine number of ticks
    * displayed and their labels. Ticks are spaced evenly across width of Slider.
    */
   tickLabels?: React.ReactNode[];
@@ -146,7 +142,7 @@ export type SliderProps = {
   minLabel?: React.ReactNode;
   /**
    * Label for the maximum value. If undefined then the max
-   *  value is shown. Use empty string for no label.
+   * value is shown. Use empty string for no label.
    */
   maxLabel?: React.ReactNode;
   /**
@@ -197,7 +193,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       tickLabels,
       minLabel,
       maxLabel,
-      trackDisplayMode = undefined,
+      trackDisplayMode = 'auto',
       thumbMode = 'inhibit-crossing',
       onChange,
       onUpdate,
@@ -237,7 +233,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       }
     }, [setFocus]);
 
-    const fractionDigits = React.useMemo(() => {
+    const getNumDecimalPlaces = React.useMemo(() => {
       const stepString = step.toString();
       const decimalIndex = stepString.indexOf('.');
       return stepString.length - (decimalIndex + 1);
@@ -247,9 +243,9 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       (val: number): React.ReactNode => {
         return tooltipRenderer
           ? tooltipRenderer(val, step)
-          : formatNumberValue(val, step, fractionDigits);
+          : formatNumberValue(val, step, getNumDecimalPlaces);
       },
-      [fractionDigits, step, tooltipRenderer],
+      [getNumDecimalPlaces, step, tooltipRenderer],
     );
 
     const getAllowableThumbRange = React.useCallback(
@@ -412,7 +408,6 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         )}
         <div
           ref={containerRef}
-          style={{ touchAction: 'pan-y' }} // temporary until css is updated
           className={cx('iui-slider-container', {
             'iui-grabbing': undefined !== activeThumbIndex,
           })}
