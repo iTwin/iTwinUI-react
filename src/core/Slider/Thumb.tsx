@@ -140,7 +140,7 @@ export const Thumb = (props: ThumbProps) => {
           className,
         )}
         role='slider'
-        tabIndex={0}
+        tabIndex={disabled ? undefined : 0}
         aria-valuemin={minVal}
         aria-valuenow={value}
         aria-valuemax={maxVal}
