@@ -33,7 +33,7 @@ export type UserIconGroupProps = {
   children: React.ReactNode;
 
   /**
-   * User count icon props
+   * User count icon props, eg. onClick
    */
   countIconProps?: React.HTMLAttributes<HTMLDivElement>;
 } & CommonProps;
