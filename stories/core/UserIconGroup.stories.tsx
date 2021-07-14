@@ -197,18 +197,17 @@ export const WithTooltip: Story<UserIconGroupProps> = (args) => {
     'Justice Harrington',
   ];
 
-  const [, setDoSomething] = React.useState<boolean>(false);
-
   /**
    * User Icon ref is needed for Tooltip positioning.
+   * We should only render Tooltip when the ref has been set.
    */
-  const userIconRef = React.useRef();
-
-  const countIconProps = {
-    ref: userIconRef,
-    onMouseOver: () => setDoSomething(true),
-    //onMouseOut: () => setDoSomething(false),
-  };
+  const userIconRef = React.useRef<HTMLDivElement>(null);
+  const [isRefSet, setIsRefSet] = React.useState(false);
+  React.useEffect(() => {
+    if (userIconRef.current) {
+      setIsRefSet(true);
+    }
+  }, []);
 
   const arrayLength = args.maxIcons;
   const usersSubArray = userNames.slice(arrayLength);
@@ -216,10 +215,7 @@ export const WithTooltip: Story<UserIconGroupProps> = (args) => {
 
   return (
     <>
-      <UserIconGroup
-        {...args}
-        countIconProps={countIconProps as React.HTMLAttributes<HTMLDivElement>}
-      >
+      <UserIconGroup {...args} countIconProps={{ ref: userIconRef }}>
         {userNames.map((name) => (
           <UserIcon
             size='medium'
@@ -233,11 +229,14 @@ export const WithTooltip: Story<UserIconGroupProps> = (args) => {
           />
         ))}
       </UserIconGroup>
-      <Tooltip
-        reference={userIconRef.current}
-        content={tooltipContent}
-        placement='right'
-      />
+      {isRefSet && (
+        <Tooltip
+          reference={userIconRef.current}
+          content={tooltipContent}
+          placement='right'
+          style={{ whiteSpace: 'pre' }}
+        />
+      )}
     </>
   );
 };
