@@ -126,6 +126,7 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
               'iui-user-icon',
               `iui-${iconSize}`,
               'iui-user-icon-count',
+              countIconProps?.className,
             )}
           >
             <abbr className='iui-initials'>
