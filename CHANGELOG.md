@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+`Date`
+
+- **Added `UserIconGroup` component** - stacked/non-stacked, animated lists with custom `.iui-user-icon-count` icon behavior
+
 ## [1.11.0]
 
 `2021-07-08`
