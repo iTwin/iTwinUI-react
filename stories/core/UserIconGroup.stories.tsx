@@ -198,16 +198,9 @@ export const WithTooltip: Story<UserIconGroupProps> = (args) => {
   ];
 
   /**
-   * User Icon ref is needed for Tooltip positioning.
-   * We should only render Tooltip when the ref has been set.
+   * Ref is set on the last user icon for tooltip positioning.
    */
   const userIconRef = React.useRef<HTMLDivElement>(null);
-  const [isRefSet, setIsRefSet] = React.useState(false);
-  React.useEffect(() => {
-    if (userIconRef.current) {
-      setIsRefSet(true);
-    }
-  }, []);
 
   const arrayLength = args.maxIcons;
   const usersSubArray = userNames.slice(arrayLength);
@@ -229,14 +222,12 @@ export const WithTooltip: Story<UserIconGroupProps> = (args) => {
           />
         ))}
       </UserIconGroup>
-      {isRefSet && (
-        <Tooltip
-          reference={userIconRef.current}
-          content={tooltipContent}
-          placement='right'
-          style={{ whiteSpace: 'pre' }}
-        />
-      )}
+      <Tooltip
+        reference={userIconRef}
+        content={tooltipContent}
+        placement='right'
+        style={{ whiteSpace: 'pre' }}
+      />
     </>
   );
 };
