@@ -144,6 +144,7 @@ export const Thumb = (props: ThumbProps) => {
         aria-valuemin={minVal}
         aria-valuenow={value}
         aria-valuemax={maxVal}
+        aria-disabled={disabled}
         onPointerDown={handlePointerDownOnThumb}
         onKeyDown={handleOnKeyDown}
         onFocus={() => setHasFocus(true)}
