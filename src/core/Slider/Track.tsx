@@ -58,25 +58,29 @@ export const Track = ({
     [currentValues, sliderMin, sliderMax],
   );
 
+  const segmentKeyRef = React.useRef(0);
+
   return (
     <>
       {'none' !== trackDisplayMode &&
         segments.map((segment, index) => {
+          segmentKeyRef.current = segmentKeyRef.current++;
           const leftPercent =
             (100.0 * (segment.left - sliderMin)) / (sliderMax - sliderMin);
           let rightPercent =
             (100.0 * (segment.right - sliderMin)) / (sliderMax - sliderMin);
           rightPercent = 100.0 - rightPercent;
-          if (shouldDisplaySegment(index, trackDisplayMode)) {
-            return (
-              <div
-                key={index}
-                className='iui-slider-track'
-                style={{ left: `${leftPercent}%`, right: `${rightPercent}%` }}
-              />
-            );
-          }
-          return null;
+
+          return (
+            <React.Fragment key={segmentKeyRef.current}>
+              {shouldDisplaySegment(index, trackDisplayMode) ? (
+                <div
+                  className='iui-slider-track'
+                  style={{ left: `${leftPercent}%`, right: `${rightPercent}%` }}
+                />
+              ) : null}
+            </React.Fragment>
+          );
         })}
     </>
   );

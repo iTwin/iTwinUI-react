@@ -66,6 +66,19 @@ const formatNumberValue = (
   return value.toFixed(numDecimals);
 };
 
+const focusThumb = (sliderContainer: HTMLDivElement, activeIndex: number) => {
+  const doc = sliderContainer.ownerDocument;
+  if (
+    !sliderContainer.contains(doc.activeElement) ||
+    Number(doc.activeElement?.getAttribute('data-index')) !== activeIndex
+  ) {
+    const thumbToFocus = sliderContainer.querySelector(
+      `[data-index="${activeIndex}"]`,
+    );
+    thumbToFocus && (thumbToFocus as HTMLElement).focus();
+  }
+};
+
 /**
  * Properties for Slider component
  */
@@ -220,10 +233,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
 
     React.useEffect(() => {
       if (containerRef.current && setFocus) {
-        const firstThumb = containerRef.current.querySelector(
-          '.iui-slider-thumb',
-        );
-        firstThumb && (firstThumb as HTMLElement).focus();
+        focusThumb(containerRef.current, 0);
       }
     }, [setFocus]);
 
@@ -257,6 +267,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       [max, min, step, thumbMode, currentValues],
     );
 
+    const thumbIdRef = React.useRef(0);
     const [activeThumbIndex, setActiveThumbIndex] = React.useState<
       number | undefined
     >(undefined);
@@ -345,6 +356,9 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
           newValues[closestValueIndex] = pointerValue;
           setCurrentValues(newValues);
           onChange?.(newValues);
+          focusThumb(containerRef.current, closestValueIndex);
+          event.preventDefault();
+          event.stopPropagation();
         }
       },
       [min, max, step, currentValues, getAllowableThumbRange, onChange],
@@ -407,10 +421,12 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
           <div className='iui-slider-rail' />
           {currentValues.map((thumbValue, index) => {
             const [minVal, maxVal] = getAllowableThumbRange(index);
+            thumbIdRef.current = thumbIdRef.current++;
             return (
               <Thumb
-                key={index}
+                key={thumbIdRef.current}
                 index={index}
+                disabled={disabled}
                 isActive={activeThumbIndex === index}
                 onThumbActivated={onThumbActivated}
                 onThumbValueChanged={onThumbValueChanged}

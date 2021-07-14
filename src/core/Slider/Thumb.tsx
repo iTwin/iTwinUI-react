@@ -41,6 +41,10 @@ export type ThumbProps = {
    */
   isActive: boolean;
   /**
+   * true if the Thumb is disabled.
+   */
+  disabled?: boolean;
+  /**
    * Callback to invoke when Thumb receives a pointer down event.
    */
   onThumbActivated: (index: number) => void;
@@ -82,10 +86,14 @@ export const Thumb = (props: ThumbProps) => {
     tooltipContent,
     tooltipProps,
     thumbProps,
+    disabled,
   } = props;
   const thumbRef = React.useRef<HTMLDivElement>(null);
   const handleOnKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (disabled) {
+        return;
+      }
       switch (event.key) {
         case 'ArrowLeft':
           onThumbValueChanged(index, Math.max(value - step, minVal));
@@ -101,12 +109,12 @@ export const Thumb = (props: ThumbProps) => {
           return;
       }
     },
-    [value, index, step, minVal, onThumbValueChanged, maxVal],
+    [disabled, onThumbValueChanged, index, value, step, minVal, maxVal],
   );
 
   const handlePointerDownOnThumb = React.useCallback(() => {
-    onThumbActivated(index);
-  }, [index, onThumbActivated]);
+    !disabled && onThumbActivated(index);
+  }, [disabled, index, onThumbActivated]);
 
   const [hasFocus, setHasFocus] = React.useState(false);
   const [isHovered, setIsHovered] = React.useState(false);
@@ -123,6 +131,7 @@ export const Thumb = (props: ThumbProps) => {
     >
       <div
         {...rest}
+        data-index={index}
         ref={thumbRef}
         style={{ ...style, left: `${leftPercent}%` }}
         className={cx(
