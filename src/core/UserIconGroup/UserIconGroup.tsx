@@ -9,42 +9,41 @@ import { CommonProps } from '../utils/props';
 
 export type UserIconGroupProps = {
   /**
-   * UserIconGroup max number of icons unstacked
+   * Max number of icons unstacked.
    * @default 5
    */
   maxIcons?: number;
   /**
-   * UserIconGroup is group needs to be stacked
-   * @default 'true'
+   * If true, group will be stacked to take less space.
+   * @default true
    */
   stacked?: boolean;
   /**
-   * UserIconGroup type
-   * @default 'false'
+   * If true, group will be animated on hover.
+   * @default false
    */
   animated?: boolean;
   /**
-   * UserIconGroup type
+   *  Size of user and count icons.
    */
   iconSize: 'small' | 'medium' | 'large' | 'x-large';
   /**
-   * User Icons in the UserIconGroup.
+   * User Icons in the group..
    */
   children: React.ReactNode;
 
   /**
-   * User count icon props, eg. onClick
+   * User count icon props, eg. onClick.
    */
   countIconProps?: React.HTMLAttributes<HTMLDivElement>;
 } & CommonProps;
-
 /**
  * Group User Icons together.
  *
- * User Icons stacking is based on maxIcons count. If you provide 8 UserIcons and keep default 5 maxIcons count,
+ * User Icons stacking is based on `maxIcons` count. If you provide 8 UserIcons and keep default 5 `maxIcons` count,
  * this component will show 5 UserIcons and stacked UserIcon with "3" in it.
  *
- * You can add custom User Count Icon behavior, eg. onClick or onMouseOver, by using countIconProps.
+ * You can add custom User Count Icon behavior, eg. onClick or onMouseOver, by using `countIconProps`.
  *
  * @example
  * <UserIconGroup iconSize='medium'>
@@ -72,19 +71,18 @@ export type UserIconGroupProps = {
  * </UserIconGroup>
  */
 export const UserIconGroup = (props: UserIconGroupProps) => {
-  const defaultLength = 5;
   const maxLength = 99;
   const {
     children,
     animated = false,
     stacked = true,
-    maxIcons = defaultLength,
+    maxIcons = 5,
     iconSize,
     countIconProps,
   } = props;
 
   const childrenArray = React.Children.toArray(children);
-  const childrenLength = React.Children.count(children);
+  const childrenLength = childrenArray.length;
 
   useTheme();
 

@@ -52,6 +52,7 @@ export const Basic: Story<UserIconGroupProps> = (args) => {
     </UserIconGroup>
   );
 };
+
 Basic.args = {
   animated: false,
   iconSize: 'medium',
@@ -83,6 +84,7 @@ export const Animated: Story<UserIconGroupProps> = (args) => {
     </UserIconGroup>
   );
 };
+
 Animated.args = {
   animated: true,
   iconSize: 'medium',
@@ -124,7 +126,7 @@ export const ManyIcons: Story<UserIconGroupProps> = (args) => {
         ))}
       </UserIconGroup>
       <br />
-      <UserIconGroup animated={false} iconSize='large'>
+      <UserIconGroup {...args} iconSize='large'>
         {userNames.map((name) => (
           <UserIcon
             size='large'
@@ -176,6 +178,7 @@ export const NonStacked: Story<UserIconGroupProps> = (args) => {
     </UserIconGroup>
   );
 };
+
 NonStacked.args = {
   animated: false,
   stacked: false,
@@ -204,7 +207,7 @@ export const WithTooltip: Story<UserIconGroupProps> = (args) => {
   const countIconProps = {
     ref: userIconRef,
     onMouseOver: () => setDoSomething(true),
-    onMouseOut: () => setDoSomething(false),
+    //onMouseOut: () => setDoSomething(false),
   };
 
   const arrayLength = args.maxIcons;
@@ -213,7 +216,10 @@ export const WithTooltip: Story<UserIconGroupProps> = (args) => {
 
   return (
     <>
-      <UserIconGroup {...args} countIconProps={countIconProps}>
+      <UserIconGroup
+        {...args}
+        countIconProps={countIconProps as React.HTMLAttributes<HTMLDivElement>}
+      >
         {userNames.map((name) => (
           <UserIcon
             size='medium'
@@ -229,12 +235,13 @@ export const WithTooltip: Story<UserIconGroupProps> = (args) => {
       </UserIconGroup>
       <Tooltip
         reference={userIconRef.current}
-        content={tooltipContent as string}
+        content={tooltipContent}
         placement='right'
       />
     </>
   );
 };
+
 WithTooltip.args = {
   animated: false,
   iconSize: 'medium',
