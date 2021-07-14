@@ -45,6 +45,29 @@ it('should render animated', () => {
   expect(userGroupContainer.classList).toContain(`iui-animated`);
 });
 
+it('should render not animated', () => {
+  const { container } = render(
+    <UserIconGroup iconSize='medium' animated={false}>
+      <UserIcon
+        abbreviation='RM'
+        backgroundColor='#C8C2B4'
+        size='medium'
+        title='Robin Mercer'
+      />
+      <UserIcon
+        abbreviation='MR'
+        backgroundColor='#C8C2B4'
+        size='medium'
+        title='Mercer Robin'
+      />
+    </UserIconGroup>,
+  );
+  const userGroupContainer = container.querySelector(
+    '.iui-user-icon-list',
+  ) as HTMLElement;
+  expect(userGroupContainer.classList).not.toContain(`iui-animated`);
+});
+
 it('should render stacked', () => {
   const { container } = render(
     <UserIconGroup iconSize='medium'>
@@ -103,8 +126,65 @@ it('should render stacked', () => {
     '.iui-user-icon-list',
   ) as HTMLElement;
   expect(userGroupContainer.classList).toContain(`iui-stacked`);
-  const statusContainer = userGroupContainer.querySelector(
-    '.iui-initials',
+  expect(userGroupContainer.querySelector('.iui-user-icon-count')).toBeTruthy();
+});
+
+it('should render not stacked', () => {
+  const { container } = render(
+    <UserIconGroup iconSize='medium' stacked={false}>
+      <UserIcon
+        abbreviation='RM'
+        backgroundColor='#C8C2B4'
+        size='medium'
+        title='Robin Mercer'
+      />
+      <UserIcon
+        abbreviation='MR'
+        backgroundColor='#C8C2B4'
+        size='medium'
+        title='Mercer Robin'
+      />
+      <UserIcon
+        abbreviation='RM'
+        backgroundColor='#C8C2B4'
+        size='medium'
+        title='Robin Mercer'
+      />
+      <UserIcon
+        abbreviation='MR'
+        backgroundColor='#C8C2B4'
+        size='medium'
+        title='Mercer Robin'
+      />
+      <UserIcon
+        abbreviation='RM'
+        backgroundColor='#C8C2B4'
+        size='medium'
+        title='Robin Mercer'
+      />
+      <UserIcon
+        abbreviation='MR'
+        backgroundColor='#C8C2B4'
+        size='medium'
+        title='Mercer Robin'
+      />
+      <UserIcon
+        abbreviation='RM'
+        backgroundColor='#C8C2B4'
+        size='medium'
+        title='Robin Mercer'
+      />
+      <UserIcon
+        abbreviation='MR'
+        backgroundColor='#C8C2B4'
+        size='medium'
+        title='Mercer Robin'
+      />
+    </UserIconGroup>,
+  );
+
+  const userGroupContainer = container.querySelector(
+    '.iui-user-icon-list',
   ) as HTMLElement;
-  expect(statusContainer.getAttribute('textContent')).toEqual('3');
+  expect(userGroupContainer.classList).not.toContain(`iui-stacked`);
 });
