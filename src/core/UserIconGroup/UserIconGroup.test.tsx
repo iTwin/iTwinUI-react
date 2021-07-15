@@ -245,3 +245,20 @@ it('should render custom classname', () => {
   );
   expect(userGroupContainer).toBeTruthy();
 });
+
+it('should render custom classname for count icon', () => {
+  const { container } = render(
+    <UserIconGroup
+      iconSize='medium'
+      countIconProps={{ className: 'custom-classname' }}
+      stacked={false}
+    >
+      {generateUserIcons(7)}
+    </UserIconGroup>,
+  );
+
+  const userGroupContainer = container.querySelector(
+    '.iui-user-icon-list > .iui-user-icon-count.custom-classname',
+  );
+  expect(userGroupContainer).toBeTruthy();
+});
