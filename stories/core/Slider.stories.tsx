@@ -39,11 +39,11 @@ WithProps.args = {
   maxLabel: <SvgSmileySad />,
 };
 
-export const WithThumbProps: Story<SliderProps> = (args) => {
+export const WithCustomThumb: Story<SliderProps> = (args) => {
   return <Slider {...args} />;
 };
 
-WithThumbProps.args = {
+WithCustomThumb.args = {
   thumbProps: () => {
     return {
       className: 'thumb-test-class',
@@ -75,7 +75,6 @@ WithThumbProps.args = {
   values: [50],
   minLabel: <SvgSmileyHappy />,
   maxLabel: <SvgSmileySad />,
-  tickLabels: ['', '', ''],
   tooltipProps: { style: { userSelect: 'none' } },
   railContainerProps: { style: { margin: '0 8px' } },
 };
