@@ -47,13 +47,37 @@ WithThumbProps.args = {
   thumbProps: () => {
     return {
       className: 'thumb-test-class',
-      style: { backgroundColor: 'red' },
+      style: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#999',
+        width: '36px',
+        height: '26px',
+        borderRadius: '4px',
+        transform: 'translateX(-19.2px)',
+        top: 0,
+      },
+      children: (
+        <span
+          style={{
+            pointerEvents: 'none',
+            marginBottom: '4px',
+            userSelect: 'none',
+          }}
+        >
+          |||
+        </span>
+      ),
     };
   },
   disabled: false,
   values: [50],
   minLabel: <SvgSmileyHappy />,
   maxLabel: <SvgSmileySad />,
+  tickLabels: ['', '', ''],
+  tooltipProps: { style: { userSelect: 'none' } },
+  railContainerProps: { style: { margin: '0 8px' } },
 };
 
 export const Range: Story<SliderProps> = (args) => {

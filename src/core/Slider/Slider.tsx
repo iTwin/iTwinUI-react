@@ -145,6 +145,10 @@ export type SliderProps = {
    */
   maxLabel?: React.ReactNode;
   /**
+   * Additional props for container `<div>` that hold the slider rail, thumbs, and tracks.
+   */
+  railContainerProps?: React.HTMLAttributes<HTMLDivElement>;
+  /**
    * Defines the allowed behavior when moving Thumbs when multiple Thumbs are
    * shown. It controls if a Thumb movement should be limited to only move in
    * the segments adjacent to the Thumb. Possible values:
@@ -198,12 +202,16 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       onUpdate,
       thumbProps,
       className,
+      railContainerProps,
       ...rest
     } = props;
+
+    const thumbIdRef = React.useRef(0);
 
     const [currentValues, setCurrentValues] = React.useState(values);
     React.useEffect(() => {
       setCurrentValues(values);
+      thumbIdRef.current = thumbIdRef.current + 1;
     }, [values]);
 
     const [minValueLabel, setMinValueLabel] = React.useState(
@@ -266,7 +274,6 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       [max, min, step, thumbMode, currentValues],
     );
 
-    const thumbIdRef = React.useRef(0);
     const [activeThumbIndex, setActiveThumbIndex] = React.useState<
       number | undefined
     >(undefined);
@@ -415,14 +422,14 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
             'iui-grabbing': undefined !== activeThumbIndex,
           })}
           onPointerDown={handlePointerDownOnSlider}
+          {...railContainerProps}
         >
           <div className='iui-slider-rail' />
           {currentValues.map((thumbValue, index) => {
             const [minVal, maxVal] = getAllowableThumbRange(index);
-            thumbIdRef.current = thumbIdRef.current++;
             return (
               <Thumb
-                key={thumbIdRef.current}
+                key={`${thumbIdRef.current}-${index}`}
                 index={index}
                 disabled={disabled}
                 isActive={activeThumbIndex === index}
