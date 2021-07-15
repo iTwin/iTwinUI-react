@@ -51,6 +51,7 @@ it('should render in its most basic state', () => {
   ) as HTMLElement;
   expect(userGroup).toBeTruthy();
   expect(userGroup.classList).not.toContain(`iui-animated`);
+
   const userGroupIconCount = container.querySelectorAll(
     '.iui-user-icon-list > .iui-user-icon',
   );
@@ -59,8 +60,9 @@ it('should render in its most basic state', () => {
     '.iui-user-icon-count',
   ) as HTMLElement;
   expect(countIcon.textContent).toBe('2');
-  expect(userGroup.querySelectorAll('.iui-stroke').length).toBeGreaterThan(0);
-  expect(userGroup.querySelectorAll('.iui-initials').length).toBeGreaterThan(0);
+
+  expect(userGroup.querySelectorAll('.iui-stroke').length).toBe(6);
+  expect(userGroup.querySelectorAll('.iui-initials').length).toBe(6);
 });
 
 it('should render animated', () => {
@@ -70,7 +72,7 @@ it('should render animated', () => {
     </UserIconGroup>,
   );
   expect(
-    container.querySelector('.iui-user-icon-list.iui-animated') as HTMLElement,
+    container.querySelector('.iui-user-icon-list.iui-animated'),
   ).toBeTruthy();
 });
 
@@ -78,14 +80,12 @@ it('should render many icons', () => {
   const { container } = render(
     <UserIconGroup iconSize='medium'>{generateUserIcons(105)}</UserIconGroup>,
   );
-  const userGroup = container.querySelector(
-    '.iui-user-icon-list.iui-stacked',
-  ) as HTMLElement;
-  expect(userGroup).toBeTruthy();
-  const userGroupIconCount = container.querySelectorAll(
-    '.iui-user-icon-list > .iui-user-icon',
-  );
-  expect(userGroupIconCount.length).toBe(6);
+  expect(
+    container.querySelector('.iui-user-icon-list.iui-stacked'),
+  ).toBeTruthy();
+  expect(
+    container.querySelectorAll('.iui-user-icon-list > .iui-user-icon').length,
+  ).toBe(6);
   const countIcon = container.querySelector(
     '.iui-user-icon-count',
   ) as HTMLElement;
@@ -99,22 +99,23 @@ it('should render not stacked', () => {
     </UserIconGroup>,
   );
 
-  const userGroupContainer = container.querySelector(
-    '.iui-user-icon-list.iui-stacked',
-  ) as HTMLElement;
-  expect(userGroupContainer).toBeFalsy();
+  expect(
+    container.querySelector('.iui-user-icon-list.iui-stacked'),
+  ).toBeFalsy();
 });
 
-it('should render user icons x-large', () => {
+it.each(['small', 'medium', 'large', 'x-large'] as Array<
+  'small' | 'medium' | 'large' | 'x-large'
+>)('should render with %s size', (size) => {
   const { container } = render(
-    <UserIconGroup iconSize='x-large' stacked={false}>
+    <UserIconGroup iconSize={size} stacked={false}>
       {generateUserIcons(7)}
     </UserIconGroup>,
   );
 
   expect(
     container.querySelectorAll(
-      '.iui-user-icon-list > .iui-user-icon.iui-x-large',
+      `.iui-user-icon-list > .iui-user-icon.iui-${size}`,
     ),
   ).toBeTruthy();
 });
@@ -130,10 +131,9 @@ it('should render custom classname', () => {
     </UserIconGroup>,
   );
 
-  const userGroupContainer = container.querySelector(
-    '.iui-user-icon-list.custom-classname',
-  );
-  expect(userGroupContainer).toBeTruthy();
+  expect(
+    container.querySelector('.iui-user-icon-list.custom-classname'),
+  ).toBeTruthy();
 });
 
 it('should render custom classname for count icon', () => {
@@ -147,8 +147,9 @@ it('should render custom classname for count icon', () => {
     </UserIconGroup>,
   );
 
-  const userGroupContainer = container.querySelector(
-    '.iui-user-icon-list > .iui-user-icon-count.custom-classname',
-  );
-  expect(userGroupContainer).toBeTruthy();
+  expect(
+    container.querySelector(
+      '.iui-user-icon-list > .iui-user-icon-count.custom-classname',
+    ),
+  ).toBeTruthy();
 });
