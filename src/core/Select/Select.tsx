@@ -29,6 +29,14 @@ export type SelectOption<T> = {
    */
   label: string;
   /**
+   * Sublabel of the item shown below the label when item size is 'large'.
+   */
+  sublabel?: React.ReactNode;
+  /**
+   * Modify height of the item. Use 'large' to support multiple lines.
+   */
+  size?: 'default' | 'large';
+  /**
    * Value of the item.
    */
   value: T;
@@ -237,7 +245,6 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
           key: `${option.label}-${index}`,
           isSelected,
           disabled: option.disabled,
-          value: option.value,
           onClick: () => {
             !option.disabled && onChange?.(option.value);
             close();
@@ -245,6 +252,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
           ref: (el: HTMLElement) => isSelected && el?.scrollIntoView(),
           icon: option.icon,
           role: 'option',
+          ...option,
           ...menuItem.props,
         });
       });
