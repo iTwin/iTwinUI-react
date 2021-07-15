@@ -123,7 +123,6 @@ export type SliderProps = {
   disabled?: boolean;
   /**
    * Props to override default for showing a tooltip when Thumb is active or has focus.
-   * changes are allowed.
    */
   tooltipProps?: Partial<Omit<TooltipProps, 'content' | 'children'>>;
   /**
@@ -207,12 +206,16 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       setCurrentValues(values);
     }, [values]);
 
-    const [minValueLabel, setMinValueLabel] = React.useState(minLabel);
+    const [minValueLabel, setMinValueLabel] = React.useState(
+      () => minLabel ?? min.toString(),
+    );
     React.useEffect(() => {
       setMinValueLabel(minLabel ?? min.toString());
     }, [minLabel, min]);
 
-    const [maxValueLabel, setMaxValueLabel] = React.useState(maxLabel);
+    const [maxValueLabel, setMaxValueLabel] = React.useState(
+      () => maxLabel ?? max.toString(),
+    );
     React.useEffect(() => {
       setMaxValueLabel(maxLabel ?? max.toString());
     }, [maxLabel, max]);
