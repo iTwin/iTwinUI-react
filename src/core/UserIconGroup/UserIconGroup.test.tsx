@@ -30,18 +30,16 @@ function generateUserIcons(length: number) {
   return Array(length)
     .fill(null)
     .map((_, index) => userNames[index % userNames.length])
-    .map(() =>
-      userNames.map((name, index) => (
-        <UserIcon
-          key={`${name}-${index}`}
-          title={name}
-          abbreviation={name
-            .split(' ')
-            .map((token) => token[0])
-            .join('')}
-        />
-      )),
-    );
+    .map((name, index) => (
+      <UserIcon
+        key={`${name}-${index}`}
+        title={name}
+        abbreviation={name
+          .split(' ')
+          .map((token) => token[0])
+          .join('')}
+      />
+    ));
 }
 
 it('should render in its most basic state', () => {
