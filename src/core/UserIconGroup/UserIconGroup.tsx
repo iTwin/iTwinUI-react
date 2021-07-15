@@ -28,12 +28,11 @@ export type UserIconGroupProps = {
    */
   iconSize: 'small' | 'medium' | 'large' | 'x-large';
   /**
-   * User Icons in the group..
+   * User Icons in the group.
    */
   children: React.ReactNode;
-
   /**
-   * User count icon props, eg. onClick.
+   * User count icon props.
    */
   countIconProps?: React.HTMLAttributes<HTMLDivElement>;
 } & CommonProps;
@@ -43,7 +42,7 @@ export type UserIconGroupProps = {
  * User Icons stacking is based on `maxIcons` count. If you provide 8 UserIcons and keep default 5 `maxIcons` count,
  * this component will show 5 UserIcons and stacked UserIcon with "3" in it.
  *
- * You can add custom User Count Icon behavior, eg. onClick or onMouseOver, by using `countIconProps`.
+ * You can add custom User Count Icon behavior by using `countIconProps`.
  *
  * @example
  * <UserIconGroup iconSize='medium'>

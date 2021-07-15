@@ -4,7 +4,7 @@
 
 `Date`
 
-- **Added `UserIconGroup` component** - stacked/non-stacked, animated lists with custom `.iui-user-icon-count` icon behavior
+- **Added `UserIconGroup` component** - stacked/non-stacked, animated lists with custom count icon behavior.
 
 ## [1.11.0]
 
