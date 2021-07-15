@@ -4,13 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 import { Story, Meta } from '@storybook/react';
 import React from 'react';
-import {
-  getUserColor,
-  Tooltip,
-  UserIcon,
-  UserIconGroup,
-  UserIconGroupProps,
-} from '../../src/core';
+import { getUserColor, Tooltip, UserIcon } from '../../src/core';
+import { UserIconGroup, UserIconGroupProps } from '../../src/core/index';
 
 export default {
   component: UserIconGroup,
@@ -39,7 +34,6 @@ export const Basic: Story<UserIconGroupProps> = (args) => {
     <UserIconGroup {...args}>
       {userNames.map((name) => (
         <UserIcon
-          size='medium'
           key={name}
           abbreviation={name
             .split(' ')
@@ -71,7 +65,6 @@ export const Animated: Story<UserIconGroupProps> = (args) => {
     <UserIconGroup animated {...args}>
       {userNames.map((name) => (
         <UserIcon
-          size='medium'
           key={name}
           abbreviation={name
             .split(' ')
@@ -107,6 +100,101 @@ export const ManyIcons: Story<UserIconGroupProps> = (args) => {
     'Peyton Pennington',
     'Justice Harrington',
     'Jessie Dodd',
+    'Terry Rivers',
+    'Robin Mercer',
+    'Morgan Vera',
+    'Ace Cash',
+    'Tanner Fraser',
+    'Ashley Miles',
+    'Jean Mullins',
+    'Nico Triplett',
+    'Drew Abel',
+    'Kendall Simons',
+    'Kennedy Gray',
+    'Charlie Mayfield',
+    'Peyton Pennington',
+    'Justice Harrington',
+    'Jessie Dodd',
+    'Terry Rivers',
+    'Robin Mercer',
+    'Morgan Vera',
+    'Ace Cash',
+    'Tanner Fraser',
+    'Ashley Miles',
+    'Jean Mullins',
+    'Nico Triplett',
+    'Drew Abel',
+    'Kendall Simons',
+    'Kennedy Gray',
+    'Charlie Mayfield',
+    'Peyton Pennington',
+    'Justice Harrington',
+    'Jessie Dodd',
+    'Terry Rivers',
+    'Robin Mercer',
+    'Morgan Vera',
+    'Ace Cash',
+    'Tanner Fraser',
+    'Ashley Miles',
+    'Jean Mullins',
+    'Nico Triplett',
+    'Drew Abel',
+    'Kendall Simons',
+    'Kennedy Gray',
+    'Charlie Mayfield',
+    'Peyton Pennington',
+    'Justice Harrington',
+    'Jessie Dodd',
+    'Terry Rivers',
+    'Robin Mercer',
+    'Morgan Vera',
+    'Ace Cash',
+    'Tanner Fraser',
+    'Ashley Miles',
+    'Jean Mullins',
+    'Nico Triplett',
+    'Drew Abel',
+    'Kendall Simons',
+    'Kennedy Gray',
+    'Charlie Mayfield',
+    'Peyton Pennington',
+    'Justice Harrington',
+    'Jessie Dodd',
+    'Kennedy Gray',
+    'Charlie Mayfield',
+    'Peyton Pennington',
+    'Justice Harrington',
+    'Jessie Dodd',
+    'Terry Rivers',
+    'Robin Mercer',
+    'Morgan Vera',
+    'Ace Cash',
+    'Tanner Fraser',
+    'Ashley Miles',
+    'Jean Mullins',
+    'Nico Triplett',
+    'Drew Abel',
+    'Kendall Simons',
+    'Kennedy Gray',
+    'Charlie Mayfield',
+    'Peyton Pennington',
+    'Justice Harrington',
+    'Jessie Dodd',
+    'Terry Rivers',
+    'Robin Mercer',
+    'Morgan Vera',
+    'Ace Cash',
+    'Tanner Fraser',
+    'Ashley Miles',
+    'Jean Mullins',
+    'Nico Triplett',
+    'Drew Abel',
+    'Kendall Simons',
+    'Kennedy Gray',
+    'Charlie Mayfield',
+    'Peyton Pennington',
+    'Justice Harrington',
+    'Jessie Dodd',
   ];
 
   return (
@@ -114,7 +202,6 @@ export const ManyIcons: Story<UserIconGroupProps> = (args) => {
       <UserIconGroup {...args}>
         {userNames.map((name) => (
           <UserIcon
-            size='medium'
             key={name}
             abbreviation={name
               .split(' ')
@@ -129,7 +216,6 @@ export const ManyIcons: Story<UserIconGroupProps> = (args) => {
       <UserIconGroup {...args} iconSize='large'>
         {userNames.map((name) => (
           <UserIcon
-            size='large'
             key={name}
             abbreviation={name
               .split(' ')
@@ -165,7 +251,6 @@ export const NonStacked: Story<UserIconGroupProps> = (args) => {
     <UserIconGroup stacked={false} {...args}>
       {userNames.map((name) => (
         <UserIcon
-          size='medium'
           key={name}
           abbreviation={name
             .split(' ')
@@ -211,7 +296,6 @@ export const WithTooltip: Story<UserIconGroupProps> = (args) => {
       <UserIconGroup {...args} countIconProps={{ ref: userIconRef }}>
         {userNames.map((name) => (
           <UserIcon
-            size='medium'
             key={name}
             abbreviation={name
               .split(' ')

@@ -32,15 +32,15 @@ export type UserIconGroupProps = {
    */
   children: React.ReactNode;
   /**
-   * User count icon props.
+   * User Count Icon props.
    */
   countIconProps?: React.HTMLAttributes<HTMLDivElement>;
-} & CommonProps;
+} & Omit<CommonProps, 'title'>;
 /**
  * Group User Icons together.
  *
- * User Icons stacking is based on `maxIcons` count. If you provide 8 UserIcons and keep default 5 `maxIcons` count,
- * this component will show 5 UserIcons and stacked UserIcon with "3" in it.
+ * User Icons stacking is based on `maxIcons` count. If you provide 8 User Icons and keep default 5 `maxIcons` count,
+ * this component will show 5 User Icons and User Count Icon with "3" in it.
  *
  * You can add custom User Count Icon behavior by using `countIconProps`.
  *
@@ -78,6 +78,8 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
     maxIcons = 5,
     iconSize,
     countIconProps,
+    className,
+    ...rest
   } = props;
 
   const childrenArray = React.Children.toArray(children);
@@ -95,7 +97,9 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
         {
           'iui-stacked': stacked,
         },
+        className,
       )}
+      {...rest}
     >
       {childrenLength <= maxIcons + 1 ? (
         <>
