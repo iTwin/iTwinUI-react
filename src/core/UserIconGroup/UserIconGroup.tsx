@@ -117,7 +117,7 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
             index < maxIcons
               ? React.cloneElement(child as JSX.Element, {
                   status: undefined,
-                  key: index,
+                  key: (child as JSX.Element).props.title,
                   size: iconSize,
                 })
               : null,
