@@ -32,9 +32,9 @@ export const Basic: Story<UserIconGroupProps> = (args) => {
 
   return (
     <UserIconGroup {...args}>
-      {userNames.map((name) => (
+      {userNames.map((name, index) => (
         <UserIcon
-          key={name}
+          key={`${name}-${index}`}
           abbreviation={name
             .split(' ')
             .map((token) => token[0])
@@ -63,9 +63,9 @@ export const Animated: Story<UserIconGroupProps> = (args) => {
 
   return (
     <UserIconGroup animated {...args}>
-      {userNames.map((name) => (
+      {userNames.map((name, index) => (
         <UserIcon
-          key={name}
+          key={`${name}-${index}`}
           abbreviation={name
             .split(' ')
             .map((token) => token[0])
@@ -100,131 +100,25 @@ export const ManyIcons: Story<UserIconGroupProps> = (args) => {
     'Peyton Pennington',
     'Justice Harrington',
     'Jessie Dodd',
-    'Terry Rivers',
-    'Robin Mercer',
-    'Morgan Vera',
-    'Ace Cash',
-    'Tanner Fraser',
-    'Ashley Miles',
-    'Jean Mullins',
-    'Nico Triplett',
-    'Drew Abel',
-    'Kendall Simons',
-    'Kennedy Gray',
-    'Charlie Mayfield',
-    'Peyton Pennington',
-    'Justice Harrington',
-    'Jessie Dodd',
-    'Terry Rivers',
-    'Robin Mercer',
-    'Morgan Vera',
-    'Ace Cash',
-    'Tanner Fraser',
-    'Ashley Miles',
-    'Jean Mullins',
-    'Nico Triplett',
-    'Drew Abel',
-    'Kendall Simons',
-    'Kennedy Gray',
-    'Charlie Mayfield',
-    'Peyton Pennington',
-    'Justice Harrington',
-    'Jessie Dodd',
-    'Terry Rivers',
-    'Robin Mercer',
-    'Morgan Vera',
-    'Ace Cash',
-    'Tanner Fraser',
-    'Ashley Miles',
-    'Jean Mullins',
-    'Nico Triplett',
-    'Drew Abel',
-    'Kendall Simons',
-    'Kennedy Gray',
-    'Charlie Mayfield',
-    'Peyton Pennington',
-    'Justice Harrington',
-    'Jessie Dodd',
-    'Terry Rivers',
-    'Robin Mercer',
-    'Morgan Vera',
-    'Ace Cash',
-    'Tanner Fraser',
-    'Ashley Miles',
-    'Jean Mullins',
-    'Nico Triplett',
-    'Drew Abel',
-    'Kendall Simons',
-    'Kennedy Gray',
-    'Charlie Mayfield',
-    'Peyton Pennington',
-    'Justice Harrington',
-    'Jessie Dodd',
-    'Kennedy Gray',
-    'Charlie Mayfield',
-    'Peyton Pennington',
-    'Justice Harrington',
-    'Jessie Dodd',
-    'Terry Rivers',
-    'Robin Mercer',
-    'Morgan Vera',
-    'Ace Cash',
-    'Tanner Fraser',
-    'Ashley Miles',
-    'Jean Mullins',
-    'Nico Triplett',
-    'Drew Abel',
-    'Kendall Simons',
-    'Kennedy Gray',
-    'Charlie Mayfield',
-    'Peyton Pennington',
-    'Justice Harrington',
-    'Jessie Dodd',
-    'Terry Rivers',
-    'Robin Mercer',
-    'Morgan Vera',
-    'Ace Cash',
-    'Tanner Fraser',
-    'Ashley Miles',
-    'Jean Mullins',
-    'Nico Triplett',
-    'Drew Abel',
-    'Kendall Simons',
-    'Kennedy Gray',
-    'Charlie Mayfield',
-    'Peyton Pennington',
-    'Justice Harrington',
-    'Jessie Dodd',
   ];
 
   return (
     <>
       <UserIconGroup {...args}>
-        {userNames.map((name) => (
-          <UserIcon
-            key={name}
-            abbreviation={name
-              .split(' ')
-              .map((token) => token[0])
-              .join('')}
-            backgroundColor={getUserColor(name)}
-            title={name}
-          />
-        ))}
-      </UserIconGroup>
-      <br />
-      <UserIconGroup {...args} iconSize='large'>
-        {userNames.map((name) => (
-          <UserIcon
-            key={name}
-            abbreviation={name
-              .split(' ')
-              .map((token) => token[0])
-              .join('')}
-            backgroundColor={getUserColor(name)}
-            title={name}
-          />
-        ))}
+        {Array(110)
+          .fill(null)
+          .map((_, index) => userNames[index % userNames.length])
+          .map((name, index) => (
+            <UserIcon
+              key={`${name}-${index}`}
+              abbreviation={name
+                .split(' ')
+                .map((token) => token[0])
+                .join('')}
+              backgroundColor={getUserColor(name)}
+              title={name}
+            />
+          ))}
       </UserIconGroup>
     </>
   );
@@ -232,7 +126,7 @@ export const ManyIcons: Story<UserIconGroupProps> = (args) => {
 
 ManyIcons.args = {
   animated: false,
-  iconSize: 'medium',
+  iconSize: 'large',
 };
 
 export const NonStacked: Story<UserIconGroupProps> = (args) => {
@@ -249,9 +143,9 @@ export const NonStacked: Story<UserIconGroupProps> = (args) => {
 
   return (
     <UserIconGroup stacked={false} {...args}>
-      {userNames.map((name) => (
+      {userNames.map((name, index) => (
         <UserIcon
-          key={name}
+          key={`${name}-${index}`}
           abbreviation={name
             .split(' ')
             .map((token) => token[0])
@@ -294,9 +188,9 @@ export const WithTooltip: Story<UserIconGroupProps> = (args) => {
   return (
     <>
       <UserIconGroup {...args} countIconProps={{ ref: userIconRef }}>
-        {userNames.map((name) => (
+        {userNames.map((name, index) => (
           <UserIcon
-            key={name}
+            key={`${name}-${index}`}
             abbreviation={name
               .split(' ')
               .map((token) => token[0])
