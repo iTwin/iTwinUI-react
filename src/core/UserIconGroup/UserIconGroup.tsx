@@ -25,6 +25,7 @@ export type UserIconGroupProps = {
   animated?: boolean;
   /**
    *  Size of user and count icons.
+   * @default 'medium'
    */
   iconSize: 'small' | 'medium' | 'large' | 'x-large';
   /**
@@ -48,24 +49,18 @@ export type UserIconGroupProps = {
  * <UserIconGroup iconSize='medium'>
  *  <UserIcon
  *    abbreviation="TR"
- *    backgroundColor="#6AB9EC"
- *    size="medium"
+ *    backgroundColor={getUserColor("Terry Rivers")}
  *    title="Terry Rivers"
- *    type="default"
  *  />
  *  <UserIcon
- *   abbreviation="RM"
- *    backgroundColor="#C8C2B4"
- *    size="medium"
+ *    abbreviation="RM"
+ *    backgroundColor={getUserColor("Robin Mercer")}
  *    title="Robin Mercer"
- *    type="default"
  *  />
  *  <UserIcon
- *    abbreviation="TR"
- *    backgroundColor="#6AB9EC"
- *    size="medium"
- *    title="Terry Rivers"
- *    type="default"
+ *    abbreviation="JM"
+ *    backgroundColor={getUserColor("Jean Mullins")}
+ *    title="Jean Mullins"
  *  />
  * </UserIconGroup>
  */
@@ -76,7 +71,7 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
     animated = false,
     stacked = true,
     maxIcons = 5,
-    iconSize,
+    iconSize = 'medium',
     countIconProps,
     className,
     ...rest
@@ -93,8 +88,6 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
         'iui-user-icon-list',
         {
           'iui-animated': animated,
-        },
-        {
           'iui-stacked': stacked,
         },
         className,
@@ -117,7 +110,7 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
             index < maxIcons
               ? React.cloneElement(child as JSX.Element, {
                   status: undefined,
-                  key: (child as JSX.Element).props.title,
+                  key: (child as JSX.Element).props.key ?? index,
                   size: iconSize,
                 })
               : null,
