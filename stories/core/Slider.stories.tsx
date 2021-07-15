@@ -44,9 +44,11 @@ export const WithThumbProps: Story<SliderProps> = (args) => {
 };
 
 WithThumbProps.args = {
-  thumbProps: {
-    className: 'thumb-test-class',
-    style: { backgroundColor: 'red' },
+  thumbProps: () => {
+    return {
+      className: 'thumb-test-class',
+      style: { backgroundColor: 'red' },
+    };
   },
   disabled: false,
   values: [50],
@@ -86,6 +88,14 @@ export const MultiThumbsAllowCrossing: Story<SliderProps> = (args) => {
 };
 
 MultiThumbsAllowCrossing.args = {
+  thumbProps: (index: number) => {
+    const color = 0 == index % 2 ? 'blue' : 'red';
+    return {
+      className: 'thumb-test-class',
+      style: { backgroundColor: color },
+    };
+  },
+
   values: [20, 40, 60, 80],
   trackDisplayMode: 'even-segments',
   thumbMode: 'allow-crossing',

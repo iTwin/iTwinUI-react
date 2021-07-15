@@ -154,9 +154,9 @@ export type SliderProps = {
    */
   thumbMode?: 'allow-crossing' | 'inhibit-crossing';
   /**
-   * Additional props to include on each thumb container.
+   * Callback that can provide additional props for `<div>` representing a thumb.
    */
-  thumbProps?: Omit<CommonProps, 'title'>;
+  thumbProps?: (index: number) => React.HTMLAttributes<HTMLDivElement>;
   /**
    * Callback fired when the value(s) of the slider has changed. This will receive
    * changes at the end of a slide as well as changes from clicks on rails and tracks.

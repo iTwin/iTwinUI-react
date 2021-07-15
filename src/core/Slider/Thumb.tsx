@@ -5,7 +5,6 @@
 import React from 'react';
 import cx from 'classnames';
 import { Tooltip, TooltipProps } from '../Tooltip';
-import { CommonProps } from '../utils/props';
 
 export type ThumbProps = {
   /**
@@ -63,7 +62,7 @@ export type ThumbProps = {
   /**
    * Additional props for Thumb.
    */
-  thumbProps?: Omit<CommonProps, 'title'>;
+  thumbProps?: (index: number) => React.HTMLAttributes<HTMLDivElement>;
 };
 
 /**
@@ -120,7 +119,7 @@ export const Thumb = (props: ThumbProps) => {
   const [isHovered, setIsHovered] = React.useState(false);
 
   const leftPercent = (100.0 * (value - sliderMin)) / (sliderMax - sliderMin);
-  const { style, className, ...rest } = thumbProps || {};
+  const { style, className, ...rest } = thumbProps?.(index) || {};
 
   return (
     <Tooltip
