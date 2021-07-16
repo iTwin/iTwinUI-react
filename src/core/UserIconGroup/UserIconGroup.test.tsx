@@ -5,8 +5,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import { UserIconGroup } from './UserIconGroup';
-import UserIcon from '../UserIcon/UserIcon';
+import { UserIcon, UserIconGroup } from '../../core';
 
 function generateUserIcons(length: number) {
   const userNames = [

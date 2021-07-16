@@ -4,8 +4,13 @@
  *--------------------------------------------------------------------------------------------*/
 import { Story, Meta } from '@storybook/react';
 import React from 'react';
-import { getUserColor, Tooltip, UserIcon } from '../../src/core';
-import { UserIconGroup, UserIconGroupProps } from '../../src/core/index';
+import {
+  getUserColor,
+  Tooltip,
+  UserIcon,
+  UserIconGroup,
+  UserIconGroupProps,
+} from '../../src/core';
 
 export default {
   component: UserIconGroup,

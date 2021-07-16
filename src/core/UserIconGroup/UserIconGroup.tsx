@@ -83,42 +83,36 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
   useTheme();
 
   return (
-    <div
-      className={cx(
-        'iui-user-icon-list',
-        {
-          'iui-animated': animated,
-          'iui-stacked': stacked,
-        },
-        className,
-      )}
-      {...rest}
-    >
-      {childrenLength <= maxIcons + 1 ? (
-        <>
-          {childrenArray.map((child, index) =>
+    <>
+      <div
+        className={cx(
+          'iui-user-icon-list',
+          {
+            'iui-animated': animated,
+            'iui-stacked': stacked,
+          },
+          className,
+        )}
+        {...rest}
+      >
+        {childrenArray.length <= maxIcons + 1 &&
+          childrenArray.slice(0, maxIcons + 1).map((child) =>
             React.cloneElement(child as JSX.Element, {
               status: undefined,
-              key: index,
               size: iconSize,
             }),
           )}
-        </>
-      ) : (
-        <>
-          {childrenArray.map((child, index) =>
-            index < maxIcons
-              ? React.cloneElement(child as JSX.Element, {
-                  status: undefined,
-                  key:
-                    (child as JSX.Element).props.key ??
-                    `${(child as JSX.Element).props.title}-${index}`,
-                  size: iconSize,
-                })
-              : null,
+        {childrenArray.length > maxIcons + 1 &&
+          childrenArray.slice(0, maxIcons).map((child) =>
+            React.cloneElement(child as JSX.Element, {
+              status: undefined,
+              size: iconSize,
+            }),
           )}
-
+        ​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
+        {childrenArray.length > maxIcons + 1 && (
           <div
+            {...countIconProps}
             {...countIconProps}
             className={cx(
               'iui-user-icon',
@@ -134,9 +128,10 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
             </abbr>
             <span className='iui-stroke' />
           </div>
-        </>
-      )}
-    </div>
+        )}
+        ​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
+      </div>
+    </>
   );
 };
 

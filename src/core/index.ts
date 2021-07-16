@@ -161,6 +161,9 @@ export type {
 export { UserIcon } from './UserIcon';
 export type { UserIconProps, StatusTitles, UserIconStatus } from './UserIcon';
 
+export { UserIconGroup } from './UserIconGroup';
+export type { UserIconGroupProps } from './UserIconGroup';
+
 export { Wizard } from './Wizard';
 export type {
   WizardProps,
@@ -173,6 +176,3 @@ export { getUserColor } from './utils/common';
 
 export { useTheme } from './utils/hooks/useTheme';
 export type { ThemeType } from './utils/hooks/useTheme';
-
-export { UserIconGroup } from './UserIconGroup';
-export type { UserIconGroupProps } from './UserIconGroup';
