@@ -26,19 +26,6 @@ Basic.args = {
   maxLabel: <SvgSmileySad />,
 };
 
-export const WithProps: Story<SliderProps> = (args) => {
-  return <Slider {...args} />;
-};
-
-WithProps.args = {
-  className: 'test-class',
-  style: { width: '80%' },
-  disabled: false,
-  values: [50],
-  minLabel: <SvgSmileyHappy />,
-  maxLabel: <SvgSmileySad />,
-};
-
 export const WithCustomThumb: Story<SliderProps> = (args) => {
   return <Slider {...args} />;
 };
@@ -89,15 +76,6 @@ Range.args = {
   values: [20, 80],
 };
 
-export const RangeEvenSegments: Story<SliderProps> = (args) => {
-  return <Slider {...args} />;
-};
-
-RangeEvenSegments.args = {
-  values: [20, 80],
-  trackDisplayMode: 'even-segments',
-};
-
 export const MultiThumbs: Story<SliderProps> = (args) => {
   return <Slider {...args} />;
 };
@@ -135,18 +113,6 @@ Disabled.args = {
   disabled: true,
 };
 
-export const NoLabels: Story<SliderProps> = (args) => {
-  return <Slider {...args} />;
-};
-
-NoLabels.args = {
-  min: 0,
-  max: 60,
-  values: [30],
-  minLabel: '',
-  maxLabel: '',
-};
-
 export const TooltipRight: Story<SliderProps> = (args) => {
   return <Slider {...args} />;
 };
@@ -158,22 +124,11 @@ TooltipRight.args = {
   tooltipProps: { placement: 'right' },
 };
 
-export const WithTick: Story<SliderProps> = (args) => {
+export const CustomTooltipWithTicks: Story<SliderProps> = (args) => {
   return <Slider {...args} />;
 };
 
-WithTick.args = {
-  min: 0,
-  max: 60,
-  values: [20],
-  tickLabels: ['0', '20', '40', '60'],
-};
-
-export const CustomTooltip: Story<SliderProps> = (args) => {
-  return <Slider {...args} />;
-};
-
-CustomTooltip.args = {
+CustomTooltipWithTicks.args = {
   min: 0,
   max: 60,
   values: [20],
@@ -183,7 +138,7 @@ CustomTooltip.args = {
   },
 };
 
-export const HideTooltip: Story<SliderProps> = (args) => {
+export const CustomMinLabelNoTooltip: Story<SliderProps> = (args) => {
   const [minLabel, setMinLabel] = useState('20');
   const updateLabel = useCallback((values: ReadonlyArray<number>) => {
     setMinLabel(values[0].toString());
@@ -199,7 +154,7 @@ export const HideTooltip: Story<SliderProps> = (args) => {
   );
 };
 
-HideTooltip.args = {
+CustomMinLabelNoTooltip.args = {
   className: 'test-class',
   style: { width: '60%' },
   min: 0,
@@ -209,7 +164,7 @@ HideTooltip.args = {
   tooltipProps: { visible: false },
 };
 
-export const DateSlider: Story<SliderProps> = (args) => {
+export const DateWithCustomTickArea: Story<SliderProps> = (args) => {
   const dateFormatter = useMemo(() => {
     return new Intl.DateTimeFormat('default', {
       month: 'short',
@@ -222,7 +177,7 @@ export const DateSlider: Story<SliderProps> = (args) => {
     new Date(Date.UTC(2019, 0, 1)),
   );
 
-  const [minLabel, setMinLabel] = useState(() =>
+  const [dateLabel, setDateLabel] = useState(() =>
     dateFormatter.format(currentDate),
   );
 
@@ -230,7 +185,7 @@ export const DateSlider: Story<SliderProps> = (args) => {
     (values: ReadonlyArray<number>) => {
       const newDate = new Date(Date.UTC(2019, 0, values[0]));
       setCurrentDate(newDate);
-      setMinLabel(dateFormatter.format(newDate));
+      setDateLabel(dateFormatter.format(newDate));
     },
     [dateFormatter],
   );
@@ -242,22 +197,32 @@ export const DateSlider: Story<SliderProps> = (args) => {
   return (
     <Slider
       {...args}
-      minLabel={
-        <Body style={{ width: '60px', marginRight: '6px' }}>{minLabel}</Body>
-      }
       tooltipRenderer={tooltipRenderer}
       onUpdate={updateDate}
       onChange={updateDate}
+      tickLabels={
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: '20px',
+          }}
+        >
+          <Body style={{ width: '60px', marginRight: '6px' }}>{dateLabel}</Body>
+        </div>
+      }
     />
   );
 };
 
-DateSlider.args = {
+DateWithCustomTickArea.args = {
+  style: { width: '50%' },
   min: 1,
   max: 365,
   values: [0],
+  minLabel: 'Date',
   maxLabel: '',
-  tickLabels: ['Jan', 'Dec'],
 };
 
 export const SmallIncrement: Story<SliderProps> = (args) => {

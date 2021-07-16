@@ -130,10 +130,11 @@ export type SliderProps = {
    */
   tooltipRenderer?: (val: number, step: number) => React.ReactNode;
   /**
-   * Array of labels that will be used to determine number of ticks
-   * displayed and their labels. Ticks are spaced evenly across width of Slider.
+   * Either an array of labels that will be placed under auto generated tick marks
+   * that are spaced evenly across width of Slider or a custom component that allows
+   * custom content to be placed in tick mark area below slider.
    */
-  tickLabels?: React.ReactNode[];
+  tickLabels?: React.ReactNode[] | JSX.Element;
   /**
    * Label for the minimum value. If undefined then the min
    * value is shown. Use empty string for no label.
@@ -286,7 +287,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         if (containerRef.current && undefined !== activeThumbIndex) {
           const percent = getPercentageOfRectangle(
             containerRef.current.getBoundingClientRect(),
-            event.pageX,
+            event.clientX,
           );
           let pointerValue = min + (max - min) * percent;
           pointerValue = roundValueToClosestStep(pointerValue, step, min);
@@ -341,10 +342,11 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
 
     const handlePointerDownOnSlider = React.useCallback(
       (event: React.PointerEvent) => {
+        console.log(`clientX = ${event.clientX}`);
         if (containerRef.current) {
           const percent = getPercentageOfRectangle(
             containerRef.current.getBoundingClientRect(),
-            event.pageX,
+            event.clientX,
           );
           let pointerValue = min + (max - min) * percent;
           pointerValue = roundValueToClosestStep(pointerValue, step, min);
@@ -403,6 +405,30 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       };
     }, [handlePointerMove, handlePointerUp]);
 
+    const tickMarkArea = React.useMemo(() => {
+      if (!tickLabels) {
+        return null;
+      }
+
+      if (Array.isArray(tickLabels)) {
+        return (
+          <div className='iui-slider-ticks'>
+            {tickLabels.map((label, index) => (
+              <span key={index} className='iui-slider-tick'>
+                {label}
+              </span>
+            ))}
+          </div>
+        );
+      }
+
+      if (1 === React.Children.count(tickLabels)) {
+        return tickLabels;
+      }
+
+      return null;
+    }, [tickLabels]);
+
     return (
       <div
         ref={ref}
@@ -453,15 +479,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
             sliderMax={max}
             values={currentValues}
           />
-          {tickLabels?.length && (
-            <div className='iui-slider-ticks'>
-              {tickLabels.map((label, index) => (
-                <span key={index} className='iui-slider-tick'>
-                  {label}
-                </span>
-              ))}
-            </div>
-          )}
+          {tickMarkArea}
         </div>
         {maxValueLabel && (
           <span className='iui-slider-max'>{maxValueLabel}</span>
