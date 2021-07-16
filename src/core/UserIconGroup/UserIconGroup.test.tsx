@@ -52,8 +52,9 @@ it('should render in its most basic state', () => {
   expect(userGroup.classList).not.toContain(`iui-animated`);
 
   expect(
-    container.querySelector(`.iui-user-icon-list > .iui-user-icon.iui-small`),
-  ).toBeTruthy();
+    container.querySelectorAll(`.iui-user-icon-list > .iui-user-icon.iui-small`)
+      .length,
+  ).toBe(6);
 
   const userGroupIconCount = container.querySelectorAll(
     '.iui-user-icon-list > .iui-user-icon',
@@ -175,9 +176,11 @@ it.each(['small', 'medium', 'large', 'x-large'] as Array<
 
   expect(
     container.querySelectorAll(
-      `.iui-user-icon-list > .iui-user-icon.iui-${size}`,
-    ),
-  ).toBeTruthy();
+      `.iui-user-icon-list > .iui-user-icon${
+        size !== 'medium' ? `.iui-${size}` : ''
+      }`,
+    ).length,
+  ).toBe(6);
 });
 
 it('should render custom classname', () => {

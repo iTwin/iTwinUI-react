@@ -10,31 +10,31 @@ import '@itwin/itwinui-css/css/user-icon.css';
 
 export type UserIconGroupProps = {
   /**
-   *  Max number of icons unstacked.
-   *  @default 5
+   * Max number of icons unstacked.
+   * @default 5
    */
   maxIcons?: number;
   /**
-   *  If true, group will be stacked to take less space.
-   *  @default true
+   * If true, group will be stacked to take less space.
+   * @default true
    */
   stacked?: boolean;
   /**
-   *  If true, group will be animated on hover.
-   *  @default false
+   * If true, group will be animated on hover.
+   * @default false
    */
   animated?: boolean;
   /**
-   *  Size of user and count icons.
-   *  @default 'small'
+   * Size of user and count icons.
+   * @default 'small'
    */
   iconSize?: 'small' | 'medium' | 'large' | 'x-large';
   /**
-   *  User Icons in the group.
+   * User Icons in the group.
    */
   children: React.ReactNode;
   /**
-   *  User Count Icon props.
+   * User Count Icon props.
    */
   countIconProps?: React.HTMLAttributes<HTMLDivElement>;
 } & Omit<CommonProps, 'title'>;
@@ -114,7 +114,7 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
               {...countIconProps}
               className={cx(
                 'iui-user-icon',
-                `iui-${iconSize}`,
+                { [`iui-${iconSize}`]: iconSize !== 'medium' },
                 'iui-user-icon-count',
                 countIconProps?.className,
               )}
