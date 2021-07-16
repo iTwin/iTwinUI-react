@@ -52,9 +52,7 @@ it('should render in its most basic state', () => {
   expect(userGroup.classList).not.toContain(`iui-animated`);
 
   expect(
-    container.querySelectorAll(
-      `.iui-user-icon-list > .iui-user-icon.iui-small`,
-    ),
+    container.querySelector(`.iui-user-icon-list > .iui-user-icon.iui-small`),
   ).toBeTruthy();
 
   const userGroupIconCount = container.querySelectorAll(

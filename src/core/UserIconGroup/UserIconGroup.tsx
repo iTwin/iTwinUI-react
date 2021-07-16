@@ -72,7 +72,7 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
     animated = false,
     stacked = true,
     maxIcons = 5,
-    iconSize = 'medium',
+    iconSize = 'small',
     countIconProps,
     className,
     ...rest
