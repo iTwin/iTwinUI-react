@@ -62,7 +62,15 @@ const formatNumberValue = (
   return value.toFixed(numDecimals);
 };
 
-const focusThumb = (sliderContainer: HTMLDivElement, activeIndex: number) => {
+/**
+ * Focus specified thumb on Slider control
+ * @param sliderContainer containing div hold slider
+ * @param activeIndex index of the thumb
+ */
+export const focusThumb = (
+  sliderContainer: HTMLDivElement,
+  activeIndex: number,
+) => {
   const doc = sliderContainer.ownerDocument;
   if (
     !sliderContainer.contains(doc.activeElement) ||

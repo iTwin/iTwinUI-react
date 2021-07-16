@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
-import { Slider } from './Slider';
+import { Slider, focusThumb } from './Slider';
 
 export const createBoundingClientRect = (
   left: number,
@@ -344,6 +344,156 @@ it('should activate thumb on pointerDown', () => {
     fireEvent.pointerDown(thumb);
   });
   expect(thumb.classList.contains('iui-active'));
+});
+
+it('focused thumb should process keystrokes', () => {
+  let element: HTMLDivElement | null = null;
+  const onRef = (ref: HTMLDivElement) => {
+    element = ref;
+  };
+  const wrapper = render(
+    <Slider ref={onRef} values={[50]} step={5} setFocus />,
+  );
+  const { container } = wrapper;
+  assertBaseElement(container);
+  expect(element).toBeTruthy();
+  let thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
+  expect(thumb).toBeTruthy();
+  expect(thumb.classList.contains('iui-active')).toBeFalsy();
+
+  expect(document.activeElement).toEqual(thumb);
+  expect(thumb.getAttribute('aria-valuenow')).toEqual('50');
+
+  act(() => {
+    fireEvent.keyDown(thumb, { key: 'ArrowLeft' });
+  });
+  thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
+  expect(thumb.getAttribute('aria-valuenow')).toEqual('45');
+
+  act(() => {
+    fireEvent.keyDown(thumb, { key: 'ArrowRight' });
+  });
+  thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
+  expect(thumb.getAttribute('aria-valuenow')).toEqual('50');
+  act(() => {
+    fireEvent.keyDown(thumb, { key: 'Home' });
+  });
+  thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
+  expect(thumb.getAttribute('aria-valuenow')).toEqual('0');
+  act(() => {
+    fireEvent.keyDown(thumb, { key: 'End' });
+  });
+  thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
+  expect(thumb.getAttribute('aria-valuenow')).toEqual('100');
+});
+
+it('focused thumb on disabled slider should NOT process keystrokes', () => {
+  let element: HTMLDivElement | null = null;
+  const onRef = (ref: HTMLDivElement) => {
+    element = ref;
+  };
+  const wrapper = render(
+    <Slider ref={onRef} values={[50]} step={5} disabled />,
+  );
+  const { container } = wrapper;
+  assertBaseElement(container);
+  expect(element).toBeTruthy();
+  let thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
+  expect(thumb).toBeTruthy();
+  expect(thumb.classList.contains('iui-active')).toBeFalsy();
+
+  // force thumb to have focus
+  thumb.focus();
+  expect(thumb.getAttribute('aria-valuenow')).toEqual('50');
+
+  act(() => {
+    fireEvent.keyDown(thumb, { key: 'ArrowLeft' });
+  });
+  thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
+  expect(thumb.getAttribute('aria-valuenow')).toEqual('50');
+});
+
+it('thumb should show tooltip on hover', () => {
+  let element: HTMLDivElement | null = null;
+  const onRef = (ref: HTMLDivElement) => {
+    element = ref;
+  };
+  const wrapper = render(<Slider ref={onRef} values={defaultSingleValue} />);
+  const { container } = wrapper;
+  assertBaseElement(container);
+  expect(element).toBeTruthy();
+  let thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
+  expect(thumb).toBeTruthy();
+  expect(thumb.classList.contains('iui-active')).toBeFalsy();
+  expect(container.querySelector('.iui-tooltip')).toBeFalsy();
+  act(() => {
+    fireEvent.mouseEnter(thumb);
+  });
+  expect(
+    (container.querySelector('.iui-tooltip') as HTMLDivElement).textContent,
+  ).toBe('50');
+  act(() => {
+    thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
+    fireEvent.mouseLeave(thumb);
+  });
+});
+
+it('thumb should show tooltip on focus', () => {
+  let element: HTMLDivElement | null = null;
+  const onRef = (ref: HTMLDivElement) => {
+    element = ref;
+  };
+  const wrapper = render(<Slider ref={onRef} values={defaultSingleValue} />);
+  const { container } = wrapper;
+  assertBaseElement(container);
+  expect(element).toBeTruthy();
+  let thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
+  expect(thumb).toBeTruthy();
+  expect(thumb.classList.contains('iui-active')).toBeFalsy();
+  expect(container.querySelector('.iui-tooltip')).toBeFalsy();
+  act(() => {
+    thumb.focus();
+  });
+  expect(
+    (container.querySelector('.iui-tooltip') as HTMLDivElement).textContent,
+  ).toBe('50');
+  act(() => {
+    thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
+    thumb.blur();
+  });
+});
+
+it('thumb props should be applied', () => {
+  const thumbProps = () => {
+    return {
+      className: 'thumb-test-class',
+      style: { backgroundColor: 'red' },
+    };
+  };
+  const wrapper = render(
+    <Slider values={defaultSingleValue} thumbProps={thumbProps} />,
+  );
+  const { container } = wrapper;
+  assertBaseElement(container);
+  const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
+  expect(thumb).toBeTruthy();
+  expect(thumb.classList.contains('thumb-test-class'));
+});
+
+it('focus on specific thumb', () => {
+  const wrapper = render(<Slider values={[50, 80]} step={5} />);
+  const { container } = wrapper;
+  assertBaseElement(container);
+  const slideContainer = container.querySelector(
+    '.iui-slider-container',
+  ) as HTMLDivElement;
+  let thumbs = container.querySelectorAll('.iui-slider-thumb');
+
+  focusThumb(slideContainer, 1);
+  expect(document.activeElement).toEqual(thumbs[1]);
+  focusThumb(slideContainer, 0);
+  thumbs = container.querySelectorAll('.iui-slider-thumb');
+  expect(document.activeElement).toEqual(thumbs[0]);
 });
 
 // it('should render handle click on rail', () => {
