@@ -7,6 +7,7 @@
 ### What's new
 
 - **Added `UserIconGroup` component** - stacked/non-stacked, animated lists with custom count icon behavior.
+- **Added new `sublabel` and `size` props to `MenuItem` and `SelectOption`.**
 
 ### Fixes
 
