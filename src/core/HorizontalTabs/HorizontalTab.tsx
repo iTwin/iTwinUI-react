@@ -48,11 +48,15 @@ export const HorizontalTab = (props: HorizontalTabProps) => {
 
   return (
     <button className={cx('iui-tab', className)} role='tab' {...rest}>
-      {icon && React.cloneElement(icon, { className: 'iui-tab-icon' })}
+      {icon &&
+        React.cloneElement(icon, {
+          className: 'iui-tab-icon',
+          'aria-hidden': true,
+        })}
       {label && (
         <span className='iui-tab-label'>
           <div>{label}</div>
-          <div className='iui-tab-description'>{sublabel}</div>
+          {sublabel && <div className='iui-tab-description'>{sublabel}</div>}
         </span>
       )}
       {children}

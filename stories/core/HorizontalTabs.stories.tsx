@@ -37,13 +37,11 @@ const Template: Story<HorizontalTabsProps> = (args) => {
 };
 
 export const DefaultTabs = Template.bind({});
-
 DefaultTabs.args = {
   labels: ['Item1', 'Item2', 'Item3'],
 };
 
 export const BorderlessTabs = Template.bind({});
-
 BorderlessTabs.args = {
   labels: ['Item1', 'Item2', 'Item3'],
   type: 'borderless',
@@ -53,8 +51,22 @@ export const PillTabs = Template.bind({});
 PillTabs.args = {
   labels: Array(3)
     .fill(null)
-    .map((_, index) => (
-      <HorizontalTab key={index} icon={<SvgStar aria-hidden />} />
-    )),
+    .map((_, index) => <HorizontalTab key={index} icon={<SvgStar />} />),
   type: 'pill',
+};
+
+export const SublabelsAndIcons = Template.bind({});
+SublabelsAndIcons.args = {
+  labels: Array(3)
+    .fill(null)
+    .map((_, index) => (
+      <HorizontalTab
+        key={index}
+        label={`Item${index}`}
+        sublabel={`Sublabel ${index}`}
+        icon={<SvgStar />}
+      />
+    )),
+  type: 'borderless',
+  size: 'large',
 };
