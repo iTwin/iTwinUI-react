@@ -141,3 +141,51 @@ it('should add custom style', () => {
   assertBaseElement(menuItem);
   expect(menuItem.style.color).toEqual('red');
 });
+
+it('should handle key press with sub menus', () => {
+  const mockedOnClick = jest.fn();
+  const mockedSubOnClick = jest.fn();
+  const { container } = render(
+    <MenuItem
+      onClick={mockedOnClick}
+      value='test_value'
+      subMenuItems={[
+        <MenuItem key={1} onClick={mockedSubOnClick} value='test_value_sub'>
+          Test sub
+        </MenuItem>,
+      ]}
+    >
+      Test item
+    </MenuItem>,
+  );
+
+  const menuItem = container.querySelector('.iui-menu-item') as HTMLLIElement;
+  assertBaseElement(menuItem, { hasBadge: true });
+
+  // go right to open sub menu
+  fireEvent.keyDown(menuItem, { key: 'ArrowRight' });
+  let subMenu = container.querySelector(
+    '#tippy-1 .iui-menu-item',
+  ) as HTMLLIElement;
+  expect(subMenu.textContent).toBe('Test sub');
+  expect(container.ownerDocument.activeElement).toEqual(subMenu);
+
+  // go left to close sub menu
+  fireEvent.keyDown(subMenu, { key: 'ArrowLeft' });
+  // expect(container.querySelector('#tippy-1 .iui-menu-item')).toBeFalsy();
+  expect(container.ownerDocument.activeElement).toEqual(menuItem);
+
+  // go right to open sub menu
+  fireEvent.keyDown(menuItem, { key: 'ArrowRight' });
+  subMenu = container.querySelector('#tippy-1 .iui-menu-item') as HTMLLIElement;
+  expect(subMenu.textContent).toBe('Test sub');
+  expect(container.ownerDocument.activeElement).toEqual(subMenu);
+
+  // click
+  fireEvent.keyDown(subMenu, { key: 'Enter' });
+  expect(mockedSubOnClick).toHaveBeenNthCalledWith(1, 'test_value_sub');
+  fireEvent.keyDown(subMenu, { key: ' ' });
+  expect(mockedSubOnClick).toHaveBeenNthCalledWith(2, 'test_value_sub');
+  fireEvent.keyDown(subMenu, { key: 'Spacebar' });
+  expect(mockedSubOnClick).toHaveBeenNthCalledWith(3, 'test_value_sub');
+});
