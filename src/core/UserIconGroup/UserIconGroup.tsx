@@ -83,6 +83,15 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
 
   useTheme();
 
+  const getUserIconList = (count: number) => {
+    return childrenArray.slice(0, count).map((child) =>
+      React.cloneElement(child as JSX.Element, {
+        status: undefined,
+        size: iconSize,
+      }),
+    );
+  };
+
   return (
     <>
       <div
@@ -96,24 +105,12 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
         )}
         {...rest}
       >
-        {childrenArray.length <= maxIcons + 1 &&
-          childrenArray.slice(0, maxIcons + 1).map((child) =>
-            React.cloneElement(child as JSX.Element, {
-              status: undefined,
-              size: iconSize,
-            }),
-          )}
+        {childrenArray.length <= maxIcons + 1 && getUserIconList(maxIcons + 1)}
         {childrenArray.length > maxIcons + 1 && (
           <>
-            {childrenArray.slice(0, maxIcons).map((child) =>
-              React.cloneElement(child as JSX.Element, {
-                status: undefined,
-                size: iconSize,
-              }),
-            )}
+            {getUserIconList(maxIcons)}
             ​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
             <div
-              {...countIconProps}
               {...countIconProps}
               className={cx(
                 'iui-user-icon',
