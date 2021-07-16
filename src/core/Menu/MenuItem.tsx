@@ -119,6 +119,7 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
     const listItem = (
       <li
         className={cx(
+          'iui-menu-item',
           {
             'iui-active': isSelected,
             'iui-disabled': disabled,

@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+`Date`
+
+### Fixes
+
+- **Fix Table rows rendering when selection is enabled and min width is set for columns**
+
+## [1.11.0]
+
+`2021-07-08`
+
+### What's new
+
+- **Improved row selection in `Table`.** Clicking on rows will now select them and fire the `onRowClick` callback.
+- **Allowing to disable specific rows in `Table`.** Provide `isRowDisabled` prop.
+
 ## [1.10.0]
 
 `2021-07-01`
@@ -373,6 +390,7 @@
 - **New ThemeProvider component added.** It allows to switch between light and dark themes.
 - **iTwinUI-React is generated to `CommonJS` and `ES` modules.** Usage of `ES` modules allows bundlers to tree-shake unused code resulting in smaller bundle sizes.
 
+[1.11.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.10.0...v1.11.0
 [1.10.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.9.0...v1.10.0
 [1.9.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.8.1...v1.9.0
 [1.8.1]: https://github.com/iTwin/iTwinUI-react/compare/v1.8.0...v1.8.1
