@@ -143,6 +143,15 @@ it('should add custom style', () => {
   expect(menuItem.style.color).toEqual('red');
 });
 
+it('should render large size', () => {
+  const { container } = render(<MenuItem size='large'>Test item</MenuItem>);
+
+  const menuItem = container.querySelector(
+    '.iui-menu-item.iui-large',
+  ) as HTMLLIElement;
+  assertBaseElement(menuItem);
+});
+
 it('should render sublabel', () => {
   const { container } = render(
     <MenuItem sublabel='Test sublabel'>Test item</MenuItem>,
