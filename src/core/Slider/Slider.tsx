@@ -342,7 +342,6 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
 
     const handlePointerDownOnSlider = React.useCallback(
       (event: React.PointerEvent) => {
-        console.log(`clientX = ${event.clientX}`);
         if (containerRef.current) {
           const percent = getPercentageOfRectangle(
             containerRef.current.getBoundingClientRect(),

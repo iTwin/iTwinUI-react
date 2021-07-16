@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { render } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import { Slider } from './Slider';
 
@@ -141,7 +141,6 @@ it('should set focus', () => {
   expect(element).toBeTruthy();
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
   expect(thumb).toBeTruthy();
-  expect(element).toBeTruthy();
   expect(document.activeElement).toEqual(thumb);
 });
 it('should show tooltip when focused', () => {
@@ -157,7 +156,6 @@ it('should show tooltip when focused', () => {
   expect(element).toBeTruthy();
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
   expect(thumb).toBeTruthy();
-  expect(element).toBeTruthy();
   expect(document.activeElement).toEqual(thumb);
   expect(
     (container.querySelector('.iui-tooltip') as HTMLDivElement).textContent,
@@ -181,7 +179,6 @@ it('should NOT show tooltip if visibility is overridden', () => {
   expect(element).toBeTruthy();
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
   expect(thumb).toBeTruthy();
-  expect(element).toBeTruthy();
   expect(document.activeElement).toEqual(thumb);
   expect(container.querySelector('.iui-tooltip')).toBeFalsy();
 });
@@ -205,7 +202,6 @@ it('should show custom tooltip when focused', () => {
   expect(element).toBeTruthy();
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
   expect(thumb).toBeTruthy();
-  expect(element).toBeTruthy();
   expect(document.activeElement).toEqual(thumb);
   expect(
     (container.querySelector('.iui-tooltip') as HTMLDivElement).textContent,
@@ -329,6 +325,25 @@ it('should render custom tick marks', () => {
     container.querySelector('.iui-slider-component-container'),
   ).toBeTruthy();
   expect(container.querySelector('.custom-tick-mark')).toBeTruthy();
+});
+
+it('should activate thumb on pointerDown', () => {
+  let element: HTMLDivElement | null = null;
+  const onRef = (ref: HTMLDivElement) => {
+    element = ref;
+  };
+  const wrapper = render(<Slider ref={onRef} values={defaultSingleValue} />);
+  const { container } = wrapper;
+  assertBaseElement(container);
+  expect(element).toBeTruthy();
+  const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
+  expect(thumb).toBeTruthy();
+  expect(thumb.classList.contains('iui-active')).toBeFalsy();
+
+  act(() => {
+    fireEvent.pointerDown(thumb);
+  });
+  expect(thumb.classList.contains('iui-active'));
 });
 
 // it('should render handle click on rail', () => {
