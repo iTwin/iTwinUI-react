@@ -6,6 +6,7 @@ import React from 'react';
 import { useTheme } from '../utils/hooks/useTheme';
 import cx from 'classnames';
 import { CommonProps } from '../utils/props';
+import '@itwin/itwinui-css/css/user-icon.css';
 
 export type UserIconGroupProps = {
   /**
@@ -25,9 +26,9 @@ export type UserIconGroupProps = {
   animated?: boolean;
   /**
    *  Size of user and count icons.
-   * @default 'medium'
+   *  @default 'small'
    */
-  iconSize: 'small' | 'medium' | 'large' | 'x-large';
+  iconSize?: 'small' | 'medium' | 'large' | 'x-large';
   /**
    * User Icons in the group.
    */
