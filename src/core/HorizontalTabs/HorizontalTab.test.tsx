@@ -8,7 +8,7 @@ import React from 'react';
 
 import { HorizontalTab } from './HorizontalTab';
 
-it('renders in its most basic state', () => {
+it('should render in its most basic state', () => {
   const { container } = render(<HorizontalTab label='Tab label' />);
   expect(container.querySelector('button.iui-tab')).toBeTruthy();
 
@@ -31,7 +31,7 @@ it('should render with sublabel', () => {
   expect(sublabel.textContent).toEqual('Sub-label');
 });
 
-it('renders with icon', () => {
+it('should render with icon', () => {
   const { container } = render(
     <HorizontalTab label='Tab label' icon={<SvgPlaceholder />} />,
   );
@@ -45,4 +45,16 @@ it('renders with icon', () => {
     container: { firstChild: placeholderIcon },
   } = render(<SvgPlaceholder className='iui-tab-icon' aria-hidden />);
   expect(container.querySelector('.iui-tab-icon')).toEqual(placeholderIcon);
+});
+
+it('should render in disabled state', () => {
+  const { container } = render(<HorizontalTab label='Tab label' disabled />);
+
+  const tab = container.querySelector('button.iui-tab') as HTMLButtonElement;
+  expect(tab).toBeTruthy();
+  expect(tab.disabled).toBeTruthy();
+
+  const label = container.querySelector('.iui-tab-label') as HTMLElement;
+  expect(label).toBeTruthy();
+  expect(label.firstElementChild?.textContent).toBe('Tab label');
 });

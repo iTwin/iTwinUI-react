@@ -65,6 +65,7 @@ SublabelsAndIcons.args = {
         label={`Item${index}`}
         sublabel={`Sublabel ${index}`}
         icon={<SvgStar />}
+        disabled={index === 2}
       />
     )),
   type: 'borderless',
