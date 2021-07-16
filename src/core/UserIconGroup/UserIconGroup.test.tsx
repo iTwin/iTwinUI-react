@@ -75,6 +75,38 @@ it('should render animated', () => {
   ).toBeTruthy();
 });
 
+it('should render without count icon', () => {
+  const { container } = render(
+    <UserIconGroup iconSize='medium'>{generateUserIcons(6)}</UserIconGroup>,
+  );
+  const userGroup = container.querySelector(
+    '.iui-user-icon-list.iui-stacked',
+  ) as HTMLElement;
+  expect(userGroup).toBeTruthy();
+  expect(userGroup.classList).not.toContain(`iui-animated`);
+
+  const userGroupIconCount = container.querySelectorAll(
+    '.iui-user-icon-list > .iui-user-icon',
+  );
+  expect(userGroupIconCount.length).toBe(6);
+
+  expect(container.querySelector('.iui-user-icon-count')).toBeFalsy();
+
+  expect(userGroup.querySelectorAll('.iui-stroke').length).toBe(6);
+  expect(userGroup.querySelectorAll('.iui-initials').length).toBe(6);
+});
+
+it('should render animated', () => {
+  const { container } = render(
+    <UserIconGroup iconSize='medium' animated={true}>
+      {generateUserIcons(7)}
+    </UserIconGroup>,
+  );
+  expect(
+    container.querySelector('.iui-user-icon-list.iui-animated'),
+  ).toBeTruthy();
+});
+
 it('should render many icons', () => {
   const { container } = render(
     <UserIconGroup iconSize='medium'>{generateUserIcons(105)}</UserIconGroup>,
