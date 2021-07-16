@@ -12,6 +12,13 @@ import { Popover } from '../utils/Popover';
 import { Menu } from './Menu';
 import { useMergedRefs } from '../utils/hooks/useMergedRefs';
 
+/**
+ * Context used to provide menu item ref to sub-menu items.
+ */
+export const MenuItemContext = React.createContext<{
+  ref: React.RefObject<HTMLLIElement> | undefined;
+}>({ ref: undefined });
+
 export type MenuItemProps = {
   /**
    * Item is selected.
@@ -61,10 +68,6 @@ export type MenuItemProps = {
    * Content of the menu item.
    */
   children?: React.ReactNode;
-  /**
-   * Parent `MenuItem` reference. Used in sub-menus.
-   */
-  parentMenuItemRef?: React.RefObject<HTMLLIElement>;
 } & CommonProps;
 
 /**
@@ -86,7 +89,6 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
       style,
       role = 'menuitem',
       subMenuItems = [],
-      parentMenuItemRef,
       ...rest
     } = props;
 
@@ -94,6 +96,8 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
 
     const menuItemRef = React.useRef<HTMLLIElement>(null);
     const refs = useMergedRefs(menuItemRef, ref);
+
+    const { ref: parentMenuItemRef } = React.useContext(MenuItemContext);
 
     const subMenuRef = React.useRef<HTMLUListElement>(null);
 
@@ -176,21 +180,21 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
     return subMenuItems.length === 0 ? (
       listItem
     ) : (
-      <Popover
-        placement='right-start'
-        visible={isSubmenuVisible}
-        content={
-          <Menu ref={subMenuRef}>
-            {subMenuItems.map((item) =>
-              React.cloneElement<MenuItemProps>(item, {
-                parentMenuItemRef: menuItemRef,
-              }),
-            )}
-          </Menu>
-        }
-      >
-        {listItem}
-      </Popover>
+      <MenuItemContext.Provider value={{ ref: menuItemRef }}>
+        <Popover
+          placement='right-start'
+          visible={isSubmenuVisible}
+          content={
+            <Menu ref={subMenuRef}>
+              {subMenuItems.map((item) =>
+                React.cloneElement<MenuItemProps>(item, {}),
+              )}
+            </Menu>
+          }
+        >
+          {listItem}
+        </Popover>
+      </MenuItemContext.Provider>
     );
   },
 );
