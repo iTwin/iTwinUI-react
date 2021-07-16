@@ -143,11 +143,9 @@ it('should add custom style', () => {
   expect(menuItem.style.color).toEqual('red');
 });
 
-it('should render sublabel on large MenuItem', () => {
+it('should render sublabel', () => {
   const { container } = render(
-    <MenuItem size='large' sublabel='Test sublabel'>
-      Test item
-    </MenuItem>,
+    <MenuItem sublabel='Test sublabel'>Test item</MenuItem>,
   );
 
   const menuItem = container.querySelector(

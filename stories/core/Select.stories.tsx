@@ -228,9 +228,9 @@ ManyItems.argTypes = {
 export const Sublabels: Story<SelectProps<number>> = (args) => {
   const {
     options = [
-      { value: 1, label: 'Item #1', sublabel: 'Sublabel #1', size: 'large' },
-      { value: 2, label: 'Item #2', sublabel: 'Sublabel #2', size: 'large' },
-      { value: 3, label: 'Item #3', sublabel: 'Sublabel #3', size: 'large' },
+      { value: 1, label: 'Item #1', sublabel: 'Sublabel #1' },
+      { value: 2, label: 'Item #2', sublabel: 'Sublabel #2' },
+      { value: 3, label: 'Item #3', sublabel: 'Sublabel #3' },
     ],
     placeholder = 'Placeholder text',
     size = 'large',
@@ -255,9 +255,9 @@ Sublabels.args = {
   placeholder: 'Placeholder text',
   size: 'large',
   options: [
-    { value: 1, label: 'Item #1', sublabel: 'Sublabel #1', size: 'large' },
-    { value: 2, label: 'Item #2', sublabel: 'Sublabel #2', size: 'large' },
-    { value: 3, label: 'Item #3', sublabel: 'Sublabel #3', size: 'large' },
+    { value: 1, label: 'Item #1', sublabel: 'Sublabel #1' },
+    { value: 2, label: 'Item #2', sublabel: 'Sublabel #2' },
+    { value: 3, label: 'Item #3', sublabel: 'Sublabel #3' },
   ],
 };
 

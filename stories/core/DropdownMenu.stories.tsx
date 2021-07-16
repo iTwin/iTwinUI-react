@@ -146,7 +146,6 @@ export const WithSublabels: Story<DropdownMenuProps> = (args) => {
     <MenuItem
       key={1}
       onClick={onClick(1, close)}
-      size='large'
       icon={<SvgPlaceholder />}
       sublabel='Sublabel #1'
     >
@@ -155,7 +154,6 @@ export const WithSublabels: Story<DropdownMenuProps> = (args) => {
     <MenuItem
       key={2}
       onClick={onClick(2, close)}
-      size='large'
       icon={<SvgPlaceholder />}
       sublabel='Sublabel #2'
     >
@@ -164,7 +162,6 @@ export const WithSublabels: Story<DropdownMenuProps> = (args) => {
     <MenuItem
       key={3}
       onClick={onClick(3, close)}
-      size='large'
       icon={<SvgPlaceholder />}
       sublabel='Sublabel #3'
     >

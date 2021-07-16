@@ -26,13 +26,13 @@ export type MenuItemProps = {
    */
   onClick?: (value?: unknown) => void;
   /**
-   * Modify height of the item. Use 'large' to support multiple lines.
-   * @default 'default'
+   * Modify height of the item.
+   * Use 'large' when any of the siblings have description.
+   * Defaults to 'large' if description provided, otherwise 'default'.
    */
   size?: 'default' | 'large';
   /**
    * Sub label shown below the main content of the item.
-   * Only shown if `size` is set to 'large'.
    */
   sublabel?: React.ReactNode;
   /**
@@ -65,8 +65,8 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
       disabled,
       value,
       onClick,
-      size = 'default',
       sublabel,
+      size = !!sublabel ? 'large' : 'default',
       icon,
       badge,
       className,
