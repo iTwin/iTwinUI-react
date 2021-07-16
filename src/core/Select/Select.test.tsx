@@ -368,3 +368,30 @@ it.each(['small', 'large'] as const)(
     expect(container.querySelector(`.iui-select.iui-${size}`)).toBeTruthy();
   },
 );
+
+it('should render sublabel on large SelectOption', () => {
+  const { container } = renderComponent({
+    options: [...new Array(3)].map((_, index) => ({
+      label: `Test${index}`,
+      sublabel: `Sublabel ${index}`,
+      size: 'large',
+      value: index,
+    })),
+  });
+
+  const select = container.querySelector('.iui-select') as HTMLElement;
+  expect(select).toBeTruthy();
+
+  fireEvent.click(select.querySelector('.iui-select-button') as HTMLElement);
+
+  const menuItems = select.querySelectorAll('.iui-menu-item.iui-large');
+  expect(menuItems.length).toEqual(3);
+
+  menuItems.forEach((menuItem, index) => {
+    const sublabel = menuItem.querySelector(
+      '.iui-content .iui-menu-description',
+    ) as HTMLElement;
+    expect(sublabel).toBeTruthy();
+    expect(sublabel.textContent).toEqual(`Sublabel ${index}`);
+  });
+});

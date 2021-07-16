@@ -244,13 +244,11 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
         return React.cloneElement(menuItem, {
           key: `${option.label}-${index}`,
           isSelected,
-          disabled: option.disabled,
           onClick: () => {
             !option.disabled && onChange?.(option.value);
             close();
           },
           ref: (el: HTMLElement) => isSelected && el?.scrollIntoView(),
-          icon: option.icon,
           role: 'option',
           ...option,
           ...menuItem.props,
