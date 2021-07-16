@@ -203,7 +203,7 @@ export const ManyItems: Story<SelectProps<number>> = (args) => {
       <Select<number>
         options={
           options ||
-          [...new Array(20)].map((_, index) => ({
+          [...Array(20).fill(null)].map((_, index) => ({
             label: `Item #${index}`,
             value: index,
           }))
@@ -223,6 +223,42 @@ ManyItems.args = {
 
 ManyItems.argTypes = {
   options: { control: { disable: true } },
+};
+
+export const Sublabels: Story<SelectProps<number>> = (args) => {
+  const {
+    options = [
+      { value: 1, label: 'Item #1', sublabel: 'Sublabel #1' },
+      { value: 2, label: 'Item #2', sublabel: 'Sublabel #2' },
+      { value: 3, label: 'Item #3', sublabel: 'Sublabel #3' },
+    ],
+    placeholder = 'Placeholder text',
+    size = 'large',
+    ...rest
+  } = args;
+  const [value, setValue] = useState<number | undefined>(undefined);
+  return (
+    <div style={{ minHeight: 350 }}>
+      <Select<number>
+        options={options}
+        value={value}
+        onChange={setValue}
+        placeholder={placeholder}
+        size={size}
+        {...rest}
+      />
+    </div>
+  );
+};
+
+Sublabels.args = {
+  placeholder: 'Placeholder text',
+  size: 'large',
+  options: [
+    { value: 1, label: 'Item #1', sublabel: 'Sublabel #1' },
+    { value: 2, label: 'Item #2', sublabel: 'Sublabel #2' },
+    { value: 3, label: 'Item #3', sublabel: 'Sublabel #3' },
+  ],
 };
 
 export const Custom: Story<SelectProps<string>> = (args) => {
