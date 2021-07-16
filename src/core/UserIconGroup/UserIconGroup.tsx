@@ -102,34 +102,35 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
               size: iconSize,
             }),
           )}
-        {childrenArray.length > maxIcons + 1 &&
-          childrenArray.slice(0, maxIcons).map((child) =>
-            React.cloneElement(child as JSX.Element, {
-              status: undefined,
-              size: iconSize,
-            }),
-          )}
-        ​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
         {childrenArray.length > maxIcons + 1 && (
-          <div
-            {...countIconProps}
-            {...countIconProps}
-            className={cx(
-              'iui-user-icon',
-              `iui-${iconSize}`,
-              'iui-user-icon-count',
-              countIconProps?.className,
+          <>
+            {childrenArray.slice(0, maxIcons).map((child) =>
+              React.cloneElement(child as JSX.Element, {
+                status: undefined,
+                size: iconSize,
+              }),
             )}
-          >
-            <abbr className='iui-initials'>
-              {childrenLength <= maxLength
-                ? `${childrenLength - maxIcons}`
-                : `${maxLength}+`}
-            </abbr>
-            <span className='iui-stroke' />
-          </div>
+            ​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
+            <div
+              {...countIconProps}
+              {...countIconProps}
+              className={cx(
+                'iui-user-icon',
+                `iui-${iconSize}`,
+                'iui-user-icon-count',
+                countIconProps?.className,
+              )}
+            >
+              <abbr className='iui-initials'>
+                {childrenLength <= maxLength
+                  ? `${childrenLength - maxIcons}`
+                  : `${maxLength}+`}
+              </abbr>
+              <span className='iui-stroke' />
+            </div>
+            ​
+          </>
         )}
-        ​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
       </div>
     </>
   );
