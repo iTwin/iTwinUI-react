@@ -51,8 +51,10 @@ BorderlessTabs.args = {
 
 export const PillTabs = Template.bind({});
 PillTabs.args = {
-  labels: [...new Array(3)].map((_, index) => (
-    <HorizontalTab key={index} icon={<SvgStar aria-hidden />} />
-  )),
+  labels: Array(3)
+    .fill(null)
+    .map((_, index) => (
+      <HorizontalTab key={index} icon={<SvgStar aria-hidden />} />
+    )),
   type: 'pill',
 };

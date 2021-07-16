@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+`Date`
+
+### What's new
+
+- **Added `UserIconGroup` component** - stacked/non-stacked, animated lists with custom count icon behavior.
+- **Added new `sublabel` and `size` props to `MenuItem` and `SelectOption`.**
+
+### Fixes
+
+- **Fix `Table` overflow when selection is enabled and min width is set for columns**
+
 ## [1.11.0]
 
 `2021-07-08`
