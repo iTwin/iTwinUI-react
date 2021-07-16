@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+`Date`
+
+### Fixes
+
+- **Fix Table rows rendering when selection is enabled and min width is set for columns**
+
+### What's new
+
+- **Added `UserIconGroup` component** - stacked/non-stacked, animated lists with custom count icon behavior.
+
 ## [1.11.0]
 
 `2021-07-08`
