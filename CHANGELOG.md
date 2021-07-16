@@ -11,7 +11,7 @@
 
 ### Fixes
 
-- **Fix Table rows rendering when selection is enabled and min width is set for columns**
+- **Fix `Table` overflow when selection is enabled and min width is set for columns**
 
 ## [1.11.0]
 

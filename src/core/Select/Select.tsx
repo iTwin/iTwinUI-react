@@ -34,8 +34,9 @@ export type SelectOption<T> = {
   sublabel?: React.ReactNode;
   /**
    * Modify height of the item.
-   * Use 'large' when any of the select options have a description.
-   * Defaults to 'large' if description provided, otherwise 'default'.
+   * Use 'large' when any of the select options have `sublabel`.
+   *
+   * Defaults to 'large' if `sublabel` provided, otherwise 'default'.
    */
   size?: 'default' | 'large';
   /**
