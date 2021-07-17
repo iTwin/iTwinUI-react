@@ -37,14 +37,13 @@ const getClosestValueIndex = (values: number[], pointerValue: number) => {
 
 const getDefaultTrackDisplay = (
   trackDisplayMode: TrackDisplayMode,
-  values?: number[],
+  values: number[],
 ) => {
-  const numValues = values?.length ?? 0;
   if ('auto' !== trackDisplayMode) {
     return trackDisplayMode;
   }
 
-  return numValues % 2 ? 'even-segments' : 'odd-segments';
+  return values.length % 2 ? 'even-segments' : 'odd-segments';
 };
 
 const roundValueToClosestStep = (value: number, step: number, min: number) => {
@@ -429,11 +428,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         );
       }
 
-      if (1 === React.Children.count(tickLabels)) {
-        return tickLabels;
-      }
-
-      return null;
+      return tickLabels;
     }, [tickLabels]);
 
     return (
