@@ -24,6 +24,7 @@ Basic.args = {
   values: [50],
   minLabel: <SvgSmileyHappy />,
   maxLabel: <SvgSmileySad />,
+  tooltipProps: { style: { userSelect: 'none' } },
 };
 
 export const WithCustomThumb: Story<SliderProps> = (args) => {
@@ -82,6 +83,7 @@ export const MultiThumbs: Story<SliderProps> = (args) => {
 
 MultiThumbs.args = {
   values: [20, 40, 60, 80],
+  tooltipProps: { style: { userSelect: 'none' } },
 };
 
 export const MultiThumbsAllowCrossing: Story<SliderProps> = (args) => {
@@ -100,6 +102,7 @@ MultiThumbsAllowCrossing.args = {
   values: [20, 40, 60, 80],
   trackDisplayMode: 'even-segments',
   thumbMode: 'allow-crossing',
+  tooltipProps: { style: { userSelect: 'none' } },
 };
 
 export const Disabled: Story<SliderProps> = (args) => {
@@ -121,7 +124,7 @@ TooltipRight.args = {
   min: 0,
   max: 60,
   values: [30],
-  tooltipProps: { placement: 'right' },
+  tooltipProps: { placement: 'right', style: { userSelect: 'none' } },
 };
 
 export const CustomTooltipWithTicks: Story<SliderProps> = (args) => {
@@ -136,6 +139,7 @@ CustomTooltipWithTicks.args = {
   tooltipRenderer: (val) => {
     return `\$${val}.00`;
   },
+  tooltipProps: { style: { userSelect: 'none' } },
 };
 
 export const CustomMinLabelNoTooltip: Story<SliderProps> = (args) => {
@@ -223,6 +227,7 @@ DateWithCustomTickArea.args = {
   values: [0],
   minLabel: 'Date',
   maxLabel: '',
+  tooltipProps: { style: { userSelect: 'none' } },
 };
 
 export const SmallIncrement: Story<SliderProps> = (args) => {
@@ -235,6 +240,7 @@ SmallIncrement.args = {
   max: 5,
   step: 0.25,
   values: [0.25],
+  tooltipProps: { style: { userSelect: 'none' } },
 };
 
 export const LargeIncrement: Story<SliderProps> = (args) => {
@@ -247,6 +253,7 @@ LargeIncrement.args = {
   max: 500,
   step: 25,
   values: [250],
+  tooltipProps: { style: { userSelect: 'none' } },
 };
 
 export const DecimalIncrement: Story<SliderProps> = (args) => {
@@ -259,4 +266,5 @@ DecimalIncrement.args = {
   max: 50,
   step: 2.5,
   values: [25],
+  tooltipProps: { style: { userSelect: 'none' } },
 };
