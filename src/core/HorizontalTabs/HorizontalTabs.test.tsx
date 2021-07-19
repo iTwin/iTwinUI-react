@@ -89,12 +89,6 @@ it('should not fail with invalid active tab and set the first one', () => {
   expect(tabs[2].className).not.toContain('iui-tab iui-active');
 });
 
-it('should render large tabs', () => {
-  const { container } = renderComponent({ size: 'large' });
-  expect(container.querySelector('.iui-tabs-wrapper')).toBeTruthy();
-  expect(container.querySelector('.iui-tabs.iui-large')).toBeTruthy();
-});
-
 it('should render strings in HorizontalTab child component', () => {
   const { container } = renderComponent({
     labels: ['item0', 'item1', 'item2'],
@@ -109,7 +103,7 @@ it('should render strings in HorizontalTab child component', () => {
   });
 });
 
-it('should render large Tabs if HorizontalTab child has sublabel', () => {
+it('should add .iui-large if HorizontalTab has sublabel', () => {
   const { container } = renderComponent({
     labels: [
       <HorizontalTab key={0} label='item0' sublabel='Sublabel0' />,

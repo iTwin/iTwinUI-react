@@ -35,11 +35,6 @@ export type HorizontalTabsProps = {
    */
   type?: 'default' | 'borderless' | 'pill';
   /**
-   * Modify height of tabs.
-   * Defaults to 'large' when tabs have sublabels, otherwise 'default'.
-   */
-  size?: 'default' | 'large';
-  /**
    * Custom CSS class name for tabs.
    */
   tabsClassName?: string;
@@ -84,7 +79,6 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
     onTabSelected,
     type = 'default',
     color = 'blue',
-    size = 'default',
     tabsClassName,
     contentClassName,
     children,
@@ -165,7 +159,7 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
           {
             'iui-green': color === 'green',
             'iui-animated': type !== 'default',
-            'iui-large': size === 'large' || hasSublabel,
+            'iui-large': hasSublabel,
           },
           tabsClassName,
         )}

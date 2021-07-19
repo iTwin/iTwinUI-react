@@ -15,6 +15,7 @@ import {
 export default {
   title: 'Core/HorizontalTabs',
   component: HorizontalTabs,
+  subcomponents: { HorizontalTab },
 } as Meta<HorizontalTabsProps>;
 
 const Template: Story<HorizontalTabsProps> = (args) => {
