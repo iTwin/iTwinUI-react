@@ -129,31 +129,8 @@ it('should render provided min max label nodes', () => {
   expect(
     container.querySelector('.iui-slider-component-container'),
   ).toBeTruthy();
-  expect(
-    (container.querySelector('.span-min') as HTMLSpanElement).textContent,
-  ).toBe('small');
-  expect(
-    (container.querySelector('.span-max') as HTMLSpanElement).textContent,
-  ).toBe('big');
-});
-it('should render provided min max label nodes', () => {
-  const { container } = render(
-    <Slider
-      values={defaultSingleValue}
-      maxLabel={<span className='span-max'>big</span>}
-      minLabel={<span className='span-min'>small</span>}
-    />,
-  );
-  assertBaseElement(container);
-  expect(
-    container.querySelector('.iui-slider-component-container'),
-  ).toBeTruthy();
-  expect(
-    (container.querySelector('.span-min') as HTMLSpanElement).textContent,
-  ).toBe('small');
-  expect(
-    (container.querySelector('.span-max') as HTMLSpanElement).textContent,
-  ).toBe('big');
+  expect(container.querySelector('.span-min')?.textContent).toBe('small');
+  expect(container.querySelector('.span-max')?.textContent).toBe('big');
 });
 it('should set focus', () => {
   let element: HTMLDivElement | null = null;
@@ -278,8 +255,8 @@ it('should render single track', () => {
   ).toBeTruthy();
   expect(container.querySelectorAll('.iui-slider-track').length).toBe(1);
 });
-// segments 0--10--20--30--40-----100
-it('should render odd tracks based in even number of values and `auto` trackDisplayMode', () => {
+// available track segments 0--10--20--30--40--100
+it('should render odd tracks based on even number of values and `auto` trackDisplayMode', () => {
   const { container } = render(<Slider values={[10, 20, 30, 40]} />);
   assertBaseElement(container);
   expect(
@@ -288,7 +265,7 @@ it('should render odd tracks based in even number of values and `auto` trackDisp
   // segments 10-20, 30-40
   expect(container.querySelectorAll('.iui-slider-track').length).toBe(2);
 });
-it('should render 3 even track `even-segments` trackDisplayMode', () => {
+it('should render 3 `even-segments` 0-10,20-30,40-100', () => {
   const { container } = render(
     <Slider trackDisplayMode='even-segments' values={[10, 20, 30, 40]} />,
   );
@@ -299,7 +276,7 @@ it('should render 3 even track `even-segments` trackDisplayMode', () => {
   // segments 0-10,20-30,40-100
   expect(container.querySelectorAll('.iui-slider-track').length).toBe(3);
 });
-it('should render 2 odd track `even-segments` trackDisplayMode', () => {
+it('should render 2 `odd-segments` 10-20, 30-40', () => {
   const { container } = render(
     <Slider trackDisplayMode='odd-segments' values={[10, 20, 30, 40]} />,
   );
@@ -307,7 +284,6 @@ it('should render 2 odd track `even-segments` trackDisplayMode', () => {
   expect(
     container.querySelector('.iui-slider-component-container'),
   ).toBeTruthy();
-  // segments 10-20, 30-40
   expect(container.querySelectorAll('.iui-slider-track').length).toBe(2);
 });
 it('should not render track', () => {
