@@ -63,14 +63,14 @@ export type HorizontalTabsProps = {
  *   <HorizontalTab label='Label 1' sublabel='First tab' />,
  *   <HorizontalTab label='Label 2' sublabel='Active tab' />,
  * ];
- * <HorizontalTabs labels={tabs} activeIndex={1} />
+ * <HorizontalTabs labels={tabsWithSublabels} activeIndex={1} />
  *
  * @example
  * const tabsWithIcons = [
  *   <HorizontalTab label='Label 1' icon={<SvgPlaceholder />} />,
  *   <HorizontalTab label='Label 2' icon={<SvgPlaceholder />} />,
  * ];
- * <HorizontalTabs labels={tabs} type={'pill'} />
+ * <HorizontalTabs labels={tabsWithIcons} type='pill' />
  */
 export const HorizontalTabs = (props: HorizontalTabsProps) => {
   const {

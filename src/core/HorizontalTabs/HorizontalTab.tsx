@@ -30,8 +30,11 @@ export type HorizontalTabProps = {
    * Custom content appended to the tab.
    */
   children?: React.ReactNode;
-} & React.ComponentPropsWithRef<'button'> &
-  CommonProps;
+  /**
+   * Click event handler.
+   */
+  onClick?: () => void;
+} & CommonProps;
 
 /**
  * Individual tab content to be used in the `labels` prop of `HorizontalTabs`.
