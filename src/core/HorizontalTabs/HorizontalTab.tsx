@@ -15,7 +15,6 @@ export type HorizontalTabProps = {
   label?: React.ReactNode;
   /**
    * Secondary label shown below the main label.
-   * Only shown if `size` of `HorizontalTabs` is set to large.
    */
   sublabel?: React.ReactNode;
   /**
@@ -50,7 +49,12 @@ export const HorizontalTab = (props: HorizontalTabProps) => {
   useTheme();
 
   return (
-    <button className={cx('iui-tab', className)} role='tab' {...rest}>
+    <button
+      className={cx('iui-tab', className)}
+      role='tab'
+      tabIndex={-1}
+      {...rest}
+    >
       {startIcon &&
         React.cloneElement(startIcon, {
           className: 'iui-tab-icon',
