@@ -49,7 +49,6 @@ WithCustomThumb.args = {
           style={{
             pointerEvents: 'none',
             marginBottom: '4px',
-            userSelect: 'none',
           }}
         >
           |||
