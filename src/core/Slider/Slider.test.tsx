@@ -661,15 +661,15 @@ it('focus on specific thumb', () => {
   const wrapper = render(<Slider values={[50, 80]} step={5} />);
   const { container } = wrapper;
   assertBaseElement(container);
-  const slideContainer = container.querySelector(
+  const sliderContainer = container.querySelector(
     '.iui-slider-container',
   ) as HTMLDivElement;
   let thumbs = container.querySelectorAll('.iui-slider-thumb');
 
-  focusThumb(slideContainer, 1);
-  focusThumb(slideContainer, 1);
+  focusThumb(sliderContainer, 1);
+  focusThumb(sliderContainer, 1);
   expect(document.activeElement).toEqual(thumbs[1]);
-  focusThumb(slideContainer, 0);
+  focusThumb(sliderContainer, 0);
   thumbs = container.querySelectorAll('.iui-slider-thumb');
   expect(document.activeElement).toEqual(thumbs[0]);
 });
@@ -683,18 +683,18 @@ it('should move thumb when pointer down on rail', () => {
   );
 
   const { container } = wrapper;
-  const slideContainer = container.querySelector(
+  const sliderContainer = container.querySelector(
     '.iui-slider-container',
   ) as HTMLDivElement;
   assertBaseElement(container);
 
-  expect(slideContainer.getBoundingClientRect().left).toBe(10);
-  expect(slideContainer.getBoundingClientRect().right).toBe(1010);
-  expect(slideContainer.getBoundingClientRect().width).toBe(1000);
+  expect(sliderContainer.getBoundingClientRect().left).toBe(10);
+  expect(sliderContainer.getBoundingClientRect().right).toBe(1010);
+  expect(sliderContainer.getBoundingClientRect().width).toBe(1000);
 
   /* fire a pointer down event 30% down the slider */
   act(() => {
-    fireEvent.pointerDown(slideContainer, {
+    fireEvent.pointerDown(sliderContainer, {
       pointerId: 5,
       buttons: 1,
       clientX: 310,
@@ -718,18 +718,18 @@ it('should move thumb when pointer down on rail with change handler', () => {
   );
 
   const { container } = wrapper;
-  const slideContainer = container.querySelector(
+  const sliderContainer = container.querySelector(
     '.iui-slider-container',
   ) as HTMLDivElement;
   assertBaseElement(container);
 
-  expect(slideContainer.getBoundingClientRect().left).toBe(10);
-  expect(slideContainer.getBoundingClientRect().right).toBe(1010);
-  expect(slideContainer.getBoundingClientRect().width).toBe(1000);
+  expect(sliderContainer.getBoundingClientRect().left).toBe(10);
+  expect(sliderContainer.getBoundingClientRect().right).toBe(1010);
+  expect(sliderContainer.getBoundingClientRect().width).toBe(1000);
 
   /* fire a pointer down event 30% down the slider */
   act(() => {
-    fireEvent.pointerDown(slideContainer, {
+    fireEvent.pointerDown(sliderContainer, {
       pointerId: 5,
       buttons: 1,
       clientX: 310,
@@ -755,7 +755,7 @@ it('should move to closest step when pointer down on rail', () => {
   );
 
   const { container } = wrapper;
-  const slideContainer = container.querySelector(
+  const sliderContainer = container.querySelector(
     '.iui-slider-container',
   ) as HTMLDivElement;
   assertBaseElement(container);
@@ -764,7 +764,7 @@ it('should move to closest step when pointer down on rail', () => {
    * 0 - .25 - .5 - .75 - 1 so closet to .3 is .25
    */
   act(() => {
-    fireEvent.pointerDown(slideContainer, {
+    fireEvent.pointerDown(sliderContainer, {
       pointerId: 5,
       buttons: 1,
       clientX: 310,
@@ -785,14 +785,14 @@ it('should move closest thumb when pointer down on rail', () => {
   );
 
   const { container } = wrapper;
-  const slideContainer = container.querySelector(
+  const sliderContainer = container.querySelector(
     '.iui-slider-container',
   ) as HTMLDivElement;
   assertBaseElement(container);
 
   /* fire a pointer down event 70% down the the slider */
   act(() => {
-    fireEvent.pointerDown(slideContainer, {
+    fireEvent.pointerDown(sliderContainer, {
       pointerId: 5,
       buttons: 1,
       clientX: 710,
@@ -821,7 +821,7 @@ it('should activate thumb on pointerDown and move to closest step on move', () =
 
   const { container } = wrapper;
   assertBaseElement(container);
-  const slideContainer = container.querySelector(
+  const sliderContainer = container.querySelector(
     '.iui-slider-container',
   ) as HTMLDivElement;
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
@@ -839,7 +839,7 @@ it('should activate thumb on pointerDown and move to closest step on move', () =
 
   // moving to same location should not trigger update
   act(() => {
-    fireEvent.pointerMove(slideContainer, {
+    fireEvent.pointerMove(sliderContainer, {
       pointerId: 5,
       buttons: 1,
       clientX: 210,
@@ -848,7 +848,7 @@ it('should activate thumb on pointerDown and move to closest step on move', () =
 
   /* move thumb to 40 value on slider */
   act(() => {
-    fireEvent.pointerMove(slideContainer, {
+    fireEvent.pointerMove(sliderContainer, {
       pointerId: 5,
       buttons: 1,
       clientX: 410,
@@ -857,7 +857,7 @@ it('should activate thumb on pointerDown and move to closest step on move', () =
   expect(handleOnUpdate).toHaveBeenCalledTimes(1);
 
   act(() => {
-    fireEvent.pointerUp(slideContainer, {
+    fireEvent.pointerUp(sliderContainer, {
       pointerId: 5,
       buttons: 1,
       clientX: 410,
@@ -884,7 +884,7 @@ it('should activate thumb on pointerDown and move to closest step on move/ no up
 
   const { container } = wrapper;
   assertBaseElement(container);
-  const slideContainer = container.querySelector(
+  const sliderContainer = container.querySelector(
     '.iui-slider-container',
   ) as HTMLDivElement;
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
@@ -899,10 +899,11 @@ it('should activate thumb on pointerDown and move to closest step on move/ no up
     });
   });
   expect(thumb.classList.contains('iui-active'));
+  expect(sliderContainer.classList.contains('iui-grabbing'));
 
   // moving to same location should not trigger update
   act(() => {
-    fireEvent.pointerMove(slideContainer, {
+    fireEvent.pointerMove(sliderContainer, {
       pointerId: 5,
       buttons: 1,
       clientX: 210,
@@ -911,7 +912,7 @@ it('should activate thumb on pointerDown and move to closest step on move/ no up
 
   /* move thumb to 40 value on slider */
   act(() => {
-    fireEvent.pointerMove(slideContainer, {
+    fireEvent.pointerMove(sliderContainer, {
       pointerId: 5,
       buttons: 1,
       clientX: 410,
@@ -919,7 +920,7 @@ it('should activate thumb on pointerDown and move to closest step on move/ no up
   });
 
   act(() => {
-    fireEvent.pointerUp(slideContainer, {
+    fireEvent.pointerUp(sliderContainer, {
       pointerId: 5,
       buttons: 1,
       clientX: 410,
