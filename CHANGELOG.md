@@ -14,7 +14,7 @@
 
 ### Fixes
 
-- **Fixed `Table` overflow when selection is enabled and min width is set for columns**
+- **Fixed `Table` overflow when selection is enabled and min width is set for columns.**
 
 ## [1.11.0]
 
