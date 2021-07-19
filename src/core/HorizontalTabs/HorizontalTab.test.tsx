@@ -25,7 +25,7 @@ it('should render with sublabel', () => {
 
   const label = container.querySelector('.iui-tab-label') as HTMLElement;
   expect(label).toBeTruthy();
-  expect(label.textContent).toBe('Tab label');
+  expect(label.firstElementChild?.textContent).toBe('Tab label');
 
   const sublabel = label.querySelector('.iui-tab-description') as HTMLElement;
   expect(sublabel.textContent).toEqual('Sub-label');
