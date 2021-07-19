@@ -29,21 +29,19 @@ function generateSegments(
   return segments;
 }
 
-/**
- * Track displays color segments above Rail. Which, if any, segments that are
- * colorized is based on `trackDisplayMode`.
- */
-export const Track = ({
-  trackDisplayMode,
-  sliderMin,
-  sliderMax,
-  values,
-}: {
+export type TrackProps = {
   trackDisplayMode: TrackDisplayMode;
   sliderMin: number;
   sliderMax: number;
   values: number[];
-}) => {
+};
+
+/**
+ * Track displays color segments above Rail. Which, if any, segments that are
+ * colorized is based on `trackDisplayMode`.
+ */
+export const Track = (props: TrackProps) => {
+  const { trackDisplayMode, sliderMin, sliderMax, values } = props;
   const [currentValues, setCurrentValues] = React.useState(
     [...values].sort((a, b) => a - b),
   );
