@@ -120,7 +120,7 @@ TooltipRight.args = {
   max: 60,
   values: [30],
   tooltipProps: () => {
-    return { placement: 'right', style: { userSelect: 'none' } };
+    return { placement: 'right' };
   },
 };
 
@@ -136,7 +136,6 @@ CustomTooltipWithTicks.args = {
   tooltipProps: (index, val) => {
     return {
       content: `\$${val}.00`,
-      style: { userSelect: 'none' },
     };
   },
 };
@@ -204,7 +203,6 @@ export const DateWithCustomTickArea: Story<SliderProps> = (args) => {
       {...args}
       tooltipProps={() => {
         return {
-          style: { userSelect: 'none' },
           content: tooltipRenderer(),
         };
       }}
