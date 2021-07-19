@@ -406,10 +406,6 @@ it('should not process keystrokes when slider is disabled', () => {
   expect(thumb).toBeTruthy();
   expect(thumb.classList).not.toContain('iui-active');
 
-  // force thumb to have focus
-  thumb.focus();
-  expect(thumb.getAttribute('aria-valuenow')).toEqual('50');
-
   act(() => {
     fireEvent.keyDown(thumb, { key: 'ArrowLeft' });
   });
@@ -433,10 +429,8 @@ it('should show tooltip on thumb hover', () => {
     thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
     fireEvent.mouseLeave(thumb);
   });
-  const tippyBox = container.querySelector('.tippy-box') as HTMLDivElement;
-  expect((tippyBox.parentElement as HTMLElement).style.visibility).toEqual(
-    'hidden',
-  );
+  const tippy = container.querySelector('[data-tippy-root]') as HTMLElement;
+  expect(tippy.style.visibility).toEqual('hidden');
 });
 
 it('should show tooltip on thumb focus', () => {
@@ -457,10 +451,8 @@ it('should show tooltip on thumb focus', () => {
     thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
     thumb.blur();
   });
-  const tippyBox = container.querySelector('.tippy-box') as HTMLDivElement;
-  expect((tippyBox.parentElement as HTMLElement).style.visibility).toEqual(
-    'hidden',
-  );
+  const tippy = container.querySelector('[data-tippy-root]') as HTMLElement;
+  expect(tippy.style.visibility).toEqual('hidden');
 });
 
 it('should apply thumb props', () => {
