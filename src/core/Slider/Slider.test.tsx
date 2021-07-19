@@ -515,11 +515,8 @@ it('should show tooltip on thumb focus', () => {
     thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
     thumb.blur();
   });
-  // The tooltip, which was constructed earlier in test, remains but it is set to hidden.
-  const tippyBox = container.querySelector('.tippy-box') as HTMLDivElement;
-  expect((tippyBox.parentElement as HTMLElement).style.visibility).toEqual(
-    'hidden',
-  );
+  const tippy = document.querySelector('[data-tippy-root]') as HTMLElement;
+  expect(tippy.style.visibility).toEqual('hidden');
 });
 
 it('should apply thumb props', () => {
