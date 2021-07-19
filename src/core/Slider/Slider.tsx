@@ -82,9 +82,6 @@ export const focusThumb = (
   }
 };
 
-/**
- * Properties for Slider component
- */
 export type SliderProps = {
   /**
    * Set focus on first thumb in slider element.
@@ -125,7 +122,7 @@ export type SliderProps = {
   /**
    * Forces control to be displayed in a disabled state where no interactive value
    * changes are allowed.
-   *  @default false
+   * @default false
    */
   disabled?: boolean;
   /**
@@ -304,6 +301,8 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
 
     const handlePointerMove = React.useCallback(
       (event: PointerEvent): void => {
+        event.preventDefault();
+        event.stopPropagation();
         updateThumbValue(event, onUpdate);
       },
       [onUpdate, updateThumbValue],

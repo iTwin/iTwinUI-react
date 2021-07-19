@@ -5,8 +5,7 @@
 import { Meta, Story } from '@storybook/react';
 import React from 'react';
 import { useMemo, useCallback, useState } from '@storybook/addons';
-import { Body, Slider } from '../../src/core';
-import { SliderProps } from '../../src/core/Slider/Slider';
+import { Body, Slider, SliderProps } from '../../src/core';
 import SvgSmileyHappy from '@itwin/itwinui-icons-react/cjs/icons/SmileyHappy';
 import SvgSmileySad from '@itwin/itwinui-icons-react/cjs/icons/SmileySad';
 
@@ -24,9 +23,6 @@ Basic.args = {
   values: [50],
   minLabel: <SvgSmileyHappy />,
   maxLabel: <SvgSmileySad />,
-  tooltipProps: () => {
-    return { style: { userSelect: 'none' } };
-  },
 };
 
 export const WithCustomThumb: Story<SliderProps> = (args) => {
@@ -65,9 +61,6 @@ WithCustomThumb.args = {
   values: [50],
   minLabel: <SvgSmileyHappy />,
   maxLabel: <SvgSmileySad />,
-  tooltipProps: () => {
-    return { style: { userSelect: 'none' } };
-  },
   railContainerProps: { style: { margin: '0 8px' } },
 };
 
@@ -87,9 +80,6 @@ export const MultiThumbs: Story<SliderProps> = (args) => {
 
 MultiThumbs.args = {
   values: [20, 40, 60, 80],
-  tooltipProps: () => {
-    return { style: { userSelect: 'none' } };
-  },
 };
 
 export const MultiThumbsAllowCrossing: Story<SliderProps> = (args) => {
@@ -108,9 +98,6 @@ MultiThumbsAllowCrossing.args = {
   values: [20, 40, 60, 80],
   trackDisplayMode: 'even-segments',
   thumbMode: 'allow-crossing',
-  tooltipProps: () => {
-    return { style: { userSelect: 'none' } };
-  },
 };
 
 export const Disabled: Story<SliderProps> = (args) => {
@@ -258,9 +245,6 @@ SmallIncrement.args = {
   max: 5,
   step: 0.25,
   values: [0.25],
-  tooltipProps: () => {
-    return { style: { userSelect: 'none' } };
-  },
 };
 
 export const LargeIncrement: Story<SliderProps> = (args) => {
@@ -273,9 +257,6 @@ LargeIncrement.args = {
   max: 500,
   step: 25,
   values: [250],
-  tooltipProps: () => {
-    return { style: { userSelect: 'none' } };
-  },
 };
 
 export const DecimalIncrement: Story<SliderProps> = (args) => {
@@ -288,7 +269,4 @@ DecimalIncrement.args = {
   max: 50,
   step: 2.5,
   values: [25],
-  tooltipProps: () => {
-    return { style: { userSelect: 'none' } };
-  },
 };
