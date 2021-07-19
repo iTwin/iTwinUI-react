@@ -469,10 +469,6 @@ it('should NOT process keystrokes when slider is disabled', () => {
   expect(thumb).toBeTruthy();
   expect(thumb.classList.contains('iui-active')).toBeFalsy();
 
-  // force thumb to have focus
-  thumb.focus();
-  expect(thumb.getAttribute('aria-valuenow')).toEqual('50');
-
   act(() => {
     fireEvent.keyDown(thumb, { key: 'ArrowLeft' });
   });
@@ -500,7 +496,7 @@ it('should show tooltip on thumb hover', () => {
   });
 });
 
-it('should show tooltip on thumb focus', async () => {
+it('should show tooltip on thumb focus', () => {
   const wrapper = render(<Slider values={defaultSingleValue} />);
   const { container } = wrapper;
   assertBaseElement(container);
@@ -515,7 +511,7 @@ it('should show tooltip on thumb focus', async () => {
     (container.querySelector('.iui-tooltip') as HTMLDivElement).textContent,
   ).toBe('50');
 
-  await act(async () => {
+  act(() => {
     thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
     thumb.blur();
   });
