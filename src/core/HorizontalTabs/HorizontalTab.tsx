@@ -37,7 +37,7 @@ export type HorizontalTabProps = {
 } & CommonProps;
 
 /**
- * Individual tab content to be used in the `labels` prop of `HorizontalTabs`.
+ * Individual tab component to be used in the `labels` prop of `HorizontalTabs`.
  * @example
  * const tabs = [
  *   <HorizontalTab label='Label 1' sublabel='Description 1' />,
