@@ -352,7 +352,7 @@ it('should process keystrokes when thumb has focus', () => {
   expect(handleOnChange).toHaveBeenCalledTimes(4);
 });
 
-it('focused thumb should process keystrokes limited by segment', () => {
+it('should limit keystrokes processing to adjacent points by default', () => {
   const wrapper = render(<Slider values={[40, 80]} step={5} setFocus />);
   const { container } = wrapper;
   assertBaseElement(container);
@@ -386,7 +386,7 @@ it('focused thumb should process keystrokes limited by segment', () => {
   expect(thumb.getAttribute('aria-valuenow')).toEqual('75');
 });
 
-it('focused thumb allow crossing should process keystrokes limited by min max', () => {
+it('should limit keystrokes processing by min max when allow-crossing is set', () => {
   const handleOnChange = jest.fn();
   const wrapper = render(
     <Slider
@@ -436,7 +436,7 @@ it('focused thumb allow crossing should process keystrokes limited by min max', 
   expect(handleOnChange).toHaveBeenCalledTimes(4);
 });
 
-it('focused thumb on disabled slider should NOT process keystrokes', () => {
+it('should NOT process keystrokes when slider is disabled', () => {
   const wrapper = render(<Slider values={[50]} step={5} disabled />);
   const { container } = wrapper;
   assertBaseElement(container);
@@ -455,7 +455,7 @@ it('focused thumb on disabled slider should NOT process keystrokes', () => {
   expect(thumb.getAttribute('aria-valuenow')).toEqual('50');
 });
 
-it('thumb should show tooltip on hover', () => {
+it('should show tooltip on thumb hover', () => {
   const wrapper = render(<Slider values={defaultSingleValue} />);
   const { container } = wrapper;
   assertBaseElement(container);
@@ -475,7 +475,7 @@ it('thumb should show tooltip on hover', () => {
   });
 });
 
-it('thumb should show tooltip on focus', async () => {
+it('should show tooltip on thumb focus', async () => {
   const wrapper = render(<Slider values={defaultSingleValue} />);
   const { container } = wrapper;
   assertBaseElement(container);
@@ -500,7 +500,7 @@ it('thumb should show tooltip on focus', async () => {
     'hidden',
   );
 });
-it('thumb props should be applied', () => {
+it('should apply thumb props', () => {
   const thumbProps = () => {
     return {
       className: 'thumb-test-class',
@@ -518,7 +518,7 @@ it('thumb props should be applied', () => {
   expect(thumb.style.backgroundColor).toEqual('red');
 });
 
-it('focus on specific thumb', () => {
+it('should focus on specific thumb', () => {
   const wrapper = render(<Slider values={[50, 80]} step={5} />);
   const { container } = wrapper;
   assertBaseElement(container);
