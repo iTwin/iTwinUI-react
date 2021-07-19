@@ -172,7 +172,6 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
                     'iui-active': index === currentIndex,
                   })}
                   onClick={onClick}
-                  role='tab'
                   aria-selected={index === currentIndex}
                 />
               ) : (

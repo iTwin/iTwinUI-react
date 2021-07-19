@@ -21,7 +21,7 @@ export type HorizontalTabProps = {
   /**
    * Svg icon shown before the labels.
    */
-  icon?: JSX.Element;
+  startIcon?: JSX.Element;
   /**
    * Control whether the tab is disabled.
    */
@@ -38,18 +38,18 @@ export type HorizontalTabProps = {
  * @example
  * const tabs = [
  *   <HorizontalTab label='Label 1' sublabel='Description 1' />,
- *   <HorizontalTab label='Label 2' icon={<SvgPlaceholder />} />,
+ *   <HorizontalTab label='Label 2' startIcon={<SvgPlaceholder />} />,
  * ];
  */
 export const HorizontalTab = (props: HorizontalTabProps) => {
-  const { label, sublabel, icon, children, className, ...rest } = props;
+  const { label, sublabel, startIcon, children, className, ...rest } = props;
 
   useTheme();
 
   return (
     <button className={cx('iui-tab', className)} role='tab' {...rest}>
-      {icon &&
-        React.cloneElement(icon, {
+      {startIcon &&
+        React.cloneElement(startIcon, {
           className: 'iui-tab-icon',
           'aria-hidden': true,
         })}

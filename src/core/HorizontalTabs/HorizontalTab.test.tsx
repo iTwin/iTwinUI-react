@@ -33,7 +33,7 @@ it('should render with sublabel', () => {
 
 it('should render with icon', () => {
   const { container } = render(
-    <HorizontalTab label='Tab label' icon={<SvgPlaceholder />} />,
+    <HorizontalTab label='Tab label' startIcon={<SvgPlaceholder />} />,
   );
   expect(container.querySelector('button.iui-tab')).toBeTruthy();
 

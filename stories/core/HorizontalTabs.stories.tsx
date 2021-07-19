@@ -51,7 +51,7 @@ export const PillTabs = Template.bind({});
 PillTabs.args = {
   labels: Array(3)
     .fill(null)
-    .map((_, index) => <HorizontalTab key={index} icon={<SvgStar />} />),
+    .map((_, index) => <HorizontalTab key={index} startIcon={<SvgStar />} />),
   type: 'pill',
 };
 
@@ -64,7 +64,7 @@ SublabelsAndIcons.args = {
         key={index}
         label={`Item${index}`}
         sublabel={`Sublabel ${index}`}
-        icon={<SvgStar />}
+        startIcon={<SvgStar />}
         disabled={index === 2}
       />
     )),
