@@ -14,7 +14,7 @@ it('should render in its most basic state', () => {
 
   const label = container.querySelector('.iui-tab-label > div') as HTMLElement;
   expect(label).toBeTruthy();
-  expect(label.firstElementChild?.textContent).toBe('Tab label');
+  expect(label.textContent).toBe('Tab label');
 });
 
 it('should render with sublabel', () => {
@@ -66,5 +66,5 @@ it('should render custom children', () => {
 
   expect(container.querySelector('button.iui-tab.custom-class')).toBeTruthy();
   expect(container.querySelector('.iui-tab-label')).toBeFalsy();
-  expect(container.lastElementChild?.textContent).toEqual('custom children');
+  expect(container.textContent).toEqual('custom children');
 });
