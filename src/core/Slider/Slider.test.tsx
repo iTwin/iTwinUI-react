@@ -2,47 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
- * See LICENSE.md in the project root for license terms and full copyright notice.
- *--------------------------------------------------------------------------------------------*/
-import { act, createEvent, fireEvent, render } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import { Slider, focusThumb } from './Slider';
-
-// Hack for testing
-export function patchCreateEvent(createEvent: any) {
-  // patching createEvent - see setupTest.js
-  for (const key in createEvent) {
-    if (key.indexOf('pointer') === 0) {
-      // @ts-ignore
-      const fn = createEvent[key.replace('pointer', 'mouse')];
-      if (!fn) {
-        continue;
-      }
-      // @ts-ignore
-      createEvent[key] = function (
-        type: any,
-        { pointerId = 1, pointerType = 'mouse', ...rest } = {},
-      ) {
-        const event = fn(type, rest);
-        event.pointerId = pointerId;
-        event.pointerType = pointerType;
-        const eventType = event.type;
-        Object.defineProperty(event, 'type', {
-          get: function () {
-            return eventType.replace('mouse', 'pointer');
-          },
-        });
-        return event;
-      };
-    }
-  }
-}
-
-patchCreateEvent(createEvent);
 
 const createBoundingClientRect = (
   left: number,
@@ -208,16 +170,9 @@ it('should set focus', () => {
   expect(document.activeElement).toEqual(thumb);
 });
 it('should show tooltip when focused', () => {
-  let element: HTMLDivElement | null = null;
-  const onRef = (ref: HTMLDivElement) => {
-    element = ref;
-  };
-  const wrapper = render(
-    <Slider ref={onRef} values={defaultSingleValue} setFocus />,
-  );
+  const wrapper = render(<Slider values={defaultSingleValue} setFocus />);
   const { container } = wrapper;
   assertBaseElement(container);
-  expect(element).toBeTruthy();
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
   expect(thumb).toBeTruthy();
   expect(document.activeElement).toEqual(thumb);
@@ -226,13 +181,8 @@ it('should show tooltip when focused', () => {
   ).toBe('50');
 });
 it('should NOT show tooltip if visibility is overridden', () => {
-  let element: HTMLDivElement | null = null;
-  const onRef = (ref: HTMLDivElement) => {
-    element = ref;
-  };
   const wrapper = render(
     <Slider
-      ref={onRef}
       values={defaultSingleValue}
       setFocus
       tooltipProps={{ visible: false }}
@@ -240,20 +190,14 @@ it('should NOT show tooltip if visibility is overridden', () => {
   );
   const { container } = wrapper;
   assertBaseElement(container);
-  expect(element).toBeTruthy();
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
   expect(thumb).toBeTruthy();
   expect(document.activeElement).toEqual(thumb);
   expect(container.querySelector('.iui-tooltip')).toBeFalsy();
 });
 it('should show custom tooltip when focused', () => {
-  let element: HTMLDivElement | null = null;
-  const onRef = (ref: HTMLDivElement) => {
-    element = ref;
-  };
   const wrapper = render(
     <Slider
-      ref={onRef}
       values={defaultSingleValue}
       setFocus
       tooltipRenderer={(val) => {
@@ -263,7 +207,6 @@ it('should show custom tooltip when focused', () => {
   );
   const { container } = wrapper;
   assertBaseElement(container);
-  expect(element).toBeTruthy();
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
   expect(thumb).toBeTruthy();
   expect(document.activeElement).toEqual(thumb);
@@ -314,7 +257,7 @@ it('should render tick marks', () => {
   ).toBeTruthy();
   expect(container.querySelectorAll('.iui-slider-tick').length).toBe(5);
 });
-it('should render custom tick marks', () => {
+it('should render custom tick marks as defined by ReactNode.', () => {
   const { container } = render(
     <Slider
       values={defaultSingleValue}
@@ -327,7 +270,6 @@ it('should render custom tick marks', () => {
   ).toBeTruthy();
   expect(container.querySelector('.custom-tick-mark')).toBeTruthy();
 });
-
 it('should render single track', () => {
   const { container } = render(<Slider values={defaultSingleValue} />);
   assertBaseElement(container);
@@ -378,29 +320,10 @@ it('should not render track', () => {
   ).toBeTruthy();
   expect(container.querySelectorAll('.iui-slider-track').length).toBe(0);
 });
-it('should render custom tick marks', () => {
-  const { container } = render(
-    <Slider
-      values={defaultSingleValue}
-      tickLabels={<span className='custom-tick-mark'>Custom</span>}
-    />,
-  );
-  assertBaseElement(container);
-  expect(
-    container.querySelector('.iui-slider-component-container'),
-  ).toBeTruthy();
-  expect(container.querySelector('.custom-tick-mark')).toBeTruthy();
-});
-
 it('should activate thumb on pointerDown', () => {
-  let element: HTMLDivElement | null = null;
-  const onRef = (ref: HTMLDivElement) => {
-    element = ref;
-  };
-  const wrapper = render(<Slider ref={onRef} values={defaultSingleValue} />);
+  const wrapper = render(<Slider values={defaultSingleValue} />);
   const { container } = wrapper;
   assertBaseElement(container);
-  expect(element).toBeTruthy();
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
   expect(thumb).toBeTruthy();
   expect(thumb.classList.contains('iui-active')).toBeFalsy();
@@ -415,25 +338,13 @@ it('should activate thumb on pointerDown', () => {
   expect(thumb.classList.contains('iui-active'));
 });
 
-it('focused thumb should process keystrokes', () => {
-  let element: HTMLDivElement | null = null;
-  const onRef = (ref: HTMLDivElement) => {
-    element = ref;
-  };
-
+it('should process keystrokes when thumb has focus', () => {
   const handleOnChange = jest.fn();
   const wrapper = render(
-    <Slider
-      ref={onRef}
-      values={[50]}
-      step={5}
-      setFocus
-      onChange={handleOnChange}
-    />,
+    <Slider values={[50]} step={5} setFocus onChange={handleOnChange} />,
   );
   const { container } = wrapper;
   assertBaseElement(container);
-  expect(element).toBeTruthy();
   let thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
   expect(thumb).toBeTruthy();
   expect(thumb.classList.contains('iui-active')).toBeFalsy();
@@ -466,17 +377,9 @@ it('focused thumb should process keystrokes', () => {
 });
 
 it('focused thumb should process keystrokes limited by segment', () => {
-  let element: HTMLDivElement | null = null;
-  const onRef = (ref: HTMLDivElement) => {
-    element = ref;
-  };
-
-  const wrapper = render(
-    <Slider ref={onRef} values={[40, 80]} step={5} setFocus />,
-  );
+  const wrapper = render(<Slider values={[40, 80]} step={5} setFocus />);
   const { container } = wrapper;
   assertBaseElement(container);
-  expect(element).toBeTruthy();
   let thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
   expect(thumb).toBeTruthy();
   expect(thumb.classList.contains('iui-active')).toBeFalsy();
@@ -508,15 +411,9 @@ it('focused thumb should process keystrokes limited by segment', () => {
 });
 
 it('focused thumb allow crossing should process keystrokes limited by min max', () => {
-  let element: HTMLDivElement | null = null;
-  const onRef = (ref: HTMLDivElement) => {
-    element = ref;
-  };
-
   const handleOnChange = jest.fn();
   const wrapper = render(
     <Slider
-      ref={onRef}
       values={[40, 80]}
       step={5}
       setFocus
@@ -526,7 +423,6 @@ it('focused thumb allow crossing should process keystrokes limited by min max', 
   );
   const { container } = wrapper;
   assertBaseElement(container);
-  expect(element).toBeTruthy();
   let thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
   expect(thumb).toBeTruthy();
   expect(thumb.classList.contains('iui-active')).toBeFalsy();
@@ -565,16 +461,9 @@ it('focused thumb allow crossing should process keystrokes limited by min max', 
 });
 
 it('focused thumb on disabled slider should NOT process keystrokes', () => {
-  let element: HTMLDivElement | null = null;
-  const onRef = (ref: HTMLDivElement) => {
-    element = ref;
-  };
-  const wrapper = render(
-    <Slider ref={onRef} values={[50]} step={5} disabled />,
-  );
+  const wrapper = render(<Slider values={[50]} step={5} disabled />);
   const { container } = wrapper;
   assertBaseElement(container);
-  expect(element).toBeTruthy();
   let thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
   expect(thumb).toBeTruthy();
   expect(thumb.classList.contains('iui-active')).toBeFalsy();
@@ -591,14 +480,9 @@ it('focused thumb on disabled slider should NOT process keystrokes', () => {
 });
 
 it('thumb should show tooltip on hover', () => {
-  let element: HTMLDivElement | null = null;
-  const onRef = (ref: HTMLDivElement) => {
-    element = ref;
-  };
-  const wrapper = render(<Slider ref={onRef} values={defaultSingleValue} />);
+  const wrapper = render(<Slider values={defaultSingleValue} />);
   const { container } = wrapper;
   assertBaseElement(container);
-  expect(element).toBeTruthy();
   let thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
   expect(thumb).toBeTruthy();
   expect(thumb.classList.contains('iui-active')).toBeFalsy();
@@ -615,15 +499,10 @@ it('thumb should show tooltip on hover', () => {
   });
 });
 
-it('thumb should show tooltip on focus', () => {
-  let element: HTMLDivElement | null = null;
-  const onRef = (ref: HTMLDivElement) => {
-    element = ref;
-  };
-  const wrapper = render(<Slider ref={onRef} values={defaultSingleValue} />);
+it('thumb should show tooltip on focus', async () => {
+  const wrapper = render(<Slider values={defaultSingleValue} />);
   const { container } = wrapper;
   assertBaseElement(container);
-  expect(element).toBeTruthy();
   let thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
   expect(thumb).toBeTruthy();
   expect(thumb.classList.contains('iui-active')).toBeFalsy();
@@ -634,12 +513,17 @@ it('thumb should show tooltip on focus', () => {
   expect(
     (container.querySelector('.iui-tooltip') as HTMLDivElement).textContent,
   ).toBe('50');
-  act(() => {
+
+  await act(async () => {
     thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
     thumb.blur();
   });
+  // The tooltip, which was constructed earlier in test, remains but it is set to hidden.
+  const tippyBox = container.querySelector('.tippy-box') as HTMLDivElement;
+  expect((tippyBox.parentElement as HTMLElement).style.visibility).toEqual(
+    'hidden',
+  );
 });
-
 it('thumb props should be applied', () => {
   const thumbProps = () => {
     return {
@@ -655,6 +539,7 @@ it('thumb props should be applied', () => {
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
   expect(thumb).toBeTruthy();
   expect(thumb.classList.contains('thumb-test-class'));
+  expect(thumb.style.backgroundColor).toEqual('red');
 });
 
 it('focus on specific thumb', () => {
