@@ -135,13 +135,9 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
   React.useLayoutEffect(() => {
     setHasSublabel(
       type !== 'pill' && // pill tabs should never have sublabels
-        labels.some(
-          // Check if any tabs have sublabel prop
-          (tab) =>
-            typeof tab !== 'string' && !!(tab as JSX.Element).props.sublabel,
-        ),
+        !!tablistRef.current?.querySelector('.iui-tab-description'), // check directly for the sublabel class
     );
-  }, [labels, type]);
+  }, [type]);
 
   const onTabClick = (index: number) => {
     if (onTabSelected) {
