@@ -35,8 +35,8 @@ export type HorizontalTabsProps = {
    */
   type?: 'default' | 'borderless' | 'pill';
   /**
-   * Modify height of tabs. Use 'large' when tabs have sublabels.
-   * @default 'default'
+   * Modify height of tabs.
+   * Defaults to 'large' when tabs have sublabels, otherwise 'default'.
    */
   size?: 'default' | 'large';
   /**
@@ -137,6 +137,18 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
     }
   }, [currentIndex, type, tabsWidth]);
 
+  const [hasSublabel, setHasSublabel] = React.useState(false); // used for setting size
+  React.useLayoutEffect(() => {
+    setHasSublabel(
+      type !== 'pill' && // pill tabs should never have sublabels
+        labels.some(
+          // Check if any tabs have sublabel prop
+          (tab) =>
+            typeof tab !== 'string' && !!(tab as JSX.Element).props.sublabel,
+        ),
+    );
+  }, [labels, type]);
+
   const onTabClick = (index: number) => {
     if (onTabSelected) {
       onTabSelected(index);
@@ -153,7 +165,7 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
           {
             'iui-green': color === 'green',
             'iui-animated': type !== 'default',
-            'iui-large': size === 'large',
+            'iui-large': size === 'large' || hasSublabel,
           },
           tabsClassName,
         )}

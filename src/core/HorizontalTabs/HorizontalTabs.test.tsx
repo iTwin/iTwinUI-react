@@ -109,6 +109,24 @@ it('should render strings in HorizontalTab child component', () => {
   });
 });
 
+it('should render large Tabs if HorizontalTab child has sublabel', () => {
+  const { container } = renderComponent({
+    labels: [
+      <HorizontalTab key={0} label='item0' sublabel='Sublabel0' />,
+      <HorizontalTab key={1} label='item1' sublabel='Sublabel1' />,
+      <HorizontalTab key={2} label='item2' sublabel='Sublabel2' />,
+    ],
+  });
+  expect(container.querySelector('.iui-tabs.iui-large')).toBeTruthy();
+
+  const tabs = container.querySelectorAll('.iui-tab');
+  expect(tabs.length).toBe(3);
+  tabs.forEach((tab, index) => {
+    const label = tab.querySelector('.iui-tab-label') as HTMLElement;
+    expect(label.textContent).toEqual(`item${index}Sublabel${index}`);
+  });
+});
+
 it('should add custom classnames', () => {
   const { container } = renderComponent({
     tabsClassName: 'customTabsClassName',

@@ -38,12 +38,20 @@ const Template: Story<HorizontalTabsProps> = (args) => {
 
 export const DefaultTabs = Template.bind({});
 DefaultTabs.args = {
-  labels: ['Item1', 'Item2', 'Item3'],
+  labels: [
+    <HorizontalTab key={1} label='Item1' />,
+    <HorizontalTab key={2} label='Item2' />,
+    <HorizontalTab key={3} label='Item3' />,
+  ],
 };
 
 export const BorderlessTabs = Template.bind({});
 BorderlessTabs.args = {
-  labels: ['Item1', 'Item2', 'Item3'],
+  labels: [
+    <HorizontalTab key={1} label='Item1' />,
+    <HorizontalTab key={2} label='Item2' />,
+    <HorizontalTab key={3} label='Item3' />,
+  ],
   type: 'borderless',
 };
 
@@ -69,5 +77,4 @@ SublabelsAndIcons.args = {
       />
     )),
   type: 'borderless',
-  size: 'large',
 };
