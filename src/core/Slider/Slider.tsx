@@ -63,13 +63,8 @@ const formatNumberValue = (
 
 /**
  * Focus specified thumb on Slider control
- * @param sliderContainer containing div hold slider
- * @param activeIndex index of the thumb
  */
-export const focusThumb = (
-  sliderContainer: HTMLDivElement,
-  activeIndex: number,
-) => {
+const focusThumb = (sliderContainer: HTMLDivElement, activeIndex: number) => {
   const doc = sliderContainer.ownerDocument;
   if (
     !sliderContainer.contains(doc.activeElement) ||
@@ -138,7 +133,7 @@ export type SliderProps = {
    * that are spaced evenly across width of Slider or a custom component that allows
    * custom content to be placed in tick mark area below slider.
    */
-  tickLabels?: React.ReactNode[] | JSX.Element;
+  tickLabels?: React.ReactNode;
   /**
    * Label for the minimum value. If undefined then the min
    * value is shown. Use empty string for no label.

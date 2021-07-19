@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
-import { Slider, focusThumb } from './Slider';
+import { Slider } from './Slider';
 
 const createBoundingClientRect = (
   left: number,
@@ -542,23 +542,6 @@ it('should apply thumb props', () => {
   expect(thumb).toBeTruthy();
   expect(thumb.classList.contains('thumb-test-class'));
   expect(thumb.style.backgroundColor).toEqual('red');
-});
-
-it('should focus on specific thumb', () => {
-  const wrapper = render(<Slider values={[50, 80]} step={5} />);
-  const { container } = wrapper;
-  assertBaseElement(container);
-  const sliderContainer = container.querySelector(
-    '.iui-slider-container',
-  ) as HTMLDivElement;
-  let thumbs = container.querySelectorAll('.iui-slider-thumb');
-
-  focusThumb(sliderContainer, 1);
-  focusThumb(sliderContainer, 1);
-  expect(document.activeElement).toEqual(thumbs[1]);
-  focusThumb(sliderContainer, 0);
-  thumbs = container.querySelectorAll('.iui-slider-thumb');
-  expect(document.activeElement).toEqual(thumbs[0]);
 });
 
 it('should move thumb when pointer down on rail', () => {
