@@ -12,7 +12,7 @@ it('should render in its most basic state', () => {
   const { container } = render(<HorizontalTab label='Tab label' />);
   expect(container.querySelector('button.iui-tab')).toBeTruthy();
 
-  const label = container.querySelector('.iui-tab-label') as HTMLElement;
+  const label = container.querySelector('.iui-tab-label > div') as HTMLElement;
   expect(label).toBeTruthy();
   expect(label.firstElementChild?.textContent).toBe('Tab label');
 });
@@ -25,7 +25,7 @@ it('should render with sublabel', () => {
 
   const label = container.querySelector('.iui-tab-label') as HTMLElement;
   expect(label).toBeTruthy();
-  expect(label.firstElementChild?.textContent).toBe('Tab label');
+  expect(label.textContent).toBe('Tab label');
 
   const sublabel = label.querySelector('.iui-tab-description') as HTMLElement;
   expect(sublabel.textContent).toEqual('Sub-label');
@@ -37,9 +37,9 @@ it('should render with icon', () => {
   );
   expect(container.querySelector('button.iui-tab')).toBeTruthy();
 
-  const label = container.querySelector('.iui-tab-label') as HTMLElement;
+  const label = container.querySelector('.iui-tab-label > div') as HTMLElement;
   expect(label).toBeTruthy();
-  expect(label.firstElementChild?.textContent).toBe('Tab label');
+  expect(label.textContent).toBe('Tab label');
 
   const {
     container: { firstChild: placeholderIcon },
@@ -54,7 +54,17 @@ it('should render in disabled state', () => {
   expect(tab).toBeTruthy();
   expect(tab.disabled).toBeTruthy();
 
-  const label = container.querySelector('.iui-tab-label') as HTMLElement;
+  const label = container.querySelector('.iui-tab-label > div') as HTMLElement;
   expect(label).toBeTruthy();
-  expect(label.firstElementChild?.textContent).toBe('Tab label');
+  expect(label.textContent).toBe('Tab label');
+});
+
+it('should render custom children', () => {
+  const { container } = render(
+    <HorizontalTab className='custom-class'>custom children</HorizontalTab>,
+  );
+
+  expect(container.querySelector('button.iui-tab.custom-class')).toBeTruthy();
+  expect(container.querySelector('.iui-tab-label')).toBeFalsy();
+  expect(container.lastElementChild?.textContent).toEqual('custom children');
 });
