@@ -1,18 +1,20 @@
 # Changelog
 
-## Unreleased
+## [1.12.0]
 
-`Date`
+`2021-07-19`
 
 ### What's new
 
-- **Added `UserIconGroup` component** - stacked/non-stacked, animated lists with custom count icon behavior.
+- **Change default background color of page** through CSS package.
+- **Added new `Slider` component** - single/multiple/custom thumbs, ticks and tooltips.
+- **Added new `UserIconGroup` component** - stacked/non-stacked, animated lists with custom count icon behavior.
 - **Added new `sublabel` and `size` props to `MenuItem` and `SelectOption`.**
 - **Added sublabel and icon support to `HorizontalTabs` component.** Pass new `HorizontalTab` component to `labels` prop.
 
 ### Fixes
 
-- **Fix `Table` overflow when selection is enabled and min width is set for columns**
+- **Fixed `Table` overflow when selection is enabled and min width is set for columns**
 
 ## [1.11.0]
 
@@ -396,6 +398,7 @@
 - **New ThemeProvider component added.** It allows to switch between light and dark themes.
 - **iTwinUI-React is generated to `CommonJS` and `ES` modules.** Usage of `ES` modules allows bundlers to tree-shake unused code resulting in smaller bundle sizes.
 
+[1.12.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.11.0...v1.12.0
 [1.11.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.10.0...v1.11.0
 [1.10.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.9.0...v1.10.0
 [1.9.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.8.1...v1.9.0
