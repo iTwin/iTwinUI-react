@@ -129,13 +129,13 @@ export type SliderProps = {
    */
   disabled?: boolean;
   /**
-   * Props to override default for showing a tooltip when Thumb is active or has focus.
+   * Function that can return tooltip props including content.
    */
-  tooltipProps?: Partial<Omit<TooltipProps, 'content' | 'children'>>;
-  /**
-   * Function that can generate tooltip content.
-   */
-  tooltipRenderer?: (val: number, step: number) => React.ReactNode;
+  tooltipProps?: (
+    index: number,
+    val: number,
+    step: number,
+  ) => Partial<Omit<TooltipProps, 'children'>>;
   /**
    * Either an array of labels that will be placed under auto generated tick marks
    * that are spaced evenly across width of Slider or a custom component that allows
@@ -199,7 +199,6 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       step = 1,
       setFocus = false,
       tooltipProps,
-      tooltipRenderer,
       disabled = false,
       tickLabels,
       minLabel,
@@ -257,15 +256,6 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       const decimalIndex = stepString.indexOf('.');
       return stepString.length - (decimalIndex + 1);
     }, [step]);
-
-    const generateTooltip = React.useCallback(
-      (val: number): React.ReactNode => {
-        return tooltipRenderer
-          ? tooltipRenderer(val, step)
-          : formatNumberValue(val, step, getNumDecimalPlaces);
-      },
-      [getNumDecimalPlaces, step, tooltipRenderer],
-    );
 
     const getAllowableThumbRange = React.useCallback(
       (index: number) => {
@@ -431,6 +421,22 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       return tickLabels;
     }, [tickLabels]);
 
+    const generateTooltipProps = React.useCallback(
+      (index: number, val: number): Omit<TooltipProps, 'children'> => {
+        const outProps: Partial<Omit<TooltipProps, 'children'>> = tooltipProps
+          ? tooltipProps(index, val, step)
+          : {};
+
+        return {
+          ...outProps,
+          content: outProps.content
+            ? outProps.content
+            : formatNumberValue(val, step, getNumDecimalPlaces),
+        };
+      },
+      [getNumDecimalPlaces, step, tooltipProps],
+    );
+
     return (
       <div
         ref={ref}
@@ -466,8 +472,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
                 minVal={minVal}
                 maxVal={maxVal}
                 value={thumbValue}
-                tooltipContent={generateTooltip(thumbValue)}
-                tooltipProps={tooltipProps}
+                tooltipProps={generateTooltipProps(index, thumbValue)}
                 thumbProps={thumbProps}
                 step={step}
                 sliderMin={min}

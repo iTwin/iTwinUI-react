@@ -52,13 +52,9 @@ export type ThumbProps = {
    */
   onThumbValueChanged: (index: number, value: number) => void;
   /**
-   * Content to display in tooltip.
-   */
-  tooltipContent: React.ReactNode;
-  /**
    * Additional tooltip props.
    */
-  tooltipProps?: Partial<Omit<TooltipProps, 'content' | 'children'>>;
+  tooltipProps: Omit<TooltipProps, 'children'>;
   /**
    * Additional props for Thumb.
    */
@@ -82,7 +78,6 @@ export const Thumb = (props: ThumbProps) => {
     isActive,
     onThumbActivated,
     onThumbValueChanged,
-    tooltipContent,
     tooltipProps,
     thumbProps,
     disabled,
@@ -124,7 +119,7 @@ export const Thumb = (props: ThumbProps) => {
   return (
     <Tooltip
       visible={isActive || hasFocus || isHovered}
-      content={tooltipContent}
+      content={tooltipProps.content}
       placement='top'
       {...tooltipProps}
     >

@@ -171,7 +171,9 @@ it('should NOT show tooltip if visibility is overridden', () => {
     <Slider
       values={defaultSingleValue}
       setFocus
-      tooltipProps={{ visible: false }}
+      tooltipProps={() => {
+        return { visible: false };
+      }}
     />,
   );
   const { container } = wrapper;
@@ -187,8 +189,11 @@ it('should show custom tooltip when focused', () => {
     <Slider
       values={defaultSingleValue}
       setFocus
-      tooltipRenderer={(val) => {
-        return `\$${val}.00`;
+      tooltipProps={(index, val) => {
+        return {
+          content: `\$${val}.00`,
+          style: { userSelect: 'none' },
+        };
       }}
     />,
   );

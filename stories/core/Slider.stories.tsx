@@ -24,7 +24,9 @@ Basic.args = {
   values: [50],
   minLabel: <SvgSmileyHappy />,
   maxLabel: <SvgSmileySad />,
-  tooltipProps: { style: { userSelect: 'none' } },
+  tooltipProps: () => {
+    return { style: { userSelect: 'none' } };
+  },
 };
 
 export const WithCustomThumb: Story<SliderProps> = (args) => {
@@ -63,7 +65,9 @@ WithCustomThumb.args = {
   values: [50],
   minLabel: <SvgSmileyHappy />,
   maxLabel: <SvgSmileySad />,
-  tooltipProps: { style: { userSelect: 'none' } },
+  tooltipProps: () => {
+    return { style: { userSelect: 'none' } };
+  },
   railContainerProps: { style: { margin: '0 8px' } },
 };
 
@@ -83,7 +87,9 @@ export const MultiThumbs: Story<SliderProps> = (args) => {
 
 MultiThumbs.args = {
   values: [20, 40, 60, 80],
-  tooltipProps: { style: { userSelect: 'none' } },
+  tooltipProps: () => {
+    return { style: { userSelect: 'none' } };
+  },
 };
 
 export const MultiThumbsAllowCrossing: Story<SliderProps> = (args) => {
@@ -102,7 +108,9 @@ MultiThumbsAllowCrossing.args = {
   values: [20, 40, 60, 80],
   trackDisplayMode: 'even-segments',
   thumbMode: 'allow-crossing',
-  tooltipProps: { style: { userSelect: 'none' } },
+  tooltipProps: () => {
+    return { style: { userSelect: 'none' } };
+  },
 };
 
 export const Disabled: Story<SliderProps> = (args) => {
@@ -124,7 +132,9 @@ TooltipRight.args = {
   min: 0,
   max: 60,
   values: [30],
-  tooltipProps: { placement: 'right', style: { userSelect: 'none' } },
+  tooltipProps: () => {
+    return { placement: 'right', style: { userSelect: 'none' } };
+  },
 };
 
 export const CustomTooltipWithTicks: Story<SliderProps> = (args) => {
@@ -136,10 +146,12 @@ CustomTooltipWithTicks.args = {
   max: 60,
   values: [20],
   tickLabels: ['0', '20', '40', '60'],
-  tooltipRenderer: (val) => {
-    return `\$${val}.00`;
+  tooltipProps: (index, val) => {
+    return {
+      content: `\$${val}.00`,
+      style: { userSelect: 'none' },
+    };
   },
-  tooltipProps: { style: { userSelect: 'none' } },
 };
 
 export const CustomMinLabelNoTooltip: Story<SliderProps> = (args) => {
@@ -165,7 +177,9 @@ CustomMinLabelNoTooltip.args = {
   max: 60,
   values: [20],
   tickLabels: ['0', '20', '40', '60'],
-  tooltipProps: { visible: false },
+  tooltipProps: () => {
+    return { visible: false };
+  },
 };
 
 export const DateWithCustomTickArea: Story<SliderProps> = (args) => {
@@ -201,7 +215,12 @@ export const DateWithCustomTickArea: Story<SliderProps> = (args) => {
   return (
     <Slider
       {...args}
-      tooltipRenderer={tooltipRenderer}
+      tooltipProps={() => {
+        return {
+          style: { userSelect: 'none' },
+          content: tooltipRenderer(),
+        };
+      }}
       onUpdate={updateDate}
       onChange={updateDate}
       tickLabels={
@@ -227,7 +246,6 @@ DateWithCustomTickArea.args = {
   values: [0],
   minLabel: 'Date',
   maxLabel: '',
-  tooltipProps: { style: { userSelect: 'none' } },
 };
 
 export const SmallIncrement: Story<SliderProps> = (args) => {
@@ -240,7 +258,9 @@ SmallIncrement.args = {
   max: 5,
   step: 0.25,
   values: [0.25],
-  tooltipProps: { style: { userSelect: 'none' } },
+  tooltipProps: () => {
+    return { style: { userSelect: 'none' } };
+  },
 };
 
 export const LargeIncrement: Story<SliderProps> = (args) => {
@@ -253,7 +273,9 @@ LargeIncrement.args = {
   max: 500,
   step: 25,
   values: [250],
-  tooltipProps: { style: { userSelect: 'none' } },
+  tooltipProps: () => {
+    return { style: { userSelect: 'none' } };
+  },
 };
 
 export const DecimalIncrement: Story<SliderProps> = (args) => {
@@ -266,5 +288,7 @@ DecimalIncrement.args = {
   max: 50,
   step: 2.5,
   values: [25],
-  tooltipProps: { style: { userSelect: 'none' } },
+  tooltipProps: () => {
+    return { style: { userSelect: 'none' } };
+  },
 };
