@@ -49,6 +49,7 @@ it('should render correctly in its most basic state', () => {
   expect(thumb).toBeTruthy();
   expect(thumb.getAttribute('aria-disabled')).toEqual('false');
 });
+
 it('should reset callbacks on value change', () => {
   const wrapper = render(<Slider values={defaultSingleValue} />);
   const { container } = wrapper;
@@ -57,6 +58,7 @@ it('should reset callbacks on value change', () => {
   expect(thumb).toBeTruthy();
   wrapper.rerender(<Slider values={[10, 20]} max={90} />);
 });
+
 it('should not render thumbs if no values are defined', () => {
   const { container } = render(<Slider values={[]} />);
   assertBaseElement(container);
@@ -74,6 +76,7 @@ it('should render disabled component', () => {
   expect(thumb).toBeTruthy();
   expect(thumb.getAttribute('aria-disabled')).toEqual('true');
 });
+
 it('should render min max labels by default', () => {
   const { container } = render(<Slider values={defaultSingleValue} />);
   assertBaseElement(container);
@@ -87,6 +90,7 @@ it('should render min max labels by default', () => {
     (container.querySelector('.iui-slider-max') as HTMLSpanElement).textContent,
   ).toBe('100');
 });
+
 it('should render specified min max labels', () => {
   const { container } = render(
     <Slider values={defaultSingleValue} min={5} max={55} />,
@@ -102,6 +106,7 @@ it('should render specified min max labels', () => {
     (container.querySelector('.iui-slider-max') as HTMLSpanElement).textContent,
   ).toBe('55');
 });
+
 it('should render provided min max labels', () => {
   const { container } = render(
     <Slider values={defaultSingleValue} maxLabel='big' minLabel='small' />,
@@ -117,6 +122,7 @@ it('should render provided min max labels', () => {
     (container.querySelector('.iui-slider-max') as HTMLSpanElement).textContent,
   ).toBe('big');
 });
+
 it('should render provided min max label nodes', () => {
   const { container } = render(
     <Slider
@@ -132,6 +138,7 @@ it('should render provided min max label nodes', () => {
   expect(container.querySelector('.span-min')?.textContent).toBe('small');
   expect(container.querySelector('.span-max')?.textContent).toBe('big');
 });
+
 it('should set focus', () => {
   let element: HTMLDivElement | null = null;
   const onRef = (ref: HTMLDivElement) => {
@@ -146,6 +153,7 @@ it('should set focus', () => {
   expect(thumb).toBeTruthy();
   expect(document.activeElement).toEqual(thumb);
 });
+
 it('should show tooltip when focused', () => {
   const wrapper = render(<Slider values={defaultSingleValue} setFocus />);
   const { container } = wrapper;
@@ -157,6 +165,7 @@ it('should show tooltip when focused', () => {
     (container.querySelector('.iui-tooltip') as HTMLDivElement).textContent,
   ).toBe('50');
 });
+
 it('should NOT show tooltip if visibility is overridden', () => {
   const wrapper = render(
     <Slider
@@ -172,6 +181,7 @@ it('should NOT show tooltip if visibility is overridden', () => {
   expect(document.activeElement).toEqual(thumb);
   expect(container.querySelector('.iui-tooltip')).toBeFalsy();
 });
+
 it('should show custom tooltip when focused', () => {
   const wrapper = render(
     <Slider
@@ -191,6 +201,7 @@ it('should show custom tooltip when focused', () => {
     (container.querySelector('.iui-tooltip') as HTMLDivElement).textContent,
   ).toBe('$50.00');
 });
+
 it('should take class and style', () => {
   const { container } = render(
     <Slider
@@ -205,6 +216,7 @@ it('should take class and style', () => {
   expect(slider).toBeTruthy();
   expect(slider.style.width).toBe('350px');
 });
+
 it('should take railContainerProps', () => {
   // common use case is when custom thumb is bigger than default and we must change left/right margin
   const railContainerProps = { style: { margin: '0 8px' } };
@@ -221,6 +233,7 @@ it('should take railContainerProps', () => {
   expect(railContainer.style.marginLeft).toBe('8px');
   expect(railContainer.style.marginRight).toBe('8px');
 });
+
 it('should render tick marks', () => {
   const { container } = render(
     <Slider
@@ -234,6 +247,7 @@ it('should render tick marks', () => {
   ).toBeTruthy();
   expect(container.querySelectorAll('.iui-slider-tick').length).toBe(5);
 });
+
 it('should render custom tick marks as defined by ReactNode.', () => {
   const { container } = render(
     <Slider
@@ -247,6 +261,7 @@ it('should render custom tick marks as defined by ReactNode.', () => {
   ).toBeTruthy();
   expect(container.querySelector('.custom-tick-mark')).toBeTruthy();
 });
+
 it('should render single track', () => {
   const { container } = render(<Slider values={defaultSingleValue} />);
   assertBaseElement(container);
@@ -255,6 +270,7 @@ it('should render single track', () => {
   ).toBeTruthy();
   expect(container.querySelectorAll('.iui-slider-track').length).toBe(1);
 });
+
 // available track segments 0--10--20--30--40--100
 it('should render odd tracks based on even number of values and `auto` trackDisplayMode', () => {
   const { container } = render(<Slider values={[10, 20, 30, 40]} />);
@@ -265,6 +281,7 @@ it('should render odd tracks based on even number of values and `auto` trackDisp
   // segments 10-20, 30-40
   expect(container.querySelectorAll('.iui-slider-track').length).toBe(2);
 });
+
 it('should render 3 `even-segments` 0-10,20-30,40-100', () => {
   const { container } = render(
     <Slider trackDisplayMode='even-segments' values={[10, 20, 30, 40]} />,
@@ -276,6 +293,7 @@ it('should render 3 `even-segments` 0-10,20-30,40-100', () => {
   // segments 0-10,20-30,40-100
   expect(container.querySelectorAll('.iui-slider-track').length).toBe(3);
 });
+
 it('should render 2 `odd-segments` 10-20, 30-40', () => {
   const { container } = render(
     <Slider trackDisplayMode='odd-segments' values={[10, 20, 30, 40]} />,
@@ -286,6 +304,7 @@ it('should render 2 `odd-segments` 10-20, 30-40', () => {
   ).toBeTruthy();
   expect(container.querySelectorAll('.iui-slider-track').length).toBe(2);
 });
+
 it('should not render track', () => {
   const { container } = render(
     <Slider trackDisplayMode='none' values={defaultSingleValue} />,
@@ -296,6 +315,7 @@ it('should not render track', () => {
   ).toBeTruthy();
   expect(container.querySelectorAll('.iui-slider-track').length).toBe(0);
 });
+
 it('should activate thumb on pointerDown', () => {
   const wrapper = render(<Slider values={defaultSingleValue} />);
   const { container } = wrapper;
@@ -500,6 +520,7 @@ it('should show tooltip on thumb focus', async () => {
     'hidden',
   );
 });
+
 it('should apply thumb props', () => {
   const thumbProps = () => {
     return {

@@ -12,6 +12,6 @@ window.HTMLElement.prototype.scrollIntoView = () => {};
 if (window.PointerEvent) {
   console.error('ERROR: patching PointerEvent is no longer necessary');
 } else {
-  // console.log('Setup: patching PointerEvent');
+  console.log('Setup: patching PointerEvent');
   window.PointerEvent = window.MouseEvent;
 }
