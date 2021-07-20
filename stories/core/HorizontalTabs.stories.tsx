@@ -38,7 +38,7 @@ const Template: Story<HorizontalTabsProps> = (args) => {
     }
   };
   return (
-    <HorizontalTabs onTabSelected={setIndex} {...args}>
+    <HorizontalTabs {...args} onTabSelected={setIndex}>
       {getContent()}
     </HorizontalTabs>
   );
