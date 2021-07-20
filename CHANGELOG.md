@@ -2,11 +2,11 @@
 
 ## [1.12.0]
 
-`2021-07-19`
+`2021-07-20`
 
 ### What's new
 
-- **Change default background color of page** through CSS package.
+- **Changed default body background color** through CSS package.
 - **Added new `Slider` component** - supports single/multiple/custom thumbs, ticks and tooltips.
 - **Added new `UserIconGroup` component** - stacked/non-stacked, animated lists with custom count icon behavior.
 - **Added new `sublabel` and `size` props to `MenuItem` and `SelectOption`.**
