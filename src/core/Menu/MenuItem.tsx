@@ -151,7 +151,10 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
         onKeyDown={onKeyDown}
         onMouseEnter={() => setIsSubmenuVisible(true)}
         onMouseLeave={(e) => {
-          if (!subMenuRef.current?.contains(e.relatedTarget as Node)) {
+          if (
+            !(e.relatedTarget instanceof Node) ||
+            !subMenuRef.current?.contains(e.relatedTarget as Node)
+          ) {
             setIsSubmenuVisible(false);
           }
         }}
@@ -185,11 +188,13 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
           placement='right-start'
           visible={isSubmenuVisible}
           content={
-            <Menu ref={subMenuRef}>
-              {subMenuItems.map((item) =>
-                React.cloneElement<MenuItemProps>(item, {}),
-              )}
-            </Menu>
+            <div onMouseLeave={() => setIsSubmenuVisible(false)}>
+              <Menu ref={subMenuRef}>
+                {subMenuItems.map((item) =>
+                  React.cloneElement<MenuItemProps>(item, {}),
+                )}
+              </Menu>
+            </div>
           }
         >
           {listItem}
