@@ -6,7 +6,6 @@ import cx from 'classnames';
 import React from 'react';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/tabs.css';
-import { CommonProps } from '../utils/props';
 
 export type HorizontalTabProps = {
   /**
@@ -29,8 +28,7 @@ export type HorizontalTabProps = {
    * Custom content appended to the tab.
    */
   children?: React.ReactNode;
-} & React.HTMLAttributes<HTMLButtonElement> &
-  CommonProps;
+} & React.HTMLAttributes<HTMLButtonElement>;
 
 /**
  * Individual tab component to be used in the `labels` prop of `HorizontalTabs`.
