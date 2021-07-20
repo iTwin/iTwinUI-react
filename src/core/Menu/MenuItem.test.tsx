@@ -247,22 +247,18 @@ it('should handle key press with sub menus', () => {
 
   // go right to open sub menu
   fireEvent.keyDown(menuItem, { key: 'ArrowRight' });
-  const subMenu = container.querySelectorAll(
-    '[data-tippy-root] .iui-menu-item',
-  )[0] as HTMLLIElement;
+  const subTippy = container.querySelector('[data-tippy-root]') as HTMLElement;
+  const subMenu = subTippy.querySelector('.iui-menu-item') as HTMLLIElement;
   expect(subMenu.textContent).toBe('Test sub');
   expect(container.ownerDocument.activeElement).toEqual(subMenu);
 
   // go left to close sub menu
   fireEvent.keyDown(subMenu, { key: 'ArrowLeft' });
-  const subTippyContainer = document.querySelectorAll(
-    '[data-tippy-root]',
-  )[0] as HTMLElement;
-  expect(subTippyContainer.style.visibility).toEqual('hidden');
+  expect(subTippy.style.visibility).toEqual('hidden');
 
   // go right to open sub menu
   fireEvent.keyDown(menuItem, { key: 'ArrowRight' });
-  expect(subTippyContainer.style.visibility).toEqual('visible');
+  expect(subTippy.style.visibility).toEqual('visible');
 
   // click
   fireEvent.keyDown(subMenu, { key: 'Enter' });
