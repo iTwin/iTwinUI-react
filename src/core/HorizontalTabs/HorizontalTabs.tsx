@@ -220,7 +220,10 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
         {...rest}
       >
         {labels.map((label, index) => {
-          const onClick = () => onTabClick(index);
+          const onClick = () => {
+            setFocusedIndex(index);
+            onTabClick(index);
+          };
           return (
             <li key={index}>
               {!React.isValidElement(label) ? (

@@ -198,3 +198,21 @@ it('should handle keypresses when focusActivationMode is manual', () => {
   fireEvent.keyDown(tablist, { key: ' ' });
   expect(mockOnTabSelected).toBeCalledWith(0);
 });
+
+it('should set focused index when tab is clicked', () => {
+  const mockOnTabSelected = jest.fn();
+  const { container } = renderComponent({ onTabSelected: mockOnTabSelected });
+
+  const tablist = container.querySelector('.iui-tabs') as HTMLElement;
+  const tabs = Array.from(tablist.querySelectorAll('.iui-tab'));
+
+  // click 1
+  fireEvent.click(tabs[1]);
+  expect(mockOnTabSelected).toBeCalledWith(1);
+  expect(document.activeElement).toBe(tabs[1]);
+
+  // 1 -> 2
+  fireEvent.keyDown(tablist, { key: 'ArrowRight' });
+  expect(mockOnTabSelected).toBeCalledWith(2);
+  expect(document.activeElement).toBe(tabs[2]);
+});
