@@ -18,7 +18,7 @@ import {
   SvgMove,
   SvgPlaceholder,
 } from '@itwin/itwinui-icons-react';
-import { CreeveyMeta } from 'creevey';
+import { CreeveyMeta, CreeveyStoryParams } from 'creevey';
 
 export default {
   title: 'Core/DropdownMenu',
@@ -238,4 +238,29 @@ export const Submenu: Story<DropdownMenuProps> = (args) => {
       </DropdownMenu>
     </div>
   );
+};
+
+Submenu.parameters = {
+  creevey: {
+    captureElement: null,
+    tests: {
+      async open() {
+        const closed = await this.takeScreenshot();
+
+        const button = await this.browser.findElement({
+          css: '.iui-button',
+        });
+        await button.sendKeys(' ');
+        const opened = await this.takeScreenshot();
+
+        const menuItem = await this.browser.findElement({
+          css: '.iui-menu-item:last-child',
+        });
+        this.browser.actions().move({ origin: menuItem }).perform();
+        const hovered = await this.takeScreenshot();
+
+        await this.expect({ closed, opened, hovered }).to.matchImages();
+      },
+    },
+  } as CreeveyStoryParams,
 };
