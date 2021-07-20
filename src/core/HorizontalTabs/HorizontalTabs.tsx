@@ -232,6 +232,7 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
                   className={cx({
                     'iui-active': index === currentActiveIndex,
                   })}
+                  tabIndex={index === currentActiveIndex ? 0 : -1}
                   onClick={onClick}
                   aria-selected={index === currentActiveIndex}
                 />

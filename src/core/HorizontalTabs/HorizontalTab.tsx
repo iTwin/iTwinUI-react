@@ -29,11 +29,8 @@ export type HorizontalTabProps = {
    * Custom content appended to the tab.
    */
   children?: React.ReactNode;
-  /**
-   * Click event handler.
-   */
-  onClick?: () => void;
-} & CommonProps;
+} & React.HTMLAttributes<HTMLButtonElement> &
+  CommonProps;
 
 /**
  * Individual tab component to be used in the `labels` prop of `HorizontalTabs`.
