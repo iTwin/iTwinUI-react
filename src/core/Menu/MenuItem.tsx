@@ -15,7 +15,7 @@ import { useMergedRefs } from '../utils/hooks/useMergedRefs';
 /**
  * Context used to provide menu item ref to sub-menu items.
  */
-export const MenuItemContext = React.createContext<{
+const MenuItemContext = React.createContext<{
   ref: React.RefObject<HTMLLIElement> | undefined;
 }>({ ref: undefined });
 
@@ -104,6 +104,10 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
     const [isSubmenuVisible, setIsSubmenuVisible] = React.useState(false);
 
     const onKeyDown = (event: React.KeyboardEvent<HTMLLIElement>) => {
+      if (event.altKey) {
+        return;
+      }
+
       switch (event.key) {
         case 'Enter':
         case ' ':
@@ -123,7 +127,6 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
         case 'ArrowLeft': {
           parentMenuItemRef?.current?.focus();
           event.preventDefault();
-          event.stopPropagation();
           break;
         }
         default:
@@ -158,8 +161,6 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
             setIsSubmenuVisible(false);
           }
         }}
-        // Kind of hack to close child sub-menu
-        onFocus={() => setIsSubmenuVisible(false)}
         {...rest}
       >
         {icon &&
@@ -188,12 +189,17 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
           placement='right-start'
           visible={isSubmenuVisible}
           content={
-            <div onMouseLeave={() => setIsSubmenuVisible(false)}>
-              <Menu ref={subMenuRef}>
-                {subMenuItems.map((item) =>
-                  React.cloneElement<MenuItemProps>(item, {}),
-                )}
-              </Menu>
+            <div
+              onMouseLeave={() => setIsSubmenuVisible(false)}
+              onKeyDown={(e) => {
+                if (!e.altKey && e.key === 'ArrowLeft') {
+                  setIsSubmenuVisible(false);
+                  e.stopPropagation();
+                  e.preventDefault();
+                }
+              }}
+            >
+              <Menu ref={subMenuRef}>{subMenuItems}</Menu>
             </div>
           }
         >
