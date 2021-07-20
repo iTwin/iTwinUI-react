@@ -18,6 +18,7 @@ export default {
   argTypes: {
     style: { control: { disable: true } },
     className: { control: { disable: true } },
+    id: { control: { disable: true } },
     menuStyle: { control: { disable: true } },
     menuClassName: { control: { disable: true } },
   },

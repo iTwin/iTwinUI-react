@@ -28,6 +28,7 @@ export default {
   argTypes: {
     className: { control: { disable: true } },
     style: { control: { disable: true } },
+    id: { control: { disable: true } },
   },
   title: 'Core/Tile',
 } as Meta<TileProps>;
