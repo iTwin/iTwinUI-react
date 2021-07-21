@@ -226,11 +226,9 @@ it('should show sub menu on hover', () => {
 });
 
 it('should handle key press with sub menus', () => {
-  const mockedOnClick = jest.fn();
   const mockedSubOnClick = jest.fn();
   const { container } = render(
     <MenuItem
-      onClick={mockedOnClick}
       value='test_value'
       subMenuItems={[
         <MenuItem key={1} onClick={mockedSubOnClick} value='test_value_sub'>
