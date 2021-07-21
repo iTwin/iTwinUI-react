@@ -126,6 +126,7 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
         }
         case 'ArrowLeft': {
           parentMenuItemRef?.current?.focus();
+          event.stopPropagation();
           event.preventDefault();
           break;
         }
@@ -151,6 +152,7 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
         role={role}
         tabIndex={disabled ? undefined : -1}
         aria-selected={isSelected}
+        aria-haspopup={subMenuItems.length > 0}
         onKeyDown={onKeyDown}
         onMouseEnter={() => setIsSubmenuVisible(true)}
         onMouseLeave={(e) => {
@@ -191,13 +193,6 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
           content={
             <div
               onMouseLeave={() => setIsSubmenuVisible(false)}
-              onKeyDown={(e) => {
-                if (!e.altKey && e.key === 'ArrowLeft') {
-                  setIsSubmenuVisible(false);
-                  e.stopPropagation();
-                  e.preventDefault();
-                }
-              }}
               onBlur={(e) => {
                 !!(e.relatedTarget instanceof Node) &&
                   !subMenuRef.current?.contains(e.relatedTarget as Node) &&
