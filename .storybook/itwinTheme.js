@@ -51,7 +51,7 @@ export const darkTheme = create({
 
   // UI
   appBg: '#2D373C',
-  appContentBg: 'rgb(90, 105, 115)', // background-1
+  appContentBg: '#5A6973', // background-1
   appBorderColor: '#2D373C',
   appBorderRadius: 9,
 
