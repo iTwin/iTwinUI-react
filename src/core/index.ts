@@ -8,6 +8,9 @@ export type { AlertProps } from './Alert';
 export { Badge } from './Badge';
 export type { BadgeProps } from './Badge';
 
+export { Breadcrumbs, BreadcrumbItem } from './Breadcrumbs';
+export type { BreadcrumbsProps, BreadcrumbItemProps } from './Breadcrumbs';
+
 export {
   Button,
   DropdownButton,
