@@ -115,6 +115,9 @@ it('should handle key press', () => {
   const menuItem = container.querySelector('.iui-menu-item') as HTMLLIElement;
   assertBaseElement(menuItem);
 
+  fireEvent.keyDown(menuItem, { key: 'Enter', altKey: true });
+  expect(mockedOnClick).not.toHaveBeenCalled();
+
   fireEvent.keyDown(menuItem, { key: 'Enter' });
   expect(mockedOnClick).toHaveBeenNthCalledWith(1, 'test_value');
   fireEvent.keyDown(menuItem, { key: ' ' });
