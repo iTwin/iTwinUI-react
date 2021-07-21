@@ -198,6 +198,12 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
                   e.preventDefault();
                 }
               }}
+              onBlur={(e) => {
+                !!(e.relatedTarget instanceof Node) &&
+                  !subMenuRef.current?.contains(e.relatedTarget as Node) &&
+                  !subMenuRef.current?.isEqualNode(e.relatedTarget as Node) &&
+                  setIsSubmenuVisible(false);
+              }}
             >
               <Menu ref={subMenuRef}>{subMenuItems}</Menu>
             </div>
