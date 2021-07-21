@@ -5,32 +5,22 @@
 import React from 'react';
 import cx from 'classnames';
 import { useTheme } from '../utils/hooks/useTheme';
-import { CommonProps } from '../utils/props';
 import { Button } from '../Buttons/Button';
 import '@itwin/itwinui-css/css/breadcrumbs.css';
 
-export type BreadcrumbItemProps = {
+type BreadcrumbItemOwnProps<E extends React.ElementType = React.ElementType> = {
   /**
    * Control which element the breadcrumb item should use.
-   * Only use 'anchor' if you also specify a meaningful href.
-   * @default 'button'
+   * Use 'a' if you also specify a meaningful href.
+   * @default Button
    */
-  element?: 'button' | 'anchor';
-  /**
-   * Customize props on the element.
-   */
-  elementProps?:
-    | (React.HTMLAttributes<HTMLButtonElement> & { href?: undefined })
-    | (React.HTMLAttributes<HTMLAnchorElement> & { href?: string });
-  /**
-   * Is this the currently active breadcrumb item?
-   */
-  isCurrent?: boolean;
-  /**
-   * Content inside the breadcrumb item.
-   */
-  children: React.ReactNode;
-} & CommonProps;
+  element?: E;
+};
+
+export type BreadcrumbItemProps<
+  E extends React.ElementType
+> = BreadcrumbItemOwnProps<E> &
+  Omit<React.ComponentProps<E>, keyof BreadcrumbItemOwnProps>;
 
 /**
  * Individual breadcrumb component to be used in the `Breadcrumbs` items array.
@@ -41,44 +31,21 @@ export type BreadcrumbItemProps = {
  *   <BreadcrumbItem>Item 2</BreadcrumbItem>,
  * ];
  */
-export const BreadcrumbItem = (props: BreadcrumbItemProps) => {
-  const {
-    element = 'button',
-    elementProps,
-    isCurrent,
-    children,
-    className,
-    ...rest
-  } = props;
-
-  // type guard to narrow down prop types
-  const isAnchor = (
-    props?:
-      | React.HTMLAttributes<HTMLButtonElement>
-      | React.HTMLAttributes<HTMLAnchorElement>,
-  ): props is React.HTMLAttributes<HTMLAnchorElement> => element === 'anchor';
+export const BreadcrumbItem = <E extends React.ElementType = typeof Button>(
+  props: BreadcrumbItemProps<E>,
+) => {
+  const { children, className, element: Element = Button, ...rest } = props;
 
   useTheme();
 
   return (
-    <li
-      className={cx(
-        'iui-breadcrumbs-item',
-        { 'iui-current': isCurrent },
-        className,
-      )}
+    <Element
+      className={cx({ 'iui-anchor': Element === 'a' }, className)}
+      {...(Element === Button && { styleType: 'borderless' })}
       {...rest}
     >
-      {!isAnchor(elementProps) ? (
-        <Button styleType='borderless' {...elementProps}>
-          {children}
-        </Button>
-      ) : (
-        <a className='iui-anchor' {...elementProps}>
-          {children}
-        </a>
-      )}
-    </li>
+      {children}
+    </Element>
   );
 };
 

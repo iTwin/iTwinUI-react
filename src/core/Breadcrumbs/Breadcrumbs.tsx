@@ -11,6 +11,10 @@ import '@itwin/itwinui-css/css/breadcrumbs.css';
 
 export type BreadcrumbsProps = {
   /**
+   * Index of the currently active breadcrumb.
+   */
+  currentIndex?: number;
+  /**
    * Breadcrumb items.
    */
   items: JSX.Element[];
@@ -22,7 +26,7 @@ export type BreadcrumbsProps = {
  * Example usages go here!
  */
 export const Breadcrumbs = (props: BreadcrumbsProps) => {
-  const { items, className, ...rest } = props;
+  const { items, currentIndex, className, ...rest } = props;
 
   useTheme();
 
@@ -37,7 +41,16 @@ export const Breadcrumbs = (props: BreadcrumbsProps) => {
       <ol className={cx('iui-breadcrumbs-list', className)}>
         {items.map((item, index) => (
           <React.Fragment key={index}>
-            {item}
+            <li
+              className={cx(
+                'iui-breadcrumbs-item',
+                { 'iui-current': currentIndex === index },
+                className,
+              )}
+              {...rest}
+            >
+              {item}
+            </li>
             {index < items.length - 1 && <Separator />}
           </React.Fragment>
         ))}

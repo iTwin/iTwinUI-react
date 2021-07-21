@@ -20,10 +20,7 @@ export default {
     items: [
       <BreadcrumbItem key={0}>Root</BreadcrumbItem>,
       <BreadcrumbItem key={1}>Item 1</BreadcrumbItem>,
-      <BreadcrumbItem
-        key={2}
-        elementProps={{ href: 'some-link' }} // this needs to throw but doesn't :(
-      >
+      <BreadcrumbItem key={2} element='a' href='/?path=/docs/core-breadcrumbs'>
         Item 2
       </BreadcrumbItem>,
     ],
