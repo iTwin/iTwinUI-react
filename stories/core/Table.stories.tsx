@@ -490,13 +490,12 @@ Filters.parameters = {
   creevey: {
     tests: {
       async open() {
-        const nameFilter = (
+        const filter = (
           await this.browser.findElements({
             css: '.iui-filter-button',
           })
         )[1];
-        await this.browser.actions().move({ origin: nameFilter }).perform();
-        await nameFilter.click();
+        await this.browser.actions().move({ origin: filter }).click().perform();
         await this.expect(
           await this.browser
             .findElement({ css: '.iui-table' })
