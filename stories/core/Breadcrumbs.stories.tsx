@@ -20,13 +20,64 @@ export default {
     items: [
       <BreadcrumbItem key={0}>Root</BreadcrumbItem>,
       <BreadcrumbItem key={1}>Item 1</BreadcrumbItem>,
-      <BreadcrumbItem key={2} element='a' href='/?path=/docs/core-breadcrumbs'>
-        Item 2
-      </BreadcrumbItem>,
+      <BreadcrumbItem key={2}>Item 2</BreadcrumbItem>,
     ],
   },
 } as Meta<BreadcrumbsProps>;
 
 export const Basic: Story<BreadcrumbsProps> = (args) => {
-  return <Breadcrumbs {...args} />;
+  return (
+    <Breadcrumbs
+      {...args}
+      items={[
+        <BreadcrumbItem key={0}>Root</BreadcrumbItem>,
+        <BreadcrumbItem key={1}>Item 1</BreadcrumbItem>,
+        <BreadcrumbItem key={2}>Item 2</BreadcrumbItem>,
+      ]}
+    />
+  );
+};
+
+export const Links: Story<BreadcrumbsProps> = (args) => {
+  return (
+    <Breadcrumbs
+      {...args}
+      items={[
+        <BreadcrumbItem key={0} element='a' href='/'>
+          iTwinUI
+        </BreadcrumbItem>,
+        <BreadcrumbItem
+          key={1}
+          element='a'
+          href='/?path=/docs/core-breadcrumbs'
+        >
+          Breadcrumbs
+        </BreadcrumbItem>,
+        <BreadcrumbItem
+          key={2}
+          element='a'
+          href='/?path=/docs/core-breadcrumbs--links'
+        >
+          Links
+        </BreadcrumbItem>,
+      ]}
+    />
+  );
+};
+Links.args = {
+  items: [
+    <BreadcrumbItem key={0} element='a' href='/'>
+      iTwinUI
+    </BreadcrumbItem>,
+    <BreadcrumbItem key={1} element='a' href='/?path=/docs/core-breadcrumbs'>
+      Breadcrumbs
+    </BreadcrumbItem>,
+    <BreadcrumbItem
+      key={2}
+      element='a'
+      href='/?path=/docs/core-breadcrumbs--links'
+    >
+      Links
+    </BreadcrumbItem>,
+  ],
 };
