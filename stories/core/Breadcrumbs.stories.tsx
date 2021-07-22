@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { Story, Meta } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
 import React from 'react';
 import { Breadcrumbs, BreadcrumbsProps } from '../../src/core';
 import { BreadcrumbItem } from '../../src/core/Breadcrumbs';
@@ -30,9 +31,15 @@ export const Basic: Story<BreadcrumbsProps> = (args) => {
     <Breadcrumbs
       {...args}
       items={[
-        <BreadcrumbItem key={0}>Root</BreadcrumbItem>,
-        <BreadcrumbItem key={1}>Item 1</BreadcrumbItem>,
-        <BreadcrumbItem key={2}>Item 2</BreadcrumbItem>,
+        <BreadcrumbItem key={0} onClick={() => action('Root')()}>
+          Root
+        </BreadcrumbItem>,
+        <BreadcrumbItem key={1} onClick={() => action('Item 1')()}>
+          Item 1
+        </BreadcrumbItem>,
+        <BreadcrumbItem key={2} onClick={() => action('Item 2')()}>
+          Item 2
+        </BreadcrumbItem>,
       ]}
     />
   );
@@ -56,7 +63,7 @@ export const Links: Story<BreadcrumbsProps> = (args) => {
         <BreadcrumbItem
           key={2}
           element='a'
-          href='/?path=/docs/core-breadcrumbs--links'
+          href='/?path=/docs/core-breadcrumbs--links#links'
         >
           Links
         </BreadcrumbItem>,
@@ -75,7 +82,7 @@ Links.args = {
     <BreadcrumbItem
       key={2}
       element='a'
-      href='/?path=/docs/core-breadcrumbs--links'
+      href='/?path=/docs/core-breadcrumbs--links#links'
     >
       Links
     </BreadcrumbItem>,

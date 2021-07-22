@@ -12,6 +12,7 @@ import '@itwin/itwinui-css/css/breadcrumbs.css';
 export type BreadcrumbsProps = {
   /**
    * Index of the currently active breadcrumb.
+   * Defaults to last index in the items array.
    */
   currentIndex?: number;
   /**
@@ -21,12 +22,24 @@ export type BreadcrumbsProps = {
 } & Omit<CommonProps, 'title'>;
 
 /**
- * Describe me here!
+ * A breadcrumb trail is used as a navigational aid to help users keep track
+ * of their place in the application. It is often placed before a page's main content.
+ *
+ * For accessibility, make sure to provide an aria-label describing the type of navigation.
+ *
  * @example
- * Example usages go here!
+ * <Breadcrumbs
+ *   items={[
+ *     <BreadcrumbItem onClick={() => {}}>Root</BreadcrumbItem>,
+ *     <BreadcrumbItem onClick={() => {}}>Item 1</BreadcrumbItem>,
+ *     <BreadcrumbItem onClick={() => {}}>Item 2</BreadcrumbItem>,
+ *   ]}
+ *   aria-label='breadcrumbs'
+ * />
+ />
  */
 export const Breadcrumbs = (props: BreadcrumbsProps) => {
-  const { items, currentIndex, className, ...rest } = props;
+  const { items, currentIndex = items.length - 1, className, ...rest } = props;
 
   useTheme();
 
@@ -49,7 +62,12 @@ export const Breadcrumbs = (props: BreadcrumbsProps) => {
               )}
               {...rest}
             >
-              {item}
+              {React.cloneElement(item, {
+                'aria-current':
+                  item.props['aria-current'] ?? currentIndex === index
+                    ? 'location'
+                    : undefined,
+              })}
             </li>
             {index < items.length - 1 && <Separator />}
           </React.Fragment>

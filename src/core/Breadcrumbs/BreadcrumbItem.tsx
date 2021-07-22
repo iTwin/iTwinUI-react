@@ -35,13 +35,19 @@ export type BreadcrumbItemProps<
  *   <BreadcrumbItem>Item 1</BreadcrumbItem>,
  *   <BreadcrumbItem>Item 2</BreadcrumbItem>,
  * ];
+ * @example
+ * const items = [
+ *   <BreadcrumbItem element='a' href='/'>Root</BreadcrumbItem>,
+ *   <BreadcrumbItem element='a' href='/page1'>Page 1</BreadcrumbItem>,
+ *   <BreadcrumbItem element='a' href='/page1/sub1'>Sub page 1</BreadcrumbItem>,
+ * ];
  */
 export const BreadcrumbItem = <E extends 'a' | 'button' = 'button'>(
   props: BreadcrumbItemProps<E>,
 ) => {
   const { className, children, element = 'button', ...rest } = props;
 
-  const Element = element === 'button' ? Button : 'a';
+  const Element = element === 'button' ? Button : element;
 
   useTheme();
 
