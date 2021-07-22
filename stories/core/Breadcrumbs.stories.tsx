@@ -7,6 +7,7 @@ import { action } from '@storybook/addon-actions';
 import React from 'react';
 import { Breadcrumbs, BreadcrumbsProps } from '../../src/core';
 import { BreadcrumbItem } from '../../src/core/Breadcrumbs';
+import { SvgChevronRightDouble } from '@itwin/itwinui-icons-react';
 
 export default {
   component: Breadcrumbs,
@@ -19,55 +20,65 @@ export default {
   },
   args: {
     items: [
-      <BreadcrumbItem key={0}>Root</BreadcrumbItem>,
-      <BreadcrumbItem key={1}>Item 1</BreadcrumbItem>,
-      <BreadcrumbItem key={2}>Item 2</BreadcrumbItem>,
+      <BreadcrumbItem key={0} onClick={() => action('Root')()}>
+        Root
+      </BreadcrumbItem>,
+      <BreadcrumbItem key={1} onClick={() => action('Root')()}>
+        Item 1
+      </BreadcrumbItem>,
+      <BreadcrumbItem key={2} onClick={() => action('Root')()}>
+        Item 2
+      </BreadcrumbItem>,
     ],
   },
 } as Meta<BreadcrumbsProps>;
 
-export const Basic: Story<BreadcrumbsProps> = (args) => {
+export const Basic: Story<BreadcrumbsProps> = ({ items, ...rest }) => {
   return (
     <Breadcrumbs
-      {...args}
-      items={[
-        <BreadcrumbItem key={0} onClick={() => action('Root')()}>
-          Root
-        </BreadcrumbItem>,
-        <BreadcrumbItem key={1} onClick={() => action('Item 1')()}>
-          Item 1
-        </BreadcrumbItem>,
-        <BreadcrumbItem key={2} onClick={() => action('Item 2')()}>
-          Item 2
-        </BreadcrumbItem>,
-      ]}
+      items={
+        items || [
+          <BreadcrumbItem key={0} onClick={() => action('Root')()}>
+            Root
+          </BreadcrumbItem>,
+          <BreadcrumbItem key={1} onClick={() => action('Item 1')()}>
+            Item 1
+          </BreadcrumbItem>,
+          <BreadcrumbItem key={2} onClick={() => action('Item 2')()}>
+            Item 2
+          </BreadcrumbItem>,
+        ]
+      }
+      {...rest}
     />
   );
 };
 
-export const Links: Story<BreadcrumbsProps> = (args) => {
+export const Links: Story<BreadcrumbsProps> = ({ items, ...rest }) => {
   return (
     <Breadcrumbs
-      {...args}
-      items={[
-        <BreadcrumbItem key={0} element='a' href='/'>
-          iTwinUI
-        </BreadcrumbItem>,
-        <BreadcrumbItem
-          key={1}
-          element='a'
-          href='/?path=/docs/core-breadcrumbs'
-        >
-          Breadcrumbs
-        </BreadcrumbItem>,
-        <BreadcrumbItem
-          key={2}
-          element='a'
-          href='/?path=/docs/core-breadcrumbs--links#links'
-        >
-          Links
-        </BreadcrumbItem>,
-      ]}
+      items={
+        items || [
+          <BreadcrumbItem key={0} element='a' href='/'>
+            iTwinUI
+          </BreadcrumbItem>,
+          <BreadcrumbItem
+            key={1}
+            element='a'
+            href='/?path=/docs/core-breadcrumbs'
+          >
+            Breadcrumbs
+          </BreadcrumbItem>,
+          <BreadcrumbItem
+            key={2}
+            element='a'
+            href='/?path=/docs/core-breadcrumbs--links#links'
+          >
+            Links
+          </BreadcrumbItem>,
+        ]
+      }
+      {...rest}
     />
   );
 };
@@ -87,4 +98,32 @@ Links.args = {
       Links
     </BreadcrumbItem>,
   ],
+};
+
+export const CustomSeparator: Story<BreadcrumbsProps> = ({
+  items,
+  ...rest
+}) => {
+  return (
+    <Breadcrumbs
+      items={
+        items || [
+          <BreadcrumbItem key={0} onClick={() => action('Root')()}>
+            Root
+          </BreadcrumbItem>,
+          <BreadcrumbItem key={1} onClick={() => action('Item 1')()}>
+            Item 1
+          </BreadcrumbItem>,
+          <BreadcrumbItem key={2} onClick={() => action('Item 2')()}>
+            Item 2
+          </BreadcrumbItem>,
+        ]
+      }
+      separator={<SvgChevronRightDouble />}
+      {...rest}
+    />
+  );
+};
+CustomSeparator.args = {
+  separator: <SvgChevronRightDouble />,
 };

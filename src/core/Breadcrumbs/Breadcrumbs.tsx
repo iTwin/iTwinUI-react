@@ -19,6 +19,10 @@ export type BreadcrumbsProps = {
    * Breadcrumb items.
    */
   items: JSX.Element[];
+  /**
+   * Specifiy a custom separator element to show between breadcrumb items.
+   */
+  separator?: React.ReactNode;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -39,13 +43,19 @@ export type BreadcrumbsProps = {
  />
  */
 export const Breadcrumbs = (props: BreadcrumbsProps) => {
-  const { items, currentIndex = items.length - 1, className, ...rest } = props;
+  const {
+    items,
+    currentIndex = items.length - 1,
+    separator,
+    className,
+    ...rest
+  } = props;
 
   useTheme();
 
   const Separator = () => (
     <li className='iui-breadcrumbs-separator' aria-hidden>
-      <SvgChevronRight />
+      {separator ?? <SvgChevronRight />}
     </li>
   );
 
