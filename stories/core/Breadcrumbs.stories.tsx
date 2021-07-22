@@ -69,11 +69,7 @@ export const Links: Story<BreadcrumbsProps> = ({ items, ...rest }) => {
           >
             Breadcrumbs
           </BreadcrumbItem>,
-          <BreadcrumbItem
-            key={2}
-            element='a'
-            href='/?path=/docs/core-breadcrumbs--links#links'
-          >
+          <BreadcrumbItem key={2} element='span'>
             Links
           </BreadcrumbItem>,
         ]
@@ -90,11 +86,7 @@ Links.args = {
     <BreadcrumbItem key={1} element='a' href='/?path=/docs/core-breadcrumbs'>
       Breadcrumbs
     </BreadcrumbItem>,
-    <BreadcrumbItem
-      key={2}
-      element='a'
-      href='/?path=/docs/core-breadcrumbs--links#links'
-    >
+    <BreadcrumbItem key={2} element='span'>
       Links
     </BreadcrumbItem>,
   ],
