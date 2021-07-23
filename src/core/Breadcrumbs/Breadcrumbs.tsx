@@ -8,6 +8,8 @@ import { useTheme } from '../utils/hooks/useTheme';
 import { CommonProps } from '../utils/props';
 import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import '@itwin/itwinui-css/css/breadcrumbs.css';
+import { useResizeObserver } from '../utils/hooks/useResizeObserver';
+import { useMergedRefs } from '../utils/hooks/useMergedRefs';
 
 export type BreadcrumbsProps = {
   /**
@@ -43,49 +45,117 @@ export type BreadcrumbsProps = {
  * />
  />
  */
-export const Breadcrumbs = (props: BreadcrumbsProps) => {
-  const {
-    items,
-    currentIndex = items.length - 1,
-    separator,
-    className,
-    ...rest
-  } = props;
+export const Breadcrumbs = React.forwardRef(
+  (props: BreadcrumbsProps, ref: React.RefObject<HTMLElement>) => {
+    const {
+      items,
+      currentIndex = items.length - 1,
+      separator,
+      className,
+      ...rest
+    } = props;
 
-  useTheme();
+    useTheme();
 
-  const Separator = () => (
-    <li className='iui-breadcrumbs-separator' aria-hidden>
-      {separator ?? <SvgChevronRight />}
-    </li>
-  );
+    const breadcrumbsRef = React.useRef<HTMLElement>(null);
 
-  return (
-    <nav className={cx('iui-breadcrumbs', className)} {...rest}>
-      <ol className='iui-breadcrumbs-list'>
-        {items.map((item, index) => (
-          <React.Fragment key={index}>
-            <li
-              className={cx(
-                'iui-breadcrumbs-item',
-                { 'iui-current': currentIndex === index },
-                className,
-              )}
-              {...rest}
-            >
-              {React.cloneElement(item, {
-                'aria-current':
-                  item.props['aria-current'] ?? currentIndex === index
-                    ? 'location'
-                    : undefined,
-              })}
-            </li>
-            {index < items.length - 1 && <Separator />}
-          </React.Fragment>
-        ))}
-      </ol>
-    </nav>
-  );
-};
+    const [hiddenItems, setHiddenItems] = React.useState<JSX.Element[]>([]);
+    const [postItems, setPostItems] = React.useState(() => items.slice(1));
+    const overflowBreakpoints = React.useRef<number[]>([]);
+
+    const [breadcrumbsWidth, setBreadcrumbsWith] = React.useState<number>(
+      () => breadcrumbsRef.current?.offsetWidth ?? 0,
+    );
+    const updateListWidth = React.useCallback(
+      ({ width }: DOMRectReadOnly) => setBreadcrumbsWith(width),
+      [],
+    );
+    const [listResizeRef] = useResizeObserver(updateListWidth);
+    const refs = useMergedRefs(breadcrumbsRef, listResizeRef, ref);
+
+    React.useLayoutEffect(() => {
+      if (!breadcrumbsRef.current || breadcrumbsWidth === 0) {
+        return;
+      }
+
+      // hide items when there's no space available
+      if (Math.round(breadcrumbsWidth) < breadcrumbsRef.current.scrollWidth) {
+        console.log('well shit', breadcrumbsWidth);
+        if (postItems.length > 0) {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          setHiddenItems([...hiddenItems, postItems.shift()!]);
+          setPostItems([...postItems]);
+          overflowBreakpoints.current.push(breadcrumbsWidth);
+        }
+      }
+      // restore items when there's enough space again
+      else if (
+        overflowBreakpoints.current.length > 0 &&
+        breadcrumbsWidth >
+          overflowBreakpoints.current[overflowBreakpoints.current.length - 1]
+      ) {
+        if (hiddenItems.length > 0) {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          setPostItems([hiddenItems.pop()!, ...postItems]);
+          setHiddenItems([...hiddenItems]);
+          overflowBreakpoints.current.pop();
+        }
+      }
+    }, [breadcrumbsWidth, items, hiddenItems, postItems]);
+
+    const Separator = () => (
+      <li className='iui-breadcrumbs-separator' aria-hidden>
+        {separator ?? <SvgChevronRight />}
+      </li>
+    );
+
+    const ListItem = ({
+      item,
+      index,
+    }: {
+      item: JSX.Element;
+      index: number;
+    }) => (
+      <li
+        className={cx('iui-breadcrumbs-item', {
+          'iui-current': currentIndex === index,
+        })}
+      >
+        {React.cloneElement(item, {
+          'aria-current':
+            item.props['aria-current'] ?? currentIndex === index
+              ? 'location'
+              : undefined,
+        })}
+      </li>
+    );
+
+    return (
+      <nav className={cx('iui-breadcrumbs', className)} ref={refs} {...rest}>
+        <ol className='iui-breadcrumbs-list'>
+          <ListItem item={items[0]} index={0} />
+          <Separator />
+          {hiddenItems.length > 0 && (
+            <>
+              <li className='iui-breadcrumbs-item'>
+                <span className='iui-ellipsis'>…</span>
+              </li>
+              <Separator />
+            </>
+          )}
+          {postItems.map((item, _index) => {
+            const index = 1 + hiddenItems.length + _index;
+            return (
+              <React.Fragment key={index}>
+                <ListItem item={item} index={index} />
+                {index < items.length - 1 && <Separator />}
+              </React.Fragment>
+            );
+          })}
+        </ol>
+      </nav>
+    );
+  },
+);
 
 export default Breadcrumbs;

@@ -119,3 +119,20 @@ export const CustomSeparator: Story<BreadcrumbsProps> = ({
 CustomSeparator.args = {
   separator: <SvgChevronRightDouble />,
 };
+
+export const Overflow: Story<BreadcrumbsProps> = (args) => {
+  const items = Array(10)
+    .fill(null)
+    .map((_, index) => (
+      <BreadcrumbItem key={index}>Item {index}</BreadcrumbItem>
+    ));
+
+  return (
+    <div style={{ maxWidth: '50%', border: '1px solid lightpink', padding: 8 }}>
+      <Breadcrumbs {...args} items={items} />
+    </div>
+  );
+};
+Overflow.argTypes = {
+  items: { control: { disable: true } },
+};
