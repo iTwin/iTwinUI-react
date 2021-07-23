@@ -66,12 +66,12 @@ export const Breadcrumbs = React.forwardRef(
     const [breadcrumbsWidth, setBreadcrumbsWith] = React.useState<number>(
       () => breadcrumbsRef.current?.offsetWidth ?? 0,
     );
-    const updateListWidth = React.useCallback(
+    const updateBreadcrumbsWidth = React.useCallback(
       () => setBreadcrumbsWith(breadcrumbsRef.current?.offsetWidth ?? 0),
       [],
     );
-    const [listResizeRef] = useResizeObserver(updateListWidth);
-    const refs = useMergedRefs(breadcrumbsRef, listResizeRef, ref);
+    const [resizeRef] = useResizeObserver(updateBreadcrumbsWidth);
+    const refs = useMergedRefs(breadcrumbsRef, resizeRef, ref);
 
     React.useLayoutEffect(() => {
       if (!breadcrumbsRef.current || breadcrumbsWidth === 0) {
@@ -80,7 +80,6 @@ export const Breadcrumbs = React.forwardRef(
 
       // hide items when there's no space available
       if (breadcrumbsWidth < breadcrumbsRef.current.scrollWidth) {
-        console.log('well shit', breadcrumbsWidth);
         if (postItems.length > 0) {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           setHiddenItems([...hiddenItems, postItems.shift()!]);
