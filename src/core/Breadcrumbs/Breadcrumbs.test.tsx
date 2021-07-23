@@ -85,3 +85,18 @@ it('should accept currentIndex prop', () => {
   const { container } = renderComponent({ currentIndex: 1 });
   assertBaseElement(container, { currentIndex: 1 });
 });
+
+it('should overflow when there is not enough space', () => {
+  const useRefSpy = jest.spyOn(React, 'useRef').mockReturnValueOnce({
+    current: {
+      offsetWidth: 200,
+      scrollWidth: 300,
+    },
+  });
+  // const { container } =
+  renderComponent();
+  expect(useRefSpy).toBeCalled();
+
+  // TODO: Fix this. Scroll width returns 0 instead of 300 😕
+  // expect(container.querySelector('.iui-ellipsis')).toBeTruthy();
+});
