@@ -61,8 +61,8 @@ export const Breadcrumbs = (props: BreadcrumbsProps) => {
   );
 
   return (
-    <nav className='iui-breadcrumbs' {...rest}>
-      <ol className={cx('iui-breadcrumbs-list', className)}>
+    <nav className={cx('iui-breadcrumbs', className)} {...rest}>
+      <ol className='iui-breadcrumbs-list'>
         {items.map((item, index) => (
           <React.Fragment key={index}>
             <li
