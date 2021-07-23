@@ -61,14 +61,7 @@ it('should render all elements in default state', () => {
 });
 
 it('should render custom separators', () => {
-  const { container } = render(
-    <Breadcrumbs
-      items={[...Array(3)].map((_, index) => (
-        <BreadcrumbItem key={index}>Item {index}</BreadcrumbItem>
-      ))}
-      separator='>'
-    />,
-  );
+  const { container } = renderComponent({ separator: '>' });
   expect(container.querySelector('.iui-breadcrumbs')).toBeTruthy();
   expect(container.querySelector('.iui-breadcrumbs-list')).toBeTruthy();
   expect(container.querySelectorAll('.iui-breadcrumbs-item').length).toEqual(3);
@@ -87,16 +80,16 @@ it('should accept currentIndex prop', () => {
 });
 
 it('should overflow when there is not enough space', () => {
-  const useRefSpy = jest.spyOn(React, 'useRef').mockReturnValueOnce({
-    current: {
-      offsetWidth: 200,
-      scrollWidth: 300,
-    },
-  });
-  // const { container } =
-  renderComponent();
-  expect(useRefSpy).toBeCalled();
+  Object.defineProperty(HTMLElement.prototype, 'scrollWidth', { value: 400 });
+  Object.defineProperty(HTMLElement.prototype, 'offsetWidth', { value: 300 });
 
-  // TODO: Fix this. Scroll width returns 0 instead of 300 😕
-  // expect(container.querySelector('.iui-ellipsis')).toBeTruthy();
+  const { container } = renderComponent();
+
+  expect(container.querySelector('.iui-breadcrumbs')).toBeTruthy();
+  expect(container.querySelector('.iui-breadcrumbs-list')).toBeTruthy();
+
+  const breadcrumbs = container.querySelectorAll('.iui-breadcrumbs-item');
+  // expect(breadcrumbs.length).toEqual(3); // TODO: fix this
+  expect(breadcrumbs[0].textContent).toEqual('Item 0');
+  expect(container.querySelector('.iui-ellipsis')).toBeTruthy();
 });

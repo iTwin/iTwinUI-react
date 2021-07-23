@@ -63,27 +63,26 @@ export const Breadcrumbs = React.forwardRef(
     const [postItems, setPostItems] = React.useState(() => items.slice(1));
     const overflowBreakpoints = React.useRef<number[]>([]);
 
-    const [breadcrumbsWidth, setBreadcrumbsWith] = React.useState<number>(
-      () => breadcrumbsRef.current?.offsetWidth ?? 0,
-    );
+    const [breadcrumbsWidth, setBreadcrumbsWith] = React.useState<number>(0);
     const updateBreadcrumbsWidth = React.useCallback(
-      () => setBreadcrumbsWith(breadcrumbsRef.current?.offsetWidth ?? 0),
+      ({ width }) => setBreadcrumbsWith(width),
       [],
     );
     const [resizeRef] = useResizeObserver(updateBreadcrumbsWidth);
     const refs = useMergedRefs(breadcrumbsRef, resizeRef, ref);
 
     React.useLayoutEffect(() => {
-      if (!breadcrumbsRef.current || breadcrumbsWidth === 0) {
+      if (!breadcrumbsRef.current) {
         return;
       }
 
       // hide items when there's no space available
-      if (breadcrumbsWidth < breadcrumbsRef.current.scrollWidth) {
+      if (
+        breadcrumbsRef.current.offsetWidth < breadcrumbsRef.current.scrollWidth
+      ) {
         if (postItems.length > 0) {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          setHiddenItems([...hiddenItems, postItems.shift()!]);
-          setPostItems([...postItems]);
+          setHiddenItems([...hiddenItems, postItems.shift()!]); // eslint-disable-line @typescript-eslint/no-non-null-assertion
+          setPostItems(postItems);
           overflowBreakpoints.current.push(breadcrumbsWidth);
         }
       }
@@ -94,8 +93,7 @@ export const Breadcrumbs = React.forwardRef(
           overflowBreakpoints.current[overflowBreakpoints.current.length - 1]
       ) {
         if (hiddenItems.length > 0) {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          setPostItems([hiddenItems.pop()!, ...postItems]);
+          setPostItems([hiddenItems.pop()!, ...postItems]); // eslint-disable-line @typescript-eslint/no-non-null-assertion
           setHiddenItems([...hiddenItems]);
           overflowBreakpoints.current.pop();
         }
