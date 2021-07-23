@@ -6,7 +6,7 @@ import React from 'react';
 import cx from 'classnames';
 import { useTheme } from '../utils/hooks/useTheme';
 import { CommonProps } from '../utils/props';
-import { SvgChevronRight } from '@itwin/itwinui-icons-react';
+import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import '@itwin/itwinui-css/css/breadcrumbs.css';
 
 export type BreadcrumbsProps = {
@@ -20,7 +20,8 @@ export type BreadcrumbsProps = {
    */
   items: JSX.Element[];
   /**
-   * Specifiy a custom separator element to show between breadcrumb items.
+   * Specify a custom separator element to show between breadcrumb items.
+   * Defaults to the `SvgChevronRight` icon.
    */
   separator?: React.ReactNode;
 } & Omit<CommonProps, 'title'>;
