@@ -9,13 +9,18 @@ import { useTheme } from '../utils/hooks/useTheme';
 import { Button } from '../Buttons/Button';
 import '@itwin/itwinui-css/css/breadcrumbs.css';
 
-type BreadcrumbItemOwnProps<E extends 'a' | 'button' | 'span'> = {
+type BreadcrumbItemOwnProps<
+  E extends 'a' | 'button' | 'span' | React.ComponentType
+> = {
   /**
    * Control which element the breadcrumb item should use.
    *
    * Use 'button' if you specify an `onClick` handler.
-   * Use 'a' if you also specify a meaningful `href`.
+   * Use 'a' only if you specify a meaningful `href`.
    * Use 'span' if the item should not be clickable (e.g. for the current item).
+   *
+   * You can also use a custom component like `RouterLink` or `NavLink`.
+   *
    * @default 'button'
    */
   element?: E;
@@ -26,7 +31,7 @@ type BreadcrumbItemOwnProps<E extends 'a' | 'button' | 'span'> = {
 } & CommonProps;
 
 export type BreadcrumbItemProps<
-  E extends 'a' | 'button' | 'span'
+  E extends 'a' | 'button' | 'span' | React.ComponentType
 > = BreadcrumbItemOwnProps<E> &
   Omit<React.ComponentPropsWithoutRef<E>, keyof BreadcrumbItemOwnProps<E>>;
 
@@ -45,7 +50,9 @@ export type BreadcrumbItemProps<
  *   <BreadcrumbItem element='a' href='/page1/sub1'>Sub page 1</BreadcrumbItem>,
  * ];
  */
-export const BreadcrumbItem = <E extends 'a' | 'button' | 'span' = 'button'>(
+export const BreadcrumbItem = <
+  E extends 'a' | 'button' | 'span' | React.ComponentType = 'button'
+>(
   props: BreadcrumbItemProps<E>,
 ) => {
   const { className, children, element = 'button', ...rest } = props;
