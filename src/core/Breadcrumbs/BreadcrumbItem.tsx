@@ -19,7 +19,7 @@ type BreadcrumbItemOwnProps<
    * Use 'a' only if you specify a meaningful `href`.
    * Use 'span' if the item should not be clickable (e.g. for the current item).
    *
-   * You can also use a custom component like `RouterLink` or `NavLink`.
+   * You can also use a custom component like a react-router `Link` or `NavLink`.
    *
    * @default 'button'
    */
