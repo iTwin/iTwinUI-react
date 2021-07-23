@@ -67,7 +67,7 @@ export const Breadcrumbs = React.forwardRef(
       () => breadcrumbsRef.current?.offsetWidth ?? 0,
     );
     const updateListWidth = React.useCallback(
-      ({ width }: DOMRectReadOnly) => setBreadcrumbsWith(width),
+      () => setBreadcrumbsWith(breadcrumbsRef.current?.offsetWidth ?? 0),
       [],
     );
     const [listResizeRef] = useResizeObserver(updateListWidth);
@@ -79,7 +79,7 @@ export const Breadcrumbs = React.forwardRef(
       }
 
       // hide items when there's no space available
-      if (Math.round(breadcrumbsWidth) < breadcrumbsRef.current.scrollWidth) {
+      if (breadcrumbsWidth < breadcrumbsRef.current.scrollWidth) {
         console.log('well shit', breadcrumbsWidth);
         if (postItems.length > 0) {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
