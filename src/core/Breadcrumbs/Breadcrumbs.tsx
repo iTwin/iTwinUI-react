@@ -131,8 +131,8 @@ export const Breadcrumbs = React.forwardRef(
       >
         <ol className='iui-breadcrumbs-list'>
           {<ListItem item={items[0]} index={0} />}
-          {<Separator />}
-          {visibleCount > 0 && (
+          {visibleCount > 1 && <Separator />}
+          {items.length - visibleCount > 0 && (
             <>
               <li className='iui-breadcrumbs-item'>
                 <span className='iui-ellipsis'>…</span>
@@ -140,8 +140,8 @@ export const Breadcrumbs = React.forwardRef(
               <Separator />
             </>
           )}
-          {items.slice(items.length - visibleCount).map((item, _index) => {
-            const index = 1 + (items.length - 1 - visibleCount) + _index;
+          {items.slice(items.length - visibleCount + 1).map((item, _index) => {
+            const index = 1 + (items.length - visibleCount) + _index;
             return (
               <React.Fragment key={index}>
                 <ListItem item={item} index={index} />
