@@ -15,6 +15,15 @@ it('should render in its most basic state', () => {
   expect(badge.title).toBeFalsy();
 });
 
+it('should set inline css variable correctly', () => {
+  window.CSS = { supports: () => true, escape: (i) => i };
+  const { container } = render(<Badge backgroundColor='skyblue'>label</Badge>);
+
+  const badge = container.querySelector('.iui-badge') as HTMLElement;
+  expect(badge.textContent).toBe('label');
+  expect(badge.style.getPropertyValue('--badge-color')).toEqual('skyblue');
+});
+
 it('should add className and style correctly', () => {
   const { container } = render(
     <Badge
