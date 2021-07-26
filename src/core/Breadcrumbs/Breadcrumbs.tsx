@@ -58,6 +58,11 @@ export const Breadcrumbs = React.forwardRef(
     const [visibleCount, setVisibleCount] = React.useState(items.length);
     const overflowBreakpoints = React.useRef<number[]>([]);
 
+    React.useLayoutEffect(() => {
+      setVisibleCount(React.Children.count(children));
+      overflowBreakpoints.current = [];
+    }, [children]);
+
     const [breadcrumbsWidth, setBreadcrumbsWith] = React.useState<number>(0);
     const updateBreadcrumbsWidth = React.useCallback(
       ({ width }) => setBreadcrumbsWith(width),
@@ -89,7 +94,7 @@ export const Breadcrumbs = React.forwardRef(
         setVisibleCount((count) => count + 1);
         overflowBreakpoints.current.pop();
       }
-    }, [breadcrumbsWidth, items, visibleCount]);
+    }, [breadcrumbsWidth, visibleCount]);
 
     const Separator = () => (
       <li className='iui-breadcrumbs-separator' aria-hidden>
