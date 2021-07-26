@@ -19,19 +19,6 @@ export default {
     id: { control: { disable: true } },
     children: { control: { disable: true } },
   },
-  args: {
-    children: [
-      <BreadcrumbItem key={0} onClick={() => action('Root')()}>
-        Root
-      </BreadcrumbItem>,
-      <BreadcrumbItem key={1} onClick={() => action('Root')()}>
-        Item 1
-      </BreadcrumbItem>,
-      <BreadcrumbItem key={2} onClick={() => action('Root')()}>
-        Item 2
-      </BreadcrumbItem>,
-    ],
-  },
 } as Meta<BreadcrumbsProps>;
 
 export const Basic: Story<BreadcrumbsProps> = (args) => {
@@ -64,19 +51,6 @@ export const Links: Story<BreadcrumbsProps> = (args) => {
       </BreadcrumbItem>
     </Breadcrumbs>
   );
-};
-Links.args = {
-  children: [
-    <BreadcrumbItem key={0} element='a' href='/'>
-      iTwinUI
-    </BreadcrumbItem>,
-    <BreadcrumbItem key={1} element='a' href='/?path=/docs/core-breadcrumbs'>
-      Breadcrumbs
-    </BreadcrumbItem>,
-    <BreadcrumbItem key={2} element='span'>
-      Links
-    </BreadcrumbItem>,
-  ],
 };
 
 export const CustomSeparator: Story<BreadcrumbsProps> = (args) => {

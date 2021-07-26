@@ -32,8 +32,6 @@ export type BreadcrumbsProps = {
  * A breadcrumb trail is used as a navigational aid to help users keep track
  * of their place in the application. It is often placed before a page's main content.
  *
- * For accessibility, make sure to provide an aria-label describing the type of navigation.
- *
  * @example
  * <Breadcrumbs>
  *   <BreadcrumbItem onClick={() => {}}>Root</BreadcrumbItem>
@@ -142,7 +140,7 @@ export const Breadcrumbs = React.forwardRef(
                 ? items.length - visibleCount + 1
                 : items.length - 1,
             )
-            .map((item, _index) => {
+            .map((_, _index) => {
               const index =
                 visibleCount > 1
                   ? 1 + (items.length - visibleCount) + _index
