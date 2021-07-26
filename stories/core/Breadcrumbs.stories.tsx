@@ -17,9 +17,10 @@ export default {
     className: { control: { disable: true } },
     style: { control: { disable: true } },
     id: { control: { disable: true } },
+    children: { control: { disable: true } },
   },
   args: {
-    items: [
+    children: [
       <BreadcrumbItem key={0} onClick={() => action('Root')()}>
         Root
       </BreadcrumbItem>,
@@ -33,53 +34,39 @@ export default {
   },
 } as Meta<BreadcrumbsProps>;
 
-export const Basic: Story<BreadcrumbsProps> = ({ items, ...rest }) => {
+export const Basic: Story<BreadcrumbsProps> = (args) => {
   return (
-    <Breadcrumbs
-      items={
-        items || [
-          <BreadcrumbItem key={0} onClick={() => action('Root')()}>
-            Root
-          </BreadcrumbItem>,
-          <BreadcrumbItem key={1} onClick={() => action('Item 1')()}>
-            Item 1
-          </BreadcrumbItem>,
-          <BreadcrumbItem key={2} onClick={() => action('Item 2')()}>
-            Item 2
-          </BreadcrumbItem>,
-        ]
-      }
-      {...rest}
-    />
+    <Breadcrumbs {...args}>
+      <BreadcrumbItem key={0} onClick={() => action('Root')()}>
+        Root
+      </BreadcrumbItem>
+      <BreadcrumbItem key={1} onClick={() => action('Item 1')()}>
+        Item 1
+      </BreadcrumbItem>
+      <BreadcrumbItem key={2} onClick={() => action('Item 2')()}>
+        Item 2
+      </BreadcrumbItem>
+    </Breadcrumbs>
   );
 };
 
-export const Links: Story<BreadcrumbsProps> = ({ items, ...rest }) => {
+export const Links: Story<BreadcrumbsProps> = (args) => {
   return (
-    <Breadcrumbs
-      items={
-        items || [
-          <BreadcrumbItem key={0} element='a' href='/'>
-            iTwinUI
-          </BreadcrumbItem>,
-          <BreadcrumbItem
-            key={1}
-            element='a'
-            href='/?path=/docs/core-breadcrumbs'
-          >
-            Breadcrumbs
-          </BreadcrumbItem>,
-          <BreadcrumbItem key={2} element='span'>
-            Links
-          </BreadcrumbItem>,
-        ]
-      }
-      {...rest}
-    />
+    <Breadcrumbs {...args}>
+      <BreadcrumbItem key={0} element='a' href='/'>
+        iTwinUI
+      </BreadcrumbItem>
+      <BreadcrumbItem key={1} element='a' href='/?path=/docs/core-breadcrumbs'>
+        Breadcrumbs
+      </BreadcrumbItem>
+      <BreadcrumbItem key={2} element='span'>
+        Links
+      </BreadcrumbItem>
+    </Breadcrumbs>
   );
 };
 Links.args = {
-  items: [
+  children: [
     <BreadcrumbItem key={0} element='a' href='/'>
       iTwinUI
     </BreadcrumbItem>,
@@ -92,28 +79,19 @@ Links.args = {
   ],
 };
 
-export const CustomSeparator: Story<BreadcrumbsProps> = ({
-  items,
-  ...rest
-}) => {
+export const CustomSeparator: Story<BreadcrumbsProps> = (args) => {
   return (
-    <Breadcrumbs
-      items={
-        items || [
-          <BreadcrumbItem key={0} onClick={() => action('Root')()}>
-            Root
-          </BreadcrumbItem>,
-          <BreadcrumbItem key={1} onClick={() => action('Item 1')()}>
-            Item 1
-          </BreadcrumbItem>,
-          <BreadcrumbItem key={2} onClick={() => action('Item 2')()}>
-            Item 2
-          </BreadcrumbItem>,
-        ]
-      }
-      separator={<SvgChevronRightDouble />}
-      {...rest}
-    />
+    <Breadcrumbs separator={<SvgChevronRightDouble />} {...args}>
+      <BreadcrumbItem key={0} onClick={() => action('Root')()}>
+        Root
+      </BreadcrumbItem>
+      <BreadcrumbItem key={1} onClick={() => action('Item 1')()}>
+        Item 1
+      </BreadcrumbItem>
+      <BreadcrumbItem key={2} onClick={() => action('Item 2')()}>
+        Item 2
+      </BreadcrumbItem>
+    </Breadcrumbs>
   );
 };
 CustomSeparator.args = {
@@ -129,10 +107,7 @@ export const Overflow: Story<BreadcrumbsProps> = (args) => {
 
   return (
     <div style={{ maxWidth: '50%', border: '1px solid lightpink', padding: 8 }}>
-      <Breadcrumbs {...args} items={items} />
+      <Breadcrumbs {...args}>{items}</Breadcrumbs>
     </div>
   );
-};
-Overflow.argTypes = {
-  items: { control: { disable: true } },
 };

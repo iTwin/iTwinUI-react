@@ -14,13 +14,13 @@ import { useMergedRefs } from '../utils/hooks/useMergedRefs';
 export type BreadcrumbsProps = {
   /**
    * Index of the currently active breadcrumb.
-   * Defaults to last index in the items array.
+   * Defaults to the index of the last breadcrumb item.
    */
   currentIndex?: number;
   /**
    * Breadcrumb items.
    */
-  items: JSX.Element[];
+  children: JSX.Element[];
   /**
    * Specify a custom separator element to show between breadcrumb items.
    * Defaults to the `SvgChevronRight` icon.
@@ -35,24 +35,23 @@ export type BreadcrumbsProps = {
  * For accessibility, make sure to provide an aria-label describing the type of navigation.
  *
  * @example
- * <Breadcrumbs
- *   items={[
- *     <BreadcrumbItem onClick={() => {}}>Root</BreadcrumbItem>,
- *     <BreadcrumbItem onClick={() => {}}>Item 1</BreadcrumbItem>,
- *     <BreadcrumbItem onClick={() => {}}>Item 2</BreadcrumbItem>,
- *   ]}
- * />
+ * <Breadcrumbs>
+ *   <BreadcrumbItem onClick={() => {}}>Root</BreadcrumbItem>
+ *   <BreadcrumbItem onClick={() => {}}>Item 1</BreadcrumbItem>
+ *   <BreadcrumbItem onClick={() => {}}>Item 2</BreadcrumbItem>
+ * </Breadcrumbs>
  />
  */
 export const Breadcrumbs = React.forwardRef(
   (props: BreadcrumbsProps, ref: React.RefObject<HTMLElement>) => {
     const {
-      items,
-      currentIndex = items.length - 1,
+      children,
+      currentIndex = React.Children.count(children) - 1,
       separator,
       className,
       ...rest
     } = props;
+    const items = React.Children.toArray(children);
 
     useTheme();
 
@@ -100,26 +99,24 @@ export const Breadcrumbs = React.forwardRef(
       </li>
     );
 
-    const ListItem = ({
-      item,
-      index,
-    }: {
-      item: JSX.Element;
-      index: number;
-    }) => (
-      <li
-        className={cx('iui-breadcrumbs-item', {
-          'iui-current': currentIndex === index,
-        })}
-      >
-        {React.cloneElement(item, {
-          'aria-current':
-            item.props['aria-current'] ?? currentIndex === index
-              ? 'location'
-              : undefined,
-        })}
-      </li>
-    );
+    const ListItem = ({ index }: { index: number }) => {
+      const item = items[index];
+      return (
+        <li
+          className={cx('iui-breadcrumbs-item', {
+            'iui-current': currentIndex === index,
+          })}
+        >
+          {React.isValidElement(item) &&
+            React.cloneElement(item, {
+              'aria-current':
+                item.props['aria-current'] ?? currentIndex === index
+                  ? 'location'
+                  : undefined,
+            })}
+        </li>
+      );
+    };
 
     return (
       <nav
@@ -129,7 +126,7 @@ export const Breadcrumbs = React.forwardRef(
         {...rest}
       >
         <ol className='iui-breadcrumbs-list'>
-          {visibleCount > 1 && <ListItem item={items[0]} index={0} />}
+          {visibleCount > 1 && <ListItem index={0} />}
           {visibleCount > 1 && <Separator />}
           {items.length - visibleCount > 0 && (
             <>
@@ -152,7 +149,7 @@ export const Breadcrumbs = React.forwardRef(
                   : items.length - 1;
               return (
                 <React.Fragment key={index}>
-                  <ListItem item={item} index={index} />
+                  <ListItem index={index} />
                   {index < items.length - 1 && <Separator />}
                 </React.Fragment>
               );

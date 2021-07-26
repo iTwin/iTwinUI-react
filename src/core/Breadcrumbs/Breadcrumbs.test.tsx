@@ -11,12 +11,11 @@ import { SvgChevronRight } from '@itwin/itwinui-icons-react';
 
 const renderComponent = (props?: Partial<BreadcrumbsProps>) => {
   return render(
-    <Breadcrumbs
-      items={[...Array(3)].map((_, index) => (
+    <Breadcrumbs {...props}>
+      {[...Array(3)].map((_, index) => (
         <BreadcrumbItem key={index}>Item {index}</BreadcrumbItem>
       ))}
-      {...props}
-    />,
+    </Breadcrumbs>,
   );
 };
 
@@ -123,11 +122,11 @@ it('should restore hidden items when there is enough space again', () => {
   offsetWidthSpy.mockReturnValue(250);
 
   rerender(
-    <Breadcrumbs
-      items={[...Array(3)].map((_, index) => (
+    <Breadcrumbs>
+      {[...Array(3)].map((_, index) => (
         <BreadcrumbItem key={index}>Item {index}</BreadcrumbItem>
       ))}
-    />,
+    </Breadcrumbs>,
   );
 
   expect(container.querySelector('.iui-ellipsis')).toBeFalsy();
