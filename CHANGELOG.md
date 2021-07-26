@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+`Date`
+
+### What's new
+
+- **Added new `Breadcrumbs` component.**
+  - Supports customizing elements in `BreadcrumbItem` and handles overflow based on available space.
+
 ## [1.12.0]
 
 `2021-07-20`

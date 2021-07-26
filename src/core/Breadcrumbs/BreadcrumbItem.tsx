@@ -36,19 +36,13 @@ export type BreadcrumbItemProps<
   Omit<React.ComponentPropsWithoutRef<E>, keyof BreadcrumbItemOwnProps<E>>;
 
 /**
- * Individual breadcrumb component to be used in the `Breadcrumbs` items array.
+ * Individual breadcrumb component to be used as children of `Breadcrumbs`.
+ *
  * @example
- * const items = [
- *   <BreadcrumbItem onClick={() => {}}>Root</BreadcrumbItem>,
- *   <BreadcrumbItem onClick={() => {}}>Item 1</BreadcrumbItem>,
- *   <BreadcrumbItem onClick={() => {}}>Item 2</BreadcrumbItem>,
- * ];
+ * <BreadcrumbItem onClick={() => {}}>Breadcrumb button</BreadcrumbItem>
+ *
  * @example
- * const items = [
- *   <BreadcrumbItem element='a' href='/'>Root</BreadcrumbItem>,
- *   <BreadcrumbItem element='a' href='/page1'>Page 1</BreadcrumbItem>,
- *   <BreadcrumbItem element='a' href='/page1/sub1'>Sub page 1</BreadcrumbItem>,
- * ];
+ * <BreadcrumbItem element='a' href='/page'>Breadcrumb link</BreadcrumbItem>,
  */
 export const BreadcrumbItem = <
   E extends 'a' | 'button' | 'span' | React.ComponentType = 'button'
