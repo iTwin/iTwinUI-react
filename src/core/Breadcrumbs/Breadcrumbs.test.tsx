@@ -103,3 +103,61 @@ it('should overflow when there is not enough space', () => {
   scrollWidthSpy.mockRestore();
   offsetWidthSpy.mockRestore();
 });
+
+it('should restore hidden items when there is enough space again', () => {
+  const scrollWidthSpy = jest
+    .spyOn(HTMLElement.prototype, 'scrollWidth', 'get')
+    .mockReturnValueOnce(250)
+    .mockReturnValue(200);
+  const offsetWidthSpy = jest
+    .spyOn(HTMLElement.prototype, 'offsetWidth', 'get')
+    .mockReturnValue(200);
+
+  const { container, rerender } = renderComponent();
+
+  expect(container.querySelector('.iui-breadcrumbs')).toBeTruthy();
+  expect(container.querySelectorAll('.iui-breadcrumbs-item')).toHaveLength(3);
+  expect(container.querySelector('.iui-ellipsis')?.textContent).toEqual('…');
+
+  scrollWidthSpy.mockReturnValue(250);
+  offsetWidthSpy.mockReturnValue(250);
+
+  rerender(
+    <Breadcrumbs
+      items={[...Array(3)].map((_, index) => (
+        <BreadcrumbItem key={index}>Item {index}</BreadcrumbItem>
+      ))}
+    />,
+  );
+
+  expect(container.querySelector('.iui-ellipsis')).toBeFalsy();
+  assertBaseElement(container);
+
+  scrollWidthSpy.mockRestore();
+  offsetWidthSpy.mockRestore();
+});
+
+it('should hide first item on very small widths', () => {
+  const scrollWidthSpy = jest
+    .spyOn(HTMLElement.prototype, 'scrollWidth', 'get')
+    .mockReturnValueOnce(250)
+    .mockReturnValueOnce(150)
+    .mockReturnValue(100);
+  const offsetWidthSpy = jest
+    .spyOn(HTMLElement.prototype, 'offsetWidth', 'get')
+    .mockReturnValue(100);
+
+  const { container } = renderComponent();
+
+  expect(container.querySelector('.iui-breadcrumbs')).toBeTruthy();
+  expect(container.querySelector('.iui-breadcrumbs-list')).toBeTruthy();
+
+  const breadcrumbs = container.querySelectorAll('.iui-breadcrumbs-item');
+  expect(breadcrumbs.length).toEqual(2);
+  expect(breadcrumbs[0].textContent).toEqual('…');
+  expect(breadcrumbs[0].firstElementChild?.classList).toContain('iui-ellipsis');
+  expect(breadcrumbs[1].textContent).toEqual('Item 2');
+
+  scrollWidthSpy.mockRestore();
+  offsetWidthSpy.mockRestore();
+});
