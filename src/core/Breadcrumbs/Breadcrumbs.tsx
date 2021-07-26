@@ -128,10 +128,15 @@ export const Breadcrumbs = React.forwardRef(
     );
 
     return (
-      <nav className={cx('iui-breadcrumbs', className)} ref={refs} {...rest}>
+      <nav
+        className={cx('iui-breadcrumbs', className)}
+        ref={refs}
+        aria-label='Breadcrumb'
+        {...rest}
+      >
         <ol className='iui-breadcrumbs-list'>
           <ListItem item={items[0]} index={0} />
-          <Separator />
+          {items.length > 1 && <Separator />}
           {hiddenItems.length > 0 && (
             <>
               <li className='iui-breadcrumbs-item'>

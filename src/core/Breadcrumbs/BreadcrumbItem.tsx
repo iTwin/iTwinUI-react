@@ -39,9 +39,9 @@ export type BreadcrumbItemProps<
  * Individual breadcrumb component to be used in the `Breadcrumbs` items array.
  * @example
  * const items = [
- *   <BreadcrumbItem>Root</BreadcrumbItem>,
- *   <BreadcrumbItem>Item 1</BreadcrumbItem>,
- *   <BreadcrumbItem>Item 2</BreadcrumbItem>,
+ *   <BreadcrumbItem onClick={() => {}}>Root</BreadcrumbItem>,
+ *   <BreadcrumbItem onClick={() => {}}>Item 1</BreadcrumbItem>,
+ *   <BreadcrumbItem onClick={() => {}}>Item 2</BreadcrumbItem>,
  * ];
  * @example
  * const items = [
