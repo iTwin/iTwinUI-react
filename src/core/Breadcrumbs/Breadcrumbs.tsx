@@ -59,8 +59,7 @@ export const Breadcrumbs = React.forwardRef(
 
     const breadcrumbsRef = React.useRef<HTMLElement>(null);
 
-    const [hiddenItems, setHiddenItems] = React.useState<JSX.Element[]>([]);
-    const [postItems, setPostItems] = React.useState(() => items.slice(1));
+    const [visibleCount, setVisibleCount] = React.useState(items.length);
     const overflowBreakpoints = React.useRef<number[]>([]);
 
     const [breadcrumbsWidth, setBreadcrumbsWith] = React.useState<number>(0);
@@ -78,27 +77,23 @@ export const Breadcrumbs = React.forwardRef(
 
       // hide items when there's no space available
       if (
-        breadcrumbsRef.current.offsetWidth < breadcrumbsRef.current.scrollWidth
+        breadcrumbsRef.current.offsetWidth <
+          breadcrumbsRef.current.scrollWidth &&
+        visibleCount > 1
       ) {
-        if (postItems.length > 0) {
-          setHiddenItems([...hiddenItems, postItems.shift()!]); // eslint-disable-line @typescript-eslint/no-non-null-assertion
-          setPostItems(postItems);
-          overflowBreakpoints.current.push(breadcrumbsWidth);
-        }
+        setVisibleCount((count) => count - 1);
+        overflowBreakpoints.current.push(breadcrumbsRef.current.offsetWidth);
       }
       // restore items when there's enough space again
       else if (
         overflowBreakpoints.current.length > 0 &&
-        breadcrumbsWidth >
+        breadcrumbsRef.current.offsetWidth >
           overflowBreakpoints.current[overflowBreakpoints.current.length - 1]
       ) {
-        if (hiddenItems.length > 0) {
-          setPostItems([hiddenItems.pop()!, ...postItems]); // eslint-disable-line @typescript-eslint/no-non-null-assertion
-          setHiddenItems([...hiddenItems]);
-          overflowBreakpoints.current.pop();
-        }
+        setVisibleCount((count) => count + 1);
+        overflowBreakpoints.current.pop();
       }
-    }, [breadcrumbsWidth, items, hiddenItems, postItems]);
+    }, [breadcrumbsWidth, items, visibleCount]);
 
     const Separator = () => (
       <li className='iui-breadcrumbs-separator' aria-hidden>
@@ -135,9 +130,9 @@ export const Breadcrumbs = React.forwardRef(
         {...rest}
       >
         <ol className='iui-breadcrumbs-list'>
-          <ListItem item={items[0]} index={0} />
-          {items.length > 1 && <Separator />}
-          {hiddenItems.length > 0 && (
+          {<ListItem item={items[0]} index={0} />}
+          {<Separator />}
+          {visibleCount > 0 && (
             <>
               <li className='iui-breadcrumbs-item'>
                 <span className='iui-ellipsis'>…</span>
@@ -145,8 +140,8 @@ export const Breadcrumbs = React.forwardRef(
               <Separator />
             </>
           )}
-          {postItems.map((item, _index) => {
-            const index = 1 + hiddenItems.length + _index;
+          {items.slice(items.length - visibleCount).map((item, _index) => {
+            const index = 1 + (items.length - 1 - visibleCount) + _index;
             return (
               <React.Fragment key={index}>
                 <ListItem item={item} index={index} />
