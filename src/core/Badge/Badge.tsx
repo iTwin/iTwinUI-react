@@ -7,6 +7,7 @@ import cx from 'classnames';
 import { CommonProps } from '../utils/props';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/badge.css';
+import { getWindow } from '../utils/common';
 
 export type BadgeProps = {
   /**
@@ -28,13 +29,16 @@ export type BadgeProps = {
  */
 export const Badge = (props: BadgeProps) => {
   const { backgroundColor, style, className, children, ...rest } = props;
+
   useTheme();
+
+  const _style =
+    getWindow()?.CSS && CSS.supports(`--badge-color: ${backgroundColor}`)
+      ? { '--badge-color': backgroundColor, ...style }
+      : { backgroundColor: backgroundColor, ...style };
+
   return (
-    <span
-      className={cx('iui-badge', className)}
-      style={{ backgroundColor, ...style }}
-      {...rest}
-    >
+    <span className={cx('iui-badge', className)} style={_style} {...rest}>
       {children}
     </span>
   );
