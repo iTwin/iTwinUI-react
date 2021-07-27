@@ -9,7 +9,7 @@ import '@itwin/itwinui-css/css/slider.css';
 import { TooltipProps } from '../Tooltip';
 import { CommonProps } from '../utils/props';
 import { getBoundedValue } from '../utils/common';
-import { usePointerEventListener } from '../utils/hooks/usePointerEventListener';
+import { useEventListener } from '../utils/hooks/useEventListener';
 import { Track } from './Track';
 import { Thumb } from './Thumb';
 
@@ -273,7 +273,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       (
         event: PointerEvent,
         callback?: (values: ReadonlyArray<number>) => void,
-        skipValueChangeCheck?: boolean,
+        forceCallbackToRun?: boolean,
       ) => {
         if (containerRef.current && undefined !== activeThumbIndex) {
           const percent = getPercentageOfRectangle(
@@ -285,7 +285,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
           const [minVal, maxVal] = getAllowableThumbRange(activeThumbIndex);
           pointerValue = getBoundedValue(pointerValue, minVal, maxVal);
           if (
-            !skipValueChangeCheck &&
+            !forceCallbackToRun &&
             pointerValue === currentValues[activeThumbIndex]
           ) {
             return;
@@ -367,12 +367,12 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       [min, max, step, currentValues, getAllowableThumbRange, onChange],
     );
 
-    usePointerEventListener(
+    useEventListener(
       'pointermove',
       handlePointerMove,
       containerRef.current?.ownerDocument,
     );
-    usePointerEventListener(
+    useEventListener(
       'pointerup',
       handlePointerUp,
       containerRef.current?.ownerDocument,
