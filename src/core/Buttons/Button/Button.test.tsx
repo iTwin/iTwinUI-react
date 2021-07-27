@@ -154,7 +154,7 @@ it('should render without label correctly', () => {
     container: { firstChild: placeholderIcon },
   } = render(<SvgPlaceholder className='iui-icon' />);
 
-  button.querySelectorAll('.iui-icon').forEach((button) => {
-    expect(button).toEqual(placeholderIcon);
+  button.querySelectorAll('.iui-icon').forEach((icon) => {
+    expect(icon).toEqual(placeholderIcon);
   });
 });
