@@ -4,10 +4,17 @@
  *--------------------------------------------------------------------------------------------*/
 import { Story, Meta } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
+import { useState } from '@storybook/addons';
 import React from 'react';
-import { Breadcrumbs, BreadcrumbsProps } from '../../src/core';
-import { BreadcrumbItem } from '../../src/core/Breadcrumbs';
-import { SvgChevronRightDouble } from '@itwin/itwinui-icons-react';
+import {
+  Breadcrumbs,
+  BreadcrumbsProps,
+  BreadcrumbItem,
+  DropdownButton,
+  MenuItem,
+  Input,
+} from '../../src/core';
+import { SvgChevronRightDouble, SvgFolder } from '@itwin/itwinui-icons-react';
 
 export default {
   component: Breadcrumbs,
@@ -82,6 +89,76 @@ export const Overflow: Story<BreadcrumbsProps> = (args) => {
   return (
     <div style={{ maxWidth: '50%', border: '1px solid lightpink', padding: 8 }}>
       <Breadcrumbs {...args}>{items}</Breadcrumbs>
+    </div>
+  );
+};
+
+export const FolderNavigation: Story<BreadcrumbsProps> = (args) => {
+  const items = React.useMemo(
+    () => ['Root', 'Level 1', 'Level 2', 'Level 3', 'Level 4'],
+    [],
+  );
+
+  const [lastIndex, setLastIndex] = useState(items.length - 1);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const breadcrumbItems = React.useMemo(
+    () =>
+      items.slice(0, lastIndex + 1).map((item, index) => (
+        <BreadcrumbItem
+          key={`Breadcrumb${index}`}
+          onClick={() => {
+            if (lastIndex !== index) {
+              setLastIndex(index);
+            } else {
+              setIsEditing(true);
+            }
+          }}
+        >
+          {item}
+        </BreadcrumbItem>
+      )),
+    [items, lastIndex],
+  );
+
+  return (
+    <div style={{ display: 'inline-flex', width: 450 }}>
+      {isEditing ? (
+        <Input
+          setFocus
+          defaultValue={items.slice(0, lastIndex + 1).join('/')}
+          onChange={({ target: { value } }) => {
+            const lastItem = value.substring(
+              value.lastIndexOf('/', value.length - 2) + 1,
+            );
+            setLastIndex(items.findIndex((item) => lastItem.includes(item)));
+          }}
+          onKeyDown={({ key }) => key === 'Enter' && setIsEditing(false)}
+          onBlur={() => setIsEditing(false)}
+        />
+      ) : (
+        <>
+          <DropdownButton
+            startIcon={<SvgFolder aria-hidden />}
+            styleType='borderless'
+            menuItems={(close) =>
+              items.map((item, index) => (
+                <MenuItem
+                  key={`Item${index}`}
+                  onClick={() => {
+                    setLastIndex(index);
+                    setIsEditing(false);
+                    close();
+                  }}
+                >
+                  {item}
+                </MenuItem>
+              ))
+            }
+          />
+          <Breadcrumbs {...args}>{breadcrumbItems}</Breadcrumbs>
+        </>
+      )}
     </div>
   );
 };
