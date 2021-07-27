@@ -9,6 +9,10 @@
 - **Added new `Breadcrumbs` component.**
   - Supports customizing elements in `BreadcrumbItem` and handles overflow based on available space.
 
+### Fixes
+
+- **Made `Button` children optional** to allow using buttons with only icons.
+
 ## [1.12.0]
 
 `2021-07-20`
