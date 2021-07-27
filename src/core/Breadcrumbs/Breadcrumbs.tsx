@@ -20,7 +20,7 @@ export type BreadcrumbsProps = {
   /**
    * Breadcrumb items.
    */
-  children: JSX.Element[];
+  children: React.ReactNodeArray;
   /**
    * Specify a custom separator element to show between breadcrumb items.
    * Defaults to the `SvgChevronRight` icon.
@@ -43,13 +43,12 @@ export type BreadcrumbsProps = {
 export const Breadcrumbs = React.forwardRef(
   (props: BreadcrumbsProps, ref: React.RefObject<HTMLElement>) => {
     const {
-      children,
-      currentIndex = React.Children.count(children) - 1,
+      children: items,
+      currentIndex = items.length - 1,
       separator,
       className,
       ...rest
     } = props;
-    const items = React.Children.toArray(children);
 
     useTheme();
 
@@ -59,9 +58,9 @@ export const Breadcrumbs = React.forwardRef(
     const overflowBreakpoints = React.useRef<number[]>([]);
 
     React.useLayoutEffect(() => {
-      setVisibleCount(React.Children.count(children));
+      setVisibleCount(items.length);
       overflowBreakpoints.current = [];
-    }, [children]);
+    }, [items]);
 
     const [breadcrumbsWidth, setBreadcrumbsWith] = React.useState<number>(0);
     const updateBreadcrumbsWidth = React.useCallback(
@@ -110,13 +109,14 @@ export const Breadcrumbs = React.forwardRef(
             'iui-current': currentIndex === index,
           })}
         >
-          {React.isValidElement(item) &&
-            React.cloneElement(item, {
-              'aria-current':
-                item.props['aria-current'] ?? currentIndex === index
-                  ? 'location'
-                  : undefined,
-            })}
+          {React.isValidElement(item)
+            ? React.cloneElement(item, {
+                'aria-current':
+                  item.props['aria-current'] ?? currentIndex === index
+                    ? 'location'
+                    : undefined,
+              })
+            : item}
         </li>
       );
     };
@@ -129,8 +129,12 @@ export const Breadcrumbs = React.forwardRef(
         {...rest}
       >
         <ol className='iui-breadcrumbs-list'>
-          {visibleCount > 1 && <ListItem index={0} />}
-          {visibleCount > 1 && <Separator />}
+          {visibleCount > 1 && (
+            <>
+              <ListItem index={0} />
+              <Separator />
+            </>
+          )}
           {items.length - visibleCount > 0 && (
             <>
               <li className='iui-breadcrumbs-item'>
