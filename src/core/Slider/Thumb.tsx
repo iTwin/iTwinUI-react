@@ -88,6 +88,9 @@ export const Thumb = (props: ThumbProps) => {
       if (disabled) {
         return;
       }
+      if (event.altKey) {
+        return;
+      }
       switch (event.key) {
         case 'ArrowLeft':
         case 'ArrowDown':

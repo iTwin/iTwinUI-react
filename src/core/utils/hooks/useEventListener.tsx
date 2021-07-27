@@ -34,7 +34,6 @@ export const useEventListener = (
     }
 
     const eventListener = (event: Event) => savedHandler.current?.(event);
-
     element.addEventListener(eventName, eventListener);
     return () => {
       element.removeEventListener(eventName, eventListener);
