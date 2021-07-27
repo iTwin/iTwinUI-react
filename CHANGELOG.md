@@ -7,7 +7,8 @@
 ### What's new
 
 - **Added new `Breadcrumbs` component.**
-  - Supports customizing elements in `BreadcrumbItem` and handles overflow based on available space.
+  - Supports customizing elements in `BreadcrumbItem` through `element` prop.
+  - Handles overflow based on available space and resizes.
 
 ### Fixes
 
