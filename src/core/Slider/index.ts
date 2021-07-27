@@ -3,5 +3,5 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 export { Slider } from './Slider';
-export type { SliderProps } from './Slider';
+export type { SliderProps, TrackDisplayMode } from './Slider';
 export default './Slider';
