@@ -90,9 +90,11 @@ export const Thumb = (props: ThumbProps) => {
       }
       switch (event.key) {
         case 'ArrowLeft':
+        case 'ArrowDown':
           onThumbValueChanged(index, Math.max(value - step, minVal));
           return;
         case 'ArrowRight':
+        case 'ArrowUp':
           onThumbValueChanged(index, Math.min(value + step, maxVal));
           return;
         case 'Home':

@@ -12,6 +12,47 @@ import { getBoundedValue } from '../utils/common';
 import { Track } from './Track';
 import { Thumb } from './Thumb';
 
+// based on https://usehooks.com/useEventListener/
+function usePointerEventListener(
+  eventName: string,
+  handler: (event: PointerEvent) => void,
+  element: HTMLElement | Document | undefined,
+) {
+  // Create a ref that stores handler
+  const savedHandler = React.useRef<(event: PointerEvent) => void>();
+
+  // Update ref.current value if handler changes.
+  // This allows our effect below to always get latest handler ...
+  // ... without us needing to pass it in effect deps array ...
+  // ... and potentially cause effect to re-run every render.
+  React.useEffect(() => {
+    savedHandler.current = handler;
+  }, [handler]);
+
+  React.useEffect(
+    () => {
+      // Make sure element supports addEventListener
+      const isSupported = element && element.addEventListener;
+      if (!isSupported) {
+        return;
+      }
+
+      // Create event listener that calls handler function stored in ref
+      const eventListener = (event: PointerEvent) =>
+        savedHandler.current?.(event);
+
+      // Add event listener
+      element?.addEventListener(eventName, eventListener);
+
+      // Remove event listener on cleanup
+      return () => {
+        element?.removeEventListener(eventName, eventListener);
+      };
+    },
+    [eventName, element], // Re-run if eventName or element changes
+  );
+}
+
 /**
  * Determines which segments are shown with color.
  */
@@ -272,6 +313,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       (
         event: PointerEvent,
         callback?: (values: ReadonlyArray<number>) => void,
+        skipValueChangeCheck?: boolean,
       ) => {
         if (containerRef.current && undefined !== activeThumbIndex) {
           const percent = getPercentageOfRectangle(
@@ -282,7 +324,10 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
           pointerValue = roundValueToClosestStep(pointerValue, step, min);
           const [minVal, maxVal] = getAllowableThumbRange(activeThumbIndex);
           pointerValue = getBoundedValue(pointerValue, minVal, maxVal);
-          if (pointerValue === currentValues[activeThumbIndex]) {
+          if (
+            !skipValueChangeCheck &&
+            pointerValue === currentValues[activeThumbIndex]
+          ) {
             return;
           }
           const newValues = [...currentValues];
@@ -323,7 +368,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
 
     const handlePointerUp = React.useCallback(
       (event: PointerEvent) => {
-        updateThumbValue(event, onChange);
+        updateThumbValue(event, onChange, true);
         setActiveThumbIndex(undefined);
         event.preventDefault();
         event.stopPropagation();
@@ -362,38 +407,16 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       [min, max, step, currentValues, getAllowableThumbRange, onChange],
     );
 
-    const pointerMoveFunctionRef = React.useRef<
-      (event: PointerEvent) => void
-    >();
-    React.useEffect(() => {
-      const ownerDoc = containerRef.current?.ownerDocument;
-      if (pointerMoveFunctionRef.current && ownerDoc) {
-        ownerDoc.removeEventListener(
-          'pointermove',
-          pointerMoveFunctionRef.current,
-        );
-      }
-      pointerMoveFunctionRef.current = handlePointerMove;
-    }, [handlePointerMove]);
-
-    const pointerUpFunctionRef = React.useRef<(event: PointerEvent) => void>();
-    React.useEffect(() => {
-      const ownerDoc = containerRef.current?.ownerDocument;
-      if (pointerUpFunctionRef.current && ownerDoc) {
-        ownerDoc.removeEventListener('pointerup', pointerUpFunctionRef.current);
-      }
-      pointerUpFunctionRef.current = handlePointerUp;
-    }, [handlePointerUp]);
-
-    React.useEffect(() => {
-      const ownerDoc = containerRef.current?.ownerDocument;
-      ownerDoc?.addEventListener('pointermove', handlePointerMove);
-      ownerDoc?.addEventListener('pointerup', handlePointerUp);
-      return () => {
-        ownerDoc?.removeEventListener('pointermove', handlePointerMove);
-        ownerDoc?.removeEventListener('pointerup', handlePointerUp);
-      };
-    }, [handlePointerMove, handlePointerUp]);
+    usePointerEventListener(
+      'pointermove',
+      handlePointerMove,
+      containerRef.current?.ownerDocument,
+    );
+    usePointerEventListener(
+      'pointerup',
+      handlePointerUp,
+      containerRef.current?.ownerDocument,
+    );
 
     const tickMarkArea = React.useMemo(() => {
       if (!tickLabels) {
