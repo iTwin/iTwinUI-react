@@ -30,7 +30,7 @@ it('should render as anchor link', () => {
     </BreadcrumbItem>,
   );
 
-  const item = container.querySelector('a.iui-anchor') as HTMLAnchorElement;
+  const item = container.querySelector('a') as HTMLAnchorElement;
   expect(item).toBeTruthy();
   expect(item.textContent).toEqual('Item');
   expect(item.href).toContain(mockHref);

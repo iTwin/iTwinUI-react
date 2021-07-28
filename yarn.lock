@@ -2215,10 +2215,10 @@
   resolved "https://registry.yarnpkg.com/@istanbuljs/schema/-/schema-0.1.3.tgz#e45e384e4b8ec16bce2fd903af78450f6bf7ec98"
   integrity sha512-ZXRY4jNvVgSVQ8DL3LTcakaAtXwTVUxE81hslsyD2AtoXW/wVob10HkOJ1X/pAlcI7D+2YoZKg5do8G/w6RYgA==
 
-"@itwin/itwinui-css@^0.24.3":
-  version "0.24.3"
-  resolved "https://registry.yarnpkg.com/@itwin/itwinui-css/-/itwinui-css-0.24.3.tgz#38bc559573629cf99fd18b3369846e6a6de2c05a"
-  integrity sha512-/9RmPAbF5sfU+YIyvmGIlooPTJ305JbWrvdB82zhFGMkmlfV28MMiURj6XxEYyT4jq3eQVggKwC9f3HUuYlmLg==
+"@itwin/itwinui-css@^0.24.5":
+  version "0.24.5"
+  resolved "https://registry.yarnpkg.com/@itwin/itwinui-css/-/itwinui-css-0.24.5.tgz#e19a6195a1e42354eeed3358b27454a542f84423"
+  integrity sha512-b1LuXwJ954EuEnVDXh47xjXHe/1BO6HHoUR2bJ5HR2okgChBJvM9LQNlO09C2oEjROr62QN1XItQkocrVEKkNQ==
 
 "@itwin/itwinui-icons-react@^1.1.1":
   version "1.1.3"
