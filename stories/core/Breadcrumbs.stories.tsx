@@ -118,6 +118,24 @@ export const FolderNavigation: Story<BreadcrumbsProps> = (args) => {
 
   return (
     <div style={{ display: 'inline-flex', width: 450 }}>
+      <DropdownButton
+        startIcon={<SvgFolder aria-hidden />}
+        styleType='borderless'
+        menuItems={(close) =>
+          items.map((item, index) => (
+            <MenuItem
+              key={`Item${index}`}
+              onClick={() => {
+                setLastIndex(index);
+                setIsEditing(false);
+                close();
+              }}
+            >
+              {item}
+            </MenuItem>
+          ))
+        }
+      />
       {isEditing ? (
         <Input
           setFocus
@@ -132,27 +150,7 @@ export const FolderNavigation: Story<BreadcrumbsProps> = (args) => {
           onBlur={() => setIsEditing(false)}
         />
       ) : (
-        <>
-          <DropdownButton
-            startIcon={<SvgFolder aria-hidden />}
-            styleType='borderless'
-            menuItems={(close) =>
-              items.map((item, index) => (
-                <MenuItem
-                  key={`Item${index}`}
-                  onClick={() => {
-                    setLastIndex(index);
-                    setIsEditing(false);
-                    close();
-                  }}
-                >
-                  {item}
-                </MenuItem>
-              ))
-            }
-          />
-          <Breadcrumbs {...args}>{breadcrumbItems}</Breadcrumbs>
-        </>
+        <Breadcrumbs {...args}>{breadcrumbItems}</Breadcrumbs>
       )}
     </div>
   );
