@@ -163,8 +163,7 @@ export type SliderProps = {
    */
   thumbProps?: (index: number) => React.HTMLAttributes<HTMLDivElement>;
   /**
-   * Callback fired at the end of a thumb move and when there user clicks on rail
-   * to report the current set of values.
+   * Callback fired at the end of a thumb move (i.e. on pointerUp) and when user clicks on rail.
    */
   onChange?: (values: ReadonlyArray<number>) => void;
   /**
