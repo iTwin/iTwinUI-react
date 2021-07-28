@@ -32,15 +32,23 @@ export type BreadcrumbsProps = {
  * A breadcrumb trail is used as a navigational aid to help users keep track
  * of their place in the application. It is often placed before a page's main content.
  *
+ * Breadcrumb items can use `Button` or `a` or any custom component (passed as `children`).
+ *
  * For accessibility, make sure to provide an aria-label describing the type of navigation.
- * 
+ *
  * @example
  * <Breadcrumbs aria-label='Primary'>
  *   <Button onClick={() => {}}>Root</Button>
  *   <Button onClick={() => {}}>Item 1</Button>
  *   <Button onClick={() => {}}>Item 2</Button>
  * </Breadcrumbs>
- />
+ *
+ * @example
+ * <Breadcrumbs aria-label='Secondary'>
+ *   <a href='/'>Root</a>
+ *   <a href='/level1/'>Level 1</a>
+ *   <span>Current level</span>
+ * </Breadcrumbs>
  */
 export const Breadcrumbs = React.forwardRef(
   (props: BreadcrumbsProps, ref: React.RefObject<HTMLElement>) => {
