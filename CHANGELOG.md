@@ -7,6 +7,7 @@
 ### What's new
 
 - **Added new `Breadcrumbs` component.** Handles overflow based on available space and resizes.
+- **Added support for nested menus in `MenuItem`** through new `subMenuItems` prop.
 
 ### Fixes
 
