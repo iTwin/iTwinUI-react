@@ -279,19 +279,16 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
           pointerValue = roundValueToClosestStep(pointerValue, step, min);
           const [minVal, maxVal] = getAllowableThumbRange(activeThumbIndex);
           pointerValue = getBoundedValue(pointerValue, minVal, maxVal);
-          if (pointerValue === currentValues[activeThumbIndex]) {
-            if ('onChange' === callbackType) {
-              onChange?.(currentValues);
-            }
-            return;
+          if (pointerValue !== currentValues[activeThumbIndex]) {
+            const newValues = [...currentValues];
+            newValues[activeThumbIndex] = pointerValue;
+            setCurrentValues(newValues);
+            'onChange' === callbackType
+              ? onChange?.(newValues)
+              : onUpdate?.(newValues);
+          } else if ('onChange' === callbackType) {
+            onChange?.(currentValues);
           }
-
-          const newValues = [...currentValues];
-          newValues[activeThumbIndex] = pointerValue;
-          setCurrentValues(newValues);
-          'onChange' === callbackType
-            ? onChange?.(newValues)
-            : onUpdate?.(newValues);
         }
       },
       [
