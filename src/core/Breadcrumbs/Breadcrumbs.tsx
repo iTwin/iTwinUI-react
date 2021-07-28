@@ -32,8 +32,10 @@ export type BreadcrumbsProps = {
  * A breadcrumb trail is used as a navigational aid to help users keep track
  * of their place in the application. It is often placed before a page's main content.
  *
+ * For accessibility, make sure to provide an aria-label describing the type of navigation.
+ * 
  * @example
- * <Breadcrumbs>
+ * <Breadcrumbs aria-label='Primary'>
  *   <BreadcrumbItem onClick={() => {}}>Root</BreadcrumbItem>
  *   <BreadcrumbItem onClick={() => {}}>Item 1</BreadcrumbItem>
  *   <BreadcrumbItem onClick={() => {}}>Item 2</BreadcrumbItem>
