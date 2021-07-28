@@ -7,9 +7,9 @@ import { action } from '@storybook/addon-actions';
 import { useState } from '@storybook/addons';
 import React from 'react';
 import {
+  Button,
   Breadcrumbs,
   BreadcrumbsProps,
-  BreadcrumbItem,
   DropdownButton,
   MenuItem,
   Input,
@@ -18,7 +18,6 @@ import { SvgChevronRightDouble, SvgFolder } from '@itwin/itwinui-icons-react';
 
 export default {
   component: Breadcrumbs,
-  subcomponents: { BreadcrumbItem },
   title: 'Core/Breadcrumbs',
   argTypes: {
     className: { control: { disable: true } },
@@ -31,15 +30,15 @@ export default {
 export const Basic: Story<BreadcrumbsProps> = (args) => {
   return (
     <Breadcrumbs {...args}>
-      <BreadcrumbItem key={0} onClick={() => action('Root')()}>
+      <Button key={0} onClick={() => action('Root')()}>
         Root
-      </BreadcrumbItem>
-      <BreadcrumbItem key={1} onClick={() => action('Item 1')()}>
+      </Button>
+      <Button key={1} onClick={() => action('Item 1')()}>
         Item 1
-      </BreadcrumbItem>
-      <BreadcrumbItem key={2} onClick={() => action('Item 2')()}>
+      </Button>
+      <Button key={2} onClick={() => action('Item 2')()}>
         Item 2
-      </BreadcrumbItem>
+      </Button>
     </Breadcrumbs>
   );
 };
@@ -47,15 +46,13 @@ export const Basic: Story<BreadcrumbsProps> = (args) => {
 export const Links: Story<BreadcrumbsProps> = (args) => {
   return (
     <Breadcrumbs {...args}>
-      <BreadcrumbItem key={0} element='a' href='/'>
+      <a key={0} href='/'>
         iTwinUI
-      </BreadcrumbItem>
-      <BreadcrumbItem key={1} element='a' href='/?path=/docs/core-breadcrumbs'>
+      </a>
+      <a key={1} href='/?path=/docs/core-breadcrumbs'>
         Breadcrumbs
-      </BreadcrumbItem>
-      <BreadcrumbItem key={2} element='span'>
-        Links
-      </BreadcrumbItem>
+      </a>
+      <span key={2}>Links</span>
     </Breadcrumbs>
   );
 };
@@ -63,15 +60,15 @@ export const Links: Story<BreadcrumbsProps> = (args) => {
 export const CustomSeparator: Story<BreadcrumbsProps> = (args) => {
   return (
     <Breadcrumbs separator={<SvgChevronRightDouble />} {...args}>
-      <BreadcrumbItem key={0} onClick={() => action('Root')()}>
+      <Button key={0} onClick={() => action('Root')()}>
         Root
-      </BreadcrumbItem>
-      <BreadcrumbItem key={1} onClick={() => action('Item 1')()}>
+      </Button>
+      <Button key={1} onClick={() => action('Item 1')()}>
         Item 1
-      </BreadcrumbItem>
-      <BreadcrumbItem key={2} onClick={() => action('Item 2')()}>
+      </Button>
+      <Button key={2} onClick={() => action('Item 2')()}>
         Item 2
-      </BreadcrumbItem>
+      </Button>
     </Breadcrumbs>
   );
 };
@@ -82,9 +79,7 @@ CustomSeparator.args = {
 export const Overflow: Story<BreadcrumbsProps> = (args) => {
   const items = Array(10)
     .fill(null)
-    .map((_, index) => (
-      <BreadcrumbItem key={index}>Item {index}</BreadcrumbItem>
-    ));
+    .map((_, index) => <Button key={index}>Item {index}</Button>);
 
   return (
     <div style={{ maxWidth: '50%', border: '1px solid lightpink', padding: 8 }}>
@@ -105,7 +100,7 @@ export const FolderNavigation: Story<BreadcrumbsProps> = (args) => {
   const breadcrumbItems = React.useMemo(
     () =>
       items.slice(0, lastIndex + 1).map((item, index) => (
-        <BreadcrumbItem
+        <Button
           key={`Breadcrumb${index}`}
           onClick={() => {
             if (lastIndex !== index) {
@@ -116,7 +111,7 @@ export const FolderNavigation: Story<BreadcrumbsProps> = (args) => {
           }}
         >
           {item}
-        </BreadcrumbItem>
+        </Button>
       )),
     [items, lastIndex],
   );

@@ -6,14 +6,14 @@ import React from 'react';
 import { render } from '@testing-library/react';
 
 import { Breadcrumbs, BreadcrumbsProps } from './Breadcrumbs';
-import { BreadcrumbItem } from './BreadcrumbItem';
+import { Button } from '../Buttons';
 import { SvgChevronRight } from '@itwin/itwinui-icons-react';
 
 const renderComponent = (props?: Partial<BreadcrumbsProps>) => {
   return render(
     <Breadcrumbs {...props}>
       {[...Array(3)].map((_, index) => (
-        <BreadcrumbItem key={index}>Item {index}</BreadcrumbItem>
+        <Button key={index}>Item {index}</Button>
       ))}
     </Breadcrumbs>,
   );
@@ -124,7 +124,7 @@ it('should restore hidden items when there is enough space again', () => {
   rerender(
     <Breadcrumbs>
       {[...Array(3)].map((_, index) => (
-        <BreadcrumbItem key={index}>Item {index}</BreadcrumbItem>
+        <Button key={index}>Item {index}</Button>
       ))}
     </Breadcrumbs>,
   );
