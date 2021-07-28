@@ -85,10 +85,7 @@ export const Thumb = (props: ThumbProps) => {
   const thumbRef = React.useRef<HTMLDivElement>(null);
   const handleOnKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
-      if (disabled) {
-        return;
-      }
-      if (event.altKey) {
+      if (disabled || event.altKey) {
         return;
       }
       switch (event.key) {
