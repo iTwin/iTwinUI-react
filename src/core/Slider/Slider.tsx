@@ -163,8 +163,8 @@ export type SliderProps = {
    */
   thumbProps?: (index: number) => React.HTMLAttributes<HTMLDivElement>;
   /**
-   * Callback fired when the value(s) of the slider has changed. This will receive
-   * changes at the end of a slide as well as changes from clicks on rails and tracks.
+   * Callback fired at the end of a thumb move and when there user clicks on rail
+   * to report the current set of values.
    */
   onChange?: (values: ReadonlyArray<number>) => void;
   /**
@@ -270,11 +270,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
     >(undefined);
 
     const updateThumbValue = React.useCallback(
-      (
-        event: PointerEvent,
-        callback?: (values: ReadonlyArray<number>) => void,
-        forceCallbackToRun?: boolean,
-      ) => {
+      (event: PointerEvent, callbackType: 'onChange' | 'onUpdate') => {
         if (containerRef.current && undefined !== activeThumbIndex) {
           const percent = getPercentageOfRectangle(
             containerRef.current.getBoundingClientRect(),
@@ -284,28 +280,40 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
           pointerValue = roundValueToClosestStep(pointerValue, step, min);
           const [minVal, maxVal] = getAllowableThumbRange(activeThumbIndex);
           pointerValue = getBoundedValue(pointerValue, minVal, maxVal);
-          if (
-            !forceCallbackToRun &&
-            pointerValue === currentValues[activeThumbIndex]
-          ) {
+          if (pointerValue === currentValues[activeThumbIndex]) {
+            if ('onChange' === callbackType) {
+              onChange?.(currentValues);
+            }
             return;
           }
+
           const newValues = [...currentValues];
           newValues[activeThumbIndex] = pointerValue;
           setCurrentValues(newValues);
-          callback?.(newValues);
+          'onChange' === callbackType
+            ? onChange?.(newValues)
+            : onUpdate?.(newValues);
         }
       },
-      [activeThumbIndex, min, max, step, getAllowableThumbRange, currentValues],
+      [
+        activeThumbIndex,
+        min,
+        max,
+        step,
+        getAllowableThumbRange,
+        currentValues,
+        onUpdate,
+        onChange,
+      ],
     );
 
     const handlePointerMove = React.useCallback(
       (event: PointerEvent): void => {
         event.preventDefault();
         event.stopPropagation();
-        updateThumbValue(event, onUpdate);
+        updateThumbValue(event, 'onUpdate');
       },
-      [onUpdate, updateThumbValue],
+      [updateThumbValue],
     );
 
     // function called by Thumb keyboard processing
@@ -328,12 +336,12 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
 
     const handlePointerUp = React.useCallback(
       (event: PointerEvent) => {
-        updateThumbValue(event, onChange, true);
+        updateThumbValue(event, 'onChange');
         setActiveThumbIndex(undefined);
         event.preventDefault();
         event.stopPropagation();
       },
-      [onChange, updateThumbValue],
+      [updateThumbValue],
     );
 
     const handlePointerDownOnSlider = React.useCallback(
