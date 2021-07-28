@@ -36,9 +36,9 @@ export type BreadcrumbsProps = {
  * 
  * @example
  * <Breadcrumbs aria-label='Primary'>
- *   <BreadcrumbItem onClick={() => {}}>Root</BreadcrumbItem>
- *   <BreadcrumbItem onClick={() => {}}>Item 1</BreadcrumbItem>
- *   <BreadcrumbItem onClick={() => {}}>Item 2</BreadcrumbItem>
+ *   <Button onClick={() => {}}>Root</Button>
+ *   <Button onClick={() => {}}>Item 1</Button>
+ *   <Button onClick={() => {}}>Item 2</Button>
  * </Breadcrumbs>
  />
  */
