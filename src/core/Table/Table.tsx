@@ -129,6 +129,14 @@ export type TableProps<
    * If not specified, all rows are enabled.
    */
   isRowDisabled?: (rowData: T) => boolean;
+  /**
+   * Function that should return custom props passed to the each row.
+   * Must be memoized.
+   */
+  rowProps?: (
+    rowData: T,
+  ) => React.HTMLAttributes<HTMLDivElement> &
+    React.RefAttributes<HTMLDivElement>;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -201,6 +209,7 @@ export const Table = <
     filterTypes: filterFunctions,
     expanderCell,
     isRowDisabled,
+    rowProps,
     ...rest
   } = props;
 
@@ -546,13 +555,7 @@ export const Table = <
         {data.length !== 0 &&
           rows.map((row: Row<T>) => {
             prepareRow(row);
-            const rowProps = row.getRowProps({
-              className: cx('iui-row', {
-                'iui-selected': row.isSelected,
-                'iui-row-expanded': row.isExpanded && subComponent,
-                'iui-disabled': isRowDisabled?.(row.original),
-              }),
-            });
+
             return (
               <TableRowMemoized
                 row={row}
@@ -562,9 +565,10 @@ export const Table = <
                 onBottomReached={onBottomReachedRef}
                 intersectionMargin={intersectionMargin}
                 state={state}
-                key={rowProps.key}
+                key={row.getRowProps().key}
                 onClick={onRowClickHandler}
                 subComponent={subComponent}
+                isRowDisabled={isRowDisabled}
               />
             );
           })}

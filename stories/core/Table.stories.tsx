@@ -21,6 +21,7 @@ import {
   tableFilters,
   TableFilterValue,
   TableProps,
+  Tooltip,
 } from '../../src/core';
 import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
@@ -1088,6 +1089,12 @@ ControlledState.args = { isSelectable: true };
 export const Full: Story<TableProps> = (args) => {
   const { columns, data, ...rest } = args;
 
+  const [hoveredRow, setHoveredRow] = useState<
+    { name: string; description: string } | undefined
+  >(undefined);
+
+  const rowRefMap = React.useRef<Record<string, HTMLDivElement>>({});
+
   const isRowDisabled = useCallback(
     (rowData: { name: string; description: string }) => {
       return rowData.name === 'Name2';
@@ -1140,17 +1147,42 @@ export const Full: Story<TableProps> = (args) => {
     [],
   );
 
+  const rowProps = useCallback(
+    (rowData: { name: string; description: string }) => {
+      return {
+        onMouseEnter: (e: React.MouseEvent) => {
+          action(`Hovered over ${rowData.name}`)(e);
+          setHoveredRow(rowData);
+        },
+        ref: (el: HTMLDivElement | null) => {
+          if (el) {
+            rowRefMap.current[rowData.name] = el;
+          }
+        },
+      };
+    },
+    [],
+  );
+
   return (
-    <Table
-      columns={columns || tableColumns}
-      data={data || tableData}
-      emptyTableContent='No data.'
-      subComponent={expandedSubComponent}
-      isRowDisabled={isRowDisabled}
-      isSelectable
-      isSortable
-      {...rest}
-    />
+    <>
+      <Table
+        columns={columns || tableColumns}
+        data={data || tableData}
+        emptyTableContent='No data.'
+        subComponent={expandedSubComponent}
+        isRowDisabled={isRowDisabled}
+        rowProps={rowProps}
+        isSelectable
+        isSortable
+        {...rest}
+      />
+      <Tooltip
+        reference={hoveredRow ? rowRefMap.current[hoveredRow.name] : undefined}
+        content={`Hovered over ${hoveredRow?.name}.`}
+        placement='bottom'
+      />
+    </>
   );
 };
 

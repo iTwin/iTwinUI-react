@@ -970,3 +970,22 @@ it('should select and filter rows', () => {
   expect(checkboxInputs[2].checked).toBe(true);
   expect(checkboxInputs[3].checked).toBe(false);
 });
+
+it('should pass custom props to row', () => {
+  const onMouseEnter = jest.fn();
+  let element: HTMLInputElement | null = null;
+  const onRef = (ref: HTMLInputElement) => {
+    element = ref;
+  };
+  const rowProps = (rowData: { name: string; description: string }) => {
+    return { onMouseEnter: () => onMouseEnter(rowData), ref: onRef };
+  };
+  const { container } = renderComponent({ rowProps });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  fireEvent.mouseEnter(rows[0]);
+  expect(onMouseEnter).toHaveBeenCalledWith(mockedData()[0]);
+  expect(element).toBeTruthy();
+});
