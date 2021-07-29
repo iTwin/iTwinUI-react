@@ -9,10 +9,6 @@
 - **Added new `Breadcrumbs` component.** Handles overflow based on available space and resizes.
 - **Added support for nested menus in `MenuItem`** through new `subMenuItems` prop.
 
-### What's new
-
-- **Added new `Breadcrumbs` component.** Handles overflow based on available space and resizes.
-
 ### Fixes
 
 - **Made `Button` children optional** to allow using buttons with only icons.
