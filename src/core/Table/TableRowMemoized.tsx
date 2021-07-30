@@ -29,7 +29,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
   state: TableState<T>; // Needed for explicitly checking selection changes
   onClick?: (event: React.MouseEvent, row: Row<T>) => void;
   subComponent?: (row: Row<T>) => React.ReactNode;
-  isRowDisabled: boolean;
+  isDisabled: boolean;
 }) => {
   const {
     row,
@@ -40,7 +40,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
     intersectionMargin,
     onClick,
     subComponent,
-    isRowDisabled,
+    isDisabled,
   } = props;
 
   const onIntersect = React.useCallback(() => {
@@ -54,18 +54,24 @@ const TableRow = <T extends Record<string, unknown>>(props: {
 
   const expandedHeight = React.useRef(0);
 
+  const userRowProps = rowProps?.(row.original);
   const mergedProps = {
-    ...row.getRowProps({
-      className: cx('iui-row', {
-        'iui-selected': row.isSelected,
-        'iui-row-expanded': row.isExpanded && subComponent,
-        'iui-disabled': isRowDisabled,
-      }),
-    }),
-    ...rowProps?.(row.original),
+    ...row.getRowProps(),
+    ...userRowProps,
+    ...{
+      className: cx(
+        'iui-row',
+        {
+          'iui-selected': row.isSelected,
+          'iui-row-expanded': row.isExpanded && subComponent,
+          'iui-disabled': isDisabled,
+        },
+        userRowProps?.className,
+      ),
+    },
   };
 
-  const refs = useMergedRefs(rowRef, mergedProps.ref ?? (() => {}));
+  const refs = useMergedRefs(rowRef, mergedProps.ref);
 
   return (
     <>
@@ -137,6 +143,6 @@ export const TableRowMemoized = React.memo(
     prevProp.row.cells.every(
       (cell, index) => nextProp.row.cells[index].column === cell.column,
     ) &&
-    prevProp.isRowDisabled === nextProp.isRowDisabled &&
+    prevProp.isDisabled === nextProp.isDisabled &&
     prevProp.rowProps === nextProp.rowProps,
 ) as typeof TableRow;

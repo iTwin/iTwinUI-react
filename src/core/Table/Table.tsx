@@ -564,7 +564,7 @@ export const Table = <
                 key={row.getRowProps().key}
                 onClick={onRowClickHandler}
                 subComponent={subComponent}
-                isRowDisabled={!!isRowDisabled?.(row.original)}
+                isDisabled={!!isRowDisabled?.(row.original)}
               />
             );
           })}
