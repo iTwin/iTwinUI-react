@@ -18,10 +18,7 @@ import { useMergedRefs } from '../utils/hooks/useMergedRefs';
  */
 const TableRow = <T extends Record<string, unknown>>(props: {
   row: Row<T>;
-  rowProps?: (
-    rowData: T,
-  ) => React.HTMLAttributes<HTMLDivElement> &
-    React.RefAttributes<HTMLDivElement>;
+  rowProps?: (rowData: T) => React.ComponentPropsWithRef<'div'>;
   isLast: boolean;
   onRowInViewport: React.MutableRefObject<((rowData: T) => void) | undefined>;
   onBottomReached: React.MutableRefObject<(() => void) | undefined>;
