@@ -29,7 +29,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
   state: TableState<T>; // Needed for explicitly checking selection changes
   onClick?: (event: React.MouseEvent, row: Row<T>) => void;
   subComponent?: (row: Row<T>) => React.ReactNode;
-  isRowDisabled?: (rowData: T) => boolean;
+  isRowDisabled: boolean;
 }) => {
   const {
     row,
@@ -59,7 +59,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
       className: cx('iui-row', {
         'iui-selected': row.isSelected,
         'iui-row-expanded': row.isExpanded && subComponent,
-        'iui-disabled': isRowDisabled?.(row.original),
+        'iui-disabled': isRowDisabled,
       }),
     }),
     ...rowProps?.(row.original),

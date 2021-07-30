@@ -133,10 +133,7 @@ export type TableProps<
    * Function that should return custom props passed to the each row.
    * Must be memoized.
    */
-  rowProps?: (
-    rowData: T,
-  ) => React.HTMLAttributes<HTMLDivElement> &
-    React.RefAttributes<HTMLDivElement>;
+  rowProps?: (rowData: T) => React.ComponentPropsWithRef<'div'>;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -555,7 +552,6 @@ export const Table = <
         {data.length !== 0 &&
           rows.map((row: Row<T>) => {
             prepareRow(row);
-
             return (
               <TableRowMemoized
                 row={row}
@@ -568,7 +564,7 @@ export const Table = <
                 key={row.getRowProps().key}
                 onClick={onRowClickHandler}
                 subComponent={subComponent}
-                isRowDisabled={isRowDisabled}
+                isRowDisabled={!!isRowDisabled?.(row.original)}
               />
             );
           })}
