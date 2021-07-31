@@ -205,12 +205,9 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       ...rest
     } = props;
 
-    const thumbIdRef = React.useRef(0);
-
     const [currentValues, setCurrentValues] = React.useState(values);
     React.useEffect(() => {
       setCurrentValues(values);
-      thumbIdRef.current = thumbIdRef.current + 1;
     }, [values]);
 
     const [minValueLabel, setMinValueLabel] = React.useState(
@@ -444,7 +441,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
             const [minVal, maxVal] = getAllowableThumbRange(index);
             return (
               <Thumb
-                key={`${thumbIdRef.current}-${index}`}
+                key={index}
                 index={index}
                 disabled={disabled}
                 isActive={activeThumbIndex === index}
