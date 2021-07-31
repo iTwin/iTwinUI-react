@@ -182,24 +182,3 @@ DecimalIncrement.args = {
   step: 2.5,
   values: [25],
 };
-
-export const ProcessChange: Story<Partial<SliderProps>> = (args) => {
-  const [sliderValues, setSliderValues] = React.useState([20, 40]);
-
-  return (
-    <Slider
-      {...args}
-      values={sliderValues}
-      onChange={(values) => setSliderValues([...values])}
-    />
-  );
-};
-
-ProcessChange.args = {
-  min: 0,
-  max: 60,
-  tickLabels: ['0', '20', '40', '60'],
-  tooltipProps: (index, val) => {
-    return { placement: 'right', content: `\$${val}.00` };
-  },
-};
