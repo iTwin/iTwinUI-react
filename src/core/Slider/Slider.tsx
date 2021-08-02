@@ -442,7 +442,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
             const thisThumbProps = thumbProps?.(index) ?? {};
             return (
               <Thumb
-                key={`${thisThumbProps?.id ?? index}`}
+                key={`${thisThumbProps.id ?? index}`}
                 index={index}
                 disabled={disabled}
                 isActive={activeThumbIndex === index}
