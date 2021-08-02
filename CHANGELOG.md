@@ -7,6 +7,8 @@
 ### What's new
 
 - **`Table` accepts custom row props** through `rowProps` prop.
+- **`Select` and `MenuItem` now use data-value attributes** as HTML value representation.
+- **`SelectOption` has support for `id` prop.**
 
 ## [1.13.1]
 
