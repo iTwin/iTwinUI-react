@@ -440,12 +440,9 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
           {currentValues.map((thumbValue, index) => {
             const [minVal, maxVal] = getAllowableThumbRange(index);
             const thisThumbProps = thumbProps?.(index) ?? {};
-            const key = thisThumbProps.id
-              ? thisThumbProps.id
-              : index.toString();
             return (
               <Thumb
-                key={key}
+                key={`${thisThumbProps?.id ?? index}`}
                 index={index}
                 disabled={disabled}
                 isActive={activeThumbIndex === index}
