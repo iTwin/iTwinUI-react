@@ -51,6 +51,10 @@ export type SelectOption<T> = {
    * Item is disabled.
    */
   disabled?: boolean;
+  /**
+   * HTML id attribute.
+   */
+  id?: string;
 };
 
 export type SelectProps<T> = {
@@ -274,6 +278,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
       aria-expanded={isOpen}
       aria-haspopup='listbox'
       style={style}
+      data-value={selectedItem?.value}
       {...rest}
     >
       <DropdownMenu

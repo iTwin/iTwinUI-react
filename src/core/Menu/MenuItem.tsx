@@ -153,6 +153,7 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
         tabIndex={disabled ? undefined : -1}
         aria-selected={isSelected}
         aria-haspopup={subMenuItems.length > 0}
+        data-value={value}
         onKeyDown={onKeyDown}
         onMouseEnter={() => setIsSubmenuVisible(true)}
         onMouseLeave={(e) => {
