@@ -36,6 +36,7 @@ import { IconButton } from '../Buttons';
 import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import { FilterToggle, TableFilterValue } from './filters';
 import { customFilterFunctions } from './filters/customFilterFunctions';
+import VirtualScroll from './VirtualScroll';
 
 const singleRowSelectedAction = 'singleRowSelected';
 
@@ -548,31 +549,35 @@ export const Table = <
         })}
       </div>
       <div {...getTableBodyProps({ className: 'iui-table-body' })}>
-        {data.length !== 0 &&
-          rows.map((row: Row<T>) => {
-            prepareRow(row);
-            const rowProps = row.getRowProps({
-              className: cx('iui-row', {
-                'iui-selected': row.isSelected,
-                'iui-row-expanded': row.isExpanded && subComponent,
-                'iui-disabled': isRowDisabled?.(row.original),
-              }),
-            });
-            return (
-              <TableRowMemoized
-                row={row}
-                rowProps={rowProps}
-                isLast={row.index === data.length - 1}
-                onRowInViewport={onRowInViewportRef}
-                onBottomReached={onBottomReachedRef}
-                intersectionMargin={intersectionMargin}
-                state={state}
-                key={rowProps.key}
-                onClick={onRowClickHandler}
-                subComponent={subComponent}
-              />
-            );
-          })}
+        {data.length !== 0 && (
+          <VirtualScroll height={style?.height ?? 0}>
+            {rows.map((row: Row<T>) => {
+              prepareRow(row);
+              const rowProps = row.getRowProps({
+                className: cx('iui-row', {
+                  'iui-selected': row.isSelected,
+                  'iui-row-expanded': row.isExpanded && subComponent,
+                  'iui-disabled': isRowDisabled?.(row.original),
+                }),
+              });
+              return (
+                <TableRowMemoized
+                  row={row}
+                  rowProps={rowProps}
+                  isLast={row.index === data.length - 1}
+                  onRowInViewport={onRowInViewportRef}
+                  onBottomReached={onBottomReachedRef}
+                  intersectionMargin={intersectionMargin}
+                  state={state}
+                  key={rowProps.key}
+                  onClick={onRowClickHandler}
+                  subComponent={subComponent}
+                />
+              );
+            })}
+          </VirtualScroll>
+        )}
+
         {isLoading && data.length === 0 && (
           <div className={'iui-table-empty'}>
             <ProgressRadial indeterminate={true} />
