@@ -1,12 +1,14 @@
 # Changelog
 
-## Unreleased
+## [1.13.2]
 
-`Date`
+`2021-08-03`
 
-### What's new
+### Fixes
 
-- **`Table` accepts custom row props** through `rowProps` prop.
+- **Fixed a bug in `Slider` where thumb focus was lost on keyboard navigation.**
+- **`Table` can now accept custom row props** through `rowProps` prop.
+- **Fixed `UserIconGroup` prop type for `countIconProps`** to support refs.
 
 ## [1.13.1]
 
@@ -430,6 +432,7 @@
 - **New ThemeProvider component added.** It allows to switch between light and dark themes.
 - **iTwinUI-React is generated to `CommonJS` and `ES` modules.** Usage of `ES` modules allows bundlers to tree-shake unused code resulting in smaller bundle sizes.
 
+[1.13.2]: https://github.com/iTwin/iTwinUI-react/compare/v1.13.1...v1.13.2
 [1.13.1]: https://github.com/iTwin/iTwinUI-react/compare/v1.13.0...v1.13.1
 [1.13.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.12.0...v1.13.0
 [1.12.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.11.0...v1.12.0
