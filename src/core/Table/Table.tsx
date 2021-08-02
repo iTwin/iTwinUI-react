@@ -133,7 +133,7 @@ export type TableProps<
    * Function that should return custom props passed to the each row.
    * Must be memoized.
    */
-  rowProps?: (rowData: T) => React.ComponentPropsWithRef<'div'>;
+  rowProps?: (row: Row<T>) => React.ComponentPropsWithRef<'div'>;
 } & Omit<CommonProps, 'title'>;
 
 /**

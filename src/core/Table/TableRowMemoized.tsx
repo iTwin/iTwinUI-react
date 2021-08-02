@@ -18,7 +18,7 @@ import { useMergedRefs } from '../utils/hooks/useMergedRefs';
  */
 const TableRow = <T extends Record<string, unknown>>(props: {
   row: Row<T>;
-  rowProps?: (rowData: T) => React.ComponentPropsWithRef<'div'>;
+  rowProps?: (row: Row<T>) => React.ComponentPropsWithRef<'div'>;
   isLast: boolean;
   onRowInViewport: React.MutableRefObject<((rowData: T) => void) | undefined>;
   onBottomReached: React.MutableRefObject<(() => void) | undefined>;
@@ -51,7 +51,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
 
   const expandedHeight = React.useRef(0);
 
-  const userRowProps = rowProps?.(row.original);
+  const userRowProps = rowProps?.(row);
   const mergedProps = {
     ...row.getRowProps(),
     ...userRowProps,

@@ -13,7 +13,7 @@ import React from 'react';
 import { Table, TableProps } from './Table';
 import * as IntersectionHooks from '../utils/hooks/useIntersection';
 import { tableFilters } from './filters';
-import { CellProps } from 'react-table';
+import { CellProps, Row } from 'react-table';
 import { SvgChevronRight } from '@itwin/itwinui-icons-react';
 
 const intersectionCallbacks = new Map<Element, () => void>();
@@ -977,8 +977,8 @@ it('should pass custom props to row', () => {
   const onRef = (ref: HTMLInputElement) => {
     element = ref;
   };
-  const rowProps = (rowData: { name: string; description: string }) => {
-    return { onMouseEnter: () => onMouseEnter(rowData), ref: onRef };
+  const rowProps = (row: Row<{ name: string; description: string }>) => {
+    return { onMouseEnter: () => onMouseEnter(row.original), ref: onRef };
   };
   const { container } = renderComponent({ rowProps });
 

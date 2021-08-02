@@ -1089,11 +1089,9 @@ ControlledState.args = { isSelectable: true };
 export const Full: Story<TableProps> = (args) => {
   const { columns, data, ...rest } = args;
 
-  const [hoveredRow, setHoveredRow] = useState<
-    { name: string; description: string } | undefined
-  >(undefined);
+  const [hoveredRowIndex, setHoveredRowIndex] = useState(0);
 
-  const rowRefMap = React.useRef<Record<string, HTMLDivElement>>({});
+  const rowRefMap = React.useRef<Record<number, HTMLDivElement>>({});
 
   const isRowDisabled = useCallback(
     (rowData: { name: string; description: string }) => {
@@ -1148,15 +1146,15 @@ export const Full: Story<TableProps> = (args) => {
   );
 
   const rowProps = useCallback(
-    (rowData: { name: string; description: string }) => {
+    (row: Row<{ name: string; description: string }>) => {
       return {
         onMouseEnter: (e: React.MouseEvent) => {
-          action(`Hovered over ${rowData.name}`)(e);
-          setHoveredRow(rowData);
+          action(`Hovered over ${row.original.name}`)(e);
+          setHoveredRowIndex(row.index);
         },
         ref: (el: HTMLDivElement | null) => {
           if (el) {
-            rowRefMap.current[rowData.name] = el;
+            rowRefMap.current[row.index] = el;
           }
         },
       };
@@ -1178,8 +1176,8 @@ export const Full: Story<TableProps> = (args) => {
         {...rest}
       />
       <Tooltip
-        reference={hoveredRow ? rowRefMap.current[hoveredRow.name] : undefined}
-        content={`Hovered over ${hoveredRow?.name}.`}
+        reference={rowRefMap.current[hoveredRowIndex]}
+        content={`Hovered over ${data[hoveredRowIndex].name}.`}
         placement='bottom'
       />
     </>
