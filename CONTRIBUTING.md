@@ -123,7 +123,7 @@ it('should be visible', () => {
 
 ### Visual Testing
 
-We reuse our stories for visual tests (through [Creevey](https://github.com/wKich/creevey)). Make sure you have [Docker](https://www.docker.com/get-started) installed, and then you can start storybook and run `yarn creevey --ui` in a new terminal. This should start the test UI at `localhost:3000` where you can run tests and approve images.
+We reuse our stories for visual tests (through [Creevey](https://github.com/wKich/creevey)). Make sure you have [Docker](https://www.docker.com/get-started) installed and running, and then you can start storybook and run `yarn creevey --ui` in a new terminal. This should start the test UI at `localhost:3000` where you can run tests and approve images.
 
 By default, the stories will be rendered as-is, but interaction can be added using the `creevey` parameter of story, where you have access to a [Selenium WebDriver](https://www.selenium.dev/selenium/docs/api/javascript/module/selenium-webdriver/index_exports_WebDriver.html) instance.
 
