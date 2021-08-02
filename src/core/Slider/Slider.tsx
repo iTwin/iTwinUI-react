@@ -439,9 +439,13 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
           <div className='iui-slider-rail' />
           {currentValues.map((thumbValue, index) => {
             const [minVal, maxVal] = getAllowableThumbRange(index);
+            const thisThumbProps = thumbProps?.(index) ?? {};
+            const key = thisThumbProps.id
+              ? thisThumbProps.id
+              : index.toString();
             return (
               <Thumb
-                key={index}
+                key={key}
                 index={index}
                 disabled={disabled}
                 isActive={activeThumbIndex === index}
@@ -451,7 +455,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
                 maxVal={maxVal}
                 value={thumbValue}
                 tooltipProps={generateTooltipProps(index, thumbValue)}
-                thumbProps={thumbProps}
+                thumbProps={thisThumbProps}
                 step={step}
                 sliderMin={min}
                 sliderMax={max}
