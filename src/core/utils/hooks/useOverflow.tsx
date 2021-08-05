@@ -47,10 +47,13 @@ export const useOverflow = <T extends HTMLElement>(
     [],
   );
   const [resizeRef, observer] = useResizeObserver<T>(updateContainerWidth);
+  const resizeObserverRef = React.useRef(observer);
+
+  const mergedRefs = useMergedRefs(containerRef, resizeRef);
 
   React.useLayoutEffect(() => {
     if (!containerRef.current || disabled) {
-      observer?.disconnect();
+      resizeObserverRef.current?.disconnect();
       return;
     }
 
@@ -71,9 +74,7 @@ export const useOverflow = <T extends HTMLElement>(
       setVisibleCount((count) => count + 1);
       overflowBreakpoints.current.pop();
     }
-  }, [containerWidth, visibleCount, disabled, observer]);
-
-  const mergedRefs = useMergedRefs(containerRef, resizeRef);
+  }, [containerWidth, visibleCount, disabled]);
 
   return [mergedRefs, visibleCount] as const;
 };
