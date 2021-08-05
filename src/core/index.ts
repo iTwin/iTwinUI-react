@@ -182,3 +182,6 @@ export { getUserColor } from './utils/common';
 
 export { useTheme } from './utils/hooks/useTheme';
 export type { ThemeType } from './utils/hooks/useTheme';
+
+export { Fieldset } from './Fieldset';
+export type { FieldsetProps } from './Fieldset';
