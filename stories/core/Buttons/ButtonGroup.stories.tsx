@@ -4,13 +4,15 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { ButtonGroup, ButtonGroupProps, IconButton } from '../../../src/core';
-import SvgAdd from '@itwin/itwinui-icons-react/cjs/icons/Add';
-import SvgDelete from '@itwin/itwinui-icons-react/cjs/icons/Delete';
-import SvgEdit from '@itwin/itwinui-icons-react/cjs/icons/Edit';
-import SvgUndo from '@itwin/itwinui-icons-react/cjs/icons/Undo';
+import {
+  SvgAdd,
+  SvgDelete,
+  SvgEdit,
+  SvgUndo,
+  SvgPlaceholder,
+} from '@itwin/itwinui-icons-react';
 import { Meta, Story } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import { SvgPlaceholder } from '@itwin/itwinui-icons-react';
 import { CreeveyMeta } from 'creevey';
 
 export default {

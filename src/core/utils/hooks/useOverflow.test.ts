@@ -40,36 +40,3 @@ it('should overflow when there is not enough space', () => {
   scrollWidthSpy.mockRestore();
   offsetWidthSpy.mockRestore();
 });
-
-// it('should restore hidden items when there is enough space again', () => {
-//   const scrollWidthSpy = jest
-//     .spyOn(HTMLElement.prototype, 'scrollWidth', 'get')
-//     .mockReturnValueOnce(250)
-//     .mockReturnValue(200);
-//   const offsetWidthSpy = jest
-//     .spyOn(HTMLElement.prototype, 'offsetWidth', 'get')
-//     .mockReturnValue(200);
-
-//   const { container, rerender } = renderComponent();
-
-//   expect(container.querySelector('.iui-breadcrumbs')).toBeTruthy();
-//   expect(container.querySelectorAll('.iui-breadcrumbs-item')).toHaveLength(3);
-//   expect(container.querySelector('.iui-ellipsis')?.textContent).toEqual('…');
-
-//   scrollWidthSpy.mockReturnValue(250);
-//   offsetWidthSpy.mockReturnValue(250);
-
-//   rerender(
-//     <Breadcrumbs>
-//       {[...Array(3)].map((_, index) => (
-//         <Button key={index}>Item {index}</Button>
-//       ))}
-//     </Breadcrumbs>,
-//   );
-
-//   expect(container.querySelector('.iui-ellipsis')).toBeFalsy();
-//   assertBaseElement(container);
-
-//   scrollWidthSpy.mockRestore();
-//   offsetWidthSpy.mockRestore();
-// });
