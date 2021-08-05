@@ -4,8 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { StylingProps } from '../utils/props';
+import { CommonProps } from '../utils/props';
 import { useTheme } from '../utils/hooks/useTheme';
+import { useOverflow } from '../utils/hooks/useOverflow';
 import '@itwin/itwinui-css/css/button.css';
 
 export type ButtonGroupProps = {
@@ -13,7 +14,11 @@ export type ButtonGroupProps = {
    * Buttons in the ButtonGroup.
    */
   children: React.ReactNode;
-} & StylingProps;
+  /**
+   * If true, the ButtonGroup will collapse the overflowing Buttons into a menu.
+   */
+  responsive?: boolean;
+} & Omit<CommonProps, 'title'>;
 
 /**
  * Group buttons together for common actions
@@ -28,12 +33,23 @@ export type ButtonGroupProps = {
  * </ButtonGroup>
  */
 export const ButtonGroup = (props: ButtonGroupProps) => {
-  const { children, className, ...rest } = props;
+  const { children, className, responsive = false, ...rest } = props;
+  const childrenArray = React.Children.toArray(children);
 
   useTheme();
+
+  const [overflowRef, visibleCount] = useOverflow(
+    childrenArray.length,
+    !responsive,
+  );
+
   return (
-    <div className={cx('iui-button-group', className)} {...rest}>
-      {children}
+    <div
+      className={cx('iui-button-group', className)}
+      ref={overflowRef}
+      {...rest}
+    >
+      {childrenArray.slice(0, visibleCount)}
     </div>
   );
 };

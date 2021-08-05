@@ -10,18 +10,22 @@ import SvgEdit from '@itwin/itwinui-icons-react/cjs/icons/Edit';
 import SvgUndo from '@itwin/itwinui-icons-react/cjs/icons/Undo';
 import { Meta, Story } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
+import { SvgPlaceholder } from '@itwin/itwinui-icons-react';
 
 export default {
   title: 'Buttons/ButtonGroup',
   component: ButtonGroup,
-  parameters: {
-    controls: { hideNoControlsWarning: true },
+  argTypes: {
+    style: { control: { disable: true } },
+    className: { control: { disable: true } },
+    id: { control: { disable: true } },
+    children: { control: { disable: true } },
   },
 } as Meta<ButtonGroupProps>;
 
-export const WithIcons: Story<ButtonGroupProps> = () => {
+export const WithIcons: Story<ButtonGroupProps> = (args) => {
   return (
-    <ButtonGroup>
+    <ButtonGroup {...args}>
       <IconButton onClick={action('Clicked add!')}>
         <SvgAdd />
       </IconButton>
@@ -36,4 +40,28 @@ export const WithIcons: Story<ButtonGroupProps> = () => {
       </IconButton>
     </ButtonGroup>
   );
+};
+WithIcons.args = {
+  responsive: false,
+};
+
+export const Overflow: Story<ButtonGroupProps> = (args) => {
+  const buttons = Array(15)
+    .fill(null)
+    .map((_, index) => (
+      <IconButton key={index}>
+        <SvgPlaceholder />
+      </IconButton>
+    ));
+
+  return (
+    <div style={{ maxWidth: '50%', border: '1px solid hotpink', padding: 8 }}>
+      <ButtonGroup style={{ display: 'flex' }} responsive {...args}>
+        {buttons}
+      </ButtonGroup>
+    </div>
+  );
+};
+Overflow.args = {
+  responsive: true,
 };
