@@ -107,7 +107,6 @@ export const Thumb = (props: ThumbProps) => {
           return;
       }
       event.preventDefault();
-      event.stopPropagation();
     },
     [disabled, onThumbValueChanged, index, value, step, minVal, maxVal],
   );
