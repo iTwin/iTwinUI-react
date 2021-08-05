@@ -6,7 +6,7 @@
 
 ### Fixes
 
-- **Fix a bug where Arrow keydown on `Slider` propagated to parent container's scrollbars.**
+- **Fixed a bug where Arrow keydown on `Slider` propagated to parent container's scrollbars.**
 
 ## [1.14.0]
 
