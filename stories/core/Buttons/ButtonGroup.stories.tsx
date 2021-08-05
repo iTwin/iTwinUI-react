@@ -11,6 +11,7 @@ import SvgUndo from '@itwin/itwinui-icons-react/cjs/icons/Undo';
 import { Meta, Story } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { SvgPlaceholder } from '@itwin/itwinui-icons-react';
+import { CreeveyMeta } from 'creevey';
 
 export default {
   title: 'Buttons/ButtonGroup',
@@ -21,7 +22,10 @@ export default {
     id: { control: { disable: true } },
     children: { control: { disable: true } },
   },
-} as Meta<ButtonGroupProps>;
+  parameters: {
+    creevey: { skip: ['Overflow'] },
+  },
+} as Meta<ButtonGroupProps> & CreeveyMeta;
 
 export const WithIcons: Story<ButtonGroupProps> = (args) => {
   return (
