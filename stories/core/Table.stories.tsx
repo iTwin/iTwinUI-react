@@ -21,6 +21,7 @@ import {
   tableFilters,
   TableFilterValue,
   TableProps,
+  Tooltip,
 } from '../../src/core';
 import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
@@ -1084,3 +1085,112 @@ export const ControlledState: Story<TableProps> = (args) => {
 };
 
 ControlledState.args = { isSelectable: true };
+
+export const Full: Story<TableProps> = (args) => {
+  const { columns, data, ...rest } = args;
+
+  const [hoveredRowIndex, setHoveredRowIndex] = useState(0);
+
+  const rowRefMap = React.useRef<Record<number, HTMLDivElement>>({});
+
+  const isRowDisabled = useCallback(
+    (rowData: { name: string; description: string }) => {
+      return rowData.name === 'Name2';
+    },
+    [],
+  );
+
+  const tableColumns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+            Filter: tableFilters.TextFilter(),
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+            Filter: tableFilters.TextFilter(),
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const tableData = useMemo(
+    () => [
+      { name: 'Name1', description: 'Description1' },
+      { name: 'Name2', description: 'Description2' },
+      { name: 'Name3', description: 'Description3' },
+    ],
+    [],
+  );
+
+  const expandedSubComponent = useCallback(
+    (row: Row) => (
+      <div style={{ padding: 16 }}>
+        <Leading>Extra information</Leading>
+        <pre>
+          <code>{JSON.stringify({ values: row.values }, null, 2)}</code>
+        </pre>
+      </div>
+    ),
+    [],
+  );
+
+  const rowProps = useCallback(
+    (row: Row<{ name: string; description: string }>) => {
+      return {
+        onMouseEnter: () => {
+          action(`Hovered over ${row.original.name}`)();
+          setHoveredRowIndex(row.index);
+        },
+        ref: (el: HTMLDivElement | null) => {
+          if (el) {
+            rowRefMap.current[row.index] = el;
+          }
+        },
+      };
+    },
+    [],
+  );
+
+  return (
+    <>
+      <Table
+        columns={columns || tableColumns}
+        data={data || tableData}
+        emptyTableContent='No data.'
+        subComponent={expandedSubComponent}
+        isRowDisabled={isRowDisabled}
+        rowProps={rowProps}
+        isSelectable
+        isSortable
+        {...rest}
+      />
+      <Tooltip
+        reference={rowRefMap.current[hoveredRowIndex]}
+        content={`Hovered over ${data[hoveredRowIndex].name}.`}
+        placement='bottom'
+      />
+    </>
+  );
+};
+
+Full.args = {
+  data: [
+    { name: 'Name1', description: 'Description1' },
+    { name: 'Name2', description: 'Description2' },
+    { name: 'Name3', description: 'Description3' },
+  ],
+  isSelectable: true,
+  isSortable: true,
+  emptyFilteredTableContent: 'No results found. Clear or try another filter.',
+};

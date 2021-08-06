@@ -1,5 +1,57 @@
 # Changelog
 
+## Unreleased
+
+`Date`
+
+### Fixes
+
+- **Fixed a `Table` bug where filter icon is hidden when `manualFilters` is on and no data is returned after filtering.**
+
+## [1.14.1]
+
+`2021-08-05`
+
+### Fixes
+
+- **Fixed a bug where Arrow keydown on `Slider` propagated to parent container's scrollbars.**
+
+## [1.14.0]
+
+`2021-08-03`
+
+### What's new
+
+- **`Table` can now accept custom row props** through `rowProps` prop.
+
+### Fixes
+
+- **Fixed a bug in `Slider` where thumb focus was lost on keyboard navigation.**
+- **Fixed `UserIconGroup` prop type for `countIconProps`** to support refs.
+
+## [1.13.1]
+
+`2021-07-29`
+
+### Fixes
+
+- **Fixed `Table` bug when selecting filtered rows throws an exception.**
+- **Fixed `Table` empty state background color** through base CSS package.
+
+## [1.13.0]
+
+`2021-07-29`
+
+### What's new
+
+- **Added new `Breadcrumbs` component.** Handles overflow based on available space and resizes.
+- **Added support for nested menus in `MenuItem`** through new `subMenuItems` prop.
+
+### Fixes
+
+- **Made `Button` children optional** to allow using buttons with only icons.
+- **Fix `Slider` bug where onChange was not always called after pointerUp.**
+
 ## [1.12.0]
 
 `2021-07-20`
@@ -399,6 +451,10 @@
 - **New ThemeProvider component added.** It allows to switch between light and dark themes.
 - **iTwinUI-React is generated to `CommonJS` and `ES` modules.** Usage of `ES` modules allows bundlers to tree-shake unused code resulting in smaller bundle sizes.
 
+[1.14.1]: https://github.com/iTwin/iTwinUI-react/compare/v1.14.0...v1.14.1
+[1.14.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.13.1...v1.14.0
+[1.13.1]: https://github.com/iTwin/iTwinUI-react/compare/v1.13.0...v1.13.1
+[1.13.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.12.0...v1.13.0
 [1.12.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.11.0...v1.12.0
 [1.11.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.10.0...v1.11.0
 [1.10.0]: https://github.com/iTwin/iTwinUI-react/compare/v1.9.0...v1.10.0
