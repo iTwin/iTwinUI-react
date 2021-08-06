@@ -13,13 +13,13 @@ import { useResizeObserver } from './useResizeObserver';
  * The returned number should be used to render the element with fewer items.
  *
  * @private
- * @param itemsCount Total number of items that this element contains.
+ * @param items Items that this element contains.
  * @param disabled Set to true to disconnect the observer.
  * @returns [callback ref to set on container, stateful count of visible items]
  *
  * @example
  * const items = Array(10).fill().map((_, i) => <span>Item {i}</span>);
- * const [ref, visibleCount] = useOverflow(items.length);
+ * const [ref, visibleCount] = useOverflow(items);
  * ...
  * return (
  *   <div ref={ref}>
@@ -28,18 +28,18 @@ import { useResizeObserver } from './useResizeObserver';
  * );
  */
 export const useOverflow = <T extends HTMLElement>(
-  itemsCount: number,
+  items: React.ReactNode[],
   disabled = false,
 ) => {
   const containerRef = React.useRef<T>(null);
 
-  const [visibleCount, setVisibleCount] = React.useState(itemsCount);
+  const [visibleCount, setVisibleCount] = React.useState(items.length);
   const overflowBreakpoints = React.useRef<number[]>([]);
 
   React.useLayoutEffect(() => {
-    setVisibleCount(itemsCount);
+    setVisibleCount(items.length);
     overflowBreakpoints.current = [];
-  }, [itemsCount]);
+  }, [items]);
 
   const [containerWidth, setContainerWidth] = React.useState<number>(0);
   const updateContainerWidth = React.useCallback(
@@ -57,18 +57,18 @@ export const useOverflow = <T extends HTMLElement>(
       return;
     }
 
+    const offsetWidth = containerRef.current.offsetWidth; // available space
+    const scrollWidth = containerRef.current.scrollWidth; // needed space
+
     // hide items when there's no space available
-    if (
-      containerRef.current.offsetWidth < containerRef.current.scrollWidth &&
-      visibleCount > 1
-    ) {
+    if (offsetWidth < scrollWidth && visibleCount > 1) {
       setVisibleCount((count) => count - 1);
-      overflowBreakpoints.current.push(containerRef.current.offsetWidth);
+      overflowBreakpoints.current.push(offsetWidth);
     }
     // restore items when there's enough space again
     else if (
       overflowBreakpoints.current.length > 0 &&
-      containerRef.current.offsetWidth >
+      offsetWidth >
         overflowBreakpoints.current[overflowBreakpoints.current.length - 1]
     ) {
       setVisibleCount((count) => count + 1);

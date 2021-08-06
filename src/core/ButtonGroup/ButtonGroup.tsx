@@ -38,10 +38,7 @@ export const ButtonGroup = (props: ButtonGroupProps) => {
 
   useTheme();
 
-  const [overflowRef, visibleCount] = useOverflow(
-    childrenArray.length,
-    !responsive,
-  );
+  const [overflowRef, visibleCount] = useOverflow(childrenArray, !responsive);
 
   return (
     <div
