@@ -57,18 +57,18 @@ export const useOverflow = <T extends HTMLElement>(
       return;
     }
 
-    const offsetWidth = containerRef.current.offsetWidth; // available space
-    const scrollWidth = containerRef.current.scrollWidth; // needed space
+    const availableWidth = containerRef.current.offsetWidth;
+    const requiredWidth = containerRef.current.scrollWidth;
 
     // hide items when there's no space available
-    if (offsetWidth < scrollWidth && visibleCount > 1) {
+    if (availableWidth < requiredWidth && visibleCount > 1) {
       setVisibleCount((count) => count - 1);
-      overflowBreakpoints.current.push(offsetWidth);
+      overflowBreakpoints.current.push(availableWidth);
     }
     // restore items when there's enough space again
     else if (
       overflowBreakpoints.current.length > 0 &&
-      offsetWidth >
+      availableWidth >
         overflowBreakpoints.current[overflowBreakpoints.current.length - 1]
     ) {
       setVisibleCount((count) => count + 1);
