@@ -38,7 +38,8 @@ export type BadgeProps = {
   /**
    * Background color of the badge.
    *
-   * Recommended to use one of the preset colors.
+   * Recommended to use one of the preset colors for statuses and soft backgrounds.
+   *
    * If not specified, a default neutral background will be used.
    */
   backgroundColor?:
@@ -47,7 +48,7 @@ export type BadgeProps = {
     | 'negative'
     | 'warning'
     | keyof typeof SoftBackgrounds
-    | (string & {}); // eslint-disable-line @typescript-eslint/ban-types
+    | (string & {}); // eslint-disable-line @typescript-eslint/ban-types -- see https://github.com/Microsoft/TypeScript/issues/29729
   /**
    * Badge label.
    * Always gets converted to uppercase, and truncated if too long.
