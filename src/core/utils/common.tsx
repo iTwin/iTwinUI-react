@@ -32,6 +32,13 @@ export const SoftBackgrounds = {
   oak: 'hsl(27, 32%, 72%)',
 } as const;
 
+/** Returns true if a string value is one of the SoftBackgrounds keys */
+export const isSoftBackground = (
+  value: string,
+): value is keyof typeof SoftBackgrounds => {
+  return Object.keys(SoftBackgrounds).includes(value);
+};
+
 const USER_COLORS = [
   '#6AB9EC',
   '#B1C854',

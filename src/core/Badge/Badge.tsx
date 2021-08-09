@@ -7,7 +7,7 @@ import cx from 'classnames';
 import { CommonProps } from '../utils/props';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/badge.css';
-import { getWindow, SoftBackgrounds } from '../utils/common';
+import { getWindow, isSoftBackground, SoftBackgrounds } from '../utils/common';
 
 /**
  * Helper function that returns one of the preset badge color values.
@@ -27,21 +27,27 @@ const getBadgeColorValue = (color: BadgeProps['backgroundColor']) => {
     case 'warning':
       return '#F9D7AB';
     default:
-      return SoftBackgrounds[color];
+      if (isSoftBackground(color)) {
+        return SoftBackgrounds[color];
+      }
+      return color;
   }
 };
 
 export type BadgeProps = {
   /**
    * Background color of the badge.
-   * Recommended to use one of the data visualization colors: `$iui-color-dataviz-*`.
+   *
+   * Recommended to use one of the preset colors.
+   * If not specified, a default neutral background will be used.
    */
   backgroundColor?:
     | 'primary'
     | 'positive'
     | 'negative'
     | 'warning'
-    | keyof typeof SoftBackgrounds;
+    | keyof typeof SoftBackgrounds
+    | (string & {}); // eslint-disable-line @typescript-eslint/ban-types
   /**
    * Badge label.
    * Always gets converted to uppercase, and truncated if too long.
@@ -52,7 +58,9 @@ export type BadgeProps = {
 /**
  * A colorful visual indicator for categorizing items.
  * @example
- * <Badge backgroundColor="#6AB9EC">Label</Badge>
+ * <Badge>Label</Badge>
+ * <Badge backgroundColor="sunglow">Label</Badge>
+ * <Badge backgroundColor="positive">Label</Badge>
  */
 export const Badge = (props: BadgeProps) => {
   const { backgroundColor, style, className, children, ...rest } = props;
