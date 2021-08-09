@@ -17,8 +17,6 @@ export default {
   title: 'Input/Fieldset',
   component: Fieldset,
   argTypes: {
-    className: { control: { disable: true } },
-    style: { control: { disable: true } },
     children: { control: { disable: true } },
   },
 } as Meta<FieldsetProps>;

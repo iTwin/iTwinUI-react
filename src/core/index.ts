@@ -48,6 +48,9 @@ export type {
 export { ExpandableBlock } from './ExpandableBlock';
 export type { ExpandableBlockProps } from './ExpandableBlock';
 
+export { Fieldset } from './Fieldset';
+export type { FieldsetProps } from './Fieldset';
+
 export { FileUpload, FileUploadTemplate } from './FileUpload';
 export type { FileUploadProps, FileUploadTemplateProps } from './FileUpload';
 
@@ -182,6 +185,3 @@ export { getUserColor } from './utils/common';
 
 export { useTheme } from './utils/hooks/useTheme';
 export type { ThemeType } from './utils/hooks/useTheme';
-
-export { Fieldset } from './Fieldset';
-export type { FieldsetProps } from './Fieldset';
