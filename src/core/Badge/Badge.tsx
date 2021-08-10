@@ -27,10 +27,7 @@ const getBadgeColorValue = (color: BadgeProps['backgroundColor']) => {
     case 'warning':
       return '#F9D7AB';
     default:
-      if (isSoftBackground(color)) {
-        return SoftBackgrounds[color];
-      }
-      return color;
+      return isSoftBackground(color) ? SoftBackgrounds[color] : color;
   }
 };
 
