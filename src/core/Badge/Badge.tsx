@@ -48,7 +48,8 @@ export type BadgeProps = {
     | 'negative'
     | 'warning'
     | keyof typeof SoftBackgrounds
-    | (string & {}); // eslint-disable-line @typescript-eslint/ban-types -- see https://github.com/Microsoft/TypeScript/issues/29729
+    // eslint-disable-next-line @typescript-eslint/ban-types -- This allows custom strings and keeps intellisense. See https://github.com/Microsoft/TypeScript/issues/29729
+    | (string & {});
   /**
    * Badge label.
    * Always gets converted to uppercase, and truncated if too long.
@@ -69,9 +70,8 @@ export const Badge = (props: BadgeProps) => {
   useTheme();
 
   const _style =
-    getWindow()?.CSS &&
     backgroundColor &&
-    CSS.supports(`--badge-color: ${backgroundColor}`)
+    getWindow()?.CSS?.supports(`--badge-color: ${backgroundColor}`)
       ? { '--badge-color': getBadgeColorValue(backgroundColor), ...style }
       : { backgroundColor: getBadgeColorValue(backgroundColor), ...style };
 
