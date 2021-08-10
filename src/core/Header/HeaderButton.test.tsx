@@ -55,6 +55,41 @@ it('render isActive correctly', () => {
   expect(activeButton?.getAttribute('aria-current')).toEqual('location');
 });
 
+it('render split button correctly', () => {
+  const itemOneOnClick = jest.fn();
+  const buttonOnClick = jest.fn();
+
+  const { container } = render(
+    <HeaderButton
+      name={'MockName'}
+      onClick={buttonOnClick}
+      menuItems={(close) => [
+        <MenuItem
+          key={0}
+          onClick={() => {
+            itemOneOnClick();
+            close();
+          }}
+        >
+          Test0
+        </MenuItem>,
+        <MenuItem key={1} onClick={close}>
+          Test1
+        </MenuItem>,
+        <MenuItem key={2} onClick={close}>
+          Test2
+        </MenuItem>,
+      ]}
+    />,
+  );
+
+  const splitButton = container.querySelector('.iui-header-split-button');
+  expect(splitButton).toBeTruthy();
+
+  const innerButtons = splitButton?.querySelectorAll('.iui-borderless');
+  expect(innerButtons?.length).toBe(2);
+});
+
 it('render startIcon correctly', () => {
   const { container } = render(
     <HeaderButton name={'MockName'} startIcon={<SvgPlaceholder />} />,

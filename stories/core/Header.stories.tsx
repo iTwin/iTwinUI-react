@@ -278,3 +278,66 @@ export const CenterContent: Story<HeaderProps> = (args) => {
     </Header>
   );
 };
+
+export const SplitButtonHeader: Story<HeaderProps> = (args) => {
+  return (
+    <Header
+      {...args}
+      appLogo={
+        <HeaderLogo
+          logo={
+            <svg
+              viewBox='0 0 16 16'
+              xmlns='http://www.w3.org/2000/svg'
+              aria-hidden='true'
+            >
+              <path d='m12.6 13.4c-1.2-1.5-2.1-3.1-2.4-5.5-2.7 3.9-4.6 4.2-5.7 2.4l-1.2 5.7h-2.2l3.5-14.1 1.8-.4c-.1.5-1.4 6.2.6 7 2 .7 4.6-8.5 4.6-8.5l2.2.4c-1.6 3.7-1.6 7.6 1.1 10.9l-2.3 2.1' />
+            </svg>
+          }
+        />
+      }
+      breadcrumbs={
+        <HeaderBreadcrumbs
+          items={[
+            <HeaderButton
+              key='project'
+              name='Project A (Super Size Edition)'
+              description='YJC-2249'
+              startIcon={<SvgNetwork />}
+              onClick={() => action('Clicked on the Project')()}
+              menuItems={buildMenu('project')}
+            />,
+            <HeaderButton
+              key='iModel'
+              name='iModel B'
+              startIcon={
+                <img
+                  src='https://itwinplatformcdn.azureedge.net/iTwinUI/stadium.png'
+                  style={{ objectFit: 'cover' }}
+                />
+              }
+              onClick={() => action('Clicked on the iModel')()}
+              menuItems={buildMenu('imodel')}
+            />,
+            <HeaderButton
+              key='version'
+              name='Version C'
+              onClick={() => action('Clicked on the Version')()}
+              startIcon={<SvgVersion />}
+              isActive={true}
+              menuItems={buildMenu('version')}
+            />,
+          ]}
+        />
+      }
+      userIcon={
+        <UserIcon
+          size='medium'
+          abbreviation='TR'
+          backgroundColor={getUserColor('Terry Rivers')}
+          title='Terry Rivers'
+        />
+      }
+    />
+  );
+};

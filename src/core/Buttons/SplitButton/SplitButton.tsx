@@ -34,7 +34,7 @@ export type SplitButtonProps = {
    * Style of the button.
    * @default 'default'
    */
-  styleType?: 'cta' | 'high-visibility' | 'default';
+  styleType?: 'cta' | 'high-visibility' | 'default' | 'borderless';
   /**
    * Content of primary button.
    */
