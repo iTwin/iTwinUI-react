@@ -11,7 +11,6 @@ import '@itwin/itwinui-css/css/text.css';
 type TextOwnProps<T extends React.ElementType | React.ComponentType = 'div'> = {
   /**
    * What element should the text be rendered as?
-   *
    * @default 'div'
    */
   as?: T;
@@ -38,12 +37,6 @@ type TextOwnProps<T extends React.ElementType | React.ComponentType = 'div'> = {
    * @default false
    */
   isSkeleton?: boolean;
-
-  /**
-   * Does the element have a bottom margin?
-   * @default false
-   */
-  hasMargin?: boolean;
 } & CommonProps;
 
 export type TextProps<
@@ -70,7 +63,6 @@ export const Text = <T extends React.ElementType | React.ComponentType = 'div'>(
     className,
     isMuted = false,
     isSkeleton = false,
-    hasMargin = false,
     ...rest
   } = props;
 
@@ -82,7 +74,6 @@ export const Text = <T extends React.ElementType | React.ComponentType = 'div'>(
         {
           [`iui-text-${variant}`]: variant !== 'body',
           'iui-text-block': variant === 'body',
-          'iui-text-spacing': hasMargin,
           'iui-text-muted': isMuted,
           'iui-skeleton': isSkeleton,
         },

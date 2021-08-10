@@ -43,10 +43,3 @@ it('should render as muted if isMuted is set', () => {
     container.querySelector('div.iui-text-block.iui-text-muted')?.textContent,
   ).toEqual('Some text');
 });
-
-it('should render with margin if hasMargin is set', () => {
-  const { container } = render(<Text hasMargin>Some text</Text>);
-  expect(
-    container.querySelector('div.iui-text-block.iui-text-spacing')?.textContent,
-  ).toEqual('Some text');
-});
