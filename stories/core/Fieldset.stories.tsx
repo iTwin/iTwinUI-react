@@ -2,8 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { useState } from '@storybook/addons';
 import { Story, Meta } from '@storybook/react';
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Fieldset,
   FieldsetProps,
@@ -56,5 +57,4 @@ export const Basic: Story<FieldsetProps> = (args) => {
 Basic.args = { legend: 'General Settings', disabled: false };
 
 export const Disabled: Story<FieldsetProps> = Basic.bind({});
-
 Disabled.args = { legend: 'General Settings', disabled: true };

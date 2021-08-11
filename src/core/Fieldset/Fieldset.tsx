@@ -42,9 +42,7 @@ export const Fieldset = (props: FieldsetProps) => {
       {disabled
         ? React.Children.map(children, (child) =>
             React.isValidElement(child)
-              ? React.cloneElement(child, {
-                  disabled: true,
-                })
+              ? React.cloneElement(child, { disabled: true })
               : child,
           )
         : children}
