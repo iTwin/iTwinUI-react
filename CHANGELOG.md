@@ -4,13 +4,13 @@
 
 `Date`
 
+### What's new
+
+- **Added new `Fieldset` component** for grouping inputs.
+
 ### Fixes
 
 - **Fixed a `Table` bug where filter icon is hidden when `manualFilters` is on and no data is returned after filtering.**
-
-### What's new
-
-- **Added `Fieldset` component** - basic and disabled.
 
 ## [1.14.1]
 
