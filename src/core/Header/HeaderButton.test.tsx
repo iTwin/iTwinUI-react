@@ -16,7 +16,7 @@ it('should render in its most basic state', () => {
   expect(container.querySelector('.iui-label > :first-child')).toBeTruthy();
 });
 
-it('render default button correctly', () => {
+it('should render default button correctly', () => {
   const { container } = render(<HeaderButton name={'MockName'} />);
 
   const root = container.querySelector(
@@ -29,7 +29,7 @@ it('render default button correctly', () => {
   expect(name?.textContent).toEqual('MockName');
 });
 
-it('render description correctly', () => {
+it('should render description correctly', () => {
   const { container } = render(
     <HeaderButton name={'MockName'} description={'MockDescription'} />,
   );
@@ -45,7 +45,7 @@ it('render description correctly', () => {
   expect(description?.textContent).toEqual('MockDescription');
 });
 
-it('render isActive correctly', () => {
+it('should render isActive correctly', () => {
   const { container } = render(
     <HeaderButton name={'MockName'} isActive={true} />,
   );
@@ -55,9 +55,9 @@ it('render isActive correctly', () => {
   expect(activeButton?.getAttribute('aria-current')).toEqual('location');
 });
 
-it('render split button correctly', () => {
-  const itemOneOnClick = jest.fn();
-  const buttonOnClick = jest.fn();
+it('should render split button correctly', () => {
+  const itemOneOnClick = () => {};
+  const buttonOnClick = () => {};
 
   const { container } = render(
     <HeaderButton
@@ -90,7 +90,7 @@ it('render split button correctly', () => {
   expect(innerButtons?.length).toBe(2);
 });
 
-it('render startIcon correctly', () => {
+it('should render startIcon correctly', () => {
   const { container } = render(
     <HeaderButton name={'MockName'} startIcon={<SvgPlaceholder />} />,
   );
@@ -103,7 +103,7 @@ it('render startIcon correctly', () => {
   );
 });
 
-it('render menuItems correctly', () => {
+it('should render menuItems correctly', () => {
   // Summarized, as this is based on Dropdown button, which is tested independently.
   const itemOneOnClick = jest.fn();
   const { container } = render(

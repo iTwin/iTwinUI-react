@@ -70,9 +70,11 @@ export const HeaderButton = (props: HeaderButtonProps) => {
       : undefined,
     styleType: 'borderless',
     className: cx(
-      { 'iui-header-button': !isSplitButton },
-      { 'iui-header-split-button': isSplitButton },
-      { 'iui-active': isActive },
+      {
+        'iui-header-button': !isSplitButton,
+        'iui-header-split-button': isSplitButton,
+        'iui-active': isActive,
+      },
       className,
     ),
     'aria-current': isActive ? 'location' : undefined,
