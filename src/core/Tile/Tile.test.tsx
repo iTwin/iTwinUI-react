@@ -37,6 +37,7 @@ it('should render new and selected states', () => {
 });
 
 it('should render main text content correctly', () => {
+  window.CSS = { supports: () => true, escape: (i) => i };
   const { container } = render(
     <Tile
       name='test-name'
