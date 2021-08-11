@@ -154,6 +154,7 @@ export {
   Code,
   Kbd,
   KbdKeys,
+  Text,
 } from './Typography';
 export type {
   BodyProps,
@@ -165,6 +166,7 @@ export type {
   BlockquoteProps,
   CodeProps,
   KbdProps,
+  TextProps,
 } from './Typography';
 
 export { UserIcon } from './UserIcon';
