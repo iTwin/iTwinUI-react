@@ -10,13 +10,13 @@ import '@itwin/itwinui-css/css/fieldset.css';
 
 export type FieldsetProps = {
   /**
-   * The caption or title for the fieldset
+   * The caption or title for the fieldset.
    */
   legend?: React.ReactNode;
 } & React.ComponentPropsWithoutRef<'fieldset'>;
 
 /**
- * Basic fieldset component to group different components together
+ * Fieldset component to group several inputs, controls and labels within a form.
  * @example
  * <Fieldset legend='Settings'>
  *   <Input />
@@ -41,9 +41,11 @@ export const Fieldset = (props: FieldsetProps) => {
 
       {disabled
         ? React.Children.map(children, (child) =>
-            React.cloneElement(child as JSX.Element, {
-              disabled: true,
-            }),
+            React.isValidElement(child)
+              ? React.cloneElement(child as JSX.Element, {
+                  disabled: true,
+                })
+              : child,
           )
         : children}
     </fieldset>
