@@ -7,7 +7,6 @@ import { fireEvent, render } from '@testing-library/react';
 import { Fieldset } from './Fieldset';
 import { InputGroup } from '../InputGroup';
 import { ToggleSwitch } from '../ToggleSwitch';
-import '@testing-library/jest-dom/extend-expect';
 import { Select } from '../Select';
 
 it('should render in its most basic state', () => {
