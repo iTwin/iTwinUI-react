@@ -6,6 +6,8 @@
 
 ### What's new
 
+- **Updated `Badge` styling** and added preset colors to `backgroundColor` prop.
+- **Added new polymorphic `Text` component.**
 - **Added new `Fieldset` component** for grouping inputs.
 
 ### Fixes
