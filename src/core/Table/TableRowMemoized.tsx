@@ -4,11 +4,13 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { Row, TableState } from 'react-table';
+import { Cell, CellProps, Row, TableInstance, TableState } from 'react-table';
+import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import { useIntersection } from '../utils/hooks/useIntersection';
 import { getCellStyle } from './utils';
 import { CSSTransition } from 'react-transition-group';
 import { useMergedRefs } from '../utils/hooks/useMergedRefs';
+import { IconButton } from '../Buttons';
 
 /**
  * Memoization is needed to avoid unnecessary re-renders of all rows when additional data is added when lazy-loading.
@@ -27,6 +29,9 @@ const TableRow = <T extends Record<string, unknown>>(props: {
   onClick?: (event: React.MouseEvent, row: Row<T>) => void;
   subComponent?: (row: Row<T>) => React.ReactNode;
   isDisabled: boolean;
+  tableHasSubRows: boolean;
+  tableInstance: TableInstance<T>;
+  expanderCell?: (cellProps: CellProps<T>) => React.ReactNode;
 }) => {
   const {
     row,
@@ -38,6 +43,9 @@ const TableRow = <T extends Record<string, unknown>>(props: {
     onClick,
     subComponent,
     isDisabled,
+    tableHasSubRows,
+    tableInstance,
+    expanderCell,
   } = props;
 
   const onIntersect = React.useCallback(() => {
@@ -70,6 +78,38 @@ const TableRow = <T extends Record<string, unknown>>(props: {
 
   const refs = useMergedRefs(rowRef, mergedProps.ref);
 
+  const subRowExpanderCellIndex = row.cells.findIndex(
+    (c) => c.column.id !== 'iui-table-checkbox-selector',
+  );
+
+  const getSubRowExpander = (cell: Cell<T>) =>
+    expanderCell ? (
+      expanderCell({
+        ...tableInstance,
+        ...{ cell, row: cell.row, value: cell.value, column: cell.column },
+      })
+    ) : (
+      <IconButton
+        style={{ marginLeft: cell.row.depth * 43, marginRight: 16 }}
+        className='iui-row-expander'
+        styleType='borderless'
+        size='small'
+        onClick={(e) => {
+          e.stopPropagation();
+          cell.row.toggleRowExpanded();
+        }}
+        disabled={isDisabled}
+      >
+        {
+          <SvgChevronRight
+            style={{
+              transform: cell.row.isExpanded ? 'rotate(90deg)' : undefined,
+            }}
+          />
+        }
+      </IconButton>
+    );
+
   return (
     <>
       <div
@@ -80,13 +120,27 @@ const TableRow = <T extends Record<string, unknown>>(props: {
           onClick?.(event, row);
         }}
       >
-        {row.cells.map((cell) => {
+        {row.cells.map((cell, index) => {
           const cellProps = cell.getCellProps({
             className: cx('iui-cell', cell.column.cellClassName),
-            style: getCellStyle(cell.column),
+            style: {
+              ...getCellStyle(cell.column),
+              ...{
+                paddingLeft:
+                  tableHasSubRows &&
+                  !cell.row.canExpand &&
+                  index === subRowExpanderCellIndex
+                    ? (cell.row.depth + 1) * 43 + 16 // expander width + margin = 43, cell padding-left = 16
+                    : undefined,
+              },
+            },
           });
           return (
             <div {...cellProps} key={cellProps.key}>
+              {tableHasSubRows &&
+                index === subRowExpanderCellIndex &&
+                cell.row.canExpand &&
+                getSubRowExpander(cell)}
               {cell.render('Cell')}
             </div>
           );
@@ -134,6 +188,9 @@ export const TableRowMemoized = React.memo(
     prevProp.row.original === nextProp.row.original &&
     prevProp.state.selectedRowIds?.[prevProp.row.id] ===
       nextProp.state.selectedRowIds?.[nextProp.row.id] &&
+    // Check if sub-rows selection has changed and whether to show indeterminate state or not
+    prevProp.row.subRows.some((r) => prevProp.state.selectedRowIds?.[r.id]) ===
+      nextProp.row.subRows.some((r) => nextProp.state.selectedRowIds?.[r.id]) &&
     prevProp.state.expanded?.[prevProp.row.id] ===
       nextProp.state.expanded?.[nextProp.row.id] &&
     prevProp.subComponent === nextProp.subComponent &&
@@ -141,5 +198,7 @@ export const TableRowMemoized = React.memo(
       (cell, index) => nextProp.row.cells[index].column === cell.column,
     ) &&
     prevProp.isDisabled === nextProp.isDisabled &&
-    prevProp.rowProps === nextProp.rowProps,
+    prevProp.rowProps === nextProp.rowProps &&
+    prevProp.expanderCell === nextProp.expanderCell &&
+    prevProp.tableHasSubRows === nextProp.tableHasSubRows,
 ) as typeof TableRow;

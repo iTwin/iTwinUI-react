@@ -38,6 +38,7 @@ export default {
       { name: 'Name3', description: 'Description3' },
     ],
     emptyTableContent: 'No data.',
+    emptyFilteredTableContent: 'No results found. Clear or try another filter.',
   },
   argTypes: {
     columns: { control: { disable: true } },
@@ -485,7 +486,6 @@ Filters.args = {
       endDate: '2021-06-02T21:00:00.000Z',
     },
   ],
-  emptyFilteredTableContent: 'No results found. Clear or try another filter.',
 };
 Filters.parameters = {
   creevey: {
@@ -604,6 +604,108 @@ Expandable.parameters = {
       },
     },
   } as CreeveyStoryParams,
+};
+
+export const ExpandableSubrows: Story<TableProps> = (args) => {
+  const { data, ...rest } = args;
+
+  const onExpand = useCallback(
+    (rows, state) =>
+      action(
+        `Expanded rows: ${JSON.stringify(rows)}. Table state: ${JSON.stringify(
+          state,
+        )}`,
+      )(),
+    [],
+  );
+
+  const tableColumns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'expander',
+            Header: 'Name',
+            accessor: 'name',
+            minWidth: 400,
+            Filter: tableFilters.TextFilter(),
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  return (
+    <Table
+      showSubRows
+      emptyTableContent='No data.'
+      isSelectable
+      {...rest}
+      data={data}
+      columns={tableColumns}
+      onExpand={onExpand}
+    />
+  );
+};
+
+ExpandableSubrows.args = {
+  data: [
+    {
+      name: 'Row 1',
+      description: 'Description 1',
+      subRows: [
+        { name: 'Row 1.1', description: 'Description 1.1', subRows: [] },
+        {
+          name: 'Row 1.2',
+          description: 'Description 1.2',
+          subRows: [
+            {
+              name: 'Row 1.2.1',
+              description: 'Description 1.2.1',
+              subRows: [],
+            },
+            {
+              name: 'Row 1.2.2',
+              description: 'Description 1.2.2',
+              subRows: [],
+            },
+            {
+              name: 'Row 1.2.3',
+              description: 'Description 1.2.3',
+              subRows: [],
+            },
+            {
+              name: 'Row 1.2.4',
+              description: 'Description 1.2.4',
+              subRows: [],
+            },
+          ],
+        },
+        { name: 'Row 1.3', description: 'Description 1.3', subRows: [] },
+        { name: 'Row 1.4', description: 'Description 1.4', subRows: [] },
+      ],
+    },
+    {
+      name: 'Row 2',
+      description: 'Description 2',
+      subRows: [
+        { name: 'Row 2.1', description: 'Description 2.1', subRows: [] },
+        { name: 'Row 2.2', description: 'Description 2.2', subRows: [] },
+        { name: 'Row 2.3', description: 'Description 2.3', subRows: [] },
+      ],
+    },
+    { name: 'Row 3', description: 'Description 3', subRows: [] },
+  ],
+};
+ExpandableSubrows.argTypes = {
+  data: { control: { disable: true } },
 };
 
 export const LazyLoading: Story<TableProps> = (args) => {

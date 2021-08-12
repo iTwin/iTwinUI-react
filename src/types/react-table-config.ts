@@ -149,5 +149,7 @@ declare module 'react-table' {
     extends UseExpandedRowProps<D>,
       UseGroupByRowProps<D>,
       UseRowSelectRowProps<D>,
-      UseRowStateRowProps<D> {}
+      UseRowStateRowProps<D> {
+    initialSubRows?: Row<D>[];
+  }
 }
