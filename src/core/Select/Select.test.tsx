@@ -131,7 +131,7 @@ it('should set focus on select', () => {
     '.iui-select-button',
   ) as HTMLElement;
   expect(selectButton).toBeTruthy();
-  expect(document.activeElement).toEqual(selectButton);
+  expect(selectButton).toHaveFocus();
   expect(selectButton.getAttribute('tabIndex')).toBe('0');
 });
 
