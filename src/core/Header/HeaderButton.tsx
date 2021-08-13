@@ -87,7 +87,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
     ...rest,
   };
 
-  if (menuItems && props.onClick) {
+  if (menuItems && buttonProps.onClick) {
     return (
       <SplitButton
         {...buttonProps}

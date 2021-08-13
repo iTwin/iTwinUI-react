@@ -179,6 +179,7 @@ export const Basic: Story<HeaderProps> = (args) => {
         <HeaderBreadcrumbs
           items={[
             <HeaderButton
+              disabled={true}
               key='project'
               name='Project A (Super Size Edition)'
               description='YJC-2249'
@@ -200,6 +201,7 @@ export const Basic: Story<HeaderProps> = (args) => {
             <HeaderButton
               key='version'
               name='Version C'
+              disabled={true}
               menuItems={buildMenu('Version')}
               startIcon={<SvgVersion />}
               isActive={true}
