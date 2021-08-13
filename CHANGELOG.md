@@ -6,6 +6,7 @@
 
 ### What's new
 
+- **Added new `Fieldset` component** for grouping inputs.
 - **Added Split Header Button**
 
 ### Fixes
