@@ -7,10 +7,7 @@ import cx from 'classnames';
 import {
   actions as TableActions,
   CellProps,
-  ColumnInstance,
   HeaderGroup,
-  HeaderProps,
-  Hooks,
   TableOptions,
   Row,
   TableState,
@@ -24,11 +21,11 @@ import {
   useExpanded,
   IdType,
   FilterValue,
+  Hooks,
 } from 'react-table';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import * as defaultFilterTypes from '../../../node_modules/react-table/src/filterTypes.js';
-import { Checkbox } from '../Checkbox';
 import { ProgressRadial } from '../ProgressIndicators';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/table.css';
@@ -37,10 +34,14 @@ import SvgSortDown from '@itwin/itwinui-icons-react/cjs/icons/SortDown';
 import SvgSortUp from '@itwin/itwinui-icons-react/cjs/icons/SortUp';
 import { getCellStyle } from './utils';
 import { TableRowMemoized } from './TableRowMemoized';
-import { IconButton } from '../Buttons';
-import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import { FilterToggle, TableFilterValue } from './filters';
 import { customFilterFunctions } from './filters/customFilterFunctions';
+import { useExpanderCell, useSelectionCell } from './hooks';
+import {
+  onExpandHandler,
+  onFilterHandler,
+  onSelectHandler,
+} from './actionHandlers';
 
 const singleRowSelectedAction = 'singleRowSelected';
 
@@ -243,104 +244,6 @@ export const Table = <
     onRowInViewportRef.current = onRowInViewport;
   }, [onBottomReached, onRowInViewport]);
 
-  const useExpanderHook = (hooks: Hooks<T>) => {
-    if (!subComponent) {
-      return;
-    }
-    hooks.allColumns.push((columns: ColumnInstance<T>[]) => [
-      {
-        id: 'iui-table-expander',
-        disableResizing: true,
-        disableGroupBy: true,
-        minWidth: 48,
-        width: 48,
-        maxWidth: 48,
-        columnClassName: 'iui-slot',
-        cellClassName: 'iui-slot',
-        Cell: (props: CellProps<T>) => {
-          const { row } = props;
-          if (!subComponent(row)) {
-            return null;
-          } else if (expanderCell) {
-            return expanderCell(props);
-          } else {
-            return (
-              <IconButton
-                className='iui-row-expander'
-                styleType='borderless'
-                size='small'
-                onClick={(e) => {
-                  e.stopPropagation();
-                  row.toggleRowExpanded();
-                }}
-                disabled={isRowDisabled?.(props.row.original)}
-              >
-                {<SvgChevronRight />}
-              </IconButton>
-            );
-          }
-        },
-      },
-      ...columns,
-    ]);
-  };
-
-  const useSelectionHook = (hooks: Hooks<T>) => {
-    if (!isSelectable) {
-      return;
-    }
-
-    hooks.allColumns.push((columns: ColumnInstance<T>[]) => [
-      // Let's make a column for selection
-      {
-        id: 'iui-table-checkbox-selector',
-        disableResizing: true,
-        disableGroupBy: true,
-        minWidth: 48,
-        width: 48,
-        maxWidth: 48,
-        columnClassName: 'iui-slot',
-        cellClassName: 'iui-slot',
-        Header: ({ getToggleAllRowsSelectedProps }: HeaderProps<T>) => {
-          const disabled = instance.rows.every((row) =>
-            isRowDisabled?.(row.original),
-          );
-          const checked = instance.initialRows.every(
-            (row) =>
-              instance.state.selectedRowIds[row.id] ||
-              isRowDisabled?.(row.original),
-          );
-          return (
-            <Checkbox
-              {...getToggleAllRowsSelectedProps()}
-              checked={checked && !disabled}
-              indeterminate={
-                !checked &&
-                Object.keys(instance.state.selectedRowIds).length > 0
-              }
-              disabled={disabled}
-            />
-          );
-        },
-        Cell: ({ row }: CellProps<T>) => (
-          <span onClick={(e) => e.stopPropagation()}>
-            <Checkbox
-              {...row.getToggleRowSelectedProps()}
-              disabled={isRowDisabled?.(row.original)}
-            />
-          </span>
-        ),
-      },
-      ...columns,
-    ]);
-
-    hooks.useInstanceBeforeDimensions.push(({ headerGroups }) => {
-      // Fix the parent group of the selection button to not be resizable
-      const selectionGroupHeader = headerGroups[0].headers[0];
-      selectionGroupHeader.canResize = false;
-    });
-  };
-
   const useSubRowFiltering = (hooks: Hooks<T>) => {
     hooks.useInstance.push((instance) => {
       const setInitialRows = (rows: Row<T>[]) => {
@@ -473,85 +376,6 @@ export const Table = <
     });
   };
 
-  const onFilterHandler = (
-    newState: TableState<T>,
-    action: ActionType,
-    previousState: TableState<T>,
-    instance?: TableInstance<T>,
-  ) => {
-    const previousFilter = previousState.filters.find(
-      (f) => f.id === action.columnId,
-    );
-    if (previousFilter?.value != action.filterValue) {
-      const filters = newState.filters.map((f) => {
-        const column = instance?.allColumns.find((c) => c.id === f.id);
-        return {
-          id: f.id,
-          value: f.value,
-          fieldType: column?.fieldType ?? 'text',
-          filterType: column?.filter ?? 'text',
-        };
-      }) as TableFilterValue<T>[];
-      onFilter?.(filters, newState);
-    }
-  };
-
-  const onSelectHandler = (
-    newState: TableState<T>,
-    instance?: TableInstance<T>,
-  ) => {
-    if (!instance?.rows.length) {
-      onSelect?.([], newState);
-      return;
-    }
-
-    const newSelectedRowIds = {} as Record<string, boolean>;
-
-    const handleRow = (row: Row<T>) => {
-      if (isRowDisabled?.(row.original)) {
-        return false;
-      }
-
-      let isAllSubSelected = true;
-      row.initialSubRows?.forEach((subRow) => {
-        const result = handleRow(subRow);
-        if (!result) {
-          isAllSubSelected = false;
-        }
-      });
-
-      // If `selectSubRows` is false, then no need to select sub-rows
-      // and just check current selection state.
-      if (!instance.selectSubRows && newState.selectedRowIds[row.id]) {
-        newSelectedRowIds[row.id] = true;
-        return true;
-      }
-
-      // If a row doesn't have sub-rows then check its selection state.
-      // If it has sub-rows then check whether all of them are selected.
-      if (
-        (!row.initialSubRows?.length && newState.selectedRowIds[row.id]) ||
-        (row.initialSubRows?.length && isAllSubSelected)
-      ) {
-        newSelectedRowIds[row.id] = true;
-      }
-      return !!newSelectedRowIds[row.id];
-    };
-    instance.initialRows.forEach((row) => handleRow(row));
-
-    const selectedData: T[] = [];
-    const setSelectedData = (row: Row<T>) => {
-      if (newSelectedRowIds[row.id]) {
-        selectedData.push(row.original);
-      }
-      row.initialSubRows?.forEach((subRow) => setSelectedData(subRow));
-    };
-    instance.initialRows.forEach((row) => setSelectedData(row));
-
-    newState.selectedRowIds = newSelectedRowIds;
-    onSelect?.(selectedData, newState);
-  };
-
   const onSingleSelectHandler = (
     newState: TableState<T>,
     action: ActionType,
@@ -571,24 +395,6 @@ export const Table = <
     };
   };
 
-  const onExpandHandler = (
-    newState: TableState<T>,
-    instance?: TableInstance<T>,
-  ) => {
-    if (!instance?.rows.length) {
-      onExpand?.([], newState);
-      return;
-    }
-
-    const expandedData: T[] = [];
-    instance.rows.forEach((row) => {
-      if (newState.expanded[row.id]) {
-        expandedData.push(row.original);
-      }
-    });
-    onExpand?.(expandedData, newState);
-  };
-
   const tableStateReducer = (
     newState: TableState<T>,
     action: ActionType,
@@ -600,11 +406,11 @@ export const Table = <
         onSort?.(newState);
         break;
       case TableActions.setFilter:
-        onFilterHandler(newState, action, previousState, instance);
+        onFilterHandler(newState, action, previousState, instance, onFilter);
         break;
       case TableActions.toggleRowExpanded:
       case TableActions.toggleAllRowsExpanded:
-        onExpandHandler(newState, instance);
+        onExpandHandler(newState, instance, onExpand);
         break;
       case singleRowSelectedAction: {
         newState = onSingleSelectHandler(newState, action, instance);
@@ -612,7 +418,7 @@ export const Table = <
       case TableActions.toggleRowSelected:
       case TableActions.toggleAllRowsSelected:
       case TableActions.toggleAllPageRowsSelected: {
-        onSelectHandler(newState, instance);
+        onSelectHandler(newState, instance, onSelect, isRowDisabled);
         break;
       }
       default:
@@ -640,8 +446,8 @@ export const Table = <
     useExpanded,
     useRowSelect,
     useSubRowSelection,
-    useExpanderHook,
-    useSelectionHook,
+    useExpanderCell(subComponent, expanderCell, isRowDisabled),
+    useSelectionCell(isSelectable, isRowDisabled),
   );
 
   const {
@@ -718,7 +524,7 @@ export const Table = <
                 return (
                   <div {...columnProps} key={columnProps.key} title={undefined}>
                     {column.render('Header')}
-                    {!isLoading && data.length != 0 && (
+                    {!isLoading && (data.length != 0 || areFiltersSet) && (
                       <FilterToggle
                         column={column}
                         ownerDocument={ownerDocument}
