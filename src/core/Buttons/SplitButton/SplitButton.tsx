@@ -95,7 +95,7 @@ export const SplitButton = (props: SplitButtonProps) => {
         onShow={React.useCallback(() => setIsMenuOpen(true), [])}
         onHide={React.useCallback(() => setIsMenuOpen(false), [])}
       >
-        <IconButton styleType={styleType} size={size}>
+        <IconButton styleType={styleType} size={size} disabled={props.disabled}>
           {isMenuOpen ? <SvgCaretUpSmall /> : <SvgCaretDownSmall />}
         </IconButton>
       </DropdownMenu>

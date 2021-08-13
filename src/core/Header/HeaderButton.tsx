@@ -74,6 +74,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
         'iui-header-button': !isSplitButton,
         'iui-header-split-button': isSplitButton,
         'iui-active': isActive,
+        'iui-disabled': props.disabled,
       },
       className,
     ),
