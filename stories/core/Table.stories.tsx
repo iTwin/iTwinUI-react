@@ -1194,3 +1194,6 @@ Full.args = {
   isSortable: true,
   emptyFilteredTableContent: 'No results found. Clear or try another filter.',
 };
+
+export const Condensed: Story<TableProps> = Basic.bind({});
+Condensed.args = { density: 'extra-condensed' };

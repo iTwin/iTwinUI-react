@@ -1043,3 +1043,24 @@ it('should pass custom props to row', () => {
   expect(onMouseEnter).toHaveBeenCalledWith(mockedData()[0]);
   expect(element).toBeTruthy();
 });
+
+it('should render condensed table', () => {
+  const { container } = renderComponent({
+    density: 'condensed',
+  });
+
+  const table = container.querySelector(
+    '.iui-table.iui-condensed',
+  ) as HTMLElement;
+  expect(table).toBeTruthy();
+});
+
+it('should render extra condensed table', () => {
+  const { container } = renderComponent({
+    density: 'extra-condensed',
+  });
+  const table = container.querySelector(
+    '.iui-table.iui-extra-condensed',
+  ) as HTMLElement;
+  expect(table).toBeTruthy();
+});
