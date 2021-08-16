@@ -58,7 +58,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
   } = props;
 
   useTheme();
-
+  const isSplitButton = menuItems && onClick;
   const buttonProps: ButtonProps & {
     styleType: 'borderless';
   } = {
@@ -73,8 +73,8 @@ export const HeaderButton = (props: HeaderButtonProps) => {
     styleType: 'borderless',
     className: cx(
       {
-        'iui-header-button': !(menuItems && onClick),
-        'iui-header-split-button': menuItems && onClick,
+        'iui-header-button': !isSplitButton,
+        'iui-header-split-button': isSplitButton,
         'iui-active': isActive,
       },
       className,
