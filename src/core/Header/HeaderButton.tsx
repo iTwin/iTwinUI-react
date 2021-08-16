@@ -61,9 +61,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
 
   const buttonProps: ButtonProps & {
     styleType: 'borderless';
-    menuItems: ((close: () => void) => JSX.Element[]) | undefined;
   } = {
-    menuItems: menuItems,
     startIcon: React.isValidElement(startIcon)
       ? React.cloneElement(startIcon as JSX.Element, {
           className: cx(
@@ -91,11 +89,15 @@ export const HeaderButton = (props: HeaderButtonProps) => {
     ...rest,
   };
 
-  if (buttonProps.menuItems && buttonProps.onClick) {
-    return <SplitButton {...buttonProps}>{buttonProps.children}</SplitButton>;
+  if (menuItems && onClick) {
+    return (
+      <SplitButton {...buttonProps} onClick={onClick} menuItems={menuItems}>
+        {buttonProps.children}
+      </SplitButton>
+    );
   }
-  if (buttonProps.menuItems) {
-    return <DropdownButton {...buttonProps} />;
+  if (menuItems) {
+    return <DropdownButton {...buttonProps} menuItems={menuItems} />;
   }
   return <Button {...buttonProps} />;
 };

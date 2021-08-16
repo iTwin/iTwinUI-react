@@ -179,7 +179,6 @@ export const Basic: Story<HeaderProps> = (args) => {
         <HeaderBreadcrumbs
           items={[
             <HeaderButton
-              disabled
               key='project'
               name='Project A (Super Size Edition)'
               description='YJC-2249'

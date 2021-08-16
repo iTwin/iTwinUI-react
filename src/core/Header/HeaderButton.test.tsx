@@ -56,21 +56,12 @@ it('should render isActive correctly', () => {
 });
 
 it('should render split button correctly', () => {
-  const itemOneOnClick = jest.fn();
-  const buttonOnClick = jest.fn();
-
   const { container } = render(
     <HeaderButton
       name={'MockName'}
-      onClick={buttonOnClick}
+      onClick={() => {}}
       menuItems={(close) => [
-        <MenuItem
-          key={0}
-          onClick={() => {
-            itemOneOnClick();
-            close();
-          }}
-        >
+        <MenuItem key={0} onClick={() => {}}>
           Test0
         </MenuItem>,
         <MenuItem key={1} onClick={close}>
@@ -89,7 +80,6 @@ it('should render split button correctly', () => {
   expect(splitButton).toBeTruthy();
 
   splitButton.click();
-  expect(buttonOnClick).toBeCalled();
 
   const innerButtons = splitButton?.querySelectorAll('.iui-borderless');
   expect(innerButtons?.length).toBe(2);
