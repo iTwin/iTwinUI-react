@@ -58,7 +58,7 @@ export type ThumbProps = {
   /**
    * Additional props for Thumb.
    */
-  thumbProps?: (index: number) => React.HTMLAttributes<HTMLDivElement>;
+  thumbProps?: React.HTMLAttributes<HTMLDivElement>;
 };
 
 /**
@@ -85,23 +85,28 @@ export const Thumb = (props: ThumbProps) => {
   const thumbRef = React.useRef<HTMLDivElement>(null);
   const handleOnKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
-      if (disabled) {
+      if (disabled || event.altKey) {
         return;
       }
       switch (event.key) {
         case 'ArrowLeft':
+        case 'ArrowDown':
           onThumbValueChanged(index, Math.max(value - step, minVal));
-          return;
+          break;
         case 'ArrowRight':
+        case 'ArrowUp':
           onThumbValueChanged(index, Math.min(value + step, maxVal));
-          return;
+          break;
         case 'Home':
           onThumbValueChanged(index, minVal);
-          return;
+          break;
         case 'End':
           onThumbValueChanged(index, maxVal);
+          break;
+        default:
           return;
       }
+      event.preventDefault();
     },
     [disabled, onThumbValueChanged, index, value, step, minVal, maxVal],
   );
@@ -114,7 +119,7 @@ export const Thumb = (props: ThumbProps) => {
   const [isHovered, setIsHovered] = React.useState(false);
 
   const leftPercent = (100.0 * (value - sliderMin)) / (sliderMax - sliderMin);
-  const { style, className, ...rest } = thumbProps?.(index) || {};
+  const { style, className, ...rest } = thumbProps || {};
 
   return (
     <Tooltip

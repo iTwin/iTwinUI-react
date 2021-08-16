@@ -13,7 +13,7 @@ import React from 'react';
 import { Table, TableProps } from './Table';
 import * as IntersectionHooks from '../utils/hooks/useIntersection';
 import { tableFilters } from './filters';
-import { CellProps } from 'react-table';
+import { CellProps, Row } from 'react-table';
 import { SvgChevronRight } from '@itwin/itwinui-icons-react';
 
 const intersectionCallbacks = new Map<Element, () => void>();
@@ -95,6 +95,32 @@ function assertRowsData(
     fireEvent.click(cells[2].firstElementChild as HTMLElement);
   }
 }
+
+const setFilter = (container: HTMLElement, value: string) => {
+  const filterIcon = container.querySelector(
+    '.iui-filter-button .iui-icon',
+  ) as HTMLElement;
+  expect(filterIcon).toBeTruthy();
+  fireEvent.click(filterIcon);
+
+  const filterInput = document.querySelector(
+    '.iui-column-filter input',
+  ) as HTMLInputElement;
+  expect(filterInput).toBeTruthy();
+
+  fireEvent.change(filterInput, { target: { value } });
+  screen.getByText('Filter').click();
+};
+
+const clearFilter = (container: HTMLElement) => {
+  const filterIcon = container.querySelector(
+    '.iui-filter-button .iui-icon',
+  ) as HTMLElement;
+  expect(filterIcon).toBeTruthy();
+  fireEvent.click(filterIcon);
+
+  screen.getByText('Clear').click();
+};
 
 beforeEach(() => {
   intersectionCallbacks.clear();
@@ -278,19 +304,7 @@ it('should not trigger onSelect when sorting and filtering', () => {
   expect(onSort).toHaveBeenCalled();
   expect(onSelect).not.toHaveBeenCalled();
 
-  const filterIcon = container.querySelector(
-    '.iui-filter-button .iui-icon',
-  ) as HTMLElement;
-  expect(filterIcon).toBeTruthy();
-  fireEvent.click(filterIcon);
-
-  const filterInput = document.querySelector(
-    '.iui-column-filter input',
-  ) as HTMLInputElement;
-  expect(filterInput).toBeTruthy();
-
-  fireEvent.change(filterInput, { target: { value: '2' } });
-  screen.getByText('Filter').click();
+  setFilter(container, '2');
   expect(onFilter).toHaveBeenCalled();
   expect(onSelect).not.toHaveBeenCalled();
 });
@@ -473,19 +487,7 @@ it('should filter table', () => {
   let rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
 
-  const filterIcon = container.querySelector(
-    '.iui-filter-button .iui-icon',
-  ) as HTMLElement;
-  expect(filterIcon).toBeTruthy();
-  fireEvent.click(filterIcon);
-
-  const filterInput = document.querySelector(
-    '.iui-column-filter input',
-  ) as HTMLInputElement;
-  expect(filterInput).toBeTruthy();
-
-  fireEvent.change(filterInput, { target: { value: '2' } });
-  screen.getByText('Filter').click();
+  setFilter(container, '2');
 
   const tippy = document.querySelector('[data-tippy-root]') as HTMLElement;
   expect(tippy.style.visibility).toEqual('hidden');
@@ -575,19 +577,7 @@ it('should not filter table when manualFilters flag is on', () => {
   let rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
 
-  const filterIcon = container.querySelector(
-    '.iui-filter-button .iui-icon',
-  ) as HTMLElement;
-  expect(filterIcon).toBeTruthy();
-  fireEvent.click(filterIcon);
-
-  const filterInput = document.querySelector(
-    '.iui-column-filter input',
-  ) as HTMLInputElement;
-  expect(filterInput).toBeTruthy();
-
-  fireEvent.change(filterInput, { target: { value: '2' } });
-  screen.getByText('Filter').click();
+  setFilter(container, '2');
 
   const tippy = document.querySelector('[data-tippy-root]') as HTMLElement;
   expect(tippy.style.visibility).toEqual('hidden');
@@ -627,7 +617,7 @@ it('should not show filter icon when filter component is not set', () => {
   expect(filterIcon).toBeFalsy();
 });
 
-it('should show message when there is no data after filtering', () => {
+it('should show message and active filter icon when there is no data after filtering', () => {
   const mockedColumns = [
     {
       Header: 'Header name',
@@ -648,23 +638,65 @@ it('should show message when there is no data after filtering', () => {
   let rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
 
-  const filterIcon = container.querySelector(
-    '.iui-filter-button .iui-icon',
-  ) as HTMLElement;
-  expect(filterIcon).toBeTruthy();
-  fireEvent.click(filterIcon);
-
-  const filterInput = document.querySelector(
-    '.iui-column-filter input',
-  ) as HTMLInputElement;
-  expect(filterInput).toBeTruthy();
-
-  fireEvent.change(filterInput, { target: { value: 'invalid value' } });
-  screen.getByText('Filter').click();
+  setFilter(container, 'invalid value');
 
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(0);
   screen.getByText('No results. Clear filter.');
+  const filterIcon = container.querySelector(
+    '.iui-filter-button.iui-active .iui-icon',
+  ) as HTMLElement;
+  expect(filterIcon).toBeTruthy();
+});
+
+it('should show message and active filter icon when there is no data after manual filtering', () => {
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          Filter: tableFilters.TextFilter(),
+          fieldType: 'text',
+        },
+      ],
+    },
+  ];
+  const { container, rerender } = render(
+    <Table
+      data={mockedData()}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      emptyFilteredTableContent='No results. Clear filter.'
+      manualFilters={true}
+    />,
+  );
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  setFilter(container, 'invalid value');
+
+  rerender(
+    <Table
+      data={[]}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      emptyFilteredTableContent='No results. Clear filter.'
+      manualFilters={true}
+    />,
+  );
+
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(0);
+  screen.getByText('No results. Clear filter.');
+  const filterIcon = container.querySelector(
+    '.iui-filter-button.iui-active .iui-icon',
+  ) as HTMLElement;
+  expect(filterIcon).toBeTruthy();
 });
 
 it('should not trigger sorting when filter is clicked', () => {
@@ -690,19 +722,7 @@ it('should not trigger sorting when filter is clicked', () => {
     onSort,
   });
 
-  const filterIcon = container.querySelector(
-    '.iui-filter-button .iui-icon',
-  ) as HTMLElement;
-  expect(filterIcon).toBeTruthy();
-  fireEvent.click(filterIcon);
-
-  const filterInput = document.querySelector(
-    '.iui-column-filter input',
-  ) as HTMLInputElement;
-  expect(filterInput).toBeTruthy();
-
-  fireEvent.change(filterInput, { target: { value: 'invalid value' } });
-  screen.getByText('Filter').click();
+  setFilter(container, '2');
 
   expect(onFilter).toHaveBeenCalled();
   expect(onSort).not.toHaveBeenCalled();
@@ -940,4 +960,86 @@ it('should disable row and handle selection accordingly', () => {
   expect(onSelect).toHaveBeenCalledWith([], expect.any(Object));
   expect(headerCheckbox.indeterminate).toBe(false);
   expect(headerCheckbox.checked).toBe(false);
+});
+
+it('should select and filter rows', () => {
+  const onSelect = jest.fn();
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          Filter: tableFilters.TextFilter(),
+          fieldType: 'text',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns: mockedColumns,
+    isSelectable: true,
+    onSelect,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  let checkboxCells = container.querySelectorAll('.iui-slot .iui-checkbox');
+  expect(checkboxCells.length).toBe(4);
+
+  // Select first row
+  fireEvent.click(checkboxCells[1]);
+  expect(onSelect).toHaveBeenCalledWith([mockedData()[0]], expect.any(Object));
+  const headerCheckbox = checkboxCells[0].querySelector(
+    'input',
+  ) as HTMLInputElement;
+  expect(headerCheckbox.indeterminate).toBe(true);
+
+  // Filter table
+  setFilter(container, '2');
+  expect(headerCheckbox.indeterminate).toBe(true);
+
+  checkboxCells = container.querySelectorAll('.iui-slot .iui-checkbox');
+  expect(checkboxCells.length).toBe(2);
+
+  // Select second row
+  fireEvent.click(checkboxCells[1]);
+  expect(onSelect).toHaveBeenCalledWith(
+    [mockedData()[0], mockedData()[1]],
+    expect.any(Object),
+  );
+  expect(headerCheckbox.indeterminate).toBe(true);
+
+  // Clear filter
+  clearFilter(container);
+  const checkboxInputs = container.querySelectorAll<HTMLInputElement>(
+    '.iui-slot .iui-checkbox input',
+  );
+  expect(checkboxInputs.length).toBe(4);
+  expect(checkboxInputs[0].indeterminate).toBe(true);
+  expect(checkboxInputs[1].checked).toBe(true);
+  expect(checkboxInputs[2].checked).toBe(true);
+  expect(checkboxInputs[3].checked).toBe(false);
+});
+
+it('should pass custom props to row', () => {
+  const onMouseEnter = jest.fn();
+  let element: HTMLInputElement | null = null;
+  const onRef = (ref: HTMLInputElement) => {
+    element = ref;
+  };
+  const rowProps = (row: Row<{ name: string; description: string }>) => {
+    return { onMouseEnter: () => onMouseEnter(row.original), ref: onRef };
+  };
+  const { container } = renderComponent({ rowProps });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  fireEvent.mouseEnter(rows[0]);
+  expect(onMouseEnter).toHaveBeenCalledWith(mockedData()[0]);
+  expect(element).toBeTruthy();
 });

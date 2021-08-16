@@ -9,6 +9,7 @@ import '@itwin/itwinui-css/css/slider.css';
 import { TooltipProps } from '../Tooltip';
 import { CommonProps } from '../utils/props';
 import { getBoundedValue } from '../utils/common';
+import { useEventListener } from '../utils/hooks/useEventListener';
 import { Track } from './Track';
 import { Thumb } from './Thumb';
 
@@ -162,8 +163,7 @@ export type SliderProps = {
    */
   thumbProps?: (index: number) => React.HTMLAttributes<HTMLDivElement>;
   /**
-   * Callback fired when the value(s) of the slider has changed. This will receive
-   * changes at the end of a slide as well as changes from clicks on rails and tracks.
+   * Callback fired at the end of a thumb move (i.e. on pointerUp) and when user clicks on rail.
    */
   onChange?: (values: ReadonlyArray<number>) => void;
   /**
@@ -205,12 +205,9 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       ...rest
     } = props;
 
-    const thumbIdRef = React.useRef(0);
-
     const [currentValues, setCurrentValues] = React.useState(values);
     React.useEffect(() => {
       setCurrentValues(values);
-      thumbIdRef.current = thumbIdRef.current + 1;
     }, [values]);
 
     const [minValueLabel, setMinValueLabel] = React.useState(
@@ -269,10 +266,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
     >(undefined);
 
     const updateThumbValue = React.useCallback(
-      (
-        event: PointerEvent,
-        callback?: (values: ReadonlyArray<number>) => void,
-      ) => {
+      (event: PointerEvent, callbackType: 'onChange' | 'onUpdate') => {
         if (containerRef.current && undefined !== activeThumbIndex) {
           const percent = getPercentageOfRectangle(
             containerRef.current.getBoundingClientRect(),
@@ -282,25 +276,37 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
           pointerValue = roundValueToClosestStep(pointerValue, step, min);
           const [minVal, maxVal] = getAllowableThumbRange(activeThumbIndex);
           pointerValue = getBoundedValue(pointerValue, minVal, maxVal);
-          if (pointerValue === currentValues[activeThumbIndex]) {
-            return;
+          if (pointerValue !== currentValues[activeThumbIndex]) {
+            const newValues = [...currentValues];
+            newValues[activeThumbIndex] = pointerValue;
+            setCurrentValues(newValues);
+            'onChange' === callbackType
+              ? onChange?.(newValues)
+              : onUpdate?.(newValues);
+          } else if ('onChange' === callbackType) {
+            onChange?.(currentValues);
           }
-          const newValues = [...currentValues];
-          newValues[activeThumbIndex] = pointerValue;
-          setCurrentValues(newValues);
-          callback?.(newValues);
         }
       },
-      [activeThumbIndex, min, max, step, getAllowableThumbRange, currentValues],
+      [
+        activeThumbIndex,
+        min,
+        max,
+        step,
+        getAllowableThumbRange,
+        currentValues,
+        onUpdate,
+        onChange,
+      ],
     );
 
     const handlePointerMove = React.useCallback(
       (event: PointerEvent): void => {
         event.preventDefault();
         event.stopPropagation();
-        updateThumbValue(event, onUpdate);
+        updateThumbValue(event, 'onUpdate');
       },
-      [onUpdate, updateThumbValue],
+      [updateThumbValue],
     );
 
     // function called by Thumb keyboard processing
@@ -323,12 +329,12 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
 
     const handlePointerUp = React.useCallback(
       (event: PointerEvent) => {
-        updateThumbValue(event, onChange);
+        updateThumbValue(event, 'onChange');
         setActiveThumbIndex(undefined);
         event.preventDefault();
         event.stopPropagation();
       },
-      [onChange, updateThumbValue],
+      [updateThumbValue],
     );
 
     const handlePointerDownOnSlider = React.useCallback(
@@ -362,38 +368,16 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       [min, max, step, currentValues, getAllowableThumbRange, onChange],
     );
 
-    const pointerMoveFunctionRef = React.useRef<
-      (event: PointerEvent) => void
-    >();
-    React.useEffect(() => {
-      const ownerDoc = containerRef.current?.ownerDocument;
-      if (pointerMoveFunctionRef.current && ownerDoc) {
-        ownerDoc.removeEventListener(
-          'pointermove',
-          pointerMoveFunctionRef.current,
-        );
-      }
-      pointerMoveFunctionRef.current = handlePointerMove;
-    }, [handlePointerMove]);
-
-    const pointerUpFunctionRef = React.useRef<(event: PointerEvent) => void>();
-    React.useEffect(() => {
-      const ownerDoc = containerRef.current?.ownerDocument;
-      if (pointerUpFunctionRef.current && ownerDoc) {
-        ownerDoc.removeEventListener('pointerup', pointerUpFunctionRef.current);
-      }
-      pointerUpFunctionRef.current = handlePointerUp;
-    }, [handlePointerUp]);
-
-    React.useEffect(() => {
-      const ownerDoc = containerRef.current?.ownerDocument;
-      ownerDoc?.addEventListener('pointermove', handlePointerMove);
-      ownerDoc?.addEventListener('pointerup', handlePointerUp);
-      return () => {
-        ownerDoc?.removeEventListener('pointermove', handlePointerMove);
-        ownerDoc?.removeEventListener('pointerup', handlePointerUp);
-      };
-    }, [handlePointerMove, handlePointerUp]);
+    useEventListener(
+      'pointermove',
+      handlePointerMove,
+      containerRef.current?.ownerDocument,
+    );
+    useEventListener(
+      'pointerup',
+      handlePointerUp,
+      containerRef.current?.ownerDocument,
+    );
 
     const tickMarkArea = React.useMemo(() => {
       if (!tickLabels) {
@@ -455,9 +439,10 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
           <div className='iui-slider-rail' />
           {currentValues.map((thumbValue, index) => {
             const [minVal, maxVal] = getAllowableThumbRange(index);
+            const thisThumbProps = thumbProps?.(index);
             return (
               <Thumb
-                key={`${thumbIdRef.current}-${index}`}
+                key={thisThumbProps?.id ?? index}
                 index={index}
                 disabled={disabled}
                 isActive={activeThumbIndex === index}
@@ -467,7 +452,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
                 maxVal={maxVal}
                 value={thumbValue}
                 tooltipProps={generateTooltipProps(index, thumbValue)}
-                thumbProps={thumbProps}
+                thumbProps={thisThumbProps}
                 step={step}
                 sliderMin={min}
                 sliderMax={max}

@@ -7,10 +7,7 @@ import cx from 'classnames';
 import {
   actions as TableActions,
   CellProps,
-  ColumnInstance,
   HeaderGroup,
-  HeaderProps,
-  Hooks,
   TableOptions,
   Row,
   TableState,
@@ -23,7 +20,6 @@ import {
   TableInstance,
   useExpanded,
 } from 'react-table';
-import { Checkbox } from '../Checkbox';
 import { ProgressRadial } from '../ProgressIndicators';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/table.css';
@@ -32,10 +28,14 @@ import SvgSortDown from '@itwin/itwinui-icons-react/cjs/icons/SortDown';
 import SvgSortUp from '@itwin/itwinui-icons-react/cjs/icons/SortUp';
 import { getCellStyle } from './utils';
 import { TableRowMemoized } from './TableRowMemoized';
-import { IconButton } from '../Buttons';
-import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import { FilterToggle, TableFilterValue } from './filters';
 import { customFilterFunctions } from './filters/customFilterFunctions';
+import { useExpanderCell, useSelectionCell } from './hooks';
+import {
+  onExpandHandler,
+  onFilterHandler,
+  onSelectHandler,
+} from './actionHandlers';
 import VirtualScroll from './VirtualScroll';
 
 const singleRowSelectedAction = 'singleRowSelected';
@@ -130,6 +130,11 @@ export type TableProps<
    * If not specified, all rows are enabled.
    */
   isRowDisabled?: (rowData: T) => boolean;
+  /**
+   * Function that should return custom props passed to the each row.
+   * Must be memoized.
+   */
+  rowProps?: (row: Row<T>) => React.ComponentPropsWithRef<'div'>;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -202,6 +207,7 @@ export const Table = <
     filterTypes: filterFunctions,
     expanderCell,
     isRowDisabled,
+    rowProps,
     ...rest
   } = props;
 
@@ -226,207 +232,45 @@ export const Table = <
     onRowInViewportRef.current = onRowInViewport;
   }, [onBottomReached, onRowInViewport]);
 
-  const useExpanderHook = (hooks: Hooks<T>) => {
-    if (!subComponent) {
-      return;
-    }
-    hooks.allColumns.push((columns: ColumnInstance<T>[]) => [
-      {
-        id: 'iui-table-expander',
-        disableResizing: true,
-        disableGroupBy: true,
-        minWidth: 48,
-        width: 48,
-        maxWidth: 48,
-        columnClassName: 'iui-slot',
-        cellClassName: 'iui-slot',
-        Cell: (props: CellProps<T>) => {
-          const { row } = props;
-          if (!subComponent(row)) {
-            return null;
-          } else if (expanderCell) {
-            return expanderCell(props);
-          } else {
-            return (
-              <IconButton
-                className='iui-row-expander'
-                styleType='borderless'
-                size='small'
-                onClick={(e) => {
-                  e.stopPropagation();
-                  row.toggleRowExpanded();
-                }}
-                disabled={isRowDisabled?.(props.row.original)}
-              >
-                {<SvgChevronRight />}
-              </IconButton>
-            );
-          }
-        },
-      },
-      ...columns,
-    ]);
-  };
-
-  const useSelectionHook = (hooks: Hooks<T>) => {
-    if (!isSelectable) {
-      return;
-    }
-
-    hooks.allColumns.push((columns: ColumnInstance<T>[]) => [
-      // Let's make a column for selection
-      {
-        id: 'iui-table-checkbox-selector',
-        disableResizing: true,
-        disableGroupBy: true,
-        minWidth: 48,
-        width: 48,
-        maxWidth: 48,
-        columnClassName: 'iui-slot',
-        cellClassName: 'iui-slot',
-        Header: ({ getToggleAllRowsSelectedProps }: HeaderProps<T>) => {
-          const disabled = instance.rows.every((row) =>
-            isRowDisabled?.(row.original),
-          );
-          const checked =
-            instance.isAllRowsSelected ||
-            instance.rows.every(
-              (row) =>
-                instance.state.selectedRowIds[row.id] ||
-                isRowDisabled?.(row.original),
-            );
-          return (
-            <Checkbox
-              {...getToggleAllRowsSelectedProps()}
-              checked={checked && !disabled}
-              indeterminate={
-                !checked &&
-                Object.keys(instance.state.selectedRowIds).length > 0
-              }
-              disabled={disabled}
-            />
-          );
-        },
-        Cell: ({ row }: CellProps<T>) => (
-          <span onClick={(e) => e.stopPropagation()}>
-            <Checkbox
-              {...row.getToggleRowSelectedProps()}
-              disabled={isRowDisabled?.(row.original)}
-            />
-          </span>
-        ),
-      },
-      ...columns,
-    ]);
-
-    hooks.useInstanceBeforeDimensions.push(({ headerGroups }) => {
-      // Fix the parent group of the selection button to not be resizable
-      const selectionGroupHeader = headerGroups[0].headers[0];
-      selectionGroupHeader.canResize = false;
-    });
-  };
-
-  const onFilterHandler = (
-    newState: TableState<T>,
-    action: ActionType,
-    previousState: TableState<T>,
-    instance?: TableInstance<T>,
-  ) => {
-    const previousFilter = previousState.filters.find(
-      (f) => f.id === action.columnId,
-    );
-    if (previousFilter?.value != action.filterValue) {
-      const filters = newState.filters.map((f) => {
-        const column = instance?.allColumns.find((c) => c.id === f.id);
-        return {
-          id: f.id,
-          value: f.value,
-          fieldType: column?.fieldType ?? 'text',
-          filterType: column?.filter ?? 'text',
-        };
-      }) as TableFilterValue<T>[];
-      onFilter?.(filters, newState);
-    }
-  };
-
-  const onSelectHandler = (
-    newState: TableState<T>,
-    instance?: TableInstance<T>,
-  ) => {
-    if (!instance?.rows.length) {
-      onSelect?.([], newState);
-      return;
-    }
-
-    const selectedData: T[] = [];
-    const newSelectedRowIds = {} as Record<string, boolean>;
-    Object.keys(newState.selectedRowIds).forEach((id) => {
-      if (
-        newState.selectedRowIds[id] &&
-        !isRowDisabled?.(instance.rowsById[id].original)
-      ) {
-        newSelectedRowIds[id] = true;
-        selectedData.push(instance.rowsById[id].original);
+  const tableStateReducer = React.useCallback(
+    (
+      newState: TableState<T>,
+      action: ActionType,
+      previousState: TableState<T>,
+      instance?: TableInstance<T>,
+    ): TableState<T> => {
+      switch (action.type) {
+        case TableActions.toggleSortBy:
+          onSort?.(newState);
+          break;
+        case TableActions.setFilter:
+          onFilterHandler(newState, action, previousState, instance, onFilter);
+          break;
+        case TableActions.toggleRowExpanded:
+        case TableActions.toggleAllRowsExpanded:
+          onExpandHandler(newState, instance, onExpand);
+          break;
+        case singleRowSelectedAction: {
+          newState = {
+            ...newState,
+            selectedRowIds: { [action.id]: true } as Record<string, boolean>,
+          };
+        }
+        case TableActions.toggleRowSelected:
+        case TableActions.toggleAllRowsSelected:
+        case TableActions.toggleAllPageRowsSelected: {
+          onSelectHandler(newState, instance, onSelect, isRowDisabled);
+          break;
+        }
+        default:
+          break;
       }
-    });
-    newState.selectedRowIds = newSelectedRowIds;
-    onSelect?.(selectedData, newState);
-  };
-
-  const onExpandHandler = (
-    newState: TableState<T>,
-    instance?: TableInstance<T>,
-  ) => {
-    if (!instance?.rows.length) {
-      onExpand?.([], newState);
-      return;
-    }
-
-    const expandedData: T[] = [];
-    instance.rows.forEach((row) => {
-      if (newState.expanded[row.id]) {
-        expandedData.push(row.original);
-      }
-    });
-    onExpand?.(expandedData, newState);
-  };
-
-  const tableStateReducer = (
-    newState: TableState<T>,
-    action: ActionType,
-    previousState: TableState<T>,
-    instance?: TableInstance<T>,
-  ): TableState<T> => {
-    switch (action.type) {
-      case TableActions.toggleSortBy:
-        onSort?.(newState);
-        break;
-      case TableActions.setFilter:
-        onFilterHandler(newState, action, previousState, instance);
-        break;
-      case TableActions.toggleRowExpanded:
-      case TableActions.toggleAllRowsExpanded:
-        onExpandHandler(newState, instance);
-        break;
-      case singleRowSelectedAction: {
-        newState = {
-          ...newState,
-          selectedRowIds: { [action.id]: true } as Record<string, boolean>,
-        };
-      }
-      case TableActions.toggleRowSelected:
-      case TableActions.toggleAllRowsSelected:
-      case TableActions.toggleAllPageRowsSelected: {
-        onSelectHandler(newState, instance);
-        break;
-      }
-      default:
-        break;
-    }
-    return stateReducer
-      ? stateReducer(newState, action, previousState, instance)
-      : newState;
-  };
+      return stateReducer
+        ? stateReducer(newState, action, previousState, instance)
+        : newState;
+    },
+    [isRowDisabled, onExpand, onFilter, onSelect, onSort, stateReducer],
+  );
 
   const instance = useTable<T>(
     {
@@ -442,8 +286,8 @@ export const Table = <
     useSortBy,
     useExpanded,
     useRowSelect,
-    useExpanderHook,
-    useSelectionHook,
+    useExpanderCell(subComponent, expanderCell, isRowDisabled),
+    useSelectionCell(isSelectable, isRowDisabled),
   );
 
   const {
@@ -520,7 +364,7 @@ export const Table = <
                 return (
                   <div {...columnProps} key={columnProps.key} title={undefined}>
                     {column.render('Header')}
-                    {!isLoading && data.length != 0 && (
+                    {!isLoading && (data.length != 0 || areFiltersSet) && (
                       <FilterToggle
                         column={column}
                         ownerDocument={ownerDocument}
@@ -553,13 +397,6 @@ export const Table = <
           <VirtualScroll height={style?.height ?? 0}>
             {rows.map((row: Row<T>) => {
               prepareRow(row);
-              const rowProps = row.getRowProps({
-                className: cx('iui-row', {
-                  'iui-selected': row.isSelected,
-                  'iui-row-expanded': row.isExpanded && subComponent,
-                  'iui-disabled': isRowDisabled?.(row.original),
-                }),
-              });
               return (
                 <TableRowMemoized
                   row={row}
@@ -569,15 +406,15 @@ export const Table = <
                   onBottomReached={onBottomReachedRef}
                   intersectionMargin={intersectionMargin}
                   state={state}
-                  key={rowProps.key}
+                  key={row.getRowProps().key}
                   onClick={onRowClickHandler}
                   subComponent={subComponent}
+                  isDisabled={!!isRowDisabled?.(row.original)}
                 />
               );
             })}
           </VirtualScroll>
         )}
-
         {isLoading && data.length === 0 && (
           <div className={'iui-table-empty'}>
             <ProgressRadial indeterminate={true} />

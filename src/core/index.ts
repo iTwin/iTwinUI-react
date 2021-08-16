@@ -8,6 +8,9 @@ export type { AlertProps } from './Alert';
 export { Badge } from './Badge';
 export type { BadgeProps } from './Badge';
 
+export { Breadcrumbs } from './Breadcrumbs';
+export type { BreadcrumbsProps } from './Breadcrumbs';
+
 export {
   Button,
   DropdownButton,
@@ -44,6 +47,9 @@ export type {
 
 export { ExpandableBlock } from './ExpandableBlock';
 export type { ExpandableBlockProps } from './ExpandableBlock';
+
+export { Fieldset } from './Fieldset';
+export type { FieldsetProps } from './Fieldset';
 
 export { FileUpload, FileUploadTemplate } from './FileUpload';
 export type { FileUploadProps, FileUploadTemplateProps } from './FileUpload';
@@ -148,6 +154,7 @@ export {
   Code,
   Kbd,
   KbdKeys,
+  Text,
 } from './Typography';
 export type {
   BodyProps,
@@ -159,6 +166,7 @@ export type {
   BlockquoteProps,
   CodeProps,
   KbdProps,
+  TextProps,
 } from './Typography';
 
 export { UserIcon } from './UserIcon';
