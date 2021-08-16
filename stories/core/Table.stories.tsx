@@ -38,6 +38,7 @@ export default {
       { name: 'Name3', description: 'Description3' },
     ],
     emptyTableContent: 'No data.',
+    density: 'default',
   },
   argTypes: {
     columns: { control: { disable: true } },
@@ -1196,4 +1197,4 @@ Full.args = {
 };
 
 export const Condensed: Story<TableProps> = Basic.bind({});
-Condensed.args = { density: 'extra-condensed' };
+Condensed.args = { density: 'condensed' };

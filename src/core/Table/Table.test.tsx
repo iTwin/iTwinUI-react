@@ -1045,7 +1045,7 @@ it('should pass custom props to row', () => {
 });
 
 it.each(['condensed', 'extra-condensed'] as const)(
-  'should render %s tables',
+  'should render %s table',
   (density) => {
     const { container } = renderComponent({
       density: density,

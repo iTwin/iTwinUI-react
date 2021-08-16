@@ -7,7 +7,7 @@
 ### What's new
 
 - **Added new `Fieldset` component** for grouping inputs.
-- **`Table` now has new prop to reduce row height for a condensed or extra-condensed table** through `density` prop.
+- **Added new `density` prop to `Table`** to reduce row height for a condensed or extra-condensed table.
 
 ### Fixes
 
