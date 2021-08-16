@@ -416,7 +416,7 @@ export const Table = <
           </VirtualScroll>
         )}
         {isLoading && data.length === 0 && (
-          <div className={'iui-table-empty'}>
+          <div className='iui-table-empty'>
             <ProgressRadial indeterminate={true} />
           </div>
         )}
@@ -432,12 +432,12 @@ export const Table = <
           </div>
         )}
         {!isLoading && data.length === 0 && !areFiltersSet && (
-          <div className={'iui-table-empty'}>{emptyTableContent}</div>
+          <div className='iui-table-empty'>{emptyTableContent}</div>
         )}
         {!isLoading &&
           (data.length === 0 || filteredFlatRows.length === 0) &&
           areFiltersSet && (
-            <div className={'iui-table-empty'}>{emptyFilteredTableContent}</div>
+            <div className='iui-table-empty'>{emptyFilteredTableContent}</div>
           )}
       </div>
     </div>
