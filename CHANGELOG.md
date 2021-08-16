@@ -7,6 +7,7 @@
 ### What's new
 
 - **Added new `Fieldset` component** for grouping inputs.
+- **Added sub-rows support to the `Table`.** Set `showSubRows` to `true` and add `subRows` to your `data` entries.
 
 ### Fixes
 
