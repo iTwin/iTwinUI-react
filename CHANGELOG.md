@@ -7,7 +7,7 @@
 ### What's new
 
 - **Added new `Fieldset` component** for grouping inputs.
-- **Added Split Header Button** when user provides both onClick and menuItems for Header Button component.
+- **Added Split Header Button** when user provides both `onClick` and `menuItems` for Header Button component.
 
 ### Fixes
 
