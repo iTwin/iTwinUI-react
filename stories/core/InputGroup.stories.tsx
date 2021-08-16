@@ -62,7 +62,7 @@ RadioGroup.args = {
   message: 'Tell me how happy you are',
 };
 RadioGroup.parameters = {
-  creevey: { delay: 200 } as CreeveyStoryParams,
+  creevey: { delay: 600 } as CreeveyStoryParams,
 };
 
 export const CheckboxGroup: Story<InputGroupProps> = (args) => {
