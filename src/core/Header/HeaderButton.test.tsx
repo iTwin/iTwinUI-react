@@ -56,8 +56,8 @@ it('should render isActive correctly', () => {
 });
 
 it('should render split button correctly', () => {
-  const itemOneOnClick = () => {};
-  const buttonOnClick = () => {};
+  const itemOneOnClick = jest.fn();
+  const buttonOnClick = jest.fn();
 
   const { container } = render(
     <HeaderButton
@@ -83,8 +83,13 @@ it('should render split button correctly', () => {
     />,
   );
 
-  const splitButton = container.querySelector('.iui-header-split-button');
+  const splitButton = container.querySelector(
+    '.iui-header-split-button',
+  ) as HTMLButtonElement;
   expect(splitButton).toBeTruthy();
+
+  splitButton.click();
+  expect(buttonOnClick).toBeCalled();
 
   const innerButtons = splitButton?.querySelectorAll('.iui-borderless');
   expect(innerButtons?.length).toBe(2);

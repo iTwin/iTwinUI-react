@@ -53,13 +53,17 @@ export const HeaderButton = (props: HeaderButtonProps) => {
     menuItems,
     className,
     startIcon,
+    onClick,
     ...rest
   } = props;
 
   useTheme();
 
-  const isSplitButton = menuItems && props.onClick;
-  const buttonProps: ButtonProps & { styleType: 'borderless' } = {
+  const buttonProps: ButtonProps & {
+    styleType: 'borderless';
+    menuItems: ((close: () => void) => JSX.Element[]) | undefined;
+  } = {
+    menuItems: menuItems,
     startIcon: React.isValidElement(startIcon)
       ? React.cloneElement(startIcon as JSX.Element, {
           className: cx(
@@ -71,10 +75,9 @@ export const HeaderButton = (props: HeaderButtonProps) => {
     styleType: 'borderless',
     className: cx(
       {
-        'iui-header-button': !isSplitButton,
-        'iui-header-split-button': isSplitButton,
+        'iui-header-button': !(menuItems && onClick),
+        'iui-header-split-button': menuItems && onClick,
         'iui-active': isActive,
-        'iui-disabled': props.disabled,
       },
       className,
     ),
@@ -88,19 +91,11 @@ export const HeaderButton = (props: HeaderButtonProps) => {
     ...rest,
   };
 
-  if (menuItems && buttonProps.onClick) {
-    return (
-      <SplitButton
-        {...buttonProps}
-        menuItems={menuItems}
-        onClick={() => buttonProps.onClick}
-      >
-        {buttonProps.children}
-      </SplitButton>
-    );
+  if (buttonProps.menuItems && buttonProps.onClick) {
+    return <SplitButton {...buttonProps}>{buttonProps.children}</SplitButton>;
   }
-  if (menuItems) {
-    return <DropdownButton {...buttonProps} menuItems={menuItems} />;
+  if (buttonProps.menuItems) {
+    return <DropdownButton {...buttonProps} />;
   }
   return <Button {...buttonProps} />;
 };
