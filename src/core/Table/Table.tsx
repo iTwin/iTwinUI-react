@@ -136,6 +136,7 @@ export type TableProps<
   rowProps?: (row: Row<T>) => React.ComponentPropsWithRef<'div'>;
   /**
    * Modify the density of the table (adjusts the row height).
+   * @default 'default'
    */
   density?: 'default' | 'condensed' | 'extra-condensed';
 } & Omit<CommonProps, 'title'>;
@@ -211,7 +212,7 @@ export const Table = <
     expanderCell,
     isRowDisabled,
     rowProps,
-    density,
+    density = 'default',
     ...rest
   } = props;
 
@@ -345,7 +346,7 @@ export const Table = <
         className: cx(
           'iui-table',
           {
-            [`iui-${density}`]: density !== 'default' || !!density,
+            [`iui-${density}`]: density !== 'default',
           },
           className,
         ),

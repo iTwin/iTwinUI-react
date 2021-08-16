@@ -1044,23 +1044,37 @@ it('should pass custom props to row', () => {
   expect(element).toBeTruthy();
 });
 
-it('should render condensed table', () => {
-  const { container } = renderComponent({
-    density: 'condensed',
-  });
-
-  const table = container.querySelector(
-    '.iui-table.iui-condensed',
-  ) as HTMLElement;
-  expect(table).toBeTruthy();
-});
-
-it('should render extra condensed table', () => {
-  const { container } = renderComponent({
-    density: 'extra-condensed',
-  });
-  const table = container.querySelector(
-    '.iui-table.iui-extra-condensed',
-  ) as HTMLElement;
-  expect(table).toBeTruthy();
-});
+it.each(['condensed', 'extra-condensed'] as const)(
+  'should render condensed and extra condensed tables',
+  (density) => {
+    const { container } = render(
+      <Table
+        columns={[
+          {
+            Header: 'Table',
+            columns: [
+              {
+                id: 'name',
+                Header: 'Name',
+                accessor: 'name',
+              },
+              {
+                id: 'description',
+                Header: 'Description',
+                accessor: 'description',
+              },
+            ],
+          },
+        ]}
+        data={[
+          { name: 'Name1', description: 'Description1' },
+          { name: 'Name2', description: 'Description2' },
+          { name: 'Name3', description: 'Description3' },
+        ]}
+        emptyTableContent='No data.'
+        density={density}
+      />,
+    );
+    expect(container.querySelector(`.iui-table.iui-${density}`)).toBeTruthy();
+  },
+);
