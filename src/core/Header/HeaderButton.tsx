@@ -67,7 +67,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
 
   const buttonProps: ButtonProps & {
     styleType: 'borderless';
-    menuItems: ((close: () => void) => JSX.Element[]) | undefined;
+    menuItems?: (close: () => void) => JSX.Element[];
   } = {
     menuItems: props.menuItems,
     onClick: onClick,
