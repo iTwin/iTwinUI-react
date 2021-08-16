@@ -625,10 +625,9 @@ export const ExpandableSubrows: Story<TableProps> = (args) => {
         Header: 'Table',
         columns: [
           {
-            id: 'expander',
+            id: 'name',
             Header: 'Name',
             accessor: 'name',
-            minWidth: 400,
             Filter: tableFilters.TextFilter(),
           },
           {
@@ -706,6 +705,31 @@ ExpandableSubrows.args = {
 };
 ExpandableSubrows.argTypes = {
   data: { control: { disable: true } },
+};
+
+ExpandableSubrows.parameters = {
+  creevey: {
+    tests: {
+      async expand() {
+        const closed = await this.takeScreenshot();
+
+        let expanders = await this.browser.findElements({
+          css: '.iui-row-expander',
+        });
+        // Expand Row 1
+        await expanders[0].click();
+        expanders = await this.browser.findElements({
+          css: '.iui-row-expander',
+        });
+        // Expand Row 1.2
+        await expanders[1].click();
+
+        const expanded = await this.takeScreenshot();
+
+        await this.expect({ closed, expanded }).to.matchImages();
+      },
+    },
+  } as CreeveyStoryParams,
 };
 
 export const LazyLoading: Story<TableProps> = (args) => {

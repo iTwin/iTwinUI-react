@@ -150,6 +150,6 @@ declare module 'react-table' {
       UseGroupByRowProps<D>,
       UseRowSelectRowProps<D>,
       UseRowStateRowProps<D> {
-    initialSubRows?: Row<D>[];
+    initialSubRows: Row<D>[];
   }
 }

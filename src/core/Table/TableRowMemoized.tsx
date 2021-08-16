@@ -11,6 +11,7 @@ import { getCellStyle } from './utils';
 import { CSSTransition } from 'react-transition-group';
 import { useMergedRefs } from '../utils/hooks/useMergedRefs';
 import { IconButton } from '../Buttons';
+import { SELECTION_CELL_ID } from './hooks';
 
 /**
  * Memoization is needed to avoid unnecessary re-renders of all rows when additional data is added when lazy-loading.
@@ -79,7 +80,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
   const refs = useMergedRefs(rowRef, mergedProps.ref);
 
   const subRowExpanderCellIndex = row.cells.findIndex(
-    (c) => c.column.id !== 'iui-table-checkbox-selector',
+    (c) => c.column.id !== SELECTION_CELL_ID,
   );
 
   const getSubRowExpander = (cell: Cell<T>) =>

@@ -73,6 +73,7 @@ module.exports = {
     'ts-jest': {
       tsconfig: {
         allowJs: true,
+        sourceMap: true,
       },
     },
   },

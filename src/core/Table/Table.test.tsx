@@ -1296,7 +1296,6 @@ it('should show indeterminate checkbox when sub-row selected after filtering', (
   expect(rows.length).toBe(3);
 
   setFilter(container, '2');
-
   expandAll(container);
 
   let checkboxes = container.querySelectorAll<HTMLInputElement>(

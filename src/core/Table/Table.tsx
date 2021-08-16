@@ -19,13 +19,7 @@ import {
   ActionType,
   TableInstance,
   useExpanded,
-  IdType,
-  FilterValue,
-  Hooks,
 } from 'react-table';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import * as defaultFilterTypes from '../../../node_modules/react-table/src/filterTypes.js';
 import { ProgressRadial } from '../ProgressIndicators';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/table.css';
@@ -36,12 +30,18 @@ import { getCellStyle } from './utils';
 import { TableRowMemoized } from './TableRowMemoized';
 import { FilterToggle, TableFilterValue } from './filters';
 import { customFilterFunctions } from './filters/customFilterFunctions';
-import { useExpanderCell, useSelectionCell } from './hooks';
+import {
+  useExpanderCell,
+  useSelectionCell,
+  useSubRowFiltering,
+  useSubRowSelection,
+} from './hooks';
 import {
   onExpandHandler,
   onFilterHandler,
   onSelectHandler,
 } from './actionHandlers';
+import { onSingleSelectHandler } from './actionHandlers/selectHandler';
 
 const singleRowSelectedAction = 'singleRowSelected';
 
@@ -244,157 +244,6 @@ export const Table = <
     onRowInViewportRef.current = onRowInViewport;
   }, [onBottomReached, onRowInViewport]);
 
-  const useSubRowFiltering = (hooks: Hooks<T>) => {
-    hooks.useInstance.push((instance) => {
-      const setInitialRows = (rows: Row<T>[]) => {
-        rows.forEach((row) => {
-          if (!row.initialSubRows?.length) {
-            row.initialSubRows = row.subRows;
-          }
-          setInitialRows(row.subRows);
-        });
-      };
-      setInitialRows(instance.initialRows);
-
-      const setSubRows = (rows: Row<T>[]) => {
-        rows.forEach((row) => {
-          row.subRows = row.initialSubRows ?? [];
-          setSubRows(row.subRows);
-        });
-      };
-      setSubRows(instance.initialRows);
-
-      if (!showSubRows) {
-        return;
-      }
-
-      let currentlyFilteredRows = [...instance.preFilteredRows];
-
-      const filteredRows: Row<T>[] = [];
-      const filteredFlatRows: Row<T>[] = [];
-      const filteredRowsById: Record<string, Row<T>> = {};
-
-      const handleFilter = ({
-        id: columnId,
-        value: filterValue,
-      }: {
-        id: IdType<T>;
-        value: FilterValue;
-      }) => {
-        const column = instance.allColumns.find((c) => c.id === columnId);
-        if (!column) {
-          return;
-        }
-
-        const filterTypes = { ...defaultFilterTypes, ...instance.filterTypes };
-        const filterFn =
-          typeof column.filter === 'function'
-            ? column.filter
-            : column.filter
-            ? filterTypes[column.filter]
-            : filterTypes['text'];
-
-        const handleRow = (row: Row<T>): boolean => {
-          const newSubRows: Row<T>[] = [];
-          let hasFilteredSubRows = false;
-          row.initialSubRows?.forEach((r) => {
-            const result = handleRow(r);
-            if (result) {
-              hasFilteredSubRows = true;
-              newSubRows.push(r);
-            }
-          });
-          row.subRows = newSubRows;
-
-          // If row has any sub-rows that meet filter conditions,
-          // then that row also needs to be shown.
-          if (hasFilteredSubRows) {
-            return true;
-          }
-
-          const result = filterFn([row], [columnId], filterValue);
-          if (!result.length) {
-            return false;
-          }
-
-          return true;
-        };
-
-        currentlyFilteredRows = currentlyFilteredRows.filter((row) =>
-          handleRow(row),
-        );
-      };
-      instance.state.filters.forEach((f) => handleFilter(f));
-
-      const populateRows = (row: Row<T>) => {
-        if (row.depth === 0) {
-          filteredRows.push(row);
-        }
-        filteredFlatRows.push(row);
-        filteredRowsById[row.id] = row;
-        if (row.subRows.length) {
-          row.subRows.forEach((r) => populateRows(r));
-        }
-      };
-      currentlyFilteredRows.forEach((row) => {
-        populateRows(row);
-      });
-
-      Object.assign(instance, {
-        filteredRows,
-        filteredFlatRows,
-        filteredRowsById,
-        rows: filteredRows,
-        flatRows: filteredFlatRows,
-        rowsById: filteredRowsById,
-      });
-    });
-  };
-
-  const useSubRowSelection = (hooks: Hooks<T>) => {
-    hooks.useInstance.push((instance) => {
-      const selectedFlatRows: Row<T>[] = [];
-
-      const setSelectionState = (row: Row<T>) => {
-        row.subRows.forEach((subRow) => setSelectionState(subRow));
-        // react-table only checks filtered sub-rows.
-        // In order to show correct states we need to also check initial sub-rows.
-        row.isSomeSelected =
-          row.isSomeSelected ||
-          (row.isSelected && row.subRows.length !== row.initialSubRows?.length);
-        row.isSelected =
-          row.isSelected && row.subRows.length === row.initialSubRows?.length;
-        if (row.isSelected) {
-          selectedFlatRows.push(row);
-        }
-      };
-      instance.rows.forEach((row) => setSelectionState(row));
-
-      Object.assign(instance, {
-        selectedFlatRows,
-      });
-    });
-  };
-
-  const onSingleSelectHandler = (
-    newState: TableState<T>,
-    action: ActionType,
-    instance?: TableInstance<T>,
-  ) => {
-    const selectedRowIds = { [action.id]: true } as Record<string, boolean>;
-    if (instance?.selectSubRows) {
-      const handleRow = (row: Row<T>) => {
-        selectedRowIds[row.id] = true;
-        row.subRows.forEach((r) => handleRow(r));
-      };
-      handleRow(instance.rowsById[action.id]);
-    }
-    return {
-      ...newState,
-      selectedRowIds,
-    };
-  };
-
   const tableStateReducer = (
     newState: TableState<T>,
     action: ActionType,
@@ -413,7 +262,8 @@ export const Table = <
         onExpandHandler(newState, instance, onExpand);
         break;
       case singleRowSelectedAction: {
-        newState = onSingleSelectHandler(newState, action, instance);
+        newState = onSingleSelectHandler(newState, action, instance, onSelect);
+        break;
       }
       case TableActions.toggleRowSelected:
       case TableActions.toggleAllRowsSelected:
@@ -429,6 +279,11 @@ export const Table = <
       : newState;
   };
 
+  const filterTypes = React.useMemo(
+    () => ({ ...customFilterFunctions, ...filterFunctions }),
+    [filterFunctions],
+  );
+
   const instance = useTable<T>(
     {
       ...props,
@@ -436,12 +291,12 @@ export const Table = <
       defaultColumn,
       disableSortBy: !isSortable,
       stateReducer: tableStateReducer,
-      filterTypes: { ...customFilterFunctions, ...filterFunctions },
+      filterTypes,
       selectSubRows,
     },
     useFlexLayout,
     useFilters,
-    useSubRowFiltering,
+    useSubRowFiltering(showSubRows),
     useSortBy,
     useExpanded,
     useRowSelect,
