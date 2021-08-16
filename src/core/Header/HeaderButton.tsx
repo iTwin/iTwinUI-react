@@ -14,7 +14,7 @@ import {
 
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/header.css';
-import { SplitButton } from '../Buttons/SplitButton';
+import { SplitButton, SplitButtonProps } from '../Buttons/SplitButton';
 
 export type HeaderButtonProps = {
   /**
@@ -58,10 +58,19 @@ export const HeaderButton = (props: HeaderButtonProps) => {
   } = props;
 
   useTheme();
-  const isSplitButton = menuItems && onClick;
+
+  const isSplitButton = (
+    props: Partial<SplitButtonProps>,
+  ): props is SplitButtonProps => {
+    return !!props.menuItems && !!props.onClick;
+  };
+
   const buttonProps: ButtonProps & {
     styleType: 'borderless';
+    menuItems: ((close: () => void) => JSX.Element[]) | undefined;
   } = {
+    menuItems: props.menuItems,
+    onClick: onClick,
     startIcon: React.isValidElement(startIcon)
       ? React.cloneElement(startIcon as JSX.Element, {
           className: cx(
@@ -73,8 +82,8 @@ export const HeaderButton = (props: HeaderButtonProps) => {
     styleType: 'borderless',
     className: cx(
       {
-        'iui-header-button': !isSplitButton,
-        'iui-header-split-button': isSplitButton,
+        'iui-header-button': !isSplitButton(props),
+        'iui-header-split-button': isSplitButton(props),
         'iui-active': isActive,
       },
       className,
@@ -89,12 +98,8 @@ export const HeaderButton = (props: HeaderButtonProps) => {
     ...rest,
   };
 
-  if (menuItems && onClick) {
-    return (
-      <SplitButton {...buttonProps} onClick={onClick} menuItems={menuItems}>
-        {buttonProps.children}
-      </SplitButton>
-    );
+  if (isSplitButton(buttonProps)) {
+    return <SplitButton {...buttonProps} />;
   }
   if (menuItems) {
     return <DropdownButton {...buttonProps} menuItems={menuItems} />;
