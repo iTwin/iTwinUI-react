@@ -10,11 +10,12 @@ import {
   ButtonProps,
   DropdownButton,
   DropdownButtonProps,
+  SplitButton,
+  SplitButtonProps,
 } from '../Buttons';
 
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/header.css';
-import { SplitButton, SplitButtonProps } from '../Buttons/SplitButton';
 
 export type HeaderButtonProps = {
   /**
@@ -35,6 +36,12 @@ export type HeaderButtonProps = {
   'children' | 'styleType'
 >;
 
+const isSplitButton = (
+  props: Partial<SplitButtonProps>,
+): props is SplitButtonProps => {
+  return !!props.menuItems && !!props.onClick;
+};
+
 /**
  * Header button that handles slim state of the `Header` it's in.
  * When in slim mode, will only display the name and reduce icon size.
@@ -50,27 +57,17 @@ export const HeaderButton = (props: HeaderButtonProps) => {
     name,
     description,
     isActive = false,
-    menuItems,
     className,
     startIcon,
-    onClick,
     ...rest
   } = props;
 
   useTheme();
 
-  const isSplitButton = (
-    props: Partial<SplitButtonProps>,
-  ): props is SplitButtonProps => {
-    return !!props.menuItems && !!props.onClick;
-  };
-
   const buttonProps: ButtonProps & {
     styleType: 'borderless';
     menuItems?: (close: () => void) => JSX.Element[];
   } = {
-    menuItems: props.menuItems,
-    onClick: onClick,
     startIcon: React.isValidElement(startIcon)
       ? React.cloneElement(startIcon as JSX.Element, {
           className: cx(
@@ -101,8 +98,10 @@ export const HeaderButton = (props: HeaderButtonProps) => {
   if (isSplitButton(buttonProps)) {
     return <SplitButton {...buttonProps} />;
   }
-  if (menuItems) {
-    return <DropdownButton {...buttonProps} menuItems={menuItems} />;
+  if (buttonProps.menuItems) {
+    return (
+      <DropdownButton {...buttonProps} menuItems={buttonProps.menuItems} />
+    );
   }
   return <Button {...buttonProps} />;
 };
