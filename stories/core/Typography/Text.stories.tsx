@@ -23,7 +23,7 @@ export default {
     title: { control: { disable: true } },
   },
   parameters: {
-    creevey: { skip: ['Skeleteon'] },
+    creevey: { skip: { stories: ['Skeleton'] } },
   },
 } as Meta<TextProps> & CreeveyMeta;
 
@@ -43,7 +43,7 @@ export const Polymorphic: Story<TextProps<'h4'>> = ({ children, ...rest }) => {
   );
 };
 Polymorphic.args = {
-  children: "I'm a headline text rendered as an h6 element!",
+  children: "I'm a headline text rendered as an h4 element!",
   variant: 'headline',
   as: 'h4',
 };
