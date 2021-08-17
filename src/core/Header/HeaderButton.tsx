@@ -42,6 +42,12 @@ const isSplitButton = (
   return !!props.menuItems && !!props.onClick;
 };
 
+const hasMenuItems = (
+  props: Partial<DropdownButtonProps>,
+): props is DropdownButtonProps => {
+  return !!props.menuItems;
+};
+
 /**
  * Header button that handles slim state of the `Header` it's in.
  * When in slim mode, will only display the name and reduce icon size.
@@ -98,10 +104,8 @@ export const HeaderButton = (props: HeaderButtonProps) => {
   if (isSplitButton(buttonProps)) {
     return <SplitButton {...buttonProps} />;
   }
-  if (buttonProps.menuItems) {
-    return (
-      <DropdownButton {...buttonProps} menuItems={buttonProps.menuItems} />
-    );
+  if (hasMenuItems(buttonProps)) {
+    return <DropdownButton {...buttonProps} />;
   }
   return <Button {...buttonProps} />;
 };
