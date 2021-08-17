@@ -68,7 +68,7 @@ it('should render split button correctly', () => {
           key={0}
           onClick={() => {
             itemOneOnClick();
-            close;
+            close();
           }}
         >
           Test0
