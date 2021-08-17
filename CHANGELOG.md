@@ -9,6 +9,7 @@
 - **Updated `Badge` styling** and added preset colors to `backgroundColor` prop.
 - **Added new polymorphic `Text` component.**
 - **Added new `Fieldset` component** for grouping inputs.
+- **Added new `density` prop to `Table`** to reduce row height for a condensed or extra-condensed table.
 - **Added split variant to `HeaderButton`.** Used when both `onClick` and `menuItems` props are specified.
 
 ### Fixes
