@@ -56,12 +56,21 @@ it('should render isActive correctly', () => {
 });
 
 it('should render split button correctly', () => {
+  const itemOneOnClick = jest.fn();
+  const buttonOnClick = jest.fn();
+
   const { container } = render(
     <HeaderButton
       name={'MockName'}
-      onClick={() => {}}
+      onClick={buttonOnClick}
       menuItems={(close) => [
-        <MenuItem key={0} onClick={() => {}}>
+        <MenuItem
+          key={0}
+          onClick={() => {
+            itemOneOnClick();
+            close;
+          }}
+        >
           Test0
         </MenuItem>,
         <MenuItem key={1} onClick={close}>
@@ -74,15 +83,23 @@ it('should render split button correctly', () => {
     />,
   );
 
-  const splitButton = container.querySelector(
-    '.iui-header-split-button',
-  ) as HTMLButtonElement;
+  const splitButton = container.querySelector('.iui-header-split-button');
   expect(splitButton).toBeTruthy();
-
-  splitButton.click();
 
   const innerButtons = splitButton?.querySelectorAll('.iui-borderless');
   expect(innerButtons?.length).toBe(2);
+
+  if (innerButtons) {
+    (innerButtons[0] as HTMLButtonElement).click();
+    expect(buttonOnClick).toBeCalled();
+
+    (innerButtons[1] as HTMLButtonElement).click();
+    const menu = document.querySelector('.iui-menu') as HTMLUListElement;
+    const menuItem = menu.querySelector('li') as HTMLLIElement;
+    expect(menuItem).toBeTruthy();
+    menuItem.click();
+    expect(itemOneOnClick).toBeCalled();
+  }
 });
 
 it('should render startIcon correctly', () => {
