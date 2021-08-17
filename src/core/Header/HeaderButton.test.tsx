@@ -83,25 +83,25 @@ it('should render split button correctly', () => {
     />,
   );
 
-  const splitButton = container.querySelector('.iui-header-split-button');
+  const splitButton = container.querySelector(
+    '.iui-header-split-button',
+  ) as HTMLButtonElement;
   expect(splitButton).toBeTruthy();
 
-  const innerButtons = splitButton?.querySelectorAll('.iui-borderless');
-  expect(innerButtons?.length).toBe(2);
+  const innerButtons = splitButton.querySelectorAll('.iui-borderless');
+  expect(innerButtons.length).toBe(2);
 
-  if (innerButtons) {
-    (innerButtons[0] as HTMLButtonElement).click();
-    expect(buttonOnClick).toBeCalled();
+  (innerButtons[0] as HTMLButtonElement).click();
+  expect(buttonOnClick).toBeCalled();
 
-    (innerButtons[1] as HTMLButtonElement).click();
-    const menu = document.querySelector('.iui-menu') as HTMLUListElement;
-    expect(menu).toBeTruthy();
-    expect(document.querySelectorAll('li')).toHaveLength(3);
-    const menuItem = menu.querySelector('li') as HTMLLIElement;
-    expect(menuItem).toBeTruthy();
-    menuItem.click();
-    expect(itemOneOnClick).toBeCalled();
-  }
+  (innerButtons[1] as HTMLButtonElement).click();
+  const menu = document.querySelector('.iui-menu') as HTMLUListElement;
+  expect(menu).toBeTruthy();
+  expect(document.querySelectorAll('li')).toHaveLength(3);
+  const menuItem = menu.querySelector('li') as HTMLLIElement;
+  expect(menuItem).toBeTruthy();
+  menuItem.click();
+  expect(itemOneOnClick).toBeCalled();
 });
 
 it('should render startIcon correctly', () => {
