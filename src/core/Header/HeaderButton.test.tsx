@@ -95,6 +95,8 @@ it('should render split button correctly', () => {
 
     (innerButtons[1] as HTMLButtonElement).click();
     const menu = document.querySelector('.iui-menu') as HTMLUListElement;
+    expect(menu).toBeTruthy();
+    expect(document.querySelectorAll('li')).toHaveLength(3);
     const menuItem = menu.querySelector('li') as HTMLLIElement;
     expect(menuItem).toBeTruthy();
     menuItem.click();
