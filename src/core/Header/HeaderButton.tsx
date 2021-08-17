@@ -42,7 +42,7 @@ const isSplitButton = (
   return !!props.menuItems && !!props.onClick;
 };
 
-const hasMenuItems = (
+const isDropdownButton = (
   props: Partial<DropdownButtonProps>,
 ): props is DropdownButtonProps => {
   return !!props.menuItems;
@@ -104,7 +104,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
   if (isSplitButton(buttonProps)) {
     return <SplitButton {...buttonProps} />;
   }
-  if (hasMenuItems(buttonProps)) {
+  if (isDropdownButton(buttonProps)) {
     return <DropdownButton {...buttonProps} />;
   }
   return <Button {...buttonProps} />;
