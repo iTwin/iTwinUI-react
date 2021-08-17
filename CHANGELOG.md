@@ -9,6 +9,7 @@
 - **Updated `Badge` styling** and added preset colors to `backgroundColor` prop.
 - **Added new polymorphic `Text` component.**
 - **Added new `Fieldset` component** for grouping inputs.
+- **Added split variant to `HeaderButton`.** Used when both `onClick` and `menuItems` props are specified.
 
 ### Fixes
 

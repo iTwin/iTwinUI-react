@@ -47,7 +47,6 @@ export const RadioGroup: Story<InputGroupProps> = (args) => {
           value='option2'
           onChange={action('Clicked option 2!')}
           label={option2Label}
-          setFocus={true}
           disabled={args.disabled}
           required={args.required}
         />
