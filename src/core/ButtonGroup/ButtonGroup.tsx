@@ -15,13 +15,19 @@ export type ButtonGroupProps = {
    */
   children: React.ReactNode;
   /**
-   * If true, the ButtonGroup will collapse the overflowing Buttons into a menu.
+   * If specified, this prop will be used to show a custom button as the last button
+   * when overflow happens, i.e. when there is not enough space to fit all the buttons.
+   *
+   * Expects a function that takes the index of the first button that is overflowing (i.e. hidden)
+   * and returns the `ReactNode` to render.
    */
-  responsive?: boolean;
+  overflowButton?: (firstOverflowingIndex: number) => React.ReactNode;
 } & Omit<CommonProps, 'title'>;
 
 /**
- * Group buttons together for common actions
+ * Group buttons together for common actions.
+ * Handles reponsive overflow when the `overflowButton` prop is specified.
+ *
  * @example
  * <ButtonGroup>
  *   <IconButton>
@@ -31,14 +37,31 @@ export type ButtonGroupProps = {
  *     <SvgEdit />
  *   </IconButton>
  * </ButtonGroup>
+ *
+ * @example
+ * const buttons = [...Array(10)].map((_, index) => <IconButton><SvgPlaceholder /></IconButton>);
+ * <ButtonGroup
+ *   overflowButton={(overflowStart) => <DropdownMenu menuItems={(close) =>
+ *     [...Array(buttons.length - overflowStart + 1)].map((_, index) => (
+ *       <MenuItem icon={<SvgPlaceholder />} onClick={close}>Button #{overflowStart + index}</MenuItem>
+ *     ))
+ *   }>
+ *     <IconButton><SvgMore /></IconButton>
+ *   </DropdownMenu>}
+ * >
+ *   {buttons}
+ * </ButtonGroup>
  */
 export const ButtonGroup = (props: ButtonGroupProps) => {
-  const { children, className, responsive = false, ...rest } = props;
-  const childrenArray = React.Children.toArray(children);
+  const { children, className, overflowButton, ...rest } = props;
+
+  const items = React.useMemo(() => React.Children.toArray(children), [
+    children,
+  ]);
 
   useTheme();
 
-  const [overflowRef, visibleCount] = useOverflow(childrenArray, !responsive);
+  const [overflowRef, visibleCount] = useOverflow(items, !overflowButton);
 
   return (
     <div
@@ -46,7 +69,14 @@ export const ButtonGroup = (props: ButtonGroupProps) => {
       ref={overflowRef}
       {...rest}
     >
-      {childrenArray.slice(0, visibleCount)}
+      {!!overflowButton && visibleCount < items.length ? (
+        <>
+          {items.slice(0, visibleCount - 1)}
+          {overflowButton(visibleCount)}
+        </>
+      ) : (
+        children
+      )}
     </div>
   );
 };

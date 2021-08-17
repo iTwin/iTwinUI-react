@@ -3,13 +3,20 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { ButtonGroup, ButtonGroupProps, IconButton } from '../../../src/core';
+import {
+  ButtonGroup,
+  ButtonGroupProps,
+  DropdownMenu,
+  IconButton,
+  MenuItem,
+} from '../../../src/core';
 import {
   SvgAdd,
   SvgDelete,
   SvgEdit,
   SvgUndo,
   SvgPlaceholder,
+  SvgMore,
 } from '@itwin/itwinui-icons-react';
 import { Meta, Story } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
@@ -47,27 +54,61 @@ export const WithIcons: Story<ButtonGroupProps> = (args) => {
     </ButtonGroup>
   );
 };
-WithIcons.args = {
-  responsive: false,
-};
 
 export const Overflow: Story<ButtonGroupProps> = (args) => {
-  const buttons = Array(15)
+  const buttons = Array(10)
     .fill(null)
     .map((_, index) => (
-      <IconButton key={index}>
+      <IconButton
+        key={index}
+        onClick={() => action(`Clicked on button ${index + 1}`)()}
+      >
         <SvgPlaceholder />
       </IconButton>
     ));
 
   return (
-    <div style={{ maxWidth: '50%', border: '1px solid hotpink', padding: 8 }}>
-      <ButtonGroup style={{ display: 'flex' }} responsive {...args}>
+    <div
+      style={{
+        maxWidth: 'clamp(300px, 50%, 100%)',
+        border: '1px solid hotpink',
+        padding: 8,
+      }}
+    >
+      <ButtonGroup
+        style={{ display: 'flex' }}
+        overflowButton={(overflowStart) => (
+          <DropdownMenu
+            menuItems={(close) =>
+              Array(buttons.length - overflowStart + 1)
+                .fill(null)
+                .map((_, _index) => {
+                  const index = overflowStart + _index;
+                  const onClick = (close: () => void) => {
+                    action(`Clicked button ${index} (overflow)`)();
+                    close();
+                  };
+                  return (
+                    <MenuItem
+                      key={index}
+                      onClick={() => onClick(close)}
+                      icon={<SvgPlaceholder />}
+                    >
+                      Button #{index}
+                    </MenuItem>
+                  );
+                })
+            }
+            {...args}
+          >
+            <IconButton onClick={() => action('Clicked on overflow icon')()}>
+              <SvgMore />
+            </IconButton>
+          </DropdownMenu>
+        )}
+      >
         {buttons}
       </ButtonGroup>
     </div>
   );
-};
-Overflow.args = {
-  responsive: true,
 };
