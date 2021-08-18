@@ -1256,6 +1256,46 @@ it('should show indeterminate checkbox when some sub-rows are selected', () => {
   );
 });
 
+it('should show indeterminate checkbox when a sub-row of a sub-row is selected', () => {
+  const onSelect = jest.fn();
+  const data = mockedSubRowsData();
+  const { container } = renderComponent({
+    data,
+    onSelect,
+    showSubRows: true,
+    isSelectable: true,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  expandAll(container);
+
+  let checkboxes = container.querySelectorAll<HTMLInputElement>(
+    '.iui-table-body .iui-checkbox input',
+  );
+  expect(checkboxes.length).toBe(10);
+  // Click row 1.2.1 checkbox
+  checkboxes[3].click();
+
+  checkboxes = container.querySelectorAll<HTMLInputElement>(
+    '.iui-table-body .iui-checkbox input',
+  );
+  expect(checkboxes.length).toBe(10);
+  // Row 1
+  expect(checkboxes[0].indeterminate).toBe(true);
+  // Row 1.2
+  expect(checkboxes[2].indeterminate).toBe(true);
+  Array.from(checkboxes).forEach((checkbox, index) =>
+    expect(!!checkbox.checked).toBe(index === 3),
+  );
+
+  expect(onSelect).toHaveBeenCalledWith(
+    [data[0].subRows[1].subRows[0]],
+    expect.any(Object),
+  );
+});
+
 it('should show indeterminate checkbox when sub-row selected after filtering', () => {
   const onSelect = jest.fn();
   const data = mockedSubRowsData();
@@ -1306,6 +1346,68 @@ it('should show indeterminate checkbox when sub-row selected after filtering', (
   checkboxes[1].click();
 
   checkboxes = container.querySelectorAll<HTMLInputElement>(
+    '.iui-table-body .iui-checkbox input',
+  );
+  expect(checkboxes.length).toBe(7);
+  expect(checkboxes[0].indeterminate).toBe(true);
+  Array.from(checkboxes).forEach((checkbox, index) =>
+    expect(!!checkbox.checked).toBe(index > 0 && index < 4),
+  );
+
+  expect(onSelect).toHaveBeenCalledWith(
+    [data[0].subRows[1], ...data[0].subRows[1].subRows],
+    expect.any(Object),
+  );
+});
+
+it('should show indeterminate checkbox when clicking on a row itself after filtering', () => {
+  const onSelect = jest.fn();
+  const data = mockedSubRowsData();
+  const columns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          Filter: tableFilters.TextFilter(),
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => {
+            return <span>View</span>;
+          },
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    data,
+    columns,
+    onSelect,
+    showSubRows: true,
+    isSelectable: true,
+  });
+
+  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  setFilter(container, '2');
+  expandAll(container);
+
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(7);
+  // Click row 1
+  fireEvent.click(rows[0]);
+
+  const checkboxes = container.querySelectorAll<HTMLInputElement>(
     '.iui-table-body .iui-checkbox input',
   );
   expect(checkboxes.length).toBe(7);

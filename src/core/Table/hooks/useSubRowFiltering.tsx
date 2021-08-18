@@ -6,7 +6,7 @@ import React from 'react';
 import { Hooks, IdType, Row, TableInstance } from 'react-table';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import * as defaultFilterTypes from '../../../../node_modules/react-table/src/filterTypes.js';
+import * as defaultFilterTypes from 'react-table/src/filterTypes.js';
 
 export const useSubRowFiltering = <T extends Record<string, unknown>>(
   showSubRows: boolean,

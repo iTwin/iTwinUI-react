@@ -179,6 +179,18 @@ const TableRow = <T extends Record<string, unknown>>(props: {
   );
 };
 
+const hasAnySelectedSubRow = <T extends Record<string, unknown>>(
+  row: Row<T>,
+  selectedRowIds?: Record<string, boolean>,
+): boolean => {
+  if (selectedRowIds?.[row.id]) {
+    return true;
+  }
+  return row.subRows.some((subRow) =>
+    hasAnySelectedSubRow(subRow, selectedRowIds),
+  );
+};
+
 export const TableRowMemoized = React.memo(
   TableRow,
   (prevProp, nextProp) =>
@@ -190,8 +202,12 @@ export const TableRowMemoized = React.memo(
     prevProp.state.selectedRowIds?.[prevProp.row.id] ===
       nextProp.state.selectedRowIds?.[nextProp.row.id] &&
     // Check if sub-rows selection has changed and whether to show indeterminate state or not
-    prevProp.row.subRows.some((r) => prevProp.state.selectedRowIds?.[r.id]) ===
-      nextProp.row.subRows.some((r) => nextProp.state.selectedRowIds?.[r.id]) &&
+    prevProp.row.subRows.some((subRow) =>
+      hasAnySelectedSubRow(subRow, prevProp.state.selectedRowIds),
+    ) ===
+      nextProp.row.subRows.some((subRow) =>
+        hasAnySelectedSubRow(subRow, nextProp.state.selectedRowIds),
+      ) &&
     prevProp.state.expanded?.[prevProp.row.id] ===
       nextProp.state.expanded?.[nextProp.row.id] &&
     prevProp.subComponent === nextProp.subComponent &&

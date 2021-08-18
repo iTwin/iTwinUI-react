@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { Hooks, Row, TableInstance } from 'react-table';
+import { Hooks, IdType, Row, TableInstance } from 'react-table';
 
 export const useSubRowSelection = <T extends Record<string, unknown>>(
   hooks: Hooks<T>,
@@ -16,22 +16,32 @@ const useInstance = <T extends Record<string, unknown>>(
 ) => {
   const selectedFlatRows = React.useMemo(() => {
     const selectedFlatRows: Row<T>[] = [];
-    const setSelectionState = (row: Row<T>) => {
-      // react-table only checks filtered sub-rows.
-      // In order to show correct states we need to also check all initial sub-rows.
-      row.isSomeSelected =
-        row.isSomeSelected ||
-        (row.isSelected && row.subRows.length !== row.initialSubRows.length);
-      row.isSelected =
-        row.isSelected && row.subRows.length === row.initialSubRows.length;
+    const setSelectionState = (
+      row: Row<T>,
+      selectedRowIds: Record<IdType<T>, boolean>,
+    ) => {
+      let isSomeSubRowsSelected = false;
+      row.subRows.forEach((subRow) => {
+        setSelectionState(subRow, selectedRowIds);
+        if (subRow.isSelected || subRow.isSomeSelected) {
+          isSomeSubRowsSelected = true;
+        }
+      });
 
-      if (row.isSelected) {
+      if (selectedRowIds[row.id]) {
+        row.isSelected = true;
+        row.isSomeSelected = false;
         selectedFlatRows.push(row);
+      } else {
+        row.isSelected = false;
+        row.isSomeSelected = isSomeSubRowsSelected;
       }
-      row.subRows.forEach((subRow) => setSelectionState(subRow));
     };
-    instance.rows.forEach((row) => setSelectionState(row));
-  }, [instance.rows]);
+    instance.rows.forEach((row) =>
+      setSelectionState(row, instance.state.selectedRowIds),
+    );
+    return selectedFlatRows;
+  }, [instance.rows, instance.state.selectedRowIds]);
 
   Object.assign(instance, {
     selectedFlatRows,

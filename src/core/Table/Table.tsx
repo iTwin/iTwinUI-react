@@ -244,40 +244,49 @@ export const Table = <
     onRowInViewportRef.current = onRowInViewport;
   }, [onBottomReached, onRowInViewport]);
 
-  const tableStateReducer = (
-    newState: TableState<T>,
-    action: ActionType,
-    previousState: TableState<T>,
-    instance?: TableInstance<T>,
-  ): TableState<T> => {
-    switch (action.type) {
-      case TableActions.toggleSortBy:
-        onSort?.(newState);
-        break;
-      case TableActions.setFilter:
-        onFilterHandler(newState, action, previousState, instance, onFilter);
-        break;
-      case TableActions.toggleRowExpanded:
-      case TableActions.toggleAllRowsExpanded:
-        onExpandHandler(newState, instance, onExpand);
-        break;
-      case singleRowSelectedAction: {
-        newState = onSingleSelectHandler(newState, action, instance, onSelect);
-        break;
+  const tableStateReducer = React.useCallback(
+    (
+      newState: TableState<T>,
+      action: ActionType,
+      previousState: TableState<T>,
+      instance?: TableInstance<T>,
+    ): TableState<T> => {
+      switch (action.type) {
+        case TableActions.toggleSortBy:
+          onSort?.(newState);
+          break;
+        case TableActions.setFilter:
+          onFilterHandler(newState, action, previousState, instance, onFilter);
+          break;
+        case TableActions.toggleRowExpanded:
+        case TableActions.toggleAllRowsExpanded:
+          onExpandHandler(newState, instance, onExpand);
+          break;
+        case singleRowSelectedAction: {
+          newState = onSingleSelectHandler(
+            newState,
+            action,
+            instance,
+            onSelect,
+            isRowDisabled,
+          );
+          break;
+        }
+        case TableActions.toggleRowSelected:
+        case TableActions.toggleAllRowsSelected:
+        case TableActions.toggleAllPageRowsSelected: {
+          onSelectHandler(newState, instance, onSelect, isRowDisabled);
+          break;
+        }
+        default:
+          break;
       }
-      case TableActions.toggleRowSelected:
-      case TableActions.toggleAllRowsSelected:
-      case TableActions.toggleAllPageRowsSelected: {
-        onSelectHandler(newState, instance, onSelect, isRowDisabled);
-        break;
-      }
-      default:
-        break;
-    }
-    return stateReducer
-      ? stateReducer(newState, action, previousState, instance)
-      : newState;
-  };
+      return stateReducer
+        ? stateReducer(newState, action, previousState, instance)
+        : newState;
+    },
+    [isRowDisabled, onExpand, onFilter, onSelect, onSort, stateReducer],
+  );
 
   const filterTypes = React.useMemo(
     () => ({ ...customFilterFunctions, ...filterFunctions }),

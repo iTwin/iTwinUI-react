@@ -4,6 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 import { ActionType, Row, TableInstance, TableState } from 'react-table';
 
+/**
+ * Handles selection when clicked on a checkbox.
+ */
 export const onSelectHandler = <T extends Record<string, unknown>>(
   newState: TableState<T>,
   instance?: TableInstance<T>,
@@ -53,6 +56,9 @@ export const onSelectHandler = <T extends Record<string, unknown>>(
   onSelect?.(selectedData, newState);
 };
 
+/**
+ * Handles selection when clicked on a row.
+ */
 export const onSingleSelectHandler = <T extends Record<string, unknown>>(
   state: TableState<T>,
   action: ActionType,
@@ -61,6 +67,7 @@ export const onSingleSelectHandler = <T extends Record<string, unknown>>(
     selectedData: T[] | undefined,
     tableState?: TableState<T>,
   ) => void,
+  isRowDisabled?: (rowData: T) => boolean,
 ) => {
   const selectedRowIds = { [action.id]: true } as Record<string, boolean>;
   if (instance?.selectSubRows) {
@@ -71,12 +78,12 @@ export const onSingleSelectHandler = <T extends Record<string, unknown>>(
     handleRow(instance.rowsById[action.id]);
   }
 
-  const selectedData = getSelectedData(selectedRowIds, instance);
   const newState = {
     ...state,
     selectedRowIds,
   };
-  onSelect?.(selectedData, newState);
+  // Passing to `onSelectHandler` to handle filtered sub-rows
+  onSelectHandler(newState, instance, onSelect, isRowDisabled);
 
   return newState;
 };

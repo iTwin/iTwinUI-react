@@ -646,6 +646,7 @@ export const ExpandableSubrows: Story<TableProps> = (args) => {
       showSubRows
       emptyTableContent='No data.'
       isSelectable
+      isSortable
       {...rest}
       data={data}
       columns={tableColumns}
