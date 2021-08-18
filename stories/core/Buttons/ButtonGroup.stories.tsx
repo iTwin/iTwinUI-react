@@ -86,14 +86,14 @@ export const Overflow: Story<ButtonGroupProps> = (args) => {
                   .fill(null)
                   .map((_, _index) => {
                     const index = overflowStart + _index;
-                    const onClick = (close: () => void) => {
+                    const onClick = () => {
                       action(`Clicked button ${index} (overflow)`)();
                       close();
                     };
                     return (
                       <MenuItem
                         key={index}
-                        onClick={() => onClick(close)}
+                        onClick={onClick}
                         icon={<SvgPlaceholder />}
                       >
                         Button #{index}
