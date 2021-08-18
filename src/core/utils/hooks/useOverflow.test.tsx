@@ -6,8 +6,14 @@ import { render } from '@testing-library/react';
 import React from 'react';
 import { useOverflow } from './useOverflow';
 
-const MockComponent = ({ children }: { children: React.ReactNode[] }) => {
-  const [overflowRef, visibleCount] = useOverflow(children);
+const MockComponent = ({
+  children,
+  disableOverflow = false,
+}: {
+  children: React.ReactNode[];
+  disableOverflow?: boolean;
+}) => {
+  const [overflowRef, visibleCount] = useOverflow(children, disableOverflow);
   return <div ref={overflowRef}>{children.slice(0, visibleCount)}</div>;
 };
 
@@ -58,6 +64,29 @@ it('should restore hidden items when space is available again', () => {
   offsetWidthSpy.mockReturnValue(120);
   rerender(
     <MockComponent>
+      {[...Array(5)].map((_, i) => (
+        <span key={i}>Test {i}</span>
+      ))}
+    </MockComponent>,
+  );
+
+  expect(container.querySelectorAll('span')).toHaveLength(5);
+
+  scrollWidthSpy.mockRestore();
+  offsetWidthSpy.mockRestore();
+});
+
+it('should not overflow when disabled', () => {
+  const scrollWidthSpy = jest
+    .spyOn(HTMLElement.prototype, 'scrollWidth', 'get')
+    .mockReturnValueOnce(120)
+    .mockReturnValue(100);
+  const offsetWidthSpy = jest
+    .spyOn(HTMLElement.prototype, 'offsetWidth', 'get')
+    .mockReturnValue(100);
+
+  const { container } = render(
+    <MockComponent disableOverflow>
       {[...Array(5)].map((_, i) => (
         <span key={i}>Test {i}</span>
       ))}
