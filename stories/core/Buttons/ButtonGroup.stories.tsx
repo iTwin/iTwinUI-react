@@ -9,6 +9,7 @@ import {
   DropdownMenu,
   IconButton,
   MenuItem,
+  Text,
 } from '../../../src/core';
 import {
   SvgAdd,
@@ -20,7 +21,7 @@ import {
 } from '@itwin/itwinui-icons-react';
 import { Meta, Story } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import { CreeveyMeta } from 'creevey';
+import { CreeveyMeta, CreeveyStoryParams } from 'creevey';
 
 export default {
   title: 'Buttons/ButtonGroup',
@@ -30,9 +31,6 @@ export default {
     className: { control: { disable: true } },
     id: { control: { disable: true } },
     children: { control: { disable: true } },
-  },
-  parameters: {
-    creevey: { skip: ['Overflow'] },
   },
 } as Meta<ButtonGroupProps> & CreeveyMeta;
 
@@ -68,47 +66,57 @@ export const Overflow: Story<ButtonGroupProps> = (args) => {
     ));
 
   return (
-    <div
-      style={{
-        maxWidth: 'clamp(300px, 50%, 100%)',
-        border: '1px solid hotpink',
-        padding: 8,
-      }}
-    >
-      <ButtonGroup
-        style={{ display: 'flex' }}
-        overflowButton={(overflowStart) => (
-          <DropdownMenu
-            menuItems={(close) =>
-              Array(buttons.length - overflowStart + 1)
-                .fill(null)
-                .map((_, _index) => {
-                  const index = overflowStart + _index;
-                  const onClick = (close: () => void) => {
-                    action(`Clicked button ${index} (overflow)`)();
-                    close();
-                  };
-                  return (
-                    <MenuItem
-                      key={index}
-                      onClick={() => onClick(close)}
-                      icon={<SvgPlaceholder />}
-                    >
-                      Button #{index}
-                    </MenuItem>
-                  );
-                })
-            }
-            {...args}
-          >
-            <IconButton onClick={() => action('Clicked on overflow icon')()}>
-              <SvgMore />
-            </IconButton>
-          </DropdownMenu>
-        )}
+    <>
+      <Text variant='small' as='small' isMuted>
+        Resize the viewport to see overflow behavior.
+      </Text>
+      <div
+        style={{
+          maxWidth: 'clamp(300px, 50%, 100%)',
+          border: '1px solid hotpink',
+          padding: 8,
+        }}
       >
-        {buttons}
-      </ButtonGroup>
-    </div>
+        <ButtonGroup
+          style={{ display: 'flex' }}
+          overflowButton={(overflowStart) => (
+            <DropdownMenu
+              menuItems={(close) =>
+                Array(buttons.length - overflowStart + 1)
+                  .fill(null)
+                  .map((_, _index) => {
+                    const index = overflowStart + _index;
+                    const onClick = (close: () => void) => {
+                      action(`Clicked button ${index} (overflow)`)();
+                      close();
+                    };
+                    return (
+                      <MenuItem
+                        key={index}
+                        onClick={() => onClick(close)}
+                        icon={<SvgPlaceholder />}
+                      >
+                        Button #{index}
+                      </MenuItem>
+                    );
+                  })
+              }
+              {...args}
+            >
+              <IconButton onClick={() => action('Clicked on overflow icon')()}>
+                <SvgMore />
+              </IconButton>
+            </DropdownMenu>
+          )}
+        >
+          {buttons}
+        </ButtonGroup>
+      </div>
+    </>
   );
+};
+Overflow.parameters = {
+  creevey: {
+    ignoreElements: ['small'],
+  } as CreeveyStoryParams,
 };

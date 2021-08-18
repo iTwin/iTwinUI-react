@@ -26,7 +26,7 @@ export type ButtonGroupProps = {
 
 /**
  * Group buttons together for common actions.
- * Handles reponsive overflow when the `overflowButton` prop is specified.
+ * Handles responsive overflow when the `overflowButton` prop is specified.
  *
  * @example
  * <ButtonGroup>
