@@ -135,6 +135,11 @@ export type TableProps<
    * Must be memoized.
    */
   rowProps?: (row: Row<T>) => React.ComponentPropsWithRef<'div'>;
+  /**
+   * Modify the density of the table (adjusts the row height).
+   * @default 'default'
+   */
+  density?: 'default' | 'condensed' | 'extra-condensed';
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -208,6 +213,7 @@ export const Table = <
     expanderCell,
     isRowDisabled,
     rowProps,
+    density = 'default',
     ...rest
   } = props;
 
@@ -338,7 +344,11 @@ export const Table = <
       ref={(element) => setOwnerDocument(element?.ownerDocument)}
       id={id}
       {...getTableProps({
-        className: cx('iui-table', className),
+        className: cx(
+          'iui-table',
+          { [`iui-${density}`]: density !== 'default' },
+          className,
+        ),
         style,
       })}
       {...ariaDataAttributes}
