@@ -661,11 +661,11 @@ export const LazyLoading: Story<TableProps> = (args) => {
       .fill(null)
       .map((_, index) => ({
         name:
-          index % 10
-            ? `Name${start + index}`
-            : `Name${
-                start + index
-              } veeeeeeeeeeeeeerrrrryyyyyyyyyyyyyyyyyyyyyyyyy looooooooooooooooooooooooooooonnnnnnnnnnngggggggggggggggg naaaaaaameeeeeeeeeeeee, wwwwwwwwwwwooooooooooooooooooooooooooooooooooooooooooooooooooooow`,
+          // index % 10
+          new Array(((index % 10) + 1) * 23).join('o'),
+        // : `Name${
+        //     start + index
+        //   } veeeeeeeeeeeeeerrrrryyyyyyyyyyyyyyyyyyyyyyyyy looooooooooooooooooooooooooooonnnnnnnnnnngggggggggggggggg naaaaaaameeeeeeeeeeeee, wwwwwwwwwwwooooooooooooooooooooooooooooooooooooooooooooooooooooow`,
         description: `Description${start + index}`,
       }));
   };
@@ -689,12 +689,12 @@ export const LazyLoading: Story<TableProps> = (args) => {
 
   return (
     <Table
-      style={{ height: 440 }}
       columns={columns || tableColumns}
       emptyTableContent='No data.'
       onBottomReached={onBottomReached}
       isLoading={isLoading}
       {...rest}
+      style={{ height: 440 }}
       data={tableData}
     />
   );

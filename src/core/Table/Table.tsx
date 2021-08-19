@@ -404,7 +404,7 @@ export const Table = <
       </div>
       <div {...getTableBodyProps({ className: 'iui-table-body' })}>
         {data.length !== 0 && (
-          <VirtualScroll height={style?.height ?? 0}>
+          <VirtualScroll>
             {rows.map((row: Row<T>) => {
               prepareRow(row);
               return (

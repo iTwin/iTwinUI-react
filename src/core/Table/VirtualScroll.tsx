@@ -3,7 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { getBoundedValue } from '../utils/common';
 
 const getScrollableParent = (element: HTMLElement | null): HTMLElement => {
   if (!element || element === document.body) {
@@ -28,50 +27,58 @@ const getElementStyle = (element: HTMLElement, prop: string) => {
 
 type VirtualScrollProps = {
   children: React.ReactNodeArray;
-  height: string | number;
 };
 
-export const VirtualScroll = ({ children, height }: VirtualScrollProps) => {
-  const renderAdditional = 10;
+export const VirtualScroll = ({ children }: VirtualScrollProps) => {
+  const renderAdditional = 20;
   const [startNode, setStartNode] = React.useState(0);
   const [visibleNodeCount, setVisibleNodeCount] = React.useState(0);
   const [scrollContainer, setScrollContainer] = React.useState<HTMLElement>();
   const childrenParentRef = React.useRef<HTMLDivElement>(null);
-  const [childHeight, setChildHeight] = React.useState(0);
+  const [childHeight, setChildHeight] = React.useState(57);
   const [translateY, setTranslateY] = React.useState(0);
   const heightMap: React.MutableRefObject<{
     [key: string]: number;
   }> = React.useRef({});
+  const animationFrame = React.useRef<number>();
+  const firstLoad = React.useRef(true);
+  const [viewportHeight, setViewportHeight] = React.useState(0);
 
   React.useLayoutEffect(() => {
-    setScrollContainer(getScrollableParent(childrenParentRef.current));
+    const scrollableParent = getScrollableParent(childrenParentRef.current);
+    setScrollContainer(scrollableParent);
+    setViewportHeight(scrollableParent.offsetHeight);
   }, []);
 
   const visibleChildren = React.useMemo(() => {
-    const adjustedVisibleCount =
-      visibleNodeCount > 0 ? visibleNodeCount : 20 + renderAdditional;
-    return children.slice(startNode, startNode + adjustedVisibleCount);
-  }, [startNode, visibleNodeCount, children]);
+    return children.slice(
+      startNode,
+      startNode + visibleNodeCount + renderAdditional,
+    );
+  }, [children, startNode, visibleNodeCount]);
 
   React.useLayoutEffect(() => {
-    const childrenLength = getBoundedValue(
-      visibleChildren.length,
-      1,
-      visibleChildren.length,
-    );
+    if (!childrenParentRef.current) {
+      return;
+    }
+
     let heightSum = 0;
-    for (let i = startNode; i < childrenLength + startNode; i++) {
-      const elementHeight =
-        childrenParentRef.current?.children.item(i)?.clientHeight || 0;
-      if (elementHeight !== 0) {
-        heightMap.current[i] = elementHeight;
-        heightSum += elementHeight;
-      }
+    for (let i = startNode; i < visibleChildren.length + startNode; i++) {
+      const htmlElement = childrenParentRef.current.children.item(
+        Math.max(0, i - startNode),
+      ) as HTMLElement;
+      const elementHeight = htmlElement.offsetHeight;
+      heightMap.current[i] = elementHeight;
+      heightSum += elementHeight;
     }
-    if (startNode === 0) {
-      setChildHeight(heightSum / childrenLength);
+    if (startNode === 0 && firstLoad.current) {
+      // setChildHeight(
+      //   Math.max(57, Math.ceil(heightSum / visibleChildren.length)),
+      // );
+      setChildHeight(Math.ceil(heightSum / visibleChildren.length));
+      firstLoad.current = false;
     }
-  }, [visibleChildren, startNode, heightMap]);
+  }, [visibleChildren, startNode]);
 
   const getCountOfChildrenInHeight = (height: number, startIndex = 0) => {
     let i = startIndex;
@@ -81,49 +88,46 @@ export const VirtualScroll = ({ children, height }: VirtualScrollProps) => {
       ++i;
     }
     i = sum > height ? i - 1 : i;
-    return i;
+    return i - startIndex;
   };
 
-  const getTranslateValue = (startNode: number) => {
+  const getTranslateValue = React.useCallback((startNode: number) => {
     let sum = 0;
     let i = 0;
     while (i < startNode) {
       sum += heightMap.current[i];
       ++i;
     }
-    console.log(startNode, sum, i);
     return sum;
-  };
+  }, []);
 
-  const onScroll = React.useCallback(
-    () =>
-      requestAnimationFrame(() => {
-        if (!scrollContainer) {
-          return;
-        }
-        const top = scrollContainer.scrollTop;
-        const start = getCountOfChildrenInHeight(top);
-        // : document.scrollingElement?.scrollTop) ?? 0;
-        setStartNode(start);
-        setVisibleNodeCount(
-          Math.min(
-            children.length - start,
-            typeof height === 'string'
-              ? getCountOfChildrenInHeight(Number.parseInt(height), start) +
-                  1 +
-                  renderAdditional
-              : getCountOfChildrenInHeight(height, start) +
-                  1 +
-                  renderAdditional,
-          ),
-        );
-        console.log('translatee', start, getTranslateValue(start), top);
-        setTranslateY(getTranslateValue(start));
-      }),
-    [children.length, height, scrollContainer],
+  const getVisibleNodeCount = React.useCallback(
+    (startIndex: number) => {
+      return Math.min(
+        children.length - startIndex,
+        getCountOfChildrenInHeight(viewportHeight, startIndex),
+      );
+    },
+    [children.length, viewportHeight],
   );
 
-  React.useEffect(() => {
+  const onScroll = React.useCallback(() => {
+    if (animationFrame.current) {
+      cancelAnimationFrame(animationFrame.current);
+    }
+    animationFrame.current = requestAnimationFrame(() => {
+      if (!scrollContainer) {
+        return;
+      }
+      const start = getCountOfChildrenInHeight(scrollContainer.scrollTop);
+
+      setStartNode(start);
+      setVisibleNodeCount(getVisibleNodeCount(start));
+      setTranslateY(getTranslateValue(start));
+    });
+  }, [getTranslateValue, getVisibleNodeCount, scrollContainer]);
+
+  React.useLayoutEffect(() => {
     let top = 0;
     if (!scrollContainer) {
       document.addEventListener('scroll', onScroll);
@@ -134,32 +138,20 @@ export const VirtualScroll = ({ children, height }: VirtualScrollProps) => {
     }
     const start = getCountOfChildrenInHeight(top);
     setStartNode(start);
-    setVisibleNodeCount(
-      Math.min(
-        children.length - start,
-        typeof height === 'string'
-          ? getCountOfChildrenInHeight(Number.parseInt(height), start) +
-              1 +
-              renderAdditional
-          : getCountOfChildrenInHeight(height, start) + 1 + renderAdditional,
-      ),
-    );
-    console.log('translatee', top);
+    setVisibleNodeCount(getVisibleNodeCount(start));
     setTranslateY(getTranslateValue(start));
     return () =>
       scrollContainer
         ? scrollContainer.removeEventListener('scroll', onScroll)
         : document.removeEventListener('scroll', onScroll);
-  }, [children.length, height, onScroll, scrollContainer]);
+  }, [getTranslateValue, getVisibleNodeCount, onScroll, scrollContainer]);
 
   return (
     <>
       <div
         style={{
           overflow: 'hidden',
-          willChange: 'transform',
           height: children.length * childHeight,
-          position: 'relative',
         }}
       >
         <div
