@@ -20,6 +20,7 @@ const useInstance = <T extends Record<string, unknown>>(
 ) => {
   // There is a bug in react-table that filtered out sub-rows won't be shown after clearing the filter.
   // Therefore saving original sub-rows separately.
+  // Related issue: https://github.com/tannerlinsley/react-table/issues/2928
   const setInitialSubRows = (rows: Row<T>[]) => {
     rows.forEach((row) => {
       if (!row.initialSubRows) {
