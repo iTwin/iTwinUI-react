@@ -53,7 +53,7 @@ export type ButtonGroupProps = {
  * </ButtonGroup>
  */
 export const ButtonGroup = (props: ButtonGroupProps) => {
-  const { children, className, overflowButton, ...rest } = props;
+  const { children, className, style, overflowButton, ...rest } = props;
 
   const items = React.useMemo(() => React.Children.toArray(children), [
     children,
@@ -66,6 +66,7 @@ export const ButtonGroup = (props: ButtonGroupProps) => {
   return (
     <div
       className={cx('iui-button-group', className)}
+      style={{ ...(!!overflowButton && { width: '100%' }), ...style }}
       ref={overflowRef}
       {...rest}
     >

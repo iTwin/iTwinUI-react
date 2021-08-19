@@ -78,7 +78,6 @@ export const Overflow: Story<ButtonGroupProps> = (args) => {
         }}
       >
         <ButtonGroup
-          style={{ display: 'flex' }}
           overflowButton={(overflowStart) => (
             <DropdownMenu
               menuItems={(close) =>
