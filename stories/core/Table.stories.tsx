@@ -38,6 +38,7 @@ export default {
       { name: 'Name3', description: 'Description3' },
     ],
     emptyTableContent: 'No data.',
+    density: 'default',
     emptyFilteredTableContent: 'No results found. Clear or try another filter.',
   },
   argTypes: {
@@ -1321,3 +1322,6 @@ Full.args = {
   isSortable: true,
   emptyFilteredTableContent: 'No results found. Clear or try another filter.',
 };
+
+export const Condensed: Story<TableProps> = Basic.bind({});
+Condensed.args = { density: 'condensed' };

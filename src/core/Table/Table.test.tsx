@@ -1107,6 +1107,16 @@ it('should pass custom props to row', () => {
   expect(element).toBeTruthy();
 });
 
+it.each(['condensed', 'extra-condensed'] as const)(
+  'should render %s table',
+  (density) => {
+    const { container } = renderComponent({
+      density: density,
+    });
+    expect(container.querySelector(`.iui-table.iui-${density}`)).toBeTruthy();
+  },
+);
+
 it('should render sub-rows and handle expansions', () => {
   const onExpand = jest.fn();
   const data = mockedSubRowsData();
