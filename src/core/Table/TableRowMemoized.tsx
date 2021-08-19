@@ -91,7 +91,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
       })
     ) : (
       <IconButton
-        style={{ marginLeft: cell.row.depth * 43, marginRight: 16 }}
+        style={{ marginRight: 8 }}
         className='iui-row-expander'
         styleType='borderless'
         size='small'
@@ -128,10 +128,9 @@ const TableRow = <T extends Record<string, unknown>>(props: {
               ...getCellStyle(cell.column),
               ...{
                 paddingLeft:
-                  tableHasSubRows &&
-                  !cell.row.canExpand &&
-                  index === subRowExpanderCellIndex
-                    ? (cell.row.depth + 1) * 43 + 16 // expander width + margin = 43, cell padding-left = 16
+                  tableHasSubRows && index === subRowExpanderCellIndex
+                    ? // If it can't be expanded then shift by another level to align with expandable rows on the same depth
+                      (row.depth + (row.canExpand ? 0 : 1)) * 35 // 35 = 27 + 8 = expander_width + margin
                     : undefined,
               },
             },
