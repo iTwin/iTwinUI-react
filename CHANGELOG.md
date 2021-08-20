@@ -6,7 +6,7 @@
 
 ### What's new
 
-- **Added sub-rows support to the `Table`.** Set `showSubRows` to `true` and add `subRows` to your `data` entries.
+- **Added sub-rows support to `Table`.** Use the `subRows` field in your `data` entries.
 
 ## [1.15.0]
 

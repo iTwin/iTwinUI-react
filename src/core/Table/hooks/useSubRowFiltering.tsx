@@ -9,13 +9,13 @@ import { Hooks, IdType, Row, TableInstance } from 'react-table';
 import * as defaultFilterTypes from 'react-table/src/filterTypes.js';
 
 export const useSubRowFiltering = <T extends Record<string, unknown>>(
-  showSubRows: boolean,
+  hasAnySubRows: boolean,
 ) => (hooks: Hooks<T>) => {
-  hooks.useInstance.push(useInstance.bind({}, showSubRows));
+  hooks.useInstance.push(useInstance.bind({}, hasAnySubRows));
 };
 
 const useInstance = <T extends Record<string, unknown>>(
-  showSubRows: boolean,
+  hasAnySubRows: boolean,
   instance: TableInstance<T>,
 ) => {
   // There is a bug in react-table that filtered out sub-rows won't be shown after clearing the filter.
@@ -36,7 +36,7 @@ const useInstance = <T extends Record<string, unknown>>(
     filteredFlatRows = instance.filteredFlatRows,
     filteredRowsById = instance.filteredRowsById,
   } = React.useMemo(() => {
-    if (!showSubRows) {
+    if (!hasAnySubRows) {
       return {};
     }
 
@@ -91,7 +91,7 @@ const useInstance = <T extends Record<string, unknown>>(
     instance.filterTypes,
     instance.initialRows,
     instance.state.filters,
-    showSubRows,
+    hasAnySubRows,
   ]);
 
   Object.assign(instance, {

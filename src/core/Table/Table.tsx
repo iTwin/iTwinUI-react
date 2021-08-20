@@ -145,11 +145,6 @@ export type TableProps<
    * @default 'default'
    */
   density?: 'default' | 'condensed' | 'extra-condensed';
-  /**
-   * Flag whether show sub-rows or not.
-   * @default false
-   */
-  showSubRows?: boolean;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -200,6 +195,7 @@ export const Table = <
   props: TableProps<T>,
 ): JSX.Element => {
   const {
+    data,
     columns,
     isLoading = false,
     emptyTableContent,
@@ -225,7 +221,7 @@ export const Table = <
     rowProps,
     density = 'default',
     selectSubRows = true,
-    showSubRows = false,
+    getSubRows,
     ...rest
   } = props;
 
@@ -299,6 +295,12 @@ export const Table = <
     [filterFunctions],
   );
 
+  const hasAnySubRows = React.useMemo(() => {
+    return data.some((item, index) =>
+      getSubRows ? getSubRows(item, index) : item.subRows,
+    );
+  }, [data, getSubRows]);
+
   const instance = useTable<T>(
     {
       ...props,
@@ -308,10 +310,12 @@ export const Table = <
       stateReducer: tableStateReducer,
       filterTypes,
       selectSubRows,
+      data,
+      getSubRows,
     },
     useFlexLayout,
     useFilters,
-    useSubRowFiltering(showSubRows),
+    useSubRowFiltering(hasAnySubRows),
     useSortBy,
     useExpanded,
     useRowSelect,
@@ -326,7 +330,6 @@ export const Table = <
     headerGroups,
     getTableBodyProps,
     prepareRow,
-    data,
     state,
     allColumns,
     filteredFlatRows,
@@ -443,7 +446,7 @@ export const Table = <
                 onClick={onRowClickHandler}
                 subComponent={subComponent}
                 isDisabled={!!isRowDisabled?.(row.original)}
-                tableHasSubRows={showSubRows}
+                tableHasSubRows={hasAnySubRows}
                 tableInstance={instance}
                 expanderCell={expanderCell}
               />

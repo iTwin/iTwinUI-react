@@ -1120,7 +1120,7 @@ it.each(['condensed', 'extra-condensed'] as const)(
 it('should render sub-rows and handle expansions', () => {
   const onExpand = jest.fn();
   const data = mockedSubRowsData();
-  const { container } = renderComponent({ data, onExpand, showSubRows: true });
+  const { container } = renderComponent({ data, onExpand });
 
   let rows = container.querySelectorAll('.iui-table-body .iui-row');
   assertRowsData(rows, data);
@@ -1170,7 +1170,7 @@ it('should render filtered sub-rows', () => {
       ],
     },
   ];
-  const { container } = renderComponent({ data, columns, showSubRows: true });
+  const { container } = renderComponent({ data, columns });
 
   expandAll(container);
 
@@ -1200,7 +1200,6 @@ it('should handle sub-rows selection', () => {
   const { container } = renderComponent({
     data,
     onSelect,
-    showSubRows: true,
     isSelectable: true,
   });
 
@@ -1235,7 +1234,6 @@ it('should show indeterminate checkbox when some sub-rows are selected', () => {
   const { container } = renderComponent({
     data,
     onSelect,
-    showSubRows: true,
     isSelectable: true,
   });
 
@@ -1272,7 +1270,6 @@ it('should show indeterminate checkbox when a sub-row of a sub-row is selected',
   const { container } = renderComponent({
     data,
     onSelect,
-    showSubRows: true,
     isSelectable: true,
   });
 
@@ -1338,7 +1335,6 @@ it('should show indeterminate checkbox when sub-row selected after filtering', (
     data,
     columns,
     onSelect,
-    showSubRows: true,
     isSelectable: true,
   });
 
@@ -1402,7 +1398,6 @@ it('should show indeterminate checkbox when clicking on a row itself after filte
     data,
     columns,
     onSelect,
-    showSubRows: true,
     isSelectable: true,
   });
 
@@ -1438,7 +1433,6 @@ it('should only select one row even if it has sub-rows when selectSubRows is fal
   const { container } = renderComponent({
     data,
     onSelect,
-    showSubRows: true,
     isSelectable: true,
     selectSubRows: false,
   });
@@ -1469,7 +1463,6 @@ it('should render sub-rows with custom expander', () => {
   const data = mockedSubRowsData();
   const { container } = renderComponent({
     data,
-    showSubRows: true,
     expanderCell: (props: CellProps<TestDataType>) => {
       return (
         <button
