@@ -202,7 +202,7 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => {
   };
 
   return (
-    <div className='iui-tabs-wrapper'>
+    <div className={cx('iui-tabs-wrapper', 'iui-horizontal')}>
       <ul
         className={cx(
           'iui-tabs',
