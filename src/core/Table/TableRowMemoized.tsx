@@ -4,14 +4,13 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { Cell, CellProps, Row, TableInstance, TableState } from 'react-table';
-import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
+import { CellProps, Row, TableInstance, TableState } from 'react-table';
 import { useIntersection } from '../utils/hooks/useIntersection';
 import { getCellStyle } from './utils';
 import { CSSTransition } from 'react-transition-group';
 import { useMergedRefs } from '../utils/hooks/useMergedRefs';
-import { IconButton } from '../Buttons';
 import { SELECTION_CELL_ID } from './hooks';
+import SubRowExpander from './SubRowExpander';
 
 /**
  * Memoization is needed to avoid unnecessary re-renders of all rows when additional data is added when lazy-loading.
@@ -26,7 +25,7 @@ const TableRow = <T extends Record<string, unknown>>(props: {
   onRowInViewport: React.MutableRefObject<((rowData: T) => void) | undefined>;
   onBottomReached: React.MutableRefObject<(() => void) | undefined>;
   intersectionMargin: number;
-  state: TableState<T>; // Needed for explicitly checking selection changes
+  state: TableState<T>; // Needed for explicitly checking selection and expansion changes
   onClick?: (event: React.MouseEvent, row: Row<T>) => void;
   subComponent?: (row: Row<T>) => React.ReactNode;
   isDisabled: boolean;
@@ -83,33 +82,14 @@ const TableRow = <T extends Record<string, unknown>>(props: {
     (c) => c.column.id !== SELECTION_CELL_ID,
   );
 
-  const getSubRowExpander = (cell: Cell<T>) =>
-    expanderCell ? (
-      expanderCell({
-        ...tableInstance,
-        ...{ cell, row: cell.row, value: cell.value, column: cell.column },
-      })
-    ) : (
-      <IconButton
-        style={{ marginRight: 8 }}
-        className='iui-row-expander'
-        styleType='borderless'
-        size='small'
-        onClick={(e) => {
-          e.stopPropagation();
-          cell.row.toggleRowExpanded();
-        }}
-        disabled={isDisabled}
-      >
-        {
-          <SvgChevronRight
-            style={{
-              transform: cell.row.isExpanded ? 'rotate(90deg)' : undefined,
-            }}
-          />
-        }
-      </IconButton>
-    );
+  const getSubRowStyle = (index: number): React.CSSProperties | undefined => {
+    if (!tableHasSubRows || index !== subRowExpanderCellIndex) {
+      return undefined;
+    }
+    // If it doesn't have sub-rows then shift by another level to align with expandable rows on the same depth
+    // 16 = initial_cell_padding, 35 = 27 + 8 = expander_width + margin
+    return { paddingLeft: 16 + (row.depth + (row.canExpand ? 0 : 1)) * 35 };
+  };
 
   return (
     <>
@@ -126,21 +106,21 @@ const TableRow = <T extends Record<string, unknown>>(props: {
             className: cx('iui-cell', cell.column.cellClassName),
             style: {
               ...getCellStyle(cell.column),
-              ...{
-                paddingLeft:
-                  tableHasSubRows && index === subRowExpanderCellIndex
-                    ? // If it can't be expanded then shift by another level to align with expandable rows on the same depth
-                      (row.depth + (row.canExpand ? 0 : 1)) * 35 // 35 = 27 + 8 = expander_width + margin
-                    : undefined,
-              },
+              ...getSubRowStyle(index),
             },
           });
           return (
             <div {...cellProps} key={cellProps.key}>
               {tableHasSubRows &&
                 index === subRowExpanderCellIndex &&
-                cell.row.canExpand &&
-                getSubRowExpander(cell)}
+                cell.row.canExpand && (
+                  <SubRowExpander
+                    cell={cell}
+                    isDisabled={isDisabled}
+                    tableInstance={tableInstance}
+                    expanderCell={expanderCell}
+                  />
+                )}
               {cell.render('Cell')}
             </div>
           );
