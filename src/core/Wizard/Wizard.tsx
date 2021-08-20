@@ -29,7 +29,7 @@ export type WizardProps = {
   /**
    * Current step index, 0 - based.
    */
-  currentStep: number;
+  currentStep?: number;
   /**
    * An array of step objects.
    */
@@ -79,7 +79,7 @@ export const Wizard = (props: WizardProps) => {
   } = props;
 
   const boundedCurrentStep = Math.min(
-    Math.max(0, currentStep),
+    Math.max(0, currentStep ?? 0),
     steps.length - 1,
   );
 
