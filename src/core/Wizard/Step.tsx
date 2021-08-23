@@ -53,8 +53,8 @@ export const Step = (props: StepProps) => {
     ...rest
   } = props;
 
-  const isPast = currentStepNumber > index;
-  const isActive = currentStepNumber === index;
+  const isPast = type !== 'workflow' && currentStepNumber > index;
+  const isActive = type !== 'workflow' && currentStepNumber === index;
 
   const onCompletedClick = () => {
     if (isPast && !!onClick) {
@@ -67,7 +67,7 @@ export const Step = (props: StepProps) => {
       className={cx(
         'iui-wizard-step',
         {
-          'iui-current': type !== 'workflow' && isActive,
+          'iui-current': isActive,
           'iui-clickable': !!onClick && isPast,
         },
         className,
@@ -77,7 +77,7 @@ export const Step = (props: StepProps) => {
         ...style,
       }}
       onClick={onCompletedClick}
-      aria-current={type !== 'workflow' && isActive}
+      aria-current={isActive}
       {...rest}
     >
       <div className='iui-wizard-track-content'>

@@ -15,7 +15,7 @@ describe('Wizard step (default)', () => {
         index={0}
         currentStepNumber={1}
         totalSteps={3}
-        type={'default'}
+        type='default'
         onClick={mockedClick}
       />
     );
