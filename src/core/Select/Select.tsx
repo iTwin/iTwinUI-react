@@ -113,17 +113,9 @@ export type SelectProps<T> = {
    */
   popoverProps?: Omit<PopoverProps, 'onShow' | 'onHide' | 'disabled'>;
 } & Pick<PopoverProps, 'onShow' | 'onHide'> &
-  CommonProps &
   Omit<
-    React.HTMLAttributes<HTMLDivElement>,
-    | 'size'
-    | 'disabled'
-    | 'placeholder'
-    | 'onChange'
-    | 'className'
-    | 'id'
-    | 'style'
-    | 'title'
+    React.ComponentPropsWithoutRef<'div'>,
+    'size' | 'disabled' | 'placeholder' | 'onChange'
   >;
 
 /**
