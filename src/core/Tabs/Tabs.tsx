@@ -139,12 +139,12 @@ export const Tabs = (props: TabsProps) => {
       const activeTabRect = activeTab?.getBoundingClientRect();
 
       setStripeStyle({
-        width: orientation === 'horizontal' ? activeTabRect.width : undefined,
-        height: orientation === 'vertical' ? activeTabRect.height : undefined,
+        width: orientation === 'horizontal' ? activeTabRect?.width : undefined,
+        height: orientation === 'vertical' ? activeTabRect?.height : undefined,
         left:
           orientation === 'horizontal'
             ? activeTab?.offsetLeft
-            : activeTabRect.width - 2,
+            : activeTabRect?.width - 2,
         top:
           orientation === 'horizontal'
             ? activeTabRect?.height - 2
