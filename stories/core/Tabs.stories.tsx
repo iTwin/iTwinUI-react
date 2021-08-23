@@ -6,16 +6,12 @@ import SvgStar from '@itwin/itwinui-icons-react/cjs/icons/Star';
 import { useState } from '@storybook/addons';
 import { Meta, Story } from '@storybook/react/';
 import React from 'react';
-import {
-  HorizontalTabs,
-  HorizontalTabsProps,
-  HorizontalTab,
-} from '../../src/core';
+import { Tabs, TabsProps, Tab } from '../../src/core';
 
 export default {
-  title: 'Core/HorizontalTabs',
-  component: HorizontalTabs,
-  subcomponents: { HorizontalTab },
+  title: 'Core/Tabs',
+  component: Tabs,
+  subcomponents: { Tab },
   args: {
     focusActivationMode: 'auto',
     color: 'blue',
@@ -23,9 +19,9 @@ export default {
   argTypes: {
     children: { control: { disable: true } },
   },
-} as Meta<HorizontalTabsProps>;
+} as Meta<TabsProps>;
 
-const Template: Story<HorizontalTabsProps> = (args) => {
+const Template: Story<TabsProps> = (args) => {
   const [index, setIndex] = useState(0);
   const getContent = () => {
     switch (index) {
@@ -38,9 +34,9 @@ const Template: Story<HorizontalTabsProps> = (args) => {
     }
   };
   return (
-    <HorizontalTabs {...args} onTabSelected={setIndex}>
+    <Tabs {...args} onTabSelected={setIndex}>
       {getContent()}
-    </HorizontalTabs>
+    </Tabs>
   );
 };
 
@@ -48,18 +44,18 @@ export const DefaultTabs = Template.bind({});
 DefaultTabs.args = {
   type: 'default',
   labels: [
-    <HorizontalTab key={1} label='Item1' />,
-    <HorizontalTab key={2} label='Item2' />,
-    <HorizontalTab key={3} label='Item3' />,
+    <Tab key={1} label='Item1' />,
+    <Tab key={2} label='Item2' />,
+    <Tab key={3} label='Item3' />,
   ],
 };
 
 export const BorderlessTabs = Template.bind({});
 BorderlessTabs.args = {
   labels: [
-    <HorizontalTab key={1} label='Item1' />,
-    <HorizontalTab key={2} label='Item2' />,
-    <HorizontalTab key={3} label='Item3' />,
+    <Tab key={1} label='Item1' />,
+    <Tab key={2} label='Item2' />,
+    <Tab key={3} label='Item3' />,
   ],
   type: 'borderless',
 };
@@ -68,7 +64,7 @@ export const PillTabs = Template.bind({});
 PillTabs.args = {
   labels: Array(3)
     .fill(null)
-    .map((_, index) => <HorizontalTab key={index} startIcon={<SvgStar />} />),
+    .map((_, index) => <Tab key={index} startIcon={<SvgStar />} />),
   type: 'pill',
 };
 
@@ -77,7 +73,7 @@ SublabelsAndIcons.args = {
   labels: Array(3)
     .fill(null)
     .map((_, index) => (
-      <HorizontalTab
+      <Tab
         key={index}
         label={`Item${index}`}
         sublabel={`Sublabel ${index}`}
@@ -85,5 +81,16 @@ SublabelsAndIcons.args = {
         disabled={index === 2}
       />
     )),
+  type: 'borderless',
+};
+
+export const Vertical = Template.bind({});
+Vertical.args = {
+  labels: [
+    <Tab key={1} label='Item1' />,
+    <Tab key={2} label='Item2' />,
+    <Tab key={3} label='Item3' />,
+  ],
+  orientation: 'vertical',
   type: 'borderless',
 };

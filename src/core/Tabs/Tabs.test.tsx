@@ -4,23 +4,23 @@
  *--------------------------------------------------------------------------------------------*/
 import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
-import { HorizontalTab } from './HorizontalTab';
-import { HorizontalTabs, HorizontalTabsProps } from './HorizontalTabs';
+import { Tab } from './Tab';
+import { Tabs, TabsProps } from './Tabs';
 
 const renderComponent = (
-  initialProps?: Partial<HorizontalTabsProps>,
+  initialProps?: Partial<TabsProps>,
   initialChildren?: React.ReactNode,
 ) => {
-  const defaultProps: HorizontalTabsProps = {
+  const defaultProps: TabsProps = {
     labels: [
-      <HorizontalTab key={1} label='Label 1' />,
-      <HorizontalTab key={2} label='Label 2' />,
-      <HorizontalTab key={3} label='Label 3' />,
+      <Tab key={1} label='Label 1' />,
+      <Tab key={2} label='Label 2' />,
+      <Tab key={3} label='Label 3' />,
     ],
   };
   const props = { ...defaultProps, ...initialProps };
   const children = initialChildren ?? 'Test content';
-  return render(<HorizontalTabs {...props}>{children}</HorizontalTabs>);
+  return render(<Tabs {...props}>{children}</Tabs>);
 };
 
 it('should render tabs', () => {
@@ -106,9 +106,9 @@ it('should render strings in HorizontalTab child component', () => {
 it('should add .iui-large if HorizontalTab has sublabel', () => {
   const { container } = renderComponent({
     labels: [
-      <HorizontalTab key={0} label='item0' sublabel='Sublabel0' />,
-      <HorizontalTab key={1} label='item1' sublabel='Sublabel1' />,
-      <HorizontalTab key={2} label='item2' sublabel='Sublabel2' />,
+      <Tab key={0} label='item0' sublabel='Sublabel0' />,
+      <Tab key={1} label='item1' sublabel='Sublabel1' />,
+      <Tab key={2} label='item2' sublabel='Sublabel2' />,
     ],
   });
   expect(container.querySelector('.iui-tabs.iui-large')).toBeTruthy();
