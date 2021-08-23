@@ -133,14 +133,25 @@ export const Tabs = (props: TabsProps) => {
   const [stripeStyle, setStripeStyle] = React.useState<React.CSSProperties>({});
   React.useLayoutEffect(() => {
     if (type !== 'default') {
-      const activeTab = tablistRef.current?.children[currentActiveIndex];
+      const activeTab = tablistRef.current?.children[
+        currentActiveIndex
+      ] as HTMLElement;
+      const activeTabRect = activeTab?.getBoundingClientRect();
+
       setStripeStyle({
-        width: activeTab?.getBoundingClientRect().width,
-        left: (activeTab as HTMLElement)?.offsetLeft,
-        top: (activeTab as HTMLElement)?.getBoundingClientRect().height - 2,
+        width: orientation === 'horizontal' ? activeTabRect.width : undefined,
+        height: orientation === 'vertical' ? activeTabRect.height : undefined,
+        left:
+          orientation === 'horizontal'
+            ? activeTab?.offsetLeft
+            : activeTabRect.width - 2,
+        top:
+          orientation === 'horizontal'
+            ? activeTabRect?.height - 2
+            : activeTab?.offsetTop,
       });
     }
-  }, [currentActiveIndex, type, tabsWidth]);
+  }, [currentActiveIndex, type, orientation, tabsWidth]);
 
   const [focusedIndex, setFocusedIndex] = React.useState<number | undefined>();
   React.useEffect(() => {
@@ -166,7 +177,7 @@ export const Tabs = (props: TabsProps) => {
   };
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLUListElement>) => {
-    // alt + left/right is used by browser / assistive technologies
+    // alt + arrow keys are used by browser / assistive technologies
     if (event.altKey) {
       return;
     }
@@ -183,6 +194,7 @@ export const Tabs = (props: TabsProps) => {
 
     let newIndex = focusedIndex ?? currentActiveIndex;
     switch (event.key) {
+      case 'ArrowDown':
       case 'ArrowRight': {
         do {
           newIndex = (newIndex + 1 + labels.length) % labels.length;
@@ -191,6 +203,7 @@ export const Tabs = (props: TabsProps) => {
         event.preventDefault();
         break;
       }
+      case 'ArrowUp':
       case 'ArrowLeft': {
         do {
           newIndex = (newIndex - 1 + labels.length) % labels.length;

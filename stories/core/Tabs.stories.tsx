@@ -94,7 +94,6 @@ Vertical.args = {
         label={`Item${index}`}
         sublabel={`Sublabel ${index}`}
         startIcon={<SvgStar />}
-        disabled={index === 2}
       />
     )),
   orientation: 'vertical',
