@@ -6,7 +6,7 @@ on:
     types: [labeled]
 
 jobs:
-  publish_storybook:
+  publish-storybook:
     if: "${{ github.event.name === 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'autorelease: tagged') }}"
     runs-on: ubuntu-latest
 
