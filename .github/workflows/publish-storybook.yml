@@ -2,9 +2,12 @@ name: Publish storybook
 
 on:
   workflow_dispatch:
+  pull_request:
+    types: [labeled]
 
 jobs:
-  build:
+  publish_storybook:
+    if: "${{ github.event.name === 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'autorelease: tagged') }}"
     runs-on: ubuntu-latest
 
     steps:
