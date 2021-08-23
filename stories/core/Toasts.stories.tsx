@@ -7,6 +7,7 @@ import { Story, Meta } from '@storybook/react';
 import { Button, toaster } from '../../src/core';
 import { Toast, ToastProps } from '../../src/core/Toast/Toast';
 import { CreeveyMeta } from 'creevey';
+import { ToasterSettings } from '../../src/core/Toast/Toaster';
 
 export default {
   subcomponents: { Toast },
@@ -73,9 +74,9 @@ export default {
     },
   },
   title: 'Core/Toasts',
-} as Meta<ToastProps> & CreeveyMeta;
+} as Meta<ToastProps & ToasterSettings> & CreeveyMeta;
 
-export const Positive: Story<ToastProps> = ({
+export const Positive: Story<ToastProps & ToasterSettings> = ({
   content,
   duration,
   hasCloseButton,
@@ -83,7 +84,13 @@ export const Positive: Story<ToastProps> = ({
   type,
   onRemove,
 }) => {
+  const settings: ToasterSettings = {
+    placement: 'top',
+    order: 'top-to-bottom',
+  };
+
   const displayPositiveToast = () => {
+    toaster.setSettings(settings);
     toaster.positive(content, {
       duration,
       hasCloseButton,
@@ -120,7 +127,13 @@ export const Negative: Story<ToastProps> = ({
   link,
   onRemove,
 }) => {
+  const settings: ToasterSettings = {
+    placement: 'top',
+    order: 'top-to-bottom',
+  };
+
   const displayNegativeToast = () => {
+    toaster.setSettings(settings);
     toaster.negative(content, {
       duration,
       hasCloseButton,
@@ -157,7 +170,13 @@ export const Informational: Story<ToastProps> = ({
   link,
   onRemove,
 }) => {
+  const settings: ToasterSettings = {
+    placement: 'top',
+    order: 'top-to-bottom',
+  };
+
   const displayInformationalToast = () => {
+    toaster.setSettings(settings);
     toaster.informational(content, {
       duration,
       hasCloseButton,
@@ -187,7 +206,13 @@ Informational.args = {
 };
 
 export const Warning: Story<ToastProps> = ({ content, ...options }) => {
+  const settings: ToasterSettings = {
+    placement: 'top',
+    order: 'top-to-bottom',
+  };
+
   const displayWarningToast = () => {
+    toaster.setSettings(settings);
     toaster.warning(content, { ...options });
   };
 
@@ -208,4 +233,34 @@ export const Warning: Story<ToastProps> = ({ content, ...options }) => {
 
 Warning.args = {
   content: 'This is a warning toast message',
+};
+
+export const PositionChanged: Story<ToastProps> = ({ content, ...options }) => {
+  const settings: ToasterSettings = {
+    placement: 'bottom-start',
+    order: 'bottom-to-top',
+  };
+
+  const displayPositionChangedToast = () => {
+    toaster.setSettings(settings);
+    toaster.informational(content, { ...options });
+  };
+
+  return (
+    <>
+      <Button styleType='high-visibility' onClick={displayPositionChangedToast}>
+        Toast
+      </Button>
+      <Button
+        style={{ display: 'block', marginTop: 16 }}
+        onClick={() => toaster.closeAll()}
+      >
+        Close All
+      </Button>
+    </>
+  );
+};
+
+PositionChanged.args = {
+  content: 'This is a toast message',
 };

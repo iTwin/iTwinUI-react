@@ -4,11 +4,20 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Placement } from 'tippy.js';
 import { getContainer } from '../utils/common';
 import { ToastCategory, ToastProps } from './Toast';
 import { ToastWrapper } from './ToastWrapper';
 
 const TOASTS_CONTAINER_ID = 'iui-toasts-container';
+
+export type ToasterSettings = {
+  order?: 'top-to-bottom' | 'bottom-to-top';
+  placement?: Omit<
+    Placement,
+    'right' | 'left' | 'right-start' | 'right-end' | 'left-start' | 'left-end'
+  >;
+};
 
 export type ToastOptions = Omit<
   ToastProps,
@@ -18,6 +27,14 @@ export type ToastOptions = Omit<
 export default class Toaster {
   private toasts: ToastProps[] = [];
   private lastId = 0;
+  private settings: ToasterSettings = {
+    order: 'bottom-to-top',
+    placement: 'top-end',
+  };
+
+  public setSettings(settings: ToasterSettings) {
+    this.settings = settings;
+  }
 
   public positive(content: React.ReactNode, settings?: ToastOptions): void {
     this.createToast(content, 'positive', settings);
@@ -45,21 +62,37 @@ export default class Toaster {
   ) {
     ++this.lastId;
     const currentId = this.lastId;
-    this.toasts = [
-      {
-        ...settings,
-        content,
-        category,
-        onRemove: () => {
-          this.removeToast(currentId);
-          settings?.onRemove?.();
+    if (this.settings.order === 'top-to-bottom') {
+      this.toasts = [
+        {
+          ...settings,
+          content,
+          category,
+          onRemove: () => {
+            this.removeToast(currentId);
+            settings?.onRemove?.();
+          },
+          id: currentId,
+          isVisible: true,
         },
-        id: currentId,
-        isVisible: true,
-      },
-      ...this.toasts,
-    ];
-
+        ...this.toasts,
+      ];
+    } else if (this.settings.order === 'bottom-to-top') {
+      this.toasts = [
+        ...this.toasts,
+        {
+          ...settings,
+          content,
+          category,
+          onRemove: () => {
+            this.removeToast(currentId);
+            settings?.onRemove?.();
+          },
+          id: currentId,
+          isVisible: true,
+        },
+      ];
+    }
     this.updateView();
   }
 
@@ -74,7 +107,10 @@ export default class Toaster {
       return;
     }
 
-    ReactDOM.render(<ToastWrapper toasts={this.toasts} />, container);
+    ReactDOM.render(
+      <ToastWrapper toasts={this.toasts} placement={this.settings.placement} />,
+      container,
+    );
   }
 
   public closeAll(): void {
