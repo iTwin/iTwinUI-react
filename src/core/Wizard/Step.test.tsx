@@ -134,7 +134,7 @@ describe('Wizard step (default)', () => {
 });
 
 describe.each(['long', 'workflow'] as const)('Wizard step (%s)', (type) => {
-  it('should render step correctly', () => {
+  it('should render correctly', () => {
     const step = (
       <Step
         title='Second step'
@@ -176,25 +176,23 @@ describe.each(['long', 'workflow'] as const)('Wizard step (%s)', (type) => {
   });
 });
 
-describe('Wizard step', () => {
-  it('should add className and style props correctly', () => {
-    const { container } = render(
-      <Step
-        title='Mock step'
-        index={1}
-        currentStepNumber={0}
-        totalSteps={4}
-        type={'default'}
-        className='custom-class'
-        style={{ width: 50, color: 'red' }}
-      />,
-    );
+it('should add className and style props correctly', () => {
+  const { container } = render(
+    <Step
+      title='Mock step'
+      index={1}
+      currentStepNumber={0}
+      totalSteps={4}
+      type={'default'}
+      className='custom-class'
+      style={{ width: 50, color: 'red' }}
+    />,
+  );
 
-    const step = container.querySelector(
-      '.iui-wizard-step.custom-class',
-    ) as HTMLElement;
-    expect(step).toBeTruthy();
-    expect(step.style.width).toEqual('50px');
-    expect(step.style.color).toEqual('red');
-  });
+  const step = container.querySelector(
+    '.iui-wizard-step.custom-class',
+  ) as HTMLElement;
+  expect(step).toBeTruthy();
+  expect(step.style.width).toEqual('50px');
+  expect(step.style.color).toEqual('red');
 });
