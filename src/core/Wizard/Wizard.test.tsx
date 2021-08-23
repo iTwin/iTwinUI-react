@@ -133,8 +133,8 @@ describe('<Wizard />', () => {
 
     const { getByText, queryByText } = render(wizard);
 
-    getByText('Step 3 of 3:');
-    getByText('Step Three');
+    expect(getByText('Step 3 of 3:')).toHaveClass('iui-steps-count');
+    expect(getByText('Step Three')).toHaveClass('iui-wizard-steps-label');
 
     getByText('1');
     getByText('2');
