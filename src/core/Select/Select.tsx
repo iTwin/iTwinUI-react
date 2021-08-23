@@ -123,6 +123,7 @@ export type SelectProps<T> = {
     | 'className'
     | 'id'
     | 'style'
+    | 'title'
   >;
 
 /**
