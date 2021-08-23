@@ -48,7 +48,7 @@ describe('Wizard step (default)', () => {
         index={1}
         currentStepNumber={0}
         totalSteps={3}
-        type={'default'}
+        type='default'
         onClick={mockedClick}
       />
     );
@@ -80,7 +80,7 @@ describe('Wizard step (default)', () => {
         index={0}
         currentStepNumber={0}
         totalSteps={1}
-        type={'default'}
+        type='default'
       />
     );
 
@@ -109,7 +109,7 @@ describe('Wizard step (default)', () => {
         index={1}
         currentStepNumber={0}
         totalSteps={4}
-        type={'default'}
+        type='default'
       />,
     );
 
@@ -123,7 +123,7 @@ describe('Wizard step (default)', () => {
         index={1}
         currentStepNumber={1}
         totalSteps={8}
-        type={'default'}
+        type='default'
       />,
     );
 
@@ -183,7 +183,7 @@ it('should add className and style props correctly', () => {
       index={1}
       currentStepNumber={0}
       totalSteps={4}
-      type={'default'}
+      type='default'
       className='custom-class'
       style={{ width: 50, color: 'red' }}
     />,
