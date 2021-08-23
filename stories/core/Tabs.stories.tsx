@@ -86,11 +86,17 @@ SublabelsAndIcons.args = {
 
 export const Vertical = Template.bind({});
 Vertical.args = {
-  labels: [
-    <Tab key={1} label='Item1' />,
-    <Tab key={2} label='Item2' />,
-    <Tab key={3} label='Item3' />,
-  ],
+  labels: Array(3)
+    .fill(null)
+    .map((_, index) => (
+      <Tab
+        key={index}
+        label={`Item${index}`}
+        sublabel={`Sublabel ${index}`}
+        startIcon={<SvgStar />}
+        disabled={index === 2}
+      />
+    )),
   orientation: 'vertical',
   type: 'borderless',
 };

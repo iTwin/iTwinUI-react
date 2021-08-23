@@ -26,7 +26,9 @@ const renderComponent = (
 it('should render tabs', () => {
   const { container } = renderComponent();
 
-  expect(container.querySelector('.iui-tabs-wrapper')).toBeTruthy();
+  expect(
+    container.querySelector('.iui-tabs-wrapper.iui-horizontal'),
+  ).toBeTruthy();
 
   const tabContainer = container.querySelector('.iui-tabs') as HTMLElement;
   expect(tabContainer).toBeTruthy();
@@ -49,6 +51,16 @@ it('should render pill tabs', () => {
   const tabContainer = container.querySelector('.iui-tabs') as HTMLElement;
   expect(tabContainer).toBeTruthy();
   expect(tabContainer.className).toContain('iui-tabs iui-pill');
+});
+
+it('should render vertical tabs', () => {
+  const { container } = renderComponent({ orientation: 'vertical' });
+
+  expect(
+    container.querySelector('.iui-tabs-wrapper.iui-vertical'),
+  ).toBeTruthy();
+  expect(container.querySelector('.iui-tabs')).toBeTruthy();
+  expect(container.querySelector('.iui-tab')).toBeTruthy();
 });
 
 it('should render green tabs', () => {
