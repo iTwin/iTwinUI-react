@@ -14,6 +14,7 @@ jobs:
         uses: actions/github-script@v4
         with:
           script: |
+            console.log(${{ github }});
             const { data: { title } } = await github.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
