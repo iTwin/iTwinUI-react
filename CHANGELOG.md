@@ -10,8 +10,8 @@
 - **Added responsive overflow handling to `ButtonGroup`** through `overflowButton` prop.
 - **Added new animation style to `ExpandableBlock`.**
 - **Added ability to pass native html attributes in `Select`** and arbitrary props in `SelectOption`.
-- **Added new `Tabs` component with support for vertical `orientation`**.
-  - Replaces `HorizontalTabs` component, as `orientation` defaults to horizontal.
+- **Added new `VerticalTabs` component**, similar to `HorizontalTabs`.
+  - Renamed `HorizontalTab` component to `Tab`, for use in both `HorizontalTabs` and `VerticalTabs`.
 
 ### Fixes
 
