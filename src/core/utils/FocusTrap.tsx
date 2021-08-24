@@ -52,7 +52,10 @@ export const FocusTrap = (props: FocusTrapProps) => {
     <div>
       <div tabIndex={0} onFocus={onFirstFocus} />
       {React.cloneElement(children, {
-        ref: mergeRefs(children.props.ref, childRef),
+        ref: mergeRefs(
+          (children as React.FunctionComponentElement<HTMLElement>).ref,
+          childRef,
+        ),
       })}
       <div tabIndex={0} onFocus={onLastFocus} />
     </div>
