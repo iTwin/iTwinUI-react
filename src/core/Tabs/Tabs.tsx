@@ -192,17 +192,10 @@ export const Tabs = (props: TabsProps) => {
 
     let newIndex = focusedIndex ?? currentActiveIndex;
 
-    const focusNextTab = () => {
+    /** focus next tab if delta is +1, previous tab if -1 */
+    const focusTab = (delta = +1) => {
       do {
-        newIndex = (newIndex + 1 + labels.length) % labels.length;
-      } while (isTabDisabled(newIndex) && newIndex !== focusedIndex);
-      setFocusedIndex(newIndex);
-      focusActivationMode === 'auto' && onTabClick(newIndex);
-    };
-
-    const focusPreviousTab = () => {
-      do {
-        newIndex = (newIndex - 1 + labels.length) % labels.length;
+        newIndex = (newIndex + delta + labels.length) % labels.length;
       } while (isTabDisabled(newIndex) && newIndex !== focusedIndex);
       setFocusedIndex(newIndex);
       focusActivationMode === 'auto' && onTabClick(newIndex);
@@ -211,28 +204,28 @@ export const Tabs = (props: TabsProps) => {
     switch (event.key) {
       case 'ArrowDown': {
         if (orientation === 'vertical') {
-          focusNextTab();
+          focusTab(+1);
           event.preventDefault();
         }
         break;
       }
       case 'ArrowRight': {
         if (orientation === 'horizontal') {
-          focusNextTab();
+          focusTab(+1);
           event.preventDefault();
         }
         break;
       }
       case 'ArrowUp': {
         if (orientation === 'vertical') {
-          focusPreviousTab();
+          focusTab(-1);
           event.preventDefault();
         }
         break;
       }
       case 'ArrowLeft': {
         if (orientation === 'horizontal') {
-          focusPreviousTab();
+          focusTab(-1);
           event.preventDefault();
         }
         break;
