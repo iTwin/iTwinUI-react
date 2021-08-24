@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { getFocusableElements } from './common';
-import { useMergedRefs } from './hooks/useMergedRefs';
+import { mergeRefs } from './hooks/useMergedRefs';
 
 export type FocusTrapProps = {
   /**
@@ -52,7 +52,7 @@ export const FocusTrap = (props: FocusTrapProps) => {
     <div>
       <div tabIndex={0} onFocus={onFirstFocus} />
       {React.cloneElement(children, {
-        ref: useMergedRefs(children.props.ref, childRef),
+        ref: mergeRefs(children.props.ref, childRef),
       })}
       <div tabIndex={0} onFocus={onLastFocus} />
     </div>
