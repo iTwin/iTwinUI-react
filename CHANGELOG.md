@@ -9,7 +9,7 @@
 - **Added sub-rows support to `Table`.** Use the `subRows` field in your `data` entries.
 - **Added responsive overflow handling to `ButtonGroup`** through `overflowButton` prop.
 - **Added new animation style to `ExpandableBlock`.**
-- **Added ability to pass native html attributes in `Select`** and arbitrary props in `SelectOption`.
+- **Added ability to pass native HTML attributes in `Select`** and arbitrary props in `SelectOption`.
 - **Added new `VerticalTabs` component**, similar to `HorizontalTabs`.
   - Renamed `HorizontalTab` component to `Tab`, for use in both `HorizontalTabs` and `VerticalTabs`.
 
