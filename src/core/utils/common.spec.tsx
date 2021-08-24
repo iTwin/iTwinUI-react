@@ -6,6 +6,7 @@ import {
   getBoundedValue,
   getContainer,
   getDocument,
+  getFocusableElements,
   getUserColor,
   getWindow,
 } from './common';
@@ -41,17 +42,40 @@ it('should get document when it is defined', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   jest.spyOn(global as any, 'document', 'get').mockReturnValue(undefined);
   expect(getDocument()).toBeFalsy();
+  jest.restoreAllMocks();
 });
 
 it('should get window when it is defined', () => {
   expect(getWindow()).toBeTruthy();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   jest.spyOn(global as any, 'window', 'get').mockReturnValue(undefined);
-  expect(getDocument()).toBeFalsy();
+  expect(getWindow()).toBeFalsy();
+  jest.restoreAllMocks();
 });
 
 it('should get bounded values', () => {
   expect(getBoundedValue(20, 0, 100)).toBe(20);
   expect(getBoundedValue(20, 30, 100)).toBe(30);
   expect(getBoundedValue(20, 0, 10)).toBe(10);
+});
+
+it('should get focusable elements', () => {
+  const container = document.createElement('div');
+  container.append(document.createElement('button'));
+  const focusableDiv = document.createElement('div');
+  focusableDiv.setAttribute('tabindex', '0');
+  focusableDiv.append(document.createElement('textarea'));
+  container.append(focusableDiv);
+  const disabledSelect = document.createElement('select');
+  disabledSelect.disabled = true;
+  container.append(disabledSelect);
+  container.append(document.createElement('input'));
+
+  expect(getFocusableElements(container).length).toBe(4);
+});
+
+it('should return empty array of focusable elements', () => {
+  expect(getFocusableElements(undefined).length).toBe(0);
+  expect(getFocusableElements(null).length).toBe(0);
+  expect(getFocusableElements(document.createElement('div')).length).toBe(0);
 });
