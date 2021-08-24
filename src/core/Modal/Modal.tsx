@@ -11,6 +11,7 @@ import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/modal.css';
 import { IconButton } from '../Buttons/IconButton';
 import { getContainer, getDocument } from '../utils/common';
+import FocusTrap from '../utils/FocusTrap';
 
 export type ModalProps = {
   /**
@@ -109,9 +110,11 @@ export const Modal = (props: ModalProps) => {
 
   const originalBodyOverflow = React.useRef('');
 
+  const childrenRef = React.useRef<HTMLDivElement>(null);
+
   // Give focus to overlay for key handling to work.
-  React.useEffect(() => {
-    if (isOpen) {
+  React.useLayoutEffect(() => {
+    if (isOpen && !overlayRef.current?.contains(document.activeElement)) {
       overlayRef.current?.focus();
     }
   }, [isOpen]);
@@ -154,38 +157,41 @@ export const Modal = (props: ModalProps) => {
   return !!container ? (
     ReactDOM.createPortal(
       isOpen && (
-        <div
-          className={cx('iui-modal', 'iui-modal-visible', className)}
-          tabIndex={-1}
-          onKeyDown={handleKeyDown}
-          ref={overlayRef}
-          onMouseDown={handleMouseDown}
-          {...rest}
-        >
+        <FocusTrap>
           <div
-            className='iui-modal-dialog'
-            id={id}
-            style={style}
-            role='dialog'
-            aria-modal='true'
-            onMouseDown={(event) => event.stopPropagation()}
+            className={cx('iui-modal', 'iui-modal-visible', className)}
+            tabIndex={-1}
+            onKeyDown={handleKeyDown}
+            ref={overlayRef}
+            onMouseDown={handleMouseDown}
+            {...rest}
           >
-            <div className='iui-title-bar'>
-              <div className='iui-title'>{title}</div>
-              {isDismissible && (
-                <IconButton
-                  size='small'
-                  styleType='borderless'
-                  onClick={onClose}
-                  aria-label='Close'
-                >
-                  <SvgClose />
-                </IconButton>
-              )}
+            <div
+              className='iui-modal-dialog'
+              id={id}
+              style={style}
+              role='dialog'
+              aria-modal='true'
+              onMouseDown={(event) => event.stopPropagation()}
+              ref={childrenRef}
+            >
+              <div className='iui-title-bar'>
+                <div className='iui-title'>{title}</div>
+                {isDismissible && (
+                  <IconButton
+                    size='small'
+                    styleType='borderless'
+                    onClick={onClose}
+                    aria-label='Close'
+                  >
+                    <SvgClose />
+                  </IconButton>
+                )}
+              </div>
+              {children}
             </div>
-            {children}
           </div>
-        </div>
+        </FocusTrap>
       ),
       container,
     )
