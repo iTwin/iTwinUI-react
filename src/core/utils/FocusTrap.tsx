@@ -20,18 +20,27 @@ export type FocusTrapProps = {
 export const FocusTrap = (props: FocusTrapProps) => {
   const { children } = props;
   const childRef = React.useRef<HTMLElement>();
-  const lastElementRef = React.useRef(null);
 
-  const onFocus = (event: React.FocusEvent) => {
-    console.log(event.currentTarget);
+  const onLastFocus = (event: React.FocusEvent) => {
+    const elements = getFocusableElements(childRef.current);
+    const firstElement = elements[0];
+    const lastElement = elements[(elements.length || 1) - 1];
+
+    if (event.relatedTarget === lastElement) {
+      (firstElement as HTMLElement).focus();
+    } else {
+      (lastElement as HTMLElement).focus();
+    }
+  };
+
+  const onFirstFocus = (event: React.FocusEvent) => {
     const elements = getFocusableElements(childRef.current);
     const firstElement = elements[0];
     const lastElement = elements[(elements.length || 1) - 1];
 
     if (
-      event.relatedTarget === firstElement ||
-      (event.relatedTarget === childRef.current &&
-        event.target === lastElementRef.current)
+      event.relatedTarget === childRef.current ||
+      event.relatedTarget === firstElement
     ) {
       (lastElement as HTMLElement).focus();
     } else {
@@ -40,13 +49,13 @@ export const FocusTrap = (props: FocusTrapProps) => {
   };
 
   return (
-    <>
-      <div tabIndex={0} onFocus={onFocus} />
+    <div>
+      <div tabIndex={0} onFocus={onFirstFocus} />
       {React.cloneElement(children, {
         ref: useMergedRefs(children.props.ref, childRef),
       })}
-      <div ref={lastElementRef} tabIndex={0} onFocus={onFocus} />
-    </>
+      <div tabIndex={0} onFocus={onLastFocus} />
+    </div>
   );
 };
 
