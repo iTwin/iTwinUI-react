@@ -68,30 +68,31 @@ const defaultWizardLocalization: WizardLocalization = {
  *  />
  */
 
-export const Wizard = (props: WizardProps) => {
-  const {
-    currentStep,
-    steps,
-    type = 'default',
-    localization = defaultWizardLocalization,
-    onStepClick,
-    ...rest
-  } = props;
+export const Wizard = React.forwardRef<HTMLDivElement, WizardProps>(
+  (props, ref) => {
+    const {
+      currentStep,
+      steps,
+      type = 'default',
+      localization = defaultWizardLocalization,
+      onStepClick,
+      ...rest
+    } = props;
 
-  const boundedCurrentStep = Math.min(
-    Math.max(0, currentStep ?? 0),
-    steps.length - 1,
-  );
+    const boundedCurrentStep = Math.min(
+      Math.max(0, currentStep ?? 0),
+      steps.length - 1,
+    );
 
-  useTheme();
+    useTheme();
 
-  return (
-    <>
+    return (
       <div
         className={cx('iui-wizard', {
           'iui-long': type === 'long',
           'iui-workflow': type === 'workflow',
         })}
+        ref={ref}
         {...rest}
       >
         <ol>
@@ -120,8 +121,8 @@ export const Wizard = (props: WizardProps) => {
           </div>
         )}
       </div>
-    </>
-  );
-};
+    );
+  },
+);
 
 export default Wizard;
