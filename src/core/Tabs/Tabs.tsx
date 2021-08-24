@@ -62,7 +62,7 @@ export type TabsProps = {
 
 export type HorizontalTabsProps = Omit<TabsProps, 'orientation'>;
 export type VerticalTabsProps = Omit<TabsProps, 'orientation' | 'type'> & {
-  type: 'default' | 'borderless';
+  type?: 'default' | 'borderless';
 };
 
 /**
