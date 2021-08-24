@@ -145,42 +145,51 @@ it('should add custom classnames', () => {
   expect(content).toBeTruthy();
 });
 
-it('should handle keypresses', () => {
-  const mockOnTabSelected = jest.fn();
-  const { container } = renderComponent({ onTabSelected: mockOnTabSelected });
+it.each(['horizontal', 'vertical'] as const)(
+  'should handle keypresses',
+  (orientation) => {
+    const mockOnTabSelected = jest.fn();
+    const { container } = renderComponent({
+      onTabSelected: mockOnTabSelected,
+      orientation: orientation,
+    });
 
-  const tablist = container.querySelector('.iui-tabs') as HTMLElement;
-  const tabs = Array.from(tablist.querySelectorAll('.iui-tab'));
+    const nextTabKey = orientation === 'vertical' ? 'ArrowDown' : 'ArrowRight';
+    const previousTabKey = orientation === 'vertical' ? 'ArrowUp' : 'ArrowLeft';
 
-  // alt key
-  fireEvent.keyDown(tablist, { key: 'ArrowRight', altKey: true });
-  expect(mockOnTabSelected).not.toHaveBeenCalled();
+    const tablist = container.querySelector('.iui-tabs') as HTMLElement;
+    const tabs = Array.from(tablist.querySelectorAll('.iui-tab'));
 
-  // 0 -> 1
-  fireEvent.keyDown(tablist, { key: 'ArrowRight' });
-  expect(mockOnTabSelected).toBeCalledWith(1);
-  expect(document.activeElement).toBe(tabs[1]);
+    // alt key
+    fireEvent.keyDown(tablist, { key: nextTabKey, altKey: true });
+    expect(mockOnTabSelected).not.toHaveBeenCalled();
 
-  // 1 -> 2
-  fireEvent.keyDown(tablist, { key: 'ArrowRight' });
-  expect(mockOnTabSelected).toBeCalledWith(2);
-  expect(document.activeElement).toBe(tabs[2]);
+    // 0 -> 1
+    fireEvent.keyDown(tablist, { key: nextTabKey });
+    expect(mockOnTabSelected).toBeCalledWith(1);
+    expect(document.activeElement).toBe(tabs[1]);
 
-  // 2 -> 0
-  fireEvent.keyDown(tablist, { key: 'ArrowRight' });
-  expect(mockOnTabSelected).toBeCalledWith(0);
-  expect(document.activeElement).toBe(tabs[0]);
+    // 1 -> 2
+    fireEvent.keyDown(tablist, { key: nextTabKey });
+    expect(mockOnTabSelected).toBeCalledWith(2);
+    expect(document.activeElement).toBe(tabs[2]);
 
-  // 0 -> 2
-  fireEvent.keyDown(tablist, { key: 'ArrowLeft' });
-  expect(mockOnTabSelected).toBeCalledWith(2);
-  expect(document.activeElement).toBe(tabs[2]);
+    // 2 -> 0
+    fireEvent.keyDown(tablist, { key: nextTabKey });
+    expect(mockOnTabSelected).toBeCalledWith(0);
+    expect(document.activeElement).toBe(tabs[0]);
 
-  // 2 -> 1
-  fireEvent.keyDown(tablist, { key: 'ArrowLeft' });
-  expect(mockOnTabSelected).toBeCalledWith(1);
-  expect(document.activeElement).toBe(tabs[1]);
-});
+    // 0 -> 2
+    fireEvent.keyDown(tablist, { key: previousTabKey });
+    expect(mockOnTabSelected).toBeCalledWith(2);
+    expect(document.activeElement).toBe(tabs[2]);
+
+    // 2 -> 1
+    fireEvent.keyDown(tablist, { key: previousTabKey });
+    expect(mockOnTabSelected).toBeCalledWith(1);
+    expect(document.activeElement).toBe(tabs[1]);
+  },
+);
 
 it('should handle keypresses when focusActivationMode is manual', () => {
   const mockOnTabSelected = jest.fn();

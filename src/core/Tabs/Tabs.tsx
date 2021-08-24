@@ -187,28 +187,51 @@ export const Tabs = (props: TabsProps) => {
       return React.isValidElement(tab) && tab.props.disabled;
     };
 
-    const focusTabAt = (index: number) => {
-      setFocusedIndex(index);
-      focusActivationMode === 'auto' && onTabClick(index);
+    let newIndex = focusedIndex ?? currentActiveIndex;
+
+    const focusNextTab = () => {
+      do {
+        newIndex = (newIndex + 1 + labels.length) % labels.length;
+      } while (isTabDisabled(newIndex) && newIndex !== focusedIndex);
+      setFocusedIndex(newIndex);
+      focusActivationMode === 'auto' && onTabClick(newIndex);
     };
 
-    let newIndex = focusedIndex ?? currentActiveIndex;
+    const focusPreviousTab = () => {
+      do {
+        newIndex = (newIndex - 1 + labels.length) % labels.length;
+      } while (isTabDisabled(newIndex) && newIndex !== focusedIndex);
+      setFocusedIndex(newIndex);
+      focusActivationMode === 'auto' && onTabClick(newIndex);
+    };
+
     switch (event.key) {
-      case 'ArrowDown':
-      case 'ArrowRight': {
-        do {
-          newIndex = (newIndex + 1 + labels.length) % labels.length;
-        } while (isTabDisabled(newIndex) && newIndex !== focusedIndex);
-        focusTabAt(newIndex);
-        event.preventDefault();
+      case 'ArrowDown': {
+        if (orientation === 'vertical') {
+          focusNextTab();
+          event.preventDefault();
+        }
         break;
       }
-      case 'ArrowUp':
+      case 'ArrowRight': {
+        if (orientation === 'horizontal') {
+          focusNextTab();
+          event.preventDefault();
+        }
+        break;
+      }
+      case 'ArrowUp': {
+        if (orientation === 'vertical') {
+          focusPreviousTab();
+          event.preventDefault();
+        }
+        break;
+      }
       case 'ArrowLeft': {
-        do {
-          newIndex = (newIndex - 1 + labels.length) % labels.length;
-        } while (isTabDisabled(newIndex) && newIndex !== focusedIndex);
-        focusTabAt(newIndex);
+        if (orientation === 'horizontal') {
+          focusPreviousTab();
+          event.preventDefault();
+        }
         event.preventDefault();
         break;
       }
