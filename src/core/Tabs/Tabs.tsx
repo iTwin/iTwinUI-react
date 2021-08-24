@@ -311,7 +311,9 @@ export const Tabs = (props: TabsProps) => {
   );
 };
 
-export const HorizontalTabs = Tabs;
-export const VerticalTabs = Tabs;
+export const HorizontalTabs = (props: HorizontalTabsProps) => (
+  <Tabs {...props} />
+);
+export const VerticalTabs = (props: VerticalTabsProps) => <Tabs {...props} />;
 
 export default Tabs;

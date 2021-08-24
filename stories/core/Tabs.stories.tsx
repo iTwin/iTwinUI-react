@@ -6,7 +6,14 @@ import SvgStar from '@itwin/itwinui-icons-react/cjs/icons/Star';
 import { useState } from '@storybook/addons';
 import { Meta, Story } from '@storybook/react/';
 import React from 'react';
-import { Tabs, TabsProps, Tab } from '../../src/core';
+import {
+  VerticalTabs,
+  HorizontalTabs,
+  HorizontalTabsProps,
+  VerticalTabsProps,
+  Tab,
+} from '../../src/core';
+import { Tabs, TabsProps } from '../../src/core/Tabs/Tabs';
 
 export default {
   title: 'Core/Tabs',
@@ -18,10 +25,12 @@ export default {
   },
   argTypes: {
     children: { control: { disable: true } },
+    style: { control: { disable: true } },
+    orientation: { control: { disable: true } },
   },
 } as Meta<TabsProps>;
 
-const Template: Story<TabsProps> = (args) => {
+export const DefaultTabs: Story<HorizontalTabsProps> = (args) => {
   const [index, setIndex] = useState(0);
   const getContent = () => {
     switch (index) {
@@ -34,13 +43,11 @@ const Template: Story<TabsProps> = (args) => {
     }
   };
   return (
-    <Tabs {...args} onTabSelected={setIndex}>
+    <HorizontalTabs {...args} onTabSelected={setIndex}>
       {getContent()}
-    </Tabs>
+    </HorizontalTabs>
   );
 };
-
-export const DefaultTabs = Template.bind({});
 DefaultTabs.args = {
   type: 'default',
   labels: [
@@ -50,7 +57,7 @@ DefaultTabs.args = {
   ],
 };
 
-export const BorderlessTabs = Template.bind({});
+export const BorderlessTabs = DefaultTabs.bind({});
 BorderlessTabs.args = {
   labels: [
     <Tab key={1} label='Item1' />,
@@ -60,7 +67,7 @@ BorderlessTabs.args = {
   type: 'borderless',
 };
 
-export const PillTabs = Template.bind({});
+export const PillTabs = DefaultTabs.bind({});
 PillTabs.args = {
   labels: Array(3)
     .fill(null)
@@ -68,7 +75,7 @@ PillTabs.args = {
   type: 'pill',
 };
 
-export const SublabelsAndIcons = Template.bind({});
+export const SublabelsAndIcons = DefaultTabs.bind({});
 SublabelsAndIcons.args = {
   labels: Array(3)
     .fill(null)
@@ -84,7 +91,24 @@ SublabelsAndIcons.args = {
   type: 'borderless',
 };
 
-export const Vertical = Template.bind({});
+export const Vertical: Story<VerticalTabsProps> = (args) => {
+  const [index, setIndex] = useState(0);
+  const getContent = () => {
+    switch (index) {
+      case 0:
+        return "Bentley Systems, Incorporated, is an American-based software development company that develops, manufactures, licenses, sells and supports computer software and services for the design, construction, and operation of infrastructure. The company's software serves the building, plant, civil, and geospatial markets in the areas of architecture, engineering, construction (AEC) and operations. Their software products are used to design, engineer, build, and operate large constructed assets such as roadways, railways, bridges, buildings, industrial plants, power plants, and utility networks. The company re-invests 20% of their revenues in research and development.";
+      case 1:
+        return 'Bentley Systems is headquartered in Exton, Pennsylvania, United States, but has development, sales and other departments in over 50 countries. The company had revenues of $700 million in 2018.';
+      default:
+        return 'Keith A. Bentley and Barry J. Bentley founded Bentley Systems in 1984. They introduced the commercial version of PseudoStation in 1985, which allowed users of Intergraphs VAX systems to use low-cost graphics terminals to view and modify the designs on their Intergraph IGDS (Interactive Graphics Design System) installations. Their first product was shown to potential users who were polled as to what they would be willing to pay for it. They averaged the answers, arriving at a price of $7,943. A DOS-based version of MicroStation was introduced in 1986.';
+    }
+  };
+  return (
+    <VerticalTabs {...args} onTabSelected={setIndex}>
+      {getContent()}
+    </VerticalTabs>
+  );
+};
 Vertical.args = {
   labels: Array(3)
     .fill(null)

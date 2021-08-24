@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 export { VerticalTabs, HorizontalTabs } from './Tabs';
 export type { VerticalTabsProps, HorizontalTabsProps } from './Tabs';
-export default './Tabs';
 
 export { Tab, HorizontalTab } from './Tab';
 export type { TabProps, HorizontalTabProps } from './Tab';
