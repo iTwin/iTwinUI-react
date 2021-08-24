@@ -235,7 +235,6 @@ export const Tabs = (props: TabsProps) => {
           focusPreviousTab();
           event.preventDefault();
         }
-        event.preventDefault();
         break;
       }
       case 'Enter':
