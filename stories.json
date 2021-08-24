@@ -78,10 +78,6 @@
       "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Header.stories.tsx",
       "framework": "react"
     },
-    "Core/HorizontalTabs": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/HorizontalTabs.stories.tsx",
-      "framework": "react"
-    },
     "Input/Input": {
       "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Input.stories.tsx",
       "framework": "react"
@@ -136,6 +132,10 @@
     },
     "Core/Table": {
       "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+      "framework": "react"
+    },
+    "Core/Tabs": {
+      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tabs.stories.tsx",
       "framework": "react"
     },
     "Core/Tag": {
@@ -402,6 +402,15 @@
       "story": "With Icons",
       "parameters": {
         "__id": "buttons-buttongroup--with-icons"
+      }
+    },
+    "buttons-buttongroup--overflow": {
+      "id": "buttons-buttongroup--overflow",
+      "name": "Overflow",
+      "kind": "Buttons/ButtonGroup",
+      "story": "Overflow",
+      "parameters": {
+        "__id": "buttons-buttongroup--overflow"
       }
     },
     "buttons-dropdownbutton--basic": {
@@ -816,42 +825,6 @@
       "story": "Center Content",
       "parameters": {
         "__id": "core-header--center-content"
-      }
-    },
-    "core-horizontaltabs--default-tabs": {
-      "id": "core-horizontaltabs--default-tabs",
-      "name": "Default Tabs",
-      "kind": "Core/HorizontalTabs",
-      "story": "Default Tabs",
-      "parameters": {
-        "__id": "core-horizontaltabs--default-tabs"
-      }
-    },
-    "core-horizontaltabs--borderless-tabs": {
-      "id": "core-horizontaltabs--borderless-tabs",
-      "name": "Borderless Tabs",
-      "kind": "Core/HorizontalTabs",
-      "story": "Borderless Tabs",
-      "parameters": {
-        "__id": "core-horizontaltabs--borderless-tabs"
-      }
-    },
-    "core-horizontaltabs--pill-tabs": {
-      "id": "core-horizontaltabs--pill-tabs",
-      "name": "Pill Tabs",
-      "kind": "Core/HorizontalTabs",
-      "story": "Pill Tabs",
-      "parameters": {
-        "__id": "core-horizontaltabs--pill-tabs"
-      }
-    },
-    "core-horizontaltabs--sublabels-and-icons": {
-      "id": "core-horizontaltabs--sublabels-and-icons",
-      "name": "Sublabels And Icons",
-      "kind": "Core/HorizontalTabs",
-      "story": "Sublabels And Icons",
-      "parameters": {
-        "__id": "core-horizontaltabs--sublabels-and-icons"
       }
     },
     "input-input--basic": {
@@ -1493,6 +1466,15 @@
         "__id": "core-table--expandable"
       }
     },
+    "core-table--expandable-subrows": {
+      "id": "core-table--expandable-subrows",
+      "name": "Expandable Subrows",
+      "kind": "Core/Table",
+      "story": "Expandable Subrows",
+      "parameters": {
+        "__id": "core-table--expandable-subrows"
+      }
+    },
     "core-table--lazy-loading": {
       "id": "core-table--lazy-loading",
       "name": "Lazy Loading",
@@ -1563,6 +1545,51 @@
       "story": "Condensed",
       "parameters": {
         "__id": "core-table--condensed"
+      }
+    },
+    "core-tabs--default-tabs": {
+      "id": "core-tabs--default-tabs",
+      "name": "Default Tabs",
+      "kind": "Core/Tabs",
+      "story": "Default Tabs",
+      "parameters": {
+        "__id": "core-tabs--default-tabs"
+      }
+    },
+    "core-tabs--borderless-tabs": {
+      "id": "core-tabs--borderless-tabs",
+      "name": "Borderless Tabs",
+      "kind": "Core/Tabs",
+      "story": "Borderless Tabs",
+      "parameters": {
+        "__id": "core-tabs--borderless-tabs"
+      }
+    },
+    "core-tabs--pill-tabs": {
+      "id": "core-tabs--pill-tabs",
+      "name": "Pill Tabs",
+      "kind": "Core/Tabs",
+      "story": "Pill Tabs",
+      "parameters": {
+        "__id": "core-tabs--pill-tabs"
+      }
+    },
+    "core-tabs--sublabels-and-icons": {
+      "id": "core-tabs--sublabels-and-icons",
+      "name": "Sublabels And Icons",
+      "kind": "Core/Tabs",
+      "story": "Sublabels And Icons",
+      "parameters": {
+        "__id": "core-tabs--sublabels-and-icons"
+      }
+    },
+    "core-tabs--vertical": {
+      "id": "core-tabs--vertical",
+      "name": "Vertical",
+      "kind": "Core/Tabs",
+      "story": "Vertical",
+      "parameters": {
+        "__id": "core-tabs--vertical"
       }
     },
     "core-tag--default": {
