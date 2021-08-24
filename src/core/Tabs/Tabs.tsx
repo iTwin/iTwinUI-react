@@ -314,8 +314,9 @@ export const Tabs = (props: TabsProps) => {
  * const tabs = [
  *   <Tab label='Label 1' sublabel='First tab' />,
  *   <Tab label='Label 2' sublabel='Active tab' />,
+ *   <Tab label='Label 3' sublabel='Disabled tab' disabled icon={<SvgPlaceholder />} />,
  * ];
- * <HorizontalTabs labels={tabs} activeIndex={1} />
+ * <HorizontalTabs labels={tabs} activeIndex={1}>Tabpanel content</HorizontalTabs>
  */
 export const HorizontalTabs = (props: HorizontalTabsProps) => (
   <Tabs orientation='horizontal' {...props} />
@@ -327,9 +328,9 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => (
  * const tabs = [
  *   <Tab label='Label 1' sublabel='First tab' />,
  *   <Tab label='Label 2' sublabel='Active tab' />,
- *   <Tab label='Label 3' icon={<SvgPlaceholder />} />,
+ *   <Tab label='Label 3'  sublabel='Disabled tab' disabled icon={<SvgPlaceholder />} />,
  * ];
- * <VerticalTabs labels={tabs} activeIndex={1} />
+ * <VerticalTabs labels={tabs} activeIndex={1}>Tabpanel content</VerticalTabs>
  */
 export const VerticalTabs = (props: VerticalTabsProps) => (
   <Tabs orientation='vertical' {...props} />
