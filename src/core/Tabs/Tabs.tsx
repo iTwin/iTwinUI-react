@@ -60,11 +60,8 @@ export type TabsProps = {
   children?: React.ReactNode;
 };
 
-export type HorizontalTabsProps = Omit<TabsProps, 'orientation'> & {
-  orientation: 'horizontal';
-};
+export type HorizontalTabsProps = Omit<TabsProps, 'orientation'>;
 export type VerticalTabsProps = Omit<TabsProps, 'orientation' | 'type'> & {
-  orientation: 'vertical';
   type: 'default' | 'borderless';
 };
 
@@ -311,9 +308,31 @@ export const Tabs = (props: TabsProps) => {
   );
 };
 
+/**
+ * Tabs organize and allow navigation between groups of content that are related and at the same level of hierarchy.
+ * @example
+ * const tabs = [
+ *   <Tab label='Label 1' sublabel='First tab' />,
+ *   <Tab label='Label 2' sublabel='Active tab' />,
+ * ];
+ * <HorizontalTabs labels={tabs} activeIndex={1} />
+ */
 export const HorizontalTabs = (props: HorizontalTabsProps) => (
-  <Tabs {...props} />
+  <Tabs orientation='horizontal' {...props} />
 );
-export const VerticalTabs = (props: VerticalTabsProps) => <Tabs {...props} />;
+
+/**
+ * Tabs organize and allow navigation between groups of content that are related and at the same level of hierarchy.
+ * @example
+ * const tabs = [
+ *   <Tab label='Label 1' sublabel='First tab' />,
+ *   <Tab label='Label 2' sublabel='Active tab' />,
+ *   <Tab label='Label 3' icon={<SvgPlaceholder />} />,
+ * ];
+ * <VerticalTabs labels={tabs} activeIndex={1} />
+ */
+export const VerticalTabs = (props: VerticalTabsProps) => (
+  <Tabs orientation='vertical' {...props} />
+);
 
 export default Tabs;
