@@ -35,14 +35,14 @@ export const FocusTrap = (props: FocusTrapProps) => {
 
   return (
     <div>
-      <div tabIndex={0} onFocus={onFocus} />
+      <div tabIndex={0} onFocus={onFocus} aria-hidden />
       {React.cloneElement(children, {
         ref: mergeRefs(
           (children as React.FunctionComponentElement<HTMLElement>).ref,
           childRef,
         ),
       })}
-      <div tabIndex={0} onFocus={onFocus} />
+      <div tabIndex={0} onFocus={onFocus} aria-hidden />
     </div>
   );
 };
