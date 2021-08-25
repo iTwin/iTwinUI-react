@@ -112,11 +112,25 @@ export const Modal = (props: ModalProps) => {
 
   const childrenRef = React.useRef<HTMLDivElement>(null);
 
+  const previousFocusedElement = React.useRef<HTMLElement | null>();
+
+  // const focusRef = useFocusTrap();
+
+  // const refs = useMergedRefs(focusRef, overlayRef);
+
   // Give focus to overlay for key handling to work.
   React.useLayoutEffect(() => {
-    if (isOpen && !overlayRef.current?.contains(document.activeElement)) {
+    if (isOpen) {
+      previousFocusedElement.current = document.activeElement as HTMLElement;
       overlayRef.current?.focus();
+    } else {
+      previousFocusedElement.current?.focus();
     }
+    const modalOverlayRef = overlayRef.current;
+    return () => {
+      modalOverlayRef?.contains(document.activeElement) &&
+        previousFocusedElement.current?.focus();
+    };
   }, [isOpen]);
 
   React.useEffect(() => {

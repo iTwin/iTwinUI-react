@@ -21,7 +21,7 @@ export const FocusTrap = (props: FocusTrapProps) => {
   const { children } = props;
   const childRef = React.useRef<HTMLElement>();
 
-  const onLastFocus = (event: React.FocusEvent) => {
+  const onFocus = (event: React.FocusEvent) => {
     const elements = getFocusableElements(childRef.current);
     const firstElement = elements[0];
     const lastElement = elements[(elements.length || 1) - 1];
@@ -33,31 +33,16 @@ export const FocusTrap = (props: FocusTrapProps) => {
     }
   };
 
-  const onFirstFocus = (event: React.FocusEvent) => {
-    const elements = getFocusableElements(childRef.current);
-    const firstElement = elements[0];
-    const lastElement = elements[(elements.length || 1) - 1];
-
-    if (
-      event.relatedTarget === childRef.current ||
-      event.relatedTarget === firstElement
-    ) {
-      (lastElement as HTMLElement).focus();
-    } else {
-      (firstElement as HTMLElement).focus();
-    }
-  };
-
   return (
     <div>
-      <div tabIndex={0} onFocus={onFirstFocus} />
+      <div tabIndex={0} onFocus={onFocus} />
       {React.cloneElement(children, {
         ref: mergeRefs(
           (children as React.FunctionComponentElement<HTMLElement>).ref,
           childRef,
         ),
       })}
-      <div tabIndex={0} onFocus={onLastFocus} />
+      <div tabIndex={0} onFocus={onFocus} />
     </div>
   );
 };
