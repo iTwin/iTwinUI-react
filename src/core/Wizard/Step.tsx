@@ -78,7 +78,7 @@ export const Step = (props: StepProps) => {
       }}
       onClick={onCompletedClick}
       aria-current={isActive ? 'step' : undefined}
-      tabIndex={0}
+      tabIndex={!!onClick && isPast ? 0 : undefined}
       {...rest}
     >
       <div className='iui-wizard-track-content'>
