@@ -55,10 +55,21 @@ export const Step = (props: StepProps) => {
 
   const isPast = type !== 'workflow' && currentStepNumber > index;
   const isActive = type !== 'workflow' && currentStepNumber === index;
+  const isClickable = type !== 'workflow' && isPast && !!onClick;
 
   const onCompletedClick = () => {
-    if (isPast && !!onClick) {
-      onClick(index);
+    if (isClickable) {
+      onClick?.(index);
+    }
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (!isClickable) {
+      return;
+    }
+
+    if (e.key === 'Enter' || e.key === 'Space' || e.key === ' ') {
+      onCompletedClick();
     }
   };
 
@@ -68,7 +79,7 @@ export const Step = (props: StepProps) => {
         'iui-wizard-step',
         {
           'iui-current': isActive,
-          'iui-clickable': !!onClick && isPast,
+          'iui-clickable': isClickable,
         },
         className,
       )}
@@ -77,8 +88,9 @@ export const Step = (props: StepProps) => {
         ...style,
       }}
       onClick={onCompletedClick}
+      onKeyDown={onKeyDown}
       aria-current={isActive ? 'step' : undefined}
-      tabIndex={!!onClick && isPast ? 0 : undefined}
+      tabIndex={isClickable ? 0 : undefined}
       {...rest}
     >
       <div className='iui-wizard-track-content'>
