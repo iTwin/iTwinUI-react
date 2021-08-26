@@ -110,8 +110,6 @@ export const Modal = (props: ModalProps) => {
 
   const originalBodyOverflow = React.useRef('');
 
-  const childrenRef = React.useRef<HTMLDivElement>(null);
-
   const previousFocusedElement = React.useRef<HTMLElement | null>();
 
   // Give focus to overlay for key handling to work.
@@ -183,7 +181,6 @@ export const Modal = (props: ModalProps) => {
               role='dialog'
               aria-modal='true'
               onMouseDown={(event) => event.stopPropagation()}
-              ref={childrenRef}
             >
               <div className='iui-title-bar'>
                 <div className='iui-title'>{title}</div>
