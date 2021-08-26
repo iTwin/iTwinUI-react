@@ -114,10 +114,6 @@ export const Modal = (props: ModalProps) => {
 
   const previousFocusedElement = React.useRef<HTMLElement | null>();
 
-  // const focusRef = useFocusTrap();
-
-  // const refs = useMergedRefs(focusRef, overlayRef);
-
   // Give focus to overlay for key handling to work.
   React.useLayoutEffect(() => {
     if (isOpen) {

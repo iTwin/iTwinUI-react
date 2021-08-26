@@ -21,28 +21,41 @@ export const FocusTrap = (props: FocusTrapProps) => {
   const { children } = props;
   const childRef = React.useRef<HTMLElement>();
 
-  const onFocus = (event: React.FocusEvent) => {
+  const getFirstLastFocusables = () => {
     const elements = getFocusableElements(childRef.current);
     const firstElement = elements[0];
     const lastElement = elements[(elements.length || 1) - 1];
+    return [firstElement, lastElement] as const;
+  };
 
-    if (event.relatedTarget === lastElement) {
-      (firstElement as HTMLElement).focus();
+  const onFirstFocus = (event: React.FocusEvent) => {
+    const [firstElement, lastElement] = getFirstLastFocusables();
+    if (event.relatedTarget === firstElement) {
+      (lastElement as HTMLElement)?.focus();
     } else {
-      (lastElement as HTMLElement).focus();
+      (firstElement as HTMLElement)?.focus();
+    }
+  };
+
+  const onLastFocus = (event: React.FocusEvent) => {
+    const [firstElement, lastElement] = getFirstLastFocusables();
+    if (event.relatedTarget === lastElement) {
+      (firstElement as HTMLElement)?.focus();
+    } else {
+      (lastElement as HTMLElement)?.focus();
     }
   };
 
   return (
     <div>
-      <div tabIndex={0} onFocus={onFocus} aria-hidden />
+      <div tabIndex={0} onFocus={onFirstFocus} aria-hidden />
       {React.cloneElement(children, {
         ref: mergeRefs(
           (children as React.FunctionComponentElement<HTMLElement>).ref,
           childRef,
         ),
       })}
-      <div tabIndex={0} onFocus={onFocus} aria-hidden />
+      <div tabIndex={0} onFocus={onLastFocus} aria-hidden />
     </div>
   );
 };

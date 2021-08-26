@@ -122,7 +122,7 @@ export const getFocusableElements = (
   }
 
   const elements = container.querySelectorAll(
-    'a, button, input, textarea, select, details, audio[controls], video[controls], [contenteditable]:not([contenteditable="false"]), [tabindex]:not([tabindex="-1"])',
+    'a[href], button, input, textarea, select, details, audio[controls], video[controls], [contenteditable]:not([contenteditable="false"]), [tabindex]:not([tabindex="-1"])',
   );
 
   return Array.from(elements).filter((el) => !el.hasAttribute('disabled'));
