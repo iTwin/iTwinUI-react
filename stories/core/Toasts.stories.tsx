@@ -38,6 +38,29 @@ export default {
     onRemove: {
       action: 'Toast removed!',
     },
+    placement: {
+      control: {
+        options: [
+          'top',
+          'top-start',
+          'top-end',
+          'bottom',
+          'bottom-start',
+          'bottom-end',
+        ],
+        type: 'select',
+      },
+      defaultValue: 'top',
+      description: 'description 1',
+    },
+    order: {
+      control: {
+        options: ['top-to-bottom', 'bottom-to-top'],
+        type: 'select',
+      },
+      defaultValue: 'top-to-bottom',
+      description: 'description2',
+    },
   },
   args: {
     duration: 7000,
@@ -83,10 +106,12 @@ export const Positive: Story<ToastProps & ToasterSettings> = ({
   link,
   type,
   onRemove,
+  placement,
+  order,
 }) => {
   const settings: ToasterSettings = {
-    placement: 'top',
-    order: 'top-to-bottom',
+    placement: placement ?? 'top',
+    order: order ?? 'top-to-bottom',
   };
 
   const displayPositiveToast = () => {
@@ -238,7 +263,7 @@ Warning.args = {
 export const PositionChanged: Story<ToastProps> = ({ content, ...options }) => {
   const settings: ToasterSettings = {
     placement: 'bottom-start',
-    order: 'bottom-to-top',
+    order: 'top-to-bottom',
   };
 
   const displayPositionChangedToast = () => {

@@ -4,15 +4,17 @@
  *--------------------------------------------------------------------------------------------*/
 import '@itwin/itwinui-css/css/toast-notification.css';
 import React from 'react';
-import { Placement } from 'tippy.js';
 import Toast, { ToastProps } from './Toast';
 
 type ToastWrapperProps = {
   toasts: ToastProps[];
-  placement?: Omit<
-    Placement,
-    'right' | 'left' | 'right-start' | 'right-end' | 'left-start' | 'left-end'
-  >;
+  placement?:
+    | 'top'
+    | 'top-start'
+    | 'top-end'
+    | 'bottom'
+    | 'bottom-start'
+    | 'bottom-end';
 };
 
 export const ToastWrapper = (props: ToastWrapperProps) => {

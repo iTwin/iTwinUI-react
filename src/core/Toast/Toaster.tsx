@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Placement } from 'tippy.js';
 import { getContainer } from '../utils/common';
 import { ToastCategory, ToastProps } from './Toast';
 import { ToastWrapper } from './ToastWrapper';
@@ -13,10 +12,13 @@ const TOASTS_CONTAINER_ID = 'iui-toasts-container';
 
 export type ToasterSettings = {
   order?: 'top-to-bottom' | 'bottom-to-top';
-  placement?: Omit<
-    Placement,
-    'right' | 'left' | 'right-start' | 'right-end' | 'left-start' | 'left-end'
-  >;
+  placement?:
+    | 'top'
+    | 'top-start'
+    | 'top-end'
+    | 'bottom'
+    | 'bottom-start'
+    | 'bottom-end';
 };
 
 export type ToastOptions = Omit<
