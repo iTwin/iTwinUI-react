@@ -5,17 +5,11 @@
 import '@itwin/itwinui-css/css/toast-notification.css';
 import React from 'react';
 import Toast, { ToastProps } from './Toast';
+import { ToasterSettings } from './Toaster';
 
 type ToastWrapperProps = {
   toasts: ToastProps[];
-  placement?:
-    | 'top'
-    | 'top-start'
-    | 'top-end'
-    | 'bottom'
-    | 'bottom-start'
-    | 'bottom-end';
-};
+} & Pick<ToasterSettings, 'placement'>;
 
 export const ToastWrapper = (props: ToastWrapperProps) => {
   const { toasts, placement = 'top' } = props;
