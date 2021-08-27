@@ -58,7 +58,6 @@ export default {
         options: ['top-to-bottom', 'bottom-to-top'],
         type: 'select',
       },
-      defaultValue: 'top-to-bottom',
       description: 'description2',
     },
   },
@@ -144,17 +143,19 @@ Positive.args = {
   content: 'This is a positive toast message',
 };
 
-export const Negative: Story<ToastProps> = ({
+export const Negative: Story<ToastProps & ToasterSettings> = ({
   duration,
   hasCloseButton,
   content,
   type,
   link,
   onRemove,
+  placement,
+  order,
 }) => {
   const settings: ToasterSettings = {
-    placement: 'top',
-    order: 'top-to-bottom',
+    placement: placement ?? 'top',
+    order: order ?? 'top-to-bottom',
   };
 
   const displayNegativeToast = () => {
@@ -187,19 +188,20 @@ Negative.args = {
   content: 'This is a negative toast message',
 };
 
-export const Informational: Story<ToastProps> = ({
+export const Informational: Story<ToastProps & ToasterSettings> = ({
   duration,
   hasCloseButton,
   content,
   type,
   link,
   onRemove,
+  placement,
+  order,
 }) => {
   const settings: ToasterSettings = {
-    placement: 'top',
-    order: 'top-to-bottom',
+    placement: placement ?? 'top',
+    order: order ?? 'top-to-bottom',
   };
-
   const displayInformationalToast = () => {
     toaster.setSettings(settings);
     toaster.informational(content, {
@@ -230,10 +232,15 @@ Informational.args = {
   content: 'This is an informational toast message',
 };
 
-export const Warning: Story<ToastProps> = ({ content, ...options }) => {
+export const Warning: Story<ToastProps & ToasterSettings> = ({
+  content,
+  placement,
+  order,
+  ...options
+}) => {
   const settings: ToasterSettings = {
-    placement: 'top',
-    order: 'top-to-bottom',
+    placement: placement ?? 'top',
+    order: order ?? 'top-to-bottom',
   };
 
   const displayWarningToast = () => {
@@ -260,12 +267,16 @@ Warning.args = {
   content: 'This is a warning toast message',
 };
 
-export const PositionChanged: Story<ToastProps> = ({ content, ...options }) => {
+export const PositionChanged: Story<ToastProps & ToasterSettings> = ({
+  content,
+  placement,
+  order,
+  ...options
+}) => {
   const settings: ToasterSettings = {
-    placement: 'bottom-start',
-    order: 'top-to-bottom',
+    placement: placement ?? 'bottom-end',
+    order: order,
   };
-
   const displayPositionChangedToast = () => {
     toaster.setSettings(settings);
     toaster.informational(content, { ...options });
@@ -288,4 +299,5 @@ export const PositionChanged: Story<ToastProps> = ({ content, ...options }) => {
 
 PositionChanged.args = {
   content: 'This is a toast message',
+  placement: 'bottom-end',
 };
