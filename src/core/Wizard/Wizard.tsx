@@ -29,7 +29,7 @@ export type WizardProps = {
   /**
    * Current step index, 0 - based.
    */
-  currentStep: number;
+  currentStep?: number;
   /**
    * An array of step objects.
    */
@@ -55,11 +55,11 @@ const defaultWizardLocalization: WizardLocalization = {
 };
 
 /**
- * A Wizard.
- * Give it some steps.
- * Tell it what step to display.
- * Set the type if you'd like.
- * That's about it.
+ * A wizard displays progress through a sequence of logical and numbered steps.
+ * It may also be used for navigation.
+ *
+ * The `type` can be set to 'long' to show labels under steps.
+ *
  * @example
  * <Wizard
  *  steps=[{name: "Step One"}, {name: "Step Two"}, {name: "Step Three"}]
@@ -67,35 +67,34 @@ const defaultWizardLocalization: WizardLocalization = {
  *  type='long'
  *  />
  */
+export const Wizard = React.forwardRef<HTMLDivElement, WizardProps>(
+  (props, ref) => {
+    const {
+      currentStep,
+      steps,
+      type = 'default',
+      localization = defaultWizardLocalization,
+      onStepClick,
+      ...rest
+    } = props;
 
-export const Wizard = (props: WizardProps) => {
-  const {
-    currentStep,
-    steps,
-    type = 'default',
-    localization = defaultWizardLocalization,
-    onStepClick,
-    ...rest
-  } = props;
+    const boundedCurrentStep = Math.min(
+      Math.max(0, currentStep ?? 0),
+      steps.length - 1,
+    );
 
-  const boundedCurrentStep = Math.min(
-    Math.max(0, currentStep),
-    steps.length - 1,
-  );
+    useTheme();
 
-  useTheme();
-
-  return (
-    <>
+    return (
       <div
-        className={cx({
-          'iui-wizards': type === 'default',
-          'iui-wizards-long': type === 'long',
-          'iui-wizards-workflow': type === 'workflow',
+        className={cx('iui-wizard', {
+          'iui-long': type === 'long',
+          'iui-workflow': type === 'workflow',
         })}
+        ref={ref}
         {...rest}
       >
-        <div className='iui-wizards-wrapper'>
+        <ol>
           {steps.map((s, index) => (
             <Step
               key={index}
@@ -108,21 +107,21 @@ export const Wizard = (props: WizardProps) => {
               description={s.description}
             />
           ))}
-        </div>
+        </ol>
         {type === 'long' && (
-          <p className='iui-wizards-steps'>
-            <span className='iui-wizards-steps-count'>
+          <div className='iui-wizard-steps-label'>
+            <span className='iui-steps-count'>
               {localization.stepsCountLabel(
                 boundedCurrentStep + 1,
                 steps.length,
               )}
             </span>
             {steps[boundedCurrentStep].name}
-          </p>
+          </div>
         )}
       </div>
-    </>
-  );
-};
+    );
+  },
+);
 
 export default Wizard;

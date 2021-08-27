@@ -53,24 +53,33 @@ export const Step = (props: StepProps) => {
     ...rest
   } = props;
 
-  const isLast = totalSteps === index + 1;
-  const isPast = currentStepNumber > index;
-  const isActive = currentStepNumber === index;
+  const isPast = type !== 'workflow' && currentStepNumber > index;
+  const isActive = type !== 'workflow' && currentStepNumber === index;
+  const isClickable = type !== 'workflow' && isPast && !!onClick;
 
   const onCompletedClick = () => {
-    if (isPast && !!onClick) {
-      onClick(index);
+    if (isClickable) {
+      onClick?.(index);
+    }
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (!isClickable) {
+      return;
+    }
+
+    if (e.key === 'Enter' || e.key === 'Space' || e.key === ' ') {
+      onCompletedClick();
     }
   };
 
   const stepShape = (
-    <span
+    <li
       className={cx(
-        'iui-wizards-step',
+        'iui-wizard-step',
         {
-          'iui-wizards-step-completed': isPast,
-          'iui-wizards-step-current': isActive,
-          'iui-clickable': !!onClick && isPast,
+          'iui-current': isActive,
+          'iui-clickable': isClickable,
         },
         className,
       )}
@@ -79,52 +88,25 @@ export const Step = (props: StepProps) => {
         ...style,
       }}
       onClick={onCompletedClick}
+      onKeyDown={onKeyDown}
+      aria-current={isActive ? 'step' : undefined}
+      tabIndex={isClickable ? 0 : undefined}
       {...rest}
     >
-      {index !== 0 && type === 'default' && (
-        <span
-          className={cx(
-            'iui-wizards-step-track',
-            'iui-wizards-step-track-before',
-          )}
-        />
+      <div className='iui-wizard-track-content'>
+        <span className='iui-wizard-circle'>
+          {type === 'workflow' ? title : index + 1}
+        </span>
+      </div>
+      {type === 'default' && (
+        <span className='iui-wizard-step-name'>{title}</span>
       )}
-
-      {type !== 'workflow' && (
-        <span className='iui-wizards-step-title'>{title}</span>
-      )}
-      {!isLast && type === 'default' && (
-        <span
-          className={cx(
-            'iui-wizards-step-track',
-            'iui-wizards-step-track-after',
-          )}
-        />
-      )}
-      <span className='iui-wizards-step-circle'>
-        {type === 'workflow' ? title : index + 1}
-      </span>
-    </span>
+    </li>
   );
 
-  return (
-    <>
-      {description ? (
-        <Tooltip content={description}>{stepShape}</Tooltip>
-      ) : (
-        stepShape
-      )}
-      {!isLast && (
-        <span
-          className={cx(
-            'iui-wizards-step-track',
-            'iui-wizards-step-track-main',
-            {
-              'iui-wizards-step-track-filled': type !== 'workflow' && isPast,
-            },
-          )}
-        />
-      )}
-    </>
+  return description ? (
+    <Tooltip content={description}>{stepShape}</Tooltip>
+  ) : (
+    stepShape
   );
 };
