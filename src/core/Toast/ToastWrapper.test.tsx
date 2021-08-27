@@ -79,3 +79,17 @@ it('should remove all toasts', () => {
   expect(toasts.length).toBe(0);
   jest.useRealTimers();
 });
+
+it('should change placement to bottom end', () => {
+  const { container } = render(
+    <ToastWrapper
+      toasts={[mockToastObject1, mockToastObject2]}
+      placement='bottom-end'
+    />,
+  );
+
+  expect(container.querySelector('.iui-toast-wrapper')).toBeTruthy();
+  expect(container.querySelector('.iui-toast-wrapper')?.classList).toContain(
+    'iui-placement-bottom-end',
+  );
+});
