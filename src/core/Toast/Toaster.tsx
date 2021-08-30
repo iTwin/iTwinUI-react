@@ -11,7 +11,18 @@ import { ToastWrapper } from './ToastWrapper';
 const TOASTS_CONTAINER_ID = 'iui-toasts-container';
 
 export type ToasterSettings = {
-  order?: 'descending' | 'ascending';
+  /**
+   * Order of toasts.
+   * Ascending places toasts from newest to oldest. Descending - from oldest to newest (new toasts appear on the bottom of the list).
+   * When placement is set and order not specified, toasts are ordered by placement. Top placement sets order 'ascending', bottom placement sets order 'descending'.
+   * @default 'ascending'
+   */
+  order?: 'ascending' | 'descending';
+  /**
+   * Placement of toasts.
+   * Changes placement of toasts. *-start indicated left side of viewport. *-end - right side of viewport.
+   * @default 'top'
+   */
   placement?:
     | 'top'
     | 'top-start'
@@ -30,15 +41,17 @@ export default class Toaster {
   private toasts: ToastProps[] = [];
   private lastId = 0;
   private settings: ToasterSettings = {
-    order: 'bottom-to-top',
-    placement: 'top-end',
+    order: 'ascending',
+    placement: 'top',
   };
 
   public setSettings(settings: ToasterSettings) {
-    settings.placement ??= this.settings.placement;
-    settings.order ??= settings.placement.startsWith('top')
-      ? 'top-to-bottom'
-      : 'bottom-to-top';
+    if (!settings.order && settings.placement?.startsWith('top')) {
+      settings.order = 'ascending';
+    }
+    if (!settings.order && settings.placement?.startsWith('bottom')) {
+      settings.order = 'descending';
+    }
     this.settings = settings;
   }
 
@@ -68,37 +81,21 @@ export default class Toaster {
   ) {
     ++this.lastId;
     const currentId = this.lastId;
-    if (this.settings.order === 'top-to-bottom') {
-      this.toasts = [
-        {
-          ...settings,
-          content,
-          category,
-          onRemove: () => {
-            this.removeToast(currentId);
-            settings?.onRemove?.();
-          },
-          id: currentId,
-          isVisible: true,
+    this.toasts = [
+      ...(this.settings.order === 'descending' ? this.toasts : []),
+      {
+        ...settings,
+        content,
+        category,
+        onRemove: () => {
+          this.removeToast(currentId);
+          settings?.onRemove?.();
         },
-        ...this.toasts,
-      ];
-    } else if (this.settings.order === 'bottom-to-top') {
-      this.toasts = [
-        ...this.toasts,
-        {
-          ...settings,
-          content,
-          category,
-          onRemove: () => {
-            this.removeToast(currentId);
-            settings?.onRemove?.();
-          },
-          id: currentId,
-          isVisible: true,
-        },
-      ];
-    }
+        id: currentId,
+        isVisible: true,
+      },
+      ...(this.settings.order === 'ascending' ? this.toasts : []),
+    ];
     this.updateView();
   }
 
