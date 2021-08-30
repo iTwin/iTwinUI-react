@@ -88,3 +88,17 @@ it('should override title attribute', () => {
   getByText('some text');
   expect(getByText('child').getAttribute('title')).toBeNull();
 });
+
+it('should forward ref', () => {
+  const mockCallbackRef = jest.fn();
+
+  const { container, queryByText } = render(
+    <Tooltip content='some text' visible ref={mockCallbackRef}>
+      <div id='tooltip-target'>children</div>
+    </Tooltip>,
+  );
+
+  const tooltipTarget = container.querySelector('div#tooltip-target');
+  expect(queryByText('some text')).toBeVisible();
+  expect(mockCallbackRef).toHaveBeenCalledWith(tooltipTarget);
+});

@@ -33,17 +33,8 @@ export type TooltipProps = {
  * <Button ref={buttonRef} />
  * <Tooltip content='tooltip text' reference={buttonRef} />
  */
-export const Tooltip = (props: TooltipProps) => {
-  const {
-    content,
-    children,
-    className,
-    style,
-    visible,
-    ref,
-    id,
-    ...rest
-  } = props;
+export const Tooltip = React.forwardRef<Element, TooltipProps>((props, ref) => {
+  const { content, children, className, style, visible, id, ...rest } = props;
 
   useTheme();
 
@@ -68,6 +59,6 @@ export const Tooltip = (props: TooltipProps) => {
       {children && React.cloneElement(children, { title: undefined })}
     </Popover>
   );
-};
+});
 
 export default Tooltip;
