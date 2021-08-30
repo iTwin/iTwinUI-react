@@ -87,24 +87,16 @@ it.each([
   'bottom-start',
   'bottom',
   'bottom-end',
-])('should change placement to $s', (placement) => {
+] as const)('should change placement to $s', (placement) => {
   const { container } = render(
     <ToastWrapper
       toasts={[mockToastObject1, mockToastObject2]}
-      placement={
-        placement as
-          | 'top'
-          | 'top-start'
-          | 'top-end'
-          | 'bottom'
-          | 'bottom-start'
-          | 'bottom-end'
-      }
+      placement={placement}
     />,
   );
 
   expect(container.querySelector('.iui-toast-wrapper')).toBeTruthy();
-  expect(container.querySelector('.iui-toast-wrapper')?.classList).toContain(
+  expect(container.querySelector('.iui-toast-wrapper')?.classList).toHaveClass(
     `iui-placement-${placement}`,
   );
 });

@@ -109,13 +109,11 @@ export const Positive: Story<ToastProps & ToasterSettings> = ({
   placement,
   order,
 }) => {
-  const settings: ToasterSettings = {
-    placement: placement ?? 'top',
-    order: order ?? 'ascending',
-  };
-
   const displayPositiveToast = () => {
-    toaster.setSettings(settings);
+    toaster.setSettings({
+      placement: placement ?? 'top',
+      order: order ?? 'ascending',
+    });
     toaster.positive(content, {
       duration,
       hasCloseButton,
@@ -154,13 +152,11 @@ export const Negative: Story<ToastProps & ToasterSettings> = ({
   placement,
   order,
 }) => {
-  const settings: ToasterSettings = {
-    placement: placement ?? 'top',
-    order: order ?? 'ascending',
-  };
-
   const displayNegativeToast = () => {
-    toaster.setSettings(settings);
+    toaster.setSettings({
+      placement: placement ?? 'top',
+      order: order ?? 'ascending',
+    });
     toaster.negative(content, {
       duration,
       hasCloseButton,
@@ -199,12 +195,11 @@ export const Informational: Story<ToastProps & ToasterSettings> = ({
   placement,
   order,
 }) => {
-  const settings: ToasterSettings = {
-    placement: placement ?? 'top',
-    order: order ?? 'ascending',
-  };
   const displayInformationalToast = () => {
-    toaster.setSettings(settings);
+    toaster.setSettings({
+      placement: placement ?? 'top',
+      order: order ?? 'ascending',
+    });
     toaster.informational(content, {
       duration,
       hasCloseButton,
@@ -239,13 +234,11 @@ export const Warning: Story<ToastProps & ToasterSettings> = ({
   order,
   ...options
 }) => {
-  const settings: ToasterSettings = {
-    placement: placement ?? 'top',
-    order: order ?? 'ascending',
-  };
-
   const displayWarningToast = () => {
-    toaster.setSettings(settings);
+    toaster.setSettings({
+      placement: placement ?? 'top',
+      order: order ?? 'ascending',
+    });
     toaster.warning(content, { ...options });
   };
 
@@ -274,12 +267,11 @@ export const PositionChanged: Story<ToastProps & ToasterSettings> = ({
   order,
   ...options
 }) => {
-  const settings: ToasterSettings = {
-    placement: placement ?? 'bottom-end',
-    order: order,
-  };
   const displayPositionChangedToast = () => {
-    toaster.setSettings(settings);
+    toaster.setSettings({
+      placement: placement ?? 'bottom-end',
+      order: order,
+    });
     toaster.informational(content, { ...options });
   };
 

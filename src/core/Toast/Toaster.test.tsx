@@ -113,15 +113,9 @@ it.each([
   'bottom-start',
   'bottom',
   'bottom-end',
-])('should change placement to $s', (placement) => {
+] as const)('should change placement to $s', (placement) => {
   toaster.setSettings({
-    placement: placement as
-      | 'top'
-      | 'top-start'
-      | 'top-end'
-      | 'bottom'
-      | 'bottom-start'
-      | 'bottom-end',
+    placement: placement,
   });
   toaster.informational('mockContent', mockedOptions());
   expect(document.querySelector('.iui-toast-wrapper')?.classList).toContain(
