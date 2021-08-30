@@ -82,7 +82,6 @@ it('should add toast with warning', () => {
 });
 
 it('should add toasts and remove all', () => {
-  toaster.setSettings({ placement: 'top', order: 'top-to-bottom' });
   toaster.informational('mockContent', mockedOptions());
   assertAddedToast(toaster['toasts'][0], 'informational', 'mockContent', 1);
 
@@ -92,10 +91,14 @@ it('should add toasts and remove all', () => {
   toaster.closeAll();
   assertRemovedToast(toaster['toasts'][1], 'informational', 'mockContent', 1);
   assertRemovedToast(toaster['toasts'][0], 'positive', 'mockContent', 2);
+
+  expect(document.querySelector('.iui-toast-wrapper')?.classList).toContain(
+    'iui-placement-top',
+  );
 });
 
 it('should change order to bottom to top', () => {
-  toaster.setSettings({ placement: 'top', order: 'bottom-to-top' });
+  toaster.setSettings({ placement: 'top', order: 'descending' });
   toaster.informational('mockContent', mockedOptions());
   assertAddedToast(toaster['toasts'][0], 'informational', 'mockContent', 1);
 
@@ -103,10 +106,25 @@ it('should change order to bottom to top', () => {
   assertAddedToast(toaster['toasts'][1], 'positive', 'mockContent', 2);
 });
 
-it('should change placement to bottom start', () => {
-  toaster.setSettings({ placement: 'bottom-start', order: 'bottom-to-top' });
+it.each([
+  'top-start',
+  'top',
+  'top-end',
+  'bottom-start',
+  'bottom',
+  'bottom-end',
+])('should change placement to $s', (placement) => {
+  toaster.setSettings({
+    placement: placement as
+      | 'top'
+      | 'top-start'
+      | 'top-end'
+      | 'bottom'
+      | 'bottom-start'
+      | 'bottom-end',
+  });
   toaster.informational('mockContent', mockedOptions());
   expect(document.querySelector('.iui-toast-wrapper')?.classList).toContain(
-    'iui-placement-bottom-start',
+    `iui-placement-${placement}`,
   );
 });
