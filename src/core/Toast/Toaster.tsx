@@ -46,10 +46,8 @@ export default class Toaster {
   };
 
   /**
-   * Set Toaster settings for toasts order and placement.
-   * Order: ascending or descending.
-   * Placement: 'top' | 'top-start' | 'top-end' | 'bottom' | 'bottom-start' | 'bottom-end';
-   * @param settings
+   * Set global Toaster settings for toasts order and placement.
+   * Settings will be applied to all existing and new toasts on the page.
    */
   public setSettings(settings: ToasterSettings) {
     if (!settings.order && settings.placement?.startsWith('top')) {
