@@ -36,7 +36,9 @@ export default class Toaster {
 
   public setSettings(settings: ToasterSettings) {
     settings.placement ??= this.settings.placement;
-    settings.order ??= settings.placement.startsWith('top') ? 'top-to-bottom' : 'bottom-to-top';
+    settings.order ??= settings.placement.startsWith('top')
+      ? 'top-to-bottom'
+      : 'bottom-to-top';
     this.settings = settings;
   }
 
