@@ -51,14 +51,15 @@ export default {
         type: 'select',
       },
       defaultValue: 'top',
-      description: 'description 1',
+      description:
+        'Changes placement of toasts. *-start indicated left side of viewport. *-end - right side of viewport.',
     },
     order: {
       control: {
-        options: ['top-to-bottom', 'bottom-to-top'],
+        options: ['ascending', 'descending'],
         type: 'select',
       },
-      description: 'description2',
+      description: `Order of toasts. Ascending places toasts from newest to oldest. Descending - from oldest to newest (new toasts appear on the bottom of the list). When placement is set and order not specified, toasts are ordered by placement. Top placement sets order 'ascending', bottom placement sets order 'descending'.`,
     },
   },
   args: {
@@ -110,7 +111,7 @@ export const Positive: Story<ToastProps & ToasterSettings> = ({
 }) => {
   const settings: ToasterSettings = {
     placement: placement ?? 'top',
-    order: order ?? 'top-to-bottom',
+    order: order ?? 'ascending',
   };
 
   const displayPositiveToast = () => {
@@ -155,7 +156,7 @@ export const Negative: Story<ToastProps & ToasterSettings> = ({
 }) => {
   const settings: ToasterSettings = {
     placement: placement ?? 'top',
-    order: order ?? 'top-to-bottom',
+    order: order ?? 'ascending',
   };
 
   const displayNegativeToast = () => {
@@ -200,7 +201,7 @@ export const Informational: Story<ToastProps & ToasterSettings> = ({
 }) => {
   const settings: ToasterSettings = {
     placement: placement ?? 'top',
-    order: order ?? 'top-to-bottom',
+    order: order ?? 'ascending',
   };
   const displayInformationalToast = () => {
     toaster.setSettings(settings);
@@ -240,7 +241,7 @@ export const Warning: Story<ToastProps & ToasterSettings> = ({
 }) => {
   const settings: ToasterSettings = {
     placement: placement ?? 'top',
-    order: order ?? 'top-to-bottom',
+    order: order ?? 'ascending',
   };
 
   const displayWarningToast = () => {

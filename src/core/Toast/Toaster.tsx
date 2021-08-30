@@ -20,7 +20,7 @@ export type ToasterSettings = {
   order?: 'ascending' | 'descending';
   /**
    * Placement of toasts.
-   * Changes placement of toasts. *-start indicated left side of viewport. *-end - right side of viewport.
+   * Changes placement of toasts. Start indicates left side of viewport. End - right side of viewport.
    * @default 'top'
    */
   placement?:
@@ -45,6 +45,12 @@ export default class Toaster {
     placement: 'top',
   };
 
+  /**
+   * Set Toaster settings for toasts order and placement.
+   * Order: ascending or descending.
+   * Placement: 'top' | 'top-start' | 'top-end' | 'bottom' | 'bottom-start' | 'bottom-end';
+   * @param settings
+   */
   public setSettings(settings: ToasterSettings) {
     if (!settings.order && settings.placement?.startsWith('top')) {
       settings.order = 'ascending';
