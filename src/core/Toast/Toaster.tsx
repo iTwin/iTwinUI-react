@@ -11,7 +11,7 @@ import { ToastWrapper } from './ToastWrapper';
 const TOASTS_CONTAINER_ID = 'iui-toasts-container';
 
 export type ToasterSettings = {
-  order?: 'top-to-bottom' | 'bottom-to-top';
+  order?: 'descending' | 'ascending';
   placement?:
     | 'top'
     | 'top-start'
