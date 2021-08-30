@@ -56,10 +56,10 @@ export default {
     },
     order: {
       control: {
-        options: ['ascending', 'descending'],
+        options: ['descending', 'ascending'],
         type: 'select',
       },
-      description: `Order of toasts. Ascending places toasts from newest to oldest. Descending - from oldest to newest (new toasts appear on the bottom of the list). When placement is set and order not specified, toasts are ordered by placement. Top placement sets order 'ascending', bottom placement sets order 'descending'.`,
+      description: `Order of toasts. Descending places toasts from newest to oldest (new toasts appear on the top of the list). Ascending - from oldest to newest (new toasts appear on the bottom of the list). When placement is set and order not specified, toasts are ordered by placement. Top placement sets order 'descending', bottom placement sets order 'ascending'.`,
     },
   },
   args: {
@@ -112,7 +112,7 @@ export const Positive: Story<ToastProps & ToasterSettings> = ({
   const displayPositiveToast = () => {
     toaster.setSettings({
       placement: placement ?? 'top',
-      order: order ?? 'ascending',
+      order: order ?? 'descending',
     });
     toaster.positive(content, {
       duration,
@@ -155,7 +155,7 @@ export const Negative: Story<ToastProps & ToasterSettings> = ({
   const displayNegativeToast = () => {
     toaster.setSettings({
       placement: placement ?? 'top',
-      order: order ?? 'ascending',
+      order: order ?? 'descending',
     });
     toaster.negative(content, {
       duration,
@@ -198,7 +198,7 @@ export const Informational: Story<ToastProps & ToasterSettings> = ({
   const displayInformationalToast = () => {
     toaster.setSettings({
       placement: placement ?? 'top',
-      order: order ?? 'ascending',
+      order: order ?? 'descending',
     });
     toaster.informational(content, {
       duration,
@@ -237,7 +237,7 @@ export const Warning: Story<ToastProps & ToasterSettings> = ({
   const displayWarningToast = () => {
     toaster.setSettings({
       placement: placement ?? 'top',
-      order: order ?? 'ascending',
+      order: order ?? 'descending',
     });
     toaster.warning(content, { ...options });
   };

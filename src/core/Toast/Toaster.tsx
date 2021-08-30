@@ -13,11 +13,11 @@ const TOASTS_CONTAINER_ID = 'iui-toasts-container';
 export type ToasterSettings = {
   /**
    * Order of toasts.
-   * Ascending places toasts from newest to oldest. Descending - from oldest to newest (new toasts appear on the bottom of the list).
-   * When placement is set and order not specified, toasts are ordered by placement. Top placement sets order 'ascending', bottom placement sets order 'descending'.
+   * Ascending places toasts from newest to oldest - most recent toasts are on top. Descending - from oldest to newest - most recent toasts are on bottom.
+   * When placement is set and order not specified, toasts are ordered by placement. Top placement sets order 'descending', bottom placement sets order 'ascending'.
    * @default 'ascending'
    */
-  order?: 'ascending' | 'descending';
+  order?: 'descending' | 'ascending';
   /**
    * Placement of toasts.
    * Changes placement of toasts. Start indicates left side of viewport. End - right side of viewport.
@@ -41,7 +41,7 @@ export default class Toaster {
   private toasts: ToastProps[] = [];
   private lastId = 0;
   private settings: ToasterSettings = {
-    order: 'ascending',
+    order: 'descending',
     placement: 'top',
   };
 
@@ -50,12 +50,10 @@ export default class Toaster {
    * Settings will be applied to all existing and new toasts on the page.
    */
   public setSettings(settings: ToasterSettings) {
-    if (!settings.order && settings.placement?.startsWith('top')) {
-      settings.order = 'ascending';
-    }
-    if (!settings.order && settings.placement?.startsWith('bottom')) {
-      settings.order = 'descending';
-    }
+    settings.placement ??= this.settings.placement;
+    settings.order ??= settings.placement?.startsWith('bottom')
+      ? 'ascending'
+      : 'descending';
     this.settings = settings;
   }
 
@@ -86,7 +84,7 @@ export default class Toaster {
     ++this.lastId;
     const currentId = this.lastId;
     this.toasts = [
-      ...(this.settings.order === 'descending' ? this.toasts : []),
+      ...(this.settings.order === 'ascending' ? this.toasts : []),
       {
         ...settings,
         content,
@@ -98,7 +96,7 @@ export default class Toaster {
         id: currentId,
         isVisible: true,
       },
-      ...(this.settings.order === 'ascending' ? this.toasts : []),
+      ...(this.settings.order === 'descending' ? this.toasts : []),
     ];
     this.updateView();
   }
