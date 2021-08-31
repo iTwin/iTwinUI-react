@@ -14,8 +14,7 @@ export type ToasterSettings = {
   /**
    * Order of toasts.
    * Ascending places toasts from newest to oldest - most recent toasts are on top. Descending - from oldest to newest - most recent toasts are on bottom.
-   * When placement is set and order not specified, toasts are ordered by placement. Top placement sets order 'descending', bottom placement sets order 'ascending'.
-   * @default 'descending'
+   * When `placement` is set to a top value, order defaults to 'descending', otherwise 'ascending'.
    */
   order?: 'descending' | 'ascending';
   /**
