@@ -57,41 +57,38 @@ export default class Toaster {
     this.settings = newSettings;
   }
 
-  public positive(content: React.ReactNode, settings?: ToastOptions): void {
-    this.createToast(content, 'positive', settings);
+  public positive(content: React.ReactNode, options?: ToastOptions): void {
+    this.createToast(content, 'positive', options);
   }
 
-  public informational(
-    content: React.ReactNode,
-    settings?: ToastOptions,
-  ): void {
-    this.createToast(content, 'informational', settings);
+  public informational(content: React.ReactNode, options?: ToastOptions): void {
+    this.createToast(content, 'informational', options);
   }
 
-  public negative(content: React.ReactNode, settings?: ToastOptions): void {
-    this.createToast(content, 'negative', settings);
+  public negative(content: React.ReactNode, options?: ToastOptions): void {
+    this.createToast(content, 'negative', options);
   }
 
-  public warning(content: React.ReactNode, settings?: ToastOptions): void {
-    this.createToast(content, 'warning', settings);
+  public warning(content: React.ReactNode, options?: ToastOptions): void {
+    this.createToast(content, 'warning', options);
   }
 
   private createToast(
     content: React.ReactNode,
     category: ToastCategory,
-    settings?: ToastOptions,
+    options?: ToastOptions,
   ) {
     ++this.lastId;
     const currentId = this.lastId;
     this.toasts = [
       ...(this.settings.order === 'ascending' ? this.toasts : []),
       {
-        ...settings,
+        ...options,
         content,
         category,
         onRemove: () => {
           this.removeToast(currentId);
-          settings?.onRemove?.();
+          options?.onRemove?.();
         },
         id: currentId,
         isVisible: true,
