@@ -13,9 +13,9 @@ const TOASTS_CONTAINER_ID = 'iui-toasts-container';
 export type ToasterSettings = {
   /**
    * Order of toasts.
-   * Ascending places toasts from newest to oldest - most recent toasts are on top. Descending - from oldest to newest - most recent toasts are on bottom.
-   * When placement is set and order not specified, toasts are ordered by placement. Top placement sets order 'descending', bottom placement sets order 'ascending'.
-   * @default 'descending'
+   * When set to 'descending', most recent toasts are on top. When set to 'ascending', most recent toasts are on bottom.
+
+   * When `placement` is set to a top value, order defaults to 'descending', otherwise 'ascending'.
    */
   order?: 'descending' | 'ascending';
   /**
