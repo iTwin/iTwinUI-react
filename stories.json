@@ -1754,6 +1754,15 @@
         "__id": "core-toasts--warning"
       }
     },
+    "core-toasts--position-changed": {
+      "id": "core-toasts--position-changed",
+      "name": "Position Changed",
+      "kind": "Core/Toasts",
+      "story": "Position Changed",
+      "parameters": {
+        "__id": "core-toasts--position-changed"
+      }
+    },
     "input-toggleswitch--basic": {
       "id": "input-toggleswitch--basic",
       "name": "Basic",
