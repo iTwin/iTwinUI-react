@@ -92,9 +92,9 @@ it('should add toasts and remove all', () => {
   assertRemovedToast(toaster['toasts'][1], 'informational', 'mockContent', 1);
   assertRemovedToast(toaster['toasts'][0], 'positive', 'mockContent', 2);
 
-  expect(document.querySelector('.iui-toast-wrapper')?.classList).toContain(
-    'iui-placement-top',
-  );
+  expect(
+    document.querySelector('.iui-toast-wrapper.iui-placement-top'),
+  ).toBeTruthy();
 });
 
 it('should change order to bottom to top', () => {

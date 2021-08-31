@@ -47,14 +47,14 @@ export default class Toaster {
 
   /**
    * Set global Toaster settings for toasts order and placement.
-   * Settings will be applied to all existing and new toasts on the page.
+   * Settings will be applied to new toasts on the page.
    */
-  public setSettings(settings: ToasterSettings) {
-    settings.placement ??= this.settings.placement;
-    settings.order ??= settings.placement?.startsWith('bottom')
+  public setSettings(newSettings: ToasterSettings) {
+    newSettings.placement ??= this.settings.placement;
+    newSettings.order ??= newSettings.placement?.startsWith('bottom')
       ? 'ascending'
       : 'descending';
-    this.settings = settings;
+    this.settings = newSettings;
   }
 
   public positive(content: React.ReactNode, settings?: ToastOptions): void {
