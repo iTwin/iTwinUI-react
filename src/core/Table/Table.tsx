@@ -42,6 +42,7 @@ import {
   onSelectHandler,
 } from './actionHandlers';
 import { onSingleSelectHandler } from './actionHandlers/selectHandler';
+import { OnCellEditCallbackParams } from './EditableCell';
 
 const singleRowSelectedAction = 'singleRowSelected';
 
@@ -145,6 +146,11 @@ export type TableProps<
    * @default 'default'
    */
   density?: 'default' | 'condensed' | 'extra-condensed';
+  /**
+   * Callback function when cell is edited. It is called when `onBlur` event is fired.
+   * You must pass `isEditable` prop to the columns that should be editable.
+   */
+  onCellEdit?: (cellEditParams: OnCellEditCallbackParams<T>) => void;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -222,6 +228,7 @@ export const Table = <
     density = 'default',
     selectSubRows = true,
     getSubRows,
+    onCellEdit,
     ...rest
   } = props;
 
@@ -449,6 +456,7 @@ export const Table = <
                 tableHasSubRows={hasAnySubRows}
                 tableInstance={instance}
                 expanderCell={expanderCell}
+                onCellEdit={onCellEdit}
               />
             );
           })}

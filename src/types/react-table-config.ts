@@ -141,6 +141,12 @@ declare module 'react-table' {
      * More info about these filters: https://github.com/tannerlinsley/react-table/blob/master/src/filterTypes.js
      */
     filter?: FilterType<D> | DefaultFilterTypes | string;
+    /**
+     * Function that should return true if a column's cell is editable.
+     * If not specified, all column cells will not be editable.
+     * You must pass `onCellEdit` prop to the `Table`.
+     */
+    isCellEditable?: (rowData: D) => boolean;
   }
 
   export interface ColumnInstance<D extends object = {}>

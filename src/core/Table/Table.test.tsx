@@ -13,7 +13,7 @@ import React from 'react';
 import { Table, TableProps } from './Table';
 import * as IntersectionHooks from '../utils/hooks/useIntersection';
 import { tableFilters } from './filters';
-import { CellProps, Row } from 'react-table';
+import { CellProps, Column, Row } from 'react-table';
 import { SvgChevronRight } from '@itwin/itwinui-icons-react';
 
 const intersectionCallbacks = new Map<Element, () => void>();
@@ -1485,4 +1485,98 @@ it('should render sub-rows with custom expander', () => {
 
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(10);
+});
+
+it('should edit cell data', () => {
+  const onCellEdit = jest.fn();
+  const data = mockedData(4);
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          isCellEditable: (rowData) => rowData.name !== 'Name2',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => {
+            return <span>View</span>;
+          },
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    data,
+    onCellEdit,
+    isRowDisabled: (rowData) => rowData.name === 'Name3',
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  assertRowsData(rows, data);
+
+  const editableCells = container.querySelectorAll(
+    '.iui-cell[contenteditable]',
+  );
+  expect(editableCells).toHaveLength(2);
+  // Should only allow to edit cells when isCellEditable returns true and row is not disabled
+  expect(editableCells[0].textContent).toEqual('Name1');
+  expect(editableCells[1].textContent).toEqual('Name4');
+
+  fireEvent.input(editableCells[1], { target: { innerText: 'test-data' } });
+  fireEvent.blur(editableCells[1]);
+  expect(onCellEdit).toHaveBeenCalledWith({
+    columnId: 'name',
+    value: 'test-data',
+    rowData: data[3],
+  });
+});
+
+it('should not allow to edit when onCellEdit is missing', () => {
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          isCellEditable: () => true,
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => {
+            return <span>View</span>;
+          },
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  assertRowsData(rows);
+
+  const editableCells = container.querySelectorAll(
+    '.iui-cell[contenteditable]',
+  );
+  expect(editableCells).toHaveLength(0);
 });

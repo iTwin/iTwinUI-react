@@ -15,4 +15,6 @@ export type {
   TableFilterValue,
 } from './filters';
 
+export type { OnCellEditCallbackParams } from './EditableCell';
+
 export default './Table';

@@ -22,6 +22,7 @@ import {
   TableFilterValue,
   TableProps,
   Tooltip,
+  OnCellEditCallbackParams,
 } from '../../src/core';
 import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
@@ -1324,3 +1325,100 @@ Full.args = {
 
 export const Condensed: Story<TableProps> = Basic.bind({});
 Condensed.args = { density: 'condensed' };
+
+export const Editable: Story<TableProps> = (args) => {
+  const { ...rest } = args;
+
+  type TableStoryDataType = {
+    name: string;
+    description: string;
+  };
+
+  const [data, setData] = React.useState(() => [
+    { name: 'Name1', description: 'Description1' },
+    { name: 'Name2', description: 'Description2' },
+    { name: 'Name3', description: 'Fetching...' },
+  ]);
+
+  const isRowDisabled = useCallback((rowData: TableStoryDataType) => {
+    return rowData.name === 'Name2';
+  }, []);
+
+  const columns = React.useMemo(
+    (): Column<TableStoryDataType>[] => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+            isCellEditable: () => true,
+            Filter: tableFilters.TextFilter(),
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            isCellEditable: (rowData) => rowData.description !== 'Fetching...',
+            Filter: tableFilters.TextFilter(),
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const onCellEdit = useCallback(
+    (params: OnCellEditCallbackParams<TableStoryDataType>) => {
+      action('onCellEdit')(params);
+      setData((oldData) => {
+        const newData = [...oldData];
+        const index = oldData.indexOf(params.rowData);
+        const newObject = { ...newData[index] };
+        newObject[params.columnId as keyof TableStoryDataType] = params.value;
+        newData[index] = newObject;
+        return newData;
+      });
+    },
+    [],
+  );
+
+  return (
+    <Table
+      {...rest}
+      columns={columns}
+      data={data}
+      emptyTableContent='No data.'
+      onCellEdit={onCellEdit}
+      autoResetFilters={false}
+      isRowDisabled={isRowDisabled}
+    />
+  );
+};
+
+Editable.argTypes = {
+  data: { control: { disable: true } },
+};
+
+Editable.parameters = {
+  creevey: {
+    tests: {
+      async focusAndHover() {
+        const editableCells = await this.browser.findElements({
+          css: '.iui-cell[contenteditable]',
+        });
+        await this.browser.actions().click(editableCells[0]).perform();
+        await this.browser
+          .actions()
+          .move({ origin: editableCells[2] })
+          .perform();
+        await this.expect(
+          await this.browser
+            .findElement({ css: '.iui-table' })
+            .takeScreenshot(),
+        ).to.matchImage();
+      },
+    },
+  } as CreeveyStoryParams,
+};

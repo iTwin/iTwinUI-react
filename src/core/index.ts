@@ -122,6 +122,7 @@ export type {
   TableFilterValue,
   DateRangeFilterOptions,
   FilterButtonBarProps,
+  OnCellEditCallbackParams,
 } from './Table';
 
 export { Tag, TagContainer } from './Tag';
