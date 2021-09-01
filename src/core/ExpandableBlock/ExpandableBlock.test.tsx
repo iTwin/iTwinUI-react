@@ -119,7 +119,7 @@ it('should trigger onToggle when clicked with Enter or Spacebar', () => {
   expect(onToggleMock).toHaveBeenCalledTimes(3);
 });
 
-it.each(['positive', 'negative', 'warning'] as const)(
+it.each(['positive', 'negative', 'warning', 'informational'] as const)(
   'should set %s status',
   (status) => {
     const { container, queryByText } = render(
