@@ -121,7 +121,7 @@ export const ExpandableBlock = (props: ExpandableBlockProps) => {
         {icon &&
           React.cloneElement(icon, {
             className: cx(
-              'iui-icon',
+              'iui-status-icon',
               { [`iui-${status}`]: !!status },
               icon.props.className,
             ),
