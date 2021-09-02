@@ -139,7 +139,12 @@ export const VirtualScroll = ({ children }: VirtualScrollProps) => {
     setVisibleNodeCount(getVisibleNodeCount(start));
     setTranslateY(getTranslateValue(start));
     // });
-  }, [getTranslateValue, getVisibleNodeCount, scrollContainer]);
+  }, [
+    getCountOfChildrenInHeight,
+    getTranslateValue,
+    getVisibleNodeCount,
+    scrollContainer,
+  ]);
 
   React.useLayoutEffect(() => {
     let top = 0;
@@ -158,7 +163,13 @@ export const VirtualScroll = ({ children }: VirtualScrollProps) => {
       scrollContainer
         ? scrollContainer.removeEventListener('scroll', onScroll)
         : document.removeEventListener('scroll', onScroll);
-  }, [getTranslateValue, getVisibleNodeCount, onScroll, scrollContainer]);
+  }, [
+    getCountOfChildrenInHeight,
+    getTranslateValue,
+    getVisibleNodeCount,
+    onScroll,
+    scrollContainer,
+  ]);
 
   return (
     <>
