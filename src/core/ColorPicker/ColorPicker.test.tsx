@@ -9,7 +9,9 @@ import { ColorPicker } from './ColorPicker';
 
 it('should render in its most basic state', () => {
   // TODO: Make sure all required props are passed in here
-  const { container } = render(<ColorPicker />);
+
+  const colorList = ['#00121D', '#002A44'];
+  const { container } = render(<ColorPicker colors={colorList} />);
   expect(container.querySelector('div')).toBeTruthy();
 });
 

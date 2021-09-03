@@ -17,13 +17,21 @@ export default {
 } as Meta<ColorPickerProps>;
 
 export const Basic: Story<ColorPickerProps> = (args) => {
-  return (
-    <ColorPicker {...args}>
-      <div className='iui-color-palette'>
-        <span className='iui-color-swatch' />
-        <span className='iui-color-swatch' />
-        <span className='iui-color-swatch' />
-      </div>
-    </ColorPicker>
-  );
+  return <ColorPicker {...args} />;
+};
+
+Basic.args = {
+  colors: [
+    '#458816',
+    '#CF0000',
+    '#00121D',
+    '#00426B',
+    '#008BE1',
+    '#D4F4BD',
+    '#EEF6E8',
+    '#9BA5AF',
+    '#CF0000',
+    '#FF6300',
+    '#FFC335',
+  ],
 };
