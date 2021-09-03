@@ -9,6 +9,7 @@ import { Select } from '../Select';
 import { SelectProps } from '../Select/Select';
 import { StatusIconMap } from '../utils/common';
 import { useTheme } from '../utils/hooks/useTheme';
+import { LabeledInputProps } from '../LabeledInput';
 import '@itwin/itwinui-css/css/inputs.css';
 
 export type LabeledSelectProps<T> = {
@@ -26,7 +27,7 @@ export type LabeledSelectProps<T> = {
    */
   status?: 'positive' | 'warning' | 'negative';
   /**
-   * Custom svg icon. If select has status, default status icon is used instead.
+   * Custom svg icon. Will override status icon if specified.
    */
   svgIcon?: JSX.Element;
   /**
@@ -38,16 +39,12 @@ export type LabeledSelectProps<T> = {
    */
   selectStyle?: React.CSSProperties;
   /**
-   * You can choose between default and inline.
-   * @default 'default'
-   */
-  displayStyle?: 'default' | 'inline';
-  /**
    * If true, shows a red asterisk but does not prevent form submission.
    * @default false
    */
   required?: boolean;
-} & SelectProps<T>;
+} & Pick<LabeledInputProps, 'displayStyle'> &
+  SelectProps<T>;
 
 /**
  * Labeled select component to select value from options.
@@ -111,7 +108,8 @@ export const LabeledSelect = <T,>(
         {
           'iui-disabled': disabled,
           [`iui-${status}`]: !!status,
-          [`iui-${displayStyle}`]: displayStyle !== 'default',
+          'iui-inline-label': displayStyle === 'inline',
+          'iui-with-message': !!message && displayStyle !== 'inline',
         },
         className,
       )}
@@ -132,11 +130,13 @@ export const LabeledSelect = <T,>(
         style={selectStyle}
         {...rest}
       />
-      {displayStyle === 'default' && (message || icon) && (
-        <div className='iui-message'>
-          {icon}
-          {message}
-        </div>
+      {displayStyle === 'default' &&
+        icon &&
+        React.cloneElement(icon, {
+          className: cx('iui-input-icon', icon.props?.className),
+        })}
+      {displayStyle !== 'inline' && message && (
+        <div className='iui-message'>{message}</div>
       )}
     </div>
   );

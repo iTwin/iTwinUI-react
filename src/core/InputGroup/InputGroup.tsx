@@ -87,7 +87,8 @@ export const InputGroup = (props: InputGroupProps) => {
         {
           'iui-disabled': disabled,
           [`iui-${status}`]: !!status,
-          [`iui-${displayStyle}`]: displayStyle !== 'default',
+          'iui-inline-label': displayStyle === 'inline',
+          'iui-with-message': !!message,
         },
         className,
       )}
@@ -103,12 +104,13 @@ export const InputGroup = (props: InputGroupProps) => {
           {label}
         </div>
       )}
-      {children}
-      {(message || icon) && (
-        <div className='iui-message'>
-          {icon}
-          {displayStyle === 'default' && message}
-        </div>
+      <div className='iui-input-group'>{children}</div>
+      {icon &&
+        React.cloneElement(icon, {
+          className: cx('iui-input-icon', icon.props?.className),
+        })}
+      {displayStyle !== 'inline' && message && (
+        <div className='iui-message'>{message}</div>
       )}
     </div>
   );

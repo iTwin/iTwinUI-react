@@ -2,6 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { SvgPlaceholder } from '@itwin/itwinui-icons-react';
 import SvgCamera from '@itwin/itwinui-icons-react/cjs/icons/Camera';
 import { Meta, Story } from '@storybook/react';
 import React from 'react';
@@ -145,4 +146,23 @@ export const Inline: Story<LabeledInputProps> = (args) => {
 Inline.args = {
   status: 'negative',
   displayStyle: 'inline',
+};
+
+export const HybridLayout: Story<LabeledInputProps> = (args) => {
+  return (
+    <LabeledInput
+      placeholder='Enter text here'
+      label='This is a label'
+      displayStyle='inline'
+      svgIcon={<SvgPlaceholder />}
+      message='Block layout with inline icon'
+      {...args}
+    />
+  );
+};
+
+HybridLayout.args = {
+  iconDisplayStyle: 'inline',
+  svgIcon: <SvgPlaceholder />,
+  message: 'Block layout with inline icon',
 };

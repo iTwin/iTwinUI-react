@@ -8,6 +8,7 @@ import { StatusIconMap } from '../utils/common';
 import { Textarea } from '../Textarea';
 import { TextareaProps } from '../Textarea/Textarea';
 import { useTheme } from '../utils/hooks/useTheme';
+import { LabeledInputProps } from '../LabeledInput';
 import '@itwin/itwinui-css/css/inputs.css';
 
 export type LabeledTextareaProps = {
@@ -31,16 +32,8 @@ export type LabeledTextareaProps = {
    * Custom style for textarea.
    */
   textareaStyle?: React.CSSProperties;
-  /**
-   * You can choose between default and inline.
-   * @default 'default'
-   */
-  displayStyle?: 'default' | 'inline';
-  /**
-   * Custom icon. If textarea has status, default status icon is used instead.
-   */
-  svgIcon?: JSX.Element;
-} & TextareaProps;
+} & Pick<LabeledInputProps, 'svgIcon' | 'displayStyle' | 'iconDisplayStyle'> &
+  TextareaProps;
 
 /**
  * Textarea wrapper that allows for additional styling and labelling
@@ -77,6 +70,7 @@ export const LabeledTextarea = React.forwardRef<
     textareaClassName,
     textareaStyle,
     displayStyle = 'default',
+    iconDisplayStyle = displayStyle === 'default' ? 'block' : 'inline',
     svgIcon,
     required = false,
     ...textareaProps
@@ -93,7 +87,9 @@ export const LabeledTextarea = React.forwardRef<
         {
           'iui-disabled': disabled,
           [`iui-${status}`]: !!status,
-          [`iui-${displayStyle}`]: displayStyle !== 'default',
+          'iui-inline-label': displayStyle === 'inline',
+          'iui-with-message': !!message && displayStyle !== 'inline',
+          'iui-inline-icon': iconDisplayStyle === 'inline',
         },
         className,
       )}
@@ -116,11 +112,12 @@ export const LabeledTextarea = React.forwardRef<
         {...textareaProps}
         ref={ref}
       />
-      {(message || icon) && (
-        <div className='iui-message'>
-          {icon}
-          {displayStyle === 'default' && message}
-        </div>
+      {icon &&
+        React.cloneElement(icon, {
+          className: cx('iui-input-icon', icon.props?.className),
+        })}
+      {displayStyle !== 'inline' && message && (
+        <div className='iui-message'>{message}</div>
       )}
     </label>
   );

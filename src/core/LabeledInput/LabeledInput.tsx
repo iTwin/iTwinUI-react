@@ -23,7 +23,7 @@ export type LabeledInputProps = {
    */
   status?: 'positive' | 'warning' | 'negative';
   /**
-   * Custom svg icon. If input has status, default status icon is used instead.
+   * Custom svg icon. Will override status icon if specified.
    */
   svgIcon?: JSX.Element;
   /**
@@ -35,10 +35,22 @@ export type LabeledInputProps = {
    */
   inputStyle?: React.CSSProperties;
   /**
-   * You can choose between default and inline.
+   * Set display style of label.
+   * Supported values:
+   * - 'default' - label appears above input.
+   * - 'inline' - appears in the same line as input.
    * @default 'default'
    */
   displayStyle?: 'default' | 'inline';
+  /**
+   * Set display style of icon.
+   * Supported values:
+   * - 'block' - icon appears below input.
+   * - 'inline' - icon appears inside input (at the end).
+   *
+   * Defaults to 'block' if `displayStyle` is `default`, else 'inline'.
+   */
+  iconDisplayStyle?: 'block' | 'inline';
 } & InputProps;
 
 /**
@@ -64,6 +76,7 @@ export const LabeledInput = React.forwardRef<
     inputClassName,
     inputStyle,
     displayStyle = 'default',
+    iconDisplayStyle = displayStyle === 'default' ? 'block' : 'inline',
     required = false,
     ...rest
   } = props;
@@ -79,7 +92,9 @@ export const LabeledInput = React.forwardRef<
         {
           'iui-disabled': disabled,
           [`iui-${status}`]: !!status,
-          [`iui-${displayStyle}`]: displayStyle !== 'default',
+          'iui-inline-label': displayStyle === 'inline',
+          'iui-with-message': !!message && displayStyle !== 'inline',
+          'iui-inline-icon': iconDisplayStyle === 'inline',
         },
         className,
       )}
@@ -102,11 +117,12 @@ export const LabeledInput = React.forwardRef<
         ref={ref}
         {...rest}
       />
-      {(message || icon) && (
-        <div className='iui-message'>
-          {icon}
-          {displayStyle === 'default' && message}
-        </div>
+      {icon &&
+        React.cloneElement(icon, {
+          className: cx('iui-input-icon', icon.props?.className),
+        })}
+      {displayStyle !== 'inline' && message && (
+        <div className='iui-message'>{message}</div>
       )}
     </label>
   );
