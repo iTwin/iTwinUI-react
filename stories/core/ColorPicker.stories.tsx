@@ -35,3 +35,12 @@ Basic.args = {
     '#FFC335',
   ],
 };
+
+export const Advanced: Story<ColorPickerProps> = (args) => {
+  return <ColorPicker {...args} />;
+};
+
+Advanced.args = {
+  type: 'advanced',
+  colors: ['#458816', '#CF0000', '#00121D', '#00426B', '#008BE1', '#D4F4BD'],
+};
