@@ -815,6 +815,7 @@ export const LazyLoading: Story<TableProps> = (args) => {
 
   return (
     <Table
+      useVirtualization
       columns={columns || tableColumns}
       emptyTableContent='No data.'
       onBottomReached={onBottomReached}
