@@ -1423,7 +1423,11 @@ Editable.parameters = {
         const editableCells = await this.browser.findElements({
           css: '.iui-cell[contenteditable]',
         });
-        await this.browser.actions().click(editableCells[0]).perform();
+        await this.browser
+          .actions()
+          .click(editableCells[0])
+          .sendKeys('test')
+          .perform();
         await this.browser
           .actions()
           .move({ origin: editableCells[2] })
