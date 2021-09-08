@@ -20,13 +20,26 @@ export type ColorPickerProps = {
    * @default 'basic'
    */
   type?: 'basic' | 'advanced';
+  /**
+   * Index of the selected color on the color palette.
+   */
+  activeColorIndex?: number;
 };
 
 export const ColorPicker = (props: ColorPickerProps) => {
-  const { colors, type, ...rest } = props;
+  const { colors, type = 'basic', activeColorIndex, ...rest } = props;
 
   useTheme();
   const selectedColor = '#010200';
+
+  // Set active color swatch
+  const [currentActiveIndex, setCurrentActiveIndex] = React.useState(
+    activeColorIndex,
+  );
+  const onColorClick = (index: number) => {
+    setCurrentActiveIndex(index);
+  };
+
   const top = '10%';
   const left = '10%';
   const colorGradientStyle = getWindow()?.CSS?.supports?.(
@@ -78,7 +91,19 @@ export const ColorPicker = (props: ColorPickerProps) => {
         )}
         {colors &&
           colors.length > 0 &&
-          colors.map((color, index) => <Color key={index} color={color} />)}
+          colors.map((color, index) => {
+            const onClick = () => {
+              onColorClick(index);
+            };
+            return (
+              <Color
+                key={index}
+                color={color}
+                onColorClicked={onClick}
+                isActive={index === currentActiveIndex}
+              />
+            );
+          })}
       </div>
     </div>
   );

@@ -34,6 +34,7 @@ Basic.args = {
     '#FF6300',
     '#FFC335',
   ],
+  activeColorIndex: 0,
 };
 
 export const Advanced: Story<ColorPickerProps> = (args) => {

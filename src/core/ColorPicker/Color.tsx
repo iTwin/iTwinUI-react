@@ -6,6 +6,7 @@ import React from 'react';
 import { useTheme } from '../utils/hooks/useTheme';
 import { getWindow } from '../utils/common';
 import { CommonProps } from '../utils/props';
+import cx from 'classnames';
 
 import 'D:/itwinUI/iTwinUI/lib/css/color-picker.css';
 
@@ -21,10 +22,18 @@ export type ColorProps = {
    * Color
    */
   color: string;
+  /**
+   * Handler for clicking a color
+   */
+  onColorClicked?: () => void;
+  /**
+   * Is color selected
+   */
+  isActive: boolean;
 } & CommonProps;
 
 export const Color = (props: ColorProps) => {
-  const { color, style, ...rest } = props;
+  const { color, style, onColorClicked, isActive, ...rest } = props;
 
   useTheme();
 
@@ -33,7 +42,14 @@ export const Color = (props: ColorProps) => {
       ? { '--swatch-color': getColorValue(color), ...style }
       : { backgroundColor: getColorValue(color), ...style };
 
-  return <span className='iui-color-swatch' style={_style} {...rest} />;
+  return (
+    <span
+      className={cx('iui-color-swatch', { [`iui-active`]: isActive })}
+      style={_style}
+      onClick={onColorClicked}
+      {...rest}
+    />
+  );
 };
 
 export default Color;
