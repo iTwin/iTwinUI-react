@@ -5,6 +5,7 @@
 import { Story, Meta } from '@storybook/react';
 import React from 'react';
 import { ColorPicker, ColorPickerProps } from '../../src/core';
+import { action } from '@storybook/addon-actions';
 
 export default {
   component: ColorPicker,
@@ -17,7 +18,11 @@ export default {
 } as Meta<ColorPickerProps>;
 
 export const Basic: Story<ColorPickerProps> = (args) => {
-  return <ColorPicker {...args} />;
+  const onClick = (index: number) => {
+    action(`Clicked color #${index}`)();
+  };
+
+  return <ColorPicker onColorClicked={onClick} {...args} />;
 };
 
 Basic.args = {
@@ -38,7 +43,11 @@ Basic.args = {
 };
 
 export const Advanced: Story<ColorPickerProps> = (args) => {
-  return <ColorPicker {...args} />;
+  const onClick = (index: number) => {
+    action(`Clicked color #${index}`)();
+  };
+
+  return <ColorPicker onColorClicked={onClick} {...args} />;
 };
 
 Advanced.args = {

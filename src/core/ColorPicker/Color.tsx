@@ -47,6 +47,7 @@ export const Color = (props: ColorProps) => {
       className={cx('iui-color-swatch', { [`iui-active`]: isActive })}
       style={_style}
       onClick={onColorClicked}
+      tabIndex={0}
       {...rest}
     />
   );

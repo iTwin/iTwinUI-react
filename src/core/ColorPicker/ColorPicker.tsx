@@ -7,6 +7,7 @@ import { useTheme } from '../utils/hooks/useTheme';
 import Color from './Color';
 import cx from 'classnames';
 import 'D:/itwinUI/iTwinUI/lib/css/color-picker.css';
+// import '@itwin/itwinui-css/css/color-picker.css';
 import { getWindow } from '../utils/common';
 import SvgAddCircular from '@itwin/itwinui-icons-react/cjs/icons/AddCircular';
 
@@ -24,10 +25,20 @@ export type ColorPickerProps = {
    * Index of the selected color on the color palette.
    */
   activeColorIndex?: number;
+  /**
+   * Handler for clicking a color
+   */
+  onColorClicked?: (index: number) => void;
 };
 
 export const ColorPicker = (props: ColorPickerProps) => {
-  const { colors, type = 'basic', activeColorIndex, ...rest } = props;
+  const {
+    colors,
+    type = 'basic',
+    activeColorIndex,
+    onColorClicked,
+    ...rest
+  } = props;
 
   useTheme();
   const selectedColor = '#010200';
@@ -36,10 +47,11 @@ export const ColorPicker = (props: ColorPickerProps) => {
   const [currentActiveIndex, setCurrentActiveIndex] = React.useState(
     activeColorIndex,
   );
-  const onColorClick = (index: number) => {
+  const onColorChanged = (index: number) => {
     setCurrentActiveIndex(index);
   };
 
+  // Set style values for advanced color picker
   const top = '10%';
   const left = '10%';
   const colorGradientStyle = getWindow()?.CSS?.supports?.(
@@ -93,7 +105,10 @@ export const ColorPicker = (props: ColorPickerProps) => {
           colors.length > 0 &&
           colors.map((color, index) => {
             const onClick = () => {
-              onColorClick(index);
+              if (onColorClicked != null) {
+                onColorClicked(index);
+              }
+              onColorChanged(index);
             };
             return (
               <Color
