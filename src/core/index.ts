@@ -128,6 +128,8 @@ export type {
   TableFilterValue,
   DateRangeFilterOptions,
   FilterButtonBarProps,
+  DefaultCellProps,
+  EditableCellProps,
 } from './Table';
 
 export { Tag, TagContainer } from './Tag';

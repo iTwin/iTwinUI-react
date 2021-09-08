@@ -26,7 +26,7 @@ export type EditableCellProps<
    * );
    */
   onCellEdit: (columnId: string, value: string, rowData: T) => void;
-};
+} & React.ComponentPropsWithoutRef<'div'>;
 
 /**
  * Editable cell.
@@ -41,7 +41,15 @@ export type EditableCellProps<
 export const EditableCell = <T extends Record<string, unknown>>(
   props: EditableCellProps<T>,
 ) => {
-  const { cellElementProps, cellProps, onCellEdit, children } = props;
+  const {
+    cellElementProps,
+    cellProps,
+    onCellEdit,
+    children,
+    onInput,
+    onBlur,
+    ...rest
+  } = props;
 
   const [value, setValue] = React.useState(cellProps.value);
   const [isDirty, setIsDirty] = React.useState(false);
@@ -57,11 +65,15 @@ export const EditableCell = <T extends Record<string, unknown>>(
           (e.target as HTMLElement).innerText.replace(/(\r\n|\n|\r)/gm, ''),
         );
         setIsDirty(true);
+        onInput?.(e);
       }}
-      onBlur={() =>
-        isDirty &&
-        onCellEdit(cellProps.column.id, value, cellProps.row.original)
-      }
+      onBlur={(e) => {
+        if (isDirty) {
+          onCellEdit(cellProps.column.id, value, cellProps.row.original);
+        }
+        onBlur?.(e);
+      }}
+      {...rest}
     >
       {children}
     </div>

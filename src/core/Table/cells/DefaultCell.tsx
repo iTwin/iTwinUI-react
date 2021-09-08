@@ -5,6 +5,10 @@
 import React from 'react';
 import { CellRendererProps } from 'react-table';
 
+export type DefaultCellProps<
+  T extends Record<string, unknown>
+> = CellRendererProps<T> & React.ComponentPropsWithoutRef<'div'>;
+
 /**
  * Default cell.
  * It should be passed to `cellRenderer`.
@@ -19,8 +23,12 @@ import { CellRendererProps } from 'react-table';
 export const DefaultCell = <T extends Record<string, unknown>>(
   props: CellRendererProps<T>,
 ) => {
-  const { cellElementProps, children } = props;
-  return <div {...cellElementProps}>{children}</div>;
+  const { cellElementProps, children, ...rest } = props;
+  return (
+    <div {...cellElementProps} {...rest}>
+      {children}
+    </div>
+  );
 };
 
 export default DefaultCell;
