@@ -35,7 +35,7 @@ export const VirtualScroll = ({ children }: VirtualScrollProps) => {
   const [visibleNodeCount, setVisibleNodeCount] = React.useState(0);
   const [scrollContainer, setScrollContainer] = React.useState<HTMLElement>();
   const childrenParentRef = React.useRef<HTMLDivElement>(null);
-  const [childHeight, setChildHeight] = React.useState(57);
+  const [childHeight, setChildHeight] = React.useState(0);
   const [translateY, setTranslateY] = React.useState(0);
   const heightMap: React.MutableRefObject<{
     [key: string]: number;
@@ -43,15 +43,18 @@ export const VirtualScroll = ({ children }: VirtualScrollProps) => {
   const animationFrame = React.useRef<number>();
   const firstLoad = React.useRef(true);
   const [viewportHeight, setViewportHeight] = React.useState(0);
+  const recalculatedHeight: React.MutableRefObject<{
+    [key: string]: boolean;
+  }> = React.useRef({});
+  const [containerHeight, setContainerHeight] = React.useState(0);
 
   React.useLayoutEffect(() => {
     const scrollableParent = getScrollableParent(childrenParentRef.current);
     setScrollContainer(scrollableParent);
-    setViewportHeight(scrollableParent.offsetHeight);
+    setViewportHeight(scrollableParent.getBoundingClientRect().height);
   }, []);
 
   const visibleChildren = React.useMemo(() => {
-    console.log('visible', startNode, visibleNodeCount);
     return children.slice(
       startNode,
       startNode + visibleNodeCount + renderAdditional,
@@ -68,22 +71,51 @@ export const VirtualScroll = ({ children }: VirtualScrollProps) => {
       const htmlElement = childrenParentRef.current.children.item(
         Math.max(0, i - startNode),
       ) as HTMLElement;
-      const elementHeight = htmlElement.offsetHeight;
-      heightMap.current[i] = elementHeight;
-      heightSum += elementHeight;
+      const elementHeight = htmlElement.getBoundingClientRect().height;
+      heightMap.current[i] = Number(elementHeight.toFixed(2));
+      heightSum += Number(elementHeight.toFixed(2));
     }
     if (firstLoad.current) {
       // setChildHeight(
       //   Math.max(57, Math.ceil(heightSum / visibleChildren.length)),
       // );
+      console.log(heightSum, visibleChildren.length, children.length);
+      setContainerHeight(
+        Math.ceil(heightSum / visibleChildren.length) * children.length,
+      );
       setChildHeight(Math.ceil(heightSum / visibleChildren.length));
-      firstLoad.current = false;
     }
-  }, [visibleChildren, startNode]);
+  }, [
+    visibleChildren,
+    startNode,
+    scrollContainer,
+    childHeight,
+    children.length,
+  ]);
+
+  React.useLayoutEffect(() => {
+    console.log('calculate', firstLoad.current, childHeight, children.length);
+    if (childHeight === 0) {
+      return;
+    }
+
+    if (firstLoad.current) {
+      firstLoad.current = false;
+      return;
+    }
+    let maxCount = 0;
+    Object.keys(recalculatedHeight.current).forEach((count) => {
+      if (Number(count) > maxCount) {
+        maxCount = Number(count);
+      }
+    });
+    const addedElementsCount = children.length - maxCount;
+    console.log(children.length, recalculatedHeight.current);
+    setContainerHeight((height) => height + addedElementsCount * childHeight);
+  }, [childHeight, children.length]);
 
   const getCountOfChildrenInHeight = React.useCallback(
     (height: number, startIndex = 0) => {
-      console.log(heightMap.current);
       let i = startIndex;
       let sum = 0;
       while (sum < height) {
@@ -97,10 +129,10 @@ export const VirtualScroll = ({ children }: VirtualScrollProps) => {
   );
 
   const getTranslateValue = React.useCallback(
-    (startNode: number) => {
+    (startIndex: number) => {
       let sum = 0;
       let i = 0;
-      while (i < startNode) {
+      while (i < startIndex) {
         sum += heightMap.current[i] ?? childHeight;
         ++i;
       }
@@ -120,7 +152,6 @@ export const VirtualScroll = ({ children }: VirtualScrollProps) => {
   );
 
   const onScroll = React.useCallback(() => {
-    console.log('scroll');
     if (animationFrame.current) {
       cancelAnimationFrame(animationFrame.current);
     }
@@ -129,21 +160,37 @@ export const VirtualScroll = ({ children }: VirtualScrollProps) => {
       return;
     }
     const start = getCountOfChildrenInHeight(scrollContainer.scrollTop);
-    console.log(
-      start,
-      scrollContainer.scrollTop,
-      getVisibleNodeCount(start),
-      getTranslateValue(start),
-    );
     setStartNode(start);
     setVisibleNodeCount(getVisibleNodeCount(start));
     setTranslateY(getTranslateValue(start));
-    // });
+    if (
+      viewportHeight +
+        scrollContainer.scrollTop +
+        renderAdditional * childHeight >=
+      scrollContainer.scrollHeight
+    ) {
+      if (
+        Object.keys(heightMap.current).length === children.length &&
+        !recalculatedHeight.current[children.length]
+      ) {
+        recalculatedHeight.current[children.length] = true;
+        let sum = 0;
+        for (let i = 0; i < Object.keys(heightMap.current).length; ++i) {
+          sum += heightMap.current[i];
+        }
+        console.log('SCROLL RECALCULATE', sum, childHeight * children.length);
+        setChildHeight(sum / Object.keys(heightMap.current).length);
+        setContainerHeight(sum);
+      }
+    }
   }, [
+    childHeight,
+    children.length,
     getCountOfChildrenInHeight,
     getTranslateValue,
     getVisibleNodeCount,
     scrollContainer,
+    viewportHeight,
   ]);
 
   React.useLayoutEffect(() => {
@@ -176,7 +223,7 @@ export const VirtualScroll = ({ children }: VirtualScrollProps) => {
       <div
         style={{
           overflow: 'hidden',
-          height: children.length * childHeight,
+          height: containerHeight || children.length * childHeight,
         }}
       >
         <div
