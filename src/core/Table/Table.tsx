@@ -146,6 +146,12 @@ export type TableProps<
    * @default 'default'
    */
   density?: 'default' | 'condensed' | 'extra-condensed';
+  /**
+   * Virtualization is used for the scrollable container.
+   * Recommended to use with scroll on table body.
+   * @default false
+   */
+  useVirtualization?: boolean;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -223,6 +229,7 @@ export const Table = <
     density = 'default',
     selectSubRows = true,
     getSubRows,
+    useVirtualization = false,
     ...rest
   } = props;
 
@@ -432,29 +439,55 @@ export const Table = <
       </div>
       <div {...getTableBodyProps({ className: 'iui-table-body' })}>
         {data.length !== 0 && (
-          <VirtualScroll>
-            {rows.map((row: Row<T>) => {
-              prepareRow(row);
-              return (
-                <TableRowMemoized
-                  row={row}
-                  rowProps={rowProps}
-                  isLast={row.index === data.length - 1}
-                  onRowInViewport={onRowInViewportRef}
-                  onBottomReached={onBottomReachedRef}
-                  intersectionMargin={intersectionMargin}
-                  state={state}
-                  key={row.getRowProps().key}
-                  onClick={onRowClickHandler}
-                  subComponent={subComponent}
-                  isDisabled={!!isRowDisabled?.(row.original)}
-                  tableHasSubRows={hasAnySubRows}
-                  tableInstance={instance}
-                  expanderCell={expanderCell}
-                />
-              );
-            })}
-          </VirtualScroll>
+          <>
+            {useVirtualization && (
+              <VirtualScroll>
+                {rows.map((row: Row<T>) => {
+                  prepareRow(row);
+                  return (
+                    <TableRowMemoized
+                      row={row}
+                      rowProps={rowProps}
+                      isLast={row.index === data.length - 1}
+                      onRowInViewport={onRowInViewportRef}
+                      onBottomReached={onBottomReachedRef}
+                      intersectionMargin={intersectionMargin}
+                      state={state}
+                      key={row.getRowProps().key}
+                      onClick={onRowClickHandler}
+                      subComponent={subComponent}
+                      isDisabled={!!isRowDisabled?.(row.original)}
+                      tableHasSubRows={hasAnySubRows}
+                      tableInstance={instance}
+                      expanderCell={expanderCell}
+                    />
+                  );
+                })}
+              </VirtualScroll>
+            )}
+            {!useVirtualization &&
+              rows.map((row: Row<T>) => {
+                prepareRow(row);
+                return (
+                  <TableRowMemoized
+                    row={row}
+                    rowProps={rowProps}
+                    isLast={row.index === data.length - 1}
+                    onRowInViewport={onRowInViewportRef}
+                    onBottomReached={onBottomReachedRef}
+                    intersectionMargin={intersectionMargin}
+                    state={state}
+                    key={row.getRowProps().key}
+                    onClick={onRowClickHandler}
+                    subComponent={subComponent}
+                    isDisabled={!!isRowDisabled?.(row.original)}
+                    tableHasSubRows={hasAnySubRows}
+                    tableInstance={instance}
+                    expanderCell={expanderCell}
+                  />
+                );
+              })}
+          </>
         )}
         {isLoading && data.length === 0 && (
           <div className='iui-table-empty'>
