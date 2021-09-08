@@ -53,6 +53,7 @@ export const EditableCell = <T extends Record<string, unknown>>(
       suppressContentEditableWarning
       onInput={(e) => {
         setValue(
+          // Removes new line symbols
           (e.target as HTMLElement).innerText.replace(/(\r\n|\n|\r)/gm, ''),
         );
         setIsDirty(true);

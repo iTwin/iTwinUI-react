@@ -6,7 +6,7 @@ import React from 'react';
 import { Cell, CellProps, TableInstance } from 'react-table';
 import cx from 'classnames';
 import { getCellStyle } from './utils';
-import SubRowExpander from './SubRowExpander';
+import { SubRowExpander } from './SubRowExpander';
 import { SELECTION_CELL_ID } from './hooks';
 import { DefaultCell } from './cells';
 
@@ -19,7 +19,7 @@ export type TableCellProps<T extends Record<string, unknown>> = {
   expanderCell?: (cellProps: CellProps<T>) => React.ReactNode;
 };
 
-const TableCell = <T extends Record<string, unknown>>(
+export const TableCell = <T extends Record<string, unknown>>(
   props: TableCellProps<T>,
 ) => {
   const {

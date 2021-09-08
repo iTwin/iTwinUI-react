@@ -14,7 +14,7 @@ export type SubRowExpanderProps<T extends Record<string, unknown>> = {
   cellProps: CellProps<T>;
 };
 
-const SubRowExpander = <T extends Record<string, unknown>>(
+export const SubRowExpander = <T extends Record<string, unknown>>(
   props: SubRowExpanderProps<T>,
 ) => {
   const { cell, isDisabled, cellProps, expanderCell } = props;

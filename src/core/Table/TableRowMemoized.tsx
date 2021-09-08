@@ -8,7 +8,7 @@ import { CellProps, Row, TableInstance, TableState } from 'react-table';
 import { useIntersection } from '../utils/hooks/useIntersection';
 import { CSSTransition } from 'react-transition-group';
 import { useMergedRefs } from '../utils/hooks/useMergedRefs';
-import TableCell from './TableCell';
+import { TableCell } from './TableCell';
 
 /**
  * Memoization is needed to avoid unnecessary re-renders of all rows when additional data is added when lazy-loading.
