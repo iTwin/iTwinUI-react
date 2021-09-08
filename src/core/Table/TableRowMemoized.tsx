@@ -9,7 +9,6 @@ import { useIntersection } from '../utils/hooks/useIntersection';
 import { CSSTransition } from 'react-transition-group';
 import { useMergedRefs } from '../utils/hooks/useMergedRefs';
 import TableCell from './TableCell';
-import { OnCellEditCallbackParams } from './EditableCell';
 
 /**
  * Memoization is needed to avoid unnecessary re-renders of all rows when additional data is added when lazy-loading.
@@ -31,7 +30,6 @@ const TableRow = <T extends Record<string, unknown>>(props: {
   tableHasSubRows: boolean;
   tableInstance: TableInstance<T>;
   expanderCell?: (cellProps: CellProps<T>) => React.ReactNode;
-  onCellEdit?: (cellEditParams: OnCellEditCallbackParams<T>) => void;
 }) => {
   const {
     row,
@@ -46,7 +44,6 @@ const TableRow = <T extends Record<string, unknown>>(props: {
     tableHasSubRows,
     tableInstance,
     expanderCell,
-    onCellEdit,
   } = props;
 
   const onIntersect = React.useCallback(() => {
@@ -95,11 +92,10 @@ const TableRow = <T extends Record<string, unknown>>(props: {
               key={cell.getCellProps().key}
               cell={cell}
               cellIndex={index}
-              isRowDisabled={isDisabled}
+              isDisabled={isDisabled}
               tableHasSubRows={tableHasSubRows}
               tableInstance={tableInstance}
               expanderCell={expanderCell}
-              onCellEdit={onCellEdit}
             />
           );
         })}
@@ -174,6 +170,5 @@ export const TableRowMemoized = React.memo(
     prevProp.isDisabled === nextProp.isDisabled &&
     prevProp.rowProps === nextProp.rowProps &&
     prevProp.expanderCell === nextProp.expanderCell &&
-    prevProp.tableHasSubRows === nextProp.tableHasSubRows &&
-    prevProp.onCellEdit === nextProp.onCellEdit,
+    prevProp.tableHasSubRows === nextProp.tableHasSubRows,
 ) as typeof TableRow;

@@ -7,6 +7,7 @@ import {
   actions,
   ActionType,
   CellProps,
+  CellRendererProps,
   Column,
   Row,
   TableInstance,
@@ -22,7 +23,8 @@ import {
   TableFilterValue,
   TableProps,
   Tooltip,
-  OnCellEditCallbackParams,
+  DefaultCell,
+  EditableCell,
 } from '../../src/core';
 import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
@@ -1344,6 +1346,35 @@ export const Editable: Story<TableProps> = (args) => {
     return rowData.name === 'Name2';
   }, []);
 
+  const onCellEdit = useCallback(
+    (columnId: string, value: string, rowData: TableStoryDataType) => {
+      action('onCellEdit')({ columnId, value, rowData });
+      setData((oldData) => {
+        const newData = [...oldData];
+        const index = oldData.indexOf(rowData);
+        const newObject = { ...newData[index] };
+        newObject[columnId as keyof TableStoryDataType] = value;
+        newData[index] = newObject;
+        return newData;
+      });
+    },
+    [],
+  );
+
+  const cellRenderer = useCallback(
+    (props: CellRendererProps<TableStoryDataType>) => (
+      <>
+        {!isRowDisabled(props.cellProps.row.original) &&
+        props.cellProps.value !== 'Fetching...' ? (
+          <EditableCell {...props} onCellEdit={onCellEdit} />
+        ) : (
+          <DefaultCell {...props} />
+        )}
+      </>
+    ),
+    [isRowDisabled, onCellEdit],
+  );
+
   const columns = React.useMemo(
     (): Column<TableStoryDataType>[] => [
       {
@@ -1353,35 +1384,20 @@ export const Editable: Story<TableProps> = (args) => {
             id: 'name',
             Header: 'Name',
             accessor: 'name',
-            isCellEditable: () => true,
+            cellRenderer,
             Filter: tableFilters.TextFilter(),
           },
           {
             id: 'description',
             Header: 'Description',
             accessor: 'description',
-            isCellEditable: (rowData) => rowData.description !== 'Fetching...',
+            cellRenderer,
             Filter: tableFilters.TextFilter(),
           },
         ],
       },
     ],
-    [],
-  );
-
-  const onCellEdit = useCallback(
-    (params: OnCellEditCallbackParams<TableStoryDataType>) => {
-      action('onCellEdit')(params);
-      setData((oldData) => {
-        const newData = [...oldData];
-        const index = oldData.indexOf(params.rowData);
-        const newObject = { ...newData[index] };
-        newObject[params.columnId as keyof TableStoryDataType] = params.value;
-        newData[index] = newObject;
-        return newData;
-      });
-    },
-    [],
+    [cellRenderer],
   );
 
   return (
@@ -1390,7 +1406,6 @@ export const Editable: Story<TableProps> = (args) => {
       columns={columns}
       data={data}
       emptyTableContent='No data.'
-      onCellEdit={onCellEdit}
       autoResetFilters={false}
       isRowDisabled={isRowDisabled}
     />

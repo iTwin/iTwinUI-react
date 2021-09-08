@@ -6,15 +6,14 @@ import React from 'react';
 import { Cell, CellProps, TableInstance } from 'react-table';
 import cx from 'classnames';
 import { getCellStyle } from './utils';
-import EditableCell, { OnCellEditCallbackParams } from './EditableCell';
 import SubRowExpander from './SubRowExpander';
 import { SELECTION_CELL_ID } from './hooks';
+import { DefaultCell } from './cells';
 
 export type TableCellProps<T extends Record<string, unknown>> = {
   cell: Cell<T>;
   cellIndex: number;
-  onCellEdit?: (cellEditParams: OnCellEditCallbackParams<T>) => void;
-  isRowDisabled: boolean;
+  isDisabled: boolean;
   tableHasSubRows: boolean;
   tableInstance: TableInstance<T>;
   expanderCell?: (cellProps: CellProps<T>) => React.ReactNode;
@@ -26,8 +25,7 @@ const TableCell = <T extends Record<string, unknown>>(
   const {
     cell,
     cellIndex,
-    onCellEdit,
-    isRowDisabled,
+    isDisabled,
     tableHasSubRows,
     tableInstance,
     expanderCell,
@@ -48,7 +46,7 @@ const TableCell = <T extends Record<string, unknown>>(
     };
   };
 
-  const cellProps = cell.getCellProps({
+  const cellElementProps = cell.getCellProps({
     className: cx('iui-cell', cell.column.cellClassName),
     style: {
       ...getCellStyle(cell.column),
@@ -56,29 +54,37 @@ const TableCell = <T extends Record<string, unknown>>(
     },
   });
 
+  const cellProps: CellProps<T> = {
+    ...tableInstance,
+    ...{ cell, row: cell.row, value: cell.value, column: cell.column },
+  };
+
   const cellContent = (
     <>
       {tableHasSubRows && hasSubRowExpander && cell.row.canExpand && (
         <SubRowExpander
           cell={cell}
-          isDisabled={isRowDisabled}
-          tableInstance={tableInstance}
+          isDisabled={isDisabled}
+          cellProps={cellProps}
           expanderCell={expanderCell}
         />
       )}
       {cell.render('Cell')}
     </>
   );
+
+  const cellRendererProps = {
+    cellElementProps,
+    cellProps,
+    children: cellContent,
+  };
+
   return (
     <>
-      {isRowDisabled ||
-      !cell.column.isCellEditable?.(cell.row.original) ||
-      !onCellEdit ? (
-        <div {...cellProps}>{cellContent}</div>
+      {cell.column.cellRenderer ? (
+        cell.column.cellRenderer(cellRendererProps)
       ) : (
-        <EditableCell cell={cell} cellProps={cellProps} onCellEdit={onCellEdit}>
-          {cellContent}
-        </EditableCell>
+        <DefaultCell {...cellRendererProps} />
       )}
     </>
   );

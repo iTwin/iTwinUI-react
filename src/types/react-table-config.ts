@@ -60,6 +60,13 @@ import {
 
 declare module 'react-table' {
   export type FieldType = 'text' | 'number' | 'date' | string;
+
+  export type CellRendererProps<D extends object = {}> = {
+    cellElementProps: TableCellProps;
+    cellProps: CellProps<D>;
+    children: React.ReactNode;
+  };
+
   // take this file as-is, or comment out the sections that don't apply to your plugin configuration
   export interface TableOptions<D extends object = {}>
     extends Omit<UseTableOptions<D>, 'data'>,
@@ -142,11 +149,16 @@ declare module 'react-table' {
      */
     filter?: FilterType<D> | DefaultFilterTypes | string;
     /**
-     * Function that should return true if a column's cell is editable.
-     * If not specified, all column cells will not be editable.
-     * You must pass `onCellEdit` prop to the `Table`.
+     * Function that should return whole cell element not only the content.
+     * Must be memoized.
+     * @example
+     * {
+     *   Header: 'Name',
+     *   accessor: 'name',
+     *   cellRenderer: (props) => <EditableCell {...props} onCellEdit={onCellEditHandler} />,
+     * }
      */
-    isCellEditable?: (rowData: D) => boolean;
+    cellRenderer?: (props: CellRendererProps<D>) => React.ReactNode;
   }
 
   export interface ColumnInstance<D extends object = {}>
