@@ -7,8 +7,7 @@ import { useTheme } from '../utils/hooks/useTheme';
 import { getWindow } from '../utils/common';
 import { CommonProps } from '../utils/props';
 import cx from 'classnames';
-
-import 'D:/itwinUI/iTwinUI/lib/css/color-picker.css';
+import '@itwin/itwinui-css/css/color-picker.css';
 
 const getColorValue = (color: ColorProps['color']) => {
   if (!color) {

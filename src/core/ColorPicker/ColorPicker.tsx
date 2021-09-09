@@ -6,8 +6,7 @@ import React from 'react';
 import { useTheme } from '../utils/hooks/useTheme';
 import Color from './Color';
 import cx from 'classnames';
-import 'D:/itwinUI/iTwinUI/lib/css/color-picker.css';
-// import '@itwin/itwinui-css/css/color-picker.css';
+import '@itwin/itwinui-css/css/color-picker.css';
 import { getWindow } from '../utils/common';
 import SvgAddCircular from '@itwin/itwinui-icons-react/cjs/icons/AddCircular';
 
