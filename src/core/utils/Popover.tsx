@@ -69,7 +69,7 @@ export const Popover = React.forwardRef((props: PopoverProps, ref) => {
     },
     role: undefined,
     offset: [0, 0],
-    maxWidth: 'none',
+    maxWidth: '',
     ...props,
     plugins: [
       lazyLoad,
