@@ -40,7 +40,6 @@ export const VirtualScroll = ({ children }: VirtualScrollProps) => {
   const heightMap: React.MutableRefObject<{
     [key: string]: number;
   }> = React.useRef({});
-  const animationFrame = React.useRef<number>();
   const firstLoad = React.useRef(true);
   const [viewportHeight, setViewportHeight] = React.useState(0);
   const recalculatedHeight: React.MutableRefObject<{
@@ -48,6 +47,8 @@ export const VirtualScroll = ({ children }: VirtualScrollProps) => {
   }> = React.useRef({});
   const [containerHeight, setContainerHeight] = React.useState(0);
 
+  // Find scrollable parent and viewport height
+  // Needed only on init
   React.useLayoutEffect(() => {
     const scrollableParent = getScrollableParent(childrenParentRef.current);
     setScrollContainer(scrollableParent);
@@ -61,6 +62,7 @@ export const VirtualScroll = ({ children }: VirtualScrollProps) => {
     );
   }, [children, startNode, visibleNodeCount]);
 
+  // Update heights map with visible children height
   React.useLayoutEffect(() => {
     if (!childrenParentRef.current) {
       return;
@@ -75,11 +77,10 @@ export const VirtualScroll = ({ children }: VirtualScrollProps) => {
       heightMap.current[i] = Number(elementHeight.toFixed(2));
       heightSum += Number(elementHeight.toFixed(2));
     }
+
+    // On the first load, set container and child heights
+    // Later on they will be updated on scroll or children change
     if (firstLoad.current) {
-      // setChildHeight(
-      //   Math.max(57, Math.ceil(heightSum / visibleChildren.length)),
-      // );
-      console.log(heightSum, visibleChildren.length, children.length);
       setContainerHeight(
         Math.ceil(heightSum / visibleChildren.length) * children.length,
       );
@@ -93,6 +94,7 @@ export const VirtualScroll = ({ children }: VirtualScrollProps) => {
     children.length,
   ]);
 
+  // When children change, recalculate container height
   React.useLayoutEffect(() => {
     console.log('calculate', firstLoad.current, childHeight, children.length);
     if (childHeight === 0) {
@@ -152,10 +154,6 @@ export const VirtualScroll = ({ children }: VirtualScrollProps) => {
   );
 
   const onScroll = React.useCallback(() => {
-    if (animationFrame.current) {
-      cancelAnimationFrame(animationFrame.current);
-    }
-    // animationFrame.current = requestAnimationFrame(() => {
     if (!scrollContainer) {
       return;
     }
@@ -163,6 +161,8 @@ export const VirtualScroll = ({ children }: VirtualScrollProps) => {
     setStartNode(start);
     setVisibleNodeCount(getVisibleNodeCount(start));
     setTranslateY(getTranslateValue(start));
+    // When getting closer to the end,
+    // recalculate container and child height
     if (
       viewportHeight +
         scrollContainer.scrollTop +
@@ -193,6 +193,7 @@ export const VirtualScroll = ({ children }: VirtualScrollProps) => {
     viewportHeight,
   ]);
 
+  // Add scroll listener and set initial values
   React.useLayoutEffect(() => {
     let top = 0;
     if (!scrollContainer || scrollContainer === document.body) {
