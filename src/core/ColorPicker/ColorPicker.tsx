@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { useTheme } from '../utils/hooks/useTheme';
 import Color from './Color';
 import cx from 'classnames';
@@ -13,10 +13,11 @@ import SvgAddCircular from '@itwin/itwinui-icons-react/cjs/icons/AddCircular';
 export type ColorPickerProps = {
   /**
    * List of colors to show in color palette
+   * Can pass in strings of the color values for simple input or a list of Colors to customize onColorClick handler etc.
    */
-  colors?: string[];
+  colors?: ReactNode[];
   /**
-   * Style of the color picker.
+   * Style of the color picker - basic or advanced.
    * @default 'basic'
    */
   type?: 'basic' | 'advanced';
@@ -26,6 +27,7 @@ export type ColorPickerProps = {
   activeColorIndex?: number;
   /**
    * Handler for clicking a color
+   * This will be applied to all colors in the palette unless specifically passed in to a specific color in the colors list
    */
   onColorClicked?: (index: number) => void;
 };
@@ -109,14 +111,28 @@ export const ColorPicker = (props: ColorPickerProps) => {
               }
               onColorChanged(index);
             };
-            return (
-              <Color
-                key={index}
-                color={color}
-                onColorClicked={onClick}
-                isActive={index === currentActiveIndex}
-              />
-            );
+            if (typeof color === 'string') {
+              return (
+                <Color
+                  key={index}
+                  color={color}
+                  onColorClicked={onClick}
+                  isActive={index === currentActiveIndex}
+                />
+              );
+            } else {
+              {
+                return React.isValidElement(color)
+                  ? React.cloneElement(color, {
+                      // Use the same onClick handler for all colors in palette unless a custom handler was passed in to specific color
+                      onColorClicked: color.props['onColorClicked']
+                        ? color.props['onColorClicked']
+                        : onClick,
+                      isActive: index === currentActiveIndex,
+                    })
+                  : color;
+              }
+            }
           })}
       </div>
     </div>

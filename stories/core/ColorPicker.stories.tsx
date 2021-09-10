@@ -6,6 +6,7 @@ import { Story, Meta } from '@storybook/react';
 import React from 'react';
 import { ColorPicker, ColorPickerProps } from '../../src/core';
 import { action } from '@storybook/addon-actions';
+import Color from '../../src/core/ColorPicker/Color';
 
 export default {
   component: ColorPicker,
@@ -25,8 +26,15 @@ export const Basic: Story<ColorPickerProps> = (args) => {
   return <ColorPicker onColorClicked={onClick} {...args} />;
 };
 
+const onCustomClick = () => {
+  action(`Custom color clicked`)();
+};
+
 Basic.args = {
   colors: [
+    <Color key={1} color='#FFC335' onColorClicked={onCustomClick} />,
+    <Color key={2} color='#CF0000' />,
+    <Color key={3} color='#D4F4BD' />,
     '#458816',
     '#CF0000',
     '#00121D',

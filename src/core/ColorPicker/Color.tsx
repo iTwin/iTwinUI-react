@@ -28,7 +28,7 @@ export type ColorProps = {
   /**
    * Is color selected
    */
-  isActive: boolean;
+  isActive?: boolean;
 } & CommonProps;
 
 export const Color = (props: ColorProps) => {
