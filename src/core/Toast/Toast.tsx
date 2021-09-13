@@ -93,8 +93,6 @@ export const Toast = (props: ToastProps) => {
 
   const [visible, setVisible] = React.useState(isVisible);
   const [height, setHeight] = React.useState(0);
-  const [animationX, setAnimationX] = React.useState(0);
-  const [animationY, setAnimationY] = React.useState(0);
   const [animateOutX, setAnimateOutX] = React.useState(0);
   const [animateOutY, setAnimateOutY] = React.useState(0);
 
@@ -138,29 +136,23 @@ export const Toast = (props: ToastProps) => {
       const { height } = ref.getBoundingClientRect();
       setHeight(height);
     }
-  };
-
-  const onAnimationRef = (ref: HTMLDivElement) => {
     if (ref && animateOutTo) {
       const { x, y } = ref.getBoundingClientRect();
-      setAnimateOutX(animateOutTo.getBoundingClientRect().x);
-      setAnimateOutY(animateOutTo.getBoundingClientRect().y);
-      setAnimationX(x);
-      setAnimationY(y);
+      setAnimateOutX(animateOutTo.getBoundingClientRect().x - x);
+      setAnimateOutY(animateOutTo.getBoundingClientRect().y - y);
     }
   };
 
-  const style = { height, marginBottom: visible ? '0' : -height };
-
-  const _transition = {
-    '--x-translate': `${animateOutX - animationX}px`,
-    '--y-translate': `${animateOutY - animationY}px`,
-    ...style,
+  const style = {
+    height,
+    marginBottom: visible ? '0' : -height,
+    '--x-translate': `${animateOutX}px`,
+    '--y-translate': `${animateOutY}px`,
   };
 
   return (
     <Transition
-      timeout={{ enter: 240, exit: 120 }}
+      timeout={{ enter: 240, exit: 400 }}
       in={visible}
       appear={true}
       unmountOnExit={true}
@@ -168,9 +160,8 @@ export const Toast = (props: ToastProps) => {
     >
       {(state) => (
         <div
-          ref={onAnimationRef}
           className={cx('iui-toast-all', `iui-toast-${state}`)}
-          style={_transition}
+          style={style}
         >
           <div ref={onRef}>
             <ToastPresentation
