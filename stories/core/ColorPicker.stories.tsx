@@ -3,10 +3,12 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { Story, Meta } from '@storybook/react';
-import React from 'react';
-import { ColorPicker, ColorPickerProps } from '../../src/core';
+import React, { useState } from 'react';
+import { ColorPicker, ColorPickerProps, IconButton } from '../../src/core';
 import { action } from '@storybook/addon-actions';
 import Color from '../../src/core/ColorPicker/Color';
+import { DefaultColors } from '../../src/core/ColorPicker/ColorPicker';
+import SvgAdd from '@itwin/itwinui-icons-react/cjs/icons/Add';
 
 export default {
   component: ColorPicker,
@@ -20,42 +22,98 @@ export default {
 
 export const Basic: Story<ColorPickerProps> = (args) => {
   const onClick = (index: number) => {
+    setCurrentColor(index.toString());
     action(`Clicked color #${index}`)();
   };
+  const [opened, setOpened] = useState(false);
 
-  return <ColorPicker onColorClicked={onClick} {...args} />;
-};
+  const [currentColor, setCurrentColor] = useState('No color selected');
 
-const onCustomClick = () => {
-  action(`Custom color clicked`)();
+  return (
+    <>
+      <IconButton onClick={() => setOpened(!opened)}>
+        <SvgAdd />
+      </IconButton>
+      <span style={{ marginLeft: 16 }}>{currentColor.toString()}</span>
+      {opened && (
+        <div style={{ marginTop: 4 }}>
+          <ColorPicker onColorClicked={onClick} {...args} />
+        </div>
+      )}
+    </>
+  );
 };
 
 Basic.args = {
-  colors: [
-    <Color key={1} color='#FFC335' onColorClicked={onCustomClick} />,
-    <Color key={2} color='#CF0000' />,
-    <Color key={3} color='#D4F4BD' />,
-    '#458816',
-    '#CF0000',
-    '#00121D',
-    '#00426B',
-    '#008BE1',
-    '#D4F4BD',
-    '#EEF6E8',
-    '#9BA5AF',
-    '#CF0000',
-    '#FF6300',
-    '#FFC335',
-  ],
-  activeColorIndex: 0,
+  colors: DefaultColors,
+};
+
+export const WithCustomClick: Story<ColorPickerProps> = (args) => {
+  const { activeColorIndex, ...rest } = args;
+
+  const [opened, setOpened] = useState(false);
+  const [currentColor, setCurrentColor] = useState('No color selected');
+
+  const [currentActiveIndex, setCurrentActiveIndex] = React.useState(
+    activeColorIndex,
+  );
+  const onCustomClick = (index: number) => {
+    action(`Clicked custom color #${index}`)();
+    setCurrentActiveIndex(index);
+  };
+
+  return (
+    <>
+      <IconButton onClick={() => setOpened(!opened)}>
+        <SvgAdd />
+      </IconButton>
+      <span style={{ marginLeft: 16 }}>{currentColor.toString()}</span>
+      {opened && (
+        <div style={{ marginTop: 4 }}>
+          <ColorPicker {...rest}>
+            {DefaultColors.map((color, index) => {
+              const onClick = () => {
+                onCustomClick(index);
+                setCurrentColor(index.toString());
+              };
+              return (
+                <Color
+                  key={index}
+                  color={color}
+                  onColorClicked={onClick}
+                  isActive={index === currentActiveIndex}
+                />
+              );
+            })}
+          </ColorPicker>{' '}
+        </div>
+      )}
+    </>
+  );
 };
 
 export const Advanced: Story<ColorPickerProps> = (args) => {
+  const [opened, setOpened] = useState(false);
+  const [currentColor, setCurrentColor] = useState('No color selected');
+
   const onClick = (index: number) => {
     action(`Clicked color #${index}`)();
+    setCurrentColor(index.toString());
   };
 
-  return <ColorPicker onColorClicked={onClick} {...args} />;
+  return (
+    <>
+      <IconButton onClick={() => setOpened(!opened)}>
+        <SvgAdd />
+      </IconButton>
+      <span style={{ marginLeft: 16 }}>{currentColor.toString()}</span>
+      {opened && (
+        <div style={{ marginTop: 4 }}>
+          <ColorPicker onColorClicked={onClick} {...args} />{' '}
+        </div>
+      )}
+    </>
+  );
 };
 
 Advanced.args = {

@@ -10,6 +10,39 @@ import '@itwin/itwinui-css/css/color-picker.css';
 import { getWindow } from '../utils/common';
 import SvgAddCircular from '@itwin/itwinui-icons-react/cjs/icons/AddCircular';
 
+export const DefaultColors = [
+  '#FFFFFF', // "WHITE"
+  '#5A6973', // "GREY"
+  '#00121D', // "KURETAKE BLACK MANGA"
+  '#002A44', // "RHAPSODY IN BLUE
+  '#00426B', // "DARK IMPERIAL BLUE"
+  '#005A92', // "JETSKI RACE"
+  '#0073BA', // "FRENCH BLUE"
+  '#008BE1', // "BLUE COLA"
+  '#30B0FF', // 'FANTASY CONSOLE SKY'
+  '#58BFFF', // 'HELLO SUMMER'
+  '#7FCEFF', // 'CHROMIS DAMSEL BLUE'
+  '#A6DDFF', // 'DROPLET'
+  '#CDECFF', // 'LUCID DREAMS'
+  '#E5F5FD', // 'KODAMA WHITE'
+  '#010200', // 'REGISTRATION BLACK'
+  '#122306', // 'YUZU SOY'
+  '#23450b', // 'FOREST GREEN'
+  '#346711', // 'TATZELWURM GREEN'
+  '#458816', // 'CHLOROPHYLL'
+  '#56AA1C', // 'PLASTIC PINES'
+  '#5FBB1F', // 'FIELD GREEN',
+  '#67CC22', // 'GREEN HIGH',
+  '#91E458', // 'LILLIPUTIAN LIME'
+  '#B2EC8B', // 'GREEN DAY'
+  '#D4F4BD', // 'TEA GREEN'
+  '#EEF6E8', // 'VERDE PASTEL'
+  '#9BA5AF', // 'SERYI GREY'
+  '#CF0000', // 'RED EPIPHYLLUM'
+  '#FF6300', // 'SAFETY ORANGE'
+  '#FFC335', // 'RISE-N-SHINE'
+];
+
 export type ColorPickerProps = {
   /**
    * List of colors to show in color palette
@@ -30,6 +63,10 @@ export type ColorPickerProps = {
    * This will be applied to all colors in the palette unless specifically passed in to a specific color in the colors list
    */
   onColorClicked?: (index: number) => void;
+  /**
+   * Any custom nodes that will be added within the color palette
+   */
+  children?: React.ReactNode;
 };
 
 export const ColorPicker = (props: ColorPickerProps) => {
@@ -38,6 +75,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
     type = 'basic',
     activeColorIndex,
     onColorClicked,
+    children,
     ...rest
   } = props;
 
@@ -134,6 +172,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
               }
             }
           })}
+        {children}
       </div>
     </div>
   );
