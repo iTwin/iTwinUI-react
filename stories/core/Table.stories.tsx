@@ -1402,12 +1402,15 @@ export const Editable: Story<TableProps> = (args) => {
 
   return (
     <Table
+      emptyTableContent='No data.'
       {...rest}
       columns={columns}
       data={data}
-      emptyTableContent='No data.'
-      autoResetFilters={false}
       isRowDisabled={isRowDisabled}
+      isSortable
+      // These flags prevent filters and sorting from resetting
+      autoResetFilters={false}
+      autoResetSortBy={false}
     />
   );
 };

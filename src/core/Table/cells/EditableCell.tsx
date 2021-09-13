@@ -41,17 +41,19 @@ export type EditableCellProps<
 export const EditableCell = <T extends Record<string, unknown>>(
   props: EditableCellProps<T>,
 ) => {
-  const {
-    cellElementProps,
-    cellProps,
-    onCellEdit,
-    children,
-    onInput,
-    onBlur,
-    ...rest
-  } = props;
+  const { cellElementProps, cellProps, onCellEdit, children, ...rest } = props;
 
-  const [value, setValue] = React.useState(cellProps.value);
+  const sanitizeString = (text: string) => {
+    return text.replace(/(\r\n|\n|\r)+/gm, ' ');
+  };
+
+  const [value, setValue] = React.useState(() =>
+    sanitizeString(cellProps.value),
+  );
+  React.useEffect(() => {
+    setValue(sanitizeString(cellProps.value));
+  }, [cellProps.value]);
+
   const [isDirty, setIsDirty] = React.useState(false);
 
   return (
@@ -59,21 +61,39 @@ export const EditableCell = <T extends Record<string, unknown>>(
       {...cellElementProps}
       contentEditable
       suppressContentEditableWarning
+      {...rest}
       onInput={(e) => {
-        setValue(
-          // Removes new line symbols
-          (e.target as HTMLElement).innerText.replace(/(\r\n|\n|\r)/gm, ''),
-        );
+        setValue(sanitizeString((e.target as HTMLElement).innerText));
         setIsDirty(true);
-        onInput?.(e);
+        props.onInput?.(e);
       }}
       onBlur={(e) => {
         if (isDirty) {
           onCellEdit(cellProps.column.id, value, cellProps.row.original);
         }
-        onBlur?.(e);
+        props.onBlur?.(e);
       }}
-      {...rest}
+      onKeyDown={(e) => {
+        // Prevents from adding HTML elements (div, br) inside a cell on Enter press
+        if (e.key === 'Enter') {
+          e.preventDefault();
+        }
+        props.onKeyDown?.(e);
+      }}
+      onPaste={(e) => {
+        e.preventDefault();
+        document.execCommand(
+          'inserttext',
+          false,
+          sanitizeString(e.clipboardData.getData('text/plain')),
+        );
+        props.onPaste?.(e);
+      }}
+      onDrop={(e) => {
+        // Prevents from drag'n'dropping into a cell because it will add unwanted HTML elements
+        e.preventDefault();
+        props.onDrop?.(e);
+      }}
     >
       {children}
     </div>

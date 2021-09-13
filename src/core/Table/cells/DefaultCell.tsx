@@ -12,7 +12,7 @@ export type DefaultCellProps<
 /**
  * Default cell.
  * It should be passed to `cellRenderer`.
- * In most cases you shouldn't need to pass this component.
+ * It can can be used to pass native HTML attributes to the cell container.
  * @example
  * {
  *   Header: 'Name',
@@ -23,7 +23,9 @@ export type DefaultCellProps<
 export const DefaultCell = <T extends Record<string, unknown>>(
   props: CellRendererProps<T>,
 ) => {
-  const { cellElementProps, children, ...rest } = props;
+  // Omitting `cellProps`
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { cellElementProps, children, cellProps, ...rest } = props;
   return (
     <div {...cellElementProps} {...rest}>
       {children}

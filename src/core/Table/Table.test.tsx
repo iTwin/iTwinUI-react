@@ -1530,8 +1530,66 @@ it('should edit cell data', () => {
   expect(editableCells).toHaveLength(3);
 
   fireEvent.input(editableCells[1], {
-    target: { innerText: 'test-data\n\r\r\n' },
+    target: { innerText: 'test data' },
   });
   fireEvent.blur(editableCells[1]);
-  expect(onCellEdit).toHaveBeenCalledWith('name', 'test-data', mockedData()[1]);
+  expect(onCellEdit).toHaveBeenCalledWith('name', 'test data', mockedData()[1]);
+});
+
+it('should handle unwanted actions on editable cell', () => {
+  const onCellEdit = jest.fn();
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          cellRenderer: (props) => (
+            <EditableCell {...props} onCellEdit={onCellEdit} />
+          ),
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => {
+            return <span>View</span>;
+          },
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  assertRowsData(rows);
+
+  const editableCells = container.querySelectorAll(
+    '.iui-cell[contenteditable]',
+  );
+  expect(editableCells).toHaveLength(3);
+
+  fireEvent.keyDown(editableCells[1], { key: 'Enter' });
+  expect(onCellEdit).not.toHaveBeenCalled();
+
+  fireEvent.drop(editableCells[1]);
+  expect(onCellEdit).not.toHaveBeenCalled();
+
+  fireEvent.input(editableCells[1], {
+    target: { innerText: 'test\n\r\r\ndata 1' },
+  });
+  fireEvent.blur(editableCells[1]);
+  expect(onCellEdit).toHaveBeenCalledWith(
+    'name',
+    'test data 1',
+    mockedData()[1],
+  );
 });

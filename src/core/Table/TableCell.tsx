@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { Cell, CellProps, TableInstance } from 'react-table';
+import { Cell, CellProps, CellRendererProps, TableInstance } from 'react-table';
 import cx from 'classnames';
 import { getCellStyle } from './utils';
 import { SubRowExpander } from './SubRowExpander';
@@ -73,7 +73,7 @@ export const TableCell = <T extends Record<string, unknown>>(
     </>
   );
 
-  const cellRendererProps = {
+  const cellRendererProps: CellRendererProps<T> = {
     cellElementProps,
     cellProps,
     children: cellContent,
