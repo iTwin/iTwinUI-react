@@ -61,6 +61,10 @@ export type ToastProps = {
    * Function called when the toast is all the way closed.
    */
   onRemove?: () => void;
+  /**
+   * Element to which the toast will animate out to.
+   */
+  animateOutTo?: HTMLElement | null;
 };
 
 /**
@@ -81,14 +85,18 @@ export const Toast = (props: ToastProps) => {
     duration = 7000,
     hasCloseButton,
     onRemove,
+    animateOutTo,
   } = props;
 
   useTheme();
-
   const closeTimeout = React.useRef(0);
 
   const [visible, setVisible] = React.useState(isVisible);
   const [height, setHeight] = React.useState(0);
+  const [animationX, setAnimationX] = React.useState(0);
+  const [animationY, setAnimationY] = React.useState(0);
+  const [animateOutX, setAnimateOutX] = React.useState(0);
+  const [animateOutY, setAnimateOutY] = React.useState(0);
 
   React.useEffect(() => {
     if (type === 'temporary') {
@@ -132,6 +140,24 @@ export const Toast = (props: ToastProps) => {
     }
   };
 
+  const onAnimationRef = (ref: HTMLDivElement) => {
+    if (ref && animateOutTo) {
+      const { x, y } = ref.getBoundingClientRect();
+      setAnimateOutX(animateOutTo.getBoundingClientRect().x);
+      setAnimateOutY(animateOutTo.getBoundingClientRect().y);
+      setAnimationX(x);
+      setAnimationY(y);
+    }
+  };
+
+  const style = { height, marginBottom: visible ? '0' : -height };
+
+  const _transition = {
+    '--x-translate': `${animateOutX - animationX}px`,
+    '--y-translate': `${animateOutY - animationY}px`,
+    ...style,
+  };
+
   return (
     <Transition
       timeout={{ enter: 240, exit: 120 }}
@@ -142,11 +168,9 @@ export const Toast = (props: ToastProps) => {
     >
       {(state) => (
         <div
+          ref={onAnimationRef}
           className={cx('iui-toast-all', `iui-toast-${state}`)}
-          style={{
-            height,
-            marginBottom: visible ? '0' : -height,
-          }}
+          style={_transition}
         >
           <div ref={onRef}>
             <ToastPresentation

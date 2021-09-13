@@ -109,6 +109,7 @@ export const Positive: Story<ToastProps & ToasterSettings> = ({
   placement,
   order,
 }) => {
+  const buttonRef = React.useRef(null);
   const displayPositiveToast = () => {
     toaster.setSettings({
       placement: placement ?? 'top',
@@ -120,12 +121,17 @@ export const Positive: Story<ToastProps & ToasterSettings> = ({
       link,
       type,
       onRemove,
+      animateOutTo: buttonRef.current,
     });
   };
 
   return (
     <>
-      <Button styleType='high-visibility' onClick={displayPositiveToast}>
+      <Button
+        ref={buttonRef}
+        styleType='high-visibility'
+        onClick={displayPositiveToast}
+      >
         Positive
       </Button>
       <Button
