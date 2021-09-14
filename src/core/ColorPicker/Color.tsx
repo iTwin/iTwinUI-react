@@ -9,13 +9,6 @@ import { CommonProps } from '../utils/props';
 import cx from 'classnames';
 import '@itwin/itwinui-css/css/color-picker.css';
 
-const getColorValue = (color: ColorProps['color']) => {
-  if (!color) {
-    return '#FFF';
-  }
-  return color;
-};
-
 export type ColorProps = {
   /**
    * Color
@@ -29,17 +22,32 @@ export type ColorProps = {
    * Is color selected
    */
   isActive?: boolean;
+  /**
+   * User friendly color name
+   */
+  name?: string;
+  /**
+   * User Count Icon props.
+   */
+  tooltipRefProp?: React.ComponentPropsWithRef<'span'>;
 } & CommonProps;
 
 export const Color = (props: ColorProps) => {
-  const { color, style, onColorClicked, isActive, ...rest } = props;
+  const {
+    color,
+    style,
+    onColorClicked,
+    isActive,
+    tooltipRefProp,
+    ...rest
+  } = props;
 
   useTheme();
 
   const _style =
     color && getWindow()?.CSS?.supports?.(`--swatch-color: ${color}`)
-      ? { '--swatch-color': getColorValue(color), ...style }
-      : { backgroundColor: getColorValue(color), ...style };
+      ? { '--swatch-color': color, ...style }
+      : { backgroundColor: color, ...style };
 
   return (
     <span
@@ -47,6 +55,7 @@ export const Color = (props: ColorProps) => {
       style={_style}
       onClick={onColorClicked}
       tabIndex={0}
+      {...tooltipRefProp}
       {...rest}
     />
   );
