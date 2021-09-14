@@ -146,13 +146,13 @@ export const Toast = (props: ToastProps) => {
   const style = {
     height,
     marginBottom: visible ? '0' : -height,
-    '--x-translate': `${animateOutX}px`,
-    '--y-translate': `${animateOutY}px`,
+    '--animateOutToX': `${animateOutX}px`,
+    '--animateOutToY': `${animateOutY}px`,
   };
 
   return (
     <Transition
-      timeout={{ enter: 240, exit: 400 }}
+      timeout={{ enter: 240, exit: animateOutTo ? 400 : 120 }}
       in={visible}
       appear={true}
       unmountOnExit={true}
@@ -160,7 +160,11 @@ export const Toast = (props: ToastProps) => {
     >
       {(state) => (
         <div
-          className={cx('iui-toast-all', `iui-toast-${state}`)}
+          className={cx('iui-toast-all', {
+            'iui-toast-transition-to-exiting':
+              animateOutTo && state === 'exiting',
+            [`iui-toast-${state}`]: !animateOutTo || state !== 'exiting',
+          })}
           style={style}
         >
           <div ref={onRef}>
