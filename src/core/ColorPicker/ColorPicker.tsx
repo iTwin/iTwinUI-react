@@ -7,8 +7,6 @@ import { useTheme } from '../utils/hooks/useTheme';
 import Color from './Color';
 import cx from 'classnames';
 import '@itwin/itwinui-css/css/color-picker.css';
-import { getWindow } from '../utils/common';
-import SvgAddCircular from '@itwin/itwinui-icons-react/cjs/icons/AddCircular';
 
 export const DefaultColors = [
   <Color key={1} color='#FFFFFF' name='WHITE' />,
@@ -80,7 +78,6 @@ export const ColorPicker = (props: ColorPickerProps) => {
   } = props;
 
   useTheme();
-  const selectedColor = '#010200';
 
   // Set active color swatch
   const [currentActiveIndex, setCurrentActiveIndex] = React.useState(
@@ -90,25 +87,6 @@ export const ColorPicker = (props: ColorPickerProps) => {
     setCurrentActiveIndex(index);
   };
 
-  // Set style values for advanced color picker
-  const top = '10%';
-  const left = '10%';
-  const colorGradientStyle = getWindow()?.CSS?.supports?.(
-    `--color: ${selectedColor}`,
-  )
-    ? { '--color': selectedColor }
-    : { backgroundColor: selectedColor };
-
-  const colorDotStyle = getWindow()?.CSS?.supports?.(
-    `--selected-color: ${selectedColor}`,
-  )
-    ? { '--selected-color': selectedColor, '--top': top, '--left': left }
-    : { backgroundColor: selectedColor, top: top, left: left };
-
-  const sliderColorDotStyle = getWindow()?.CSS?.supports?.(`--top: ${top}`)
-    ? { '--top': top }
-    : { top: top };
-
   return (
     <div
       className={cx('iui-color-picker', {
@@ -116,30 +94,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
       })}
       {...rest}
     >
-      {type == 'advanced' && (
-        <div className='iui-color-selection-wrapper'>
-          <div className='iui-color-field' style={colorGradientStyle}>
-            <div className='iui-color-dot' style={colorDotStyle} />
-          </div>
-          <div className='iui-color-slider'>
-            <div
-              className='iui-color-dot iui-white'
-              style={sliderColorDotStyle}
-            />
-          </div>
-        </div>
-      )}
-
-      {type == 'advanced' && (
-        <div className='iui-saved-colors'>Saved Colors</div>
-      )}
-
       <div className='iui-color-palette'>
-        {type == 'advanced' && (
-          <button className='iui-button iui-borderless'>
-            <SvgAddCircular className='iui-icon' aria-hidden='true' />
-          </button>
-        )}
         {colors &&
           colors.length > 0 &&
           colors.map((color, index) => {

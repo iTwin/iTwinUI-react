@@ -15,15 +15,6 @@ it('should render in its most basic state', () => {
   expect(container.querySelectorAll(`.iui-color-swatch`).length).toBe(2);
 });
 
-it('should render advanced color picker', () => {
-  const { container } = render(<ColorPicker type='advanced' />);
-  expect(
-    container.querySelector(`.iui-color-picker.iui-advanced`),
-  ).toBeTruthy();
-
-  expect(container.querySelectorAll(`.iui-color-swatch`).length).toBe(0);
-});
-
 it('should render color picker with active color swatch', () => {
   const colorList = ['#00121D', '#002A44'];
   const { container } = render(
