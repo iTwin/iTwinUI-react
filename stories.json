@@ -737,6 +737,15 @@
         "__id": "core-expandableblock--accordion"
       }
     },
+    "core-expandableblock--status-icon": {
+      "id": "core-expandableblock--status-icon",
+      "name": "Status Icon",
+      "kind": "Core/ExpandableBlock",
+      "story": "Status Icon",
+      "parameters": {
+        "__id": "core-expandableblock--status-icon"
+      }
+    },
     "input-fieldset--basic": {
       "id": "input-fieldset--basic",
       "name": "Basic",
@@ -1545,6 +1554,15 @@
       "story": "Condensed",
       "parameters": {
         "__id": "core-table--condensed"
+      }
+    },
+    "core-table--editable": {
+      "id": "core-table--editable",
+      "name": "Editable",
+      "kind": "Core/Table",
+      "story": "Editable",
+      "parameters": {
+        "__id": "core-table--editable"
       }
     },
     "core-tabs--default-tabs": {
