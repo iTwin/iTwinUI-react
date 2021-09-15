@@ -30,16 +30,16 @@ export const Basic: Story<ColorPickerProps> = (args) => {
   const [opened, setOpened] = useState(false);
 
   const [currentColorName, setCurrentColorName] = useState(
-    DefaultColors[activeColorIndex].props['name'],
+    DefaultColors[activeColorIndex].name,
   );
   const [currentColorValue, setCurrentColorValue] = useState(
-    DefaultColors[activeColorIndex].props['color'],
+    DefaultColors[activeColorIndex].color,
   );
 
   const onClick = (index: number) => {
     action(`Clicked color #${index}`)();
-    setCurrentColorName(DefaultColors[index].props['name']);
-    setCurrentColorValue(DefaultColors[index].props['color']);
+    setCurrentColorName(DefaultColors[index].name);
+    setCurrentColorValue(DefaultColors[index].color);
   };
 
   return (
@@ -58,7 +58,9 @@ export const Basic: Story<ColorPickerProps> = (args) => {
 };
 
 Basic.args = {
-  colors: DefaultColors,
+  colors: DefaultColors.map((color, index) => {
+    return <Color key={index} color={color.color} name={color.name} />;
+  }),
   activeColorIndex: 7,
 };
 
@@ -71,10 +73,10 @@ export const WithCustomClick: Story<ColorPickerProps> = (args) => {
     activeColorIndex,
   );
   const [currentColorName, setCurrentColorName] = useState(
-    DefaultColors[currentActiveIndex].props['name'],
+    DefaultColors[currentActiveIndex].name,
   );
   const [currentColorValue, setCurrentColorValue] = useState(
-    DefaultColors[currentActiveIndex].props['color'],
+    DefaultColors[currentActiveIndex].color,
   );
   const onCustomClick = (index: number, name: string, color: string) => {
     action(`Clicked custom color ${name}`)();
@@ -94,12 +96,12 @@ export const WithCustomClick: Story<ColorPickerProps> = (args) => {
           <ColorPicker {...rest}>
             {DefaultColors.map((color, index) => {
               const onClick = () => {
-                onCustomClick(index, color.props['name'], color.props['color']);
+                onCustomClick(index, color.name, color.color);
               };
               return (
                 <Color
                   key={index}
-                  color={color.props['color']}
+                  color={color.color}
                   onColorClicked={onClick}
                   isActive={index === currentActiveIndex}
                 />
@@ -125,10 +127,10 @@ export const WithTooltip: Story<ColorPickerProps> = (args) => {
     activeColorIndex,
   );
   const [currentColorName, setCurrentColorName] = useState(
-    DefaultColors[currentActiveIndex].props['name'],
+    DefaultColors[currentActiveIndex].name,
   );
   const [currentColorValue, setCurrentColorValue] = useState(
-    DefaultColors[currentActiveIndex].props['color'],
+    DefaultColors[currentActiveIndex].color,
   );
 
   const onColorClick = (index: number, name: string, color: string) => {
@@ -151,18 +153,18 @@ export const WithTooltip: Story<ColorPickerProps> = (args) => {
           <ColorPicker {...rest}>
             {DefaultColors.map((color, index) => {
               const onClick = () => {
-                onColorClick(index, color.props['name'], color.props['color']);
+                onColorClick(index, color.name, color.color);
               };
               return (
                 <>
                   <Color
                     key={index}
-                    color={color.props['color']}
+                    color={color.color}
                     onColorClicked={onClick}
                     isActive={index === currentActiveIndex}
                     tooltipRefProp={{ ref: colorRef }}
                   />
-                  <Tooltip reference={colorRef} content={color.props['name']} />
+                  <Tooltip reference={colorRef} content={color.name} />
                 </>
               );
             })}
