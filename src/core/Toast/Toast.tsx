@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { Transition } from 'react-transition-group';
+import { CSSTransition } from 'react-transition-group';
 import SvgCloseSmall from '@itwin/itwinui-icons-react/cjs/icons/CloseSmall';
 import cx from 'classnames';
 import { useTheme } from '../utils/hooks/useTheme';
@@ -136,6 +136,8 @@ export const Toast = (props: ToastProps) => {
       const { height } = ref.getBoundingClientRect();
       setHeight(height);
     }
+  };
+  const animationRef = (ref: HTMLDivElement) => {
     if (ref && animateOutTo) {
       const { x, y } = ref.getBoundingClientRect();
       setAnimateOutX(animateOutTo.getBoundingClientRect().x - x);
@@ -143,29 +145,30 @@ export const Toast = (props: ToastProps) => {
     }
   };
 
-  const style = {
-    height,
-    marginBottom: visible ? '0' : -height,
-    '--animateOutToX': `${animateOutX}px`,
-    '--animateOutToY': `${animateOutY}px`,
-  };
-
   return (
-    <Transition
+    <CSSTransition
       timeout={{ enter: 240, exit: animateOutTo ? 400 : 120 }}
       in={visible}
       appear={true}
       unmountOnExit={true}
       onExited={onRemove}
+      onExit={(node) => {
+        node.style.transform = animateOutTo
+          ? `scale(0.9) translate(${animateOutX}px,${animateOutY}px)`
+          : `scale(0.9)`;
+        node.style.opacity = '0';
+        node.style.transitionDuration = '400ms';
+        node.style.transitionTimingFunction = 'cubic-bezier(0.4, 0, 1, 1)';
+      }}
+      classNames='iui-toast'
     >
       {(state) => (
         <div
+          ref={animationRef}
           className={cx('iui-toast-all', {
-            'iui-toast-transition-to-exiting':
-              animateOutTo && state === 'exiting',
             [`iui-toast-${state}`]: !animateOutTo || state !== 'exiting',
           })}
-          style={style}
+          style={{ height, marginBottom: visible ? '0' : -height }}
         >
           <div ref={onRef}>
             <ToastPresentation
@@ -179,7 +182,7 @@ export const Toast = (props: ToastProps) => {
           </div>
         </div>
       )}
-    </Transition>
+    </CSSTransition>
   );
 };
 
