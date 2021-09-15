@@ -11,23 +11,23 @@ import '@itwin/itwinui-css/css/color-picker.css';
 
 export type ColorProps = {
   /**
-   * Color
+   * Color code.
    */
   color: string;
   /**
-   * Handler for clicking a color
+   * Handler for clicking a color.
    */
   onColorClicked?: () => void;
   /**
-   * Is color selected
+   * Is color selected.
    */
   isActive?: boolean;
   /**
-   * User friendly color name
+   * User friendly color name.
    */
   name?: string;
   /**
-   * User Count Icon props.
+   * Tooltip ref prop.
    */
   tooltipRefProp?: React.ComponentPropsWithRef<'span'>;
 } & CommonProps;

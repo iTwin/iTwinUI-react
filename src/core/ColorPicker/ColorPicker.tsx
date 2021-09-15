@@ -5,8 +5,8 @@
 import React, { ReactNode } from 'react';
 import { useTheme } from '../utils/hooks/useTheme';
 import Color from './Color';
-import cx from 'classnames';
 import '@itwin/itwinui-css/css/color-picker.css';
+import { CommonProps } from '../utils/props';
 
 export const DefaultColors = [
   { color: '#FFFFFF', name: 'WHITE' },
@@ -43,88 +43,60 @@ export const DefaultColors = [
 
 export type ColorPickerProps = {
   /**
-   * List of colors to show in color palette
+   * List of colors to show in color palette.
    * Can pass in strings of the color values for simple input or a list of Colors to customize onColorClick handler etc.
    */
   colors?: ReactNode[];
-  /**
-   * Style of the color picker - basic or advanced.
-   * @default 'basic'
-   */
-  type?: 'basic' | 'advanced';
   /**
    * Index of the selected color on the color palette.
    */
   activeColorIndex?: number;
   /**
-   * Handler for clicking a color
-   * This will be applied to all colors in the palette unless specifically passed in to a specific color in the colors list
+   * Handler for clicking a color.
+   * This will be applied to all colors in the palette unless specifically passed in to a specific color in the colors list.
    */
   onColorClicked?: (index: number) => void;
   /**
-   * Any custom nodes that will be added within the color palette
+   * Any custom nodes that will be added within the color palette.
    */
   children?: React.ReactNode;
-};
+} & Omit<CommonProps, 'title'>;
 
 export const ColorPicker = (props: ColorPickerProps) => {
-  const {
-    colors,
-    type = 'basic',
-    activeColorIndex,
-    onColorClicked,
-    children,
-    ...rest
-  } = props;
+  const { colors, activeColorIndex, onColorClicked, children, ...rest } = props;
 
   useTheme();
 
-  // Set active color swatch
-  const [currentActiveIndex, setCurrentActiveIndex] = React.useState(
-    activeColorIndex,
-  );
-  const onColorChanged = (index: number) => {
-    setCurrentActiveIndex(index);
-  };
+  const [activeIndex, setactiveIndex] = React.useState(activeColorIndex);
 
   return (
-    <div
-      className={cx('iui-color-picker', {
-        [`iui-${type}`]: type !== 'basic',
-      })}
-      {...rest}
-    >
+    <div className={'iui-color-picker'} {...rest}>
       <div className='iui-color-palette'>
         {colors &&
-          colors.length > 0 &&
           colors.map((color, index) => {
             const onClick = () => {
-              if (onColorClicked != null) {
-                onColorClicked(index);
-              }
-              onColorChanged(index);
+              onColorClicked?.(index);
+              setactiveIndex(index);
             };
             if (typeof color === 'string') {
               return (
                 <Color
-                  key={index}
+                  key={index + color}
                   color={color}
                   onColorClicked={onClick}
-                  isActive={index === currentActiveIndex}
+                  isActive={index === activeIndex}
                 />
               );
             } else {
-              {
-                return React.isValidElement(color)
-                  ? React.cloneElement(color, {
-                      // Use the same onClick handler for all colors in palette unless a custom handler was passed in to specific color
-                      onColorClicked: color.props['onColorClicked']
-                        ? color.props['onColorClicked']
-                        : onClick,
-                      isActive: index === currentActiveIndex,
-                    })
-                  : color;
-              }
+              return React.isValidElement(color)
+                ? React.cloneElement(color, {
+                    // Use the same onClick handler for all colors in palette unless a custom handler was passed in to specific color
+                    onColorClicked: color.props['onColorClicked']
+                      ? color.props['onColorClicked']
+                      : onClick,
+                    isActive: index === activeIndex,
+                  })
+                : color;
             }
           })}
         {children}
