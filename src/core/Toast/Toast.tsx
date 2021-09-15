@@ -136,12 +136,11 @@ export const Toast = (props: ToastProps) => {
       const { height } = ref.getBoundingClientRect();
       setHeight(height);
     }
-  };
-  const animationRef = (ref: HTMLDivElement) => {
     if (ref && animateOutTo) {
       const { x, y } = ref.getBoundingClientRect();
-      setAnimateOutX(animateOutTo.getBoundingClientRect().x - x);
-      setAnimateOutY(animateOutTo.getBoundingClientRect().y - y);
+      const anchorRect = animateOutTo.getBoundingClientRect();
+      setAnimateOutX(anchorRect.x - x);
+      setAnimateOutY(anchorRect.y - y);
     }
   };
 
@@ -164,7 +163,6 @@ export const Toast = (props: ToastProps) => {
     >
       {
         <div
-          ref={animationRef}
           className='iui-toast-all'
           style={{ height, marginBottom: visible ? '0' : -height }}
         >
