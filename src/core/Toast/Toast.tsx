@@ -157,17 +157,15 @@ export const Toast = (props: ToastProps) => {
           ? `scale(0.9) translate(${animateOutX}px,${animateOutY}px)`
           : `scale(0.9)`;
         node.style.opacity = '0';
-        node.style.transitionDuration = '400ms';
+        node.style.transitionDuration = animateOutTo ? '400ms' : '120ms';
         node.style.transitionTimingFunction = 'cubic-bezier(0.4, 0, 1, 1)';
       }}
       classNames='iui-toast'
     >
-      {(state) => (
+      {
         <div
           ref={animationRef}
-          className={cx('iui-toast-all', {
-            [`iui-toast-${state}`]: !animateOutTo || state !== 'exiting',
-          })}
+          className='iui-toast-all'
           style={{ height, marginBottom: visible ? '0' : -height }}
         >
           <div ref={onRef}>
@@ -181,7 +179,7 @@ export const Toast = (props: ToastProps) => {
             />
           </div>
         </div>
-      )}
+      }
     </CSSTransition>
   );
 };
