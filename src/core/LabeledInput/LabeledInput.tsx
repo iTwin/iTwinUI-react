@@ -120,6 +120,7 @@ export const LabeledInput = React.forwardRef<
       {icon &&
         React.cloneElement(icon, {
           className: cx('iui-input-icon', icon.props?.className),
+          'aria-hidden': true,
         })}
       {displayStyle !== 'inline' && message && (
         <div className='iui-message'>{message}</div>
