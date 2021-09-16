@@ -15,10 +15,6 @@ export type ColorProps = {
    */
   color: string;
   /**
-   * Handler for clicking a color.
-   */
-  onColorClicked?: () => void;
-  /**
    * Is color selected.
    */
   isActive?: boolean;
@@ -30,17 +26,11 @@ export type ColorProps = {
    * Tooltip ref prop.
    */
   tooltipRefProp?: React.ComponentPropsWithRef<'span'>;
-} & CommonProps;
+} & CommonProps &
+  React.ComponentPropsWithRef<'span'>;
 
 export const Color = (props: ColorProps) => {
-  const {
-    color,
-    style,
-    onColorClicked,
-    isActive,
-    tooltipRefProp,
-    ...rest
-  } = props;
+  const { color, style, onClick, isActive, tooltipRefProp, ...rest } = props;
 
   useTheme();
 
@@ -53,7 +43,7 @@ export const Color = (props: ColorProps) => {
     <span
       className={cx('iui-color-swatch', { [`iui-active`]: isActive })}
       style={_style}
-      onClick={onColorClicked}
+      onClick={onClick}
       tabIndex={0}
       {...tooltipRefProp}
       {...rest}

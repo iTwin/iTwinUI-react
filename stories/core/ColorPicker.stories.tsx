@@ -25,7 +25,7 @@ export default {
 } as Meta<ColorPickerProps>;
 
 export const Basic: Story<ColorPickerProps> = (args) => {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(5);
 
   const [opened, setOpened] = useState(false);
 
@@ -37,7 +37,7 @@ export const Basic: Story<ColorPickerProps> = (args) => {
   );
 
   const onClickColor = (index: number) => {
-    action(`Clicked color #${index}`)();
+    action(`Clicked color ${DefaultColors[index].color}`)();
     setActiveIndex(index);
     setCurrentColorName(DefaultColors[index].name);
     setCurrentColorValue(DefaultColors[index].color);
@@ -58,10 +58,10 @@ export const Basic: Story<ColorPickerProps> = (args) => {
               };
               return (
                 <Color
-                  key={index}
+                  key={index + color.color}
                   color={color.color}
-                  onColorClicked={onClick}
-                  isActive={index === activeIndex}
+                  onClick={onClick}
+                  isActive={color.color === currentColorValue}
                 />
               );
             })}
@@ -74,63 +74,15 @@ export const Basic: Story<ColorPickerProps> = (args) => {
 
 Basic.args = {};
 
-export const WithCustomClick: Story<ColorPickerProps> = (args) => {
-  const [opened, setOpened] = useState(false);
-
-  const [currentActiveIndex, setCurrentActiveIndex] = React.useState(0);
-  const [currentColorName, setCurrentColorName] = useState(
-    DefaultColors[currentActiveIndex].name,
-  );
-  const [currentColorValue, setCurrentColorValue] = useState(
-    DefaultColors[currentActiveIndex].color,
-  );
-  const onCustomClick = (index: number, name: string, color: string) => {
-    action(`Clicked custom color ${name}`)();
-    setCurrentActiveIndex(index);
-    setCurrentColorName(name);
-    setCurrentColorValue(color);
-  };
-
-  return (
-    <>
-      <IconButton onClick={() => setOpened(!opened)}>
-        <span style={{ backgroundColor: currentColorValue }} />
-      </IconButton>
-      <span style={{ marginLeft: 16 }}>{currentColorName}</span>
-      {opened && (
-        <div style={{ marginTop: 4 }}>
-          <ColorPicker {...args}>
-            {DefaultColors.map((color, index) => {
-              const onClick = () => {
-                onCustomClick(index, color.name, color.color);
-              };
-              return (
-                <Color
-                  key={index}
-                  color={color.color}
-                  onColorClicked={onClick}
-                  isActive={index === currentActiveIndex}
-                />
-              );
-            })}
-          </ColorPicker>
-        </div>
-      )}
-    </>
-  );
-};
-
-WithCustomClick.args = {};
-
 export const WithTooltip: Story<ColorPickerProps> = (args) => {
   const [opened, setOpened] = useState(false);
 
-  const [currentActiveIndex, setCurrentActiveIndex] = React.useState(0);
+  const [activeIndex, setCurrentActiveIndex] = React.useState(10);
   const [currentColorName, setCurrentColorName] = useState(
-    DefaultColors[currentActiveIndex].name,
+    DefaultColors[activeIndex].name,
   );
   const [currentColorValue, setCurrentColorValue] = useState(
-    DefaultColors[currentActiveIndex].color,
+    DefaultColors[activeIndex].color,
   );
 
   const onColorClick = (index: number, name: string, color: string) => {
@@ -158,10 +110,10 @@ export const WithTooltip: Story<ColorPickerProps> = (args) => {
               return (
                 <>
                   <Color
-                    key={index}
+                    key={index + color.color}
                     color={color.color}
-                    onColorClicked={onClick}
-                    isActive={index === currentActiveIndex}
+                    onClick={onClick}
+                    isActive={color.color === currentColorValue}
                     tooltipRefProp={{ ref: colorRef }}
                   />
                   <Tooltip reference={colorRef} content={color.name} />
