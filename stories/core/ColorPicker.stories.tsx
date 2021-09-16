@@ -11,7 +11,7 @@ import {
   Tooltip,
 } from '../../src/core';
 import { action } from '@storybook/addon-actions';
-import Color from '../../src/core/ColorPicker/Color';
+import ColorSwatch from '../../src/core/ColorPicker/ColorSwatch';
 import { DefaultColors } from '../../src/core/ColorPicker/ColorPicker';
 
 export default {
@@ -57,7 +57,7 @@ export const Basic: Story<ColorPickerProps> = (args) => {
                 onClickColor(index);
               };
               return (
-                <Color
+                <ColorSwatch
                   key={index + color.color}
                   color={color.color}
                   onClick={onClick}
@@ -109,7 +109,7 @@ export const WithTooltip: Story<ColorPickerProps> = (args) => {
               };
               return (
                 <>
-                  <Color
+                  <ColorSwatch
                     key={index + color.color}
                     color={color.color}
                     onClick={onClick}
