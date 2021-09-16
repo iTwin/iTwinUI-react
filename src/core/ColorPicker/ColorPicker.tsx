@@ -2,9 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { useTheme } from '../utils/hooks/useTheme';
-import Color from './Color';
 import '@itwin/itwinui-css/css/color-picker.css';
 import { CommonProps } from '../utils/props';
 
@@ -43,64 +42,19 @@ export const DefaultColors = [
 
 export type ColorPickerProps = {
   /**
-   * List of colors to show in color palette.
-   * Can pass in strings of the color values for simple input or a list of Colors to customize onColorClick handler etc.
-   */
-  colors?: ReactNode[];
-  /**
-   * Index of the selected color on the color palette.
-   */
-  activeColorIndex?: number;
-  /**
-   * Handler for clicking a color.
-   * This will be applied to all colors in the palette unless specifically passed in to a specific color in the colors list.
-   */
-  onColorClicked?: (index: number) => void;
-  /**
    * Any custom nodes that will be added within the color palette.
    */
   children?: React.ReactNode;
 } & Omit<CommonProps, 'title'>;
 
 export const ColorPicker = (props: ColorPickerProps) => {
-  const { colors, activeColorIndex, onColorClicked, children, ...rest } = props;
+  const { children, ...rest } = props;
 
   useTheme();
 
-  const [activeIndex, setactiveIndex] = React.useState(activeColorIndex);
-
   return (
     <div className={'iui-color-picker'} {...rest}>
-      <div className='iui-color-palette'>
-        {colors &&
-          colors.map((color, index) => {
-            const onClick = () => {
-              onColorClicked?.(index);
-              setactiveIndex(index);
-            };
-            if (typeof color === 'string') {
-              return (
-                <Color
-                  key={index + color}
-                  color={color}
-                  onColorClicked={onClick}
-                  isActive={index === activeIndex}
-                />
-              );
-            } else {
-              return React.isValidElement(color)
-                ? React.cloneElement(color, {
-                    // Use the same onClick handler for all colors in palette unless a custom handler was passed in to specific color
-                    onColorClicked: color.props['onColorClicked']
-                      ? color.props['onColorClicked']
-                      : onClick,
-                    isActive: index === activeIndex,
-                  })
-                : color;
-            }
-          })}
-        {children}
-      </div>
+      <div className='iui-color-palette'>{children}</div>
     </div>
   );
 };

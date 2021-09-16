@@ -25,19 +25,20 @@ export default {
 } as Meta<ColorPickerProps>;
 
 export const Basic: Story<ColorPickerProps> = (args) => {
-  const { activeColorIndex = 0 } = args;
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const [opened, setOpened] = useState(false);
 
   const [currentColorName, setCurrentColorName] = useState(
-    DefaultColors[activeColorIndex].name,
+    DefaultColors[activeIndex].name,
   );
   const [currentColorValue, setCurrentColorValue] = useState(
-    DefaultColors[activeColorIndex].color,
+    DefaultColors[activeIndex].color,
   );
 
-  const onClick = (index: number) => {
+  const onClickColor = (index: number) => {
     action(`Clicked color #${index}`)();
+    setActiveIndex(index);
     setCurrentColorName(DefaultColors[index].name);
     setCurrentColorValue(DefaultColors[index].color);
   };
@@ -50,28 +51,33 @@ export const Basic: Story<ColorPickerProps> = (args) => {
       <span style={{ marginLeft: 16 }}>{currentColorName}</span>
       {opened && (
         <div style={{ marginTop: 4 }}>
-          <ColorPicker onColorClicked={onClick} {...args} />
+          <ColorPicker {...args}>
+            {DefaultColors.map((color, index) => {
+              const onClick = () => {
+                onClickColor(index);
+              };
+              return (
+                <Color
+                  key={index}
+                  color={color.color}
+                  onColorClicked={onClick}
+                  isActive={index === activeIndex}
+                />
+              );
+            })}
+          </ColorPicker>
         </div>
       )}
     </>
   );
 };
 
-Basic.args = {
-  colors: DefaultColors.map((color, index) => {
-    return <Color key={index} color={color.color} name={color.name} />;
-  }),
-  activeColorIndex: 7,
-};
+Basic.args = {};
 
 export const WithCustomClick: Story<ColorPickerProps> = (args) => {
-  const { activeColorIndex = 0, ...rest } = args;
-
   const [opened, setOpened] = useState(false);
 
-  const [currentActiveIndex, setCurrentActiveIndex] = React.useState(
-    activeColorIndex,
-  );
+  const [currentActiveIndex, setCurrentActiveIndex] = React.useState(0);
   const [currentColorName, setCurrentColorName] = useState(
     DefaultColors[currentActiveIndex].name,
   );
@@ -93,7 +99,7 @@ export const WithCustomClick: Story<ColorPickerProps> = (args) => {
       <span style={{ marginLeft: 16 }}>{currentColorName}</span>
       {opened && (
         <div style={{ marginTop: 4 }}>
-          <ColorPicker {...rest}>
+          <ColorPicker {...args}>
             {DefaultColors.map((color, index) => {
               const onClick = () => {
                 onCustomClick(index, color.name, color.color);
@@ -114,18 +120,12 @@ export const WithCustomClick: Story<ColorPickerProps> = (args) => {
   );
 };
 
-WithCustomClick.args = {
-  activeColorIndex: 10,
-};
+WithCustomClick.args = {};
 
 export const WithTooltip: Story<ColorPickerProps> = (args) => {
-  const { activeColorIndex = 0, ...rest } = args;
-
   const [opened, setOpened] = useState(false);
 
-  const [currentActiveIndex, setCurrentActiveIndex] = React.useState(
-    activeColorIndex,
-  );
+  const [currentActiveIndex, setCurrentActiveIndex] = React.useState(0);
   const [currentColorName, setCurrentColorName] = useState(
     DefaultColors[currentActiveIndex].name,
   );
@@ -150,7 +150,7 @@ export const WithTooltip: Story<ColorPickerProps> = (args) => {
       <span style={{ marginLeft: 16 }}>{currentColorName.toString()}</span>
       {opened && (
         <div style={{ marginTop: 4 }}>
-          <ColorPicker {...rest}>
+          <ColorPicker {...args}>
             {DefaultColors.map((color, index) => {
               const onClick = () => {
                 onColorClick(index, color.name, color.color);
@@ -175,6 +175,4 @@ export const WithTooltip: Story<ColorPickerProps> = (args) => {
   );
 };
 
-WithTooltip.args = {
-  activeColorIndex: 20,
-};
+WithTooltip.args = {};
