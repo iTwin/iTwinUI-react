@@ -144,27 +144,21 @@ export const Toast = (props: ToastProps) => {
     }
   };
 
-  const keyframes = `@keyframes openAnimation {
-      from {
-        opacity: 0;
-        transform: translateY(-120%);
-      }
-
-      to {
-        transform: translateY(0);
-      }
-    }`;
-
   return (
     <CSSTransition
-      timeout={{ enter: 240, exit: animateOutTo ? 400 : 120 }}
+      timeout={{ enter: 120, exit: animateOutTo ? 400 : 120 }}
       in={visible}
       appear={true}
       unmountOnExit={true}
       onExited={onRemove}
-      onEntering={(node) => {
-        //node.style.transform = 'translateY(-120%)';
-        node.style.animation = `${keyframes}`;
+      onEnter={(node) => {
+        node.style.transform = 'translateY(-24%)';
+        node.style.transitionTimingFunction =
+          'cubic-bezier(0.175, 0.885, 0.32, 1.175)';
+      }}
+      onEntered={(node) => {
+        node.style.transform = 'translateY(0)';
+        node.style.opacity = '1';
       }}
       onExit={(node) => {
         node.style.transform = animateOutTo
@@ -174,7 +168,6 @@ export const Toast = (props: ToastProps) => {
         node.style.transitionDuration = animateOutTo ? '400ms' : '120ms';
         node.style.transitionTimingFunction = 'cubic-bezier(0.4, 0, 1, 1)';
       }}
-      //classNames='iui-toast'
     >
       {
         <div
