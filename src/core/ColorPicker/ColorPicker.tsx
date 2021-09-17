@@ -6,6 +6,7 @@ import React from 'react';
 import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/color-picker.css';
 import { CommonProps } from '../utils/props';
+import cx from 'classnames';
 
 export const DefaultColors = [
   { color: '#FFFFFF', name: 'WHITE' },
@@ -48,12 +49,12 @@ export type ColorPickerProps = {
 } & Omit<CommonProps, 'title'>;
 
 export const ColorPicker = (props: ColorPickerProps) => {
-  const { children, ...rest } = props;
+  const { children, className, ...rest } = props;
 
   useTheme();
 
   return (
-    <div className={'iui-color-picker'} {...rest}>
+    <div className={cx('iui-color-picker', className)} {...rest}>
       <div className='iui-color-palette'>{children}</div>
     </div>
   );

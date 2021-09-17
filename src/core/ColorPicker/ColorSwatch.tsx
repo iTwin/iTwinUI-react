@@ -8,6 +8,7 @@ import { getWindow } from '../utils/common';
 import { CommonProps } from '../utils/props';
 import cx from 'classnames';
 import '@itwin/itwinui-css/css/color-picker.css';
+import { useMergedRefs } from '../utils/hooks/useMergedRefs';
 
 export type ColorProps = {
   /**
@@ -22,33 +23,34 @@ export type ColorProps = {
    * User friendly color name.
    */
   name?: string;
-  /**
-   * Tooltip ref prop.
-   */
-  tooltipRefProp?: React.ComponentPropsWithRef<'span'>;
 } & CommonProps &
   React.ComponentPropsWithRef<'span'>;
 
-export const Color = (props: ColorProps) => {
-  const { color, style, onClick, isActive, tooltipRefProp, ...rest } = props;
+export const Color = React.forwardRef<HTMLSpanElement, ColorProps>(
+  (props, ref) => {
+    const { color, style, onClick, isActive, ...rest } = props;
 
-  useTheme();
+    useTheme();
 
-  const _style =
-    color && getWindow()?.CSS?.supports?.(`--swatch-color: ${color}`)
-      ? { '--swatch-color': color, ...style }
-      : { backgroundColor: color, ...style };
+    const spanRef = React.useRef<HTMLSpanElement>(null);
+    const refs = useMergedRefs<HTMLSpanElement>(spanRef, ref);
 
-  return (
-    <span
-      className={cx('iui-color-swatch', { [`iui-active`]: isActive })}
-      style={_style}
-      onClick={onClick}
-      tabIndex={0}
-      {...tooltipRefProp}
-      {...rest}
-    />
-  );
-};
+    const _style =
+      color && getWindow()?.CSS?.supports?.(`--swatch-color: ${color}`)
+        ? { '--swatch-color': color, ...style }
+        : { backgroundColor: color, ...style };
+
+    return (
+      <span
+        className={cx('iui-color-swatch', { 'iui-active': isActive })}
+        style={_style}
+        onClick={onClick}
+        tabIndex={0}
+        ref={refs}
+        {...rest}
+      />
+    );
+  },
+);
 
 export default Color;

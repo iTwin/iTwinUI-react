@@ -46,7 +46,9 @@ export const Basic: Story<ColorPickerProps> = (args) => {
   return (
     <>
       <IconButton onClick={() => setOpened(!opened)}>
-        <span style={{ backgroundColor: currentColorValue }} />
+        <span
+          style={{ backgroundColor: currentColorValue, border: '1px solid' }}
+        />
       </IconButton>
       <span style={{ marginLeft: 16 }}>{currentColorName}</span>
       {opened && (
@@ -92,12 +94,12 @@ export const WithTooltip: Story<ColorPickerProps> = (args) => {
     setCurrentColorValue(color);
   };
 
-  const colorRef = React.useRef<HTMLSpanElement>(null);
-
   return (
     <>
       <IconButton onClick={() => setOpened(!opened)}>
-        <span style={{ backgroundColor: currentColorValue }} />
+        <span
+          style={{ backgroundColor: currentColorValue, border: '1px solid' }}
+        />
       </IconButton>
       <span style={{ marginLeft: 16 }}>{currentColorName.toString()}</span>
       {opened && (
@@ -109,14 +111,14 @@ export const WithTooltip: Story<ColorPickerProps> = (args) => {
               };
               return (
                 <>
-                  <ColorSwatch
-                    key={index + color.color}
-                    color={color.color}
-                    onClick={onClick}
-                    isActive={color.color === currentColorValue}
-                    tooltipRefProp={{ ref: colorRef }}
-                  />
-                  <Tooltip reference={colorRef} content={color.name} />
+                  <Tooltip content={color.name} placement={'bottom-end'}>
+                    <ColorSwatch
+                      key={index + color.color}
+                      color={color.color}
+                      onClick={onClick}
+                      isActive={color.color === currentColorValue}
+                    />
+                  </Tooltip>
                 </>
               );
             })}
