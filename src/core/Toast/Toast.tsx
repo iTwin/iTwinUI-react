@@ -136,12 +136,19 @@ export const Toast = (props: ToastProps) => {
       const { height } = ref.getBoundingClientRect();
       setHeight(height);
     }
-    if (ref && animateOutTo) {
-      const { x, y } = ref.getBoundingClientRect();
-      const anchorRect = animateOutTo.getBoundingClientRect();
-      setAnimateOutX(anchorRect.x - x);
-      setAnimateOutY(anchorRect.y - y);
+  };
+
+  const calculateOutAnimation = (node: HTMLElement) => {
+    let translateX = 0;
+    let translateY = 0;
+    if (animateOutTo) {
+      const { x: startX, y: startY } = node.getClientRects()[0];
+      const { x: endX, y: endY } = animateOutTo.getBoundingClientRect();
+      translateX = endX - startX;
+      translateY = endY - startY;
     }
+    setAnimateOutX(translateX);
+    setAnimateOutY(translateY);
   };
 
   return (
@@ -152,15 +159,16 @@ export const Toast = (props: ToastProps) => {
       unmountOnExit={true}
       onExited={onRemove}
       onEnter={(node) => {
-        node.style.transform = 'translateY(-24%)';
-        node.style.transitionTimingFunction =
-          'cubic-bezier(0.175, 0.885, 0.32, 1.175)';
+        node.style.transform = 'translateY(15%)';
+        node.style.transitionTimingFunction = 'ease';
       }}
       onEntered={(node) => {
         node.style.transform = 'translateY(0)';
-        node.style.opacity = '1';
       }}
       onExit={(node) => {
+        calculateOutAnimation(node);
+      }}
+      onExiting={(node) => {
         node.style.transform = animateOutTo
           ? `scale(0.9) translate(${animateOutX}px,${animateOutY}px)`
           : `scale(0.9)`;
