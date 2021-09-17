@@ -8,7 +8,6 @@ import { getWindow } from '../utils/common';
 import { CommonProps } from '../utils/props';
 import cx from 'classnames';
 import '@itwin/itwinui-css/css/color-picker.css';
-import { useMergedRefs } from '../utils/hooks/useMergedRefs';
 
 export type ColorProps = {
   /**
@@ -32,9 +31,6 @@ export const Color = React.forwardRef<HTMLSpanElement, ColorProps>(
 
     useTheme();
 
-    const spanRef = React.useRef<HTMLSpanElement>(null);
-    const refs = useMergedRefs<HTMLSpanElement>(spanRef, ref);
-
     const _style =
       color && getWindow()?.CSS?.supports?.(`--swatch-color: ${color}`)
         ? { '--swatch-color': color, ...style }
@@ -46,7 +42,7 @@ export const Color = React.forwardRef<HTMLSpanElement, ColorProps>(
         style={_style}
         onClick={onClick}
         tabIndex={0}
-        ref={refs}
+        ref={ref}
         {...rest}
       />
     );

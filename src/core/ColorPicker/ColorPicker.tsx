@@ -43,7 +43,7 @@ export const DefaultColors = [
 
 export type ColorPickerProps = {
   /**
-   * Any custom nodes that will be added within the color palette.
+   * Color Swatches that will be added within the color palette.
    */
   children?: React.ReactNode;
 } & Omit<CommonProps, 'title'>;
