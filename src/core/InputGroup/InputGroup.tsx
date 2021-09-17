@@ -19,7 +19,7 @@ export type InputGroupProps = {
    */
   status?: 'positive' | 'warning' | 'negative';
   /**
-   * Message below the group. Does not apply to 'inline' group.
+   * Message below the group.
    */
   message?: React.ReactNode;
   /**
@@ -110,9 +110,7 @@ export const InputGroup = (props: InputGroupProps) => {
           className: cx('iui-input-icon', icon.props?.className),
           'aria-hidden': true,
         })}
-      {displayStyle !== 'inline' && message && (
-        <div className='iui-message'>{message}</div>
-      )}
+      {message && <div className='iui-message'>{message}</div>}
     </div>
   );
 };

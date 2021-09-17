@@ -109,7 +109,7 @@ export const LabeledSelect = <T,>(
           'iui-disabled': disabled,
           [`iui-${status}`]: !!status,
           'iui-inline-label': displayStyle === 'inline',
-          'iui-with-message': !!message && displayStyle !== 'inline',
+          'iui-with-message': !!message,
         },
         className,
       )}
@@ -136,9 +136,7 @@ export const LabeledSelect = <T,>(
           className: cx('iui-input-icon', icon.props?.className),
           'aria-hidden': true,
         })}
-      {displayStyle !== 'inline' && message && (
-        <div className='iui-message'>{message}</div>
-      )}
+      {message && <div className='iui-message'>{message}</div>}
     </div>
   );
 };
