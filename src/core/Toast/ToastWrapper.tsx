@@ -7,7 +7,6 @@ import React from 'react';
 import cx from 'classnames';
 import Toast, { ToastProps } from './Toast';
 import { ToasterSettings } from './Toaster';
-import { TransitionGroup } from 'react-transition-group';
 
 type ToastWrapperProps = {
   toasts: ToastProps[];
@@ -17,12 +16,10 @@ export const ToastWrapper = (props: ToastWrapperProps) => {
   const { toasts, placement = 'top' } = props;
 
   return (
-    <TransitionGroup
-      className={cx(`iui-toast-wrapper`, `iui-placement-${placement}`)}
-    >
+    <span className={cx(`iui-toast-wrapper`, `iui-placement-${placement}`)}>
       {toasts.map((toastProps) => {
         return <Toast key={toastProps.id} {...toastProps} />;
       })}
-    </TransitionGroup>
+    </span>
   );
 };

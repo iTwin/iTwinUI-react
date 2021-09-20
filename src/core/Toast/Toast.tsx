@@ -95,6 +95,11 @@ export const Toast = (props: ToastProps) => {
   const [height, setHeight] = React.useState(0);
   const [animateOutX, setAnimateOutX] = React.useState(0);
   const [animateOutY, setAnimateOutY] = React.useState(0);
+  // ref of current toast
+  const thisElement = React.useRef<HTMLDivElement>(null);
+
+  //variable for margin bottom
+  const [marginBottom, setMarginBottom] = React.useState(0);
 
   React.useEffect(() => {
     if (type === 'temporary') {
@@ -108,11 +113,21 @@ export const Toast = (props: ToastProps) => {
   }, [duration, type]);
 
   React.useEffect(() => {
+    // if we don't have animateOutTo point and not isVisible, set negative margin to move other toasts up.
+    // Close all and close on toasts with no anchor.
+    !isVisible && !animateOutTo && setMarginBottom(-height);
     setVisible(isVisible);
-  }, [isVisible]);
+  }, [isVisible, animateOutTo, setMarginBottom, height]);
 
   const close = () => {
     clearCloseTimeout();
+
+    // Recalculating toast animation x and y when close button is clicked or toast gets timeout.
+    if (thisElement.current) {
+      calculateOutAnimation(thisElement.current);
+    }
+    // move element up when this element is closed.
+    setMarginBottom(-height);
     setVisible(false);
   };
 
@@ -139,11 +154,12 @@ export const Toast = (props: ToastProps) => {
   };
 
   const calculateOutAnimation = (node: HTMLElement) => {
+    // calculation translate x and y pixels.
     let translateX = 0;
     let translateY = 0;
     if (animateOutTo) {
-      const { x: startX, y: startY } = node.getClientRects()[0];
-      const { x: endX, y: endY } = animateOutTo.getBoundingClientRect();
+      const { x: startX, y: startY } = node.getBoundingClientRect(); // current element
+      const { x: endX, y: endY } = animateOutTo.getBoundingClientRect(); // anchor point
       translateX = endX - startX;
       translateY = endY - startY;
     }
@@ -166,6 +182,7 @@ export const Toast = (props: ToastProps) => {
         node.style.transform = 'translateY(0)';
       }}
       onExit={(node) => {
+        // calculate translate x and y before closing
         calculateOutAnimation(node);
       }}
       onExiting={(node) => {
@@ -179,8 +196,12 @@ export const Toast = (props: ToastProps) => {
     >
       {
         <div
+          ref={thisElement}
           className='iui-toast-all'
-          style={{ height, marginBottom: visible ? '0' : -height }}
+          style={{
+            height,
+            marginBottom: marginBottom,
+          }}
         >
           <div ref={onRef}>
             <ToastPresentation
