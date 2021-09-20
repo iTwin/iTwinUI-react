@@ -148,20 +148,21 @@ Inline.args = {
   displayStyle: 'inline',
 };
 
-export const HybridLayout: Story<LabeledInputProps> = ({
-  svgIcon,
-  ...rest
-}) => {
+export const HybridLayout: Story<LabeledInputProps> = (args) => {
   const ref = React.useRef(null);
   return (
     <>
       <LabeledInput
         placeholder='Enter text here...'
         label='This is a label'
-        svgIcon={<div ref={ref}>{svgIcon}</div>}
+        svgIcon={
+          <div ref={ref}>
+            <SvgPlaceholder />
+          </div>
+        }
         message='Block layout with inline icon'
         iconDisplayStyle='inline'
-        {...rest}
+        {...args}
       />
       <Tooltip reference={ref} content='Placeholder' />
     </>
@@ -170,7 +171,6 @@ export const HybridLayout: Story<LabeledInputProps> = ({
 
 HybridLayout.args = {
   iconDisplayStyle: 'inline',
-  svgIcon: <SvgPlaceholder />,
   message: 'Block layout with inline icon',
 };
 
@@ -194,11 +194,6 @@ export const HybridLayoutWithButton: Story<LabeledInputProps> = (args) => {
 };
 
 HybridLayoutWithButton.args = {
-  svgIcon: (
-    <IconButton styleType='borderless'>
-      <SvgCloseSmall />
-    </IconButton>
-  ),
   message: 'Block layout with inline borderless button',
   iconDisplayStyle: 'inline',
 };
