@@ -41,7 +41,7 @@ export const Color = React.forwardRef<HTMLSpanElement, ColorProps>(
         className={cx('iui-color-swatch', { 'iui-active': isActive })}
         style={_style}
         onClick={onClick}
-        tabIndex={0}
+        tabIndex={-1}
         ref={ref}
         {...rest}
       />

@@ -44,17 +44,74 @@ export const DefaultColors = [
 export type ColorPickerProps = {
   /**
    * Color Swatches that will be added within the color palette.
+   * Recommended to use `ColorSwatch` components.
    */
   children?: React.ReactNode;
+  /**
+   * Index of the selected color on the color palette.
+   */
+  activeColor?: number;
 } & Omit<CommonProps, 'title'>;
 
 export const ColorPicker = (props: ColorPickerProps) => {
-  const { children, className, ...rest } = props;
+  const { children, className, activeColor, ...rest } = props;
 
   useTheme();
 
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [focusedColor, setFocusedColor] = React.useState(activeColor);
+
+  React.useEffect(() => {
+    setFocusedColor(activeColor);
+  }, [activeColor]);
+
+  const handleCalendarKeyDown = (
+    event: React.KeyboardEvent<HTMLDivElement>,
+  ) => {
+    const colorSwatches = ref.current?.querySelectorAll('.iui-color-swatch');
+    if (!colorSwatches?.length) {
+      return;
+    }
+
+    // If focusedColor is undefined, assume it is at index 0 and move from there
+    const currentIndex = focusedColor ?? 0;
+    let newIndex = -1;
+    switch (event.key) {
+      case 'ArrowDown':
+        newIndex = currentIndex + 10;
+        break;
+      case 'ArrowUp':
+        newIndex = currentIndex - 10;
+        break;
+      case 'ArrowLeft':
+        newIndex = currentIndex - 1;
+        break;
+      case 'ArrowRight':
+        newIndex = currentIndex + 1;
+        break;
+      case 'Enter':
+      case ' ':
+      case 'Spacebar':
+        const element = colorSwatches[currentIndex] as HTMLSpanElement;
+        element?.click();
+        event.preventDefault();
+        break;
+    }
+    if (newIndex < colorSwatches.length && newIndex >= 0) {
+      setFocusedColor(newIndex);
+      const element = colorSwatches[newIndex] as HTMLSpanElement;
+      element?.focus();
+      event.preventDefault();
+    }
+  };
+
   return (
-    <div className={cx('iui-color-picker', className)} {...rest}>
+    <div
+      className={cx('iui-color-picker', className)}
+      onKeyDown={handleCalendarKeyDown}
+      ref={ref}
+      {...rest}
+    >
       <div className='iui-color-palette'>{children}</div>
     </div>
   );
