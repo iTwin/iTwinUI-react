@@ -157,7 +157,7 @@ export const Toast = (props: ToastProps) => {
     // calculation translate x and y pixels.
     let translateX = 0;
     let translateY = 0;
-    if (animateOutTo) {
+    if (animateOutTo && node) {
       const { x: startX, y: startY } = node.getBoundingClientRect(); // current element
       const { x: endX, y: endY } = animateOutTo.getBoundingClientRect(); // anchor point
       translateX = endX - startX;
@@ -169,7 +169,7 @@ export const Toast = (props: ToastProps) => {
 
   return (
     <CSSTransition
-      timeout={{ enter: 120, exit: animateOutTo ? 400 : 120 }}
+      timeout={{ enter: 240, exit: animateOutTo ? 500 : 120 }}
       in={visible}
       appear={true}
       unmountOnExit={true}
