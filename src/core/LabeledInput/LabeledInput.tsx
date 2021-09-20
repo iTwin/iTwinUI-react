@@ -2,11 +2,11 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import cx from 'classnames';
 import React from 'react';
 import { Input, InputProps } from '../Input/Input';
 import { StatusIconMap } from '../utils/common';
 import { useTheme } from '../utils/hooks/useTheme';
+import { Label } from '../utils/Label';
 import '@itwin/itwinui-css/css/inputs.css';
 
 export type LabeledInputProps = {
@@ -86,29 +86,18 @@ export const LabeledInput = React.forwardRef<
   const icon = svgIcon ?? (status && StatusIconMap[status]());
 
   return (
-    <label
-      className={cx(
-        'iui-input-container',
-        {
-          'iui-disabled': disabled,
-          [`iui-${status}`]: !!status,
-          'iui-inline-label': displayStyle === 'inline',
-          'iui-with-message': !!message,
-          'iui-inline-icon': iconDisplayStyle === 'inline',
-        },
-        className,
-      )}
+    <Label
+      label={label}
+      disabled={disabled}
+      required={required}
+      status={status}
+      message={message}
+      icon={icon}
+      withInlineLabel={displayStyle === 'inline'}
+      withInlineIcon={iconDisplayStyle === 'inline'}
+      className={className}
       style={style}
     >
-      {label && (
-        <div
-          className={cx('iui-label', {
-            'iui-required': required,
-          })}
-        >
-          {label}
-        </div>
-      )}
       <Input
         disabled={disabled}
         className={inputClassName}
@@ -117,12 +106,7 @@ export const LabeledInput = React.forwardRef<
         ref={ref}
         {...rest}
       />
-      {icon &&
-        React.cloneElement(icon, {
-          className: cx('iui-input-icon', icon.props?.className),
-        })}
-      {message && <div className='iui-message'>{message}</div>}
-    </label>
+    </Label>
   );
 });
 

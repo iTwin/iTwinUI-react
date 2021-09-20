@@ -3,13 +3,13 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import cx from 'classnames';
 
 import { Select } from '../Select';
 import { SelectProps } from '../Select/Select';
 import { StatusIconMap } from '../utils/common';
 import { useTheme } from '../utils/hooks/useTheme';
 import { LabeledInputProps } from '../LabeledInput';
+import { Label } from '../utils/Label';
 import '@itwin/itwinui-css/css/inputs.css';
 
 export type LabeledSelectProps<T> = {
@@ -102,42 +102,28 @@ export const LabeledSelect = <T,>(
   const icon = svgIcon ?? (status && StatusIconMap[status]());
 
   return (
-    <div
-      className={cx(
-        'iui-input-container',
-        {
-          'iui-disabled': disabled,
-          [`iui-${status}`]: !!status,
-          'iui-inline-label': displayStyle === 'inline',
-          'iui-with-message': !!message,
-        },
-        className,
-      )}
+    <Label
+      label={label}
+      disabled={disabled}
+      required={required}
+      status={status}
+      message={message}
+      icon={
+        displayStyle === 'default' && icon
+          ? React.cloneElement(icon, { 'aria-hidden': true })
+          : undefined
+      }
+      withInlineLabel={displayStyle === 'inline'}
+      className={className}
       style={style}
     >
-      {label && (
-        <div
-          className={cx('iui-label', {
-            'iui-required': required,
-          })}
-        >
-          {label}
-        </div>
-      )}
       <Select
         disabled={disabled}
         className={selectClassName}
         style={selectStyle}
         {...rest}
       />
-      {displayStyle === 'default' &&
-        icon &&
-        React.cloneElement(icon, {
-          className: cx('iui-input-icon', icon.props?.className),
-          'aria-hidden': true,
-        })}
-      {message && <div className='iui-message'>{message}</div>}
-    </div>
+    </Label>
   );
 };
 
