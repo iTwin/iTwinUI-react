@@ -6,7 +6,7 @@ import React from 'react';
 import { Input, InputProps } from '../Input/Input';
 import { StatusIconMap } from '../utils/common';
 import { useTheme } from '../utils/hooks/useTheme';
-import { Label } from '../utils/Label';
+import { InputContainer } from '../utils/InputContainer';
 import '@itwin/itwinui-css/css/inputs.css';
 
 export type LabeledInputProps = {
@@ -86,7 +86,8 @@ export const LabeledInput = React.forwardRef<
   const icon = svgIcon ?? (status && StatusIconMap[status]());
 
   return (
-    <Label
+    <InputContainer
+      as='label'
       label={label}
       disabled={disabled}
       required={required}
@@ -106,7 +107,7 @@ export const LabeledInput = React.forwardRef<
         ref={ref}
         {...rest}
       />
-    </Label>
+    </InputContainer>
   );
 });
 

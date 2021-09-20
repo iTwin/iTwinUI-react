@@ -2,11 +2,11 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import cx from 'classnames';
 import React from 'react';
 import { StatusIconMap } from '../utils/common';
 import { useTheme } from '../utils/hooks/useTheme';
 import { CommonProps } from '../utils/props';
+import { InputContainer } from '../utils/InputContainer';
 import '@itwin/itwinui-css/css/inputs.css';
 
 export type InputGroupProps = {
@@ -81,37 +81,22 @@ export const InputGroup = (props: InputGroupProps) => {
   const icon = svgIcon ?? (status && StatusIconMap[status]());
 
   return (
-    <div
-      className={cx(
-        'iui-input-container',
-        {
-          'iui-disabled': disabled,
-          [`iui-${status}`]: !!status,
-          'iui-inline-label': displayStyle === 'inline',
-          'iui-with-message': !!message,
-        },
-        className,
-      )}
+    <InputContainer
+      label={label}
+      disabled={disabled}
+      required={required}
+      status={status}
+      message={message}
+      icon={
+        icon ? React.cloneElement(icon, { 'aria-hidden': true }) : undefined
+      }
+      withInlineLabel={displayStyle === 'inline'}
+      className={className}
       style={style}
       {...rest}
     >
-      {label && (
-        <div
-          className={cx('iui-label', {
-            'iui-required': required,
-          })}
-        >
-          {label}
-        </div>
-      )}
       <div className='iui-input-group'>{children}</div>
-      {icon &&
-        React.cloneElement(icon, {
-          className: cx('iui-input-icon', icon.props?.className),
-          'aria-hidden': true,
-        })}
-      {message && <div className='iui-message'>{message}</div>}
-    </div>
+    </InputContainer>
   );
 };
 

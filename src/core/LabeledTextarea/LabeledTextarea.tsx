@@ -8,7 +8,7 @@ import { Textarea } from '../Textarea';
 import { TextareaProps } from '../Textarea/Textarea';
 import { useTheme } from '../utils/hooks/useTheme';
 import { LabeledInputProps } from '../LabeledInput';
-import { Label } from '../utils/Label';
+import { InputContainer } from '../utils/InputContainer';
 import '@itwin/itwinui-css/css/inputs.css';
 
 export type LabeledTextareaProps = {
@@ -81,7 +81,8 @@ export const LabeledTextarea = React.forwardRef<
   const icon = svgIcon ?? (status && StatusIconMap[status]());
 
   return (
-    <Label
+    <InputContainer
+      as='label'
       label={label}
       disabled={disabled}
       required={required}
@@ -101,7 +102,7 @@ export const LabeledTextarea = React.forwardRef<
         {...textareaProps}
         ref={ref}
       />
-    </Label>
+    </InputContainer>
   );
 });
 

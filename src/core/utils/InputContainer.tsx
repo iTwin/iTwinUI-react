@@ -5,7 +5,8 @@
 import React from 'react';
 import cx from 'classnames';
 
-export type LabelProps = {
+export type InputContainerProps<T extends React.ElementType = 'div'> = {
+  as?: T;
   label?: React.ReactNode;
   disabled?: boolean;
   required?: boolean;
@@ -14,14 +15,17 @@ export type LabelProps = {
   icon?: JSX.Element;
   withInlineLabel?: boolean;
   withInlineIcon?: boolean;
-} & React.ComponentPropsWithoutRef<'label'>;
+} & React.ComponentPropsWithoutRef<T>;
 
 /**
- * Wrapper component for label with message and icon.
+ * Input container to wrap inputs with label, and add optional message and icon.
  * @private
  */
-export const Label = (props: LabelProps) => {
+export const InputContainer = <T extends React.ElementType = 'div'>(
+  props: InputContainerProps<T>,
+) => {
   const {
+    as: Element = 'div',
     label,
     disabled,
     required,
@@ -36,7 +40,7 @@ export const Label = (props: LabelProps) => {
   } = props;
 
   return (
-    <label
+    <Element
       className={cx(
         'iui-input-container',
         {
@@ -65,6 +69,6 @@ export const Label = (props: LabelProps) => {
           className: cx('iui-input-icon', icon.props?.className),
         })}
       {message && <div className='iui-message'>{message}</div>}
-    </label>
+    </Element>
   );
 };

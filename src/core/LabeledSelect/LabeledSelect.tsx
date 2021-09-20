@@ -9,7 +9,7 @@ import { SelectProps } from '../Select/Select';
 import { StatusIconMap } from '../utils/common';
 import { useTheme } from '../utils/hooks/useTheme';
 import { LabeledInputProps } from '../LabeledInput';
-import { Label } from '../utils/Label';
+import { InputContainer } from '../utils/InputContainer';
 import '@itwin/itwinui-css/css/inputs.css';
 
 export type LabeledSelectProps<T> = {
@@ -102,7 +102,7 @@ export const LabeledSelect = <T,>(
   const icon = svgIcon ?? (status && StatusIconMap[status]());
 
   return (
-    <Label
+    <InputContainer
       label={label}
       disabled={disabled}
       required={required}
@@ -123,7 +123,7 @@ export const LabeledSelect = <T,>(
         style={selectStyle}
         {...rest}
       />
-    </Label>
+    </InputContainer>
   );
 };
 
