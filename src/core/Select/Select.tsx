@@ -5,11 +5,11 @@
 import React from 'react';
 import cx from 'classnames';
 import { DropdownMenu } from '../DropdownMenu';
-import MenuItem from '../Menu/MenuItem';
-import { PopoverProps, PopoverInstance } from '../utils/Popover';
+import { PopoverProps } from '../utils/Popover';
 
 import { CommonProps } from '../utils/props';
 import { useTheme } from '../utils/hooks/useTheme';
+import { useSelect } from './useSelect';
 import '@itwin/itwinui-css/css/inputs.css';
 
 export type ItemRendererProps = {
@@ -190,90 +190,28 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
 
   useTheme();
 
-  const [isOpen, setIsOpen] = React.useState(popoverProps?.visible ?? false);
-  React.useEffect(() => {
-    setIsOpen((open) => popoverProps?.visible ?? open);
-  }, [popoverProps]);
-
-  const [minWidth, setMinWidth] = React.useState(0);
-  const toggle = () => setIsOpen((open) => !open);
-
-  const selectRef = React.useRef<HTMLDivElement>(null);
-
-  const onShowHandler = React.useCallback(
-    (instance: PopoverInstance) => {
-      setIsOpen(true);
-      onShow?.(instance);
-    },
-    [onShow],
-  );
-
-  const onHideHandler = React.useCallback(
-    (instance: PopoverInstance) => {
-      setIsOpen(false);
-      onHide?.(instance);
-    },
-    [onHide],
-  );
-
-  React.useEffect(() => {
-    if (selectRef.current && !disabled && setFocus) {
-      selectRef.current.focus();
-    }
-  }, [setFocus, disabled]);
-
-  React.useEffect(() => {
-    if (selectRef.current) {
-      setMinWidth(selectRef.current.offsetWidth);
-    }
-  }, [isOpen]);
-
-  const onKeyDown = (event: React.KeyboardEvent, toggle: () => void) => {
-    switch (event.key) {
-      case 'Enter':
-      case ' ':
-      case 'Spacebar':
-        toggle();
-        event.preventDefault();
-        break;
-      default:
-        break;
-    }
-  };
-
-  const menuItems = React.useCallback(
-    (close: () => void) => {
-      return options.map((option, index) => {
-        const isSelected = value === option.value;
-        const menuItem: JSX.Element = itemRenderer ? (
-          itemRenderer(option, { close, isSelected })
-        ) : (
-          <MenuItem>{option.label}</MenuItem>
-        );
-
-        return React.cloneElement(menuItem, {
-          key: `${option.label}-${index}`,
-          isSelected,
-          onClick: () => {
-            !option.disabled && onChange?.(option.value);
-            close();
-          },
-          ref: (el: HTMLElement) => isSelected && el?.scrollIntoView(),
-          role: 'option',
-          ...option,
-          ...menuItem.props,
-        });
-      });
-    },
-    [itemRenderer, onChange, options, value],
-  );
-
-  const selectedItem = React.useMemo(() => {
-    if (value == null) {
-      return undefined;
-    }
-    return options.find((option) => option.value === value);
-  }, [options, value]);
+  const {
+    menuItems,
+    isOpen,
+    selectedItem,
+    onKeyDown,
+    onShowHandler,
+    onHideHandler,
+    minWidth,
+    toggle,
+    selectRef,
+  } = useSelect<T>({
+    options,
+    value,
+    onChange,
+    visible: popoverProps?.visible,
+    disabled,
+    setFocus,
+    itemRenderer,
+    selectedItemRenderer,
+    onShow,
+    onHide,
+  });
 
   return (
     <div
@@ -310,19 +248,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
           onKeyDown={(e) => !disabled && onKeyDown(e, toggle)}
           tabIndex={!disabled ? 0 : undefined}
         >
-          {!selectedItem && <span className='iui-content'>{placeholder}</span>}
-          {selectedItem &&
-            selectedItemRenderer &&
-            selectedItemRenderer(selectedItem)}
-          {selectedItem && !selectedItemRenderer && (
-            <>
-              {selectedItem?.icon &&
-                React.cloneElement(selectedItem.icon, {
-                  className: cx(selectedItem?.icon.props.className, 'iui-icon'),
-                })}
-              <span className='iui-content'>{selectedItem.label}</span>
-            </>
-          )}
+          {selectedItem ?? <span className='iui-content'>{placeholder}</span>}
         </div>
       </DropdownMenu>
     </div>
