@@ -108,6 +108,7 @@ export const InputGroup = (props: InputGroupProps) => {
       {icon &&
         React.cloneElement(icon, {
           className: cx('iui-input-icon', icon.props?.className),
+          'aria-hidden': true,
         })}
       {message && <div className='iui-message'>{message}</div>}
     </div>
