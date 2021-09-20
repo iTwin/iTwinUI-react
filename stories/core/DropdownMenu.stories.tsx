@@ -9,6 +9,7 @@ import {
   DropdownMenu,
   DropdownMenuProps,
   IconButton,
+  MenuDivider,
   MenuItem,
 } from '../../src/core';
 import {
@@ -60,8 +61,12 @@ export const Basic: Story<DropdownMenuProps> = (args) => {
     <MenuItem key={2} onClick={onClick(2, close)}>
       Item #2
     </MenuItem>,
-    <MenuItem key={3} onClick={onClick(3, close)} disabled>
+    <MenuDivider key={3} />,
+    <MenuItem key={4} onClick={onClick(3, close)} disabled>
       Item #3
+    </MenuItem>,
+    <MenuItem key={5} onClick={onClick(4, close)}>
+      Item #4
     </MenuItem>,
   ];
   return (
