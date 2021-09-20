@@ -100,7 +100,7 @@ export default class Toaster {
 
   private removeToast(id: number) {
     this.toasts = this.toasts.filter((toast) => toast.id !== id);
-    //this.updateView();
+    this.updateView();
   }
 
   private updateView() {
