@@ -176,20 +176,18 @@ HybridLayout.args = {
 
 export const HybridLayoutWithButton: Story<LabeledInputProps> = (args) => {
   return (
-    <>
-      <LabeledInput
-        placeholder='Enter text here...'
-        label='This is a label'
-        svgIcon={
-          <IconButton styleType='borderless'>
-            <SvgCloseSmall />
-          </IconButton>
-        }
-        message='Block layout with inline borderless button'
-        iconDisplayStyle='inline'
-        {...args}
-      />
-    </>
+    <LabeledInput
+      placeholder='Enter text here...'
+      label='This is a label'
+      svgIcon={
+        <IconButton styleType='borderless'>
+          <SvgCloseSmall />
+        </IconButton>
+      }
+      message='Block layout with inline borderless button'
+      iconDisplayStyle='inline'
+      {...args}
+    />
   );
 };
 

@@ -134,7 +134,6 @@ export const LabeledSelect = <T,>(
         icon &&
         React.cloneElement(icon, {
           className: cx('iui-input-icon', icon.props?.className),
-          'aria-hidden': true,
         })}
       {message && <div className='iui-message'>{message}</div>}
     </div>
