@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { CSSTransition } from 'react-transition-group';
+import { Transition } from 'react-transition-group';
 import SvgCloseSmall from '@itwin/itwinui-icons-react/cjs/icons/CloseSmall';
 import cx from 'classnames';
 import { useTheme } from '../utils/hooks/useTheme';
@@ -174,7 +174,7 @@ export const Toast = (props: ToastProps) => {
   };
 
   return (
-    <CSSTransition
+    <Transition
       timeout={{ enter: 240, exit: animateOutTo ? 400 : 120 }}
       in={visible}
       appear={true}
@@ -218,7 +218,7 @@ export const Toast = (props: ToastProps) => {
           </div>
         </div>
       }
-    </CSSTransition>
+    </Transition>
   );
 };
 
