@@ -9,7 +9,7 @@ import { CommonProps } from '../utils/props';
 import cx from 'classnames';
 import '@itwin/itwinui-css/css/color-picker.css';
 
-export type ColorProps = {
+export type ColorSwatchProps = {
   /**
    * Color code.
    */
@@ -25,7 +25,7 @@ export type ColorProps = {
 } & CommonProps &
   React.ComponentPropsWithRef<'span'>;
 
-export const Color = React.forwardRef<HTMLSpanElement, ColorProps>(
+export const ColorSwatch = React.forwardRef<HTMLSpanElement, ColorSwatchProps>(
   (props, ref) => {
     const { color, style, onClick, isActive, ...rest } = props;
 
@@ -49,4 +49,4 @@ export const Color = React.forwardRef<HTMLSpanElement, ColorProps>(
   },
 );
 
-export default Color;
+export default ColorSwatch;

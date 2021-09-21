@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { Story, Meta } from '@storybook/react';
-import React, { useState } from 'react';
+import React from 'react';
 import {
   ColorPicker,
   ColorPickerProps,
@@ -25,32 +25,26 @@ export default {
 } as Meta<ColorPickerProps>;
 
 export const Basic: Story<ColorPickerProps> = (args) => {
-  const [activeIndex, setActiveIndex] = useState(5);
+  const [activeIndex, setActiveIndex] = React.useState(5);
 
-  const [opened, setOpened] = useState(false);
-
-  const [currentColorName, setCurrentColorName] = useState(
-    DefaultColors[activeIndex].name,
-  );
-  const [currentColorValue, setCurrentColorValue] = useState(
-    DefaultColors[activeIndex].color,
-  );
+  const [opened, setOpened] = React.useState(false);
 
   const onClickColor = (index: number) => {
     action(`Clicked color ${DefaultColors[index].color}`)();
     setActiveIndex(index);
-    setCurrentColorName(DefaultColors[index].name);
-    setCurrentColorValue(DefaultColors[index].color);
   };
 
   return (
     <>
       <IconButton onClick={() => setOpened(!opened)}>
         <span
-          style={{ backgroundColor: currentColorValue, border: '1px solid' }}
+          style={{
+            backgroundColor: DefaultColors[activeIndex].color,
+            border: '1px solid',
+          }}
         />
       </IconButton>
-      <span style={{ marginLeft: 16 }}>{currentColorName}</span>
+      <span style={{ marginLeft: 16 }}>{DefaultColors[activeIndex].name}</span>
       {opened && (
         <div style={{ marginTop: 4 }}>
           <ColorPicker activeColor={activeIndex} {...args}>
@@ -63,7 +57,7 @@ export const Basic: Story<ColorPickerProps> = (args) => {
                   key={index + color.color}
                   color={color.color}
                   onClick={onClick}
-                  isActive={color.color === currentColorValue}
+                  isActive={index === activeIndex}
                 />
               );
             })}
@@ -77,37 +71,36 @@ export const Basic: Story<ColorPickerProps> = (args) => {
 Basic.args = {};
 
 export const WithTooltip: Story<ColorPickerProps> = (args) => {
-  const [opened, setOpened] = useState(false);
+  const [opened, setOpened] = React.useState(false);
 
-  const [activeIndex, setCurrentActiveIndex] = React.useState(10);
-  const [currentColorName, setCurrentColorName] = useState(
-    DefaultColors[activeIndex].name,
-  );
-  const [currentColorValue, setCurrentColorValue] = useState(
-    DefaultColors[activeIndex].color,
-  );
+  const [activeIndex, setCurrentActiveIndex] = React.useState<number>();
 
-  const onColorClick = (index: number, name: string, color: string) => {
-    action(`Clicked ${name}`)();
+  const onColorClick = (index: number) => {
+    action(`Clicked ${DefaultColors[index].name}`)();
     setCurrentActiveIndex(index);
-    setCurrentColorName(name);
-    setCurrentColorValue(color);
   };
 
   return (
     <>
       <IconButton onClick={() => setOpened(!opened)}>
         <span
-          style={{ backgroundColor: currentColorValue, border: '1px solid' }}
+          style={{
+            backgroundColor: activeIndex
+              ? DefaultColors[activeIndex].color
+              : '#FFF',
+            border: '1px solid',
+          }}
         />
       </IconButton>
-      <span style={{ marginLeft: 16 }}>{currentColorName.toString()}</span>
+      <span style={{ marginLeft: 16 }}>
+        {activeIndex ? DefaultColors[activeIndex].name : 'No color selected.'}
+      </span>
       {opened && (
         <div style={{ marginTop: 4 }}>
           <ColorPicker activeColor={activeIndex} {...args}>
             {DefaultColors.map((color, index) => {
               const onClick = () => {
-                onColorClick(index, color.name, color.color);
+                onColorClick(index);
               };
               return (
                 <>
@@ -116,7 +109,7 @@ export const WithTooltip: Story<ColorPickerProps> = (args) => {
                       key={index + color.color}
                       color={color.color}
                       onClick={onClick}
-                      isActive={color.color === currentColorValue}
+                      isActive={index == activeIndex}
                     />
                   </Tooltip>
                 </>
