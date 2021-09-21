@@ -65,7 +65,9 @@ export type ToastProps = {
    * Element to which the toast will animate out to.
    */
   animateOutTo?: HTMLElement | null;
-
+  /**
+   * Parent toaster placement position for smoother animation.
+   */
   placementPosition?: 'top' | 'bottom';
 };
 
@@ -96,9 +98,7 @@ export const Toast = (props: ToastProps) => {
 
   const [visible, setVisible] = React.useState(isVisible);
   const [height, setHeight] = React.useState(0);
-  // ref of current toast
   const thisElement = React.useRef<HTMLDivElement>(null);
-  //variable for margin bottom
   const [margin, setMargin] = React.useState(0);
 
   const marginStyle = () => {
@@ -126,16 +126,13 @@ export const Toast = (props: ToastProps) => {
   React.useEffect(() => {
     // if we don't have animateOutTo point and not isVisible, set negative margin to move other toasts up.
     // Close all and close on toasts with no anchor.
-    !isVisible && !animateOutTo && setMargin(-height);
-  }, [isVisible, animateOutTo, setMargin, height, placementPosition]);
+    if (!isVisible && !animateOutTo) {
+      setMargin(-height);
+    }
+  }, [isVisible, animateOutTo, setMargin, height]);
 
   const close = () => {
     clearCloseTimeout();
-
-    // Recalculating toast animation x and y when close button is clicked or toast gets timeout.
-    if (thisElement.current) {
-      calculateOutAnimation(thisElement.current);
-    }
     // move element up when this element is closed.
     setMargin(-height);
     setVisible(false);
@@ -173,7 +170,7 @@ export const Toast = (props: ToastProps) => {
       translateX = endX - startX;
       translateY = endY - startY;
     }
-    return { translateX: translateX, translateY: translateY };
+    return { translateX, translateY };
   };
 
   return (
@@ -182,7 +179,6 @@ export const Toast = (props: ToastProps) => {
       in={visible}
       appear={true}
       unmountOnExit={true}
-      onExited={onRemove}
       onEnter={(node) => {
         node.style.transform = 'translateY(15%)';
         node.style.transitionTimingFunction = 'ease';
@@ -191,14 +187,15 @@ export const Toast = (props: ToastProps) => {
         node.style.transform = 'translateY(0)';
       }}
       onExiting={(node) => {
-        const vars = calculateOutAnimation(node);
+        const { translateX, translateY } = calculateOutAnimation(node);
         node.style.transform = animateOutTo
-          ? `scale(0.9) translate(${vars.translateX}px,${vars.translateY}px)`
+          ? `scale(0.9) translate(${translateX}px,${translateY}px)`
           : `scale(0.9)`;
         node.style.opacity = '0';
         node.style.transitionDuration = animateOutTo ? '400ms' : '120ms';
         node.style.transitionTimingFunction = 'cubic-bezier(0.4, 0, 1, 1)';
       }}
+      onExited={onRemove}
     >
       {
         <div
