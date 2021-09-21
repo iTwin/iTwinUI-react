@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.19.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.18.0...v1.19.0) (2021-09-21)
+
+
+### Fixes
+
+* updated typescript and eslint versions ([#319](https://www.github.com/iTwin/iTwinUI-react/issues/319)) ([fc2b477](https://www.github.com/iTwin/iTwinUI-react/commit/fc2b477bdf2cfc77328c358c9e76aa86d7be7007))
+
+
+### What's new
+
+* Add `iconDisplayStyle` prop to LabeledInput and LabeledTextarea ([#309](https://www.github.com/iTwin/iTwinUI-react/issues/309)) ([45b82c2](https://www.github.com/iTwin/iTwinUI-react/commit/45b82c2232c09c4b54b2db14eb53bb3be3bd276a))
+* Adding toast animation anchor ([#316](https://www.github.com/iTwin/iTwinUI-react/issues/316)) ([886efff](https://www.github.com/iTwin/iTwinUI-react/commit/886efff098d0cee98d0bcd9bd096c20f8f51d931))
+
 ## [1.18.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.17.0...v1.18.0) (2021-09-13)
 
 ### What's new
