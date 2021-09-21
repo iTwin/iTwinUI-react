@@ -65,9 +65,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
     setFocusedColor(activeColor);
   }, [activeColor]);
 
-  const handleCalendarKeyDown = (
-    event: React.KeyboardEvent<HTMLDivElement>,
-  ) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     const colorSwatches = ref.current?.querySelectorAll('.iui-color-swatch');
     if (!colorSwatches?.length) {
       return;
@@ -75,13 +73,29 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
     // If focusedColor is undefined, assume it is at index 0 and move from there
     const currentIndex = focusedColor ?? 0;
+    const currentColor = colorSwatches[currentIndex] as HTMLElement;
     let newIndex = -1;
+
     switch (event.key) {
       case 'ArrowDown':
-        newIndex = currentIndex + 10;
+        // Look for next ColorSwatch with same offsetLeft value
+        for (let i = currentIndex + 1; i < colorSwatches.length; i++) {
+          const element = colorSwatches[i] as HTMLElement;
+          if (element.offsetLeft == currentColor.offsetLeft) {
+            newIndex = i;
+            break;
+          }
+        }
         break;
       case 'ArrowUp':
-        newIndex = currentIndex - 10;
+        // Look backwards for next ColorSwatch with same offsetLeft value
+        for (let i = currentIndex - 1; i >= 0; i--) {
+          const element = colorSwatches[i] as HTMLElement;
+          if (element.offsetLeft == currentColor.offsetLeft) {
+            newIndex = i;
+            break;
+          }
+        }
         break;
       case 'ArrowLeft':
         newIndex = currentIndex - 1;
@@ -92,27 +106,24 @@ export const ColorPicker = (props: ColorPickerProps) => {
       case 'Enter':
       case ' ':
       case 'Spacebar':
-        const element = colorSwatches[currentIndex] as HTMLSpanElement;
+        const element = colorSwatches[currentIndex] as HTMLElement;
         element?.click();
         event.preventDefault();
-        break;
+        return;
     }
     if (newIndex < colorSwatches.length && newIndex >= 0) {
       setFocusedColor(newIndex);
-      const element = colorSwatches[newIndex] as HTMLSpanElement;
+      const element = colorSwatches[newIndex] as HTMLElement;
       element?.focus();
       event.preventDefault();
     }
   };
 
   return (
-    <div
-      className={cx('iui-color-picker', className)}
-      onKeyDown={handleCalendarKeyDown}
-      ref={ref}
-      {...rest}
-    >
-      <div className='iui-color-palette'>{children}</div>
+    <div className={cx('iui-color-picker', className)} {...rest}>
+      <div className='iui-color-palette' onKeyDown={handleKeyDown} ref={ref}>
+        {children}
+      </div>
     </div>
   );
 };
