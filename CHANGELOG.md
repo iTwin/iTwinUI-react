@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.18.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.18.0...v1.18.1) (2021-09-21)
+
+
+### Fixes
+
+* updated typescript and eslint versions ([#319](https://www.github.com/iTwin/iTwinUI-react/issues/319)) ([fc2b477](https://www.github.com/iTwin/iTwinUI-react/commit/fc2b477bdf2cfc77328c358c9e76aa86d7be7007))
+
 ## [1.18.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.17.0...v1.18.0) (2021-09-13)
 
 ### What's new
