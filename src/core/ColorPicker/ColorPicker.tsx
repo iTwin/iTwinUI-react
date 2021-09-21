@@ -47,23 +47,15 @@ export type ColorPickerProps = {
    * Recommended to use `ColorSwatch` components.
    */
   children?: React.ReactNode;
-  /**
-   * Index of the selected color on the color palette.
-   */
-  activeColor?: number;
 } & Omit<CommonProps, 'title'>;
 
 export const ColorPicker = (props: ColorPickerProps) => {
-  const { children, className, activeColor, ...rest } = props;
+  const { children, className, ...rest } = props;
 
   useTheme();
 
   const ref = React.useRef<HTMLDivElement>(null);
-  const [focusedColor, setFocusedColor] = React.useState(activeColor);
-
-  React.useEffect(() => {
-    setFocusedColor(activeColor);
-  }, [activeColor]);
+  const [focusedColor, setFocusedColor] = React.useState(-1);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     const colorSwatches = ref.current?.querySelectorAll('.iui-color-swatch');
@@ -71,8 +63,20 @@ export const ColorPicker = (props: ColorPickerProps) => {
       return;
     }
 
-    // If focusedColor is undefined, assume it is at index 0 and move from there
-    const currentIndex = focusedColor ?? 0;
+    let currentIndex = -1;
+    if (focusedColor == -1) {
+      // FocusedColor hasn't been set yet, find the active color index
+      for (let i = 0; i < colorSwatches.length; i++) {
+        const element = colorSwatches[i] as HTMLElement;
+        if (element.tabIndex == 0) {
+          currentIndex = i;
+          break;
+        }
+      }
+    } else {
+      currentIndex = focusedColor;
+    }
+
     const currentColor = colorSwatches[currentIndex] as HTMLElement;
     let newIndex = -1;
 
