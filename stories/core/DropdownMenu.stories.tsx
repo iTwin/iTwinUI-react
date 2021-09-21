@@ -71,7 +71,7 @@ export const Basic: Story<DropdownMenuProps> = (args) => {
   ];
   return (
     // Body height is the same as Select component height therefore clicking outside would not close dropdown.
-    <div style={{ minHeight: 150 }}>
+    <div style={{ minHeight: 200 }}>
       <DropdownMenu menuItems={menuItems || dropdownMenuItems} {...rest}>
         <IconButton>
           <SvgMore />
