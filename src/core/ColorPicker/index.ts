@@ -5,3 +5,6 @@
 export { ColorPicker } from './ColorPicker';
 export type { ColorPickerProps } from './ColorPicker';
 export default './ColorPicker';
+
+export { ColorSwatch } from './ColorSwatch';
+export type { ColorSwatchProps } from './ColorSwatch';

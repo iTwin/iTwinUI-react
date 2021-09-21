@@ -9,9 +9,9 @@ import {
   ColorPickerProps,
   IconButton,
   Tooltip,
+  ColorSwatch,
 } from '../../src/core';
 import { action } from '@storybook/addon-actions';
-import ColorSwatch from '../../src/core/ColorPicker/ColorSwatch';
 import { DefaultColors } from '../../src/core/ColorPicker/ColorPicker';
 
 export default {
