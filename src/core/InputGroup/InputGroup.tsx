@@ -90,7 +90,7 @@ export const InputGroup = (props: InputGroupProps) => {
       icon={
         icon ? React.cloneElement(icon, { 'aria-hidden': true }) : undefined
       }
-      withInlineLabel={displayStyle === 'inline'}
+      isLabelInline={displayStyle === 'inline'}
       className={className}
       style={style}
       {...rest}

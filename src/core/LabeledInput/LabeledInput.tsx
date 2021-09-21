@@ -94,8 +94,8 @@ export const LabeledInput = React.forwardRef<
       status={status}
       message={message}
       icon={icon}
-      withInlineLabel={displayStyle === 'inline'}
-      withInlineIcon={iconDisplayStyle === 'inline'}
+      isLabelInline={displayStyle === 'inline'}
+      isIconInline={iconDisplayStyle === 'inline'}
       className={className}
       style={style}
     >

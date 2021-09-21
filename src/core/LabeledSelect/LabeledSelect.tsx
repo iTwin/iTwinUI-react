@@ -113,7 +113,7 @@ export const LabeledSelect = <T,>(
           ? React.cloneElement(icon, { 'aria-hidden': true })
           : undefined
       }
-      withInlineLabel={displayStyle === 'inline'}
+      isLabelInline={displayStyle === 'inline'}
       className={className}
       style={style}
     >

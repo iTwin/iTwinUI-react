@@ -13,8 +13,8 @@ export type InputContainerProps<T extends React.ElementType = 'div'> = {
   status?: 'positive' | 'warning' | 'negative';
   message?: React.ReactNode;
   icon?: JSX.Element;
-  withInlineLabel?: boolean;
-  withInlineIcon?: boolean;
+  isLabelInline?: boolean;
+  isIconInline?: boolean;
 } & React.ComponentPropsWithoutRef<T>;
 
 /**
@@ -32,8 +32,8 @@ export const InputContainer = <T extends React.ElementType = 'div'>(
     status,
     message,
     icon,
-    withInlineLabel,
-    withInlineIcon,
+    isLabelInline,
+    isIconInline,
     children,
     className,
     style,
@@ -46,8 +46,8 @@ export const InputContainer = <T extends React.ElementType = 'div'>(
         {
           'iui-disabled': disabled,
           [`iui-${status}`]: !!status,
-          'iui-inline-label': withInlineLabel,
-          'iui-inline-icon': withInlineIcon,
+          'iui-inline-label': isLabelInline,
+          'iui-inline-icon': isIconInline,
           'iui-with-message': !!message,
         },
         className,
@@ -68,7 +68,9 @@ export const InputContainer = <T extends React.ElementType = 'div'>(
         React.cloneElement(icon, {
           className: cx('iui-input-icon', icon.props?.className),
         })}
-      {message && <div className='iui-message'>{message}</div>}
+      {message && !isLabelInline && (
+        <div className='iui-message'>{message}</div>
+      )}
     </Element>
   );
 };
