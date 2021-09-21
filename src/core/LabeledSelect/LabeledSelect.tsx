@@ -18,7 +18,7 @@ export type LabeledSelectProps<T> = {
    */
   label?: React.ReactNode;
   /**
-   * Message below the select.
+   * Message below the select. Does not apply to 'inline' select.
    */
   message?: React.ReactNode;
   /**

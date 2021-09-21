@@ -17,7 +17,7 @@ export type LabeledTextareaProps = {
    */
   label: React.ReactNode;
   /**
-   * Message below the textarea.
+   * Message below the textarea. Does not apply to 'inline' textarea.
    */
   message?: React.ReactNode;
   /**

@@ -19,7 +19,7 @@ export type InputGroupProps = {
    */
   status?: 'positive' | 'warning' | 'negative';
   /**
-   * Message below the group.
+   * Message below the group. Does not apply to 'inline' group.
    */
   message?: React.ReactNode;
   /**

@@ -15,7 +15,7 @@ export type LabeledInputProps = {
    */
   label?: React.ReactNode;
   /**
-   * Message below the input.
+   * Message below the input. Does not apply to 'inline' input.
    */
   message?: React.ReactNode;
   /**
