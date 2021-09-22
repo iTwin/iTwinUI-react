@@ -195,7 +195,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
     setIsOpen((open) => popoverProps?.visible ?? open);
   }, [popoverProps]);
 
-  const [minWidth, setMinWidth] = React.useState(0);
+  const [selectButtonWidth, setSelectButtonWidth] = React.useState(0);
   const toggle = () => setIsOpen((open) => !open);
 
   const selectRef = React.useRef<HTMLDivElement>(null);
@@ -224,7 +224,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
 
   React.useEffect(() => {
     if (selectRef.current) {
-      setMinWidth(selectRef.current.offsetWidth);
+      setSelectButtonWidth(selectRef.current.offsetWidth);
     }
   }, [isOpen]);
 
@@ -288,7 +288,11 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
         placement='bottom-start'
         className={cx('iui-scroll', menuClassName)}
         style={{
-          minWidth,
+          minWidth: selectButtonWidth,
+          maxWidth: `${Math.min(
+            selectButtonWidth * 2,
+            document.body.offsetWidth,
+          )}px`,
           maxHeight: `300px`,
           ...menuStyle,
         }}
