@@ -20,7 +20,7 @@ export type MenuProps = {
    * Menu items. Recommended to use `MenuItem` components.
    *
    * If you have custom actionable items, they should have `tabindex={-1}`
-   * because we are using rowing `tabindex` for keyboard navigation: https://www.w3.org/TR/wai-aria-practices/#kbd_roving_tabindex.
+   * for better keyboard navigation support.
    */
   children: React.ReactNode;
 } & Omit<CommonProps, 'title'>;
@@ -30,7 +30,10 @@ const getFocusableItems = (container: HTMLElement | null) => {
     ...getFocusableElements(container),
     // MenuItem has tabindex="-1".
     ...Array.from(container?.querySelectorAll('[tabindex="-1"]') ?? []),
-  ].filter((el) => !el.classList.contains('iui-disabled'));
+  ].filter(
+    (el) =>
+      !el.hasAttribute('disabled') || !el.classList.contains('iui-disabled'),
+  );
 };
 
 /**
