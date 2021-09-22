@@ -198,5 +198,8 @@ export type {
 
 export { getUserColor } from './utils/common';
 
+export { TextTruncation } from './utils/TextTruncation';
+export type { TextTruncationProps } from './utils/TextTruncation';
+
 export { useTheme } from './utils/hooks/useTheme';
 export type { ThemeType } from './utils/hooks/useTheme';
