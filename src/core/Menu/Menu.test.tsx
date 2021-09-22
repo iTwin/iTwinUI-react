@@ -94,6 +94,35 @@ it('should handle keyboard navigation', () => {
   assertBaseElement(menu, { labels, focusedIndex: 0 });
 });
 
+it('should reset focus when children changes', () => {
+  const { container, rerender } = render(
+    <Menu>
+      <MenuItem key={0}>Test0</MenuItem>,
+      <MenuItem key={1} isSelected>
+        Test1
+      </MenuItem>
+      ,<MenuItem key={2}>Test2</MenuItem>,
+    </Menu>,
+  );
+  const menu = container.querySelector('.iui-menu') as HTMLUListElement;
+  assertBaseElement(menu, { focusedIndex: 1 });
+
+  rerender(
+    <Menu>
+      <MenuItem key={0}>Test0</MenuItem>,<MenuItem key={1}>Test1</MenuItem>,
+      <MenuItem key={2}>Test2</MenuItem>,
+      <MenuItem key={3} isSelected>
+        Test3
+      </MenuItem>
+      ,
+    </Menu>,
+  );
+  assertBaseElement(menu, {
+    focusedIndex: 3,
+    labels: ['Test0', 'Test1', 'Test2', 'Test3'],
+  });
+});
+
 it('should add custom className', () => {
   const { container } = renderComponent({ className: 'test-className' });
 

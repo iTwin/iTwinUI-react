@@ -45,7 +45,7 @@ export const Menu = React.forwardRef<HTMLUListElement, MenuProps>(
 
     useTheme();
 
-    const [focusedIndex, setFocusedIndex] = React.useState<number>();
+    const [focusedIndex, setFocusedIndex] = React.useState<number | null>();
     const menuRef = React.useRef<HTMLUListElement>(null);
     const refs = useMergedRefs(menuRef, ref);
 
@@ -60,7 +60,11 @@ export const Menu = React.forwardRef<HTMLUListElement, MenuProps>(
         el.classList.contains('iui-active'),
       );
       setFocusedIndex(selectedIndex > -1 ? selectedIndex : 0);
-    }, [children, focusedIndex]);
+    }, [focusedIndex]);
+
+    React.useEffect(() => {
+      setFocusedIndex(null);
+    }, [children]);
 
     const onKeyDown = (event: React.KeyboardEvent<HTMLUListElement>) => {
       const items = getFocusableItems(menuRef.current);
