@@ -61,17 +61,13 @@ export const Basic: Story<DropdownMenuProps> = (args) => {
     <MenuItem key={2} onClick={onClick(2, close)}>
       Item #2
     </MenuItem>,
-    <MenuDivider key={3} />,
-    <MenuItem key={4} onClick={onClick(3, close)} disabled>
+    <MenuItem key={3} onClick={onClick(3, close)} disabled>
       Item #3
-    </MenuItem>,
-    <MenuItem key={5} onClick={onClick(4, close)}>
-      Item #4
     </MenuItem>,
   ];
   return (
     // Body height is the same as Select component height therefore clicking outside would not close dropdown.
-    <div style={{ minHeight: 200 }}>
+    <div style={{ minHeight: 150 }}>
       <DropdownMenu menuItems={menuItems || dropdownMenuItems} {...rest}>
         <IconButton>
           <SvgMore />
@@ -268,4 +264,37 @@ Submenu.parameters = {
       },
     },
   } as CreeveyStoryParams,
+};
+
+export const WithSeparator: Story<DropdownMenuProps> = (args) => {
+  const { menuItems, ...rest } = args;
+  const onClick = (index: number, close: () => void) => () => {
+    action(`Item #${index} clicked!`)();
+    close();
+  };
+  const dropdownMenuItems = (close: () => void) => [
+    <MenuItem key={1} onClick={onClick(1, close)}>
+      Item #1
+    </MenuItem>,
+    <MenuItem key={2} onClick={onClick(2, close)}>
+      Item #2
+    </MenuItem>,
+    <MenuDivider key={3} />,
+    <MenuItem key={4} onClick={onClick(3, close)} disabled>
+      Item #3
+    </MenuItem>,
+    <MenuItem key={5} onClick={onClick(4, close)}>
+      Item #4
+    </MenuItem>,
+  ];
+  return (
+    // Body height is the same as Select component height therefore clicking outside would not close dropdown.
+    <div style={{ minHeight: 200 }}>
+      <DropdownMenu menuItems={menuItems || dropdownMenuItems} {...rest}>
+        <IconButton>
+          <SvgMore />
+        </IconButton>
+      </DropdownMenu>
+    </div>
+  );
 };
