@@ -58,21 +58,24 @@ export const ColorPicker = (props: ColorPickerProps) => {
   const [focusedColor, setFocusedColor] = React.useState(-1);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    const colorSwatches = ref.current?.querySelectorAll('.iui-color-swatch');
+    const colorSwatches = Array.from(
+      ref.current?.querySelectorAll('.iui-color-swatch') || [],
+    );
     if (!colorSwatches?.length) {
       return;
     }
 
-    let currentIndex = -1;
+    const focusedIndex = colorSwatches.findIndex(
+      (swatch) => (swatch as HTMLElement) === document.activeElement,
+    );
+
+    let currentIndex;
     if (focusedColor == -1) {
-      // FocusedColor hasn't been set yet, find the active color index
-      for (let i = 0; i < colorSwatches.length; i++) {
-        const element = colorSwatches[i] as HTMLElement;
-        if (element.tabIndex == 0) {
-          currentIndex = i;
-          break;
-        }
-      }
+      currentIndex = colorSwatches.findIndex(
+        (swatch) => (swatch as HTMLElement).tabIndex == 0,
+      );
+    } else if (focusedColor != focusedIndex) {
+      currentIndex = focusedIndex;
     } else {
       currentIndex = focusedColor;
     }

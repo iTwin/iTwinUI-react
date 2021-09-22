@@ -10,9 +10,9 @@ import {
   IconButton,
   Tooltip,
   ColorSwatch,
+  DefaultColors,
 } from '../../src/core';
 import { action } from '@storybook/addon-actions';
-import { DefaultColors } from '../../src/core/ColorPicker/ColorPicker';
 
 export default {
   component: ColorPicker,
