@@ -19,8 +19,8 @@ export type MenuProps = {
   /**
    * Menu items. Recommended to use `MenuItem` components.
    *
-   * If you have custom actionable items, they should have `tabindex={-1}`
-   * for better keyboard navigation support.
+   * If you have custom actionable items, they should have `tabindex={-1}` for better keyboard navigation support
+   * and selected item should have `aria-selected={true}`.
    */
   children: React.ReactNode;
 } & Omit<CommonProps, 'title'>;
@@ -56,8 +56,8 @@ export const Menu = React.forwardRef<HTMLUListElement, MenuProps>(
         return;
       }
 
-      const selectedIndex = items.findIndex((el) =>
-        el.classList.contains('iui-active'),
+      const selectedIndex = items.findIndex(
+        (el) => el.getAttribute('aria-selected') === 'true',
       );
       setFocusedIndex(selectedIndex > -1 ? selectedIndex : 0);
     }, [focusedIndex]);
