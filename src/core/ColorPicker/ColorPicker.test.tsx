@@ -36,6 +36,7 @@ it('should render color picker with active color swatch', () => {
 
   const colorSwatches = container.querySelectorAll('.iui-color-swatch');
   expect(colorSwatches[0].classList).toContain('iui-active');
+  expect(colorSwatches[0]).toHaveStyle({ backgroundColor: '#9BA5AF' });
 });
 
 it('should handle color swatch onClick', () => {
@@ -58,4 +59,15 @@ it('should handle color swatch onClick', () => {
   fireEvent.click(colorSwatches[3]);
 
   expect(onColorClick).toHaveBeenCalledTimes(4);
+});
+
+it('should set swatch color', () => {
+  window.CSS = { supports: () => true, escape: (i) => i };
+
+  const { container } = render(<ColorSwatch color='#9BA5AF' />);
+  const swatch = container.querySelector(
+    '.iui-color-swatch',
+  ) as HTMLSpanElement;
+  expect(swatch).toBeTruthy();
+  expect(swatch.style.getPropertyValue('--swatch-color')).toEqual('#9BA5AF');
 });
