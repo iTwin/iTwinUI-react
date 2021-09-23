@@ -200,7 +200,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
     minWidth,
     toggle,
     selectRef,
-  } = useSelect<T>({
+  } = useSelect<T, HTMLDivElement>({
     options,
     value,
     onChange,

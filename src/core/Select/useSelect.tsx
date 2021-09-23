@@ -1,3 +1,7 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
 import { ItemRendererProps, SelectOption } from './Select';
@@ -8,7 +12,7 @@ import { MenuItem } from '../Menu';
  * Internal hook containing all logic for the `Select` component.
  * @private
  */
-export const useSelect = <T,>(props: {
+export const useSelect = <T, E extends HTMLElement>(props: {
   options: SelectOption<T>[];
   value?: T;
   onChange?: (value: T) => void;
@@ -42,9 +46,10 @@ export const useSelect = <T,>(props: {
   }, [visible]);
 
   const [minWidth, setMinWidth] = React.useState(0);
-  const toggle = () => setIsOpen((open) => !open);
+  const toggle = (forceOpen?: boolean) =>
+    setIsOpen((open) => forceOpen ?? !open);
 
-  const selectRef = React.useRef<HTMLDivElement>(null);
+  const selectRef = React.useRef<E>(null);
 
   const onShowHandler = React.useCallback(
     (instance: PopoverInstance) => {

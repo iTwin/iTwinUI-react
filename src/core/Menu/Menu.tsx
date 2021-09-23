@@ -19,6 +19,11 @@ export type MenuProps = {
    * Menu items. Recommended to use `MenuItem` components.
    */
   children: React.ReactNode;
+  /**
+   * Should the first selected or enabled menu item be focused automatically?
+   * @default true
+   */
+  bringFocusInside?: boolean;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -26,7 +31,14 @@ export type MenuProps = {
  */
 export const Menu = React.forwardRef<HTMLUListElement, MenuProps>(
   (props, ref) => {
-    const { children, role = 'menu', className, style, ...rest } = props;
+    const {
+      children,
+      role = 'menu',
+      bringFocusInside = true,
+      className,
+      style,
+      ...rest
+    } = props;
 
     useTheme();
 
@@ -48,8 +60,10 @@ export const Menu = React.forwardRef<HTMLUListElement, MenuProps>(
       const firstEnabledIndex = childrenArray.findIndex(
         (child: JSX.Element) => !child.props.disabled,
       );
-      setFocusedIndex(selectedIndex > -1 ? selectedIndex : firstEnabledIndex);
-    }, [children, focusedIndex]);
+      if (bringFocusInside) {
+        setFocusedIndex(selectedIndex > -1 ? selectedIndex : firstEnabledIndex);
+      }
+    }, [children, focusedIndex, bringFocusInside]);
 
     const onKeyDown = (event: React.KeyboardEvent<HTMLUListElement>) => {
       const items = menuRef.current?.children;
