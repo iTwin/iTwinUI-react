@@ -97,11 +97,11 @@ it('should handle keyboard navigation', () => {
 it('should reset focus when children changes', () => {
   const { container, rerender } = render(
     <Menu>
-      <MenuItem key={0}>Test0</MenuItem>,
+      <MenuItem key={0}>Test0</MenuItem>
       <MenuItem key={1} isSelected>
         Test1
       </MenuItem>
-      ,<MenuItem key={2}>Test2</MenuItem>,
+      <MenuItem key={2}>Test2</MenuItem>
     </Menu>,
   );
   const menu = container.querySelector('.iui-menu') as HTMLUListElement;
@@ -109,12 +109,12 @@ it('should reset focus when children changes', () => {
 
   rerender(
     <Menu>
-      <MenuItem key={0}>Test0</MenuItem>,<MenuItem key={1}>Test1</MenuItem>,
-      <MenuItem key={2}>Test2</MenuItem>,
+      <MenuItem key={0}>Test0</MenuItem>
+      <MenuItem key={1}>Test1</MenuItem>
+      <MenuItem key={2}>Test2</MenuItem>
       <MenuItem key={3} isSelected>
         Test3
       </MenuItem>
-      ,
     </Menu>,
   );
   assertBaseElement(menu, {
