@@ -181,6 +181,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             isSelected={isSelected}
             ref={(el) => focusedIndex === index && el?.scrollIntoView(false)}
             role='option'
+            {...option}
           >
             {option.label}
           </MenuItem>
