@@ -28,7 +28,7 @@ export type ColorSwatchProps = {
  */
 export const ColorSwatch = React.forwardRef<HTMLSpanElement, ColorSwatchProps>(
   (props, ref) => {
-    const { color, style, onClick, isActive, ...rest } = props;
+    const { color, style, onClick, isActive, className, ...rest } = props;
 
     useTheme();
 
@@ -39,7 +39,11 @@ export const ColorSwatch = React.forwardRef<HTMLSpanElement, ColorSwatchProps>(
 
     return (
       <span
-        className={cx('iui-color-swatch', { 'iui-active': isActive })}
+        className={cx(
+          'iui-color-swatch',
+          { 'iui-active': isActive },
+          className,
+        )}
         style={_style}
         onClick={onClick}
         tabIndex={isActive ? 0 : -1}
