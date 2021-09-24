@@ -73,29 +73,6 @@ describe('getBoundedValue', () => {
 describe('getTabbableElements', () => {
   it('should get tabbable elements', () => {
     const container = document.createElement('div');
-    container.append(document.createElement('button'));
-    const tabbableDiv = document.createElement('div');
-    tabbableDiv.setAttribute('tabindex', '0');
-    tabbableDiv.append(document.createElement('textarea'));
-    container.append(tabbableDiv);
-    const disabledSelect = document.createElement('select');
-    disabledSelect.disabled = true;
-    container.append(disabledSelect);
-    container.append(document.createElement('input'));
-
-    expect(getTabbableElements(container).length).toBe(4);
-  });
-
-  it('should return empty array of tabbable elements', () => {
-    expect(getTabbableElements(undefined).length).toBe(0);
-    expect(getTabbableElements(null).length).toBe(0);
-    expect(getTabbableElements(document.createElement('div')).length).toBe(0);
-  });
-});
-
-describe('getTabbableElements', () => {
-  it('should get tabbable elements', () => {
-    const container = document.createElement('div');
 
     container.append(document.createElement('button'));
 
