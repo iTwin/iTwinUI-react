@@ -55,74 +55,78 @@ export const ColorPicker = (props: ColorPickerProps) => {
   useTheme();
 
   const ref = React.useRef<HTMLDivElement>(null);
-  const [focusedColor, setFocusedColor] = React.useState(-1);
+  const [focusedColor, setFocusedColor] = React.useState<number | null>();
+
+  React.useEffect(() => {
+    const colorSwatches = Array.from<HTMLElement>(
+      ref.current?.querySelectorAll('.iui-color-swatch') ?? [],
+    );
+    if (focusedColor != null) {
+      colorSwatches[focusedColor]?.focus();
+      return;
+    }
+    const selectedIndex = colorSwatches.findIndex(
+      (swatch) =>
+        swatch.tabIndex === 0 || swatch.getAttribute('aria-selected') == 'true',
+    );
+    setFocusedColor(selectedIndex > -1 ? selectedIndex : null);
+  }, [focusedColor]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    const colorSwatches = Array.from(
-      ref.current?.querySelectorAll('.iui-color-swatch') || [],
+    const colorSwatches = Array.from<HTMLElement>(
+      ref.current?.querySelectorAll('.iui-color-swatch') ?? [],
     );
-    if (!colorSwatches?.length) {
+    if (!colorSwatches.length) {
       return;
     }
 
-    const focusedIndex = colorSwatches.findIndex(
-      (swatch) => (swatch as HTMLElement) === document.activeElement,
+    const currentlyFocused = colorSwatches.findIndex(
+      (swatch) => swatch === ref.current?.ownerDocument.activeElement,
     );
-
-    let currentIndex;
-    if (focusedColor == -1) {
-      currentIndex = colorSwatches.findIndex(
-        (swatch) => (swatch as HTMLElement).tabIndex == 0,
-      );
-    } else if (focusedColor != focusedIndex) {
-      currentIndex = focusedIndex;
-    } else {
-      currentIndex = focusedColor;
-    }
-
-    const currentColor = colorSwatches[currentIndex] as HTMLElement;
-    let newIndex = -1;
+    const currentIndex = currentlyFocused > -1 ? currentlyFocused : 0;
 
     switch (event.key) {
-      case 'ArrowDown':
+      case 'ArrowDown': {
         // Look for next ColorSwatch with same offsetLeft value
-        for (let i = currentIndex + 1; i < colorSwatches.length; i++) {
-          const element = colorSwatches[i] as HTMLElement;
-          if (element.offsetLeft == currentColor.offsetLeft) {
-            newIndex = i;
-            break;
-          }
-        }
+        const newIndex = colorSwatches.findIndex(
+          (swatch, index) =>
+            index > currentIndex &&
+            swatch.offsetLeft === colorSwatches[currentIndex].offsetLeft,
+        );
+        setFocusedColor(newIndex > -1 ? newIndex : currentIndex);
+        event.preventDefault();
         break;
-      case 'ArrowUp':
+      }
+      case 'ArrowUp': {
         // Look backwards for next ColorSwatch with same offsetLeft value
+        let newIndex = -1;
         for (let i = currentIndex - 1; i >= 0; i--) {
-          const element = colorSwatches[i] as HTMLElement;
-          if (element.offsetLeft == currentColor.offsetLeft) {
+          if (
+            colorSwatches[i].offsetLeft ==
+            colorSwatches[currentIndex].offsetLeft
+          ) {
             newIndex = i;
             break;
           }
         }
+        setFocusedColor(newIndex > -1 ? newIndex : currentIndex);
+        event.preventDefault();
         break;
+      }
       case 'ArrowLeft':
-        newIndex = currentIndex - 1;
+        setFocusedColor(Math.max(currentIndex - 1, 0));
+        event.preventDefault();
         break;
       case 'ArrowRight':
-        newIndex = currentIndex + 1;
+        setFocusedColor(Math.min(currentIndex + 1, colorSwatches.length - 1));
+        event.preventDefault();
         break;
       case 'Enter':
       case ' ':
       case 'Spacebar':
-        const element = colorSwatches[currentIndex] as HTMLElement;
-        element?.click();
+        colorSwatches[currentIndex].click();
         event.preventDefault();
-        return;
-    }
-    if (newIndex < colorSwatches.length && newIndex >= 0) {
-      setFocusedColor(newIndex);
-      const element = colorSwatches[newIndex] as HTMLElement;
-      element?.focus();
-      event.preventDefault();
+        break;
     }
   };
 

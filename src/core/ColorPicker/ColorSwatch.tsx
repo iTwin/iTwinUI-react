@@ -42,6 +42,7 @@ export const ColorSwatch = React.forwardRef<HTMLSpanElement, ColorSwatchProps>(
         style={_style}
         onClick={onClick}
         tabIndex={isActive ? 0 : -1}
+        aria-selected={isActive}
         ref={ref}
         {...rest}
       />
