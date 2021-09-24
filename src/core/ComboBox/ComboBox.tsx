@@ -7,7 +7,6 @@ import cx from 'classnames';
 import { nanoid } from 'nanoid';
 import { Input, Menu, MenuItem, SelectOption } from '../..';
 import { InputContainer } from '../utils/InputContainer';
-import { useSelect } from '../Select/useSelect';
 import { useTheme } from '../utils/hooks/useTheme';
 import { Popover } from '../utils/Popover';
 import { CommonProps } from '../utils/props';
@@ -42,7 +41,18 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     [options, id],
   );
 
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const menuRef = React.useRef<HTMLUListElement>(null);
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  // Set min-width of menu to be same as input
+  const [minWidth, setMinWidth] = React.useState(0);
+  React.useEffect(() => {
+    if (inputRef.current) {
+      setMinWidth(inputRef.current.offsetWidth);
+    }
+  }, [isOpen]);
+
   const [filteredOptions, setFilteredOptions] = React.useState(options);
   const [focusedIndex, setFocusedIndex] = React.useState<number>(-1);
 
@@ -51,12 +61,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   React.useEffect(() => {
     setSelectedValue(value);
   }, [value]);
-
-  // Update input value when option is selected
-  React.useEffect(() => {
-    const selectedOption = options.find(({ value }) => value === selectedValue);
-    selectedOption && setInputValue(selectedOption.label);
-  }, [selectedValue, options]);
 
   // Controlled input value
   const [inputValue, setInputValue] = React.useState<string>('');
@@ -68,16 +72,11 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     [],
   );
 
-  // Update focused value according to filtered list
+  // Update input value when option is selected
   React.useEffect(() => {
-    if (!filteredOptions.find(({ value }) => value === selectedValue)) {
-      setFocusedIndex(options.indexOf(filteredOptions[0]));
-    } else {
-      setFocusedIndex(
-        options.findIndex(({ value }) => value === selectedValue),
-      );
-    }
-  }, [filteredOptions, options, selectedValue]);
+    const selectedOption = options.find(({ value }) => value === selectedValue);
+    selectedOption && setInputValue(selectedOption.label);
+  }, [selectedValue, options]);
 
   // Filter options when input value changes
   React.useEffect(() => {
@@ -85,7 +84,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     if (
       inputValue &&
       inputValue.length > 0 &&
-      selectedOption?.label !== inputValue // show whole list if option is selected
+      selectedOption?.label !== inputValue // don't filter list if option is selected
     ) {
       const _filteredOptions = options.filter((option) =>
         option.label.toLowerCase().includes(inputValue?.toLowerCase()),
@@ -99,32 +98,29 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     }
   }, [inputValue, options, selectedValue]);
 
-  const {
-    isOpen,
-    toggle,
-    menuItems,
-    minWidth,
-    onHideHandler,
-    onShowHandler,
-    selectRef: inputRef,
-  } = useSelect<T, HTMLInputElement>({
-    options: filteredOptions,
-    onChange: (value) => setSelectedValue(value),
-    value: selectedValue,
-    itemRenderer: (option) => {
-      const index = options.findIndex((op) => op === option);
-      return (
-        <MenuItem
-          isSelected={selectedValue === option.value}
-          id={getOptionId(index)}
-          className={cx({ 'iui-focused': focusedIndex === index })}
-          onClick={() => setSelectedValue(option.value)}
-        >
-          {option.label}
-        </MenuItem>
+  // Update focused value according to filtered list
+  React.useEffect(() => {
+    if (!filteredOptions.find(({ value }) => value === selectedValue)) {
+      setFocusedIndex(options.indexOf(filteredOptions[0]));
+    } else {
+      setFocusedIndex(
+        options.findIndex(({ value }) => value === selectedValue),
       );
-    },
-  });
+    }
+  }, [filteredOptions, options, selectedValue]);
+
+  // Update input value and focused value when menu is closed
+  React.useEffect(() => {
+    if (!isOpen) {
+      const selectedIndex = options.findIndex(
+        ({ value }) => value === selectedValue,
+      );
+      if (selectedIndex > -1 && inputValue !== options[selectedIndex].label) {
+        setInputValue(options[selectedIndex].label);
+      }
+      setFocusedIndex(selectedIndex);
+    }
+  }, [inputValue, isOpen, options, selectedValue]);
 
   const onKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
@@ -138,6 +134,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             filteredOptions.length - 1,
           );
           setFocusedIndex(options.indexOf(filteredOptions[nextIndex]));
+          !isOpen && setIsOpen(true); // reopen menu if closed when typing
           event.preventDefault();
           event.stopPropagation();
           break;
@@ -149,21 +146,48 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           break;
         case 'Enter':
           setSelectedValue(options[focusedIndex].value);
-          toggle(!isOpen);
+          setIsOpen(!isOpen);
           event.preventDefault();
           event.stopPropagation();
           break;
         case 'Escape':
-          toggle(false);
+          setIsOpen(false);
           event.preventDefault();
           event.stopPropagation();
           break;
         default:
-          !isOpen && toggle(true); // reopen menu if closed when typing
+          !isOpen && setIsOpen(true); // reopen menu if closed when typing
           break;
       }
     },
-    [filteredOptions, focusedIndex, isOpen, options, toggle],
+    [filteredOptions, focusedIndex, isOpen, options],
+  );
+
+  const menuItems = React.useCallback(
+    (close: () => void) => {
+      return filteredOptions.map((option) => {
+        const isSelected = selectedValue === option.value;
+        const index = options.findIndex(({ value }) => option.value === value);
+        return (
+          <MenuItem
+            id={getOptionId(index)}
+            key={getOptionId(index)}
+            className={cx({ 'iui-focused': focusedIndex === index })}
+            onClick={(value) => {
+              console.log(value);
+              setSelectedValue(option.value); // FIXME
+              close();
+            }}
+            isSelected={isSelected}
+            ref={(el) => focusedIndex === index && el?.scrollIntoView(false)}
+            role='option'
+          >
+            {option.label}
+          </MenuItem>
+        );
+      });
+    },
+    [focusedIndex, getOptionId, filteredOptions, selectedValue, options],
   );
 
   return (
@@ -172,7 +196,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       isIconInline={true}
       icon={
         isOpen ? (
-          <SvgCaretUpSmall onClick={() => toggle(false)} />
+          <SvgCaretUpSmall onClick={() => setIsOpen(false)} />
         ) : (
           <SvgCaretDownSmall style={{ pointerEvents: 'none' }} />
         )
@@ -190,25 +214,24 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             role='listbox'
             ref={menuRef}
           >
-            {menuItems(toggle)}
+            {menuItems(() => setIsOpen(false))}
           </Menu>
         }
         placement='bottom-start'
-        onShow={onShowHandler}
-        onHide={onHideHandler}
         visible={isOpen}
       >
         <Input
           ref={inputRef}
           onKeyDown={onKeyDown}
-          onFocus={() => toggle(true)}
-          onBlur={() => toggle(false)}
+          onFocus={() => setIsOpen(true)}
+          onBlur={() => setIsOpen(false)}
           onChange={onInput}
           value={inputValue}
           aria-activedescendant={
             isOpen && focusedIndex > -1 ? getOptionId(focusedIndex) : undefined
           }
           role='combobox'
+          aria-owns={isOpen ? `${id}-list` : undefined}
           spellCheck={false}
           autoCapitalize='none'
           autoCorrect='off'
