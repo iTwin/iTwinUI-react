@@ -25,17 +25,6 @@ export type MenuProps = {
   children: React.ReactNode;
 } & Omit<CommonProps, 'title'>;
 
-const getFocusableItems = (container: HTMLElement | null) => {
-  return [
-    ...getFocusableElements(container),
-    // MenuItem has tabindex="-1".
-    ...Array.from(container?.querySelectorAll('[tabindex="-1"]') ?? []),
-  ].filter(
-    (el) =>
-      !el.hasAttribute('disabled') || !el.classList.contains('iui-disabled'),
-  );
-};
-
 /**
  * Basic menu component. Can be used for select or dropdown components.
  */
@@ -50,7 +39,7 @@ export const Menu = React.forwardRef<HTMLUListElement, MenuProps>(
     const refs = useMergedRefs(menuRef, ref);
 
     React.useEffect(() => {
-      const items = getFocusableItems(menuRef.current);
+      const items = getFocusableElements(menuRef.current);
       if (focusedIndex != null) {
         (items?.[focusedIndex] as HTMLLIElement)?.focus();
         return;
@@ -67,7 +56,7 @@ export const Menu = React.forwardRef<HTMLUListElement, MenuProps>(
     }, [children]);
 
     const onKeyDown = (event: React.KeyboardEvent<HTMLUListElement>) => {
-      const items = getFocusableItems(menuRef.current);
+      const items = getFocusableElements(menuRef.current);
       if (!items?.length) {
         return;
       }
