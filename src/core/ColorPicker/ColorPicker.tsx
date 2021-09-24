@@ -49,6 +49,16 @@ export type ColorPickerProps = {
   children?: React.ReactNode;
 } & Omit<CommonProps, 'title'>;
 
+/**
+ * Basic ColorPicker component to display a palette of ColorSwatches
+ * @example
+ * <ColorPicker>
+ *   <ColorSwatch key={1} color='#D4F4BD' onClick={onColorClick} />
+ *   <ColorSwatch key={2} color='#EEF6E8' onClick={onColorClick} />
+ *   <ColorSwatch key={3} color='#9BA5AF' onClick={onColorClick} />
+ *   <ColorSwatch key={4} color='#002A44' onClick={onColorClick} />
+ * </ColorPicker>
+ */
 export const ColorPicker = (props: ColorPickerProps) => {
   const { children, className, ...rest } = props;
 

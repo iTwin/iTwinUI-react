@@ -49,14 +49,13 @@ export const Basic: Story<ColorPickerProps> = (args) => {
         <div style={{ marginTop: 4 }}>
           <ColorPicker {...args}>
             {DefaultColors.map((color, index) => {
-              const onClick = () => {
-                onClickColor(index);
-              };
               return (
                 <ColorSwatch
                   key={index + color.color}
                   color={color.color}
-                  onClick={onClick}
+                  onClick={() => {
+                    onClickColor(index);
+                  }}
                   isActive={index === activeIndex}
                 />
               );
@@ -99,16 +98,15 @@ export const WithTooltip: Story<ColorPickerProps> = (args) => {
         <div style={{ marginTop: 4 }}>
           <ColorPicker {...args}>
             {DefaultColors.map((color, index) => {
-              const onClick = () => {
-                onColorClick(index);
-              };
               return (
                 <>
                   <Tooltip content={color.name} placement={'bottom-end'}>
                     <ColorSwatch
                       key={index + color.color}
                       color={color.color}
-                      onClick={onClick}
+                      onClick={() => {
+                        onColorClick(index);
+                      }}
                       isActive={index == activeIndex}
                     />
                   </Tooltip>

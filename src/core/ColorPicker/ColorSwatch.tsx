@@ -18,13 +18,14 @@ export type ColorSwatchProps = {
    * Is color selected.
    */
   isActive?: boolean;
-  /**
-   * User friendly color name.
-   */
-  name?: string;
 } & CommonProps &
   React.ComponentPropsWithRef<'span'>;
 
+/**
+ * ColorSwatch component to display a color within a basic color picker.
+ * @example
+ * <ColorSwatch color='#23450b'  onClick={onClick}/>
+ */
 export const ColorSwatch = React.forwardRef<HTMLSpanElement, ColorSwatchProps>(
   (props, ref) => {
     const { color, style, onClick, isActive, ...rest } = props;
