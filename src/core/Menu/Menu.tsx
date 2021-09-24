@@ -19,7 +19,7 @@ export type MenuProps = {
   /**
    * Menu items. Recommended to use `MenuItem` components.
    *
-   * If you have custom actionable items, they should have `tabindex={-1}` for better keyboard navigation support
+   * If you have custom actionable items, they should have `tabIndex={-1}` for better keyboard navigation support
    * and selected item should have `aria-selected={true}`.
    */
   children: React.ReactNode;
