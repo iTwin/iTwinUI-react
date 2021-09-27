@@ -84,10 +84,11 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     if (
       inputValue &&
       inputValue.length > 0 &&
+      isOpen &&
       selectedOption?.label !== inputValue // don't filter list if option is selected
     ) {
       const _filteredOptions = options.filter((option) =>
-        option.label.toLowerCase().includes(inputValue?.toLowerCase()),
+        option.label.toLowerCase().includes(inputValue?.trim().toLowerCase()),
       );
       setFilteredOptions(_filteredOptions);
       if (!_filteredOptions.find(({ value }) => value === selectedValue)) {
@@ -96,7 +97,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     } else {
       setFilteredOptions(options);
     }
-  }, [inputValue, options, selectedValue]);
+  }, [inputValue, options, selectedValue, isOpen]);
 
   // Update focused value according to filtered list
   React.useEffect(() => {
@@ -155,6 +156,9 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           event.preventDefault();
           event.stopPropagation();
           break;
+        case 'Tab':
+          setIsOpen(false);
+          break;
         default:
           !isOpen && setIsOpen(true); // reopen menu if closed when typing
           break;
@@ -173,9 +177,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             id={getOptionId(index)}
             key={getOptionId(index)}
             className={cx({ 'iui-focused': focusedIndex === index })}
-            onClick={(value) => {
-              console.log(value);
-              setSelectedValue(option.value); // FIXME
+            onClick={(value: T) => {
+              setSelectedValue(value);
               close();
             }}
             isSelected={isSelected}
@@ -197,9 +200,15 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       isIconInline={true}
       icon={
         isOpen ? (
-          <SvgCaretUpSmall onClick={() => setIsOpen(false)} />
+          <SvgCaretUpSmall
+            style={{ cursor: 'pointer' }}
+            onClick={() => setIsOpen(false)}
+          />
         ) : (
-          <SvgCaretDownSmall style={{ pointerEvents: 'none' }} />
+          <SvgCaretDownSmall
+            style={{ cursor: 'pointer' }}
+            onClick={() => inputRef.current?.focus()}
+          />
         )
       }
       {...rest}
@@ -220,12 +229,12 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
         }
         placement='bottom-start'
         visible={isOpen}
+        onClickOutside={() => setIsOpen(false)}
       >
         <Input
           ref={inputRef}
           onKeyDown={onKeyDown}
           onFocus={() => setIsOpen(true)}
-          onBlur={() => setIsOpen(false)}
           onChange={onInput}
           value={inputValue}
           aria-activedescendant={
