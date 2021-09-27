@@ -8,7 +8,7 @@ import { nanoid } from 'nanoid';
 import { Input, Menu, MenuItem, SelectOption } from '../..';
 import { InputContainer } from '../utils/InputContainer';
 import { useTheme } from '../utils/hooks/useTheme';
-import { Popover } from '../utils/Popover';
+import { Popover, PopoverProps } from '../utils/Popover';
 import { CommonProps } from '../utils/props';
 import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
 import SvgCaretUpSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretUpSmall';
@@ -27,9 +27,20 @@ export type ComboBoxProps<T> = {
    */
   onChange?: (value: T | null) => void;
   /**
+   * Function to customize the default filtering logic.
+   */
+  filterFunction?: (
+    options: SelectOption<T>[],
+    inputValue: string,
+  ) => SelectOption<T>[];
+  /**
    * Native input element props.
    */
   inputProps?: Omit<React.ComponentPropsWithoutRef<'input'>, 'size'>;
+  /**
+   * Props to customize dropdown menu behavior.
+   */
+  dropdownMenuProps?: PopoverProps;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -46,7 +57,16 @@ export type ComboBoxProps<T> = {
  * />
  */
 export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
-  const { options, value, onChange, className, inputProps, ...rest } = props;
+  const {
+    options,
+    value,
+    onChange,
+    filterFunction,
+    className,
+    inputProps,
+    dropdownMenuProps,
+    ...rest
+  } = props;
 
   // Generate a stateful random id if not specified
   const [id] = React.useState(() => props.id ?? `iui-${nanoid(10)}`);
@@ -112,21 +132,22 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     const selectedOption = options.find(({ value }) => value === selectedValue);
     if (
       !inputValue ||
-      inputValue.length === 0 ||
       !isOpen ||
       selectedOption?.label === inputValue // if a value is selected, show whole list to allow selecting a different value
     ) {
       setFilteredOptions(options);
-    } else {
-      const _filteredOptions = options.filter((option) =>
+      return;
+    }
+    const _filteredOptions =
+      filterFunction?.(options, inputValue) ??
+      options.filter((option) =>
         option.label.toLowerCase().includes(inputValue?.trim().toLowerCase()),
       );
-      setFilteredOptions(_filteredOptions);
-      if (!_filteredOptions.find(({ value }) => value === selectedValue)) {
-        setSelectedValue(undefined);
-      }
+    setFilteredOptions(_filteredOptions);
+    if (!_filteredOptions.find(({ value }) => value === selectedValue)) {
+      setSelectedValue(undefined);
     }
-  }, [inputValue, options, selectedValue, isOpen]);
+  }, [inputValue, options, selectedValue, isOpen, filterFunction]);
 
   // Update focused value according to filtered list
   React.useEffect(() => {
@@ -248,7 +269,11 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           <Menu
             id={`${id}-list`}
             className='iui-scroll'
-            style={{ minWidth, maxHeight: '300px' }}
+            style={{
+              minWidth,
+              maxWidth: `min(${minWidth * 2}px, 100vw)`,
+              maxHeight: '300px',
+            }}
             bringFocusInside={false}
             role='listbox'
             ref={menuRef}
@@ -259,6 +284,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
         placement='bottom-start'
         visible={isOpen}
         onClickOutside={() => setIsOpen(false)}
+        {...dropdownMenuProps}
       >
         <Input
           ref={inputRef}
