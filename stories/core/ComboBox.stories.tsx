@@ -6,6 +6,7 @@ import { Story, Meta } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import React from 'react';
 import { ComboBox, ComboBoxProps } from '../../src/core';
+import { CreeveyStoryParams } from 'creevey';
 
 export default {
   component: ComboBox,
@@ -24,6 +25,24 @@ export default {
   ],
   parameters: {
     docs: { source: { excludeDecorators: true } },
+    creevey: {
+      tests: {
+        async open() {
+          const closed = await this.takeScreenshot();
+
+          const input = await this.browser.findElement({
+            className: 'iui-input',
+          });
+          await this.browser.actions().click(input).perform();
+          const opened = await this.takeScreenshot();
+
+          await this.expect({
+            closed,
+            opened,
+          }).to.matchImages();
+        },
+      },
+    } as CreeveyStoryParams,
   },
   title: 'Core/ComboBox',
 } as Meta<ComboBoxProps<unknown>>;
@@ -282,7 +301,7 @@ export const Basic: Story<Partial<ComboBoxProps<string>>> = (args) => {
     <ComboBox
       options={options}
       inputProps={{ placeholder: 'Select a country' }}
-      onChange={(value) => action(value ?? '')()}
+      onChange={(value: string) => action(value ?? '')()}
       {...args}
     />
   );
