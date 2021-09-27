@@ -102,18 +102,22 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   // Update input value when option is selected
   React.useEffect(() => {
     const selectedOption = options.find(({ value }) => value === selectedValue);
-    selectedOption && setInputValue(selectedOption.label);
+    if (selectedOption) {
+      setInputValue(selectedOption.label);
+    }
   }, [selectedValue, options]);
 
   // Filter options when input value changes
   React.useEffect(() => {
     const selectedOption = options.find(({ value }) => value === selectedValue);
     if (
-      inputValue &&
-      inputValue.length > 0 &&
-      isOpen &&
-      selectedOption?.label !== inputValue // don't filter list if option is selected
+      !inputValue ||
+      inputValue.length === 0 ||
+      !isOpen ||
+      selectedOption?.label === inputValue // if a value is selected, show whole list to allow selecting a different value
     ) {
+      setFilteredOptions(options);
+    } else {
       const _filteredOptions = options.filter((option) =>
         option.label.toLowerCase().includes(inputValue?.trim().toLowerCase()),
       );
@@ -121,8 +125,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       if (!_filteredOptions.find(({ value }) => value === selectedValue)) {
         setSelectedValue(undefined);
       }
-    } else {
-      setFilteredOptions(options);
     }
   }, [inputValue, options, selectedValue, isOpen]);
 
