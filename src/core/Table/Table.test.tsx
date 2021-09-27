@@ -332,14 +332,14 @@ it('should handle row clicks', () => {
   expect(onRowClick).toHaveBeenCalledTimes(3);
 });
 
-it('should not select when clicked on row but disableOnRowClickSelection flag is on', () => {
+it('should not select when clicked on row but selectRowOnClick flag is false', () => {
   const onSelect = jest.fn();
   const onRowClick = jest.fn();
   const { container, getByText } = renderComponent({
     isSelectable: true,
     onSelect,
     onRowClick,
-    disableOnRowClickSelection: true,
+    selectRowOnClick: false,
   });
 
   expect(screen.queryByText('Header name')).toBeFalsy();
