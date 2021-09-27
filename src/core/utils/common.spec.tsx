@@ -10,7 +10,7 @@ import {
   getTabbableElements,
   getUserColor,
   getWindow,
-} from './common';
+} from '.';
 
 describe('getUserColor', () => {
   it('should return color for given user name', () => {
