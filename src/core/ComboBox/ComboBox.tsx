@@ -14,17 +14,39 @@ import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSma
 import SvgCaretUpSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretUpSmall';
 
 export type ComboBoxProps<T> = {
+  /**
+   * Array of options that populate the dropdown list.
+   */
   options: SelectOption<T>[];
+  /**
+   * Controlled value of ComboBox.
+   */
   value?: T;
+  /**
+   * Callback fired when selected value changes.
+   */
+  onChange?: (value: T | null) => void;
+  /**
+   * Native input element props.
+   */
+  inputProps?: Omit<React.ComponentPropsWithoutRef<'input'>, 'size'>;
 } & Omit<CommonProps, 'title'>;
 
 /**
- * Describe me here!
+ * ComboBox component that allows typing a value to filter the options in dropdown list.
+ * Values can be selected either using mouse clicks or using the Enter key.
  * @example
- * Example usages go here!
+ * <ComboBox
+ *   options={[
+ *     { label: 'Item 1', value: 1 },
+ *     { label: 'Item 2', value: 2 },
+ *     { label: 'Item 3', value: 3 },
+ *   ]}
+ *   onChange={() => {}}
+ * />
  */
 export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
-  const { options, value, className, ...rest } = props;
+  const { options, value, onChange, className, inputProps, ...rest } = props;
 
   // Generate a stateful random id if not specified
   const [id] = React.useState(() => props.id ?? `iui-${nanoid(10)}`);
@@ -62,14 +84,19 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     setSelectedValue(value);
   }, [value]);
 
+  // Fire onChange callback every time selected value changes
+  React.useEffect(() => {
+    onChange?.(selectedValue ?? null);
+  }, [selectedValue, onChange]);
+
   // Controlled input value
   const [inputValue, setInputValue] = React.useState<string>('');
   const onInput = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const _value = event.target.value;
-      setInputValue(_value);
+      setInputValue(event.target.value);
+      inputProps?.onChange?.(event);
     },
-    [],
+    [inputProps],
   );
 
   // Update input value when option is selected
@@ -245,6 +272,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           spellCheck={false}
           autoCapitalize='none'
           autoCorrect='off'
+          {...inputProps}
         />
       </Popover>
     </InputContainer>

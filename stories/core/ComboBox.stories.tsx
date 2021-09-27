@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { Story, Meta } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
 import React from 'react';
 import { ComboBox, ComboBoxProps } from '../../src/core';
 
@@ -12,6 +13,7 @@ export default {
     className: { control: { disable: true } },
     style: { control: { disable: true } },
     id: { control: { disable: true } },
+    options: { control: { disable: true } },
   },
   decorators: [
     (Story) => (
@@ -276,5 +278,18 @@ export const Basic: Story<Partial<ComboBoxProps<string>>> = (args) => {
     [],
   );
 
-  return <ComboBox options={options} {...args} />;
+  return (
+    <ComboBox
+      options={options}
+      inputProps={{ placeholder: 'Select a country' }}
+      onChange={(value) => action(value ?? '')()}
+      {...args}
+    />
+  );
+};
+Basic.args = {
+  inputProps: { placeholder: 'Select a country' },
+} as ComboBoxProps<string>;
+Basic.argTypes = {
+  value: { control: { disable: true } },
 };
