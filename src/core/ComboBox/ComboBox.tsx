@@ -104,11 +104,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     setSelectedValue(value);
   }, [value]);
 
-  // Fire onChange callback every time selected value changes
-  React.useEffect(() => {
-    onChange?.(selectedValue ?? null);
-  }, [selectedValue, onChange]);
-
   // Controlled input value
   const [inputValue, setInputValue] = React.useState<string>('');
   const onInput = React.useCallback(
@@ -119,7 +114,17 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     [inputProps],
   );
 
-  // Filter options when input value changes
+  // Fire onChange callback and update inputValue every time selected value changes
+  React.useEffect(() => {
+    if (selectedValue) {
+      onChange?.(selectedValue);
+      setInputValue(
+        options.find(({ value }) => value === selectedValue)?.label ?? '',
+      );
+    }
+  }, [selectedValue, onChange, options]);
+
+  // Filter options and update focus when input value changes
   React.useEffect(() => {
     const selectedOption = options.find(({ value }) => value === selectedValue);
     if (
@@ -139,21 +144,19 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     if (!_filteredOptions.find(({ value }) => value === selectedValue)) {
       setSelectedValue(undefined);
     }
-  }, [inputValue, options, selectedValue, isOpen, filterFunction]);
 
-  // Update focused value according to filtered list
-  React.useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
-    if (filteredOptions.find(({ value }) => value === selectedValue)) {
-      setFocusedIndex(
-        options.findIndex(({ value }) => value === selectedValue),
-      );
-    } else if (!filteredOptions.includes(options[focusedIndex])) {
-      setFocusedIndex(-1); // reset focus if previously selected/focused value is not in new list
-    }
-  }, [filteredOptions, focusedIndex, isOpen, options, selectedValue]);
+    setFocusedIndex((previouslyFocusedIndex) => {
+      if (_filteredOptions.includes(options[previouslyFocusedIndex])) {
+        return previouslyFocusedIndex;
+      } else if (
+        _filteredOptions.find(({ value }) => value === selectedValue)
+      ) {
+        return options.findIndex(({ value }) => value === selectedValue);
+      } else {
+        return -1; // reset focus if previously focused or selected value is not in filtered list
+      }
+    });
+  }, [inputValue, options, selectedValue, isOpen, filterFunction]);
 
   const onKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
@@ -162,18 +165,23 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       );
       switch (event.key) {
         case 'ArrowDown':
-          const nextIndex = Math.min(
-            focusedIndexInFilteredList + 1,
-            filteredOptions.length - 1,
-          );
-          setFocusedIndex(options.indexOf(filteredOptions[nextIndex]));
-          !isOpen && setIsOpen(true); // reopen menu if closed when typing
+          if (isOpen) {
+            const nextIndex = Math.min(
+              focusedIndexInFilteredList + 1,
+              filteredOptions.length - 1,
+            );
+            setFocusedIndex(options.indexOf(filteredOptions[nextIndex]));
+          } else {
+            setIsOpen(true); // reopen menu if closed when typing
+          }
           event.preventDefault();
           event.stopPropagation();
           break;
         case 'ArrowUp':
-          const previousIndex = Math.max(focusedIndexInFilteredList - 1, 0);
-          setFocusedIndex(options.indexOf(filteredOptions[previousIndex]));
+          if (isOpen) {
+            const previousIndex = Math.max(focusedIndexInFilteredList - 1, 0);
+            setFocusedIndex(options.indexOf(filteredOptions[previousIndex]));
+          }
           event.preventDefault();
           event.stopPropagation();
           break;
@@ -202,23 +210,31 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   const menuItems = React.useCallback(
     (close: () => void) => {
       return filteredOptions.map((option) => {
-        const isSelected = selectedValue === option.value;
         const index = options.findIndex(({ value }) => option.value === value);
+        const { label, value, ...rest } = option;
         return (
           <MenuItem
             id={getOptionId(index)}
             key={getOptionId(index)}
+            value={value}
             className={cx({ 'iui-focused': focusedIndex === index })}
             onClick={(value: T) => {
               setSelectedValue(value);
               close();
             }}
-            isSelected={isSelected}
-            ref={(el) => focusedIndex === index && el?.scrollIntoView(false)}
+            isSelected={selectedValue === value}
+            ref={(el) => {
+              if (
+                focusedIndex === index ||
+                (focusedIndex === -1 && selectedValue === value)
+              ) {
+                el?.scrollIntoView(false);
+              }
+            }}
             role='option'
-            {...option}
+            {...rest}
           >
-            {option.label}
+            {label}
           </MenuItem>
         );
       });
@@ -247,6 +263,10 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       id={id}
     >
       <Popover
+        placement='bottom-start'
+        visible={isOpen}
+        onClickOutside={() => setIsOpen(false)}
+        {...dropdownMenuProps}
         content={
           <Menu
             id={`${id}-list`}
@@ -263,19 +283,16 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             {menuItems(() => setIsOpen(false))}
           </Menu>
         }
-        placement='bottom-start'
-        visible={isOpen}
-        onClickOutside={() => setIsOpen(false)}
         onHide={(instance) => {
-          const selectedOption = options.find(
+          const selectedIndex = options.findIndex(
             ({ value }) => value === selectedValue,
           );
-          if (selectedOption) {
-            setInputValue(selectedOption.label); // update input value to be same as selected value
+          setFocusedIndex(selectedIndex);
+          if (selectedIndex > -1) {
+            setInputValue(options[selectedIndex].label); // update input value to be same as selected value
           }
           dropdownMenuProps?.onHide?.(instance);
         }}
-        {...dropdownMenuProps}
       >
         <Input
           ref={inputRef}
