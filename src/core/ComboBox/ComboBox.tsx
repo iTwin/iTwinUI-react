@@ -119,14 +119,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     [inputProps],
   );
 
-  // Update input value when option is selected
-  React.useEffect(() => {
-    const selectedOption = options.find(({ value }) => value === selectedValue);
-    if (selectedOption) {
-      setInputValue(selectedOption.label);
-    }
-  }, [selectedValue, options]);
-
   // Filter options when input value changes
   React.useEffect(() => {
     const selectedOption = options.find(({ value }) => value === selectedValue);
@@ -151,27 +143,17 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   // Update focused value according to filtered list
   React.useEffect(() => {
-    if (!filteredOptions.find(({ value }) => value === selectedValue)) {
-      setFocusedIndex(options.indexOf(filteredOptions[0]));
-    } else {
+    if (!isOpen) {
+      return;
+    }
+    if (filteredOptions.find(({ value }) => value === selectedValue)) {
       setFocusedIndex(
         options.findIndex(({ value }) => value === selectedValue),
       );
+    } else if (!filteredOptions.includes(options[focusedIndex])) {
+      setFocusedIndex(-1); // reset focus if previously selected/focused value is not in new list
     }
-  }, [filteredOptions, options, selectedValue]);
-
-  // Update input value and focused value when menu is closed
-  React.useEffect(() => {
-    if (!isOpen) {
-      const selectedIndex = options.findIndex(
-        ({ value }) => value === selectedValue,
-      );
-      if (selectedIndex > -1 && inputValue !== options[selectedIndex].label) {
-        setInputValue(options[selectedIndex].label);
-      }
-      setFocusedIndex(selectedIndex);
-    }
-  }, [inputValue, isOpen, options, selectedValue]);
+  }, [filteredOptions, focusedIndex, isOpen, options, selectedValue]);
 
   const onKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
@@ -196,7 +178,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           event.stopPropagation();
           break;
         case 'Enter':
-          setSelectedValue(options[focusedIndex].value);
+          isOpen && setSelectedValue(options[focusedIndex].value);
           setIsOpen(!isOpen);
           event.preventDefault();
           event.stopPropagation();
@@ -271,10 +253,10 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             className='iui-scroll'
             style={{
               minWidth,
-              maxWidth: `min(${minWidth * 2}px, 100vw)`,
-              maxHeight: '300px',
+              maxWidth: `min(${minWidth * 2}px, 90vw)`,
+              maxHeight: 300,
             }}
-            bringFocusInside={false}
+            setFocus={false}
             role='listbox'
             ref={menuRef}
           >
@@ -284,6 +266,15 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
         placement='bottom-start'
         visible={isOpen}
         onClickOutside={() => setIsOpen(false)}
+        onHide={(instance) => {
+          const selectedOption = options.find(
+            ({ value }) => value === selectedValue,
+          );
+          if (selectedOption) {
+            setInputValue(selectedOption.label); // update input value to be same as selected value
+          }
+          dropdownMenuProps?.onHide?.(instance);
+        }}
         {...dropdownMenuProps}
       >
         <Input
