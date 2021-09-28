@@ -126,15 +126,17 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   // Filter options and update focus when input value changes
   React.useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    // if input is empty or same as selected value, show the whole list
     const selectedOption = options.find(({ value }) => value === selectedValue);
-    if (
-      !inputValue ||
-      !isOpen ||
-      selectedOption?.label === inputValue // if a value is selected, show whole list to allow selecting a different value
-    ) {
+    if (!inputValue || selectedOption?.label === inputValue) {
       setFilteredOptions(options);
       return;
     }
+
     const _filteredOptions =
       filterFunction?.(options, inputValue) ??
       options.filter((option) =>

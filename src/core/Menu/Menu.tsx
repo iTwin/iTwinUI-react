@@ -60,7 +60,9 @@ export const Menu = React.forwardRef<HTMLUListElement, MenuProps>(
       const selectedIndex = items.findIndex(
         (el) => el.getAttribute('aria-selected') === 'true',
       );
-      setFocus && setFocusedIndex(selectedIndex > -1 ? selectedIndex : 0);
+      if (setFocus) {
+        setFocusedIndex(selectedIndex > -1 ? selectedIndex : 0);
+      }
     }, [setFocus, focusedIndex]);
 
     React.useEffect(() => {
