@@ -104,7 +104,7 @@ Basic.args = {};
 export const WithTooltip: Story<ColorPickerProps> = (args) => {
   const [opened, setOpened] = React.useState(false);
 
-  const [activeIndex, setCurrentActiveIndex] = React.useState<number>();
+  const [activeIndex, setCurrentActiveIndex] = React.useState(-1);
 
   const onColorClick = (index: number) => {
     action(`Clicked ${ColorsList[index].name}`)();
@@ -116,15 +116,14 @@ export const WithTooltip: Story<ColorPickerProps> = (args) => {
       <IconButton onClick={() => setOpened(!opened)}>
         <span
           style={{
-            backgroundColor: activeIndex
-              ? ColorsList[activeIndex].color
-              : '#FFF',
+            backgroundColor:
+              activeIndex > -1 ? ColorsList[activeIndex].color : '#FFF',
             border: '1px solid',
           }}
         />
       </IconButton>
       <span style={{ marginLeft: 16 }}>
-        {activeIndex ? ColorsList[activeIndex].name : 'No color selected.'}
+        {activeIndex > -1 ? ColorsList[activeIndex].name : 'No color selected.'}
       </span>
       {opened && (
         <div style={{ marginTop: 4 }}>
