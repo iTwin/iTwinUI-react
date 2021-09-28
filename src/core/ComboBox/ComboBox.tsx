@@ -41,6 +41,11 @@ export type ComboBoxProps<T> = {
    * Props to customize dropdown menu behavior.
    */
   dropdownMenuProps?: PopoverProps;
+  /**
+   * Message shown when no options are available (after filtering).
+   * @default 'No options found'
+   */
+  emptyStateMessage?: string;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -65,6 +70,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     className,
     inputProps,
     dropdownMenuProps,
+    emptyStateMessage = 'No options found',
     ...rest
   } = props;
 
@@ -211,6 +217,9 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   const menuItems = React.useCallback(
     (close: () => void) => {
+      if (filteredOptions.length === 0) {
+        return <MenuItem disabled>{emptyStateMessage}</MenuItem>;
+      }
       return filteredOptions.map((option) => {
         const index = options.findIndex(({ value }) => option.value === value);
         const { label, value, ...rest } = option;
@@ -241,7 +250,14 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
         );
       });
     },
-    [focusedIndex, getOptionId, filteredOptions, selectedValue, options],
+    [
+      filteredOptions,
+      emptyStateMessage,
+      options,
+      getOptionId,
+      focusedIndex,
+      selectedValue,
+    ],
   );
 
   return (

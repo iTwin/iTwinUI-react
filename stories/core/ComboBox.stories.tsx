@@ -15,6 +15,7 @@ export default {
     style: { control: { disable: true } },
     id: { control: { disable: true } },
     options: { control: { disable: true } },
+    dropdownMenuProps: { control: { disable: true } },
   },
   decorators: [
     (Story) => (
