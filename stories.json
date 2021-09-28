@@ -620,6 +620,15 @@
         "__id": "core-dropdownmenu--submenu"
       }
     },
+    "core-dropdownmenu--with-separator": {
+      "id": "core-dropdownmenu--with-separator",
+      "name": "With Separator",
+      "kind": "Core/DropdownMenu",
+      "story": "With Separator",
+      "parameters": {
+        "__id": "core-dropdownmenu--with-separator"
+      }
+    },
     "core-errorpage--unauthorized": {
       "id": "core-errorpage--unauthorized",
       "name": "Unauthorized",
