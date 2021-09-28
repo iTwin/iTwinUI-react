@@ -43,7 +43,8 @@ it('should render in its most basic state', () => {
 
   input.focus();
   expect(input).toHaveAttribute('aria-expanded', 'true');
-  expect(input).toHaveAttribute('aria-owns', `${id}-list`);
+  expect(input).toHaveAttribute('aria-controls', `${id}-list`);
+  expect(input).toHaveAttribute('aria-autocomplete', 'list');
 
   const list = container.querySelector('.iui-menu') as HTMLUListElement;
   expect(list.id).toEqual(`${id}-list`);
@@ -180,7 +181,7 @@ it('should handle keyboard navigation', () => {
 
   const input = assertBaseElement(container);
   input.focus();
-  expect(input).toHaveAttribute('aria-owns', `${id}-list`);
+  expect(input).toHaveAttribute('aria-controls', `${id}-list`);
 
   const items = container.querySelectorAll('.iui-menu-item');
 

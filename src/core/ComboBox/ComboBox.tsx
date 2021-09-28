@@ -322,7 +322,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             isOpen && focusedIndex > -1 ? getOptionId(focusedIndex) : undefined
           }
           role='combobox'
-          aria-owns={isOpen ? `${id}-list` : undefined}
+          aria-controls={isOpen ? `${id}-list` : undefined}
+          aria-autocomplete='list'
           spellCheck={false}
           autoCapitalize='none'
           autoCorrect='off'
