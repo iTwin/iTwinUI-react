@@ -32,7 +32,7 @@ export type { ButtonGroupProps } from './ButtonGroup';
 export { Checkbox } from './Checkbox';
 export type { CheckboxProps } from './Checkbox';
 
-export { ColorPicker, ColorSwatch, DefaultColors } from './ColorPicker';
+export { ColorPicker, ColorSwatch } from './ColorPicker';
 export type { ColorPickerProps, ColorSwatchProps } from './ColorPicker';
 
 export { DatePicker, generateLocalizedStrings } from './DatePicker';
