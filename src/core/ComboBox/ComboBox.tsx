@@ -12,6 +12,7 @@ import { Popover, PopoverProps } from '../utils/Popover';
 import { CommonProps } from '../utils/props';
 import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
 import SvgCaretUpSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretUpSmall';
+import { getFocusableElements } from '../utils/common';
 
 export type ComboBoxProps<T> = {
   /**
@@ -89,6 +90,26 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     [options, id],
   );
 
+  const memoizedItems = React.useMemo(
+    () =>
+      options.map(({ label, value, ...rest }, index) => (
+        <MenuItem
+          id={getOptionId(index)}
+          key={getOptionId(index)}
+          value={value}
+          role='option'
+          onClick={(value: T) => {
+            setSelectedValue(value);
+            setIsOpen(false);
+          }}
+          {...rest}
+        >
+          {label}
+        </MenuItem>
+      )),
+    [options, getOptionId],
+  );
+
   const inputRef = React.useRef<HTMLInputElement>(null);
   const menuRef = React.useRef<HTMLUListElement>(null);
   const [isOpen, setIsOpen] = React.useState(false);
@@ -102,7 +123,9 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   }, [isOpen]);
 
   const [filteredOptions, setFilteredOptions] = React.useState(options);
-  const [focusedIndex, setFocusedIndex] = React.useState<number>(-1);
+  const [focusedIndex, setFocusedIndex] = React.useState(() =>
+    options.findIndex((option) => value === option.value),
+  );
 
   // Maintain internal selected value state synced with `value` prop
   const [selectedValue, setSelectedValue] = React.useState<T | undefined>();
@@ -168,17 +191,24 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   const onKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
-      const focusedIndexInFilteredList = filteredOptions.findIndex(
-        (option) => option === options[focusedIndex],
+      const focusableOptions = getFocusableElements(menuRef.current);
+      const focusedIndexInFilteredList = focusableOptions.findIndex(
+        ({ id }) =>
+          id === inputRef.current?.getAttribute('aria-activedescendant'),
       );
       switch (event.key) {
         case 'ArrowDown':
           if (isOpen) {
             const nextIndex = Math.min(
               focusedIndexInFilteredList + 1,
-              filteredOptions.length - 1,
+              focusableOptions.length - 1,
             );
-            setFocusedIndex(options.indexOf(filteredOptions[nextIndex]));
+            setFocusedIndex(
+              options.findIndex(
+                (_, index) =>
+                  getOptionId(index) === focusableOptions[nextIndex].id,
+              ),
+            );
           } else {
             setIsOpen(true); // reopen menu if closed when typing
           }
@@ -188,14 +218,21 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
         case 'ArrowUp':
           if (isOpen) {
             const previousIndex = Math.max(focusedIndexInFilteredList - 1, 0);
-            setFocusedIndex(options.indexOf(filteredOptions[previousIndex]));
+            setFocusedIndex(
+              options.findIndex(
+                (_, index) =>
+                  getOptionId(index) === focusableOptions[previousIndex].id,
+              ),
+            );
           }
           event.preventDefault();
           event.stopPropagation();
           break;
         case 'Enter':
-          isOpen && setSelectedValue(options[focusedIndex].value);
-          setIsOpen(!isOpen);
+          if (isOpen) {
+            setSelectedValue(options[focusedIndex].value);
+          }
+          setIsOpen((open) => !open);
           event.preventDefault();
           event.stopPropagation();
           break;
@@ -208,57 +245,38 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           setIsOpen(false);
           break;
         default:
-          !isOpen && setIsOpen(true); // reopen menu if closed when typing
+          if (!isOpen) {
+            setIsOpen(true); // reopen menu if closed when typing
+          }
           break;
       }
     },
-    [filteredOptions, focusedIndex, isOpen, options],
+    [focusedIndex, isOpen, options, getOptionId],
   );
 
-  const menuItems = React.useCallback(
-    (close: () => void) => {
-      if (filteredOptions.length === 0) {
-        return <MenuItem disabled>{emptyStateMessage}</MenuItem>;
-      }
-      return filteredOptions.map((option) => {
-        const index = options.findIndex(({ value }) => option.value === value);
-        const { label, value, ...rest } = option;
-        return (
-          <MenuItem
-            id={getOptionId(index)}
-            key={getOptionId(index)}
-            value={value}
-            className={cx({ 'iui-focused': focusedIndex === index })}
-            onClick={(value: T) => {
-              setSelectedValue(value);
-              close();
-            }}
-            isSelected={selectedValue === value}
-            ref={(el) => {
-              if (
-                focusedIndex === index ||
-                (focusedIndex === -1 && selectedValue === value)
-              ) {
-                el?.scrollIntoView(false);
-              }
-            }}
-            role='option'
-            {...rest}
-          >
-            {label}
-          </MenuItem>
-        );
-      });
-    },
-    [
-      filteredOptions,
-      emptyStateMessage,
-      options,
-      getOptionId,
-      focusedIndex,
-      selectedValue,
-    ],
-  );
+  const menuItems = React.useMemo(() => {
+    if (filteredOptions.length === 0) {
+      return <MenuItem disabled>{emptyStateMessage}</MenuItem>;
+    }
+    return filteredOptions.map((option) => {
+      const index = options.findIndex(({ value }) => option.value === value);
+      return focusedIndex !== index && selectedValue !== option.value
+        ? memoizedItems[index]
+        : React.cloneElement(memoizedItems[index], {
+            className: cx({ 'iui-focused': focusedIndex === index }),
+            isSelected: selectedValue === option.value,
+            ref: (el: HTMLElement) =>
+              focusedIndex === index && el?.scrollIntoView(false),
+          });
+    });
+  }, [
+    filteredOptions,
+    emptyStateMessage,
+    options,
+    focusedIndex,
+    selectedValue,
+    memoizedItems,
+  ]);
 
   return (
     <InputContainer
@@ -298,7 +316,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             role='listbox'
             ref={menuRef}
           >
-            {menuItems(() => setIsOpen(false))}
+            {menuItems}
           </Menu>
         }
         onHide={(instance) => {
