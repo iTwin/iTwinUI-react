@@ -37,7 +37,6 @@ export const InputContainer = <T extends React.ElementType = 'div'>(
     children,
     className,
     style,
-    ...rest
   } = props;
 
   return (
@@ -54,7 +53,6 @@ export const InputContainer = <T extends React.ElementType = 'div'>(
         className,
       )}
       style={style}
-      {...rest}
     >
       {label && (
         <div
