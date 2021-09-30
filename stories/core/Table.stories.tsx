@@ -25,6 +25,8 @@ import {
   Tooltip,
   DefaultCell,
   EditableCell,
+  TablePagination,
+  TablePaginationRendererProps,
 } from '../../src/core';
 import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
@@ -1322,7 +1324,6 @@ Full.args = {
   ],
   isSelectable: true,
   isSortable: true,
-  emptyFilteredTableContent: 'No results found. Clear or try another filter.',
 };
 
 export const Condensed: Story<TableProps> = Basic.bind({});
@@ -1443,4 +1444,97 @@ Editable.parameters = {
       },
     },
   } as CreeveyStoryParams,
+};
+
+export const WithPagination: Story<TableProps> = (args) => {
+  const tableColumns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+            Filter: tableFilters.TextFilter(),
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+            Filter: tableFilters.TextFilter(),
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  type TableStoryDataType = {
+    name: string;
+    description: string;
+    subRows: TableStoryDataType[];
+  };
+
+  const generateItem = useCallback(
+    (index: number, parentRow = '', depth = 0): TableStoryDataType => {
+      const keyValue = parentRow ? `${parentRow}.${index}` : `${index}`;
+      return {
+        name: `Name ${keyValue}`,
+        description: `Description ${keyValue}`,
+        subRows:
+          depth < 2
+            ? Array(Math.round((Math.random() * 10) % 5))
+                .fill(null)
+                .map((_, index) => generateItem(index, keyValue, depth + 1))
+            : [],
+      };
+    },
+    [],
+  );
+
+  const tableData = useMemo(
+    () =>
+      Array(200)
+        .fill(null)
+        .map((_, index) => generateItem(index)),
+    [generateItem],
+  );
+
+  const rowsPerPage = useMemo(() => [10, 25, 50], []);
+  const tablePagination = useCallback(
+    (props: TablePaginationRendererProps) => (
+      <TablePagination
+        {...props}
+        focusActivationMode='manual'
+        rowsPerPage={rowsPerPage}
+      />
+    ),
+    [rowsPerPage],
+  );
+
+  return (
+    <>
+      <Table
+        emptyTableContent='No data.'
+        isSelectable
+        isSortable
+        {...args}
+        columns={tableColumns}
+        data={tableData}
+        paginationRenderer={tablePagination}
+      />
+    </>
+  );
+};
+
+WithPagination.args = {
+  isSelectable: true,
+  isSortable: true,
+};
+
+WithPagination.argTypes = {
+  isLoading: { control: { disable: true } },
+  data: { control: { disable: true } },
 };

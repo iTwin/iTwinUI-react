@@ -121,6 +121,7 @@ export {
   FilterButtonBar,
   DefaultCell,
   EditableCell,
+  TablePagination,
 } from './Table';
 export type {
   TableProps,
@@ -130,6 +131,8 @@ export type {
   FilterButtonBarProps,
   DefaultCellProps,
   EditableCellProps,
+  TablePaginationProps,
+  TablePaginationRendererProps,
 } from './Table';
 
 export { Tag, TagContainer } from './Tag';
