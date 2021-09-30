@@ -5,7 +5,7 @@
 import { Story, Meta } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import React from 'react';
-import { ComboBox, ComboBoxProps } from '../../src/core';
+import { ComboBox, ComboBoxProps, SelectOption } from '../../src/core';
 import { CreeveyStoryParams } from 'creevey';
 
 export default {
@@ -27,7 +27,6 @@ export default {
   parameters: {
     docs: { source: { excludeDecorators: true } },
     creevey: {
-      skip: ['Controlled'],
       tests: {
         async open() {
           const closed = await this.takeScreenshot();
@@ -333,11 +332,23 @@ Controlled.args = { ...Basic.args, value: 'CA' };
 export const DisabledItems: Story<Partial<ComboBoxProps<string>>> = (args) => {
   const options = React.useMemo(
     () =>
-      countriesList.map((country, index) => ({
-        ...country,
-        sublabel: `${country.value}${index % 2 ? ' -- disabled' : ''}`,
-        disabled: index % 2 !== 0,
-      })),
+      countriesList.map(
+        (country, index) =>
+          ({
+            ...country,
+            sublabel: `${country.value}${index % 2 ? ' -- disabled' : ''}`,
+            disabled: index % 2 !== 0,
+            badge: (
+              <img
+                loading='lazy'
+                style={{ width: 20, height: 15 }}
+                src={`https://flagcdn.com/w20/${country.value.toLowerCase()}.png`}
+                srcSet={`https://flagcdn.com/w40/${country.value.toLowerCase()}.png 2x`}
+                alt=''
+              />
+            ),
+          } as SelectOption<string>),
+      ),
     [],
   );
   return (

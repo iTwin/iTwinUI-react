@@ -6,7 +6,7 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 
 import { ComboBox, ComboBoxProps } from './ComboBox';
-import { SvgCaretDownSmall, SvgCaretUpSmall } from '@itwin/itwinui-icons-react';
+import { SvgCaretDownSmall } from '@itwin/itwinui-icons-react';
 
 const renderComponent = (props?: Partial<ComboBoxProps<number>>) => {
   return render(
@@ -47,6 +47,7 @@ it('should render in its most basic state', () => {
   expect(input).toHaveAttribute('aria-autocomplete', 'list');
 
   const list = container.querySelector('.iui-menu') as HTMLUListElement;
+  expect(list).toBeVisible();
   expect(list.id).toEqual(`${id}-list`);
   expect(list).toHaveAttribute('role', 'listbox');
   expect(list.children).toHaveLength(3);
@@ -74,38 +75,24 @@ it('should render with selected value', () => {
 
 it('should render caret icon correctly', () => {
   const { container } = renderComponent();
-  let icon = container.querySelector('.iui-input-icon') as HTMLElement;
+  let icon = container.querySelector('.iui-input-icon svg') as HTMLElement;
 
   const {
     container: { firstChild: caretDown },
-  } = render(
-    <SvgCaretDownSmall
-      className='iui-input-icon'
-      style={{ cursor: 'pointer' }}
-    />,
-  );
+  } = render(<SvgCaretDownSmall />);
 
   expect(icon).toEqual(caretDown);
   expect(container.querySelector('.iui-menu')).toBeFalsy();
 
-  const {
-    container: { firstChild: caretUp },
-  } = render(
-    <SvgCaretUpSmall
-      className='iui-input-icon'
-      style={{ cursor: 'pointer' }}
-    />,
-  );
-
   // open
   fireEvent.click(icon);
-  icon = container.querySelector('.iui-input-icon') as HTMLElement;
-  expect(icon).toEqual(caretUp);
+  icon = container.querySelector('.iui-input-icon svg') as HTMLElement;
+  expect(icon).toEqual(caretDown);
   expect(container.querySelector('.iui-menu')).toBeVisible();
 
   // close
   fireEvent.click(icon);
-  icon = container.querySelector('.iui-input-icon') as HTMLElement;
+  icon = container.querySelector('.iui-input-icon svg') as HTMLElement;
   expect(icon).toEqual(caretDown);
   expect(container.querySelector('.iui-menu')).not.toBeVisible();
 });
@@ -219,7 +206,7 @@ it('should handle keyboard navigation', () => {
 
   // select 0
   fireEvent.keyDown(input, { key: 'Enter' });
-  // expect(mockOnChange).toHaveBeenCalledWith(0); // FIXME
+  expect(mockOnChange).toHaveBeenCalledWith(0);
   expect(container.querySelector('.iui-menu')).not.toBeVisible();
 
   // reopen menu
@@ -239,10 +226,16 @@ it('should handle keyboard navigation', () => {
 
   // reopen
   fireEvent.keyDown(input, { key: 'ArrowDown' });
-  expect(items[2]).toHaveClass('iui-focused');
+  expect(items[2]).toHaveClass('iui-active iui-focused');
   expect(input).toHaveAttribute('aria-activedescendant', `${id}-option2`);
 
   // close
   fireEvent.keyDown(input, { key: 'Escape' });
+  expect(container.querySelector('.iui-menu')).not.toBeVisible();
+
+  // reopen and close
+  fireEvent.keyDown(input, { key: 'X' });
+  expect(container.querySelector('.iui-menu')).toBeVisible();
+  fireEvent.keyDown(input, { key: 'Tab' });
   expect(container.querySelector('.iui-menu')).not.toBeVisible();
 });

@@ -4,15 +4,15 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { nanoid } from 'nanoid';
-import { Input, Menu, MenuItem, SelectOption } from '../..';
+import { nanoid } from 'nanoid/non-secure';
+import { Input, InputProps, Menu, MenuItem, SelectOption } from '../..';
 import { InputContainer } from '../utils/InputContainer';
 import { useTheme } from '../utils/hooks/useTheme';
 import { Popover, PopoverProps } from '../utils/Popover';
 import { CommonProps } from '../utils/props';
 import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
-import SvgCaretUpSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretUpSmall';
 import { getFocusableElements } from '../utils/common';
+import 'tippy.js/animations/shift-away.css';
 
 export type ComboBoxProps<T> = {
   /**
@@ -37,7 +37,7 @@ export type ComboBoxProps<T> = {
   /**
    * Native input element props.
    */
-  inputProps?: Omit<React.ComponentPropsWithoutRef<'input'>, 'size'>;
+  inputProps?: Omit<InputProps, 'setFocus'>;
   /**
    * Props to customize dropdown menu behavior.
    */
@@ -112,6 +112,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   const menuRef = React.useRef<HTMLUListElement>(null);
+  const toggleButtonRef = React.useRef<HTMLSpanElement>(null);
   const [isOpen, setIsOpen] = React.useState(false);
 
   // Set min-width of menu to be same as input
@@ -145,8 +146,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   // Fire onChange callback and update inputValue every time selected value changes
   React.useEffect(() => {
-    if (selectedValue) {
-      onChange?.(selectedValue);
+    onChange?.(selectedValue ?? null);
+    if (selectedValue != null) {
       setInputValue(
         options.find(({ value }) => value === selectedValue)?.label ?? '',
       );
@@ -283,17 +284,19 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       className={className}
       isIconInline={true}
       icon={
-        isOpen ? (
-          <SvgCaretUpSmall
-            style={{ cursor: 'pointer' }}
-            onClick={() => setIsOpen(false)}
-          />
-        ) : (
-          <SvgCaretDownSmall
-            style={{ cursor: 'pointer' }}
-            onClick={() => inputRef.current?.focus()}
-          />
-        )
+        <span
+          ref={toggleButtonRef}
+          className={cx('iui-actionable', { 'iui-open': isOpen })}
+          onClick={() => {
+            if (isOpen) {
+              setIsOpen(false);
+            } else {
+              inputRef.current?.focus();
+            }
+          }}
+        >
+          <SvgCaretDownSmall />
+        </span>
       }
       {...rest}
       id={id}
@@ -301,7 +304,13 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       <Popover
         placement='bottom-start'
         visible={isOpen}
-        onClickOutside={() => setIsOpen(false)}
+        onClickOutside={(_, { target }) => {
+          if (!toggleButtonRef.current?.contains(target as Element)) {
+            setIsOpen(false);
+          }
+        }}
+        animation='shift-away'
+        duration={200}
         {...dropdownMenuProps}
         content={
           <Menu
