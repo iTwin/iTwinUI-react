@@ -3,11 +3,9 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { useTheme } from '../utils/hooks/useTheme';
-import { CommonProps } from '../utils/props';
 import cx from 'classnames';
 import '@itwin/itwinui-css/css/color-picker.css';
-import { getWindow } from '../utils';
+import { useTheme, CommonProps, getWindow } from '../utils';
 
 export type ColorSwatchProps = {
   /**
