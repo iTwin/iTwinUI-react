@@ -4,10 +4,14 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import '@itwin/itwinui-css/css/color-picker.css';
-import { useTheme, CommonProps } from '../utils';
+import {
+  useTheme,
+  CommonProps,
+  getBoundedValue,
+  getWindow,
+  useEventListener,
+} from '../utils';
 import cx from 'classnames';
-import { getBoundedValue, getWindow } from '../utils/common';
-import { useEventListener } from '../utils/hooks/useEventListener';
 
 const getVerticalPercentageOfRectangle = (rect: DOMRect, pointer: number) => {
   const position = getBoundedValue(pointer, rect.top, rect.bottom);
