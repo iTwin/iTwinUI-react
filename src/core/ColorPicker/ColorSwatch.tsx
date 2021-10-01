@@ -4,10 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { useTheme } from '../utils/hooks/useTheme';
-import { getWindow } from '../utils/common';
 import { CommonProps } from '../utils/props';
 import cx from 'classnames';
 import '@itwin/itwinui-css/css/color-picker.css';
+import { getWindow } from '../utils';
 
 export type ColorSwatchProps = {
   /**
