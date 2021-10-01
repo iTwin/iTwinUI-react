@@ -3,9 +3,8 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { useTheme } from '../utils/hooks/useTheme';
 import '@itwin/itwinui-css/css/color-picker.css';
-import { CommonProps } from '../utils/props';
+import { useTheme, CommonProps } from '../utils';
 import cx from 'classnames';
 import { getBoundedValue, getWindow } from '../utils/common';
 import { useEventListener } from '../utils/hooks/useEventListener';
