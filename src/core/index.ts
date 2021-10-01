@@ -32,6 +32,9 @@ export type { ButtonGroupProps } from './ButtonGroup';
 export { Checkbox } from './Checkbox';
 export type { CheckboxProps } from './Checkbox';
 
+export { ComboBox } from './ComboBox';
+export type { ComboBoxProps } from './ComboBox';
+
 export { DatePicker, generateLocalizedStrings } from './DatePicker';
 export type { DatePickerProps } from './DatePicker';
 
@@ -196,10 +199,5 @@ export type {
   WizardLocalization,
 } from './Wizard';
 
-export { getUserColor } from './utils/common';
-
-export { useTheme } from './utils/hooks/useTheme';
-export type { ThemeType } from './utils/hooks/useTheme';
-
-export { ComboBox } from './ComboBox';
-export type { ComboBoxProps } from './ComboBox';
+export { getUserColor, useTheme } from './utils';
+export type { ThemeType } from './utils';
