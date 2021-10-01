@@ -105,11 +105,11 @@ Basic.args = {};
 export const WithTooltip: Story<ColorPickerProps> = (args) => {
   const [opened, setOpened] = React.useState(false);
 
-  const [activeIndex, setCurrentActiveIndex] = React.useState(-1);
+  const [activeIndex, setActiveIndex] = React.useState(-1);
 
   const onColorClick = (index: number) => {
     action(`Clicked ${ColorsList[index].name}`)();
-    setCurrentActiveIndex(index);
+    setActiveIndex(index);
   };
 
   return (
