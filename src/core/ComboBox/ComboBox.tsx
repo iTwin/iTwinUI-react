@@ -4,14 +4,17 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { nanoid } from 'nanoid/non-secure';
-import { Input, InputProps, Menu, MenuItem, SelectOption } from '../..';
-import { InputContainer } from '../utils/InputContainer';
-import { useTheme } from '../utils/hooks/useTheme';
-import { Popover, PopoverProps } from '../utils/Popover';
-import { CommonProps } from '../utils/props';
+import { Input, InputProps, Menu, MenuItem, SelectOption, Text } from '../..';
+import {
+  InputContainer,
+  useTheme,
+  Popover,
+  PopoverProps,
+  CommonProps,
+  getFocusableElements,
+  getRandomValue,
+} from '../utils';
 import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
-import { getFocusableElements } from '../utils/common';
 import 'tippy.js/animations/shift-away.css';
 
 export type ComboBoxProps<T> = {
@@ -26,7 +29,7 @@ export type ComboBoxProps<T> = {
   /**
    * Callback fired when selected value changes.
    */
-  onChange?: (value: T | null) => void;
+  onChange?: (value: T) => void;
   /**
    * Function to customize the default filtering logic.
    */
@@ -76,7 +79,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   } = props;
 
   // Generate a stateful random id if not specified
-  const [id] = React.useState(() => props.id ?? `iui-${nanoid(10)}`);
+  const [id] = React.useState(() => props.id ?? `iui-${getRandomValue(10)}`);
 
   useTheme();
 
@@ -146,8 +149,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   // Fire onChange callback and update inputValue every time selected value changes
   React.useEffect(() => {
-    onChange?.(selectedValue ?? null);
-    if (selectedValue != null) {
+    if (selectedValue != undefined) {
+      onChange?.(selectedValue);
       setInputValue(
         options.find(({ value }) => value === selectedValue)?.label ?? '',
       );
@@ -173,9 +176,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
         option.label.toLowerCase().includes(inputValue?.trim().toLowerCase()),
       );
     setFilteredOptions(_filteredOptions);
-    if (!_filteredOptions.find(({ value }) => value === selectedValue)) {
-      setSelectedValue(undefined);
-    }
 
     setFocusedIndex((previouslyFocusedIndex) => {
       if (_filteredOptions.includes(options[previouslyFocusedIndex])) {
@@ -257,7 +257,11 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   const menuItems = React.useMemo(() => {
     if (filteredOptions.length === 0) {
-      return <MenuItem disabled>{emptyStateMessage}</MenuItem>;
+      return (
+        <MenuItem className='iui-menu-content' role='presentation'>
+          <Text isMuted>{emptyStateMessage}</Text>
+        </MenuItem>
+      );
     }
     return filteredOptions.map((option) => {
       const index = options.findIndex(({ value }) => option.value === value);
@@ -295,7 +299,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             }
           }}
         >
-          <SvgCaretDownSmall />
+          <SvgCaretDownSmall aria-hidden />
         </span>
       }
       {...rest}

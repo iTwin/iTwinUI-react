@@ -79,7 +79,7 @@ it('should render caret icon correctly', () => {
 
   const {
     container: { firstChild: caretDown },
-  } = render(<SvgCaretDownSmall />);
+  } = render(<SvgCaretDownSmall aria-hidden />);
 
   expect(icon).toEqual(caretDown);
   expect(container.querySelector('.iui-menu')).toBeFalsy();
