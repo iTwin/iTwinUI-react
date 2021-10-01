@@ -12,6 +12,7 @@ import {
   ColorSwatch,
 } from '../../src/core';
 import { action } from '@storybook/addon-actions';
+import SvgAddCircular from '@itwin/itwinui-icons-react/cjs/icons/AddCircular';
 
 export default {
   component: ColorPicker,
@@ -152,3 +153,87 @@ export const WithTooltip: Story<ColorPickerProps> = (args) => {
 };
 
 WithTooltip.args = {};
+
+export const Advanced: Story<ColorPickerProps> = (args) => {
+  const savedColors = [
+    { color: '#008BE1', name: 'BLUE COLA' },
+    { color: '#458816', name: 'CHLOROPHYLL' },
+    { color: '#CF0000', name: 'RED EPITHELIUM' },
+    { color: '#FF6300', name: 'SAFETY ORANGE' },
+    { color: '#FFC335', name: 'RISE-N-SHINE' },
+    { color: '#010200', name: 'BLACK' },
+  ];
+  const [opened, setOpened] = React.useState(false);
+  const [activeIndex, setActiveIndex] = React.useState(-1);
+  const [selectedColor, setSelectedColor] = React.useState('hsl(0, 100%, 50%)');
+  // TODO: Maybe selectedColor should be a 'Color' object that contains more info (hsl, hex, etc.) instead of just a string
+
+  const onColorClick = (index: number) => {
+    action(`Clicked ${savedColors[index].color}`)();
+    setActiveIndex(index);
+    setSelectedColor(savedColors[index].color);
+  };
+
+  const onColorChanged = (color: string) => {
+    setActiveIndex(-1);
+    setSelectedColor(color);
+    action(`Selected ${color}`)();
+  };
+
+  const onAdd = () => {
+    action(`Added color ${selectedColor}`)();
+    savedColors.push({ color: selectedColor, name: 'new name' });
+    setActiveIndex(
+      savedColors.findIndex((swatch) => swatch.color === selectedColor),
+    );
+    // TODO: Update color swatches in savedColors list??
+  };
+
+  return (
+    <>
+      <IconButton onClick={() => setOpened(!opened)}>
+        <span
+          style={{
+            backgroundColor: selectedColor ? selectedColor : '#FFF',
+            border: '1px solid',
+          }}
+        />
+      </IconButton>
+
+      <span style={{ marginLeft: 16 }}>
+        {selectedColor ? selectedColor : 'No color selected.'}
+      </span>
+
+      {opened && (
+        <div style={{ marginTop: 4 }}>
+          <ColorPicker
+            selectedColor={selectedColor}
+            onSelectionChanged={onColorChanged}
+            {...args}
+          >
+            <button className='iui-button iui-borderless' onClick={onAdd}>
+              <SvgAddCircular className='iui-icon' aria-hidden='true' />
+            </button>
+
+            {savedColors.map((color, index) => {
+              return (
+                <>
+                  <ColorSwatch
+                    key={index + color.color}
+                    color={color.color}
+                    onClick={() => {
+                      onColorClick(index);
+                    }}
+                    isActive={index == activeIndex}
+                  />
+                </>
+              );
+            })}
+          </ColorPicker>
+        </div>
+      )}
+    </>
+  );
+};
+
+Advanced.args = { type: 'advanced' };
