@@ -338,7 +338,7 @@ export const DisabledItems: Story<Partial<ComboBoxProps<string>>> = (args) => {
             ...country,
             sublabel: `${country.value}${index % 2 ? ' -- disabled' : ''}`,
             disabled: index % 2 !== 0,
-            badge: (
+            icon: (
               <img
                 loading='lazy'
                 style={{ width: 20, height: 15 }}
