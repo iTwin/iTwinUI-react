@@ -239,3 +239,21 @@ it('should handle keyboard navigation', () => {
   fireEvent.keyDown(input, { key: 'Tab' });
   expect(container.querySelector('.iui-menu')).not.toBeVisible();
 });
+
+it('should accept inputProps', () => {
+  const inputId = 'test-input';
+  const { container } = renderComponent({
+    inputProps: { id: inputId, name: 'input-name', required: true },
+  });
+
+  const input = assertBaseElement(container);
+  expect(input.name).toBe('input-name');
+  expect(input.required).toBeTruthy();
+  expect(input.id).toBe(inputId);
+
+  input.focus();
+  expect(container.querySelector('.iui-input-container')?.id).toBe(
+    `${inputId}-cb`,
+  );
+  expect(container.querySelector('.iui-menu')?.id).toBe(`${inputId}-cb-list`);
+});

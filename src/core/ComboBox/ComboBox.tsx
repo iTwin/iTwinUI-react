@@ -79,7 +79,9 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   } = props;
 
   // Generate a stateful random id if not specified
-  const [id] = React.useState(() => props.id ?? `iui-${getRandomValue(10)}`);
+  const [id] = React.useState(
+    () => props.id ?? `${inputProps?.id}-cb` ?? `iui-cb-${getRandomValue(10)}`,
+  );
 
   useTheme();
 
