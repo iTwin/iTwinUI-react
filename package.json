@@ -115,7 +115,8 @@
     "set-value": "^4.1.0",
     "prismjs": "^1.25.0",
     "nth-check": "^2.0.1",
-    "ansi-regex": "^5.0.1"
+    "ansi-regex": "^5.0.1",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.1"
   },
   "husky": {
     "hooks": {
