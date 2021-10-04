@@ -1446,7 +1446,7 @@ Editable.parameters = {
   } as CreeveyStoryParams,
 };
 
-export const WithPagination: Story<TableProps> = (args) => {
+export const WithPaginator: Story<TableProps> = (args) => {
   const tableColumns = useMemo(
     () => [
       {
@@ -1529,11 +1529,11 @@ export const WithPagination: Story<TableProps> = (args) => {
   );
 };
 
-WithPagination.args = {
+WithPaginator.args = {
   isSelectable: true,
   isSortable: true,
 };
 
-WithPagination.argTypes = {
+WithPaginator.argTypes = {
   data: { control: { disable: true } },
 };
