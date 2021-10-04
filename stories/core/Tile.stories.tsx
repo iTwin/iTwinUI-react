@@ -66,7 +66,7 @@ export const Basic: Story<TileProps> = (props) => {
 Basic.args = {
   name: 'Stadium',
   description: `National stadium in Singapore. Features landscape details and a metro station. This is the largest sample iModel.`,
-  thumbnail: 'https://itwinplatformcdn.azureedge.net/iTwinUI/stadium.png',
+  // thumbnail: 'https://itwinplatformcdn.azureedge.net/iTwinUI/stadium.png',
   metadata: (
     <>
       <SvgTag />
