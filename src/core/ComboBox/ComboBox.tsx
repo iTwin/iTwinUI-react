@@ -4,7 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { Input, InputProps, Menu, MenuItem, SelectOption, Text } from '../..';
+import { Input, InputProps } from '../Input';
+import { Menu, MenuItem } from '../Menu';
+import { SelectOption } from '../Select';
+import { Text } from '../Typography';
 import {
   InputContainer,
   useTheme,
