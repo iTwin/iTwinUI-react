@@ -1505,11 +1505,7 @@ export const WithPaginator: Story<TableProps> = (args) => {
   const rowsPerPage = useMemo(() => [10, 25, 50], []);
   const paginator = useCallback(
     (props: TablePaginatorRendererProps) => (
-      <TablePaginator
-        {...props}
-        focusActivationMode='manual'
-        rowsPerPage={rowsPerPage}
-      />
+      <TablePaginator {...props} rowsPerPage={rowsPerPage} />
     ),
     [rowsPerPage],
   );
@@ -1523,6 +1519,7 @@ export const WithPaginator: Story<TableProps> = (args) => {
         {...args}
         columns={tableColumns}
         data={tableData}
+        pageSize={25}
         paginatorRenderer={paginator}
       />
     </>

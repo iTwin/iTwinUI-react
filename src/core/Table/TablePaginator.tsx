@@ -104,6 +104,14 @@ export type TablePaginatorProps = {
   };
 } & Omit<CommonProps, 'title'>;
 
+/**
+ * Table paginator component. Recommended to pass to the `Table` as `paginatorRenderer` prop.
+ * @example
+ * <Table
+ *   // ...
+ *   paginatorRenderer={(props) => <TablePaginator {...props} />}
+ * />
+ */
 export const TablePaginator = (props: TablePaginatorProps) => {
   const {
     currentPage,
