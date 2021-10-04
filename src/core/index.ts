@@ -35,6 +35,9 @@ export type { CheckboxProps } from './Checkbox';
 export { ColorPicker, ColorSwatch } from './ColorPicker';
 export type { ColorPickerProps, ColorSwatchProps } from './ColorPicker';
 
+export { ComboBox } from './ComboBox';
+export type { ComboBoxProps } from './ComboBox';
+
 export { DatePicker, generateLocalizedStrings } from './DatePicker';
 export type { DatePickerProps } from './DatePicker';
 
