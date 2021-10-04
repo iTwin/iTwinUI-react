@@ -22,9 +22,8 @@ import {
   usePagination,
 } from 'react-table';
 import { ProgressRadial } from '../ProgressIndicators';
-import { useTheme } from '../utils/hooks/useTheme';
+import { useTheme, CommonProps } from '../utils';
 import '@itwin/itwinui-css/css/table.css';
-import { CommonProps } from '../utils/props';
 import SvgSortDown from '@itwin/itwinui-icons-react/cjs/icons/SortDown';
 import SvgSortUp from '@itwin/itwinui-icons-react/cjs/icons/SortUp';
 import { getCellStyle } from './utils';
@@ -176,6 +175,11 @@ export type TableProps<
    */
   density?: 'default' | 'condensed' | 'extra-condensed';
   /**
+   * Flag whether to select a row when clicked anywhere inside of it.
+   * @default true
+   */
+  selectRowOnClick?: boolean;
+  /**
    * Function that returns pagination component. Recommended to use `TablePaginator`.
    * @example
    * (props: TablePaginatorRendererProps) => (
@@ -265,6 +269,7 @@ export const Table = <
     density = 'default',
     selectSubRows = true,
     getSubRows,
+    selectRowOnClick = true,
     paginatorRenderer,
     pageSize = 10,
     ...rest
@@ -406,7 +411,7 @@ export const Table = <
   const onRowClickHandler = React.useCallback(
     (event: React.MouseEvent, row: Row<T>) => {
       const isDisabled = isRowDisabled?.(row.original);
-      if (isSelectable && !isDisabled) {
+      if (isSelectable && !isDisabled && selectRowOnClick) {
         if (!row.isSelected && !event.ctrlKey) {
           dispatch({
             type: singleRowSelectedAction,
@@ -416,9 +421,11 @@ export const Table = <
           row.toggleRowSelected(!row.isSelected);
         }
       }
-      !isDisabled && onRowClick?.(event, row);
+      if (!isDisabled) {
+        onRowClick?.(event, row);
+      }
     },
-    [dispatch, isSelectable, onRowClick, isRowDisabled],
+    [isRowDisabled, isSelectable, selectRowOnClick, dispatch, onRowClick],
   );
 
   React.useEffect(() => {

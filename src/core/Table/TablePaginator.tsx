@@ -5,19 +5,17 @@
 import React from 'react';
 import cx from 'classnames';
 import '@itwin/itwinui-css/css/table.css';
-import { useTheme } from '../utils/hooks/useTheme';
 import { IconButton } from '../Buttons/IconButton';
 import SvgChevronLeft from '@itwin/itwinui-icons-react/cjs/icons/ChevronLeft';
 import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import { ButtonGroup } from '../ButtonGroup';
 import { Button } from '../Buttons/Button';
 import { useOverflow } from '../utils/hooks/useOverflow';
-import { getBoundedValue } from '../utils/common';
 import { ProgressRadial } from '../ProgressIndicators';
-import { TableProps } from '.';
+import { TableProps } from './Table';
 import { DropdownButton } from '../Buttons';
 import { MenuItem } from '../Menu';
-import { CommonProps } from '../utils/props';
+import { CommonProps, getBoundedValue, useTheme } from '../utils';
 
 const defaultLocalization = {
   rowsPerPageLabel: (size: number) => `${size} per page`,

@@ -333,6 +333,25 @@ it('should handle row clicks', () => {
   expect(onRowClick).toHaveBeenCalledTimes(3);
 });
 
+it('should not select when clicked on row but selectRowOnClick flag is false', () => {
+  const onSelect = jest.fn();
+  const onRowClick = jest.fn();
+  const { container, getByText } = renderComponent({
+    isSelectable: true,
+    onSelect,
+    onRowClick,
+    selectRowOnClick: false,
+  });
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  fireEvent.click(getByText(mockedData()[1].name));
+  expect(onSelect).not.toHaveBeenCalled();
+  expect(onRowClick).toHaveBeenCalled();
+});
+
 it('should not trigger onSelect when sorting and filtering', () => {
   const onSort = jest.fn();
   const onSelect = jest.fn();
@@ -1539,6 +1558,7 @@ it('should edit cell data', () => {
 
 it('should handle unwanted actions on editable cell', () => {
   const onCellEdit = jest.fn();
+  const onSelect = jest.fn();
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Header name',
@@ -1568,10 +1588,12 @@ it('should handle unwanted actions on editable cell', () => {
   ];
   const { container } = renderComponent({
     columns,
+    isSelectable: true,
+    onSelect,
   });
 
   const rows = container.querySelectorAll('.iui-table-body .iui-row');
-  assertRowsData(rows);
+  expect(rows.length).toBe(3);
 
   const editableCells = container.querySelectorAll(
     '.iui-cell[contenteditable]',
@@ -1593,6 +1615,9 @@ it('should handle unwanted actions on editable cell', () => {
     'test data 1',
     mockedData()[1],
   );
+
+  fireEvent.click(editableCells[1]);
+  expect(onSelect).not.toHaveBeenCalled();
 });
 
 it('should render data in pages', () => {

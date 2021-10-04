@@ -4,10 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { useTheme } from '../utils/hooks/useTheme';
-import { useOverflow } from '../utils/hooks/useOverflow';
+import { useTheme, useOverflow, useMergedRefs } from '../utils';
 import '@itwin/itwinui-css/css/button.css';
-import { useMergedRefs } from '../utils/hooks/useMergedRefs';
 
 export type ButtonGroupProps = {
   /**
