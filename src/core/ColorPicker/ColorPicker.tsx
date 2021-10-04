@@ -21,6 +21,27 @@ const getHorizontalPercentageOfRectangle = (rect: DOMRect, pointer: number) => {
   const position = getBoundedValue(pointer, rect.left, rect.right);
   return ((position - rect.left) / rect.width) * 100;
 };
+const getPart = (color: string) => {
+  let result = '';
+  for (let i = 0; i < color.length; i++) {
+    if (!isNaN(Number(color[i]))) {
+      result += color[i];
+    } else if (color[i] == ',') {
+      break;
+    }
+  }
+  return Number(result);
+};
+const getHSL = (color: string) => {
+  const h = getPart(color.split(',')[0]);
+  const s = getPart(color.split(',')[1]);
+  const l = getPart(color.split(',')[2]);
+
+  return { h: h, s: s, l: l };
+};
+const getHSLString = (h: number, s: number, l: number) => {
+  return 'hsl( ' + h + ', ' + s + '%, ' + l + '% )';
+};
 
 export type ColorPickerProps = {
   /**
@@ -190,22 +211,35 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
   // Update slider change
   const sliderRef = React.useRef<HTMLDivElement>(null);
-  const updateSliderValue = React.useCallback((event: PointerEvent) => {
-    if (sliderRef.current) {
-      const percent = getVerticalPercentageOfRectangle(
-        sliderRef.current.getBoundingClientRect(),
-        event.clientY,
-      );
-      setSliderTop(percent);
+  const updateSliderValue = React.useCallback(
+    (event: PointerEvent) => {
+      if (sliderRef.current) {
+        const percent = getVerticalPercentageOfRectangle(
+          sliderRef.current.getBoundingClientRect(),
+          event.clientY,
+        );
+        setSliderTop(percent);
 
-      let hue = 0;
-      if (percent <= 97) {
-        //If you click in bottom of slider it should go back to red (hue = 0)
-        hue = Math.round(percent * 3.5);
+        let hue = 0;
+        if (percent <= 97) {
+          //If you click in bottom of slider it should go back to red (hue = 0)
+          hue = Math.round(percent * 3.5);
+        }
+        setSquareColor(getHSLString(hue, 100, 50));
+        if (dotColor != null) {
+          // Keep same s and l, Update hue
+          const color = getHSLString(
+            hue,
+            getHSL(dotColor).s,
+            getHSL(dotColor).l,
+          );
+          setDotColor(color);
+          onSelectionChanged?.(color);
+        }
       }
-      setSquareColor('hsl(' + hue + ', 100%, 50%)');
-    }
-  }, []);
+    },
+    [dotColor, onSelectionChanged],
+  );
   const handleSliderPointerUp = React.useCallback(
     (event: PointerEvent) => {
       updateSliderValue(event);
@@ -238,21 +272,30 @@ export const ColorPicker = (props: ColorPickerProps) => {
         setSquareLeft(percentX);
 
         // TODO: Calculate new dotColor value from new position in the colorSquare
-        let color = '';
+        let l = 0;
         if (percentX < 50 && percentY < 50) {
-          color = 'hsl(0,20%, 70%)'; // Top left
+          l = 70; // Top left
         } else if (percentX < 50 && percentY > 50) {
-          color = 'hsl(0,10%, 30%)'; // Bottom left
+          l = 30; // Bottom left
         } else if (percentX > 50 && percentY > 50) {
-          color = 'hsl(0,50%, 20%)'; // Bottom right
+          l = 20; // Bottom right
         } else if (percentX > 50 && percentY < 50) {
-          color = 'hsl(0,70%, 50%)'; // top right
+          l = 50; // top right
         }
-        setDotColor(color);
-        onSelectionChanged?.(color);
+
+        // Keep same hue, update s and l
+        if (squareColor != null) {
+          const color = getHSLString(
+            getHSL(squareColor).h,
+            Math.round(percentY),
+            l,
+          );
+          setDotColor(color);
+          onSelectionChanged?.(color);
+        }
       }
     },
-    [onSelectionChanged],
+    [onSelectionChanged, squareColor],
   );
   const handleSquarePointerUp = React.useCallback(
     (event: PointerEvent) => {

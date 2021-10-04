@@ -156,12 +156,11 @@ WithTooltip.args = {};
 
 export const Advanced: Story<ColorPickerProps> = (args) => {
   const savedColors = [
-    { color: '#008BE1', name: 'BLUE COLA' },
-    { color: '#458816', name: 'CHLOROPHYLL' },
-    { color: '#CF0000', name: 'RED EPITHELIUM' },
-    { color: '#FF6300', name: 'SAFETY ORANGE' },
-    { color: '#FFC335', name: 'RISE-N-SHINE' },
-    { color: '#010200', name: 'BLACK' },
+    { color: 'hsl(0, 100%, 50%)' },
+    { color: 'hsl(23, 100%, 50%)' },
+    { color: 'hsl(42, 99%, 60%)' },
+    { color: 'hsl(95, 71%, 42%)' },
+    { color: 'hsl(202, 100%, 59%)' },
   ];
   const [opened, setOpened] = React.useState(false);
   const [activeIndex, setActiveIndex] = React.useState(-1);
@@ -182,7 +181,7 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
 
   const onAdd = () => {
     action(`Added color ${selectedColor}`)();
-    savedColors.push({ color: selectedColor, name: 'new name' });
+    savedColors.push({ color: selectedColor });
     setActiveIndex(
       savedColors.findIndex((swatch) => swatch.color === selectedColor),
     );
