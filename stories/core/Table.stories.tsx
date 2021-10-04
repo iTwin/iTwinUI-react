@@ -1519,7 +1519,7 @@ export const WithPaginator: Story<TableProps> = (args) => {
         {...args}
         columns={tableColumns}
         data={tableData}
-        pageSize={25}
+        pageSize={10}
         paginatorRenderer={paginator}
       />
     </>
