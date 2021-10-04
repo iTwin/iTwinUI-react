@@ -143,6 +143,47 @@ it('should filter list according to text input', () => {
   expect(menu.children).toHaveLength(4);
 });
 
+it('should accept custom filter function', () => {
+  const { container } = renderComponent({
+    options: [
+      { label: 'ItemZero', value: 0 },
+      { label: 'Item-one', value: 1 },
+      { label: 'Item-two', value: 2 },
+      { label: 'Item-three', value: 3 },
+    ],
+    filterFunction: (options, str) =>
+      options.filter(
+        (option) =>
+          option.label.includes(str) || option.value.toString().includes(str),
+      ),
+  });
+  const input = assertBaseElement(container);
+  input.focus();
+  const menu = container.querySelector('.iui-menu') as HTMLElement;
+
+  // no filter
+  expect(menu.children).toHaveLength(4);
+
+  // 3 items
+  fireEvent.change(input, { target: { value: 'Item-' } });
+  expect(menu.children).toHaveLength(3);
+
+  // only 1 item
+  fireEvent.change(input, { target: { value: '2' } });
+  expect(menu.children).toHaveLength(1);
+  expect(menu.firstElementChild).toHaveTextContent('Item-two');
+
+  // only 1 item
+  fireEvent.change(input, { target: { value: 'Zero' } });
+  expect(menu.children).toHaveLength(1);
+  expect(menu.firstElementChild).toHaveTextContent('ItemZero');
+
+  // no items
+  fireEvent.change(input, { target: { value: 'five' } });
+  expect(menu.children).toHaveLength(1);
+  expect(menu.firstElementChild).toHaveTextContent('No options');
+});
+
 it('should select value on click', () => {
   const mockOnChange = jest.fn();
   const { container, getByText } = renderComponent({ onChange: mockOnChange });

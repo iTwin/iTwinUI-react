@@ -46,7 +46,7 @@ export type ComboBoxProps<T> = {
    */
   dropdownMenuProps?: PopoverProps;
   /**
-   * Message shown when no options are available (after filtering).
+   * Message shown when no options are available.
    * @default 'No options found'
    */
   emptyStateMessage?: string;
@@ -85,7 +85,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   useTheme();
 
-  /** Generates an memoized id for an option, given the index from original list */
+  /** Generates a memoized id for an option, given the index from original list */
   const getOptionId = React.useCallback(
     (index: number) =>
       options[index].id ??
