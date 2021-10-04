@@ -55,6 +55,7 @@ it('should render main text content correctly', () => {
 
 it('should render thumbnail correctly (url)', () => {
   const { container } = render(<Tile name='test-name' thumbnail='image.png' />);
+  expect(container.querySelector('.iui-thumbnail')).toBeTruthy();
   const picture = container.querySelector('.iui-picture') as HTMLDivElement;
   expect(picture).toBeTruthy();
   expect(picture.style.backgroundImage).toBe('url(image.png)');
@@ -64,6 +65,7 @@ it('should render thumbnail correctly (<img>)', () => {
   const { container } = render(
     <Tile name='test-name' thumbnail={<img src='image.png' />} />,
   );
+  expect(container.querySelector('.iui-thumbnail')).toBeTruthy();
   const img = container.querySelector('.iui-picture') as HTMLImageElement;
   expect(img).toBeTruthy();
   expect(img.src).toContain('image.png');
@@ -76,6 +78,7 @@ it('should render thumbnail correctly (svg)', () => {
   const { container: placeholderIcon } = render(
     <SvgPlaceholder className='iui-thumbnail-icon' />,
   );
+  expect(container.querySelector('.iui-thumbnail')).toBeTruthy();
   const svg = container.querySelector('svg') as SVGSVGElement;
   expect(svg).toBeTruthy();
   expect(svg).toEqual(placeholderIcon.firstChild);
