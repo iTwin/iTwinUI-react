@@ -25,8 +25,8 @@ import {
   Tooltip,
   DefaultCell,
   EditableCell,
-  TablePagination,
-  TablePaginationRendererProps,
+  TablePaginator,
+  TablePaginatorRendererProps,
 } from '../../src/core';
 import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
@@ -1485,7 +1485,7 @@ export const WithPagination: Story<TableProps> = (args) => {
         description: `Description ${keyValue}`,
         subRows:
           depth < 2
-            ? Array(Math.round((Math.random() * 10) % 5))
+            ? Array(Math.round(index % 5))
                 .fill(null)
                 .map((_, index) => generateItem(index, keyValue, depth + 1))
             : [],
@@ -1496,16 +1496,16 @@ export const WithPagination: Story<TableProps> = (args) => {
 
   const tableData = useMemo(
     () =>
-      Array(200)
+      Array(195)
         .fill(null)
         .map((_, index) => generateItem(index)),
     [generateItem],
   );
 
   const rowsPerPage = useMemo(() => [10, 25, 50], []);
-  const tablePagination = useCallback(
-    (props: TablePaginationRendererProps) => (
-      <TablePagination
+  const paginator = useCallback(
+    (props: TablePaginatorRendererProps) => (
+      <TablePaginator
         {...props}
         focusActivationMode='manual'
         rowsPerPage={rowsPerPage}
@@ -1523,7 +1523,7 @@ export const WithPagination: Story<TableProps> = (args) => {
         {...args}
         columns={tableColumns}
         data={tableData}
-        paginationRenderer={tablePagination}
+        paginatorRenderer={paginator}
       />
     </>
   );
@@ -1535,6 +1535,5 @@ WithPagination.args = {
 };
 
 WithPagination.argTypes = {
-  isLoading: { control: { disable: true } },
   data: { control: { disable: true } },
 };

@@ -10,7 +10,7 @@ import { IconButton } from '../Buttons/IconButton';
 import SvgChevronLeft from '@itwin/itwinui-icons-react/cjs/icons/ChevronLeft';
 import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import { ButtonGroup } from '../ButtonGroup';
-import { Button, ButtonProps } from '../Buttons/Button';
+import { Button } from '../Buttons/Button';
 import { useOverflow } from '../utils/hooks/useOverflow';
 import { getBoundedValue } from '../utils/common';
 import { ProgressRadial } from '../ProgressIndicators';
@@ -32,7 +32,7 @@ const defaultLocalization = {
       : `${startIndex}-${endIndex} of ${totalRows}`,
 };
 
-export type TablePaginationProps = {
+export type TablePaginatorProps = {
   /**
    * The zero-based index of the current page.
    */
@@ -52,23 +52,23 @@ export type TablePaginationProps = {
   /**
    * Callback when page size is changed.
    */
-  setPageSize: (size: number) => void;
+  onPageSizeChange?: (size: number) => void;
   /**
    * Modify the density of the pagination (adjusts the height).
    * @default 'default'
    */
   density?: TableProps['density'];
   /**
+   * Flag whether data is still loading and total rows count is not known.
+   * @default false
+   */
+  isLoading?: boolean;
+  /**
    * Control whether focusing tabs (using arrow keys) should automatically select them.
    * Use 'manual' if tab panel content is not preloaded.
    * @default 'auto'
    */
   focusActivationMode?: 'auto' | 'manual';
-  /**
-   * Flag whether data is still loading and total rows count is not known.
-   * @default false
-   */
-  isLoading?: boolean;
   /**
    * Array of possible page size options. When provided then shows current rows info and page size selection.
    */
@@ -104,7 +104,7 @@ export type TablePaginationProps = {
   };
 } & Omit<CommonProps, 'title'>;
 
-export const TablePagination = (props: TablePaginationProps) => {
+export const TablePaginator = (props: TablePaginatorProps) => {
   const {
     currentPage,
     totalRowsCount,
@@ -114,7 +114,7 @@ export const TablePagination = (props: TablePaginationProps) => {
     isLoading = false,
     density = 'default',
     rowsPerPage,
-    setPageSize,
+    onPageSizeChange,
     localization,
     className,
     style,
@@ -132,8 +132,7 @@ export const TablePagination = (props: TablePaginationProps) => {
     setFocusedIndex(currentPage);
   }, [currentPage]);
 
-  const buttonSize: ButtonProps['size'] =
-    density != 'default' ? 'small' : undefined;
+  const size = density != 'default' ? 'small' : undefined;
 
   const pageButton = React.useCallback(
     (index: number, tabIndex = index === focusedIndex ? 0 : -1) => (
@@ -145,12 +144,12 @@ export const TablePagination = (props: TablePaginationProps) => {
         onClick={() => onPageChange(index)}
         aria-current={index === currentPage}
         tabIndex={tabIndex}
-        size={buttonSize}
+        size={size}
       >
         {index + 1}
       </Button>
     ),
-    [buttonSize, currentPage, focusedIndex, onPageChange],
+    [size, currentPage, focusedIndex, onPageChange],
   );
 
   const totalPagesCount = Math.ceil(totalRowsCount / pageSize);
@@ -175,17 +174,17 @@ export const TablePagination = (props: TablePaginationProps) => {
         0,
         totalPagesCount - 1,
       );
-      setFocusedIndex(newFocusedIndex);
-
-      const buttonToFocus = Array.from(
-        pageListRef.current?.querySelectorAll('.iui-button') ?? [],
-      ).find(
-        (el) => el.textContent?.trim() === (newFocusedIndex + 1).toString(),
-      );
-      (buttonToFocus as HTMLButtonElement | undefined)?.focus();
 
       if (focusActivationMode === 'auto') {
         onPageChange(newFocusedIndex);
+      } else {
+        setFocusedIndex(newFocusedIndex);
+        const buttonToFocus = Array.from(
+          pageListRef.current?.querySelectorAll('.iui-button') ?? [],
+        ).find(
+          (el) => el.textContent?.trim() === (newFocusedIndex + 1).toString(),
+        );
+        (buttonToFocus as HTMLButtonElement | undefined)?.focus();
       }
     };
 
@@ -228,7 +227,11 @@ export const TablePagination = (props: TablePaginationProps) => {
 
   const hasNoRows = totalPagesCount === 0;
 
-  const ellipsis = <span className='iui-ellipsis iui-small'>…</span>;
+  const ellipsis = (
+    <span className={cx('iui-ellipsis', { 'iui-small': size === 'small' })}>
+      …
+    </span>
+  );
 
   return (
     <div className={cx('iui-paginator', className)} style={style} {...rest}>
@@ -238,15 +241,21 @@ export const TablePagination = (props: TablePaginationProps) => {
           styleType='borderless'
           disabled={currentPage === 0 || hasNoRows}
           onClick={() => onPageChange(currentPage - 1)}
-          size={buttonSize}
+          size={size}
+          aria-label='Previous page'
         >
           <SvgChevronLeft />
         </IconButton>
         <ButtonGroup onKeyDown={onKeyDown} ref={pageListRef}>
           {hasNoRows ? (
-            <Button styleType='borderless' disabled size={buttonSize}>
-              1
-            </Button>
+            <>
+              {!isLoading && (
+                <Button styleType='borderless' disabled size={size}>
+                  1
+                </Button>
+              )}
+              {isLoading && <ProgressRadial indeterminate size='small' />}
+            </>
           ) : (
             <>
               {startPage !== 0 && visibleCount > 1 && (
@@ -278,16 +287,17 @@ export const TablePagination = (props: TablePaginationProps) => {
           styleType='borderless'
           disabled={currentPage === totalPagesCount - 1 || hasNoRows}
           onClick={() => onPageChange(currentPage + 1)}
-          size={buttonSize}
+          size={size}
+          aria-label='Next page'
         >
           <SvgChevronRight />
         </IconButton>
       </div>
       <div className='iui-right'>
-        {rowsPerPage && !!totalRowsCount && (
+        {rowsPerPage && onPageSizeChange && !!totalRowsCount && (
           <DropdownButton
             styleType='borderless'
-            size={buttonSize}
+            size={size}
             menuItems={(close) =>
               rowsPerPage.map((size) => (
                 <MenuItem
@@ -295,7 +305,7 @@ export const TablePagination = (props: TablePaginationProps) => {
                   isSelected={size === pageSize}
                   onClick={() => {
                     close();
-                    setPageSize(size);
+                    onPageSizeChange(size);
                   }}
                 >
                   {localizationFunctions.rowsPerPageLabel(size)}
@@ -305,7 +315,7 @@ export const TablePagination = (props: TablePaginationProps) => {
           >
             {localizationFunctions.currentRowsInfoLabel(
               currentPage * pageSize + 1,
-              (currentPage + 1) * pageSize,
+              Math.min(totalRowsCount, (currentPage + 1) * pageSize),
               totalRowsCount,
               isLoading,
             )}
@@ -316,4 +326,4 @@ export const TablePagination = (props: TablePaginationProps) => {
   );
 };
 
-export default TablePagination;
+export default TablePaginator;

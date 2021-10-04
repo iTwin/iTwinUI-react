@@ -46,7 +46,7 @@ import { onSingleSelectHandler } from './actionHandlers/selectHandler';
 
 const singleRowSelectedAction = 'singleRowSelected';
 
-export type TablePaginationRendererProps = {
+export type TablePaginatorRendererProps = {
   /**
    * The zero-based index of the current page.
    */
@@ -66,12 +66,13 @@ export type TablePaginationRendererProps = {
   /**
    * Callback when page size is changed.
    */
-  setPageSize: (size: number) => void;
+  onPageSizeChange: (size: number) => void;
   /**
    * Modify the density of the pagination (adjusts the height).
    * @default 'default'
    */
   density?: TableProps['density'];
+  isLoading?: boolean;
 };
 
 /**
@@ -175,13 +176,13 @@ export type TableProps<
    */
   density?: 'default' | 'condensed' | 'extra-condensed';
   /**
-   * Function that returns pagination component. Recommended to use `TablePagination`.
+   * Function that returns pagination component. Recommended to use `TablePaginator`.
    * @example
-   * (props: TablePaginationRendererProps) => (
-   *   <TablePagination {...props} />
+   * (props: TablePaginatorRendererProps) => (
+   *   <TablePaginator {...props} />
    * )
    */
-  paginationRenderer?: (props: TablePaginationRendererProps) => React.ReactNode;
+  paginatorRenderer?: (props: TablePaginatorRendererProps) => React.ReactNode;
   /**
    * Number of rows per page.
    * @default 10
@@ -264,7 +265,7 @@ export const Table = <
     density = 'default',
     selectSubRows = true,
     getSubRows,
-    paginationRenderer,
+    paginatorRenderer,
     pageSize = 10,
     ...rest
   } = props;
@@ -349,7 +350,7 @@ export const Table = <
 
   const instance = useTable<T>(
     {
-      manualPagination: !paginationRenderer, // Prevents from paginating rows in regular table without pagination
+      manualPagination: !paginatorRenderer, // Prevents from paginating rows in regular table without pagination
       paginateExpandedRows: false, // When false, it shows sub-rows in the current page instead of splitting them
       ...props,
       columns,
@@ -361,6 +362,7 @@ export const Table = <
       data,
       getSubRows,
       initialState: { pageSize, ...props.initialState },
+      pageCount: !paginatorRenderer ? -1 : undefined,
     },
     useFlexLayout,
     useFilters,
@@ -423,12 +425,13 @@ export const Table = <
     setPageSize(pageSize);
   }, [pageSize, setPageSize]);
 
-  const paginationRendererProps: TablePaginationRendererProps = React.useMemo(
+  const paginatorRendererProps: TablePaginatorRendererProps = React.useMemo(
     () => ({
       currentPage: state.pageIndex,
       pageSize: state.pageSize,
       totalRowsCount: rows.length,
       density,
+      isLoading,
       onPageChange: (page) => {
         gotoPage(page);
         tableRef.current?.scrollIntoView({
@@ -437,11 +440,12 @@ export const Table = <
           behavior: 'smooth',
         });
       },
-      setPageSize,
+      onPageSizeChange: setPageSize,
     }),
     [
       density,
       gotoPage,
+      isLoading,
       rows.length,
       setPageSize,
       state.pageIndex,
@@ -571,7 +575,7 @@ export const Table = <
             )}
         </div>
       </div>
-      {paginationRenderer?.(paginationRendererProps)}
+      {paginatorRenderer?.(paginatorRendererProps)}
     </>
   );
 };
