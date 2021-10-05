@@ -20,7 +20,11 @@ export type AlertProps = {
    */
   clickableText?: React.ReactNode;
   /**
-   * Action handler for the clickable text.
+   * `href` for the clickable text.
+   */
+  clickableTextHref?: string;
+  /**
+   * Action handler for the clickable text, used when href is not provided.
    */
   onClick?: () => void;
   /**
@@ -53,6 +57,7 @@ export const Alert = (props: AlertProps) => {
     className,
     type = 'informational',
     clickableText,
+    clickableTextHref,
     onClick,
     onClose,
     style,
@@ -75,11 +80,15 @@ export const Alert = (props: AlertProps) => {
       style={style}
       {...rest}
     >
-      {<StatusIcon className='iui-icon' />}
-      <span className='iui-message'>
+      <StatusIcon className='iui-alert-icon' />
+      <span className='iui-alert-message'>
         {children}
         {clickableText && (
-          <a style={{ cursor: 'pointer' }} onClick={onClick}>
+          <a
+            className='iui-alert-link'
+            href={clickableTextHref}
+            onClick={onClick}
+          >
             {clickableText}
           </a>
         )}
