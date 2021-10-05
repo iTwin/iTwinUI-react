@@ -32,14 +32,12 @@ export type { ButtonGroupProps } from './ButtonGroup';
 export { Checkbox } from './Checkbox';
 export type { CheckboxProps } from './Checkbox';
 
-export {
-  ColorPicker,
-  ColorSwatch,
+export { ColorPicker, ColorSwatch, getHSL, getHSLString } from './ColorPicker';
+export type {
+  ColorPickerProps,
+  ColorSwatchProps,
   HslColor,
-  getHSL,
-  getHSLString,
 } from './ColorPicker';
-export type { ColorPickerProps, ColorSwatchProps } from './ColorPicker';
 
 export { ComboBox } from './ComboBox';
 export type { ComboBoxProps } from './ComboBox';
