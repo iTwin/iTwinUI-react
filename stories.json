@@ -46,6 +46,10 @@
       "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Checkbox.stories.tsx",
       "framework": "react"
     },
+    "Core/ComboBox": {
+      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ComboBox.stories.tsx",
+      "framework": "react"
+    },
     "Core/DatePicker": {
       "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/DatePicker.stories.tsx",
       "framework": "react"
@@ -546,6 +550,33 @@
       "story": "Loading",
       "parameters": {
         "__id": "input-checkbox--loading"
+      }
+    },
+    "core-combobox--basic": {
+      "id": "core-combobox--basic",
+      "name": "Basic",
+      "kind": "Core/ComboBox",
+      "story": "Basic",
+      "parameters": {
+        "__id": "core-combobox--basic"
+      }
+    },
+    "core-combobox--controlled": {
+      "id": "core-combobox--controlled",
+      "name": "Controlled",
+      "kind": "Core/ComboBox",
+      "story": "Controlled",
+      "parameters": {
+        "__id": "core-combobox--controlled"
+      }
+    },
+    "core-combobox--disabled-items": {
+      "id": "core-combobox--disabled-items",
+      "name": "Disabled Items",
+      "kind": "Core/ComboBox",
+      "story": "Disabled Items",
+      "parameters": {
+        "__id": "core-combobox--disabled-items"
       }
     },
     "core-datepicker--basic": {
