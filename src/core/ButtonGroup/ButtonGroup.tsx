@@ -20,7 +20,7 @@ export type ButtonGroupProps = {
    * and returns the `ReactNode` to render.
    */
   overflowButton?: (firstOverflowingIndex: number) => React.ReactNode;
-} & React.ComponentPropsWithoutRef<'div'>;
+} & React.ComponentPropsWithRef<'div'>;
 
 /**
  * Group buttons together for common actions.

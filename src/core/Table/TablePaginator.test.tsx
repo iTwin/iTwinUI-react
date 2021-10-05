@@ -14,6 +14,7 @@ const renderComponent = (props?: Partial<TablePaginatorProps>) => {
       pageSize={10}
       totalRowsCount={195}
       onPageChange={jest.fn()}
+      onPageSizeChange={jest.fn()}
       {...props}
     />,
   );
@@ -279,7 +280,7 @@ it('should render with custom localization', () => {
     onPageSizeChange: jest.fn(),
     localization: {
       rowsPerPageLabel: (size: number) => `${size} per test page`,
-      currentRowsInfoLabel: (
+      rangeLabel: (
         startIndex: number,
         endIndex: number,
         totalRows: number,

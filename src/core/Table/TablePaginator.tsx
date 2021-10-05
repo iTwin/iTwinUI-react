@@ -5,21 +5,18 @@
 import React from 'react';
 import cx from 'classnames';
 import '@itwin/itwinui-css/css/table.css';
-import { IconButton } from '../Buttons/IconButton';
 import SvgChevronLeft from '@itwin/itwinui-icons-react/cjs/icons/ChevronLeft';
 import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import { ButtonGroup } from '../ButtonGroup';
-import { Button } from '../Buttons/Button';
-import { useOverflow } from '../utils/hooks/useOverflow';
+import { IconButton, Button, DropdownButton } from '../Buttons';
 import { ProgressRadial } from '../ProgressIndicators';
-import { TableProps } from './Table';
-import { DropdownButton } from '../Buttons';
 import { MenuItem } from '../Menu';
-import { CommonProps, getBoundedValue, useTheme } from '../utils';
+import { CommonProps, getBoundedValue, useTheme, useOverflow } from '../utils';
+import { TablePaginatorRendererProps } from './Table';
 
 const defaultLocalization = {
   rowsPerPageLabel: (size: number) => `${size} per page`,
-  currentRowsInfoLabel: (
+  rangeLabel: (
     startIndex: number,
     endIndex: number,
     totalRows: number,
@@ -28,39 +25,12 @@ const defaultLocalization = {
     isLoading
       ? `${startIndex}-${endIndex}…`
       : `${startIndex}-${endIndex} of ${totalRows}`,
+  previousPage: 'Previous page',
+  nextPage: 'Next page',
+  goToPageLabel: (page: number) => `Go to page ${page}`,
 };
 
 export type TablePaginatorProps = {
-  /**
-   * The zero-based index of the current page.
-   */
-  currentPage: number;
-  /**
-   * Total number of rows.
-   */
-  totalRowsCount: number;
-  /**
-   * Number of rows per page.
-   */
-  pageSize: number;
-  /**
-   * Callback when page is changed.
-   */
-  onPageChange: (page: number) => void;
-  /**
-   * Callback when page size is changed.
-   */
-  onPageSizeChange?: (size: number) => void;
-  /**
-   * Modify the density of the pagination (adjusts the height).
-   * @default 'default'
-   */
-  density?: TableProps['density'];
-  /**
-   * Flag whether data is still loading and total rows count is not known.
-   * @default false
-   */
-  isLoading?: boolean;
   /**
    * Control whether focusing tabs (using arrow keys) should automatically select them.
    * Use 'manual' if tab panel content is not preloaded.
@@ -76,12 +46,12 @@ export type TablePaginatorProps = {
    */
   localization?: {
     /**
-     * Function that returns page size selection label.
+     * Function that returns a label for the page size selector.
      * @default (size: number) => `${size} per page`
      */
     rowsPerPageLabel?: (size: number) => string;
     /**
-     * Function that returns currently visible rows info.
+     * Function that returns a label for the range of rows within the current page and the length of the whole data.
      * @default
      *  (
      *  startIndex: number,
@@ -93,14 +63,30 @@ export type TablePaginatorProps = {
      *      ? `${startIndex}-${endIndex}…`
      *      : `${startIndex}-${endIndex} of ${totalRows}`;
      */
-    currentRowsInfoLabel?: (
+    rangeLabel?: (
       startIndex: number,
       endIndex: number,
       totalRows: number,
       isLoading: boolean,
     ) => string;
+    /**
+     * A label for previous page button. Used for accessibility attribute.
+     * @default 'Previous page'
+     */
+    previousPage?: string;
+    /**
+     * A label for next page button. Used for accessibility attribute.
+     * @default 'Next page'
+     */
+    nextPage?: string;
+    /**
+     * Function that returns a label for page selector buttons. Used for accessibility attribute.
+     * @default (page: number) => `Go to page ${page}`
+     */
+    goToPageLabel?: (page: number) => string;
   };
-} & Omit<CommonProps, 'title'>;
+} & TablePaginatorRendererProps &
+  Omit<CommonProps, 'title'>;
 
 /**
  * Table paginator component. Recommended to pass to the `Table` as `paginatorRenderer` prop.
@@ -121,15 +107,17 @@ export const TablePaginator = (props: TablePaginatorProps) => {
     density = 'default',
     rowsPerPage,
     onPageSizeChange,
-    localization,
+    localization: userLocalization,
     className,
-    style,
     ...rest
   } = props;
 
   useTheme();
 
-  const localizationFunctions = { ...defaultLocalization, ...localization };
+  const localization = React.useMemo(
+    () => ({ ...defaultLocalization, ...userLocalization }),
+    [userLocalization],
+  );
 
   const pageListRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -149,21 +137,22 @@ export const TablePaginator = (props: TablePaginatorProps) => {
         style={{ transition: 'none' }}
         onClick={() => onPageChange(index)}
         aria-current={index === currentPage}
+        aria-label={localization.goToPageLabel(index + 1)}
         tabIndex={tabIndex}
         size={size}
       >
         {index + 1}
       </Button>
     ),
-    [size, currentPage, focusedIndex, onPageChange],
+    [focusedIndex, currentPage, localization, size, onPageChange],
   );
 
   const totalPagesCount = Math.ceil(totalRowsCount / pageSize);
   const pageList = React.useMemo(
     () =>
-      [...Array(totalPagesCount).fill(null)].map((_, index) =>
-        pageButton(index),
-      ),
+      new Array(totalPagesCount)
+        .fill(null)
+        .map((_, index) => pageButton(index)),
     [pageButton, totalPagesCount],
   );
   const [overflowRef, visibleCount] = useOverflow(pageList);
@@ -240,15 +229,15 @@ export const TablePaginator = (props: TablePaginatorProps) => {
   );
 
   return (
-    <div className={cx('iui-paginator', className)} style={style} {...rest}>
+    <div className={cx('iui-paginator', className)} {...rest}>
       <div className='iui-left' />
-      <div className='iui-center' style={{ minWidth: 0 }} ref={overflowRef}>
+      <div className='iui-center' ref={overflowRef}>
         <IconButton
           styleType='borderless'
           disabled={currentPage === 0 || hasNoRows}
           onClick={() => onPageChange(currentPage - 1)}
           size={size}
-          aria-label='Previous page'
+          aria-label={localization.previousPage}
         >
           <SvgChevronLeft />
         </IconButton>
@@ -294,7 +283,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
           disabled={currentPage === totalPagesCount - 1 || hasNoRows}
           onClick={() => onPageChange(currentPage + 1)}
           size={size}
-          aria-label='Next page'
+          aria-label={localization.nextPage}
         >
           <SvgChevronRight />
         </IconButton>
@@ -314,12 +303,12 @@ export const TablePaginator = (props: TablePaginatorProps) => {
                     onPageSizeChange(size);
                   }}
                 >
-                  {localizationFunctions.rowsPerPageLabel(size)}
+                  {localization.rowsPerPageLabel(size)}
                 </MenuItem>
               ))
             }
           >
-            {localizationFunctions.currentRowsInfoLabel(
+            {localization.rangeLabel(
               currentPage * pageSize + 1,
               Math.min(totalRowsCount, (currentPage + 1) * pageSize),
               totalRowsCount,

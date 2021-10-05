@@ -71,6 +71,10 @@ export type TablePaginatorRendererProps = {
    * @default 'default'
    */
   density?: TableProps['density'];
+  /**
+   * Flag whether data is still loading and total rows count is not known.
+   * @default false
+   */
   isLoading?: boolean;
 };
 
@@ -367,7 +371,6 @@ export const Table = <
       data,
       getSubRows,
       initialState: { pageSize, ...props.initialState },
-      pageCount: !paginatorRenderer ? -1 : undefined,
     },
     useFlexLayout,
     useFilters,
