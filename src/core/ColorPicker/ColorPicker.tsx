@@ -13,6 +13,11 @@ import {
 } from '../utils';
 import cx from 'classnames';
 
+export interface HslColor {
+  h: number;
+  s: number;
+  l: number;
+}
 const getVerticalPercentageOfRectangle = (rect: DOMRect, pointer: number) => {
   const position = getBoundedValue(pointer, rect.top, rect.bottom);
   return ((position - rect.top) / rect.height) * 100;
@@ -32,15 +37,18 @@ const getPart = (color: string) => {
   }
   return Number(result);
 };
-const getHSL = (color: string) => {
+export const getHSL = (color: string) => {
   const h = getPart(color.split(',')[0]);
   const s = getPart(color.split(',')[1]);
   const l = getPart(color.split(',')[2]);
 
   return { h: h, s: s, l: l };
 };
-const getHSLString = (h: number, s: number, l: number) => {
-  return 'hsl( ' + h + ', ' + s + '%, ' + l + '% )';
+export const getHSLString = (color: HslColor | undefined) => {
+  if (color == undefined) {
+    return 'hsl( ' + 0 + ', ' + 0 + '%, ' + 100 + '% )';
+  }
+  return 'hsl( ' + color.h + ', ' + color.s + '%, ' + color.l + '% )';
 };
 
 export type ColorPickerProps = {
@@ -60,12 +68,12 @@ export type ColorPickerProps = {
    * The selected color.
    * Only for advanced color picker.
    */
-  selectedColor?: string;
+  selectedColor?: HslColor;
   /**
    * Handler for when selectedColor is changed.
    * Only for advanced color picker.
    */
-  onSelectionChanged?: (color: string) => void;
+  onSelectionChanged?: (color: HslColor) => void;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -184,21 +192,21 @@ export const ColorPicker = (props: ColorPickerProps) => {
   const [squareLeft, setSquareLeft] = React.useState(10);
 
   const colorSquareStyle = getWindow()?.CSS?.supports?.(
-    `--color: ${squareColor}`,
+    `--color: ${getHSLString(squareColor)}`,
   )
-    ? { '--color': squareColor }
-    : { backgroundColor: squareColor };
+    ? { '--color': getHSLString(squareColor) }
+    : { backgroundColor: getHSLString(squareColor) };
 
   const colorDotStyle = getWindow()?.CSS?.supports?.(
-    `--selected-color: ${dotColor}`,
+    `--selected-color: ${getHSLString(dotColor)}`,
   )
     ? {
-        '--selected-color': dotColor,
+        '--selected-color': getHSLString(dotColor),
         '--top': squareTop.toString() + '%',
         '--left': squareLeft.toString() + '%',
       }
     : {
-        backgroundColor: dotColor,
+        backgroundColor: getHSLString(dotColor),
         top: squareTop.toString() + '%',
         left: squareLeft.toString() + '%',
       };
@@ -225,14 +233,10 @@ export const ColorPicker = (props: ColorPickerProps) => {
           //If you click in bottom of slider it should go back to red (hue = 0)
           hue = Math.round(percent * 3.5);
         }
-        setSquareColor(getHSLString(hue, 100, 50));
+        setSquareColor({ h: hue, s: 100, l: 50 });
         if (dotColor != null) {
           // Keep same s and l, Update hue
-          const color = getHSLString(
-            hue,
-            getHSL(dotColor).s,
-            getHSL(dotColor).l,
-          );
+          const color = { h: hue, s: dotColor.s, l: dotColor.l };
           setDotColor(color);
           onSelectionChanged?.(color);
         }
@@ -285,11 +289,11 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
         // Keep same hue, update s and l
         if (squareColor != null) {
-          const color = getHSLString(
-            getHSL(squareColor).h,
-            Math.round(percentY),
-            l,
-          );
+          const color = {
+            h: squareColor.h,
+            s: Math.round(percentY),
+            l: l,
+          };
           setDotColor(color);
           onSelectionChanged?.(color);
         }

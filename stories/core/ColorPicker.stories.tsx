@@ -10,6 +10,9 @@ import {
   IconButton,
   Tooltip,
   ColorSwatch,
+  HslColor,
+  getHSL,
+  getHSLString,
 } from '../../src/core';
 import { action } from '@storybook/addon-actions';
 import SvgAddCircular from '@itwin/itwinui-icons-react/cjs/icons/AddCircular';
@@ -165,7 +168,6 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
   const [opened, setOpened] = React.useState(false);
   const [activeIndex, setActiveIndex] = React.useState(-1);
   const [selectedColor, setSelectedColor] = React.useState('hsl(0, 100%, 50%)');
-  // TODO: Maybe selectedColor should be a 'Color' object that contains more info (hsl, hex, etc.) instead of just a string
 
   const onColorClick = (index: number) => {
     action(`Clicked ${savedColors[index].color}`)();
@@ -173,9 +175,9 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
     setSelectedColor(savedColors[index].color);
   };
 
-  const onColorChanged = (color: string) => {
+  const onColorChanged = (color: HslColor) => {
     setActiveIndex(-1);
-    setSelectedColor(color);
+    setSelectedColor(getHSLString(color));
     action(`Selected ${color}`)();
   };
 
@@ -206,7 +208,7 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
       {opened && (
         <div style={{ marginTop: 4 }}>
           <ColorPicker
-            selectedColor={selectedColor}
+            selectedColor={getHSL(selectedColor)}
             onSelectionChanged={onColorChanged}
             {...args}
           >
