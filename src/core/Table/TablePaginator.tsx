@@ -231,7 +231,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
   return (
     <div className={cx('iui-paginator', className)} {...rest}>
       <div className='iui-left' />
-      <div className='iui-center' ref={overflowRef}>
+      <div className='iui-center' style={{ minWidth: 0 }} ref={overflowRef}>
         <IconButton
           styleType='borderless'
           disabled={currentPage === 0 || hasNoRows}
