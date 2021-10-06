@@ -190,6 +190,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
   const [sliderTop, setSliderTop] = React.useState(10);
   const [squareTop, setSquareTop] = React.useState(10);
   const [squareLeft, setSquareLeft] = React.useState(10);
+  const [sliderDotActive, setSliderDotActive] = React.useState(false);
 
   const colorSquareStyle = getWindow()?.CSS?.supports?.(
     `--color: ${getHSLString(squareColor)}`,
@@ -220,33 +221,43 @@ export const ColorPicker = (props: ColorPickerProps) => {
   // Update slider change
   const sliderRef = React.useRef<HTMLDivElement>(null);
   const updateSliderValue = React.useCallback(
-    (event: PointerEvent) => {
+    (event: PointerEvent, callbackType: 'onChange' | 'onUpdate') => {
       if (sliderRef.current) {
         const percent = getVerticalPercentageOfRectangle(
           sliderRef.current.getBoundingClientRect(),
           event.clientY,
         );
-        setSliderTop(percent);
+        if (
+          callbackType == 'onChange' ||
+          (callbackType == 'onUpdate' && sliderDotActive)
+        ) {
+          setSliderTop(percent);
 
-        let hue = 0;
-        if (percent <= 97) {
-          //If you click in bottom of slider it should go back to red (hue = 0)
-          hue = Math.round(percent * 3.5);
-        }
-        setSquareColor({ h: hue, s: 100, l: 50 });
-        if (dotColor != null) {
-          // Keep same s and l, Update hue
-          const color = { h: hue, s: dotColor.s, l: dotColor.l };
-          setDotColor(color);
-          onSelectionChanged?.(color);
+          let hue = 0;
+          if (percent <= 97) {
+            //If you click in bottom of slider it should go back to red (hue = 0)
+            hue = Math.round(percent * 3.5);
+          }
+          setSquareColor({ h: hue, s: 100, l: 50 });
+          if (dotColor != null) {
+            // Keep same s and l, Update hue
+            const color = { h: hue, s: dotColor.s, l: dotColor.l };
+            setDotColor(color);
+
+            //Only update selected color when dragging is done
+            if (callbackType == 'onChange') {
+              onSelectionChanged?.(color);
+              setSliderDotActive(false);
+            }
+          }
         }
       }
     },
-    [dotColor, onSelectionChanged],
+    [dotColor, onSelectionChanged, sliderDotActive],
   );
   const handleSliderPointerUp = React.useCallback(
     (event: PointerEvent) => {
-      updateSliderValue(event);
+      updateSliderValue(event, 'onChange');
       event.preventDefault();
       event.stopPropagation();
     },
@@ -257,6 +268,37 @@ export const ColorPicker = (props: ColorPickerProps) => {
     handleSliderPointerUp,
     sliderRef.current as HTMLElement,
   );
+
+  const handlePointerMove = React.useCallback(
+    (event: PointerEvent): void => {
+      event.preventDefault();
+      event.stopPropagation();
+      updateSliderValue(event, 'onUpdate');
+    },
+    [updateSliderValue],
+  );
+
+  useEventListener(
+    'pointermove',
+    handlePointerMove,
+    sliderRef.current as HTMLElement,
+  );
+
+  const handlePointerOut = React.useCallback((event: PointerEvent): void => {
+    event.preventDefault();
+    event.stopPropagation();
+    setSliderDotActive(false);
+  }, []);
+
+  useEventListener(
+    'mouseout',
+    handlePointerOut,
+    sliderRef.current as HTMLElement,
+  );
+
+  const handlePointerDownOnThumb = React.useCallback(() => {
+    setSliderDotActive(true);
+  }, []);
 
   // Update Color field square change
   const squareRef = React.useRef<HTMLDivElement>(null);
@@ -337,6 +379,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
             <div
               className='iui-color-dot iui-white'
               style={sliderColorDotStyle}
+              onPointerDown={handlePointerDownOnThumb}
             />
           </div>
         </div>
