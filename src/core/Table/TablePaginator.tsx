@@ -28,7 +28,7 @@ const defaultLocalization = {
   previousPage: 'Previous page',
   nextPage: 'Next page',
   goToPageLabel: (page: number) => `Go to page ${page}`,
-};
+} as const;
 
 export type TablePaginatorProps = {
   /**
