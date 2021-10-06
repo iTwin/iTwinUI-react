@@ -645,16 +645,72 @@ export const ExpandableSubrows: Story<TableProps> = (args) => {
     [],
   );
 
+  const tableData = [
+    {
+      name: 'Row 1',
+      description: 'Description 1',
+      subRows: [
+        { name: 'Row 1.1', description: 'Description 1.1', subRows: [] },
+        {
+          name: 'Row 1.2',
+          description: 'Description 1.2',
+          subRows: [
+            {
+              name: 'Row 1.2.1',
+              description: 'Description 1.2.1',
+              subRows: [],
+            },
+            {
+              name: 'Row 1.2.2',
+              description: 'Description 1.2.2',
+              subRows: [],
+            },
+            {
+              name: 'Row 1.2.3',
+              description: 'Description 1.2.3',
+              subRows: [],
+            },
+            {
+              name: 'Row 1.2.4',
+              description: 'Description 1.2.4',
+              subRows: [],
+            },
+          ],
+        },
+        { name: 'Row 1.3', description: 'Description 1.3', subRows: [] },
+        { name: 'Row 1.4', description: 'Description 1.4', subRows: [] },
+      ],
+    },
+    {
+      name: 'Row 2',
+      description: 'Description 2',
+      subRows: [
+        { name: 'Row 2.1', description: 'Description 2.1', subRows: [] },
+        { name: 'Row 2.2', description: 'Description 2.2', subRows: [] },
+        { name: 'Row 2.3', description: 'Description 2.3', subRows: [] },
+      ],
+    },
+    { name: 'Row 3', description: 'Description 3', subRows: [] },
+  ];
+
   return (
-    <Table
-      emptyTableContent='No data.'
-      isSelectable
-      isSortable
-      {...rest}
-      data={data}
-      columns={tableColumns}
-      onExpand={onExpand}
-    />
+    <>
+      <div>
+        Each data entry should have <Code>subRows</Code> property. If{' '}
+        <Code>subRows</Code> has any items, then expander will be shown for that
+        row.
+      </div>
+      <br />
+      <Table
+        emptyTableContent='No data.'
+        isSelectable
+        isSortable
+        {...rest}
+        data={data ?? tableData}
+        columns={tableColumns}
+        onExpand={onExpand}
+      />
+    </>
   );
 };
 
@@ -707,15 +763,14 @@ ExpandableSubrows.args = {
     { name: 'Row 3', description: 'Description 3', subRows: [] },
   ],
 };
-ExpandableSubrows.argTypes = {
-  data: { control: { disable: true } },
-};
 
 ExpandableSubrows.parameters = {
   creevey: {
     tests: {
       async expand() {
-        const closed = await this.takeScreenshot();
+        const closed = await this.browser
+          .findElement({ css: '.iui-table' })
+          .takeScreenshot();
 
         let expanders = await this.browser.findElements({
           css: '.iui-row-expander',
@@ -728,7 +783,9 @@ ExpandableSubrows.parameters = {
         // Expand Row 1.2
         await expanders[1].click();
 
-        const expanded = await this.takeScreenshot();
+        const expanded = await this.browser
+          .findElement({ css: '.iui-table' })
+          .takeScreenshot();
 
         await this.expect({ closed, expanded }).to.matchImages();
       },
