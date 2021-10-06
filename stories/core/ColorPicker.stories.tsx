@@ -158,16 +158,16 @@ export const WithTooltip: Story<ColorPickerProps> = (args) => {
 WithTooltip.args = {};
 
 export const Advanced: Story<ColorPickerProps> = (args) => {
-  const savedColors = [
+  const [opened, setOpened] = React.useState(false);
+  const [activeIndex, setActiveIndex] = React.useState(-1);
+  const [selectedColor, setSelectedColor] = React.useState('hsl(0, 100%, 50%)');
+  const [savedColors] = React.useState([
     { color: 'hsl(0, 100%, 50%)' },
     { color: 'hsl(23, 100%, 50%)' },
     { color: 'hsl(42, 99%, 60%)' },
     { color: 'hsl(95, 71%, 42%)' },
     { color: 'hsl(202, 100%, 59%)' },
-  ];
-  const [opened, setOpened] = React.useState(false);
-  const [activeIndex, setActiveIndex] = React.useState(-1);
-  const [selectedColor, setSelectedColor] = React.useState('hsl(0, 100%, 50%)');
+  ]);
 
   const onColorClick = (index: number) => {
     action(`Clicked ${savedColors[index].color}`)();
@@ -182,12 +182,16 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
   };
 
   const onAdd = () => {
+    if (
+      savedColors.findIndex((swatch) => swatch.color === selectedColor) > -1
+    ) {
+      action(`Cannot add duplicate color ${selectedColor}`)();
+      return;
+    }
+
     action(`Added color ${selectedColor}`)();
+    setActiveIndex(savedColors.length);
     savedColors.push({ color: selectedColor });
-    setActiveIndex(
-      savedColors.findIndex((swatch) => swatch.color === selectedColor),
-    );
-    // TODO: Update color swatches in savedColors list??
   };
 
   return (
