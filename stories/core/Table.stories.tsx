@@ -1525,7 +1525,7 @@ export const WithPaginator: Story<Partial<TableProps>> = (args) => {
 
   const data = useMemo(
     () =>
-      Array(195)
+      Array(495)
         .fill(null)
         .map((_, index) => generateItem(index)),
     [generateItem],
