@@ -67,10 +67,10 @@ export type TablePaginatorRendererProps = {
    */
   onPageSizeChange: (size: number) => void;
   /**
-   * Modify the density of the pagination (adjusts the height).
+   * Modify the size of the pagination (adjusts the elements size).
    * @default 'default'
    */
-  density?: TableProps['density'];
+  size?: 'default' | 'small';
   /**
    * Flag whether data is still loading and total rows count is not known.
    * @default false
@@ -442,7 +442,7 @@ export const Table = <
       currentPage: state.pageIndex,
       pageSize: state.pageSize,
       totalRowsCount: rows.length,
-      density,
+      size: density !== 'default' ? 'small' : 'default',
       isLoading,
       onPageChange: (page) => {
         gotoPage(page);

@@ -257,7 +257,7 @@ it('should handle keyboard navigation when focusActivationMode is manual', () =>
 
 it('should render elements in small size', () => {
   const { container } = renderComponent({
-    density: 'condensed',
+    size: 'small',
     rowsPerPage: [10, 25, 50],
     onPageSizeChange: jest.fn(),
   });

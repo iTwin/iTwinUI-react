@@ -110,7 +110,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
     onPageChange,
     focusActivationMode = 'auto',
     isLoading = false,
-    density = 'default',
+    size = 'default',
     rowsPerPage,
     onPageSizeChange,
     localization: userLocalization,
@@ -143,7 +143,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
     isMounted.current = true;
   }, [focusedIndex]);
 
-  const size = density != 'default' ? 'small' : undefined;
+  const buttonSize = size != 'default' ? 'small' : undefined;
 
   const pageButton = React.useCallback(
     (index: number, tabIndex = index === focusedIndex ? 0 : -1) => (
@@ -156,12 +156,12 @@ export const TablePaginator = (props: TablePaginatorProps) => {
         aria-current={index === currentPage}
         aria-label={localization.goToPageLabel(index + 1)}
         tabIndex={tabIndex}
-        size={size}
+        size={buttonSize}
       >
         {index + 1}
       </Button>
     ),
-    [focusedIndex, currentPage, localization, size, onPageChange],
+    [focusedIndex, currentPage, localization, buttonSize, onPageChange],
   );
 
   const totalPagesCount = Math.ceil(totalRowsCount / pageSize);
@@ -244,7 +244,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
       {isLoading ? (
         <ProgressRadial indeterminate size='small' />
       ) : (
-        <Button styleType='borderless' disabled size={size}>
+        <Button styleType='borderless' disabled size={buttonSize}>
           1
         </Button>
       )}
@@ -259,7 +259,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
           styleType='borderless'
           disabled={currentPage === 0 || hasNoRows}
           onClick={() => onPageChange(currentPage - 1)}
-          size={size}
+          size={buttonSize}
           aria-label={localization.previousPage}
         >
           <SvgChevronLeft />
@@ -301,7 +301,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
           styleType='borderless'
           disabled={currentPage === totalPagesCount - 1 || hasNoRows}
           onClick={() => onPageChange(currentPage + 1)}
-          size={size}
+          size={buttonSize}
           aria-label={localization.nextPage}
         >
           <SvgChevronRight />
@@ -311,7 +311,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
         {rowsPerPage && onPageSizeChange && !!totalRowsCount && (
           <DropdownButton
             styleType='borderless'
-            size={size}
+            size={buttonSize}
             menuItems={(close) =>
               rowsPerPage.map((size) => (
                 <MenuItem
