@@ -267,21 +267,19 @@ export const ColorPicker = (props: ColorPickerProps) => {
           let hue = 0;
           if (percent <= 97) {
             //If you click in bottom of slider it should go back to red (hue = 0)
-            hue = Math.round(percent * 3.5);
+            hue = percent * 3.5;
           }
-          setSquareColor(fillColor({ hsl: { h: hue, s: 100, l: 50 } }));
-          if (dotColor != null) {
-            // Keep same s and l, Update hue
-            const color = fillColor({
-              hsl: { h: hue, s: dotColor.hsl.s, l: dotColor.hsl.l },
-            });
-            setDotColor(color);
+          setSquareColor(fillColor({ hsv: { h: hue, s: 100, v: 100 } }));
+          // Keep same s and v, Update hue
+          const color = fillColor({
+            hsv: { h: hue, s: dotColor.hsv.s, v: dotColor.hsv.v },
+          });
+          setDotColor(color);
 
-            //Only update selected color when dragging is done
-            if (callbackType == 'onChange') {
-              onSelectionChanged?.(color);
-              setSliderDotActive(false);
-            }
+          //Only update selected color when dragging is done
+          if (callbackType == 'onChange') {
+            onSelectionChanged?.(color);
+            setSliderDotActive(false);
           }
         }
       }
@@ -310,7 +308,6 @@ export const ColorPicker = (props: ColorPickerProps) => {
     },
     [updateSliderValue],
   );
-
   useEventListener(
     'pointermove',
     handlePointerMove,
@@ -322,7 +319,6 @@ export const ColorPicker = (props: ColorPickerProps) => {
     event.stopPropagation();
     setSliderDotActive(false);
   }, []);
-
   useEventListener(
     'mouseout',
     handlePointerOut,
@@ -350,30 +346,16 @@ export const ColorPicker = (props: ColorPickerProps) => {
         setSquareTop(percentY);
         setSquareLeft(percentX);
 
-        // TODO: Calculate new dotColor value from new position in the colorSquare
-        let l = 0;
-        if (percentX < 50 && percentY < 50) {
-          l = 70; // Top left
-        } else if (percentX < 50 && percentY > 50) {
-          l = 30; // Bottom left
-        } else if (percentX > 50 && percentY > 50) {
-          l = 20; // Bottom right
-        } else if (percentX > 50 && percentY < 50) {
-          l = 50; // top right
-        }
-
-        // Keep same hue, update s and l
-        if (squareColor != null) {
-          const color = {
-            hsl: {
-              h: squareColor.hsl.h,
-              s: Math.round(percentY),
-              l: l,
-            },
-          };
-          setDotColor(fillColor(color));
-          onSelectionChanged?.(fillColor(color));
-        }
+        // Keep same hue, update s and v
+        const color = {
+          hsv: {
+            h: squareColor.hsv.h,
+            s: percentX,
+            v: 100 - percentY,
+          },
+        };
+        setDotColor(fillColor(color));
+        onSelectionChanged?.(fillColor(color));
       }
     },
     [onSelectionChanged, squareColor],
