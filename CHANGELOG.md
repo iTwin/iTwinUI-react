@@ -1,5 +1,18 @@
 # Changelog
 
+### [1.21.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.21.0...v1.21.1) (2021-10-07)
+
+### Fixes
+
+* **RadioTilesGroup:** Fixed z-index issue and added wrap ([#359](https://www.github.com/iTwin/iTwinUI-react/issues/359)) ([3461b0f](https://www.github.com/iTwin/iTwinUI-react/commit/3461b0f4ad33ac545208029fcf26613ca8f9823c))
+
+## [1.21.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.20.0...v1.21.0) (2021-10-05)
+
+### What's new
+
+* **ComboBox:** Add new `ComboBox` component with list autocomplete (list is filtered when typing in input) ([#338](https://www.github.com/iTwin/iTwinUI-react/issues/338)) ([92ac59e](https://www.github.com/iTwin/iTwinUI-react/commit/92ac59e01614bb658783d8a49aa7558f6bf61938))
+* **Tile:** Make `thumbnail` prop optional ([#354](https://www.github.com/iTwin/iTwinUI-react/issues/354)) ([b5a5a4e](https://www.github.com/iTwin/iTwinUI-react/commit/b5a5a4ed295ffd373180b84635ed198966f3a993))
+
 ## [1.20.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.19.0...v1.20.0) (2021-09-28)
 
 ### What's new
