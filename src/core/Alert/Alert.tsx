@@ -85,9 +85,9 @@ export const Alert = (props: AlertProps) => {
         {children}
         {clickableText && (
           <a
-            className='iui-alert-link'
             onClick={onClick}
             {...clickableTextProps}
+            className={cx('iui-alert-link', clickableTextProps?.className)}
           >
             {clickableText}
           </a>
