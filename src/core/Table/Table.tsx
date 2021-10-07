@@ -294,8 +294,6 @@ export const Table = <
     [],
   );
 
-  const tableRef = React.useRef<HTMLDivElement | null>(null);
-
   // useRef prevents from rerendering when one of these callbacks changes
   const onBottomReachedRef = React.useRef(onBottomReached);
   const onRowInViewportRef = React.useRef(onRowInViewport);
@@ -444,14 +442,7 @@ export const Table = <
       totalRowsCount: rows.length,
       size: density !== 'default' ? 'small' : 'default',
       isLoading,
-      onPageChange: (page) => {
-        gotoPage(page);
-        tableRef.current?.scrollIntoView({
-          block: 'start',
-          inline: 'nearest',
-          behavior: 'smooth',
-        });
-      },
+      onPageChange: gotoPage,
       onPageSizeChange: setPageSize,
     }),
     [
@@ -468,10 +459,7 @@ export const Table = <
   return (
     <>
       <div
-        ref={(element) => {
-          setOwnerDocument(element?.ownerDocument);
-          tableRef.current = element;
-        }}
+        ref={(element) => setOwnerDocument(element?.ownerDocument)}
         id={id}
         {...getTableProps({
           className: cx(
