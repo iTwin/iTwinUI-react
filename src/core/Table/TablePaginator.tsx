@@ -38,11 +38,16 @@ export type TablePaginatorProps = {
    */
   focusActivationMode?: 'auto' | 'manual';
   /**
-   * Array of possible page size options. When provided then shows current rows info and page size selection.
+   * Array of possible page size options. When provided then shows the range of rows within the current page and page size selection.
+   * @example
+   * <TablePaginator
+   *   // ...
+   *   rowsPerPage={[10, 25, 50]}
+   * />
    */
   rowsPerPage?: number[];
   /**
-   * Object of functions to localize pagination labels.
+   * Object of labels and functions used for pagination localization.
    */
   localization?: {
     /**
@@ -90,6 +95,7 @@ export type TablePaginatorProps = {
 
 /**
  * Table paginator component. Recommended to pass to the `Table` as `paginatorRenderer` prop.
+ * Passing `props` from `paginatorRenderer` handles all state management and is enough for basic use-cases.
  * @example
  * <Table
  *   // ...
@@ -125,6 +131,21 @@ export const TablePaginator = (props: TablePaginatorProps) => {
   React.useEffect(() => {
     setFocusedIndex(currentPage);
   }, [currentPage]);
+
+  const isMounted = React.useRef(false);
+  React.useEffect(() => {
+    if (isMounted.current) {
+      setTimeout(() => {
+        const buttonToFocus = Array.from(
+          pageListRef.current?.querySelectorAll('.iui-button') ?? [],
+        ).find(
+          (el) => el.textContent?.trim() === (focusedIndex + 1).toString(),
+        );
+        (buttonToFocus as HTMLButtonElement | undefined)?.focus();
+      });
+    }
+    isMounted.current = true;
+  }, [focusedIndex]);
 
   const size = density != 'default' ? 'small' : undefined;
 
@@ -174,12 +195,6 @@ export const TablePaginator = (props: TablePaginatorProps) => {
         onPageChange(newFocusedIndex);
       } else {
         setFocusedIndex(newFocusedIndex);
-        const buttonToFocus = Array.from(
-          pageListRef.current?.querySelectorAll('.iui-button') ?? [],
-        ).find(
-          (el) => el.textContent?.trim() === (newFocusedIndex + 1).toString(),
-        );
-        (buttonToFocus as HTMLButtonElement | undefined)?.focus();
       }
     };
 
@@ -228,6 +243,18 @@ export const TablePaginator = (props: TablePaginatorProps) => {
     </span>
   );
 
+  const noRowsContent = (
+    <>
+      {isLoading ? (
+        <ProgressRadial indeterminate size='small' />
+      ) : (
+        <Button styleType='borderless' disabled size={size}>
+          1
+        </Button>
+      )}
+    </>
+  );
+
   return (
     <div className={cx('iui-paginator', className)} {...rest}>
       <div className='iui-left' />
@@ -242,41 +269,40 @@ export const TablePaginator = (props: TablePaginatorProps) => {
           <SvgChevronLeft />
         </IconButton>
         <ButtonGroup onKeyDown={onKeyDown} ref={pageListRef}>
-          {hasNoRows ? (
-            <>
-              {!isLoading && (
-                <Button styleType='borderless' disabled size={size}>
-                  1
-                </Button>
-              )}
-              {isLoading && <ProgressRadial indeterminate size='small' />}
-            </>
-          ) : (
-            <>
-              {startPage !== 0 && visibleCount > 1 && (
-                <>
-                  {pageButton(0, 0)}
-                  {ellipsis}
-                </>
-              )}
-              {[
-                ...pageList.slice(startPage, focusedIndex),
-                ...pageList.slice(focusedIndex, endPage),
-              ]}
-              {endPage !== totalPagesCount && visibleCount > 1 && !isLoading && (
-                <>
-                  {ellipsis}
-                  {pageButton(totalPagesCount - 1, 0)}
-                </>
-              )}
-              {isLoading && visibleCount > 1 && (
-                <>
-                  {ellipsis}
-                  <ProgressRadial indeterminate size='small' />
-                </>
-              )}
-            </>
-          )}
+          {(() => {
+            if (hasNoRows) {
+              return noRowsContent;
+            }
+            if (visibleCount === 1) {
+              return pageButton(focusedIndex);
+            }
+            return (
+              <>
+                {startPage !== 0 && (
+                  <>
+                    {pageButton(0, 0)}
+                    {ellipsis}
+                  </>
+                )}
+                {[
+                  ...pageList.slice(startPage, focusedIndex),
+                  ...pageList.slice(focusedIndex, endPage),
+                ]}
+                {endPage !== totalPagesCount && !isLoading && (
+                  <>
+                    {ellipsis}
+                    {pageButton(totalPagesCount - 1, 0)}
+                  </>
+                )}
+                {isLoading && (
+                  <>
+                    {ellipsis}
+                    <ProgressRadial indeterminate size='small' />
+                  </>
+                )}
+              </>
+            );
+          })()}
         </ButtonGroup>
         <IconButton
           styleType='borderless'

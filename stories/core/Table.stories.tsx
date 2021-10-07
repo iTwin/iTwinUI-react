@@ -1475,8 +1475,8 @@ Editable.parameters = {
   } as CreeveyStoryParams,
 };
 
-export const WithPaginator: Story<TableProps> = (args) => {
-  const tableColumns = useMemo(
+export const WithPaginator: Story<Partial<TableProps>> = (args) => {
+  const columns = useMemo(
     () => [
       {
         Header: 'Table',
@@ -1523,7 +1523,7 @@ export const WithPaginator: Story<TableProps> = (args) => {
     [],
   );
 
-  const tableData = useMemo(
+  const data = useMemo(
     () =>
       Array(195)
         .fill(null)
@@ -1546,8 +1546,8 @@ export const WithPaginator: Story<TableProps> = (args) => {
         isSelectable
         isSortable
         {...args}
-        columns={tableColumns}
-        data={tableData}
+        columns={columns}
+        data={data}
         pageSize={10}
         paginatorRenderer={paginator}
       />
