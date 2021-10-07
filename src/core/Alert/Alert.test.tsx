@@ -43,7 +43,10 @@ it('renders clickable text correctly', () => {
 it('renders clickable text with href correctly', () => {
   const mockHref = 'https://www.example.com/';
   const { container, getByText } = render(
-    <Alert clickableText='I am a clickable text' clickableTextHref={mockHref}>
+    <Alert
+      clickableText='I am a clickable text'
+      clickableTextProps={{ href: mockHref, className: 'my-link' }}
+    >
       This is an alert.
     </Alert>,
   );
@@ -56,6 +59,7 @@ it('renders clickable text with href correctly', () => {
   expect(link).toBeTruthy();
   expect(link.textContent).toBe('I am a clickable text');
   expect(link.href).toEqual(mockHref);
+  expect(link).toHaveClass('my-link');
   getByText('This is an alert.');
 });
 

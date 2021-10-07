@@ -20,9 +20,9 @@ export type AlertProps = {
    */
   clickableText?: React.ReactNode;
   /**
-   * `href` for the clickable text.
+   * Props for the clickable text. Used for providing `href` and other attributes.
    */
-  clickableTextHref?: string;
+  clickableTextProps?: React.ComponentPropsWithoutRef<'a'>;
   /**
    * Action handler for the clickable text, used when href is not provided.
    */
@@ -57,7 +57,7 @@ export const Alert = (props: AlertProps) => {
     className,
     type = 'informational',
     clickableText,
-    clickableTextHref,
+    clickableTextProps,
     onClick,
     onClose,
     style,
@@ -86,8 +86,8 @@ export const Alert = (props: AlertProps) => {
         {clickableText && (
           <a
             className='iui-alert-link'
-            href={clickableTextHref}
             onClick={onClick}
+            {...clickableTextProps}
           >
             {clickableText}
           </a>
