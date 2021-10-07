@@ -22,9 +22,10 @@ export type AlertProps = {
   /**
    * Props for the clickable text. Used for providing `href` and other attributes.
    */
-  clickableTextProps?: React.ComponentPropsWithoutRef<'a'>;
+  clickableTextProps?: React.ComponentPropsWithRef<'a'>;
   /**
-   * Action handler for the clickable text, used when href is not provided.
+   * Action handler for the clickable text.
+   * Should be used when href is not provided.
    */
   onClick?: () => void;
   /**
