@@ -135,14 +135,10 @@ export const TablePaginator = (props: TablePaginatorProps) => {
   const isMounted = React.useRef(false);
   React.useEffect(() => {
     if (isMounted.current) {
-      setTimeout(() => {
-        const buttonToFocus = Array.from(
-          pageListRef.current?.querySelectorAll('.iui-button') ?? [],
-        ).find(
-          (el) => el.textContent?.trim() === (focusedIndex + 1).toString(),
-        );
-        (buttonToFocus as HTMLButtonElement | undefined)?.focus();
-      });
+      const buttonToFocus = Array.from(
+        pageListRef.current?.querySelectorAll('.iui-button') ?? [],
+      ).find((el) => el.textContent?.trim() === (focusedIndex + 1).toString());
+      (buttonToFocus as HTMLButtonElement | undefined)?.focus();
     }
     isMounted.current = true;
   }, [focusedIndex]);
@@ -284,10 +280,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
                     {ellipsis}
                   </>
                 )}
-                {[
-                  ...pageList.slice(startPage, focusedIndex),
-                  ...pageList.slice(focusedIndex, endPage),
-                ]}
+                {pageList.slice(startPage, endPage)}
                 {endPage !== totalPagesCount && !isLoading && (
                   <>
                     {ellipsis}
