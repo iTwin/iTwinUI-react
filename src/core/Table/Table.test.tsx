@@ -1623,24 +1623,24 @@ it('should handle unwanted actions on editable cell', () => {
 it('should render data in pages', () => {
   const { container } = renderComponent({
     data: mockedData(100),
-    pageSize: 25,
+    pageSize: 10,
     paginatorRenderer: (props) => <TablePaginator {...props} />,
   });
 
   let rows = container.querySelectorAll('.iui-table-body .iui-row');
-  expect(rows).toHaveLength(25);
+  expect(rows).toHaveLength(10);
   expect(rows[0].querySelector('.iui-cell')?.textContent).toEqual('Name1');
-  expect(rows[24].querySelector('.iui-cell')?.textContent).toEqual('Name25');
+  expect(rows[9].querySelector('.iui-cell')?.textContent).toEqual('Name10');
 
   const pages = container.querySelectorAll<HTMLButtonElement>(
     '.iui-paginator .iui-button-group .iui-button',
   );
-  expect(pages).toHaveLength(4);
+  expect(pages).toHaveLength(10);
   pages[3].click();
   rows = container.querySelectorAll('.iui-table-body .iui-row');
-  expect(rows).toHaveLength(25);
-  expect(rows[0].querySelector('.iui-cell')?.textContent).toEqual('Name76');
-  expect(rows[24].querySelector('.iui-cell')?.textContent).toEqual('Name100');
+  expect(rows).toHaveLength(10);
+  expect(rows[0].querySelector('.iui-cell')?.textContent).toEqual('Name31');
+  expect(rows[9].querySelector('.iui-cell')?.textContent).toEqual('Name40');
 });
 
 it('should change page size', () => {
@@ -1652,9 +1652,9 @@ it('should change page size', () => {
   });
 
   let rows = container.querySelectorAll('.iui-table-body .iui-row');
-  expect(rows).toHaveLength(10);
+  expect(rows).toHaveLength(25);
   expect(rows[0].querySelector('.iui-cell')?.textContent).toEqual('Name1');
-  expect(rows[9].querySelector('.iui-cell')?.textContent).toEqual('Name10');
+  expect(rows[24].querySelector('.iui-cell')?.textContent).toEqual('Name25');
 
   const pageSizeSelector = container.querySelector(
     '.iui-dropdown',

@@ -1548,7 +1548,7 @@ export const WithPaginator: Story<Partial<TableProps>> = (args) => {
         {...args}
         columns={columns}
         data={data}
-        pageSize={10}
+        pageSize={25}
         paginatorRenderer={paginator}
       />
     </>

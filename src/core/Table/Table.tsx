@@ -195,7 +195,7 @@ export type TableProps<
   paginatorRenderer?: (props: TablePaginatorRendererProps) => React.ReactNode;
   /**
    * Number of rows per page.
-   * @default 10
+   * @default 25
    */
   pageSize?: number;
 } & Omit<CommonProps, 'title'>;
@@ -277,7 +277,7 @@ export const Table = <
     getSubRows,
     selectRowOnClick = true,
     paginatorRenderer,
-    pageSize = 10,
+    pageSize = 25,
     ...rest
   } = props;
 
