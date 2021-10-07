@@ -10,9 +10,8 @@ import {
   IconButton,
   Tooltip,
   ColorSwatch,
-  HslColor,
-  getHSL,
-  getHSLString,
+  Color,
+  fillColor,
 } from '../../src/core';
 import { action } from '@storybook/addon-actions';
 import SvgAddCircular from '@itwin/itwinui-icons-react/cjs/icons/AddCircular';
@@ -160,38 +159,47 @@ WithTooltip.args = {};
 export const Advanced: Story<ColorPickerProps> = (args) => {
   const [opened, setOpened] = React.useState(false);
   const [activeIndex, setActiveIndex] = React.useState(-1);
-  const [selectedColor, setSelectedColor] = React.useState('hsl(0, 100%, 50%)');
-  const [savedColors] = React.useState([
-    { color: 'hsl(0, 100%, 50%)' },
-    { color: 'hsl(23, 100%, 50%)' },
-    { color: 'hsl(42, 99%, 60%)' },
-    { color: 'hsl(95, 71%, 42%)' },
-    { color: 'hsl(202, 100%, 59%)' },
+  const [selectedColor, setSelectedColor] = React.useState<Color>(
+    fillColor({
+      hsl: { h: 0, s: 100, l: 50 },
+    }),
+  );
+  const [savedColors] = React.useState<Array<Color>>([
+    { hsl: { h: 0, s: 100, l: 50 } },
+    { rgb: { r: 255, g: 98, b: 0 } },
+    { hex: { hex: '#fec134' } },
+    { hsv: { h: 95, s: 83, v: 72 } },
+    { hsl: { h: 202, s: 100, l: 59 } },
   ]);
 
   const onColorClick = (index: number) => {
-    action(`Clicked ${savedColors[index].color}`)();
+    const color = fillColor(savedColors[index]);
+    action(`Clicked ${color.hsl.displayString}`)();
     setActiveIndex(index);
-    setSelectedColor(savedColors[index].color);
+    setSelectedColor(color);
   };
 
-  const onColorChanged = (color: HslColor) => {
+  const onColorChanged = (color: Color) => {
     setActiveIndex(-1);
-    setSelectedColor(getHSLString(color));
-    action(`Selected ${color}`)();
+    setSelectedColor(color);
+    action(`Selected ${color.hsl?.displayString}`)();
   };
 
   const onAdd = () => {
+    const color =
+      selectedColor?.hsl?.displayString ??
+      fillColor(selectedColor).hsl.displayString;
     if (
-      savedColors.findIndex((swatch) => swatch.color === selectedColor) > -1
+      savedColors.findIndex(
+        (swatch) => fillColor(swatch).hsl.displayString === color,
+      ) > -1
     ) {
-      action(`Cannot add duplicate color ${selectedColor}`)();
+      action(`Cannot add duplicate color ${color}`)();
       return;
     }
-
-    action(`Added color ${selectedColor}`)();
+    action(`Added color ${color}`)();
     setActiveIndex(savedColors.length);
-    savedColors.push({ color: selectedColor });
+    savedColors.push(selectedColor);
   };
 
   return (
@@ -199,20 +207,24 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
       <IconButton onClick={() => setOpened(!opened)}>
         <span
           style={{
-            backgroundColor: selectedColor ? selectedColor : '#FFF',
+            backgroundColor: selectedColor.hsl?.displayString
+              ? selectedColor.hsl.displayString
+              : fillColor(selectedColor).hsl.displayString,
             border: '1px solid',
           }}
         />
       </IconButton>
 
       <span style={{ marginLeft: 16 }}>
-        {selectedColor ? selectedColor : 'No color selected.'}
+        {selectedColor.hsl
+          ? selectedColor.hsl.displayString
+          : 'No color selected.'}
       </span>
 
       {opened && (
         <div style={{ marginTop: 4 }}>
           <ColorPicker
-            selectedColor={getHSL(selectedColor)}
+            selectedColor={selectedColor}
             onSelectionChanged={onColorChanged}
             {...args}
           >
@@ -221,11 +233,13 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
             </button>
 
             {savedColors.map((color, index) => {
+              const colorString =
+                color.hsl?.displayString ?? fillColor(color).hsl.displayString;
               return (
                 <>
                   <ColorSwatch
-                    key={index + color.color}
-                    color={color.color}
+                    key={index + colorString}
+                    color={colorString}
                     onClick={() => {
                       onColorClick(index);
                     }}
