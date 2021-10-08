@@ -222,6 +222,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
   const [squareTop, setSquareTop] = React.useState(10);
   const [squareLeft, setSquareLeft] = React.useState(10);
   const [sliderDotActive, setSliderDotActive] = React.useState(false);
+  const [squareDotActive, setSquareDotActive] = React.useState(false);
 
   const colorSquareStyle = getWindow()?.CSS?.supports?.(
     `--color: ${squareColor.hsl.displayString}`,
@@ -332,7 +333,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
   // Update Color field square change
   const squareRef = React.useRef<HTMLDivElement>(null);
   const updateSquareValue = React.useCallback(
-    (event: PointerEvent) => {
+    (event: PointerEvent, callbackType: 'onChange' | 'onUpdate') => {
       if (squareRef.current) {
         const percentX = getHorizontalPercentageOfRectangle(
           squareRef.current.getBoundingClientRect(),
@@ -343,26 +344,36 @@ export const ColorPicker = (props: ColorPickerProps) => {
           event.clientY,
         );
 
-        setSquareTop(percentY);
-        setSquareLeft(percentX);
+        if (
+          callbackType == 'onChange' ||
+          (callbackType == 'onUpdate' && squareDotActive)
+        ) {
+          setSquareTop(percentY);
+          setSquareLeft(percentX);
 
-        // Keep same hue, update s and v
-        const color = {
-          hsv: {
-            h: squareColor.hsv.h,
-            s: percentX,
-            v: 100 - percentY,
-          },
-        };
-        setDotColor(fillColor(color));
-        onSelectionChanged?.(fillColor(color));
+          // Keep same hue, update s and v
+          const color = {
+            hsv: {
+              h: squareColor.hsv.h,
+              s: percentX,
+              v: 100 - percentY,
+            },
+          };
+          setDotColor(fillColor(color));
+
+          //Only update selected color when dragging is done
+          if (callbackType == 'onChange') {
+            onSelectionChanged?.(fillColor(color));
+            setSquareDotActive(false);
+          }
+        }
       }
     },
-    [onSelectionChanged, squareColor],
+    [onSelectionChanged, squareColor.hsv.h, squareDotActive],
   );
   const handleSquarePointerUp = React.useCallback(
     (event: PointerEvent) => {
-      updateSquareValue(event);
+      updateSquareValue(event, 'onChange');
       event.preventDefault();
       event.stopPropagation();
     },
@@ -373,6 +384,38 @@ export const ColorPicker = (props: ColorPickerProps) => {
     handleSquarePointerUp,
     squareRef.current as HTMLElement,
   );
+
+  const handleSquarePointerMove = React.useCallback(
+    (event: PointerEvent): void => {
+      event.preventDefault();
+      event.stopPropagation();
+      updateSquareValue(event, 'onUpdate');
+    },
+    [updateSquareValue],
+  );
+  useEventListener(
+    'pointermove',
+    handleSquarePointerMove,
+    squareRef.current as HTMLElement,
+  );
+
+  const handleSquarePointerOut = React.useCallback(
+    (event: PointerEvent): void => {
+      event.preventDefault();
+      event.stopPropagation();
+      setSquareDotActive(false);
+    },
+    [],
+  );
+  useEventListener(
+    'mouseout',
+    handleSquarePointerOut,
+    squareRef.current as HTMLElement,
+  );
+
+  const handleSquarePointerDownOnThumb = React.useCallback(() => {
+    setSquareDotActive(true);
+  }, []);
 
   return (
     <div
@@ -390,7 +433,11 @@ export const ColorPicker = (props: ColorPickerProps) => {
             style={colorSquareStyle}
             ref={squareRef}
           >
-            <div className='iui-color-dot' style={colorDotStyle} />
+            <div
+              className='iui-color-dot'
+              style={colorDotStyle}
+              onPointerDown={handleSquarePointerDownOnThumb}
+            />
           </div>
           <div className='iui-color-slider' ref={sliderRef}>
             <div
