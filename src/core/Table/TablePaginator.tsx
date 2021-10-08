@@ -223,11 +223,11 @@ export const TablePaginator = (props: TablePaginatorProps) => {
   let startPage = focusedIndex - halfVisibleCount;
   let endPage = focusedIndex + halfVisibleCount + 1;
   if (startPage < 0) {
-    endPage = Math.min(totalPagesCount, endPage + Math.abs(startPage));
+    endPage = Math.min(totalPagesCount, endPage + Math.abs(startPage)); // If no room at the beginning, show extra pages at the end
     startPage = 0;
   }
   if (endPage > totalPagesCount) {
-    startPage = Math.max(0, startPage - (endPage - totalPagesCount));
+    startPage = Math.max(0, startPage - (endPage - totalPagesCount)); // If no room at the end, show extra pages at the beginning
     endPage = totalPagesCount;
   }
 
