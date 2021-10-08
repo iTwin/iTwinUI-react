@@ -7,7 +7,10 @@ import { InputGroup, InputGroupProps } from '../InputGroup';
 import '@itwin/itwinui-css/css/inputs.css';
 import { useTheme } from '../utils';
 
-export type RadioTileGroupProps = Omit<InputGroupProps, 'displayStyle'>;
+export type RadioTileGroupProps = Omit<
+  InputGroupProps,
+  'displayStyle' | 'disabled'
+>;
 
 /**
  * RadioTileGroup component to group RadioTile components together
