@@ -68,7 +68,7 @@ export type TablePaginatorRendererProps = {
   onPageSizeChange: (size: number) => void;
   /**
    * Modify the size of the pagination (adjusts the elements size).
-   * @default 'default'
+   * @default 'default' if Table density is `default` else `small`
    */
   size?: 'default' | 'small';
   /**
