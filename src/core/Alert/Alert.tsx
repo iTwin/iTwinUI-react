@@ -25,7 +25,7 @@ export type AlertProps = {
   clickableTextProps?: React.ComponentPropsWithRef<'a'>;
   /**
    * Action handler for the clickable text.
-   * Should be used when href is not provided.
+   * @deprecated `clickableTextProps` should be used instead.
    */
   onClick?: () => void;
   /**
