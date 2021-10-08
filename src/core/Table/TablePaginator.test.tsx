@@ -209,9 +209,13 @@ it('should render only the current page when screen is very small', () => {
   expect(ellipsis).toHaveLength(0);
 });
 
-it('should handle keyboard navigation', () => {
+it('should handle keyboard navigation when focusActivationMode is auto', () => {
   const onPageChange = jest.fn();
-  const { container } = renderComponent({ currentPage: 10, onPageChange });
+  const { container } = renderComponent({
+    currentPage: 10,
+    onPageChange,
+    focusActivationMode: 'auto',
+  });
 
   const buttonGroup = container.querySelector(
     '.iui-button-group',

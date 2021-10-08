@@ -34,7 +34,7 @@ export type TablePaginatorProps = {
   /**
    * Control whether focusing tabs (using arrow keys) should automatically select them.
    * Use 'manual' if tab panel content is not preloaded.
-   * @default 'auto'
+   * @default 'manual'
    */
   focusActivationMode?: 'auto' | 'manual';
   /**
@@ -108,7 +108,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
     totalRowsCount,
     pageSize,
     onPageChange,
-    focusActivationMode = 'auto',
+    focusActivationMode = 'manual',
     isLoading = false,
     size = 'default',
     rowsPerPage,
