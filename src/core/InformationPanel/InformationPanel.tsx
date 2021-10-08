@@ -99,9 +99,9 @@ export const InformationPanel = React.forwardRef<
       }
       const { right, bottom } = infoPanelRef.current.getBoundingClientRect();
       if (orientation === 'vertical') {
-        infoPanelRef.current.style.width = `${right - e.x}px`;
+        infoPanelRef.current.style.width = `${right - e.clientX}px`;
       } else {
-        infoPanelRef.current.style.height = `${bottom - e.y}px`;
+        infoPanelRef.current.style.height = `${bottom - e.clientY}px`;
       }
     },
     [orientation],

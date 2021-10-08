@@ -130,6 +130,7 @@ it('should render custom header actions', () => {
 
 it('should handle resizing', () => {
   const { container } = render(<InformationPanel />);
+
   const infoPanel = container.querySelector(
     '.iui-information-panel',
   ) as HTMLElement;
@@ -139,12 +140,21 @@ it('should handle resizing', () => {
 
   act(() => {
     fireEvent.pointerDown(resizer, { button: 0 });
-    fireEvent.pointerMove(document, { x: 500 });
-    fireEvent.pointerUp(document);
+    fireEvent.pointerMove(document, { clientX: 500 });
   });
 
-  // FIXME
-  // expect(infoPanel).toHaveAttribute('style', 'width: 500px');
+  expect(infoPanel).toHaveStyle('width: 500px'); // 1000 - 500
+
+  act(() => {
+    fireEvent.pointerMove(document, { clientX: 400 });
+  });
+  expect(infoPanel).toHaveStyle('width: 600px'); // 1000 - 400
+
+  act(() => {
+    fireEvent.pointerMove(document, { clientX: 800 });
+    fireEvent.pointerUp(document);
+  });
+  expect(infoPanel).toHaveStyle('width: 200px'); // 1000 - 800
 });
 
 it('should accept className and style props', () => {

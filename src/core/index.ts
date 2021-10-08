@@ -76,6 +76,12 @@ export type {
   HorizontalTabProps,
 } from './Tabs';
 
+export { InformationPanel, InformationPanelWrapper } from './InformationPanel';
+export type {
+  InformationPanelProps,
+  InformationPanelWrapperProps,
+} from './InformationPanel';
+
 export { Input } from './Input';
 export type { InputProps } from './Input';
 
@@ -201,9 +207,3 @@ export type {
 
 export { getUserColor, useTheme } from './utils';
 export type { ThemeType } from './utils';
-
-export { InformationPanel, InformationPanelWrapper } from './InformationPanel';
-export type {
-  InformationPanelProps,
-  InformationPanelWrapperProps,
-} from './InformationPanel';
