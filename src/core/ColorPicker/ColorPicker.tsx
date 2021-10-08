@@ -226,8 +226,8 @@ export const ColorPicker = (props: ColorPickerProps) => {
   const [dotColor, setDotColor] = React.useState(fillColor(selectedColor));
   const [squareColor, setSquareColor] = React.useState(dotColor);
   const [sliderTop, setSliderTop] = React.useState(10);
-  const [squareTop, setSquareTop] = React.useState(10);
-  const [squareLeft, setSquareLeft] = React.useState(10);
+  const [squareTop, setSquareTop] = React.useState(0);
+  const [squareLeft, setSquareLeft] = React.useState(100);
   const [sliderDotActive, setSliderDotActive] = React.useState(false);
   const [squareDotActive, setSquareDotActive] = React.useState(false);
 
@@ -244,11 +244,13 @@ export const ColorPicker = (props: ColorPickerProps) => {
         '--selected-color': dotColor.hsl.displayString,
         '--top': squareTop.toString() + '%',
         '--left': squareLeft.toString() + '%',
+        cursor: 'crosshair',
       }
     : {
         backgroundColor: dotColor.hsl.displayString,
         top: squareTop.toString() + '%',
         left: squareLeft.toString() + '%',
+        cursor: 'crosshair',
       };
 
   const sliderColorDotStyle = getWindow()?.CSS?.supports?.(

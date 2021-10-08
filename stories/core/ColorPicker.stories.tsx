@@ -180,11 +180,13 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
     action(`Clicked ${color.hsl.displayString}`)();
     setActiveIndex(index);
     setSelectedColor(color);
+    setColorDisplayString(color.hsv.displayString);
   };
 
   const onColorChanged = (color: Color) => {
     setActiveIndex(-1);
     setSelectedColor(color);
+    setColorDisplayString(color.hsv?.displayString);
     action(`Selected ${color.hsl?.displayString}`)();
   };
 
@@ -207,7 +209,7 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
 
   const onUpdateDisplayString = () => {
     if (colorDisplayString == undefined) {
-      return;
+      setColorDisplayString(fillColor(selectedColor).hsl.displayString);
     } else if (colorDisplayString.substring(0, 3) == 'hsl') {
       setColorDisplayString(selectedColor.rgb?.displayString);
     } else if (colorDisplayString.substring(0, 3) == 'rgb') {
