@@ -164,6 +164,9 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
       hsl: { h: 0, s: 100, l: 50 },
     }),
   );
+  const [colorDisplayString, setColorDisplayString] = React.useState(
+    selectedColor.hsl?.displayString,
+  );
   const [savedColors] = React.useState<Array<Color>>([
     { hsl: { h: 0, s: 100, l: 50 } },
     { rgb: { r: 255, g: 98, b: 0 } },
@@ -202,6 +205,20 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
     savedColors.push(selectedColor);
   };
 
+  const onUpdateDisplayString = () => {
+    if (colorDisplayString == undefined) {
+      return;
+    } else if (colorDisplayString.substring(0, 3) == 'hsl') {
+      setColorDisplayString(selectedColor.rgb?.displayString);
+    } else if (colorDisplayString.substring(0, 3) == 'rgb') {
+      setColorDisplayString(selectedColor.hsv?.displayString);
+    } else if (colorDisplayString.substring(0, 3) == 'hsv') {
+      setColorDisplayString(selectedColor.hex?.hex);
+    } else {
+      setColorDisplayString(selectedColor.hsl?.displayString);
+    }
+  };
+
   return (
     <>
       <IconButton onClick={() => setOpened(!opened)}>
@@ -215,10 +232,8 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
         />
       </IconButton>
 
-      <span style={{ marginLeft: 16 }}>
-        {selectedColor.hsl
-          ? selectedColor.hsl.displayString
-          : 'No color selected.'}
+      <span style={{ marginLeft: 16 }} onClick={onUpdateDisplayString}>
+        {colorDisplayString ?? 'No color selected.'}
       </span>
 
       {opened && (
@@ -255,4 +270,6 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
   );
 };
 
-Advanced.args = { type: 'advanced' };
+Advanced.args = {
+  type: 'advanced',
+};
