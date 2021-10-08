@@ -201,3 +201,9 @@ export type {
 
 export { getUserColor, useTheme } from './utils';
 export type { ThemeType } from './utils';
+
+export { InformationPanel, InformationPanelWrapper } from './InformationPanel';
+export type {
+  InformationPanelProps,
+  InformationPanelWrapperProps,
+} from './InformationPanel';

@@ -1,0 +1,210 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import { Story, Meta } from '@storybook/react';
+import React from 'react';
+import { CellProps } from 'react-table';
+import { action } from '@storybook/addon-actions';
+import { SvgEdit } from '@itwin/itwinui-icons-react';
+import {
+  InformationPanel,
+  InformationPanelProps,
+  InformationPanelWrapper,
+  Table,
+  Text,
+  LabeledTextarea,
+  Button,
+  IconButton,
+  LabeledInput,
+} from '../../src/core';
+import { CreeveyStoryParams } from 'creevey';
+
+export default {
+  component: InformationPanel,
+  subcomponents: { InformationPanelWrapper },
+  argTypes: {
+    className: { control: { disable: true } },
+    style: { control: { disable: true } },
+    id: { control: { disable: true } },
+    headerActions: { control: { disable: true } },
+    children: { control: { disable: true } },
+  },
+  args: {
+    orientation: 'vertical',
+    resizable: true,
+  },
+  title: 'Core/InformationPanel',
+  parameters: {
+    creevey: {
+      captureElement: '.iui-information-panel-wrapper',
+      tests: {
+        async open() {
+          const button = await this.browser.findElement({
+            css: '.iui-cell .iui-button',
+          });
+          await button.click();
+
+          const opened = await this.takeScreenshot();
+          await this.expect({ opened }).to.matchImages();
+        },
+      },
+    } as CreeveyStoryParams,
+  },
+} as Meta<InformationPanelProps>;
+
+export const Basic: Story<InformationPanelProps> = (args) => {
+  const [openRowIndex, setOpenRowIndex] = React.useState<number>();
+
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          { id: 'name', Header: 'Name', accessor: 'name' },
+          {
+            Header: 'Details',
+            Cell: ({ row: { index } }: CellProps<{ name: string }>) => (
+              <Button onClick={() => setOpenRowIndex(index)}>Details</Button>
+            ),
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const data = React.useMemo(
+    () =>
+      [...Array(10).fill(null)].map((_, index) => ({ name: `Row${index}` })),
+    [],
+  );
+
+  const lorem100 = `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Accusamus veniam dicta error doloremque libero sit est. Voluptatum nam modi, ex illum veritatis nobis omnis porro quod harum optio minus magnam tenetur quia dolor quis natus, eius, suscipit hic? Nobis deleniti obcaecati, sequi mollitia vero magnam error quidem, voluptatem asperiores repudiandae, molestias sit et voluptatibus magni. Sequi delectus, sunt eaque corrupti architecto modi suscipit? Quos in itaque dolore voluptas saepe natus repellat ad qui dolores. Incidunt temporibus ut, unde maxime nam explicabo saepe aspernatur molestiae iste libero neque, alias corporis laboriosam fugiat ad. Dicta neque quos fuga odit quae sequi dolore!`;
+
+  return (
+    <>
+      <Text isMuted>
+        <em>Click on Details to open InformationalPanel</em>
+      </Text>
+      <div className='iui-information-panel-wrapper' style={{ marginTop: 11 }}>
+        <Table columns={columns} data={data} emptyTableContent='No data.' />
+        <InformationPanel
+          onClose={() => {
+            setOpenRowIndex(-1);
+            action('Panel closed')();
+          }}
+          label={<Text variant='subheading'>Row {openRowIndex ?? 0}</Text>}
+          {...args}
+          isOpen={openRowIndex != undefined && openRowIndex !== -1}
+        >
+          <Text>{lorem100}</Text>
+        </InformationPanel>
+      </div>
+    </>
+  );
+};
+
+export const Horizontal = Basic.bind({});
+Horizontal.args = { orientation: 'horizontal' };
+
+export const CustomActions: Story<InformationPanelProps> = (args) => {
+  const [openRowIndex, setOpenRowIndex] = React.useState<number>();
+  const [isEditing, setIsEditing] = React.useState(false);
+
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          { id: 'name', Header: 'Name', accessor: 'name' },
+          {
+            Header: 'Details',
+            Cell: ({ row }: CellProps<{ name: string; info: string }>) => (
+              <Button onClick={() => setOpenRowIndex(row.index)}>Edit</Button>
+            ),
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const [data, setData] = React.useState(() =>
+    [...Array(10).fill(null)].map((_, index) => ({
+      name: `Row${index}`,
+      info: `Row${index} description: Lorem ipsum dolor sit, amet consectetur adipisicing elit. Accusamus veniam dicta error doloremque libero sit est. Voluptatum nam modi, ex illum veritatis nobis omnis porro quod harum optio minus magnam tenetur quia dolor quis natus, eius, suscipit hic? Nobis deleniti obcaecati, sequi mollitia vero magnam error quidem, voluptatem asperiores repudiandae, molestias sit et voluptatibus magni. Sequi delectus, sunt eaque corrupti architecto modi suscipit? Quos in itaque dolore voluptas saepe natus repellat ad qui dolores. Incidunt temporibus ut, unde maxime nam explicabo saepe aspernatur molestiae iste libero neque, alias corporis laboriosam fugiat ad. Dicta neque quos fuga odit quae sequi dolore!`,
+    })),
+  );
+
+  return (
+    <>
+      <Text isMuted>
+        <em>Click on Details to open editable InformationalPanel</em>
+      </Text>
+
+      <div className='iui-information-panel-wrapper' style={{ marginTop: 11 }}>
+        <Table columns={columns} data={data} emptyTableContent='No data.' />
+
+        <InformationPanel
+          label={<Text variant='subheading'>Row details</Text>}
+          {...args}
+          onClose={() => {
+            setOpenRowIndex(undefined);
+            setIsEditing(false);
+            action('Panel closed')();
+          }}
+          headerActions={[
+            <IconButton
+              key='edit'
+              styleType='borderless'
+              isActive={isEditing}
+              onClick={() => setIsEditing((editing) => !editing)}
+            >
+              <SvgEdit />
+            </IconButton>,
+          ]}
+          isOpen={openRowIndex != undefined}
+        >
+          {openRowIndex != undefined && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
+              <LabeledInput
+                label='Name'
+                defaultValue={data[openRowIndex]?.name}
+                readOnly={!isEditing}
+                onFocus={() => setIsEditing(true)}
+                onChange={({ target: { value } }) => {
+                  setData((data) => {
+                    const newData = [...data];
+                    newData[openRowIndex] = {
+                      ...newData[openRowIndex],
+                      name: value,
+                    };
+                    return newData;
+                  });
+                }}
+              />
+              <LabeledTextarea
+                label='Description'
+                defaultValue={data[openRowIndex]?.info}
+                readOnly={!isEditing}
+                onFocus={() => setIsEditing(true)}
+                onChange={({ target: { value } }) => {
+                  setData((data) => {
+                    const newData = [...data];
+                    newData[openRowIndex] = {
+                      ...newData[openRowIndex],
+                      info: value,
+                    };
+                    return newData;
+                  });
+                }}
+                rows={15}
+              />
+            </div>
+          )}
+        </InformationPanel>
+      </div>
+    </>
+  );
+};
