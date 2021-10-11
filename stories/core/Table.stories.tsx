@@ -1664,11 +1664,6 @@ export const WithManualPaginator: Story<Partial<TableProps>> = (args) => {
   );
 };
 
-WithManualPaginator.args = {
-  isSelectable: true,
-  isSortable: true,
-};
-
 WithManualPaginator.decorators = [
   (Story) => (
     <div style={{ height: '90vh' }}>
