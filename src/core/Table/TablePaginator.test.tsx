@@ -41,10 +41,10 @@ it('should render in its most basic form', () => {
 
 it('should render currently visible rows info and page size selector', () => {
   const onPageSizeChange = jest.fn();
-  const rowsPerPage = [10, 25, 50];
+  const pageSizeList = [10, 25, 50];
   const { container } = renderComponent({
     currentPage: 19,
-    rowsPerPage,
+    pageSizeList,
     onPageSizeChange,
   });
 
@@ -62,7 +62,7 @@ it('should render currently visible rows info and page size selector', () => {
   const pageSizeSelections = container.querySelectorAll('.iui-menu-item');
   expect(pageSizeSelections).toHaveLength(3);
   pageSizeSelections.forEach((el, index) => {
-    expect(el.textContent).toEqual(`${rowsPerPage[index]} per page`);
+    expect(el.textContent).toEqual(`${pageSizeList[index]} per page`);
     expect(el.classList.contains('iui-active')).toBe(index === 0);
   });
 
@@ -73,7 +73,7 @@ it('should render currently visible rows info and page size selector', () => {
 it('should render loading state when there is data', () => {
   const { container } = renderComponent({
     currentPage: 19,
-    rowsPerPage: [10, 25, 50],
+    pageSizeList: [10, 25, 50],
     onPageSizeChange: jest.fn(),
     isLoading: true,
   });
@@ -100,7 +100,7 @@ it('should render loading state when there is data', () => {
 it('should render loading state when there is no data', () => {
   const { container } = renderComponent({
     totalRowsCount: 0,
-    rowsPerPage: [10, 25, 50],
+    pageSizeList: [10, 25, 50],
     onPageSizeChange: jest.fn(),
     isLoading: true,
   });
@@ -128,7 +128,7 @@ it('should render loading state when there is no data', () => {
 it('should render disabled state when there is no data', () => {
   const { container } = renderComponent({
     totalRowsCount: 0,
-    rowsPerPage: [10, 25, 50],
+    pageSizeList: [10, 25, 50],
     onPageSizeChange: jest.fn(),
   });
 
@@ -262,7 +262,7 @@ it('should handle keyboard navigation when focusActivationMode is manual', () =>
 it('should render elements in small size', () => {
   const { container } = renderComponent({
     size: 'small',
-    rowsPerPage: [10, 25, 50],
+    pageSizeList: [10, 25, 50],
     onPageSizeChange: jest.fn(),
   });
 
@@ -278,12 +278,12 @@ it('should render elements in small size', () => {
 });
 
 it('should render with custom localization', () => {
-  const rowsPerPage = [10, 25, 50];
+  const pageSizeList = [10, 25, 50];
   const { container } = renderComponent({
-    rowsPerPage,
+    pageSizeList,
     onPageSizeChange: jest.fn(),
     localization: {
-      rowsPerPageLabel: (size: number) => `${size} per test page`,
+      pageSizeLabel: (size: number) => `${size} per test page`,
       rangeLabel: (
         startIndex: number,
         endIndex: number,
@@ -306,7 +306,7 @@ it('should render with custom localization', () => {
   const pageSizeSelections = container.querySelectorAll('.iui-menu-item');
   expect(pageSizeSelections).toHaveLength(3);
   pageSizeSelections.forEach((el, index) => {
-    expect(el.textContent).toEqual(`${rowsPerPage[index]} per test page`);
+    expect(el.textContent).toEqual(`${pageSizeList[index]} per test page`);
     expect(el.classList.contains('iui-active')).toBe(index === 0);
   });
 });

@@ -15,7 +15,7 @@ import { CommonProps, getBoundedValue, useTheme, useOverflow } from '../utils';
 import { TablePaginatorRendererProps } from './Table';
 
 const defaultLocalization = {
-  rowsPerPageLabel: (size: number) => `${size} per page`,
+  pageSizeLabel: (size: number) => `${size} per page`,
   rangeLabel: (
     startIndex: number,
     endIndex: number,
@@ -42,10 +42,10 @@ export type TablePaginatorProps = {
    * @example
    * <TablePaginator
    *   // ...
-   *   rowsPerPage={[10, 25, 50]}
+   *   pageSizeList={[10, 25, 50]}
    * />
    */
-  rowsPerPage?: number[];
+  pageSizeList?: number[];
   /**
    * Object of labels and functions used for pagination localization.
    */
@@ -54,7 +54,7 @@ export type TablePaginatorProps = {
      * Function that returns a label for the page size selector.
      * @default (size: number) => `${size} per page`
      */
-    rowsPerPageLabel?: (size: number) => string;
+    pageSizeLabel?: (size: number) => string;
     /**
      * Function that returns a label for the range of rows within the current page and the length of the whole data.
      * @default
@@ -111,7 +111,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
     focusActivationMode = 'manual',
     isLoading = false,
     size = 'default',
-    rowsPerPage,
+    pageSizeList,
     onPageSizeChange,
     localization: userLocalization,
     className,
@@ -309,12 +309,12 @@ export const TablePaginator = (props: TablePaginatorProps) => {
         </IconButton>
       </div>
       <div className='iui-right'>
-        {rowsPerPage && onPageSizeChange && !!totalRowsCount && (
+        {pageSizeList && onPageSizeChange && !!totalRowsCount && (
           <DropdownButton
             styleType='borderless'
             size={buttonSize}
             menuItems={(close) =>
-              rowsPerPage.map((size) => (
+              pageSizeList.map((size) => (
                 <MenuItem
                   key={size}
                   isSelected={size === pageSize}
@@ -323,7 +323,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
                     onPageSizeChange(size);
                   }}
                 >
-                  {localization.rowsPerPageLabel(size)}
+                  {localization.pageSizeLabel(size)}
                 </MenuItem>
               ))
             }

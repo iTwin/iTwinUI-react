@@ -1647,7 +1647,7 @@ it('should change page size', () => {
   const { container } = renderComponent({
     data: mockedData(100),
     paginatorRenderer: (props) => (
-      <TablePaginator {...props} rowsPerPage={[10, 25, 50]} />
+      <TablePaginator {...props} pageSizeList={[10, 25, 50]} />
     ),
   });
 

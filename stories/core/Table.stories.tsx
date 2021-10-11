@@ -1531,12 +1531,12 @@ export const WithPaginator: Story<Partial<TableProps>> = (args) => {
     [generateItem],
   );
 
-  const rowsPerPage = useMemo(() => [10, 25, 50], []);
+  const pageSizeList = useMemo(() => [10, 25, 50], []);
   const paginator = useCallback(
     (props: TablePaginatorRendererProps) => (
-      <TablePaginator {...props} rowsPerPage={rowsPerPage} />
+      <TablePaginator {...props} pageSizeList={pageSizeList} />
     ),
-    [rowsPerPage],
+    [pageSizeList],
   );
 
   return (
