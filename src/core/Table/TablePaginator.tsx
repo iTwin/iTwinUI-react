@@ -134,6 +134,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
 
   const isMounted = React.useRef(false);
   React.useEffect(() => {
+    // This check prevent from focusing on initial load.
     if (isMounted.current) {
       const buttonToFocus = Array.from(
         pageListRef.current?.querySelectorAll('.iui-button') ?? [],
