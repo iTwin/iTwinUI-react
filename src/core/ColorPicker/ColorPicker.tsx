@@ -341,6 +341,27 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
   // Update Color field square change
   const squareRef = React.useRef<HTMLDivElement>(null);
+
+  const updateColorDot = React.useCallback(
+    (x: number, y: number, selectionChanged: boolean) => {
+      setSquareTop(y);
+      setSquareLeft(x);
+
+      const color = fillColor({
+        hsv: {
+          h: squareColor.hsv.h,
+          s: x / 100,
+          v: (100 - y) / 100,
+        },
+      });
+      setDotColor(color);
+      if (selectionChanged) {
+        onSelectionChanged?.(color);
+      }
+    },
+    [onSelectionChanged, squareColor.hsv.h],
+  );
+
   const updateSquareValue = React.useCallback(
     (event: PointerEvent, callbackType: 'onChange' | 'onUpdate') => {
       if (squareRef.current) {
@@ -353,32 +374,15 @@ export const ColorPicker = (props: ColorPickerProps) => {
           event.clientY,
         );
 
-        if (
-          callbackType == 'onChange' ||
-          (callbackType == 'onUpdate' && squareDotActive)
-        ) {
-          setSquareTop(percentY);
-          setSquareLeft(percentX);
-
-          // Keep same hue, update s and v
-          const color = {
-            hsv: {
-              h: squareColor.hsv.h,
-              s: percentX,
-              v: 100 - percentY,
-            },
-          };
-          setDotColor(fillColor(color));
-
-          //Only update selected color when dragging is done
-          if (callbackType == 'onChange') {
-            onSelectionChanged?.(fillColor(color));
-            setSquareDotActive(false);
-          }
+        if (callbackType == 'onChange') {
+          updateColorDot(percentX, percentY, true);
+          setSquareDotActive(false);
+        } else if (callbackType == 'onUpdate' && squareDotActive) {
+          updateColorDot(percentX, percentY, false);
         }
       }
     },
-    [onSelectionChanged, squareColor.hsv.h, squareDotActive],
+    [squareDotActive, updateColorDot],
   );
   const handleSquarePointerUp = React.useCallback(
     (event: PointerEvent) => {
@@ -426,6 +430,39 @@ export const ColorPicker = (props: ColorPickerProps) => {
     setSquareDotActive(true);
   }, []);
 
+  // Arrow key navigation for color dot
+  const handleColorDotKeyDown = (
+    event: React.KeyboardEvent<HTMLDivElement>,
+  ) => {
+    let x = squareLeft;
+    let y = squareTop;
+    switch (event.key) {
+      case 'ArrowDown': {
+        y = Math.min(y + 1, 100);
+        updateColorDot(x, y, false);
+        break;
+      }
+      case 'ArrowUp': {
+        y = Math.max(y - 1, 0);
+        updateColorDot(x, y, false);
+        break;
+      }
+      case 'ArrowLeft':
+        x = Math.max(x - 1, 0);
+        updateColorDot(x, y, false);
+        break;
+      case 'ArrowRight':
+        x = Math.min(x + 1, 100);
+        updateColorDot(x, y, false);
+        break;
+      case 'Enter':
+      case ' ':
+      case 'Spacebar':
+        updateColorDot(x, y, true);
+        break;
+    }
+  };
+
   return (
     <div
       className={cx(
@@ -446,6 +483,8 @@ export const ColorPicker = (props: ColorPickerProps) => {
               className='iui-color-dot'
               style={colorDotStyle}
               onPointerDown={handleSquarePointerDownOnThumb}
+              onKeyDown={handleColorDotKeyDown}
+              tabIndex={0}
             />
           </div>
           <div className='iui-color-slider' ref={sliderRef}>
