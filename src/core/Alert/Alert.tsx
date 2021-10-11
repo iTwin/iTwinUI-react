@@ -75,11 +75,11 @@ export const Alert = (props: AlertProps) => {
       style={style}
       {...rest}
     >
-      {<StatusIcon className='iui-icon' />}
-      <span className='iui-message'>
+      {<StatusIcon className='iui-alert-icon' />}
+      <span className='iui-alert-message'>
         {children}
         {clickableText && (
-          <a style={{ cursor: 'pointer' }} onClick={onClick}>
+          <a className='iui-alert-link' onClick={onClick}>
             {clickableText}
           </a>
         )}
