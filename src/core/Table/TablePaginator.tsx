@@ -132,14 +132,17 @@ export const TablePaginator = (props: TablePaginatorProps) => {
     setFocusedIndex(currentPage);
   }, [currentPage]);
 
+  const needFocus = React.useRef(false);
   const isMounted = React.useRef(false);
   React.useEffect(() => {
-    // This check prevent from focusing on initial load.
-    if (isMounted.current) {
+    // Checking `isMounted.current` prevents from focusing on initial load.
+    // Checking `needFocus.current` prevents from focusing page when clicked on previous/next page.
+    if (isMounted.current && needFocus.current) {
       const buttonToFocus = Array.from(
         pageListRef.current?.querySelectorAll('.iui-button') ?? [],
       ).find((el) => el.textContent?.trim() === (focusedIndex + 1).toString());
       (buttonToFocus as HTMLButtonElement | undefined)?.focus();
+      needFocus.current = false;
     }
     isMounted.current = true;
   }, [focusedIndex]);
@@ -187,6 +190,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
         totalPagesCount - 1,
       );
 
+      needFocus.current = true;
       if (focusActivationMode === 'auto') {
         onPageChange(newFocusedIndex);
       } else {
@@ -208,7 +212,6 @@ export const TablePaginator = (props: TablePaginatorProps) => {
       case 'Enter':
       case ' ':
       case 'Spacebar': {
-        event.preventDefault();
         if (focusActivationMode === 'manual') {
           onPageChange(focusedIndex);
         }
