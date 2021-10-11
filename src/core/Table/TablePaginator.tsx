@@ -152,7 +152,6 @@ export const TablePaginator = (props: TablePaginatorProps) => {
         key={index}
         styleType='borderless'
         className={cx({ 'iui-active': index === currentPage })}
-        style={{ transition: 'none' }}
         onClick={() => onPageChange(index)}
         aria-current={index === currentPage}
         aria-label={localization.goToPageLabel(index + 1)}
@@ -255,7 +254,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
   return (
     <div className={cx('iui-paginator', className)} {...rest}>
       <div className='iui-left' />
-      <div className='iui-center' style={{ minWidth: 0 }} ref={overflowRef}>
+      <div className='iui-center' ref={overflowRef}>
         <IconButton
           styleType='borderless'
           disabled={currentPage === 0 || hasNoRows}

@@ -574,8 +574,8 @@ export const Table = <
               </div>
             )}
         </div>
+        {paginatorRenderer?.(paginatorRendererProps)}
       </div>
-      {paginatorRenderer?.(paginatorRendererProps)}
     </>
   );
 };
