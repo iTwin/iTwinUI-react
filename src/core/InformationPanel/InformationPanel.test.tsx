@@ -78,14 +78,11 @@ it('should allow turning off resizer', () => {
 
 it('should render close icon correctly', () => {
   const mockOnClose = jest.fn();
-  const { container } = render(
-    <InformationPanel isOpen onClose={mockOnClose} />,
-  );
+  const { container } = render(<InformationPanel onClose={mockOnClose} />);
 
   const infoPanel = container.querySelector(
     '.iui-information-panel',
   ) as HTMLElement;
-  expect(infoPanel).toHaveClass('iui-visible');
 
   const {
     container: { firstChild: closeSvg },
@@ -100,7 +97,6 @@ it('should render close icon correctly', () => {
   expect(mockOnClose).not.toHaveBeenCalled();
   closeButton.click();
   expect(mockOnClose).toHaveBeenCalled();
-  expect(infoPanel).not.toHaveClass('iui-visible');
 });
 
 it('should render custom header actions', () => {
