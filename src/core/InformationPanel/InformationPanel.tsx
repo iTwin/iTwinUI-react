@@ -39,7 +39,7 @@ export type InformationPanelProps = {
   headerActions?: React.ReactNode[];
   /**
    * Set to false to make the panel non-resizable.
-   * @default false
+   * @default true
    */
   resizable?: boolean;
   /**
@@ -91,7 +91,7 @@ export const InformationPanel = React.forwardRef<
     setIsOpen(isOpenProp ?? false);
   }, [isOpenProp]);
 
-  const resizeCb = React.useCallback(
+  const onResize = React.useCallback(
     (e: PointerEvent) => {
       e.preventDefault();
       if (!infoPanelRef.current) {
@@ -135,14 +135,14 @@ export const InformationPanel = React.forwardRef<
             e.stopPropagation();
             infoPanelRef.current.ownerDocument.addEventListener(
               'pointermove',
-              resizeCb,
+              onResize,
             );
             infoPanelRef.current.ownerDocument.addEventListener(
               'pointerup',
               () =>
                 infoPanelRef.current?.ownerDocument.removeEventListener(
                   'pointermove',
-                  resizeCb,
+                  onResize,
                 ),
             );
           }}
