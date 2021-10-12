@@ -231,7 +231,6 @@ export const ColorPicker = (props: ColorPickerProps) => {
   const [activeDotIndex, setActiveDotIndex] = React.useState<
     number | undefined
   >(undefined);
-  const [squareDotActive, setSquareDotActive] = React.useState(false);
 
   const colorSquareStyle = getWindow()?.CSS?.supports?.(
     `--color: ${squareColor.hsl.displayString}`,
@@ -289,14 +288,20 @@ export const ColorPicker = (props: ColorPickerProps) => {
   );
 
   const updateSliderValue = React.useCallback(
-    (event: PointerEvent, callbackType: 'onChange' | 'onUpdate') => {
-      if (sliderRef.current && activeDotIndex == 0) {
+    (
+      event: PointerEvent | React.PointerEvent,
+      callbackType: 'onChange' | 'onUpdate' | 'onClick',
+    ) => {
+      if (
+        (sliderRef.current && activeDotIndex == 0) ||
+        (sliderRef.current && callbackType == 'onClick')
+      ) {
         const percent = getVerticalPercentageOfRectangle(
           sliderRef.current.getBoundingClientRect(),
           event.clientY,
         );
 
-        if (callbackType == 'onChange') {
+        if (callbackType == 'onChange' || callbackType == 'onClick') {
           updateSlider(percent, true);
         } else if (callbackType == 'onUpdate') {
           updateSlider(percent, false);
@@ -332,6 +337,14 @@ export const ColorPicker = (props: ColorPickerProps) => {
     'pointermove',
     handlePointerMove,
     ref.current?.ownerDocument,
+  );
+
+  const handlePointerDownOnSlider = React.useCallback(
+    (event: React.PointerEvent) => {
+      updateSliderValue(event, 'onClick');
+      setActiveDotIndex(0);
+    },
+    [updateSliderValue],
   );
 
   // Arrow key navigation for slider dot
@@ -382,8 +395,14 @@ export const ColorPicker = (props: ColorPickerProps) => {
   );
 
   const updateSquareValue = React.useCallback(
-    (event: PointerEvent, callbackType: 'onChange' | 'onUpdate') => {
-      if (squareRef.current) {
+    (
+      event: PointerEvent | React.PointerEvent,
+      callbackType: 'onChange' | 'onUpdate' | 'onClick',
+    ) => {
+      if (
+        (squareRef.current && activeDotIndex == 1) ||
+        (squareRef.current && callbackType == 'onClick')
+      ) {
         const percentX = getHorizontalPercentageOfRectangle(
           squareRef.current.getBoundingClientRect(),
           event.clientX,
@@ -393,35 +412,28 @@ export const ColorPicker = (props: ColorPickerProps) => {
           event.clientY,
         );
 
-        if (callbackType == 'onChange') {
+        if (callbackType == 'onChange' || callbackType == 'onClick') {
           updateColorDot(percentX, percentY, true);
-          setSquareDotActive(false);
-        } else if (callbackType == 'onUpdate' && squareDotActive) {
+        } else if (callbackType == 'onUpdate') {
           updateColorDot(percentX, percentY, false);
         }
       }
     },
-    [squareDotActive, updateColorDot],
+    [activeDotIndex, updateColorDot],
   );
   const handleSquarePointerUp = React.useCallback(
     (event: PointerEvent) => {
-      if (activeDotIndex == 0) {
-        // If you are currently dragging the slider dot, stop dragging and update slider value only
-        updateSliderValue(event, 'onChange');
-        setActiveDotIndex(undefined);
-      } else {
-        updateSquareValue(event, 'onChange');
-      }
+      updateSquareValue(event, 'onChange');
 
       event.preventDefault();
       event.stopPropagation();
     },
-    [activeDotIndex, updateSliderValue, updateSquareValue],
+    [updateSquareValue],
   );
   useEventListener(
     'pointerup',
     handleSquarePointerUp,
-    squareRef.current as HTMLElement,
+    ref.current?.ownerDocument,
   );
 
   const handleSquarePointerMove = React.useCallback(
@@ -435,26 +447,16 @@ export const ColorPicker = (props: ColorPickerProps) => {
   useEventListener(
     'pointermove',
     handleSquarePointerMove,
-    squareRef.current as HTMLElement,
+    ref.current?.ownerDocument,
   );
 
-  const handleSquarePointerOut = React.useCallback(
-    (event: PointerEvent): void => {
-      event.preventDefault();
-      event.stopPropagation();
-      setSquareDotActive(false);
+  const handlePointerDownOnSquare = React.useCallback(
+    (event: React.PointerEvent) => {
+      updateSquareValue(event, 'onClick');
+      setActiveDotIndex(1);
     },
-    [],
+    [updateSquareValue],
   );
-  useEventListener(
-    'mouseout',
-    handleSquarePointerOut,
-    squareRef.current as HTMLElement,
-  );
-
-  const handleSquarePointerDownOnThumb = React.useCallback(() => {
-    setSquareDotActive(true);
-  }, []);
 
   // Arrow key navigation for color dot
   const handleColorDotKeyDown = (
@@ -504,16 +506,23 @@ export const ColorPicker = (props: ColorPickerProps) => {
             className='iui-color-field'
             style={colorSquareStyle}
             ref={squareRef}
+            onPointerDown={handlePointerDownOnSquare}
           >
             <div
               className='iui-color-dot'
               style={colorDotStyle}
-              onPointerDown={handleSquarePointerDownOnThumb}
+              onPointerDown={() => {
+                setActiveDotIndex(1);
+              }}
               onKeyDown={handleColorDotKeyDown}
               tabIndex={0}
             />
           </div>
-          <div className='iui-color-slider' ref={sliderRef}>
+          <div
+            className='iui-color-slider'
+            ref={sliderRef}
+            onPointerDown={handlePointerDownOnSlider}
+          >
             <div
               className='iui-color-dot iui-white'
               style={sliderColorDotStyle}
