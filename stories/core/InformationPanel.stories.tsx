@@ -35,14 +35,13 @@ export default {
     resizable: true,
   },
   title: 'Core/InformationPanel',
+  docs: { source: { excludeDecorators: true } },
   parameters: {
     creevey: {
       captureElement: '.iui-information-panel-wrapper',
       tests: {
         async open() {
-          const button = await this.browser.findElement({
-            css: '.iui-cell .iui-button',
-          });
+          const button = await this.browser.findElement({ css: '.iui-button' });
           await button.click();
 
           const opened = await this.takeScreenshot();
@@ -83,30 +82,36 @@ export const Basic: Story<InformationPanelProps> = (args) => {
   const lorem100 = `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Accusamus veniam dicta error doloremque libero sit est. Voluptatum nam modi, ex illum veritatis nobis omnis porro quod harum optio minus magnam tenetur quia dolor quis natus, eius, suscipit hic? Nobis deleniti obcaecati, sequi mollitia vero magnam error quidem, voluptatem asperiores repudiandae, molestias sit et voluptatibus magni. Sequi delectus, sunt eaque corrupti architecto modi suscipit? Quos in itaque dolore voluptas saepe natus repellat ad qui dolores. Incidunt temporibus ut, unde maxime nam explicabo saepe aspernatur molestiae iste libero neque, alias corporis laboriosam fugiat ad. Dicta neque quos fuga odit quae sequi dolore!`;
 
   return (
-    <>
-      <Text isMuted>
-        <em>Click on Details to open InformationalPanel</em>
-      </Text>
-      <div className='iui-information-panel-wrapper' style={{ marginTop: 11 }}>
-        <Table columns={columns} data={data} emptyTableContent='No data.' />
-        <InformationPanel
-          onClose={() => {
-            setOpenRowIndex(-1);
-            action('Panel closed')();
-          }}
-          label={<Text variant='subheading'>Row {openRowIndex ?? 0}</Text>}
-          {...args}
-          isOpen={openRowIndex != undefined && openRowIndex !== -1}
-        >
-          <Text>{lorem100}</Text>
-        </InformationPanel>
-      </div>
-    </>
+    <InformationPanelWrapper>
+      <Table columns={columns} data={data} emptyTableContent='No data.' />
+      <InformationPanel
+        onClose={() => {
+          setOpenRowIndex(-1);
+          action('Panel closed')();
+        }}
+        label={<Text variant='subheading'>Row {openRowIndex ?? 0}</Text>}
+        {...args}
+        isOpen={openRowIndex != undefined && openRowIndex !== -1}
+      >
+        <Text>{lorem100}</Text>
+      </InformationPanel>
+    </InformationPanelWrapper>
   );
 };
+Basic.decorators = [
+  (Story) => (
+    <>
+      <Text isMuted style={{ marginBottom: 11 }}>
+        <em>Click on Details to open InformationalPanel</em>
+      </Text>
+      <Story />
+    </>
+  ),
+];
 
 export const Horizontal = Basic.bind({});
 Horizontal.args = { orientation: 'horizontal' };
+Horizontal.decorators = [...Basic.decorators];
 
 export const CustomActions: Story<InformationPanelProps> = (args) => {
   const [openRowIndex, setOpenRowIndex] = React.useState<number>();
@@ -121,7 +126,9 @@ export const CustomActions: Story<InformationPanelProps> = (args) => {
           {
             Header: 'Details',
             Cell: ({ row }: CellProps<{ name: string; info: string }>) => (
-              <Button onClick={() => setOpenRowIndex(row.index)}>Edit</Button>
+              <Button onClick={() => setOpenRowIndex(row.index)}>
+                Details
+              </Button>
             ),
           },
         ],
@@ -138,73 +145,112 @@ export const CustomActions: Story<InformationPanelProps> = (args) => {
   );
 
   return (
-    <>
-      <Text isMuted>
-        <em>Click on Details to open editable InformationalPanel</em>
-      </Text>
+    <InformationPanelWrapper style={{}}>
+      <Table columns={columns} data={data} emptyTableContent='No data.' />
 
-      <div className='iui-information-panel-wrapper' style={{ marginTop: 11 }}>
-        <Table columns={columns} data={data} emptyTableContent='No data.' />
-
-        <InformationPanel
-          label={<Text variant='subheading'>Row details</Text>}
-          {...args}
-          onClose={() => {
-            setOpenRowIndex(undefined);
-            setIsEditing(false);
-            action('Panel closed')();
-          }}
-          headerActions={[
-            <IconButton
-              key='edit'
-              styleType='borderless'
-              isActive={isEditing}
-              onClick={() => setIsEditing((editing) => !editing)}
-            >
-              <SvgEdit />
-            </IconButton>,
-          ]}
-          isOpen={openRowIndex != undefined}
-        >
-          {openRowIndex != undefined && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
-              <LabeledInput
-                label='Name'
-                defaultValue={data[openRowIndex]?.name}
-                readOnly={!isEditing}
-                onFocus={() => setIsEditing(true)}
-                onChange={({ target: { value } }) => {
-                  setData((data) => {
-                    const newData = [...data];
-                    newData[openRowIndex] = {
-                      ...newData[openRowIndex],
-                      name: value,
-                    };
-                    return newData;
-                  });
-                }}
-              />
-              <LabeledTextarea
-                label='Description'
-                defaultValue={data[openRowIndex]?.info}
-                readOnly={!isEditing}
-                onFocus={() => setIsEditing(true)}
-                onChange={({ target: { value } }) => {
-                  setData((data) => {
-                    const newData = [...data];
-                    newData[openRowIndex] = {
-                      ...newData[openRowIndex],
-                      info: value,
-                    };
-                    return newData;
-                  });
-                }}
-                rows={15}
-              />
-            </div>
-          )}
-        </InformationPanel>
-      </div>
-    </>
+      <InformationPanel
+        label={<Text variant='subheading'>Row details</Text>}
+        {...args}
+        onClose={() => {
+          setOpenRowIndex(undefined);
+          setIsEditing(false);
+          action('Panel closed')();
+        }}
+        headerActions={[
+          <IconButton
+            key='edit'
+            styleType='borderless'
+            isActive={isEditing}
+            onClick={() => setIsEditing((editing) => !editing)}
+          >
+            <SvgEdit />
+          </IconButton>,
+        ]}
+        isOpen={openRowIndex != undefined}
+      >
+        {openRowIndex != undefined && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
+            <LabeledInput
+              label='Name'
+              defaultValue={data[openRowIndex]?.name}
+              disabled={!isEditing}
+              onChange={({ target: { value } }) => {
+                setData((data) => {
+                  const newData = [...data];
+                  newData[openRowIndex] = {
+                    ...newData[openRowIndex],
+                    name: value,
+                  };
+                  return newData;
+                });
+              }}
+            />
+            <LabeledTextarea
+              label='Description'
+              defaultValue={data[openRowIndex]?.info}
+              disabled={!isEditing}
+              onChange={({ target: { value } }) => {
+                setData((data) => {
+                  const newData = [...data];
+                  newData[openRowIndex] = {
+                    ...newData[openRowIndex],
+                    info: value,
+                  };
+                  return newData;
+                });
+              }}
+              rows={15}
+            />
+          </div>
+        )}
+      </InformationPanel>
+    </InformationPanelWrapper>
   );
 };
+CustomActions.decorators = [...Basic.decorators];
+
+export const CustomWidth: Story<InformationPanelProps> = (args) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const lorem100 = `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Accusamus veniam dicta error doloremque libero sit est. Voluptatum nam modi, ex illum veritatis nobis omnis porro quod harum optio minus magnam tenetur quia dolor quis natus, eius, suscipit hic? Nobis deleniti obcaecati, sequi mollitia vero magnam error quidem, voluptatem asperiores repudiandae, molestias sit et voluptatibus magni. Sequi delectus, sunt eaque corrupti architecto modi suscipit? Quos in itaque dolore voluptas saepe natus repellat ad qui dolores. Incidunt temporibus ut, unde maxime nam explicabo saepe aspernatur molestiae iste libero neque, alias corporis laboriosam fugiat ad. Dicta neque quos fuga odit quae sequi dolore!`;
+
+  return (
+    <InformationPanelWrapper style={{ height: '80vh', width: '90vw' }}>
+      <div
+        style={{
+          backgroundColor: 'var(--iui-color-background-4)',
+          padding: 16,
+          height: '100%',
+        }}
+      >
+        <Button onClick={() => setIsOpen((open) => !open)}>Toggle</Button>
+      </div>
+      <InformationPanel
+        onClose={() => {
+          setIsOpen(false);
+          action('Panel closed')();
+        }}
+        style={{ width: '40%', maxWidth: '70%' }} // should be set in CSS using a custom className
+        label={<Text variant='subheading'>Details</Text>}
+        isOpen={isOpen}
+        {...args}
+        orientation='vertical'
+      >
+        <Text>{lorem100}</Text>
+      </InformationPanel>
+    </InformationPanelWrapper>
+  );
+};
+CustomWidth.decorators = [
+  (Story) => (
+    <>
+      <Text isMuted style={{ marginBottom: 11 }}>
+        <em>
+          Notice that the panel has an initial width of 40% and can only be
+          resized upto 70% of the container width.
+        </em>
+      </Text>
+      <Story />
+    </>
+  ),
+];
