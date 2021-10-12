@@ -114,14 +114,13 @@ export const Positive: Story<ToastProps & ToasterSettings> = ({
       placement: placement ?? 'top',
       order: order ?? 'descending',
     });
-    const { close } = toaster.positive(content, {
+    toaster.positive(content, {
       duration,
       hasCloseButton,
       link,
       type,
       onRemove,
     });
-    close;
   };
 
   return (
