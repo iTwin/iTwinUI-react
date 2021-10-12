@@ -215,7 +215,7 @@ export const CustomWidth: Story<InformationPanelProps> = (args) => {
   const lorem100 = `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Accusamus veniam dicta error doloremque libero sit est. Voluptatum nam modi, ex illum veritatis nobis omnis porro quod harum optio minus magnam tenetur quia dolor quis natus, eius, suscipit hic? Nobis deleniti obcaecati, sequi mollitia vero magnam error quidem, voluptatem asperiores repudiandae, molestias sit et voluptatibus magni. Sequi delectus, sunt eaque corrupti architecto modi suscipit? Quos in itaque dolore voluptas saepe natus repellat ad qui dolores. Incidunt temporibus ut, unde maxime nam explicabo saepe aspernatur molestiae iste libero neque, alias corporis laboriosam fugiat ad. Dicta neque quos fuga odit quae sequi dolore!`;
 
   return (
-    <InformationPanelWrapper style={{ height: '80vh', width: '90vw' }}>
+    <InformationPanelWrapper style={{ height: '80vh', width: '90%' }}>
       <div
         style={{
           backgroundColor: 'var(--iui-color-background-4)',
