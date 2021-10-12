@@ -57,8 +57,10 @@ export default class Toaster {
     this.settings = newSettings;
   }
 
-  public positive(content: React.ReactNode, options?: ToastOptions): void {
-    this.createToast(content, 'positive', options);
+  public positive(content: React.ReactNode, options?: ToastOptions) {
+    const id = this.createToast(content, 'positive', options);
+    // return onClose func
+    return { close: this.closeToast(id) };
   }
 
   public informational(content: React.ReactNode, options?: ToastOptions): void {
@@ -96,6 +98,7 @@ export default class Toaster {
       ...(this.settings.order === 'descending' ? this.toasts : []),
     ];
     this.updateView();
+    return currentId;
   }
 
   private removeToast(id: number) {
@@ -113,6 +116,23 @@ export default class Toaster {
       <ToastWrapper toasts={this.toasts} placement={this.settings.placement} />,
       container,
     );
+  }
+
+  // close toast function
+  closeToast(toastId: number): void {
+    console.log('calling close toast');
+    this.toasts = this.toasts.map((toast) => {
+      if (toast.id === toastId) {
+        return {
+          ...toast,
+          isVisible: false,
+        };
+      }
+      return {
+        ...toast,
+      };
+    });
+    this.updateView();
   }
 
   public closeAll(): void {
