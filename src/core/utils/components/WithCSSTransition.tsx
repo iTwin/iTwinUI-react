@@ -9,34 +9,50 @@ import { CSSTransitionProps } from 'react-transition-group/CSSTransition';
 export const WithCSSTransition = (
   props: Partial<CSSTransitionProps> & {
     children: JSX.Element;
-    orientation?: 'vertical' | 'horizontal';
+    dimension?: 'height' | 'width';
   },
 ) => {
-  const { in: visible, orientation = 'vertical', children, ...rest } = props;
+  const { in: visible, dimension = 'height', children, ...rest } = props;
 
   const expandedSize = React.useRef(0);
-  const sizeKey = orientation === 'vertical' ? 'height' : 'width';
+
+  const dimensionCamelCase = dimension === 'height' ? 'Height' : 'Width';
 
   return (
     <CSSTransition
       in={visible}
       timeout={200}
       unmountOnExit={true}
-      onEnter={(node) => (node.style[sizeKey] = `0px`)}
-      onEntering={(node) => (node.style[sizeKey] = `${expandedSize.current}px`)}
-      onEntered={(node) => (node.style[sizeKey] = 'auto')}
-      onExit={(node) => (node.style[sizeKey] = `${expandedSize.current}px`)}
-      onExiting={(node) => (node.style[sizeKey] = `0px`)}
+      onEnter={(node) => {
+        node.style[`min${dimensionCamelCase}`] = 'initial';
+        node.style[dimension] = '0px';
+      }}
+      onEntering={(node) => {
+        node.style[dimension] = `${expandedSize.current}px`;
+      }}
+      onEntered={(node) => {
+        node.style[`min${dimensionCamelCase}`] = '';
+        node.style[dimension] = '';
+      }}
+      onExit={(node) => {
+        node.style[dimension] = `${expandedSize.current}px`;
+      }}
+      onExiting={(node) => {
+        node.style[`min${dimensionCamelCase}`] = 'initial';
+        node.style[dimension] = '0px';
+      }}
       classNames='iui'
       {...rest}
     >
       {React.cloneElement(children, {
         ref: (el: HTMLElement) => {
           if (el) {
-            expandedSize.current = el.getBoundingClientRect()[sizeKey];
+            expandedSize.current = el.getBoundingClientRect()[dimension];
           }
         },
       })}
     </CSSTransition>
   );
 };
+
+export default WithCSSTransition;
