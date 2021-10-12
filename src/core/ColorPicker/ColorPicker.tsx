@@ -224,10 +224,12 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
   // Set style values for advanced color picker
   const [dotColor, setDotColor] = React.useState(fillColor(selectedColor));
-  const [squareColor, setSquareColor] = React.useState(dotColor);
-  const [sliderTop, setSliderTop] = React.useState(10);
-  const [squareTop, setSquareTop] = React.useState(0);
-  const [squareLeft, setSquareLeft] = React.useState(100);
+  const [squareColor, setSquareColor] = React.useState(
+    fillColor({ hsv: { h: dotColor.hsv.h, s: 100, v: 100 } }),
+  );
+  const [sliderTop, setSliderTop] = React.useState(dotColor.hsv.h / 3.5);
+  const [squareTop, setSquareTop] = React.useState((1 - dotColor.hsv.v) * 100);
+  const [squareLeft, setSquareLeft] = React.useState(dotColor.hsv.s * 100);
   const [activeDotIndex, setActiveDotIndex] = React.useState<
     number | undefined
   >(undefined);
@@ -267,11 +269,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
     (y: number, selectionChanged: boolean) => {
       setSliderTop(y);
 
-      let hue = 0;
-      if (y <= 97) {
-        //If you click in bottom of slider it should go back to red (hue = 0)
-        hue = y * 3.5;
-      }
+      const hue = y * 3.5;
       setSquareColor(fillColor({ hsv: { h: hue, s: 100, v: 100 } }));
       // Keep same s and v, Update hue
       const color = fillColor({
