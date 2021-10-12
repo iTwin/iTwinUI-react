@@ -116,18 +116,11 @@ export default class Toaster {
     );
   }
 
-  // close toast function
   closeToast(toastId: number): void {
-    console.log('calling close toast');
     this.toasts = this.toasts.map((toast) => {
-      if (toast.id === toastId) {
-        return {
-          ...toast,
-          isVisible: false,
-        };
-      }
       return {
         ...toast,
+        isVisible: toast.id !== toastId,
       };
     });
     this.updateView();
