@@ -35,8 +35,8 @@ export default {
     resizable: true,
   },
   title: 'Core/InformationPanel',
-  docs: { source: { excludeDecorators: true } },
   parameters: {
+    docs: { source: { excludeDecorators: true } },
     creevey: {
       captureElement: '.iui-information-panel-wrapper',
       tests: {
