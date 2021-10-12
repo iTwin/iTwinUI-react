@@ -108,7 +108,6 @@ export type ColorPickerProps = {
   /**
    * Title shown above color palette
    * Only for advanced color picker
-   * @default 'Saved Colors'
    */
   colorPaletteTitle?: string;
 } & Omit<CommonProps, 'title'>;
@@ -140,7 +139,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
     type,
     selectedColor,
     onSelectionChanged,
-    colorPaletteTitle = 'Saved Colors',
+    colorPaletteTitle,
     ...rest
   } = props;
 
@@ -533,12 +532,14 @@ export const ColorPicker = (props: ColorPickerProps) => {
           </div>
         </div>
       )}
-      {type == 'advanced' && (
+      {type == 'advanced' && children && (
         <div className='iui-saved-colors'>{colorPaletteTitle}</div>
       )}
-      <div className='iui-color-palette' onKeyDown={handleKeyDown} ref={ref}>
-        {children}
-      </div>
+      {children && (
+        <div className='iui-color-palette' onKeyDown={handleKeyDown} ref={ref}>
+          {children}
+        </div>
+      )}
     </div>
   );
 };
