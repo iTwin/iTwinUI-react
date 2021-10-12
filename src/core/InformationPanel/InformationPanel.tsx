@@ -72,7 +72,7 @@ export const InformationPanel = React.forwardRef<
   const {
     className,
     label,
-    isOpen: isOpenProp,
+    isOpen = false,
     onClose,
     orientation = 'vertical',
     headerActions,
@@ -85,11 +85,6 @@ export const InformationPanel = React.forwardRef<
 
   const infoPanelRef = React.useRef<HTMLDivElement>(null);
   const refs = useMergedRefs(ref, infoPanelRef);
-
-  const [isOpen, setIsOpen] = React.useState(isOpenProp ?? false);
-  React.useEffect(() => {
-    setIsOpen(isOpenProp ?? false);
-  }, [isOpenProp]);
 
   const onResize = React.useCallback(
     (e: PointerEvent) => {
@@ -156,10 +151,7 @@ export const InformationPanel = React.forwardRef<
           {headerActions}
           <IconButton
             styleType='borderless'
-            onClick={() => {
-              setIsOpen(false);
-              onClose?.();
-            }}
+            onClick={onClose}
             aria-label='Close'
           >
             <SvgCloseSmall aria-hidden />
