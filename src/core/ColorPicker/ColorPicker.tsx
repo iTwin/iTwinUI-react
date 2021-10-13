@@ -56,15 +56,13 @@ const getHorizontalPercentageOfRectangle = (rect: DOMRect, pointer: number) => {
 export const fillColor = (color: Color | undefined) => {
   let c;
 
-  if (color == undefined) {
-    c = tinyColor('#ff0000');
-  } else if (color.hsv != undefined) {
+  if (color?.hsv != undefined) {
     c = tinyColor(color.hsv);
-  } else if (color.hsl != undefined) {
+  } else if (color?.hsl != undefined) {
     c = tinyColor(color.hsl);
-  } else if (color.rgb != undefined) {
+  } else if (color?.rgb != undefined) {
     c = tinyColor(color.rgb);
-  } else if (color.hex != undefined) {
+  } else if (color?.hex != undefined) {
     c = tinyColor(color.hex.hex);
   } else {
     c = tinyColor('#ff0000');
