@@ -104,6 +104,41 @@ export const Basic: Story<ColorPickerProps> = (args) => {
 
 Basic.args = {};
 
+export const ColorSwatchOnly: Story<ColorPickerProps> = () => {
+  const [activeIndex, setActiveIndex] = React.useState(0);
+
+  const onClickColor = (index: number) => {
+    action(`Clicked color ${ColorsList[index].color}`)();
+    setActiveIndex(index);
+  };
+
+  return (
+    <>
+      {
+        <div style={{ marginTop: 4, display: 'flex' }}>
+          <ColorSwatch
+            color={'#5A6973'}
+            onClick={() => {
+              onClickColor(0);
+            }}
+            isActive={0 === activeIndex}
+            style={{ marginRight: 8 }}
+          />
+          <ColorSwatch
+            color={'#FFFFFF'}
+            onClick={() => {
+              onClickColor(1);
+            }}
+            isActive={1 === activeIndex}
+          />
+        </div>
+      }
+    </>
+  );
+};
+
+ColorSwatchOnly.args = {};
+
 export const WithTooltip: Story<ColorPickerProps> = (args) => {
   const [opened, setOpened] = React.useState(false);
 
@@ -180,13 +215,13 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
     action(`Clicked ${color.hsl.displayString}`)();
     setActiveIndex(index);
     setSelectedColor(color);
-    setColorDisplayString(color.hsv.displayString);
+    setColorDisplayString(color.hsl.displayString);
   };
 
   const onColorChanged = (color: Color) => {
     setActiveIndex(-1);
     setSelectedColor(color);
-    setColorDisplayString(color.hsv?.displayString);
+    setColorDisplayString(color.hsl?.displayString);
     action(`Selected ${color.hsl?.displayString}`)();
   };
 
@@ -274,4 +309,5 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
 
 Advanced.args = {
   type: 'advanced',
+  colorPaletteTitle: 'Saved Colors',
 };
