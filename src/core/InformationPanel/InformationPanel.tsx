@@ -99,11 +99,14 @@ export const InformationPanel = React.forwardRef<
       'pointermove',
       onResize,
     );
-    infoPanelRef.current.ownerDocument.addEventListener('pointerup', () =>
-      infoPanelRef.current?.ownerDocument.removeEventListener(
-        'pointermove',
-        onResize,
-      ),
+    infoPanelRef.current.ownerDocument.addEventListener(
+      'pointerup',
+      () =>
+        infoPanelRef.current?.ownerDocument.removeEventListener(
+          'pointermove',
+          onResize,
+        ),
+      { once: true },
     );
   };
 
