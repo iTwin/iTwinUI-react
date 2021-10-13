@@ -78,6 +78,7 @@ export const InformationPanel = React.forwardRef<
     headerActions,
     resizable = true,
     children,
+    style,
     ...rest
   } = props;
 
@@ -85,6 +86,9 @@ export const InformationPanel = React.forwardRef<
 
   const infoPanelRef = React.useRef<HTMLDivElement>(null);
   const refs = useMergedRefs(ref, infoPanelRef);
+
+  const [width, setWidth] = React.useState<number | undefined>();
+  const [height, setHeight] = React.useState<number | undefined>();
 
   const onResize = React.useCallback(
     (e: PointerEvent) => {
@@ -94,9 +98,9 @@ export const InformationPanel = React.forwardRef<
       }
       const { right, bottom } = infoPanelRef.current.getBoundingClientRect();
       if (orientation === 'vertical') {
-        infoPanelRef.current.style.width = `${right - e.clientX}px`;
+        setWidth(right - e.clientX);
       } else {
-        infoPanelRef.current.style.height = `${bottom - e.clientY}px`;
+        setHeight(bottom - e.clientY);
       }
     },
     [orientation],
@@ -113,6 +117,7 @@ export const InformationPanel = React.forwardRef<
         },
         className,
       )}
+      style={{ ...style, width, height }}
       ref={refs}
       {...rest}
     >
