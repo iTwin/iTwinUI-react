@@ -344,7 +344,7 @@ AnchorToButton.args = {
   content: 'This is a positive toast message',
 };
 
-export const CloseProgrammatically: Story<ToastProps & ToasterSettings> = ({
+export const CloseIndividual: Story<ToastProps & ToasterSettings> = ({
   duration,
   hasCloseButton,
   link,
@@ -403,6 +403,6 @@ export const CloseProgrammatically: Story<ToastProps & ToasterSettings> = ({
   );
 };
 
-CloseProgrammatically.args = {
+CloseIndividual.args = {
   type: 'persisting',
 };
