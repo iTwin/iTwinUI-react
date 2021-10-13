@@ -116,7 +116,7 @@ export default class Toaster {
     );
   }
 
-  closeToast(toastId: number): void {
+  private closeToast(toastId: number): void {
     this.toasts = this.toasts.map((toast) => {
       return {
         ...toast,
