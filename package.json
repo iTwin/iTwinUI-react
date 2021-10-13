@@ -47,8 +47,7 @@
     "@types/react-table": "^7.0.18",
     "classnames": "^2.2.6",
     "react-table": "^7.1.0",
-    "react-transition-group": "^4.1.1",
-    "tinycolor2": "^1.4.2"
+    "react-transition-group": "^4.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
@@ -70,7 +69,6 @@
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
     "@types/react-transition-group": "^2.9.2",
-    "@types/tinycolor2": "^1.4.2",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
     "@typescript-eslint/parser": "^4.31.1",
     "babel-loader": "^8.2.2",

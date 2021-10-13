@@ -12,7 +12,17 @@ import {
   useEventListener,
 } from '../utils';
 import cx from 'classnames';
-import tinyColor from 'tinycolor2';
+import {
+  ColorValue,
+  HslColor,
+  RgbColor,
+  HsvColor,
+} from '../utils/color/ColorValue';
+import { ColorByName } from '../utils/color/ColorByName';
+
+type HexColor = {
+  hex: string;
+};
 
 export type Color = {
   hsl?: HslColor;
@@ -20,28 +30,6 @@ export type Color = {
   hex?: HexColor;
   hsv?: HsvColor;
 };
-
-interface HslColor {
-  h: number;
-  s: number;
-  l: number;
-  displayString?: string;
-}
-interface RgbColor {
-  r: number;
-  g: number;
-  b: number;
-  displayString?: string;
-}
-interface HexColor {
-  hex: string;
-}
-interface HsvColor {
-  h: number;
-  s: number;
-  v: number;
-  displayString?: string;
-}
 
 const getVerticalPercentageOfRectangle = (rect: DOMRect, pointer: number) => {
   const position = getBoundedValue(pointer, rect.top, rect.bottom);
@@ -53,32 +41,16 @@ const getHorizontalPercentageOfRectangle = (rect: DOMRect, pointer: number) => {
 };
 
 // Converts color value provided and fills in all hsv, hsl, rgb, hex, and displayString values
-export const fillColor = (color: Color | undefined) => {
-  let c;
-
-  if (color == undefined) {
-    c = tinyColor('#ff0000');
-  } else if (color.hsv != undefined) {
-    c = tinyColor(color.hsv);
-  } else if (color.hsl != undefined) {
-    c = tinyColor(color.hsl);
-  } else if (color.rgb != undefined) {
-    c = tinyColor(color.rgb);
-  } else if (color.hex != undefined) {
-    c = tinyColor(color.hex.hex);
-  } else {
-    c = tinyColor('#ff0000');
-  }
-
-  const hsv = c.toHsv();
-  const hsl = c.toHsl();
-  const rgb = c.toRgb();
+export const fillColor = (color: ColorValue) => {
+  const hsv = color.toHSV();
+  const hsl = color.toHSL();
+  const rgb = color.toRGB();
 
   return {
-    hsv: { h: hsv.h, s: hsv.s, v: hsv.v, displayString: c.toHsvString() },
-    hsl: { h: hsl.h, s: hsl.s, l: hsl.l, displayString: c.toHslString() },
-    rgb: { r: rgb.r, g: rgb.g, b: rgb.b, displayString: c.toRgbString() },
-    hex: { hex: c.toHex() },
+    hsv: { h: hsv.h, s: hsv.s, v: hsv.v, displayString: color.toHsvString() },
+    hsl: { h: hsl.h, s: hsl.s, l: hsl.l, displayString: color.toHslString() },
+    rgb: { r: rgb.r, g: rgb.g, b: rgb.b, displayString: color.toRgbString() },
+    hex: { hex: color.toHexString() },
   };
 };
 
@@ -99,12 +71,12 @@ export type ColorPickerProps = {
    * The selected color to be shown as the initial color in advanced color picker.
    * Only for advanced color picker.
    */
-  selectedColor?: Color;
+  selectedColor?: ColorValue;
   /**
    * Handler for when selectedColor is changed.
    * Only for advanced color picker.
    */
-  onSelectionChanged?: (color: Color) => void;
+  onSelectionChanged?: (color: ColorValue) => void;
   /**
    * Title shown above color palette
    * Only for advanced color picker
@@ -222,13 +194,18 @@ export const ColorPicker = (props: ColorPickerProps) => {
   };
 
   // Set style values for advanced color picker
-  const [dotColor, setDotColor] = React.useState(fillColor(selectedColor));
-  const [squareColor, setSquareColor] = React.useState(
-    fillColor({ hsv: { h: dotColor.hsv.h, s: 100, v: 100 } }),
+  const [dotColor, setDotColor] = React.useState(() =>
+    fillColor(selectedColor ?? new ColorValue(ColorByName.red)),
   );
-  const [sliderTop, setSliderTop] = React.useState(dotColor.hsv.h / 3.5);
-  const [squareTop, setSquareTop] = React.useState((1 - dotColor.hsv.v) * 100);
-  const [squareLeft, setSquareLeft] = React.useState(dotColor.hsv.s * 100);
+
+  const [squareColor, setSquareColor] = React.useState(() =>
+    fillColor(ColorValue.fromHSV({ h: dotColor.hsv.h, s: 100, v: 100 })),
+  );
+  const [sliderTop, setSliderTop] = React.useState(() =>
+    Math.round(dotColor.hsv.h / 3.59),
+  );
+  const [squareTop, setSquareTop] = React.useState(() => 100 - dotColor.hsv.v);
+  const [squareLeft, setSquareLeft] = React.useState(() => dotColor.hsv.s);
   const [activeDotIndex, setActiveDotIndex] = React.useState<
     number | undefined
   >(undefined);
@@ -243,17 +220,17 @@ export const ColorPicker = (props: ColorPickerProps) => {
     `--selected-color: ${dotColor.hsl.displayString}`,
   )
     ? {
-        '--selected-color': dotColor.hsl.displayString,
-        '--top': squareTop.toString() + '%',
-        '--left': squareLeft.toString() + '%',
-        cursor: 'crosshair',
-      }
+      '--selected-color': dotColor.hsl.displayString,
+      '--top': squareTop.toString() + '%',
+      '--left': squareLeft.toString() + '%',
+      cursor: 'crosshair',
+    }
     : {
-        backgroundColor: dotColor.hsl.displayString,
-        top: squareTop.toString() + '%',
-        left: squareLeft.toString() + '%',
-        cursor: 'crosshair',
-      };
+      backgroundColor: dotColor.hsl.displayString,
+      top: squareTop.toString() + '%',
+      left: squareLeft.toString() + '%',
+      cursor: 'crosshair',
+    };
 
   const sliderColorDotStyle = getWindow()?.CSS?.supports?.(
     `--top: ${sliderTop}%`,
@@ -268,17 +245,27 @@ export const ColorPicker = (props: ColorPickerProps) => {
     (y: number, selectionChanged: boolean) => {
       setSliderTop(y);
 
-      const hue = y * 3.5;
-      setSquareColor(fillColor({ hsv: { h: hue, s: 100, v: 100 } }));
-      // Keep same s and v, Update hue
-      const color = fillColor({
-        hsv: { h: hue, s: dotColor.hsv.s, v: dotColor.hsv.v },
+      const hue = Math.round(y * 3.59);
+      const newSquareColor = ColorValue.fromHSV({
+        h: hue,
+        s: 100,
+        v: 100,
       });
+      setSquareColor(fillColor(newSquareColor));
+
+      const newDotColor = ColorValue.fromHSV({
+        h: hue,
+        s: dotColor.hsv.s,
+        v: dotColor.hsv.v,
+      });
+
+      // Keep same s and v, Update hue
+      const color = fillColor(newDotColor);
       setDotColor(color);
 
       //Only update selected color when dragging is done
       if (selectionChanged) {
-        onSelectionChanged?.(color);
+        onSelectionChanged?.(newDotColor);
       }
     },
     [dotColor.hsv.s, dotColor.hsv.v, onSelectionChanged],
@@ -375,17 +362,16 @@ export const ColorPicker = (props: ColorPickerProps) => {
     (x: number, y: number, selectionChanged: boolean) => {
       setSquareTop(y);
       setSquareLeft(x);
-
-      const color = fillColor({
-        hsv: {
-          h: squareColor.hsv.h,
-          s: x / 100,
-          v: (100 - y) / 100,
-        },
+      const newColor = ColorValue.fromHSV({
+        h: squareColor.hsv.h,
+        s: x,
+        v: 100 - y,
       });
+
+      const color = fillColor(newColor);
       setDotColor(color);
       if (selectionChanged) {
-        onSelectionChanged?.(color);
+        onSelectionChanged?.(newColor);
       }
     },
     [onSelectionChanged, squareColor.hsv.h],
