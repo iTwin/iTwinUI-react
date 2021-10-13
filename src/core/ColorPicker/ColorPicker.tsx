@@ -220,17 +220,17 @@ export const ColorPicker = (props: ColorPickerProps) => {
     `--selected-color: ${dotColor.hsl.displayString}`,
   )
     ? {
-      '--selected-color': dotColor.hsl.displayString,
-      '--top': squareTop.toString() + '%',
-      '--left': squareLeft.toString() + '%',
-      cursor: 'crosshair',
-    }
+        '--selected-color': dotColor.hsl.displayString,
+        '--top': squareTop.toString() + '%',
+        '--left': squareLeft.toString() + '%',
+        cursor: 'crosshair',
+      }
     : {
-      backgroundColor: dotColor.hsl.displayString,
-      top: squareTop.toString() + '%',
-      left: squareLeft.toString() + '%',
-      cursor: 'crosshair',
-    };
+        backgroundColor: dotColor.hsl.displayString,
+        top: squareTop.toString() + '%',
+        left: squareLeft.toString() + '%',
+        cursor: 'crosshair',
+      };
 
   const sliderColorDotStyle = getWindow()?.CSS?.supports?.(
     `--top: ${sliderTop}%`,
