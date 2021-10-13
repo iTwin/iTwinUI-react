@@ -404,7 +404,7 @@ export class ColorValue {
 
   private static getColorsString(tbgr: number) {
     const c = this.getColors(tbgr);
-    return `${c.r},${c.g},${c.b}`;
+    return `${c.r}, ${c.g}, ${c.b}`;
   }
 
   /** Convert this ColorValue to a string in the form "rgb(r,g,b)" where values are decimal digits of the respective colors. */
@@ -424,10 +424,12 @@ export class ColorValue {
 
   /** Convert the 0xTTBBGGRR color to a string of the form "rgba(r,g,b,a)" where the color components are specified in decimal and the alpha component is a fraction. */
   public static toRgbaString(tbgr: number): string {
-    return `rgba(${this.getColorsString(tbgr)},${this.getAlpha(tbgr) / 255})`;
+    return `rgba(${this.getColorsString(tbgr)}, ${(
+      this.getAlpha(tbgr) / 255
+    ).toFixed(2)})`;
   }
 
-  /** Create a ColorValue from hue, saturation, lightness values.  */
+  /** Create a ColorValue from hue, saturation, lightness values. transparency (0-255)  */
   public static fromHSL(hsl: HslColor, transparency = 0): ColorValue {
     return this.fromTbgr(
       this.computeTbgrFromHSL(
@@ -539,7 +541,7 @@ export class ColorValue {
     return { r, g, b };
   }
 
-  /** Create a ColorValue from an HsvColor */
+  /** Create a ColorValue from an HsvColor transparency => 0-255 */
   public static fromRGB(rgb: RgbColor, transparency = 0): ColorValue {
     return ColorValue.from(rgb.r, rgb.g, rgb.b, transparency);
   }
@@ -674,7 +676,7 @@ export class ColorValue {
   /** Convert this ColorValue to a string in the form "h,s,l" - i.e 120,50%,50% */
   public getHslString(): string {
     const hsl = this.toHSL();
-    return `${hsl.h},${hsl.s}%,${hsl.l}%`;
+    return `${hsl.h}, ${hsl.s}%, ${hsl.l}%`;
   }
 
   /** Convert this ColorValue to a string in the form "hsl(h,s,l)" - i.e hsl(120,50%,50%). */
@@ -685,13 +687,13 @@ export class ColorValue {
   /** Convert this ColorValue to a string in the form "hsla(h,s,l,a)" - i.e hsla(120,50%,50%,0.5). */
   public toHslaString(): string {
     const alpha = this.getAlpha() / 255;
-    return `hsla(${this.getHslString()},${alpha.toFixed(2)})`;
+    return `hsla(${this.getHslString()}, ${alpha.toFixed(2)})`;
   }
 
   /** Convert this ColorValue to a string in the form "h,s,v" - i.e 120,50%,50% */
   public getHsvString(): string {
     const hsv = this.toHSV();
-    return `${hsv.h},${hsv.s}%,${hsv.v}%`;
+    return `${hsv.h}, ${hsv.s}%, ${hsv.v}%`;
   }
 
   /** Convert this ColorValue to a string in the form "hsv(h,s,v)" - i.e hsv(120,50%,50%). */
@@ -702,6 +704,6 @@ export class ColorValue {
   /** Convert this ColorValue to a string in the form "hsva(h,s,v,a)" - i.e hsva(120,50%,50%,0.5). */
   public toHsvaString(): string {
     const alpha = this.getAlpha() / 255;
-    return `hsva(${this.getHsvString()},${alpha.toFixed(2)})`;
+    return `hsva(${this.getHsvString()}, ${alpha.toFixed(2)})`;
   }
 }
