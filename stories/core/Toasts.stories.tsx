@@ -391,7 +391,7 @@ export const CloseProgrammatically: Story<ToastProps & ToasterSettings> = ({
         type: 'temporary',
         onRemove,
       });
-    }, 7000);
+    }, 3000);
   };
 
   return (
