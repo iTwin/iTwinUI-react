@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
-import { ColorPicker } from './ColorPicker';
+import { ColorPicker, fillColor } from './ColorPicker';
 import ColorSwatch from './ColorSwatch';
 
 it('should render in its most basic state', () => {
@@ -410,4 +410,27 @@ it('should handle arrow key navigation on color dot', () => {
   expect(colorDot.style.getPropertyValue('--selected-color')).toEqual(
     'hsl(0, 100%, 50%)',
   );
+});
+
+it('should handle color conversion', () => {
+  // Any color to hsv
+  const hslColor = { hsl: { h: 0, s: 100, l: 50 } };
+  let color = fillColor(hslColor);
+  expect(color.hsv.displayString).toEqual('hsv(0, 100%, 100%)');
+
+  const hexColor = { hex: { hex: 'ff0000' } };
+  color = fillColor(hexColor);
+  expect(color.hsv.displayString).toEqual('hsv(0, 100%, 100%)');
+
+  const rgbColor = { rgb: { r: 255, g: 0, b: 0 } };
+  color = fillColor(rgbColor);
+  expect(color.hsv.displayString).toEqual('hsv(0, 100%, 100%)');
+
+  //hsv to any color
+  const hsvColor = { hsv: { h: 0, s: 100, v: 100 } };
+  color = fillColor(hsvColor);
+
+  expect(color.hsl.displayString).toEqual('hsl(0, 100%, 50%)');
+  expect(color.hex.hex).toEqual('ff0000');
+  expect(color.rgb.displayString).toEqual('rgb(255, 0, 0)');
 });
