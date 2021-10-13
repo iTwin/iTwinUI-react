@@ -97,6 +97,18 @@ it('should add toasts and remove all', () => {
   ).toBeTruthy();
 });
 
+it('should add toast and remove using return function', () => {
+  const { close } = toaster.informational('mockContent', mockedOptions());
+  assertAddedToast(toaster['toasts'][0], 'informational', 'mockContent', 1);
+
+  close();
+  assertRemovedToast(toaster['toasts'][0], 'informational', 'mockContent', 1);
+
+  expect(
+    document.querySelector('.iui-toast-wrapper.iui-placement-top'),
+  ).toBeTruthy();
+});
+
 it('should change order to bottom to top', () => {
   toaster.setSettings({ placement: 'top', order: 'ascending' });
   toaster.informational('mockContent', mockedOptions());
