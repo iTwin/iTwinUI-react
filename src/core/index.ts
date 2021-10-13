@@ -112,8 +112,16 @@ export type { RadioTileGroupProps, RadioTileProps } from './RadioTiles';
 export { Select } from './Select';
 export type { SelectProps, SelectOption, ItemRendererProps } from './Select';
 
-export { SideNavigation, SidenavButton } from './SideNavigation';
-export type { SideNavigationProps, SidenavButtonProps } from './SideNavigation';
+export {
+  SideNavigation,
+  SidenavButton,
+  SidenavSubmenu,
+} from './SideNavigation';
+export type {
+  SideNavigationProps,
+  SidenavButtonProps,
+  SidenavSubmenuProps,
+} from './SideNavigation';
 
 export { Slider } from './Slider';
 export type { SliderProps } from './Slider';

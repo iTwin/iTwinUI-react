@@ -15,7 +15,9 @@ import React from 'react';
 import {
   SideNavigation,
   SidenavButton,
+  SidenavSubmenu,
   SideNavigationProps,
+  Text,
 } from '../../src/core';
 
 export default {
@@ -28,7 +30,14 @@ export default {
     items: { control: { disable: true } },
     secondaryItems: { control: { disable: true } },
   },
-  args: { style: { height: 'calc(100vh - 24px) ' } },
+  decorators: [
+    (Story) => (
+      <div style={{ height: 'calc(100vh - 24px)' }}>
+        <Story />
+      </div>
+    ),
+  ],
+  parameters: { docs: { source: { excludeDecorators: true } } },
   title: 'Core/SideNavigation',
 } as Meta<SideNavigationProps>;
 
@@ -80,5 +89,91 @@ export const ActiveItem: Story<SideNavigationProps> = (args) => {
         </SidenavButton>,
       ]}
     />
+  );
+};
+
+export const Submenu: Story<SideNavigationProps> = (args) => {
+  const itemLabels = ['Home', 'Issues', 'Documents'];
+  const itemIcons = [
+    <SvgHome key={0} />,
+    <SvgFlag key={1} />,
+    <SvgFolderOpened key={2} />,
+  ];
+
+  const [activeItem, setActiveItem] = useState(2);
+  const [isSubmenuOpen, setIsSubmenuOpen] = useState(true);
+  const [activeSubItem, setActiveSubItem] = useState(0);
+
+  const mainItems = itemLabels.map((label, index) => (
+    <SidenavButton
+      key={index}
+      startIcon={itemIcons[index]}
+      isActive={activeItem === index}
+      onClick={() => {
+        if (label !== 'Documents') {
+          setActiveItem(index);
+          setActiveSubItem(-1);
+          setIsSubmenuOpen(false);
+        } else {
+          setIsSubmenuOpen((open) => !open);
+        }
+      }}
+    >
+      {label}
+    </SidenavButton>
+  ));
+
+  return (
+    <div style={{ display: 'flex', height: '100%' }}>
+      <SideNavigation
+        {...args}
+        expanderPlacement='bottom'
+        items={mainItems}
+        secondaryItems={[
+          <SidenavButton startIcon={<SvgSettings />} key={3}>
+            Settings
+          </SidenavButton>,
+        ]}
+        submenu={
+          isSubmenuOpen ? (
+            <SidenavSubmenu label='Documents'>
+              <>
+                <Text variant='leading'>All the damn documents</Text>
+                <ul>
+                  {[...Array(10).fill(null)].map((_, index) => (
+                    <li key={index}>
+                      <a
+                        className='iui-anchor'
+                        onClick={() => {
+                          setActiveItem(2);
+                          setActiveSubItem(index);
+                        }}
+                      >
+                        Folder {index}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            </SidenavSubmenu>
+          ) : undefined
+        }
+      />
+      <div
+        style={{
+          background: 'var(--iui-color-background-5)',
+          padding: 16,
+          flexGrow: 1,
+          display: 'grid',
+          placeContent: 'center',
+          placeItems: 'center',
+        }}
+      >
+        <Text>{itemLabels[activeItem]} page</Text>
+        <Text isMuted>
+          {activeSubItem >= 0 && `Contents of Folder ${activeSubItem}`}
+        </Text>
+      </div>
+    </div>
   );
 };
