@@ -98,7 +98,10 @@ it('should add toasts and remove all', () => {
 });
 
 it('should add toast and remove using return function', () => {
-  const { close } = toaster.informational('mockContent', mockedOptions());
+  const { close } = toaster.informational('mockContent', {
+    ...mockedOptions(),
+    type: 'persisting',
+  });
   assertAddedToast(toaster['toasts'][0], 'informational', 'mockContent', 1);
 
   close();
