@@ -24,11 +24,12 @@ function assertAddedToast(
   toast: ToastProps,
   category: ToastCategory,
   content: string,
+  options: ToastOptions,
   id: number,
 ) {
   expect(toast).toEqual(
     expect.objectContaining({
-      ...mockedOptions(),
+      ...options,
       id: id,
       content: content,
       isVisible: true,
@@ -41,11 +42,12 @@ function assertRemovedToast(
   toast: ToastProps,
   category: ToastCategory,
   content: string,
+  options: ToastOptions,
   id: number,
 ) {
   expect(toast).toEqual(
     expect.objectContaining({
-      ...mockedOptions(),
+      ...options,
       id: id,
       content: content,
       isVisible: false,
@@ -63,34 +65,82 @@ afterEach(() => {
 it('should add toast with success', () => {
   toaster.positive('mockContent', mockedOptions());
   expect(toaster['toasts'].length).toBe(1);
-  assertAddedToast(toaster['toasts'][0], 'positive', 'mockContent', 1);
+  assertAddedToast(
+    toaster['toasts'][0],
+    'positive',
+    'mockContent',
+    mockedOptions(),
+    1,
+  );
 });
 
 it('should add toast with negative', () => {
   toaster.negative('mockContent', mockedOptions());
-  assertAddedToast(toaster['toasts'][0], 'negative', 'mockContent', 1);
+  assertAddedToast(
+    toaster['toasts'][0],
+    'negative',
+    'mockContent',
+    mockedOptions(),
+    1,
+  );
 });
 
 it('should add toast with informational', () => {
   toaster.informational('mockContent', mockedOptions());
-  assertAddedToast(toaster['toasts'][0], 'informational', 'mockContent', 1);
+  assertAddedToast(
+    toaster['toasts'][0],
+    'informational',
+    'mockContent',
+    mockedOptions(),
+    1,
+  );
 });
 
 it('should add toast with warning', () => {
   toaster.warning('mockContent', mockedOptions());
-  assertAddedToast(toaster['toasts'][0], 'warning', 'mockContent', 1);
+  assertAddedToast(
+    toaster['toasts'][0],
+    'warning',
+    'mockContent',
+    mockedOptions(),
+    1,
+  );
 });
 
 it('should add toasts and remove all', () => {
   toaster.informational('mockContent', mockedOptions());
-  assertAddedToast(toaster['toasts'][0], 'informational', 'mockContent', 1);
+  assertAddedToast(
+    toaster['toasts'][0],
+    'informational',
+    'mockContent',
+    mockedOptions(),
+    1,
+  );
 
   toaster.positive('mockContent', mockedOptions());
-  assertAddedToast(toaster['toasts'][0], 'positive', 'mockContent', 2);
+  assertAddedToast(
+    toaster['toasts'][0],
+    'positive',
+    'mockContent',
+    mockedOptions(),
+    2,
+  );
 
   toaster.closeAll();
-  assertRemovedToast(toaster['toasts'][1], 'informational', 'mockContent', 1);
-  assertRemovedToast(toaster['toasts'][0], 'positive', 'mockContent', 2);
+  assertRemovedToast(
+    toaster['toasts'][1],
+    'informational',
+    'mockContent',
+    mockedOptions(),
+    1,
+  );
+  assertRemovedToast(
+    toaster['toasts'][0],
+    'positive',
+    'mockContent',
+    mockedOptions(),
+    2,
+  );
 
   expect(
     document.querySelector('.iui-toast-wrapper.iui-placement-top'),
@@ -102,10 +152,28 @@ it('should add toast and remove using return function', () => {
     ...mockedOptions(),
     type: 'persisting',
   });
-  assertAddedToast(toaster['toasts'][0], 'informational', 'mockContent', 1);
+  assertAddedToast(
+    toaster['toasts'][0],
+    'informational',
+    'mockContent',
+    {
+      ...mockedOptions(),
+      type: 'persisting',
+    },
+    1,
+  );
 
   close();
-  assertRemovedToast(toaster['toasts'][0], 'informational', 'mockContent', 1);
+  assertRemovedToast(
+    toaster['toasts'][0],
+    'informational',
+    'mockContent',
+    {
+      ...mockedOptions(),
+      type: 'persisting',
+    },
+    1,
+  );
 
   expect(
     document.querySelector('.iui-toast-wrapper.iui-placement-top'),
@@ -115,10 +183,22 @@ it('should add toast and remove using return function', () => {
 it('should change order to bottom to top', () => {
   toaster.setSettings({ placement: 'top', order: 'ascending' });
   toaster.informational('mockContent', mockedOptions());
-  assertAddedToast(toaster['toasts'][0], 'informational', 'mockContent', 1);
+  assertAddedToast(
+    toaster['toasts'][0],
+    'informational',
+    'mockContent',
+    mockedOptions(),
+    1,
+  );
 
   toaster.positive('mockContent', mockedOptions());
-  assertAddedToast(toaster['toasts'][1], 'positive', 'mockContent', 2);
+  assertAddedToast(
+    toaster['toasts'][1],
+    'positive',
+    'mockContent',
+    mockedOptions(),
+    2,
+  );
 });
 
 it.each([
