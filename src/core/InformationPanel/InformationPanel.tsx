@@ -87,8 +87,29 @@ export const InformationPanel = React.forwardRef<
   const infoPanelRef = React.useRef<HTMLDivElement>(null);
   const refs = useMergedRefs(ref, infoPanelRef);
 
-  const [width, setWidth] = React.useState<number | undefined>();
-  const [height, setHeight] = React.useState<number | undefined>();
+  const [width, setWidth] = React.useState(() => style?.width);
+  const [height, setHeight] = React.useState(() => style?.height);
+
+  const startResize = (e: React.PointerEvent) => {
+    if (!infoPanelRef.current) {
+      return;
+    }
+    if (e.button != undefined && e.button !== 0) {
+      return;
+    }
+    e.preventDefault();
+    e.stopPropagation();
+    infoPanelRef.current.ownerDocument.addEventListener(
+      'pointermove',
+      onResize,
+    );
+    infoPanelRef.current.ownerDocument.addEventListener('pointerup', () =>
+      infoPanelRef.current?.ownerDocument.removeEventListener(
+        'pointermove',
+        onResize,
+      ),
+    );
+  };
 
   const onResize = React.useCallback(
     (e: PointerEvent) => {
@@ -122,31 +143,7 @@ export const InformationPanel = React.forwardRef<
       {...rest}
     >
       {resizable && (
-        <div
-          className='iui-resizer'
-          onPointerDown={(e) => {
-            if (!infoPanelRef.current) {
-              return;
-            }
-            if (e.button != undefined && e.button !== 0) {
-              return;
-            }
-            e.preventDefault();
-            e.stopPropagation();
-            infoPanelRef.current.ownerDocument.addEventListener(
-              'pointermove',
-              onResize,
-            );
-            infoPanelRef.current.ownerDocument.addEventListener(
-              'pointerup',
-              () =>
-                infoPanelRef.current?.ownerDocument.removeEventListener(
-                  'pointermove',
-                  onResize,
-                ),
-            );
-          }}
-        >
+        <div className='iui-resizer' onPointerDown={startResize}>
           <div className='iui-resizer-bar' />
         </div>
       )}
