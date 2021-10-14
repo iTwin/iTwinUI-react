@@ -144,26 +144,10 @@ export const ColorPicker = (props: ColorPickerProps) => {
   useTheme();
 
   const ref = React.useRef<HTMLDivElement>(null);
-  const [focusedColor, setFocusedColor] = React.useState<number | null>();
-
-  React.useEffect(() => {
-    const colorSwatches = Array.from<HTMLElement>(
-      ref.current?.querySelectorAll('.iui-color-swatch') ?? [],
-    );
-    if (focusedColor != null) {
-      colorSwatches[focusedColor]?.focus();
-      return;
-    }
-    const selectedIndex = colorSwatches.findIndex(
-      (swatch) =>
-        swatch.tabIndex === 0 || swatch.getAttribute('aria-selected') == 'true',
-    );
-    setFocusedColor(selectedIndex > -1 ? selectedIndex : null);
-  }, [focusedColor]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     const colorSwatches = Array.from<HTMLElement>(
-      ref.current?.querySelectorAll('.iui-color-swatch') ?? [],
+      ref.current?.querySelectorAll('.iui-color-swatch, .iui-button') ?? [],
     );
     if (!colorSwatches.length) {
       return;
@@ -173,22 +157,20 @@ export const ColorPicker = (props: ColorPickerProps) => {
       (swatch) => swatch === ref.current?.ownerDocument.activeElement,
     );
     const currentIndex = currentlyFocused > -1 ? currentlyFocused : 0;
+    let newIndex = -1;
 
     switch (event.key) {
       case 'ArrowDown': {
         // Look for next ColorSwatch with same offsetLeft value
-        const newIndex = colorSwatches.findIndex(
+        newIndex = colorSwatches.findIndex(
           (swatch, index) =>
             index > currentIndex &&
             swatch.offsetLeft === colorSwatches[currentIndex].offsetLeft,
         );
-        setFocusedColor(newIndex > -1 ? newIndex : currentIndex);
-        event.preventDefault();
         break;
       }
       case 'ArrowUp': {
         // Look backwards for next ColorSwatch with same offsetLeft value
-        let newIndex = -1;
         for (let i = currentIndex - 1; i >= 0; i--) {
           if (
             colorSwatches[i].offsetLeft ==
@@ -198,24 +180,25 @@ export const ColorPicker = (props: ColorPickerProps) => {
             break;
           }
         }
-        setFocusedColor(newIndex > -1 ? newIndex : currentIndex);
-        event.preventDefault();
         break;
       }
       case 'ArrowLeft':
-        setFocusedColor(Math.max(currentIndex - 1, 0));
-        event.preventDefault();
+        newIndex = Math.max(currentIndex - 1, 0);
         break;
       case 'ArrowRight':
-        setFocusedColor(Math.min(currentIndex + 1, colorSwatches.length - 1));
-        event.preventDefault();
+        newIndex = Math.min(currentIndex + 1, colorSwatches.length - 1);
         break;
       case 'Enter':
       case ' ':
       case 'Spacebar':
         colorSwatches[currentIndex].click();
         event.preventDefault();
-        break;
+        return;
+    }
+
+    if (newIndex >= 0 && newIndex < colorSwatches.length) {
+      colorSwatches[newIndex].focus();
+      event.preventDefault();
     }
   };
 

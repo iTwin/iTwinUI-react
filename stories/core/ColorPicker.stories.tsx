@@ -280,10 +280,13 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
             onSelectionChanged={onColorChanged}
             {...args}
           >
-            <button className='iui-button iui-borderless' onClick={onAdd}>
-              <SvgAddCircular className='iui-icon' aria-hidden='true' />
-            </button>
-
+            <IconButton
+              styleType={'borderless'}
+              onClick={onAdd}
+              style={{ padding: 0 }}
+            >
+              <SvgAddCircular />
+            </IconButton>
             {savedColors.map((color, index) => {
               const colorString =
                 color.hsl?.displayString ?? fillColor(color).hsl.displayString;
