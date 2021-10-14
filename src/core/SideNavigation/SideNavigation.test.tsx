@@ -7,6 +7,7 @@ import { fireEvent, render } from '@testing-library/react';
 
 import { SideNavigation, SideNavigationProps } from './SideNavigation';
 import { SidenavButton } from './SidenavButton';
+import { SidenavSubmenu } from './SidenavSubmenu';
 import SvgPlaceholder from '@itwin/itwinui-icons-react/cjs/icons/Placeholder';
 import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 
@@ -206,4 +207,25 @@ it('should handle custom class and style', () => {
 
   expect(sidebar).toBeTruthy();
   expect(sidebar.style.height).toEqual('200px');
+});
+
+it('should render with submenu', () => {
+  const { getByText, container } = renderComponent({
+    submenu: <SidenavSubmenu>submenu content</SidenavSubmenu>,
+  });
+
+  const wrapper = container.querySelector(
+    '.iui-side-navigation-wrapper',
+  ) as HTMLElement;
+
+  expect(wrapper.querySelector('.iui-side-navigation')).toBeTruthy();
+  expect(wrapper.querySelector('.iui-sidenav-content')).toBeTruthy();
+
+  expect(
+    wrapper.querySelector('.iui-side-navigation-submenu'),
+  ).toHaveTextContent('submenu content');
+
+  expect(getByText('submenu content')).toHaveClass(
+    'iui-side-navigation-submenu-content',
+  );
 });

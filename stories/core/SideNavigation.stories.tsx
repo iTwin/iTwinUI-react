@@ -18,17 +18,20 @@ import {
   SidenavSubmenu,
   SideNavigationProps,
   Text,
+  SidenavSubmenuHeader,
+  IconButton,
 } from '../../src/core';
 
 export default {
   component: SideNavigation,
-  subcomponents: { SidenavButton },
+  subcomponents: { SidenavButton, SidenavSubmenu, SidenavSubmenuHeader },
   argTypes: {
     className: { control: { disable: true } },
     style: { control: { disable: true } },
     id: { control: { disable: true } },
     items: { control: { disable: true } },
     secondaryItems: { control: { disable: true } },
+    submenu: { control: { disable: true } },
   },
   decorators: [
     (Story) => (
@@ -136,25 +139,32 @@ export const Submenu: Story<SideNavigationProps> = (args) => {
         ]}
         submenu={
           isSubmenuOpen ? (
-            <SidenavSubmenu label='Documents'>
-              <>
-                <Text variant='leading'>All the damn documents</Text>
-                <ul>
-                  {[...Array(10).fill(null)].map((_, index) => (
-                    <li key={index}>
-                      <a
-                        className='iui-anchor'
-                        onClick={() => {
-                          setActiveItem(2);
-                          setActiveSubItem(index);
-                        }}
-                      >
-                        Folder {index}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </>
+            <SidenavSubmenu>
+              <SidenavSubmenuHeader
+                actions={
+                  <IconButton key={'settings'} styleType='borderless'>
+                    <SvgSettings />
+                  </IconButton>
+                }
+              >
+                <span>Documents</span>
+              </SidenavSubmenuHeader>
+              <Text variant='leading'>All documents</Text>
+              <ul>
+                {[...Array(10).fill(null)].map((_, index) => (
+                  <li key={index}>
+                    <a
+                      className='iui-anchor'
+                      onClick={() => {
+                        setActiveItem(2);
+                        setActiveSubItem(index);
+                      }}
+                    >
+                      Folder {index}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </SidenavSubmenu>
           ) : undefined
         }

@@ -127,11 +127,13 @@ export {
   SideNavigation,
   SidenavButton,
   SidenavSubmenu,
+  SidenavSubmenuHeader,
 } from './SideNavigation';
 export type {
   SideNavigationProps,
   SidenavButtonProps,
   SidenavSubmenuProps,
+  SidenavSubmenuHeaderProps,
 } from './SideNavigation';
 
 export { Slider } from './Slider';

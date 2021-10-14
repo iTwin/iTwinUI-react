@@ -2,44 +2,43 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import cx from 'classnames';
 import React from 'react';
-import { useTheme } from '../utils';
+import { CommonProps, useTheme } from '../utils';
+import '@itwin/itwinui-css/css/side-navigation.css';
 
 export type SidenavSubmenuProps = {
   /**
-   * Main label shown in the header of the submenu
-   */
-  label?: React.ReactNode;
-  /**
-   * Custom actions shown after the header label
-   */
-  headerActions?: React.ReactNode;
-  /**
-   * Main content of the submenu
+   * Content of the submenu.
    */
   children: React.ReactNode;
-};
+} & Omit<CommonProps, 'title'>;
 
-export const SidenavSubmenu = (props: SidenavSubmenuProps) => {
-  const { label, headerActions, children } = props;
+/**
+ * Subcomponent to be used in the `submenu` prop of `SideNavigation`.
+ * @example
+ * <SidenavSubmenu>
+ *   <SidenavSubmenuHeader>Documents</SidenavSubmenuHeader>
+ *   <div> ... </div>
+ * </SidenavSubmenu>
+ */
+export const SidenavSubmenu = React.forwardRef<
+  HTMLDivElement,
+  SidenavSubmenuProps
+>((props, ref) => {
+  const { children, className, ...rest } = props;
 
   useTheme();
 
   return (
-    <div className='iui-side-navigation-submenu-content'>
-      <div className='iui-side-navigation-submenu-header'>
-        {label && (
-          <div className='iui-side-navigation-submenu-header-label'>
-            {label}
-          </div>
-        )}
-        {headerActions && (
-          <div className='iui-side-navigation-submenu-header-actions'>
-            {headerActions}
-          </div>
-        )}
-      </div>
+    <div
+      className={cx('iui-side-navigation-submenu-content', className)}
+      ref={ref}
+      {...rest}
+    >
       {children}
     </div>
   );
-};
+});
+
+export default SidenavSubmenu;
