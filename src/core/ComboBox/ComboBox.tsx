@@ -5,7 +5,7 @@
 import React from 'react';
 import cx from 'classnames';
 import { Input, InputProps } from '../Input';
-import { Menu, MenuItem } from '../Menu';
+import { Menu, MenuContent, MenuItem } from '../Menu';
 import { SelectOption } from '../Select';
 import { Text } from '../Typography';
 import {
@@ -263,9 +263,9 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   const menuItems = React.useMemo(() => {
     if (filteredOptions.length === 0) {
       return (
-        <MenuItem className='iui-menu-content' role='presentation'>
+        <MenuContent>
           <Text isMuted>{emptyStateMessage}</Text>
-        </MenuItem>
+        </MenuContent>
       );
     }
     return filteredOptions.map((option) => {

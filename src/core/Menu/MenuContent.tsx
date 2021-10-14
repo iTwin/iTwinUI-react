@@ -6,24 +6,38 @@ import React from 'react';
 import { useTheme } from '../utils';
 import '@itwin/itwinui-css/css/menu.css';
 
+export type MenuContentProps = {
+  children: React.ReactNode;
+};
+
 /**
- * Divider between menu items. Should be used inside `Menu`.
+ * Component that allows to have any additional content inside `Menu`.
  * @example
  * <Menu>
  *   {(close) => [
- *     <MenuItem key={0} onClick={() => {}}>
- *       Item #1
- *     </MenuItem>,
+ *     <MenuContent key={0}>
+ *       <>
+ *         <Text variant='leading'>Terry Rivers</Text>
+ *           terry.rivers@email.com
+ *         </Text>
+ *         <Select options={someOptions} />
+ *       </>
+ *     </MenuContent>,
  *     <MenuDivider key={1} />,
  *     <MenuItem key={2} onClick={() => {}}>
- *       Item #2
+ *       Sign out
  *     </MenuItem>,
  *   ]}
  * </Menu>
  */
-export const MenuDivider = () => {
+export const MenuContent = (props: MenuContentProps) => {
+  const { children } = props;
   useTheme();
-  return <li role='separator' className='iui-menu-divider' />;
+  return (
+    <li className='iui-menu-content' role='presentation'>
+      {children}
+    </li>
+  );
 };
 
-export default MenuDivider;
+export default MenuContent;

@@ -9,8 +9,11 @@ import {
   DropdownMenu,
   DropdownMenuProps,
   IconButton,
+  MenuContent,
   MenuDivider,
   MenuItem,
+  Select,
+  Text,
 } from '../../src/core';
 import {
   SvgClipboard,
@@ -20,6 +23,7 @@ import {
   SvgPlaceholder,
 } from '@itwin/itwinui-icons-react';
 import { CreeveyMeta, CreeveyStoryParams } from 'creevey';
+import { useState } from '@storybook/addons';
 
 export default {
   title: 'Core/DropdownMenu',
@@ -313,4 +317,53 @@ export const WithSeparator: Story<DropdownMenuProps> = (args) => {
 
 WithSeparator.decorators = [
   (Story) => <div style={{ minHeight: 200 }}>{Story()}</div>,
+];
+
+export const WithContent: Story<DropdownMenuProps> = (args) => {
+  const { menuItems, ...rest } = args;
+
+  const onClick = (item: string, close: () => void) => () => {
+    action(`'${item}' clicked!`)();
+    close();
+  };
+
+  const [userType, setUserType] = useState('User');
+
+  const dropdownMenuItems = (close: () => void) => [
+    <MenuContent key={0}>
+      <>
+        <Text variant='leading'>Terry Rivers</Text>
+        <Text isMuted style={{ marginBottom: 8 }}>
+          terry.rivers@email.com
+        </Text>
+        <Select
+          options={[
+            { value: 'User', label: 'User' },
+            { value: 'Moderator', label: 'Moderator' },
+            { value: 'Administrator', label: 'Administrator' },
+          ]}
+          value={userType}
+          onChange={(type) => setUserType(type)}
+        />
+      </>
+    </MenuContent>,
+    <MenuDivider key={1} />,
+    <MenuItem key={2} onClick={onClick('View profile', close)}>
+      View profile
+    </MenuItem>,
+    <MenuItem key={3} onClick={onClick('Sign out', close)}>
+      Sign out
+    </MenuItem>,
+  ];
+  return (
+    <DropdownMenu menuItems={menuItems || dropdownMenuItems} {...rest}>
+      <IconButton>
+        <SvgMore />
+      </IconButton>
+    </DropdownMenu>
+  );
+};
+
+WithContent.decorators = [
+  (Story) => <div style={{ minHeight: 250 }}>{Story()}</div>,
 ];
