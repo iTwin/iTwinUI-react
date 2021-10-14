@@ -11,6 +11,7 @@ import {
   InformationPanel,
   InformationPanelProps,
   InformationPanelWrapper,
+  InformationPanelHeader,
   Table,
   Text,
   LabeledTextarea,
@@ -22,7 +23,7 @@ import { CreeveyStoryParams } from 'creevey';
 
 export default {
   component: InformationPanel,
-  subcomponents: { InformationPanelWrapper },
+  subcomponents: { InformationPanelWrapper, InformationPanelHeader },
   argTypes: {
     className: { control: { disable: true } },
     style: { control: { disable: true } },
@@ -85,13 +86,18 @@ export const Basic: Story<InformationPanelProps> = (args) => {
     <InformationPanelWrapper>
       <Table columns={columns} data={data} emptyTableContent='No data.' />
       <InformationPanel
-        onClose={() => {
-          setOpenRowIndex(-1);
-          action('Panel closed')();
-        }}
-        label={<Text variant='subheading'>Row {openRowIndex ?? 0}</Text>}
         {...args}
         isOpen={openRowIndex != undefined && openRowIndex !== -1}
+        header={
+          <InformationPanelHeader
+            onClose={() => {
+              setOpenRowIndex(-1);
+              action('Panel closed')();
+            }}
+          >
+            <Text variant='subheading'>Row {openRowIndex ?? 0}</Text>
+          </InformationPanelHeader>
+        }
       >
         <Text>{lorem100}</Text>
       </InformationPanel>
@@ -149,24 +155,29 @@ export const CustomActions: Story<InformationPanelProps> = (args) => {
       <Table columns={columns} data={data} emptyTableContent='No data.' />
 
       <InformationPanel
-        label={<Text variant='subheading'>Row details</Text>}
         {...args}
-        onClose={() => {
-          setOpenRowIndex(undefined);
-          setIsEditing(false);
-          action('Panel closed')();
-        }}
-        headerActions={[
-          <IconButton
-            key='edit'
-            styleType='borderless'
-            isActive={isEditing}
-            onClick={() => setIsEditing((editing) => !editing)}
-          >
-            <SvgEdit />
-          </IconButton>,
-        ]}
         isOpen={openRowIndex != undefined}
+        header={
+          <InformationPanelHeader
+            onClose={() => {
+              setOpenRowIndex(undefined);
+              setIsEditing(false);
+              action('Panel closed')();
+            }}
+            actions={[
+              <IconButton
+                key='edit'
+                styleType='borderless'
+                isActive={isEditing}
+                onClick={() => setIsEditing((editing) => !editing)}
+              >
+                <SvgEdit />
+              </IconButton>,
+            ]}
+          >
+            <Text variant='subheading'>Row details</Text>
+          </InformationPanelHeader>
+        }
       >
         {openRowIndex != undefined && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
@@ -226,14 +237,19 @@ export const CustomWidth: Story<InformationPanelProps> = (args) => {
         <Button onClick={() => setIsOpen((open) => !open)}>Toggle</Button>
       </div>
       <InformationPanel
-        onClose={() => {
-          setIsOpen(false);
-          action('Panel closed')();
-        }}
         style={{ width: '40%', maxWidth: '70%' }} // should be set in CSS using a custom className
-        label={<Text variant='subheading'>Details</Text>}
         isOpen={isOpen}
         {...args}
+        header={
+          <InformationPanelHeader
+            onClose={() => {
+              setIsOpen(false);
+              action('Panel closed')();
+            }}
+          >
+            <Text variant='subheading'>Details</Text>
+          </InformationPanelHeader>
+        }
         orientation='vertical'
       >
         <Text>{lorem100}</Text>

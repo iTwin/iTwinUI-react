@@ -8,3 +8,6 @@ export default './InformationPanel';
 
 export { InformationPanelWrapper } from './InformationPanelWrapper';
 export type { InformationPanelWrapperProps } from './InformationPanelWrapper';
+
+export { InformationPanelHeader } from './InformationPanelHeader';
+export type { InformationPanelHeaderProps } from './InformationPanelHeader';

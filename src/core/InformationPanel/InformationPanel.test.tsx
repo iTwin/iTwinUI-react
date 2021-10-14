@@ -10,6 +10,7 @@ import { InformationPanelWrapper } from './InformationPanelWrapper';
 import { SvgCloseSmall, SvgEdit } from '@itwin/itwinui-icons-react';
 import { IconButton } from '../Buttons';
 import { act } from 'react-dom/test-utils';
+import { InformationPanelHeader } from '.';
 
 const getBoundingClientRect = HTMLElement.prototype.getBoundingClientRect;
 HTMLElement.prototype.getBoundingClientRect = () => {
@@ -27,7 +28,9 @@ afterAll(() => {
 
 it('should render in a basic state', () => {
   const { container } = render(
-    <InformationPanel label='InfoPanel label'>
+    <InformationPanel
+      header={<InformationPanelHeader>InfoPanel header</InformationPanelHeader>}
+    >
       <span className='demo-content'>InfoPanel content</span>
     </InformationPanel>,
   );
@@ -78,7 +81,11 @@ it('should allow turning off resizer', () => {
 
 it('should render close icon correctly', () => {
   const mockOnClose = jest.fn();
-  const { container } = render(<InformationPanel onClose={mockOnClose} />);
+  const { container } = render(
+    <InformationPanel
+      header={<InformationPanelHeader onClose={mockOnClose} />}
+    />,
+  );
 
   const infoPanel = container.querySelector(
     '.iui-information-panel',
@@ -109,11 +116,15 @@ it('should render custom header actions', () => {
   );
   const { container } = render(
     <InformationPanel
-      headerActions={[
-        <IconButton key='edit' styleType='borderless'>
-          <SvgEdit />
-        </IconButton>,
-      ]}
+      header={
+        <InformationPanelHeader
+          actions={[
+            <IconButton key='edit' styleType='borderless'>
+              <SvgEdit />
+            </IconButton>,
+          ]}
+        />
+      }
     />,
   );
 

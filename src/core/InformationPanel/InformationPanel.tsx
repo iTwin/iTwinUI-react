@@ -4,16 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import cx from 'classnames';
 import React from 'react';
-import { IconButton } from '../Buttons';
 import { CommonProps, useMergedRefs, useTheme } from '../utils';
-import SvgCloseSmall from '@itwin/itwinui-icons-react/cjs/icons/CloseSmall';
 import '@itwin/itwinui-css/css/information-panel.css';
 
 export type InformationPanelProps = {
-  /**
-   * Label shown at the top of the panel.
-   */
-  label?: React.ReactNode;
   /**
    * Is the panel open?
    * @default false
@@ -25,23 +19,14 @@ export type InformationPanelProps = {
    */
   orientation?: 'vertical' | 'horizontal';
   /**
-   * Callback fired when close icon is clicked.
-   */
-  onClose?: () => void;
-  /**
-   * Custom header action buttons shown alongside the close button.
-   * @example
-   * [
-   *   <IconButton styleType='borderless' onClick={() => {}}><SvgEdit /></IconButton>,
-   *   <IconButton styleType='borderless' onClick={() => {}}><SvgDelete /></IconButton>,
-   * ]
-   */
-  headerActions?: React.ReactNode[];
-  /**
    * Set to false to make the panel non-resizable.
    * @default true
    */
   resizable?: boolean;
+  /**
+   * Header of the panel. Expects `InformationPanelHeader` component.
+   */
+  header?: React.ReactNode;
   /**
    * Content of the panel.
    */
@@ -71,11 +56,9 @@ export const InformationPanel = React.forwardRef<
 >((props, ref) => {
   const {
     className,
-    label,
+    header,
     isOpen = false,
-    onClose,
     orientation = 'vertical',
-    headerActions,
     resizable = true,
     children,
     ...rest
@@ -145,19 +128,7 @@ export const InformationPanel = React.forwardRef<
           <div className='iui-resizer-bar' />
         </div>
       )}
-      <div className='iui-information-header'>
-        <span className='iui-information-header-label'>{label}</span>
-        <div className='iui-information-header-actions'>
-          {headerActions}
-          <IconButton
-            styleType='borderless'
-            onClick={onClose}
-            aria-label='Close'
-          >
-            <SvgCloseSmall aria-hidden />
-          </IconButton>
-        </div>
-      </div>
+      {header}
       <div className='iui-information-body'>{children}</div>
     </div>
   );

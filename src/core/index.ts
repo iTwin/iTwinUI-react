@@ -76,10 +76,15 @@ export type {
   HorizontalTabProps,
 } from './Tabs';
 
-export { InformationPanel, InformationPanelWrapper } from './InformationPanel';
+export {
+  InformationPanel,
+  InformationPanelWrapper,
+  InformationPanelHeader,
+} from './InformationPanel';
 export type {
   InformationPanelProps,
   InformationPanelWrapperProps,
+  InformationPanelHeaderProps,
 } from './InformationPanel';
 
 export { Input } from './Input';
