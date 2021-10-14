@@ -38,9 +38,15 @@ export const InformationPanelHeader = (props: InformationPanelHeaderProps) => {
       <span className='iui-information-header-label'>{children}</span>
       <div className='iui-information-header-actions'>
         {actions}
-        <IconButton styleType='borderless' onClick={onClose} aria-label='Close'>
-          <SvgCloseSmall aria-hidden />
-        </IconButton>
+        {onClose && (
+          <IconButton
+            styleType='borderless'
+            onClick={onClose}
+            aria-label='Close'
+          >
+            <SvgCloseSmall aria-hidden />
+          </IconButton>
+        )}
       </div>
     </div>
   );

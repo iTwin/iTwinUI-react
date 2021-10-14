@@ -29,7 +29,7 @@ afterAll(() => {
 it('should render in a basic state', () => {
   const { container } = render(
     <InformationPanel
-      header={<InformationPanelHeader>InfoPanel header</InformationPanelHeader>}
+      header={<InformationPanelHeader>InfoPanel label</InformationPanelHeader>}
     >
       <span className='demo-content'>InfoPanel content</span>
     </InformationPanel>,
@@ -55,7 +55,7 @@ it('should render in a basic state', () => {
     infoPanel.querySelector(
       '.iui-information-header-actions > .iui-button[aria-label="Close"]',
     ),
-  ).toBeTruthy();
+  ).toBeFalsy();
 });
 
 it('should be visible when isOpen is set', () => {
