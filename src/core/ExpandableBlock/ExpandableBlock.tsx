@@ -46,6 +46,11 @@ export type ExpandableBlockProps = {
    * Content in the expandable block.
    */
   children: React.ReactNode;
+  /**
+   * Modify size of the ExpandableBlock.
+   * @default 'default'
+   */
+  size?: 'default' | 'small';
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -68,6 +73,7 @@ export const ExpandableBlock = (props: ExpandableBlockProps) => {
     isExpanded = false,
     endIcon,
     status,
+    size = 'default',
     ...rest
   } = props;
 
@@ -99,8 +105,11 @@ export const ExpandableBlock = (props: ExpandableBlockProps) => {
     <div
       className={cx(
         'iui-expandable-block',
-        { 'iui-with-caption': !!caption },
-        { 'iui-expanded': expanded },
+        {
+          'iui-with-caption': !!caption,
+          'iui-expanded': expanded,
+          'iui-small': size === 'small',
+        },
         className,
       )}
       style={style}

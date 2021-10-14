@@ -76,6 +76,17 @@ export type {
   HorizontalTabProps,
 } from './Tabs';
 
+export {
+  InformationPanel,
+  InformationPanelWrapper,
+  InformationPanelHeader,
+} from './InformationPanel';
+export type {
+  InformationPanelProps,
+  InformationPanelWrapperProps,
+  InformationPanelHeaderProps,
+} from './InformationPanel';
+
 export { Input } from './Input';
 export type { InputProps } from './Input';
 
@@ -132,6 +143,7 @@ export {
   FilterButtonBar,
   DefaultCell,
   EditableCell,
+  TablePaginator,
 } from './Table';
 export type {
   TableProps,
@@ -141,6 +153,8 @@ export type {
   FilterButtonBarProps,
   DefaultCellProps,
   EditableCellProps,
+  TablePaginatorProps,
+  TablePaginatorRendererProps,
 } from './Table';
 
 export { Tag, TagContainer } from './Tag';
