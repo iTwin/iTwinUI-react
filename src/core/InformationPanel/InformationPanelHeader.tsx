@@ -14,7 +14,7 @@ export type InformationPanelHeaderProps = {
    *
    * If not specified, close icon will not be shown.
    */
-  onClose?: () => void;
+  onClose?: (e: React.MouseEvent) => void;
   /**
    * Custom header action buttons shown alongside the close button.
    * @example
