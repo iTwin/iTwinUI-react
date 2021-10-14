@@ -119,6 +119,23 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
   const ref = React.useRef<HTMLDivElement>(null);
 
+  const [focusedColor, setFocusedColor] = React.useState<number | null>();
+
+  React.useEffect(() => {
+    const colorSwatches = Array.from<HTMLElement>(
+      ref.current?.querySelectorAll('.iui-color-swatch, .iui-button') ?? [],
+    );
+    if (focusedColor != null) {
+      colorSwatches[focusedColor]?.focus();
+      return;
+    }
+    const selectedIndex = colorSwatches.findIndex(
+      (swatch) =>
+        swatch.tabIndex === 0 || swatch.getAttribute('aria-selected') == 'true',
+    );
+    setFocusedColor(selectedIndex > -1 ? selectedIndex : null);
+  }, [focusedColor]);
+
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     const colorSwatches = Array.from<HTMLElement>(
       ref.current?.querySelectorAll('.iui-color-swatch, .iui-button') ?? [],
@@ -171,7 +188,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
     }
 
     if (newIndex >= 0 && newIndex < colorSwatches.length) {
-      colorSwatches[newIndex].focus();
+      setFocusedColor(newIndex);
       event.preventDefault();
     }
   };
