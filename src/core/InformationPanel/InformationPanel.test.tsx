@@ -118,6 +118,7 @@ it('should render custom header actions', () => {
     <InformationPanel
       header={
         <InformationPanelHeader
+          onClose={jest.fn()}
           actions={[
             <IconButton key='edit' styleType='borderless'>
               <SvgEdit />
