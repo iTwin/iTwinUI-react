@@ -30,6 +30,20 @@ export type InformationPanelHeaderProps = {
   children?: React.ReactNode;
 } & Omit<CommonProps, 'title'>;
 
+/**
+ * Header of the InformationPanel to be passed in the `header` prop.
+ *
+ * @example
+ * <InformationPanelHeader
+ *   onClose={() => {}}
+ *   header={[
+ *     <IconButton styleType='borderless' onClick={() => {}}><SvgEdit /></IconButton>,
+ *     <IconButton styleType='borderless' onClick={() => {}}><SvgDelete /></IconButton>,
+ *   ]}
+ * >
+ *   <Text variant='subheading'>InfoPanel heading</Text>
+ * </InformationPanelHeader>
+ */
 export const InformationPanelHeader = (props: InformationPanelHeaderProps) => {
   const { children, onClose, actions, className, ...rest } = props;
 
