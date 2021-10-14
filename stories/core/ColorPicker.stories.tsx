@@ -10,11 +10,11 @@ import {
   IconButton,
   Tooltip,
   ColorSwatch,
-  Color,
   fillColor,
 } from '../../src/core';
 import { action } from '@storybook/addon-actions';
 import SvgAddCircular from '@itwin/itwinui-icons-react/cjs/icons/AddCircular';
+import { ColorValue } from '../../src/core/utils/color/ColorValue';
 
 export default {
   component: ColorPicker,
@@ -194,40 +194,37 @@ WithTooltip.args = {};
 export const Advanced: Story<ColorPickerProps> = (args) => {
   const [opened, setOpened] = React.useState(false);
   const [activeIndex, setActiveIndex] = React.useState(-1);
-  const [selectedColor, setSelectedColor] = React.useState<Color>(
-    fillColor({
-      hsl: { h: 0, s: 100, l: 50 },
-    }),
+  const [selectedColor, setSelectedColor] = React.useState<ColorValue>(
+    ColorValue.fromHSL({ h: 0, s: 100, l: 50 }),
   );
   const [colorDisplayString, setColorDisplayString] = React.useState(
-    selectedColor.hsl?.displayString,
+    selectedColor.toHslString(),
   );
-  const [savedColors] = React.useState<Array<Color>>([
-    { hsl: { h: 0, s: 100, l: 50 } },
-    { rgb: { r: 255, g: 98, b: 0 } },
-    { hex: { hex: '#fec134' } },
-    { hsv: { h: 95, s: 83, v: 72 } },
-    { hsl: { h: 202, s: 100, l: 59 } },
+  const [savedColors] = React.useState<Array<ColorValue>>([
+    ColorValue.fromHSL({ h: 0, s: 100, l: 50 }),
+    ColorValue.fromRGB({ r: 255, g: 98, b: 0 }),
+    ColorValue.fromString('#fec134'),
+    ColorValue.fromHSV({ h: 95, s: 83, v: 72 }),
+    ColorValue.fromHSL({ h: 202, s: 100, l: 59 }),
   ]);
 
   const onColorClick = (index: number) => {
-    const color = fillColor(savedColors[index]);
-    action(`Clicked ${color.hsl.displayString}`)();
+    action(`Clicked ${savedColors[index].toHslString()}`)();
     setActiveIndex(index);
-    setSelectedColor(color);
-    setColorDisplayString(color.hsl.displayString);
+    setSelectedColor(savedColors[index]);
+    setColorDisplayString(savedColors[index].toHslString());
   };
 
-  const onColorChanged = (color: Color) => {
+  const onColorChanged = (color: ColorValue) => {
     setActiveIndex(-1);
     setSelectedColor(color);
-    setColorDisplayString(color.hsl?.displayString);
-    action(`Selected ${color.hsl?.displayString}`)();
+    setColorDisplayString(color.toHslString());
+    action(`Selected ${color.toHslString()}`)();
   };
 
   const onAdd = () => {
     const color =
-      selectedColor?.hsl?.displayString ??
+      selectedColor?.toHslString() ??
       fillColor(selectedColor).hsl.displayString;
     if (
       savedColors.findIndex(
@@ -246,13 +243,13 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
     if (colorDisplayString == undefined) {
       setColorDisplayString(fillColor(selectedColor).hsl.displayString);
     } else if (colorDisplayString.substring(0, 3) == 'hsl') {
-      setColorDisplayString(selectedColor.rgb?.displayString);
+      setColorDisplayString(selectedColor.toRgbString());
     } else if (colorDisplayString.substring(0, 3) == 'rgb') {
-      setColorDisplayString(selectedColor.hsv?.displayString);
+      setColorDisplayString(selectedColor.toHsvString());
     } else if (colorDisplayString.substring(0, 3) == 'hsv') {
-      setColorDisplayString(selectedColor.hex?.hex);
+      setColorDisplayString(selectedColor.toHexString());
     } else {
-      setColorDisplayString(selectedColor.hsl?.displayString);
+      setColorDisplayString(selectedColor.toHslString());
     }
   };
 
@@ -261,9 +258,7 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
       <IconButton onClick={() => setOpened(!opened)}>
         <span
           style={{
-            backgroundColor: selectedColor.hsl?.displayString
-              ? selectedColor.hsl.displayString
-              : fillColor(selectedColor).hsl.displayString,
+            backgroundColor: selectedColor.toHslString(),
             border: '1px solid',
           }}
         />
@@ -288,8 +283,7 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
               <SvgAddCircular />
             </IconButton>
             {savedColors.map((color, index) => {
-              const colorString =
-                color.hsl?.displayString ?? fillColor(color).hsl.displayString;
+              const colorString = color.toHslString();
               return (
                 <>
                   <ColorSwatch

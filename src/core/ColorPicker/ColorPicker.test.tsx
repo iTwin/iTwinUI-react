@@ -6,6 +6,7 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import { ColorPicker, fillColor } from './ColorPicker';
 import ColorSwatch from './ColorSwatch';
+import { ColorValue } from '../utils/color/ColorValue';
 
 it('should render in its most basic state', () => {
   const { container } = render(
@@ -249,9 +250,7 @@ it('should set the selected color', () => {
   const { container } = render(
     <ColorPicker
       type='advanced'
-      selectedColor={{
-        hsl: { h: 42, s: 100, l: 50 },
-      }}
+      selectedColor={ColorValue.fromHSL({ h: 42, s: 100, l: 50 })}
     />,
   );
 
@@ -276,9 +275,7 @@ it('should set the dot positions', () => {
   const { container } = render(
     <ColorPicker
       type='advanced'
-      selectedColor={{
-        hsl: { h: 42, s: 100, l: 50 },
-      }}
+      selectedColor={ColorValue.fromHSL({ h: 42, s: 100, l: 50 })}
     />,
   );
 
@@ -293,9 +290,7 @@ it('should set the dot positions', () => {
     '.iui-color-dot.iui-white',
   ) as HTMLElement;
   expect(sliderDot).toBeTruthy();
-  expect(sliderDot.style.getPropertyValue('--top')).toEqual(
-    '11.999999999999998%',
-  );
+  expect(sliderDot.style.getPropertyValue('--top')).toEqual('12%');
 });
 
 it('should handle arrow key navigation on slider dot', () => {
@@ -305,7 +300,7 @@ it('should handle arrow key navigation on slider dot', () => {
     <ColorPicker
       type='advanced'
       onSelectionChanged={onSelectionChanged}
-      selectedColor={{ hsl: { h: 0, s: 100, l: 50 } }}
+      selectedColor={ColorValue.fromHSL({ h: 0, s: 100, l: 50 })}
     />,
   );
 
@@ -348,7 +343,7 @@ it('should handle arrow key navigation on color dot', () => {
     <ColorPicker
       type='advanced'
       onSelectionChanged={onSelectionChanged}
-      selectedColor={{ hsl: { h: 0, s: 100, l: 50 } }}
+      selectedColor={ColorValue.fromHSL({ h: 0, s: 100, l: 50 })}
     />,
   );
 
@@ -414,23 +409,23 @@ it('should handle arrow key navigation on color dot', () => {
 
 it('should handle color conversion', () => {
   // Any color to hsv
-  const hslColor = { hsl: { h: 0, s: 100, l: 50 } };
+  const hslColor = ColorValue.fromHSL({ h: 0, s: 100, l: 50 });
   let color = fillColor(hslColor);
   expect(color.hsv.displayString).toEqual('hsv(0, 100%, 100%)');
 
-  const hexColor = { hex: { hex: 'ff0000' } };
+  const hexColor = ColorValue.fromString('#ff0000');
   color = fillColor(hexColor);
   expect(color.hsv.displayString).toEqual('hsv(0, 100%, 100%)');
 
-  const rgbColor = { rgb: { r: 255, g: 0, b: 0 } };
+  const rgbColor = ColorValue.fromRGB({ r: 255, g: 0, b: 0 });
   color = fillColor(rgbColor);
   expect(color.hsv.displayString).toEqual('hsv(0, 100%, 100%)');
 
   //hsv to any color
-  const hsvColor = { hsv: { h: 0, s: 100, v: 100 } };
+  const hsvColor = ColorValue.fromHSV({ h: 0, s: 100, v: 100 });
   color = fillColor(hsvColor);
 
   expect(color.hsl.displayString).toEqual('hsl(0, 100%, 50%)');
-  expect(color.hex.hex).toEqual('ff0000');
+  expect(color.hex.hex).toEqual('#ff0000');
   expect(color.rgb.displayString).toEqual('rgb(255, 0, 0)');
 });
