@@ -19,7 +19,18 @@ export type SidenavSubmenuHeaderProps = {
 } & Omit<CommonProps, 'title'>;
 
 /**
- *
+ * Header content for `SidenavSubmenu`. Supports truncated label and actions buttons.
+ * @example
+ * <SidenavSubmenuHeader actions={
+ *   <IconButton styleType='borderless' onClick={() => {}} aria-label='Settings'>
+ *     <SvgSettings />
+ *   </IconButton>
+ * }>
+ *   <IconButton styleType='borderless' onClick={() => {}} aria-label='Back'>
+ *     <SvgCaretLeft />
+ *   </IconButton>
+ *   <span>Documents</span>
+ * </SidenavSubmenuHeader>
  */
 export const SidenavSubmenuHeader = (props: SidenavSubmenuHeaderProps) => {
   const { children, actions, className, ...rest } = props;
