@@ -31,6 +31,7 @@ function renderComponent(props?: Partial<SideNavigationProps>) {
 
 it('should render in its most basic state', () => {
   const { container } = renderComponent();
+  expect(container.querySelector('.iui-side-navigation-wrapper')).toBeTruthy();
   expect(container.querySelector('.iui-side-navigation')).toBeTruthy();
   expect(container.querySelector('.iui-sidenav-content')).toBeTruthy();
   expect(container.querySelector('.iui-expand')).toBeTruthy();
@@ -201,16 +202,17 @@ it('should handle custom class and style', () => {
   });
 
   const sidebar = container.querySelector(
-    '.iui-side-navigation.test-class',
+    '.iui-side-navigation-wrapper',
   ) as HTMLElement;
 
-  expect(sidebar).toBeTruthy();
-  expect(sidebar.style.height).toEqual('200px');
+  expect(sidebar).toHaveClass('test-class');
+  expect(sidebar).toHaveStyle('height: 200px');
 });
 
 it('should render with submenu', () => {
   const { container } = renderComponent({
     submenu: <SidenavSubmenu>submenu content</SidenavSubmenu>,
+    isSubmenuOpen: true,
   });
 
   const wrapper = container.querySelector(
@@ -227,4 +229,21 @@ it('should render with submenu', () => {
   expect(screen.getByText('submenu content')).toHaveClass(
     'iui-side-navigation-submenu-content',
   );
+});
+
+it('should not show submenu if isSubmenuOpen is false', () => {
+  const { container } = renderComponent({
+    submenu: <SidenavSubmenu>submenu content</SidenavSubmenu>,
+    isSubmenuOpen: false,
+  });
+
+  const wrapper = container.querySelector(
+    '.iui-side-navigation-wrapper',
+  ) as HTMLElement;
+
+  expect(wrapper.querySelector('.iui-side-navigation')).toBeTruthy();
+  expect(wrapper.querySelector('.iui-sidenav-content')).toBeTruthy();
+
+  expect(wrapper.querySelector('.iui-side-navigation-submenu')).toBeFalsy();
+  expect(screen.queryByText('submenu content')).toBeFalsy();
 });
