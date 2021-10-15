@@ -28,7 +28,7 @@ import { useState } from '@storybook/addons';
 export default {
   title: 'Core/DropdownMenu',
   component: DropdownMenu,
-  subcomponents: { MenuItem },
+  subcomponents: { MenuItem, MenuDivider, MenuContent },
   argTypes: {
     style: { control: { disable: true } },
     className: { control: { disable: true } },

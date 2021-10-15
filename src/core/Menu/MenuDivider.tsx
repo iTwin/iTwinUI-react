@@ -3,8 +3,11 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { useTheme } from '../utils';
+import cx from 'classnames';
+import { CommonProps, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/menu.css';
+
+export type MenuDividerProps = Omit<CommonProps, 'title'>;
 
 /**
  * Divider between menu items. Should be used inside `Menu`.
@@ -21,9 +24,16 @@ import '@itwin/itwinui-css/css/menu.css';
  *   ]}
  * </Menu>
  */
-export const MenuDivider = () => {
+export const MenuDivider = (props: MenuDividerProps) => {
+  const { className, ...rest } = props;
   useTheme();
-  return <li role='separator' className='iui-menu-divider' />;
+  return (
+    <li
+      role='separator'
+      className={cx('iui-menu-divider', className)}
+      {...rest}
+    />
+  );
 };
 
 export default MenuDivider;
