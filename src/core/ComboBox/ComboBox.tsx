@@ -101,6 +101,13 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     [options, id],
   );
 
+  // Reset state when options chnge
+  React.useLayoutEffect(() => {
+    setFilteredOptions(options);
+    setSelectedValue(undefined);
+    setFocusedIndex(-1);
+  }, [options]);
+
   const memoizedItems = React.useMemo(
     () =>
       options.map(({ label, value, ...rest }, index) => (
@@ -274,14 +281,22 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     }
     return filteredOptions.map((option) => {
       const index = options.findIndex(({ value }) => option.value === value);
-      return focusedIndex !== index && selectedValue !== option.value
-        ? memoizedItems[index]
-        : React.cloneElement(memoizedItems[index], {
-            className: cx({ 'iui-focused': focusedIndex === index }),
-            isSelected: selectedValue === option.value,
-            ref: (el: HTMLElement) =>
-              focusedIndex === index && el?.scrollIntoView(false),
-          });
+      if (index < 0) {
+        return;
+      }
+
+      if (selectedValue === option.value) {
+        return React.cloneElement(memoizedItems[index], { isSelected: true });
+      }
+
+      if (focusedIndex === index) {
+        return React.cloneElement(memoizedItems[index], {
+          className: 'iui-focused',
+          ref: (el: HTMLElement) => el?.scrollIntoView(),
+        });
+      }
+
+      return memoizedItems[index];
     });
   }, [
     filteredOptions,
