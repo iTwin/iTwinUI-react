@@ -101,13 +101,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     [options, id],
   );
 
-  // Reset state when options change
-  React.useLayoutEffect(() => {
-    setFilteredOptions(options);
-    setSelectedValue(undefined);
-    setFocusedIndex(-1);
-  }, [options]);
-
   const memoizedItems = React.useMemo(
     () =>
       options.map(({ label, value, ...rest }, index) => (
@@ -143,6 +136,10 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   }, [isOpen]);
 
   const [filteredOptions, setFilteredOptions] = React.useState(options);
+  React.useEffect(() => {
+    setFilteredOptions(options);
+  }, [options]);
+
   const [focusedIndex, setFocusedIndex] = React.useState(() =>
     options.findIndex((option) => value === option.value),
   );
