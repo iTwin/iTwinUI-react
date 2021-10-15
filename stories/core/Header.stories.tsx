@@ -16,7 +16,7 @@ import {
   HeaderProps,
   IconButton,
   Input,
-  MenuContent,
+  MenuExtraContent,
   MenuItem,
   UserIcon,
   Text,
@@ -80,7 +80,7 @@ export const Full: Story<HeaderProps> = (args) => {
   const [userType, setUserType] = useState('User');
 
   const userIconMenuItems = (close: () => void) => [
-    <MenuContent key={0}>
+    <MenuExtraContent key={0}>
       <>
         <Text variant='leading'>Terry Rivers</Text>
         <Text isMuted style={{ marginBottom: 8 }}>
@@ -96,7 +96,7 @@ export const Full: Story<HeaderProps> = (args) => {
           onChange={(type) => setUserType(type)}
         />
       </>
-    </MenuContent>,
+    </MenuExtraContent>,
     <MenuDivider key={1} />,
     <MenuItem
       key={2}

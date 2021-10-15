@@ -7,7 +7,7 @@ import { fireEvent, render } from '@testing-library/react';
 import MenuItem from './MenuItem';
 import Menu, { MenuProps } from './Menu';
 import { MenuDivider } from './MenuDivider';
-import { MenuContent } from './MenuContent';
+import { MenuExtraContent } from './MenuExtraContent';
 
 const testLabels = ['Test0', 'Test1', 'Test2'];
 
@@ -64,7 +64,7 @@ it('should focus selected item', () => {
 it('should handle keyboard navigation', () => {
   const { container } = renderComponent({
     children: [
-      <MenuContent key={0}>Test content</MenuContent>,
+      <MenuExtraContent key={0}>Test content</MenuExtraContent>,
       <MenuItem key={1}>Test0</MenuItem>,
       <MenuItem key={2}>Test1</MenuItem>,
       <MenuDivider key={3} />,

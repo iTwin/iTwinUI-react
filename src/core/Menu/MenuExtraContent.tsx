@@ -7,7 +7,7 @@ import cx from 'classnames';
 import { CommonProps, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/menu.css';
 
-export type MenuContentProps = {
+export type MenuExtraContentProps = {
   children: React.ReactNode;
 } & Omit<CommonProps, 'title'>;
 
@@ -16,14 +16,14 @@ export type MenuContentProps = {
  * @example
  * <Menu>
  *   {(close) => [
- *     <MenuContent key={0}>
+ *     <MenuExtraContent key={0}>
  *       <>
  *         <Text variant='leading'>Terry Rivers</Text>
  *           terry.rivers@email.com
  *         </Text>
  *         <Select options={someOptions} />
  *       </>
- *     </MenuContent>,
+ *     </MenuExtraContent>,
  *     <MenuDivider key={1} />,
  *     <MenuItem key={2} onClick={() => {}}>
  *       Sign out
@@ -31,7 +31,7 @@ export type MenuContentProps = {
  *   ]}
  * </Menu>
  */
-export const MenuContent = (props: MenuContentProps) => {
+export const MenuExtraContent = (props: MenuExtraContentProps) => {
   const { children, className, ...rest } = props;
   useTheme();
   return (
@@ -45,4 +45,4 @@ export const MenuContent = (props: MenuContentProps) => {
   );
 };
 
-export default MenuContent;
+export default MenuExtraContent;

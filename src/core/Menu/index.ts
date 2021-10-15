@@ -11,5 +11,5 @@ export type { MenuItemProps } from './MenuItem';
 export { MenuDivider } from './MenuDivider';
 export type { MenuDividerProps } from './MenuDivider';
 
-export { MenuContent } from './MenuContent';
-export type { MenuContentProps } from './MenuContent';
+export { MenuExtraContent } from './MenuExtraContent';
+export type { MenuExtraContentProps } from './MenuExtraContent';

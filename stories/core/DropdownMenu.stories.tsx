@@ -9,7 +9,7 @@ import {
   DropdownMenu,
   DropdownMenuProps,
   IconButton,
-  MenuContent,
+  MenuExtraContent,
   MenuDivider,
   MenuItem,
   Select,
@@ -28,7 +28,7 @@ import { useState } from '@storybook/addons';
 export default {
   title: 'Core/DropdownMenu',
   component: DropdownMenu,
-  subcomponents: { MenuItem, MenuDivider, MenuContent },
+  subcomponents: { MenuItem, MenuDivider, MenuExtraContent },
   argTypes: {
     style: { control: { disable: true } },
     className: { control: { disable: true } },
@@ -330,7 +330,7 @@ export const WithContent: Story<DropdownMenuProps> = (args) => {
   const [userType, setUserType] = useState('User');
 
   const dropdownMenuItems = (close: () => void) => [
-    <MenuContent key={0}>
+    <MenuExtraContent key={0}>
       <>
         <Text variant='leading'>Terry Rivers</Text>
         <Text isMuted style={{ marginBottom: 8 }}>
@@ -346,7 +346,7 @@ export const WithContent: Story<DropdownMenuProps> = (args) => {
           onChange={(type) => setUserType(type)}
         />
       </>
-    </MenuContent>,
+    </MenuExtraContent>,
     <MenuDivider key={1} />,
     <MenuItem key={2} onClick={onClick('View profile', close)}>
       View profile
