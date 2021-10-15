@@ -202,9 +202,9 @@ export const ColorPicker = (props: ColorPickerProps) => {
   const [squareColor, setSquareColor] = React.useState(() =>
     fillColor(ColorValue.fromHSV({ h: dotColor.hsv.h, s: 100, v: 100 })),
   );
-  // const [sliderTop, setSliderTop] = React.useState(() =>
-  //   Math.round(dotColor.hsv.h / 3.59),
-  // );
+  const [sliderValue, setSliderValue] = React.useState(() =>
+    Math.round(dotColor.hsv.h / 3.59),
+  );
   const [squareTop, setSquareTop] = React.useState(() => 100 - dotColor.hsv.v);
   const [squareLeft, setSquareLeft] = React.useState(() => dotColor.hsv.s);
   const [activeDotIndex, setActiveDotIndex] = React.useState<
@@ -236,11 +236,9 @@ export const ColorPicker = (props: ColorPickerProps) => {
       };
 
   // Update slider change
-  const sliderRef = React.useRef<HTMLDivElement>(null);
-
   const updateSlider = React.useCallback(
     (y: number, selectionChanged: boolean) => {
-      // setSliderTop(y);
+      setSliderValue(y);
 
       const hue = Math.round(y * 3.59);
       const newSquareColor = ColorValue.fromHSV({
@@ -267,90 +265,19 @@ export const ColorPicker = (props: ColorPickerProps) => {
     },
     [dotColor.hsv.s, dotColor.hsv.v, onSelectionChanged],
   );
-
-  const updateSliderValue = React.useCallback(
-    (
-      event: PointerEvent | React.PointerEvent,
-      callbackType: 'onChange' | 'onUpdate' | 'onClick',
-    ) => {
-      if (
-        (sliderRef.current && activeDotIndex == 0) ||
-        (sliderRef.current && callbackType == 'onClick')
-      ) {
-        const percent = getVerticalPercentageOfRectangle(
-          sliderRef.current.getBoundingClientRect(),
-          event.clientY,
-        );
-
-        if (callbackType == 'onChange' || callbackType == 'onClick') {
-          updateSlider(percent, true);
-        } else if (callbackType == 'onUpdate') {
-          updateSlider(percent, false);
-        }
-      }
+  const onChangeColor = React.useCallback(
+    (values: ReadonlyArray<number>) => {
+      updateSlider(values[0], false);
     },
-    [activeDotIndex, updateSlider],
+    [updateSlider],
   );
-  const handleSliderPointerUp = React.useCallback(
-    (event: PointerEvent) => {
-      updateSliderValue(event, 'onChange');
-      setActiveDotIndex(undefined);
-      event.preventDefault();
-      event.stopPropagation();
+
+  const onChangeColorCompleted = React.useCallback(
+    (values: ReadonlyArray<number>) => {
+      updateSlider(values[0], true);
     },
-    [updateSliderValue],
+    [updateSlider],
   );
-  useEventListener(
-    'pointerup',
-    handleSliderPointerUp,
-    ref.current?.ownerDocument,
-  );
-
-  const handlePointerMove = React.useCallback(
-    (event: PointerEvent): void => {
-      event.preventDefault();
-      event.stopPropagation();
-      updateSliderValue(event, 'onUpdate');
-    },
-    [updateSliderValue],
-  );
-  useEventListener(
-    'pointermove',
-    handlePointerMove,
-    ref.current?.ownerDocument,
-  );
-
-  // const handlePointerDownOnSlider = React.useCallback(
-  //   (event: React.PointerEvent) => {
-  //     updateSliderValue(event, 'onClick');
-  //     setActiveDotIndex(0);
-  //   },
-  //   [updateSliderValue],
-  // );
-
-  // // Arrow key navigation for slider dot
-  // const handleSliderDotKeyDown = (
-  //   event: React.KeyboardEvent<HTMLDivElement>,
-  // ) => {
-  //   let y = sliderTop;
-  //   switch (event.key) {
-  //     case 'ArrowDown': {
-  //       y = Math.min(y + 1, 100);
-  //       updateSlider(y, false);
-  //       break;
-  //     }
-  //     case 'ArrowUp': {
-  //       y = Math.max(y - 1, 0);
-  //       updateSlider(y, false);
-  //       break;
-  //     }
-  //     case 'Enter':
-  //     case ' ':
-  //     case 'Spacebar':
-  //       updateSlider(y, true);
-  //       break;
-  //   }
-  // };
 
   // Update Color field square change
   const squareRef = React.useRef<HTMLDivElement>(null);
@@ -404,7 +331,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
   const handleSquarePointerUp = React.useCallback(
     (event: PointerEvent) => {
       updateSquareValue(event, 'onChange');
-
+      setActiveDotIndex(undefined);
       event.preventDefault();
       event.stopPropagation();
     },
@@ -502,23 +429,14 @@ export const ColorPicker = (props: ColorPickerProps) => {
           <Slider
             minLabel=''
             maxLabel=''
-            values={[100]}
+            values={[sliderValue]}
             className='iui-hue-slider'
             trackDisplayMode='none'
             tooltipProps={() => {
               return { visible: false };
             }}
-          />
-
-          <Slider
-            minLabel=''
-            maxLabel=''
-            values={[100]}
-            className='iui-opacity-slider'
-            trackDisplayMode='none'
-            tooltipProps={() => {
-              return { visible: false };
-            }}
+            onChange={onChangeColorCompleted}
+            onUpdate={onChangeColor}
           />
         </div>
       )}
