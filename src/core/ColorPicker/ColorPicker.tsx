@@ -20,17 +20,9 @@ import {
 } from '../utils/color/ColorValue';
 import { ColorByName } from '../utils/color/ColorByName';
 import { Slider } from '../Slider';
+import ColorSwatch from './ColorSwatch';
 
-type HexColor = {
-  hex: string;
-};
-
-export type Color = {
-  hsl?: HslColor;
-  rgb?: RgbColor;
-  hex?: HexColor;
-  hsv?: HsvColor;
-};
+export type Color = HslColor | RgbColor | HsvColor | string;
 
 const getVerticalPercentageOfRectangle = (rect: DOMRect, pointer: number) => {
   const position = getBoundedValue(pointer, rect.top, rect.bottom);
@@ -55,6 +47,20 @@ export const fillColor = (color: ColorValue) => {
   };
 };
 
+export type ColorBuilderProps = {
+  /** If set show either HSL or RGB input values. If undefined no input values are shown
+   *  What if you want advanced without input values?
+   */
+  defaultColorInputType?: 'HSL' | 'RGB' | 'HEX';
+};
+
+export type ColorPaletteProps = {
+  /** Available color values to show in palette */
+  colors?: Color[];
+  /** Title shown above color palette (NOTE: do not supply a default or you will be responsible for localizing it.) */
+  colorPaletteTitle?: string;
+};
+
 export type ColorPickerProps = {
   /**
    * Color Swatches that will be added within the color palette.
@@ -64,11 +70,6 @@ export type ColorPickerProps = {
    */
   children?: React.ReactNode;
   /**
-   * Type of color picker.
-   * Basic for a simple color palette, advanced for color customization options.
-   */
-  type?: 'basic' | 'advanced';
-  /**
    * The selected color to be shown as the initial color in advanced color picker.
    * Only for advanced color picker.
    */
@@ -77,12 +78,22 @@ export type ColorPickerProps = {
    * Handler for when selectedColor is changed.
    * Only for advanced color picker.
    */
-  onSelectionChanged?: (color: ColorValue) => void;
+  onChange?: (color: ColorValue) => void;
   /**
-   * Title shown above color palette
-   * Only for advanced color picker
+   * Handler for when selectedColor is changed.
+   * Only for advanced color picker.
    */
-  colorPaletteTitle?: string;
+  onChangeCompleted?: (color: ColorValue) => void;
+  /**
+   * Props used to determine what components to display to allow user to build their own color. if undefined
+   * then paletteProps must be defined.
+   */
+  builderProps?: ColorBuilderProps;
+  /**
+   * Props used to display a palette of colors. If used in combination with builderProps then the palette is shown below
+   * the builder components. A ReactNode can be used if user wants to provide a custom palette.
+   */
+  paletteProps?: ColorPaletteProps;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -109,10 +120,11 @@ export const ColorPicker = (props: ColorPickerProps) => {
   const {
     children,
     className,
-    type,
     selectedColor,
-    onSelectionChanged,
-    colorPaletteTitle,
+    onChange,
+    onChangeCompleted,
+    builderProps,
+    paletteProps,
     ...rest
   } = props;
 
@@ -121,6 +133,11 @@ export const ColorPicker = (props: ColorPickerProps) => {
   const ref = React.useRef<HTMLDivElement>(null);
 
   const [focusedColor, setFocusedColor] = React.useState<number | null>();
+  const [activeColor, setActiveColor] = React.useState<ColorValue>(
+    typeof selectedColor === 'string'
+      ? ColorValue.fromString(selectedColor)
+      : ColorValue.fromString('#00121D'),
+  );
 
   React.useEffect(() => {
     const colorSwatches = Array.from<HTMLElement>(
@@ -260,10 +277,12 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
       //Only update selected color when dragging is done
       if (selectionChanged) {
-        onSelectionChanged?.(newDotColor);
+        onChangeCompleted?.(newDotColor);
+      } else {
+        onChange?.(newDotColor);
       }
     },
-    [dotColor.hsv.s, dotColor.hsv.v, onSelectionChanged],
+    [dotColor.hsv.s, dotColor.hsv.v, onChange, onChangeCompleted],
   );
   const onChangeColor = React.useCallback(
     (values: ReadonlyArray<number>) => {
@@ -295,10 +314,10 @@ export const ColorPicker = (props: ColorPickerProps) => {
       const color = fillColor(newColor);
       setDotColor(color);
       if (selectionChanged) {
-        onSelectionChanged?.(newColor);
+        onChangeCompleted?.(newColor);
       }
     },
-    [onSelectionChanged, squareColor.hsv.h],
+    [onChangeCompleted, squareColor.hsv.h],
   );
 
   const updateSquareValue = React.useCallback(
@@ -400,15 +419,11 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
   return (
     <div
-      className={cx(
-        'iui-color-picker',
-        { [`iui-${type}`]: type !== 'basic' },
-        className,
-      )}
+      className={cx('iui-color-picker', className)}
       style={colorSquareStyle}
       {...rest}
     >
-      {type == 'advanced' && (
+      {builderProps && (
         <div className='iui-color-selection-wrapper'>
           <div
             className='iui-color-field'
@@ -440,24 +455,44 @@ export const ColorPicker = (props: ColorPickerProps) => {
           />
         </div>
       )}
-      {
-        <div>
-          {children && (
-            <div className='iui-color-picker-section-label'>
-              {colorPaletteTitle}
-            </div>
-          )}
-          {children && (
-            <div
-              className='iui-color-palette'
-              onKeyDown={handleKeyDown}
-              ref={ref}
-            >
-              {children}
-            </div>
-          )}
-        </div>
-      }
+      <div>
+        {paletteProps?.colorPaletteTitle && (
+          <div className='iui-color-picker-section-label'>
+            {paletteProps.colorPaletteTitle}
+          </div>
+        )}
+        {paletteProps && (
+          <div
+            className='iui-color-palette'
+            onKeyDown={handleKeyDown}
+            ref={ref}
+          >
+            {paletteProps.colors?.map((color, index) => {
+              return (
+                <ColorSwatch
+                  key={index}
+                  color={color}
+                  onClick={() => {
+                    if (typeof color === 'string') {
+                      onChangeCompleted?.(ColorValue.fromString(color));
+                      // } else if (color.type === HSVColor) {
+                      //   onChangeCompleted(ColorValue.fromHSL(color));
+                      setActiveColor(ColorValue.fromString(color));
+                    }
+                  }}
+                  isActive={
+                    typeof color === 'string'
+                      ? ColorValue.fromString(color).toHslString() ===
+                        activeColor?.toHslString()
+                      : false
+                  }
+                />
+              );
+            })}
+            {children}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -8,12 +8,10 @@ import {
   ColorPicker,
   ColorPickerProps,
   IconButton,
-  Tooltip,
   ColorSwatch,
   fillColor,
 } from '../../src/core';
 import { action } from '@storybook/addon-actions';
-import SvgAddCircular from '@itwin/itwinui-icons-react/cjs/icons/AddCircular';
 import { ColorValue } from '../../src/core/utils/color/ColorValue';
 
 export default {
@@ -60,13 +58,19 @@ const ColorsList = [
 ];
 
 export const Basic: Story<ColorPickerProps> = (args) => {
-  const [activeIndex, setActiveIndex] = React.useState(5);
+  const [activeColor, setActiveColor] = React.useState('#00426B');
+  const [colorName, setColorName] = React.useState(ColorsList[2].name);
 
   const [opened, setOpened] = React.useState(false);
 
-  const onClickColor = (index: number) => {
-    action(`Clicked color ${ColorsList[index].color}`)();
-    setActiveIndex(index);
+  const onColorChanged = (color: ColorValue) => {
+    const colorString = color.toHexString();
+    const index = ColorsList.findIndex(
+      (swatch) => swatch.color.toLowerCase() == colorString,
+    );
+    setActiveColor(colorString);
+    setColorName(ColorsList[index].name);
+    action(`Selected ${colorString}`)();
   };
 
   return (
@@ -74,35 +78,27 @@ export const Basic: Story<ColorPickerProps> = (args) => {
       <IconButton onClick={() => setOpened(!opened)}>
         <span
           style={{
-            backgroundColor: ColorsList[activeIndex].color,
+            backgroundColor: activeColor,
             border: '1px solid',
           }}
         />
       </IconButton>
-      <span style={{ marginLeft: 16 }}>{ColorsList[activeIndex].name}</span>
+      <span style={{ marginLeft: 16 }}>{colorName}</span>
       {opened && (
         <div style={{ marginTop: 4 }}>
-          <ColorPicker {...args}>
-            {ColorsList.map((color, index) => {
-              return (
-                <ColorSwatch
-                  key={index + color.color}
-                  color={color.color}
-                  onClick={() => {
-                    onClickColor(index);
-                  }}
-                  isActive={index === activeIndex}
-                />
-              );
-            })}
-          </ColorPicker>
+          <ColorPicker onChangeCompleted={onColorChanged} {...args} />
         </div>
       )}
     </>
   );
 };
-
-Basic.args = {};
+Basic.args = {
+  paletteProps: {
+    colors: ColorsList.map((color) => {
+      return color.color;
+    }),
+  },
+};
 
 export const ColorSwatchOnly: Story<ColorPickerProps> = () => {
   const [activeIndex, setActiveIndex] = React.useState(0);
@@ -136,107 +132,28 @@ export const ColorSwatchOnly: Story<ColorPickerProps> = () => {
     </>
   );
 };
-
 ColorSwatchOnly.args = {};
-
-export const WithTooltip: Story<ColorPickerProps> = (args) => {
-  const [opened, setOpened] = React.useState(false);
-
-  const [activeIndex, setActiveIndex] = React.useState(-1);
-
-  const onColorClick = (index: number) => {
-    action(`Clicked ${ColorsList[index].name}`)();
-    setActiveIndex(index);
-  };
-
-  return (
-    <>
-      <IconButton onClick={() => setOpened(!opened)}>
-        <span
-          style={{
-            backgroundColor:
-              activeIndex > -1 ? ColorsList[activeIndex].color : '#FFF',
-            border: '1px solid',
-          }}
-        />
-      </IconButton>
-      <span style={{ marginLeft: 16 }}>
-        {activeIndex > -1 ? ColorsList[activeIndex].name : 'No color selected.'}
-      </span>
-      {opened && (
-        <div style={{ marginTop: 4 }}>
-          <ColorPicker {...args}>
-            {ColorsList.map((color, index) => {
-              return (
-                <>
-                  <Tooltip content={color.name} placement={'bottom-end'}>
-                    <ColorSwatch
-                      key={index + color.color}
-                      color={color.color}
-                      onClick={() => {
-                        onColorClick(index);
-                      }}
-                      isActive={index == activeIndex}
-                    />
-                  </Tooltip>
-                </>
-              );
-            })}
-          </ColorPicker>
-        </div>
-      )}
-    </>
-  );
-};
-
-WithTooltip.args = {};
 
 export const Advanced: Story<ColorPickerProps> = (args) => {
   const [opened, setOpened] = React.useState(false);
-  const [activeIndex, setActiveIndex] = React.useState(-1);
   const [selectedColor, setSelectedColor] = React.useState<ColorValue>(
     ColorValue.fromHSL({ h: 0, s: 100, l: 50 }),
   );
   const [colorDisplayString, setColorDisplayString] = React.useState(
     selectedColor.toHslString(),
   );
-  const [savedColors] = React.useState<Array<ColorValue>>([
-    ColorValue.fromHSL({ h: 0, s: 100, l: 50 }),
-    ColorValue.fromRGB({ r: 255, g: 98, b: 0 }),
-    ColorValue.fromString('#fec134'),
-    ColorValue.fromHSV({ h: 95, s: 83, v: 72 }),
-    ColorValue.fromHSL({ h: 202, s: 100, l: 59 }),
-  ]);
-
-  const onColorClick = (index: number) => {
-    action(`Clicked ${savedColors[index].toHslString()}`)();
-    setActiveIndex(index);
-    setSelectedColor(savedColors[index]);
-    setColorDisplayString(savedColors[index].toHslString());
-  };
+  // const [savedColors] = React.useState<Array<ColorValue>>([
+  //   ColorValue.fromHSL({ h: 0, s: 100, l: 50 }),
+  //   ColorValue.fromRGB({ r: 255, g: 98, b: 0 }),
+  //   ColorValue.fromString('#fec134'),
+  //   ColorValue.fromHSV({ h: 95, s: 83, v: 72 }),
+  //   ColorValue.fromHSL({ h: 202, s: 100, l: 59 }),
+  // ]);
 
   const onColorChanged = (color: ColorValue) => {
-    setActiveIndex(-1);
     setSelectedColor(color);
     setColorDisplayString(color.toHslString());
     action(`Selected ${color.toHslString()}`)();
-  };
-
-  const onAdd = () => {
-    const color =
-      selectedColor?.toHslString() ??
-      fillColor(selectedColor).hsl.displayString;
-    if (
-      savedColors.findIndex(
-        (swatch) => fillColor(swatch).hsl.displayString === color,
-      ) > -1
-    ) {
-      action(`Cannot add duplicate color ${color}`)();
-      return;
-    }
-    action(`Added color ${color}`)();
-    setActiveIndex(savedColors.length);
-    savedColors.push(selectedColor);
   };
 
   const onUpdateDisplayString = () => {
@@ -272,32 +189,9 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
         <div style={{ marginTop: 4 }}>
           <ColorPicker
             selectedColor={selectedColor}
-            onSelectionChanged={onColorChanged}
+            onChangeCompleted={onColorChanged}
             {...args}
-          >
-            <IconButton
-              styleType={'borderless'}
-              onClick={onAdd}
-              style={{ padding: 0 }}
-            >
-              <SvgAddCircular />
-            </IconButton>
-            {savedColors.map((color, index) => {
-              const colorString = color.toHslString();
-              return (
-                <>
-                  <ColorSwatch
-                    key={index + colorString}
-                    color={colorString}
-                    onClick={() => {
-                      onColorClick(index);
-                    }}
-                    isActive={index == activeIndex}
-                  />
-                </>
-              );
-            })}
-          </ColorPicker>
+          />
         </div>
       )}
     </>
@@ -305,6 +199,11 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
 };
 
 Advanced.args = {
-  type: 'advanced',
-  colorPaletteTitle: 'Saved Colors',
+  paletteProps: {
+    colors: ['#FFFFFF', '#5A6973', '#346711'],
+    colorPaletteTitle: 'Saved Colors',
+  },
+  builderProps: {
+    defaultColorInputType: 'HEX',
+  },
 };

@@ -5,19 +5,19 @@
 import React from 'react';
 import cx from 'classnames';
 import '@itwin/itwinui-css/css/color-picker.css';
-import { useTheme, CommonProps, getWindow } from '../utils';
+import { useTheme, getWindow } from '../utils';
+import { Color } from './ColorPicker';
 
 export type ColorSwatchProps = {
   /**
    * Color code.
    */
-  color: string;
+  color: Color;
   /**
    * Is color selected.
    */
   isActive?: boolean;
-} & CommonProps &
-  React.ComponentPropsWithRef<'div'>;
+} & Omit<React.ComponentPropsWithRef<'div'>, 'color'>;
 
 /**
  * ColorSwatch component to display a color within a basic color picker.
@@ -30,10 +30,11 @@ export const ColorSwatch = React.forwardRef<HTMLDivElement, ColorSwatchProps>(
 
     useTheme();
 
+    const c = typeof color === 'string' ? color : '#00121D';
     const _style =
-      color && getWindow()?.CSS?.supports?.(`--swatch-color: ${color}`)
-        ? { '--swatch-color': color, ...style }
-        : { backgroundColor: color, ...style };
+      color && getWindow()?.CSS?.supports?.(`--swatch-color: ${c}`)
+        ? { '--swatch-color': c, ...style }
+        : { backgroundColor: c, ...style };
 
     return (
       <div
