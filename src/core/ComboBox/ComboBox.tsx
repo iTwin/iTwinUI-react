@@ -285,14 +285,12 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
         return;
       }
 
-      if (selectedValue === option.value) {
-        return React.cloneElement(memoizedItems[index], { isSelected: true });
-      }
-
-      if (focusedIndex === index) {
+      if (selectedValue === option.value || focusedIndex === index) {
         return React.cloneElement(memoizedItems[index], {
-          className: 'iui-focused',
-          ref: (el: HTMLElement) => el?.scrollIntoView(),
+          isSelected: selectedValue === option.value,
+          className: cx({ 'iui-focused': focusedIndex === index }),
+          ref: (el: HTMLElement) =>
+            focusedIndex === index && el?.scrollIntoView(false),
         });
       }
 
