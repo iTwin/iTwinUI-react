@@ -101,7 +101,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     [options, id],
   );
 
-  // Reset state when options chnge
+  // Reset state when options change
   React.useLayoutEffect(() => {
     setFilteredOptions(options);
     setSelectedValue(undefined);
