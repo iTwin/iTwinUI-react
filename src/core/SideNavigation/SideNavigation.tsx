@@ -34,10 +34,24 @@ export type SideNavigationProps = {
    */
   onExpanderClick?: () => void;
   /**
-   * Submenu to show supplemental info assicated to the  main item.
-   * Recommended to use the `SidenavSubmenu` component.
+   * Submenu to show supplemental info assicated to the main item.
+   * @example
+   * <SideNavigation
+   *   // ...
+   *   submenu={(
+   *   <>
+   *     <SidenavSubmenuHeader>Documents</SidenavSubmenuHeader>
+   *     <span>List of documents</span>
+   *   </>
+   *   )}
+   * />
    */
   submenu?: JSX.Element;
+  /**
+   * Set to true to display the provided `submenu`.
+   * @default false
+   */
+  isSubmenuOpen?: boolean;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -63,6 +77,7 @@ export const SideNavigation = (props: SideNavigationProps) => {
     isExpanded = false,
     onExpanderClick,
     submenu,
+    isSubmenuOpen = false,
     ...rest
   } = props;
 
@@ -86,17 +101,12 @@ export const SideNavigation = (props: SideNavigationProps) => {
   );
 
   return (
-    <div className='iui-side-navigation-wrapper'>
+    <div className={cx('iui-side-navigation-wrapper', className)} {...rest}>
       <div
-        className={cx(
-          'iui-side-navigation',
-          {
-            'iui-expanded': _isExpanded,
-            'iui-collapsed': !_isExpanded,
-          },
-          className,
-        )}
-        {...rest}
+        className={cx('iui-side-navigation', {
+          'iui-expanded': _isExpanded,
+          'iui-collapsed': !_isExpanded,
+        })}
       >
         {expanderPlacement === 'top' && ExpandButton}
         <div className='iui-sidenav-content'>
@@ -133,14 +143,16 @@ export const SideNavigation = (props: SideNavigationProps) => {
         </div>
         {expanderPlacement === 'bottom' && ExpandButton}
       </div>
-      <WithCSSTransition
-        in={!!submenu}
-        dimension='width'
-        timeout={200}
-        classNames='iui'
-      >
-        <div className='iui-side-navigation-submenu'>{submenu}</div>
-      </WithCSSTransition>
+      {submenu && (
+        <WithCSSTransition
+          in={isSubmenuOpen}
+          dimension='width'
+          timeout={200}
+          classNames='iui'
+        >
+          {submenu}
+        </WithCSSTransition>
+      )}
     </div>
   );
 };

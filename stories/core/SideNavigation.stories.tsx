@@ -16,9 +16,9 @@ import {
   SideNavigation,
   SidenavButton,
   SidenavSubmenu,
+  SidenavSubmenuHeader,
   SideNavigationProps,
   Text,
-  SidenavSubmenuHeader,
   IconButton,
 } from '../../src/core';
 
@@ -96,21 +96,21 @@ export const ActiveItem: Story<SideNavigationProps> = (args) => {
 };
 
 export const Submenu: Story<SideNavigationProps> = (args) => {
-  const itemLabels = ['Home', 'Issues', 'Documents'];
-  const itemIcons = [
-    <SvgHome key={0} />,
-    <SvgFlag key={1} />,
-    <SvgFolderOpened key={2} />,
+  const itemsData = [
+    { label: 'Home', icon: <SvgHome /> },
+    { label: 'Issues', icon: <SvgFlag /> },
+    { label: 'Documents', icon: <SvgFolderOpened /> },
+    { label: 'Settings', icon: <SvgSettings /> },
   ];
 
   const [activeItem, setActiveItem] = useState(2);
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(true);
   const [activeSubItem, setActiveSubItem] = useState(0);
 
-  const mainItems = itemLabels.map((label, index) => (
+  const items = itemsData.map(({ label, icon }, index) => (
     <SidenavButton
       key={index}
-      startIcon={itemIcons[index]}
+      startIcon={icon}
       isActive={activeItem === index}
       onClick={() => {
         if (label !== 'Documents') {
@@ -131,42 +131,37 @@ export const Submenu: Story<SideNavigationProps> = (args) => {
       <SideNavigation
         {...args}
         expanderPlacement='bottom'
-        items={mainItems}
-        secondaryItems={[
-          <SidenavButton startIcon={<SvgSettings />} key={3}>
-            Settings
-          </SidenavButton>,
-        ]}
+        items={items.slice(0, 3)}
+        secondaryItems={[items[3]]}
+        isSubmenuOpen={isSubmenuOpen}
         submenu={
-          isSubmenuOpen ? (
-            <SidenavSubmenu>
-              <SidenavSubmenuHeader
-                actions={
-                  <IconButton key={'settings'} styleType='borderless'>
-                    <SvgSettings />
-                  </IconButton>
-                }
-              >
-                <span>Documents</span>
-              </SidenavSubmenuHeader>
-              <Text variant='leading'>All documents</Text>
-              <ul>
-                {[...Array(10).fill(null)].map((_, index) => (
-                  <li key={index}>
-                    <a
-                      className='iui-anchor'
-                      onClick={() => {
-                        setActiveItem(2);
-                        setActiveSubItem(index);
-                      }}
-                    >
-                      Folder {index}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </SidenavSubmenu>
-          ) : undefined
+          <SidenavSubmenu>
+            <SidenavSubmenuHeader
+              actions={
+                <IconButton styleType='borderless'>
+                  <SvgSettings />
+                </IconButton>
+              }
+            >
+              <span>Documents</span>
+            </SidenavSubmenuHeader>
+            <Text variant='leading'>All documents</Text>
+            <ul>
+              {[...Array(10).fill(null)].map((_, index) => (
+                <li key={index}>
+                  <a
+                    className='iui-anchor'
+                    onClick={() => {
+                      setActiveItem(2);
+                      setActiveSubItem(index);
+                    }}
+                  >
+                    Folder {index}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </SidenavSubmenu>
         }
       />
       <div
@@ -179,7 +174,7 @@ export const Submenu: Story<SideNavigationProps> = (args) => {
           placeItems: 'center',
         }}
       >
-        <Text>{itemLabels[activeItem]} page</Text>
+        <Text>{itemsData[activeItem]?.label} page</Text>
         <Text isMuted>
           {activeSubItem >= 0 && `Contents of Folder ${activeSubItem}`}
         </Text>

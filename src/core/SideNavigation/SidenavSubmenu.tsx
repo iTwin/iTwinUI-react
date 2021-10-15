@@ -32,11 +32,11 @@ export const SidenavSubmenu = React.forwardRef<
 
   return (
     <div
-      className={cx('iui-side-navigation-submenu-content', className)}
+      className={cx('iui-side-navigation-submenu', className)}
       ref={ref}
       {...rest}
     >
-      {children}
+      <div className='iui-side-navigation-submenu-content'>{children}</div>
     </div>
   );
 });
