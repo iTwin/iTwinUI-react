@@ -16,6 +16,7 @@ import { tableFilters } from './filters';
 import { CellProps, Column, Row } from 'react-table';
 import { SvgChevronRight } from '@itwin/itwinui-icons-react';
 import { EditableCell } from './cells';
+import { TablePaginator } from './TablePaginator';
 
 const intersectionCallbacks = new Map<Element, () => void>();
 jest
@@ -330,6 +331,25 @@ it('should handle row clicks', () => {
   expect(rows[2].classList).toContain('iui-selected');
   expect(onSelect).toHaveBeenCalledTimes(3);
   expect(onRowClick).toHaveBeenCalledTimes(3);
+});
+
+it('should not select when clicked on row but selectRowOnClick flag is false', () => {
+  const onSelect = jest.fn();
+  const onRowClick = jest.fn();
+  const { container, getByText } = renderComponent({
+    isSelectable: true,
+    onSelect,
+    onRowClick,
+    selectRowOnClick: false,
+  });
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  fireEvent.click(getByText(mockedData()[1].name));
+  expect(onSelect).not.toHaveBeenCalled();
+  expect(onRowClick).toHaveBeenCalled();
 });
 
 it('should not trigger onSelect when sorting and filtering', () => {
@@ -1538,6 +1558,7 @@ it('should edit cell data', () => {
 
 it('should handle unwanted actions on editable cell', () => {
   const onCellEdit = jest.fn();
+  const onSelect = jest.fn();
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Header name',
@@ -1567,10 +1588,12 @@ it('should handle unwanted actions on editable cell', () => {
   ];
   const { container } = renderComponent({
     columns,
+    isSelectable: true,
+    onSelect,
   });
 
   const rows = container.querySelectorAll('.iui-table-body .iui-row');
-  assertRowsData(rows);
+  expect(rows.length).toBe(3);
 
   const editableCells = container.querySelectorAll(
     '.iui-cell[contenteditable]',
@@ -1592,4 +1615,56 @@ it('should handle unwanted actions on editable cell', () => {
     'test data 1',
     mockedData()[1],
   );
+
+  fireEvent.click(editableCells[1]);
+  expect(onSelect).not.toHaveBeenCalled();
+});
+
+it('should render data in pages', () => {
+  const { container } = renderComponent({
+    data: mockedData(100),
+    pageSize: 10,
+    paginatorRenderer: (props) => <TablePaginator {...props} />,
+  });
+
+  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows).toHaveLength(10);
+  expect(rows[0].querySelector('.iui-cell')?.textContent).toEqual('Name1');
+  expect(rows[9].querySelector('.iui-cell')?.textContent).toEqual('Name10');
+
+  const pages = container.querySelectorAll<HTMLButtonElement>(
+    '.iui-paginator .iui-button-group .iui-button',
+  );
+  expect(pages).toHaveLength(10);
+  pages[3].click();
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows).toHaveLength(10);
+  expect(rows[0].querySelector('.iui-cell')?.textContent).toEqual('Name31');
+  expect(rows[9].querySelector('.iui-cell')?.textContent).toEqual('Name40');
+});
+
+it('should change page size', () => {
+  const { container } = renderComponent({
+    data: mockedData(100),
+    paginatorRenderer: (props) => (
+      <TablePaginator {...props} pageSizeList={[10, 25, 50]} />
+    ),
+  });
+
+  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows).toHaveLength(25);
+  expect(rows[0].querySelector('.iui-cell')?.textContent).toEqual('Name1');
+  expect(rows[24].querySelector('.iui-cell')?.textContent).toEqual('Name25');
+
+  const pageSizeSelector = container.querySelector(
+    '.iui-dropdown',
+  ) as HTMLButtonElement;
+  expect(pageSizeSelector).toBeTruthy();
+  pageSizeSelector.click();
+
+  screen.getByText('50 per page').click();
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows).toHaveLength(50);
+  expect(rows[0].querySelector('.iui-cell')?.textContent).toEqual('Name1');
+  expect(rows[49].querySelector('.iui-cell')?.textContent).toEqual('Name50');
 });

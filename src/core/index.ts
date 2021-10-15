@@ -32,6 +32,9 @@ export type { ButtonGroupProps } from './ButtonGroup';
 export { Checkbox } from './Checkbox';
 export type { CheckboxProps } from './Checkbox';
 
+export { ComboBox } from './ComboBox';
+export type { ComboBoxProps } from './ComboBox';
+
 export { DatePicker, generateLocalizedStrings } from './DatePicker';
 export type { DatePickerProps } from './DatePicker';
 
@@ -73,6 +76,17 @@ export type {
   HorizontalTabProps,
 } from './Tabs';
 
+export {
+  InformationPanel,
+  InformationPanelWrapper,
+  InformationPanelHeader,
+} from './InformationPanel';
+export type {
+  InformationPanelProps,
+  InformationPanelWrapperProps,
+  InformationPanelHeaderProps,
+} from './InformationPanel';
+
 export { Input } from './Input';
 export type { InputProps } from './Input';
 
@@ -88,8 +102,13 @@ export type { LabeledSelectProps } from './LabeledSelect';
 export { LabeledTextarea } from './LabeledTextarea';
 export type { LabeledTextareaProps } from './LabeledTextarea';
 
-export { Menu, MenuItem } from './Menu';
-export type { MenuProps, MenuItemProps } from './Menu';
+export { Menu, MenuItem, MenuDivider, MenuExtraContent } from './Menu';
+export type {
+  MenuProps,
+  MenuItemProps,
+  MenuDividerProps,
+  MenuExtraContentProps,
+} from './Menu';
 
 export { Modal, ModalButtonBar } from './Modal';
 export type { ModalProps, ModalButtonBarProps } from './Modal';
@@ -121,6 +140,7 @@ export {
   FilterButtonBar,
   DefaultCell,
   EditableCell,
+  TablePaginator,
 } from './Table';
 export type {
   TableProps,
@@ -130,6 +150,8 @@ export type {
   FilterButtonBarProps,
   DefaultCellProps,
   EditableCellProps,
+  TablePaginatorProps,
+  TablePaginatorRendererProps,
 } from './Table';
 
 export { Tag, TagContainer } from './Tag';
@@ -196,10 +218,5 @@ export type {
   WizardLocalization,
 } from './Wizard';
 
-export { getUserColor } from './utils/common';
-
-export { TextTruncation } from './utils/TextTruncation';
-export type { TextTruncationProps } from './utils/TextTruncation';
-
-export { useTheme } from './utils/hooks/useTheme';
-export type { ThemeType } from './utils/hooks/useTheme';
+export { getUserColor, useTheme } from './utils';
+export type { ThemeType } from './utils';

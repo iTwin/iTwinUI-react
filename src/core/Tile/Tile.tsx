@@ -7,10 +7,9 @@ import cx from 'classnames';
 import SvgCheckmark from '@itwin/itwinui-icons-react/cjs/icons/Checkmark';
 import SvgMore from '@itwin/itwinui-icons-react/cjs/icons/More';
 import SvgNew from '@itwin/itwinui-icons-react/cjs/icons/New';
-import { useTheme } from '../utils/hooks/useTheme';
+import { useTheme, CommonProps } from '../utils';
 import '@itwin/itwinui-css/css/tile.css';
 import { DropdownMenu } from '../DropdownMenu';
-import { CommonProps } from '../utils/props';
 import { IconButton } from '../Buttons';
 
 export type TileProps = {
@@ -51,7 +50,7 @@ export type TileProps = {
    *  thumbnail={<SvgImodelHollow />}
    * />
    */
-  thumbnail: string | React.ReactNode;
+  thumbnail?: string | React.ReactNode;
   /**
    * `Badge` shown on the bottom right of thumbnail.
    */
@@ -147,36 +146,38 @@ export const Tile = (props: TileProps) => {
       )}
       {...rest}
     >
-      <div className='iui-thumbnail'>
-        {typeof thumbnail === 'string' ? (
-          <div
-            className='iui-picture'
-            style={{ backgroundImage: `url(${thumbnail})` }}
-          />
-        ) : thumbnail && (thumbnail as JSX.Element).type === 'img' ? (
-          React.cloneElement(thumbnail as JSX.Element, {
-            className: 'iui-picture',
-          })
-        ) : React.isValidElement(thumbnail) ? (
-          React.cloneElement(thumbnail, {
-            className: cx('iui-thumbnail-icon', thumbnail.props.className),
-          })
-        ) : (
-          thumbnail
-        )}
+      {thumbnail && (
+        <div className='iui-thumbnail'>
+          {typeof thumbnail === 'string' ? (
+            <div
+              className='iui-picture'
+              style={{ backgroundImage: `url(${thumbnail})` }}
+            />
+          ) : thumbnail && (thumbnail as JSX.Element).type === 'img' ? (
+            React.cloneElement(thumbnail as JSX.Element, {
+              className: 'iui-picture',
+            })
+          ) : React.isValidElement(thumbnail) ? (
+            React.cloneElement(thumbnail, {
+              className: cx('iui-thumbnail-icon', thumbnail.props.className),
+            })
+          ) : (
+            thumbnail
+          )}
 
-        {leftIcon &&
-          React.cloneElement(leftIcon as React.ReactElement, {
-            className: 'iui-small iui-type-indicator',
-          })}
+          {leftIcon &&
+            React.cloneElement(leftIcon as React.ReactElement, {
+              className: 'iui-small iui-type-indicator',
+            })}
 
-        {rightIcon &&
-          React.cloneElement(rightIcon as React.ReactElement, {
-            className: 'iui-small iui-quick-action',
-          })}
+          {rightIcon &&
+            React.cloneElement(rightIcon as React.ReactElement, {
+              className: 'iui-small iui-quick-action',
+            })}
 
-        {badge && <div className='iui-badge-container'>{badge}</div>}
-      </div>
+          {badge && <div className='iui-badge-container'>{badge}</div>}
+        </div>
+      )}
 
       <div className='iui-content'>
         <div className='iui-name'>
