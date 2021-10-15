@@ -19,6 +19,7 @@ import {
   HsvColor,
 } from '../utils/color/ColorValue';
 import { ColorByName } from '../utils/color/ColorByName';
+import { Slider } from '../Slider';
 
 type HexColor = {
   hex: string;
@@ -201,9 +202,9 @@ export const ColorPicker = (props: ColorPickerProps) => {
   const [squareColor, setSquareColor] = React.useState(() =>
     fillColor(ColorValue.fromHSV({ h: dotColor.hsv.h, s: 100, v: 100 })),
   );
-  const [sliderTop, setSliderTop] = React.useState(() =>
-    Math.round(dotColor.hsv.h / 3.59),
-  );
+  // const [sliderTop, setSliderTop] = React.useState(() =>
+  //   Math.round(dotColor.hsv.h / 3.59),
+  // );
   const [squareTop, setSquareTop] = React.useState(() => 100 - dotColor.hsv.v);
   const [squareLeft, setSquareLeft] = React.useState(() => dotColor.hsv.s);
   const [activeDotIndex, setActiveDotIndex] = React.useState<
@@ -211,39 +212,35 @@ export const ColorPicker = (props: ColorPickerProps) => {
   >(undefined);
 
   const colorSquareStyle = getWindow()?.CSS?.supports?.(
-    `--color: ${squareColor.hsl.displayString}`,
-  )
-    ? { '--color': squareColor.hsl.displayString }
-    : { backgroundColor: squareColor.hsl.displayString };
-
-  const colorDotStyle = getWindow()?.CSS?.supports?.(
+    `--hue: ${squareColor.hsl.displayString}`,
     `--selected-color: ${dotColor.hsl.displayString}`,
   )
     ? {
+        '--hue': squareColor.hsl.displayString,
         '--selected-color': dotColor.hsl.displayString,
+      }
+    : { backgroundColor: squareColor.hsl.displayString };
+
+  const colorDotStyle = getWindow()?.CSS?.supports?.(
+    `--top: ${squareTop.toString()}%`,
+    `--left: ${squareLeft.toString()}%`,
+  )
+    ? {
         '--top': squareTop.toString() + '%',
         '--left': squareLeft.toString() + '%',
-        cursor: 'crosshair',
       }
     : {
         backgroundColor: dotColor.hsl.displayString,
         top: squareTop.toString() + '%',
         left: squareLeft.toString() + '%',
-        cursor: 'crosshair',
       };
-
-  const sliderColorDotStyle = getWindow()?.CSS?.supports?.(
-    `--top: ${sliderTop}%`,
-  )
-    ? { '--top': sliderTop.toString() + '%' }
-    : { top: sliderTop.toString() + '%' };
 
   // Update slider change
   const sliderRef = React.useRef<HTMLDivElement>(null);
 
   const updateSlider = React.useCallback(
     (y: number, selectionChanged: boolean) => {
-      setSliderTop(y);
+      // setSliderTop(y);
 
       const hue = Math.round(y * 3.59);
       const newSquareColor = ColorValue.fromHSV({
@@ -323,37 +320,37 @@ export const ColorPicker = (props: ColorPickerProps) => {
     ref.current?.ownerDocument,
   );
 
-  const handlePointerDownOnSlider = React.useCallback(
-    (event: React.PointerEvent) => {
-      updateSliderValue(event, 'onClick');
-      setActiveDotIndex(0);
-    },
-    [updateSliderValue],
-  );
+  // const handlePointerDownOnSlider = React.useCallback(
+  //   (event: React.PointerEvent) => {
+  //     updateSliderValue(event, 'onClick');
+  //     setActiveDotIndex(0);
+  //   },
+  //   [updateSliderValue],
+  // );
 
-  // Arrow key navigation for slider dot
-  const handleSliderDotKeyDown = (
-    event: React.KeyboardEvent<HTMLDivElement>,
-  ) => {
-    let y = sliderTop;
-    switch (event.key) {
-      case 'ArrowDown': {
-        y = Math.min(y + 1, 100);
-        updateSlider(y, false);
-        break;
-      }
-      case 'ArrowUp': {
-        y = Math.max(y - 1, 0);
-        updateSlider(y, false);
-        break;
-      }
-      case 'Enter':
-      case ' ':
-      case 'Spacebar':
-        updateSlider(y, true);
-        break;
-    }
-  };
+  // // Arrow key navigation for slider dot
+  // const handleSliderDotKeyDown = (
+  //   event: React.KeyboardEvent<HTMLDivElement>,
+  // ) => {
+  //   let y = sliderTop;
+  //   switch (event.key) {
+  //     case 'ArrowDown': {
+  //       y = Math.min(y + 1, 100);
+  //       updateSlider(y, false);
+  //       break;
+  //     }
+  //     case 'ArrowUp': {
+  //       y = Math.max(y - 1, 0);
+  //       updateSlider(y, false);
+  //       break;
+  //     }
+  //     case 'Enter':
+  //     case ' ':
+  //     case 'Spacebar':
+  //       updateSlider(y, true);
+  //       break;
+  //   }
+  // };
 
   // Update Color field square change
   const squareRef = React.useRef<HTMLDivElement>(null);
@@ -481,13 +478,13 @@ export const ColorPicker = (props: ColorPickerProps) => {
         { [`iui-${type}`]: type !== 'basic' },
         className,
       )}
+      style={colorSquareStyle}
       {...rest}
     >
       {type == 'advanced' && (
         <div className='iui-color-selection-wrapper'>
           <div
             className='iui-color-field'
-            style={colorSquareStyle}
             ref={squareRef}
             onPointerDown={handlePointerDownOnSquare}
           >
@@ -501,31 +498,48 @@ export const ColorPicker = (props: ColorPickerProps) => {
               tabIndex={0}
             />
           </div>
-          <div
-            className='iui-color-slider'
-            ref={sliderRef}
-            onPointerDown={handlePointerDownOnSlider}
-          >
+
+          <Slider
+            minLabel=''
+            maxLabel=''
+            values={[100]}
+            className='iui-hue-slider'
+            trackDisplayMode='none'
+            tooltipProps={() => {
+              return { visible: false };
+            }}
+          />
+
+          <Slider
+            minLabel=''
+            maxLabel=''
+            values={[100]}
+            className='iui-opacity-slider'
+            trackDisplayMode='none'
+            tooltipProps={() => {
+              return { visible: false };
+            }}
+          />
+        </div>
+      )}
+      {
+        <div>
+          {children && (
+            <div className='iui-color-picker-section-label'>
+              {colorPaletteTitle}
+            </div>
+          )}
+          {children && (
             <div
-              className='iui-color-dot iui-white'
-              style={sliderColorDotStyle}
-              onPointerDown={() => {
-                setActiveDotIndex(0);
-              }}
-              onKeyDown={handleSliderDotKeyDown}
-              tabIndex={0}
-            />
-          </div>
+              className='iui-color-palette'
+              onKeyDown={handleKeyDown}
+              ref={ref}
+            >
+              {children}
+            </div>
+          )}
         </div>
-      )}
-      {type == 'advanced' && children && (
-        <div className='iui-saved-colors'>{colorPaletteTitle}</div>
-      )}
-      {children && (
-        <div className='iui-color-palette' onKeyDown={handleKeyDown} ref={ref}>
-          {children}
-        </div>
-      )}
+      }
     </div>
   );
 };

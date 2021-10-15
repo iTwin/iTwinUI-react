@@ -4,7 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import '@itwin/itwinui-css/css/color-picker.css';
+import 'D:/Dev2/iTwinUI/lib/css/color-picker.css';
+
+// import '@itwin/itwinui-css/css/color-picker.css';
 import { useTheme, CommonProps, getWindow } from '../utils';
 
 export type ColorSwatchProps = {
