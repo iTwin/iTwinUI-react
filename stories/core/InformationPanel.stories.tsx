@@ -151,7 +151,7 @@ export const CustomActions: Story<InformationPanelProps> = (args) => {
   );
 
   return (
-    <InformationPanelWrapper style={{}}>
+    <InformationPanelWrapper>
       <Table columns={columns} data={data} emptyTableContent='No data.' />
 
       <InformationPanel
