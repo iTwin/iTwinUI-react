@@ -3,13 +3,12 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import { SideNavigation, SideNavigationProps } from './SideNavigation';
 import { SidenavButton } from './SidenavButton';
 import { SidenavSubmenu } from './SidenavSubmenu';
-import SvgPlaceholder from '@itwin/itwinui-icons-react/cjs/icons/Placeholder';
-import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
+import { SvgPlaceholder, SvgChevronRight } from '@itwin/itwinui-icons-react/';
 
 function renderComponent(props?: Partial<SideNavigationProps>) {
   return render(
@@ -210,7 +209,7 @@ it('should handle custom class and style', () => {
 });
 
 it('should render with submenu', () => {
-  const { getByText, container } = renderComponent({
+  const { container } = renderComponent({
     submenu: <SidenavSubmenu>submenu content</SidenavSubmenu>,
   });
 
@@ -225,7 +224,7 @@ it('should render with submenu', () => {
     wrapper.querySelector('.iui-side-navigation-submenu'),
   ).toHaveTextContent('submenu content');
 
-  expect(getByText('submenu content')).toHaveClass(
+  expect(screen.getByText('submenu content')).toHaveClass(
     'iui-side-navigation-submenu-content',
   );
 });

@@ -19,7 +19,7 @@ it('should render in a basic state', () => {
   );
 
   const submenu = container.querySelector(
-    '.iui-side-navigation-submenu-content',
+    '.iui-side-navigation-submenu',
   ) as HTMLElement;
   expect(submenu).toBeTruthy();
 
@@ -55,7 +55,12 @@ it('should render custom header actions', () => {
     </SidenavSubmenu>,
   );
 
-  const header = container.querySelector(
+  const submenu = container.querySelector(
+    '.iui-side-navigation-submenu',
+  ) as HTMLElement;
+  expect(submenu).toBeTruthy();
+
+  const header = submenu.querySelector(
     '.iui-side-navigation-submenu-header',
   ) as HTMLElement;
 
@@ -77,7 +82,7 @@ it('should accept className and style props', () => {
   );
 
   const submenu = container.querySelector(
-    '.iui-side-navigation-submenu-content',
+    '.iui-side-navigation-submenu',
   ) as HTMLElement;
   expect(submenu).toHaveClass('test-class');
   expect(submenu).toHaveStyle('width: 400px');
