@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
+import { CommonProps } from '../props';
 
 const ELLIPSIS_CHAR = '…';
 
@@ -16,14 +17,14 @@ export type TextTruncationProps = {
    * @default 6
    */
   endCharsCount?: number;
-};
+} & CommonProps;
 
 /**
  * Truncates text with the ellipsis in the middle,
  * leaving defined number of chars at the end.
  */
 export const TextTruncation = (props: TextTruncationProps) => {
-  const { text, endCharsCount = 6 } = props;
+  const { text, endCharsCount = 6, ...rest } = props;
 
   const childRef = React.useRef<HTMLDivElement>(null);
 
@@ -60,7 +61,11 @@ export const TextTruncation = (props: TextTruncationProps) => {
     );
   }, [endCharsCount, text, truncatedText]);
 
-  return <span ref={childRef}>{truncatedText}</span>;
+  return (
+    <span ref={childRef} {...rest}>
+      {truncatedText}
+    </span>
+  );
 };
 
 export default TextTruncation;
