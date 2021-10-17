@@ -319,11 +319,12 @@ export const MiddleTextTruncation: Story<SelectProps<string>> = (args) => {
     ...rest
   } = args;
   const [selectedValue, setSelectedValue] = useState<string | undefined>(
-    undefined,
+    options[0].value,
   );
   return (
     <div style={{ minHeight: 350, width: 300 }}>
       <Select<string>
+        {...rest}
         options={options}
         value={selectedValue}
         onChange={setSelectedValue}
@@ -336,24 +337,7 @@ export const MiddleTextTruncation: Story<SelectProps<string>> = (args) => {
         selectedItemRenderer={(option) => (
           <TextTruncation text={option.label} />
         )}
-        {...rest}
       />
     </div>
   );
-};
-
-MiddleTextTruncation.args = {
-  placeholder: 'Placeholder text',
-  options: [
-    {
-      value:
-        'MyFileWithAReallyLongNameThatWillBeTruncatedBecauseItIsReallyThatLongSoHardToBelieve_FinalVersion_V2.html',
-      label:
-        'MyFileWithAReallyLongNameThatWillBeTruncatedBecauseItIsReallyThatLongSoHardToBelieve_FinalVersion_V2.html',
-    },
-    { value: 'ShortNameFile.jpg', label: 'ShortNameFile.jpg' },
-    { value: 'SomeOtherFile.dgn', label: 'SomeOtherFile.dgn' },
-  ],
-  value:
-    'MyFileWithAReallyLongNameThatWillBeTruncatedBecauseItIsReallyThatLongSoHardToBelieve_FinalVersion_V2.html',
 };
