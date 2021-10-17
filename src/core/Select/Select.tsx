@@ -286,10 +286,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
         className={cx('iui-scroll', menuClassName)}
         style={{
           minWidth: selectButtonWidth,
-          maxWidth: `${Math.min(
-            selectButtonWidth * 2,
-            document.body.offsetWidth,
-          )}px`,
+          maxWidth: Math.min(selectButtonWidth * 2, document.body.offsetWidth),
           maxHeight: `300px`,
           ...menuStyle,
         }}
