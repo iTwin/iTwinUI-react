@@ -218,5 +218,5 @@ export type {
   WizardLocalization,
 } from './Wizard';
 
-export { getUserColor, useTheme } from './utils';
-export type { ThemeType } from './utils';
+export { getUserColor, useTheme, TextTruncation } from './utils';
+export type { ThemeType, TextTruncationProps } from './utils';
