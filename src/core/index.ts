@@ -207,3 +207,4 @@ export type {
 
 export { getUserColor, useTheme } from './utils';
 export type { ThemeType } from './utils';
+export type { ColorValue } from './utils';
