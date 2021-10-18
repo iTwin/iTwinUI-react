@@ -33,7 +33,6 @@ export default {
     className: { control: { disable: true } },
     style: { control: { disable: true } },
     id: { control: { disable: true } },
-    header: { control: { disable: true } },
     children: { control: { disable: true } },
   },
   args: {
