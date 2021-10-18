@@ -24,10 +24,6 @@ export type InformationPanelProps = {
    */
   resizable?: boolean;
   /**
-   * Header of the panel. Expects `InformationPanelHeader` component.
-   */
-  header?: React.ReactNode;
-  /**
    * Content of the panel.
    */
   children?: React.ReactNode;
@@ -59,7 +55,6 @@ export const InformationPanel = React.forwardRef<
 >((props, ref) => {
   const {
     className,
-    header,
     isOpen = false,
     orientation = 'vertical',
     resizable = true,
@@ -131,8 +126,7 @@ export const InformationPanel = React.forwardRef<
           <div className='iui-resizer-bar' />
         </div>
       )}
-      {header}
-      <div className='iui-information-body'>{children}</div>
+      {children}
     </div>
   );
 });
