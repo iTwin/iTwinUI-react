@@ -145,7 +145,9 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   );
 
   // Maintain internal selected value state synced with `value` prop
-  const [selectedValue, setSelectedValue] = React.useState<T | undefined>();
+  const [selectedValue, setSelectedValue] = React.useState<T | undefined>(
+    value,
+  );
   React.useEffect(() => {
     setSelectedValue(value);
   }, [value]);
@@ -160,13 +162,11 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     [inputProps],
   );
 
-  // update inputValue every time selected value changes
+  // update inputValue and focusedIndex every time selected value changes
   React.useEffect(() => {
-    if (selectedValue != undefined) {
-      setInputValue(
-        options.find(({ value }) => value === selectedValue)?.label ?? '',
-      );
-    }
+    const selectedOption = options.find(({ value }) => value === selectedValue);
+    setInputValue(selectedOption?.label ?? '');
+    setFocusedIndex(selectedOption ? options.indexOf(selectedOption) : -1);
   }, [selectedValue, options]);
 
   // Filter options and update focus when input value changes
