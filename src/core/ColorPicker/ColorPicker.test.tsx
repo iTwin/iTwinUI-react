@@ -185,8 +185,12 @@ it('should render advanced color picker with no color swatches', () => {
   expect(container.querySelector(`.iui-color-picker`)).toBeTruthy();
   expect(container.querySelector(`.iui-color-selection-wrapper`)).toBeTruthy();
   expect(
-    container.querySelector(`.iui-color-picker-section-label`),
-  ).toBeFalsy();
+    container.querySelectorAll(`.iui-color-picker-section-label`).length,
+  ).toBe(1);
+  expect(
+    container.querySelectorAll(`.iui-color-picker-section-label`)[0]
+      .textContent,
+  ).toBe('HEX');
   expect(container.querySelector(`.iui-color-palette`)).toBeFalsy();
   expect(container.querySelector(`.iui-color-field`)).toBeTruthy();
   expect(container.querySelector(`.iui-hue-slider`)).toBeTruthy();
@@ -194,7 +198,7 @@ it('should render advanced color picker with no color swatches', () => {
   expect(container.querySelectorAll(`.iui-color-swatch`).length).toBe(0);
 });
 
-it('should render advanced color picker with color swatches', () => {
+it('should render advanced color picker with color swatches and no title', () => {
   const { container } = render(
     <ColorPicker
       paletteProps={{ colors: ['#FFFFFF'] }}
@@ -205,8 +209,41 @@ it('should render advanced color picker with color swatches', () => {
   expect(container.querySelector(`.iui-color-picker`)).toBeTruthy();
   expect(container.querySelector(`.iui-color-selection-wrapper`)).toBeTruthy();
   expect(
-    container.querySelector(`.iui-color-picker-section-label`),
-  ).toBeFalsy();
+    container.querySelectorAll(`.iui-color-picker-section-label`).length,
+  ).toBe(1);
+  expect(
+    container.querySelectorAll(`.iui-color-picker-section-label`)[0]
+      .textContent,
+  ).toEqual('HEX');
+  expect(container.querySelector(`.iui-color-palette`)).toBeTruthy();
+  expect(container.querySelector(`.iui-color-field`)).toBeTruthy();
+  expect(container.querySelector(`.iui-hue-slider`)).toBeTruthy();
+  expect(container.querySelector(`.iui-color-dot`)).toBeTruthy();
+
+  expect(container.querySelectorAll(`.iui-color-swatch`).length).toBe(1);
+});
+
+it('should render advanced color picker with color swatches and title', () => {
+  const { container } = render(
+    <ColorPicker
+      paletteProps={{ colors: ['#FFFFFF'], colorPaletteTitle: 'Test Title' }}
+      builderProps={{ defaultColorInputType: 'HEX' }}
+    />,
+  );
+
+  expect(container.querySelector(`.iui-color-picker`)).toBeTruthy();
+  expect(container.querySelector(`.iui-color-selection-wrapper`)).toBeTruthy();
+  expect(
+    container.querySelectorAll(`.iui-color-picker-section-label`).length,
+  ).toBe(2);
+  expect(
+    container.querySelectorAll(`.iui-color-picker-section-label`)[0]
+      .textContent,
+  ).toEqual('HEX');
+  expect(
+    container.querySelectorAll(`.iui-color-picker-section-label`)[1]
+      .textContent,
+  ).toEqual('Test Title');
   expect(container.querySelector(`.iui-color-palette`)).toBeTruthy();
   expect(container.querySelector(`.iui-color-field`)).toBeTruthy();
   expect(container.querySelector(`.iui-hue-slider`)).toBeTruthy();
