@@ -18,7 +18,6 @@ import {
   RgbColor,
   HsvColor,
 } from '../utils/color/ColorValue';
-import { ColorByName } from '../utils/color/ColorByName';
 import { Slider } from '../Slider';
 import ColorSwatch from './ColorSwatch';
 
@@ -35,9 +34,9 @@ const getHorizontalPercentageOfRectangle = (rect: DOMRect, pointer: number) => {
 
 // Converts color value provided and fills in all hsv, hsl, rgb, hex, and displayString values
 export const fillColor = (color: ColorValue) => {
-  const hsv = color.toHSV();
-  const hsl = color.toHSL();
-  const rgb = color.toRGB();
+  const hsv = color.toHsv();
+  const hsl = color.toHsl();
+  const rgb = color.toRgb();
 
   return {
     hsv: { h: hsv.h, s: hsv.s, v: hsv.v, displayString: color.toHsvString() },
@@ -130,6 +129,8 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
   useTheme();
 
+  const selectedColorRef = React.useRef<ColorValue | undefined>(selectedColor);
+
   const ref = React.useRef<HTMLDivElement>(null);
 
   const [focusedColor, setFocusedColor] = React.useState<number | null>();
@@ -213,7 +214,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
   // Set style values for advanced color picker
   const [dotColor, setDotColor] = React.useState(() =>
-    fillColor(selectedColor ?? new ColorValue(ColorByName.red)),
+    fillColor(selectedColor ?? ColorValue.create(0x000000)),
   );
 
   const [squareColor, setSquareColor] = React.useState(() =>
@@ -222,8 +223,29 @@ export const ColorPicker = (props: ColorPickerProps) => {
   const [sliderValue, setSliderValue] = React.useState(() =>
     Math.round(dotColor.hsv.h / 3.59),
   );
+
   const [squareTop, setSquareTop] = React.useState(() => 100 - dotColor.hsv.v);
   const [squareLeft, setSquareLeft] = React.useState(() => dotColor.hsv.s);
+
+  React.useEffect(() => {
+    if (
+      selectedColor &&
+      selectedColorRef.current &&
+      !selectedColorRef.current.equals(selectedColor)
+    ) {
+      selectedColorRef.current = selectedColor;
+      const hsv = selectedColor.toHsv();
+      setActiveColor(selectedColor);
+      setSliderValue(Math.round(hsv.h / 3.59));
+      setSquareColor(
+        fillColor(ColorValue.fromHSV({ h: hsv.h, s: 100, v: 100 })),
+      );
+      setDotColor(fillColor(selectedColor));
+      setSquareTop(100 - hsv.v);
+      setSquareLeft(hsv.s);
+    }
+  }, [selectedColor]);
+
   const [activeDotIndex, setActiveDotIndex] = React.useState<
     number | undefined
   >(undefined);
