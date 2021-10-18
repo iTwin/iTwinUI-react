@@ -15,6 +15,10 @@ import cx from 'classnames';
 import { ColorValue } from '../utils/color/ColorValue';
 import { Slider } from '../Slider';
 import ColorSwatch from './ColorSwatch';
+import { IconButton } from '../Buttons';
+import { Input } from '../Input';
+
+// cspell: ignore borderless
 
 const getVerticalPercentageOfRectangle = (rect: DOMRect, pointer: number) => {
   const position = getBoundedValue(pointer, rect.top, rect.bottom);
@@ -26,10 +30,11 @@ const getHorizontalPercentageOfRectangle = (rect: DOMRect, pointer: number) => {
 };
 
 export type ColorBuilderProps = {
-  /** If set show either HSL or RGB input values. If undefined no input values are shown
-   *  What if you want advanced without input values?
+  /**
+   * Show HSL, RGB, or HEX input values.
+   * Set to NONE to use advanced color builder without showing color input
    */
-  defaultColorInputType?: 'HSL' | 'RGB' | 'HEX';
+  defaultColorInputType?: 'HSL' | 'RGB' | 'HEX' | 'NONE';
 };
 
 export type ColorPaletteProps = {
@@ -40,35 +45,33 @@ export type ColorPaletteProps = {
 };
 
 export type ColorPickerProps = {
-  /**
-   * Color Swatches that will be added within the color palette.
-   * Recommended to use `ColorSwatch` components.
-   * In advanced color picker, this will be the 'Saved Colors' list - it can be empty.
-   * In advanced color picker, you can pass in the 'Add' button.
-   */
   children?: React.ReactNode;
   /**
    * The selected color to be shown as the initial color in advanced color picker.
    */
   selectedColor?: ColorValue;
   /**
-   * Handler for when selectedColor is changed.
-   * Only for advanced color picker.
+   * Callback fired when the color value is internally updated during
+   * operations like dragging a Thumb. Use this callback with caution as a
+   * high-volume of updates will occur when dragging.
    */
   onChange?: (color: ColorValue) => void;
   /**
-   * Handler for when selectedColor is changed.
-   * Only for advanced color picker.
+   * Callback fired when selectedColor is done changing.
+   * This can be on pointerUp when thumb is done dragging,
+   * or when user clicks on color builder components, or when user clicks on color swatch
    */
   onChangeCompleted?: (color: ColorValue) => void;
   /**
-   * Props used to determine what components to display to allow user to build their own color. if undefined
-   * then paletteProps must be defined.
+   * Props used to determine what advanced color picker components to display
+   * to allow user to build their own color.
+   * If undefined, paletteProps must be defined.
    */
   builderProps?: ColorBuilderProps;
   /**
-   * Props used to display a palette of colors. If used in combination with builderProps then the palette is shown below
-   * the builder components. A ReactNode can be used if user wants to provide a custom palette.
+   * Props used to display a palette of colors
+   * If used in combination with builderProps then the palette is shown below the builder components
+   * If undefined, builderProps must be defined.
    */
   paletteProps?: ColorPaletteProps;
 } & Omit<CommonProps, 'title'>;
@@ -115,6 +118,9 @@ export const ColorPicker = (props: ColorPickerProps) => {
   const [activeColor, setActiveColor] = React.useState<ColorValue>(
     () => selectedColor ?? ColorValue.create('#00121D'),
   );
+  const [inputType, setInputType] = React.useState<
+    'HEX' | 'HSL' | 'RGB' | 'NONE'
+  >(builderProps?.defaultColorInputType ?? 'NONE');
 
   const [hsvColor, setHsvColor] = React.useState(() => activeColor.toHsv());
 
@@ -140,6 +146,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
     setFocusedColorIndex(selectedIndex > -1 ? selectedIndex : null);
   }, [focusedColorIndex]);
 
+  // Color palette arrow key navigation
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     const colorSwatches = Array.from<HTMLElement>(
       ref.current?.querySelectorAll('.iui-color-swatch, .iui-button') ?? [],
@@ -392,6 +399,21 @@ export const ColorPicker = (props: ColorPickerProps) => {
     }
   };
 
+  // Handle swapping color input type
+  const onSwapColorType = React.useCallback(() => {
+    if (inputType == 'HEX') {
+      setInputType('HSL');
+    } else if (inputType == 'HSL') {
+      setInputType('RGB');
+    } else if (inputType == 'RGB') {
+      setInputType('HEX');
+    }
+  }, [inputType]);
+
+  const colorHexString = ColorValue.create(hsvColor).toHexString();
+  const hslColor = ColorValue.create(hsvColor).toHsl();
+  const rgbColor = ColorValue.create(hsvColor).toRgb();
+
   return (
     <div
       className={cx('iui-color-picker', className)}
@@ -430,13 +452,48 @@ export const ColorPicker = (props: ColorPickerProps) => {
           />
         </div>
       )}
-      <div>
-        {paletteProps?.colorPaletteTitle && (
-          <div className='iui-color-picker-section-label'>
-            {paletteProps.colorPaletteTitle}
+      {builderProps && inputType != 'NONE' && (
+        <div className='iui-color-picker-input-container'>
+          <div className='iui-color-picker-section-label'>{inputType}</div>
+          <div className='iui-color-input'>
+            <IconButton styleType={'borderless'} onClick={onSwapColorType}>
+              <svg viewBox='0 0 16 16' className='iui-icon' aria-hidden='true'>
+                <path d='m5 15-3.78125-3.5 3.78125-3.5v2h8v3h-8zm6-7 3.78125-3.5-3.78125-3.5v2h-8v3h8z' />
+              </svg>
+            </IconButton>
+            {inputType === 'HEX' && (
+              <div className='iui-color-input-fields'>
+                <Input
+                  type={'small'}
+                  placeholder={'HEX'}
+                  value={colorHexString}
+                />
+              </div>
+            )}
+            {inputType === 'HSL' && (
+              <div className='iui-color-input-fields'>
+                <Input type={'small'} placeholder={'H'} value={hslColor.h} />
+                <Input type={'small'} placeholder={'S'} value={hslColor.s} />
+                <Input type={'small'} placeholder={'L'} value={hslColor.l} />
+              </div>
+            )}
+            {inputType == 'RGB' && (
+              <div className='iui-color-input-fields'>
+                <Input type={'small'} placeholder={'R'} value={rgbColor.r} />
+                <Input type={'small'} placeholder={'G'} value={rgbColor.g} />
+                <Input type={'small'} placeholder={'B'} value={rgbColor.b} />
+              </div>
+            )}
           </div>
-        )}
-        {paletteProps && (
+        </div>
+      )}
+      {paletteProps && (
+        <div className='iui-color-picker-palette-container'>
+          {paletteProps.colorPaletteTitle && (
+            <div className='iui-color-picker-section-label'>
+              {paletteProps.colorPaletteTitle}
+            </div>
+          )}
           <div
             className='iui-color-palette'
             onKeyDown={handleKeyDown}
@@ -457,8 +514,8 @@ export const ColorPicker = (props: ColorPickerProps) => {
             })}
             {children}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

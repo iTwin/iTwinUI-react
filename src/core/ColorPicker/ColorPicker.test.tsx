@@ -199,7 +199,14 @@ it('should render advanced color picker with no color swatches', () => {
   expect(container.querySelector(`.iui-color-picker`)).toBeTruthy();
   expect(container.querySelector(`.iui-color-selection-wrapper`)).toBeTruthy();
   expect(
-    container.querySelector(`.iui-color-picker-section-label`),
+    container.querySelector(
+      `.iui-color-picker-input-container .iui-color-picker-section-label`,
+    ),
+  ).toBeTruthy();
+  expect(
+    container.querySelector(
+      `.iui-color-picker-palette-container .iui-color-picker-section-label`,
+    ),
   ).toBeFalsy();
   expect(container.querySelector(`.iui-color-palette`)).toBeFalsy();
   expect(container.querySelector(`.iui-color-field`)).toBeTruthy();
@@ -219,7 +226,14 @@ it('should render advanced color picker with color swatches', () => {
   expect(container.querySelector(`.iui-color-picker`)).toBeTruthy();
   expect(container.querySelector(`.iui-color-selection-wrapper`)).toBeTruthy();
   expect(
-    container.querySelector(`.iui-color-picker-section-label`),
+    container.querySelector(
+      `.iui-color-picker-input-container .iui-color-picker-section-label`,
+    ),
+  ).toBeTruthy();
+  expect(
+    container.querySelector(
+      `.iui-color-picker-palette-container .iui-color-picker-section-label`,
+    ),
   ).toBeFalsy();
   expect(container.querySelector(`.iui-color-palette`)).toBeTruthy();
   expect(container.querySelector(`.iui-color-field`)).toBeTruthy();
