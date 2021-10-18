@@ -39,10 +39,10 @@ export type SideNavigationProps = {
    * <SideNavigation
    *   // ...
    *   submenu={(
-   *   <>
-   *     <SidenavSubmenuHeader>Documents</SidenavSubmenuHeader>
-   *     <span>List of documents</span>
-   *   </>
+   *     <SidenavSubmenu>
+   *       <SidenavSubmenuHeader>Documents</SidenavSubmenuHeader>
+   *       <span>List of documents</span>
+   *     </SidenavSubmenu>
    *   )}
    * />
    */
