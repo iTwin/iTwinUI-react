@@ -12,16 +12,9 @@ import {
   useEventListener,
 } from '../utils';
 import cx from 'classnames';
-import {
-  ColorValue,
-  HslColor,
-  RgbColor,
-  HsvColor,
-} from '../utils/color/ColorValue';
+import { ColorValue } from '../utils/color/ColorValue';
 import { Slider } from '../Slider';
 import ColorSwatch from './ColorSwatch';
-
-export type Color = HslColor | RgbColor | HsvColor | string;
 
 const getVerticalPercentageOfRectangle = (rect: DOMRect, pointer: number) => {
   const position = getBoundedValue(pointer, rect.top, rect.bottom);
@@ -30,20 +23,6 @@ const getVerticalPercentageOfRectangle = (rect: DOMRect, pointer: number) => {
 const getHorizontalPercentageOfRectangle = (rect: DOMRect, pointer: number) => {
   const position = getBoundedValue(pointer, rect.left, rect.right);
   return ((position - rect.left) / rect.width) * 100;
-};
-
-// Converts color value provided and fills in all hsv, hsl, rgb, hex, and displayString values
-export const fillColor = (color: ColorValue) => {
-  const hsv = color.toHsv();
-  const hsl = color.toHsl();
-  const rgb = color.toRgb();
-
-  return {
-    hsv: { h: hsv.h, s: hsv.s, v: hsv.v, displayString: color.toHsvString() },
-    hsl: { h: hsl.h, s: hsl.s, l: hsl.l, displayString: color.toHslString() },
-    rgb: { r: rgb.r, g: rgb.g, b: rgb.b, displayString: color.toRgbString() },
-    hex: { hex: color.toHexString() },
-  };
 };
 
 export type ColorBuilderProps = {
@@ -70,7 +49,6 @@ export type ColorPickerProps = {
   children?: React.ReactNode;
   /**
    * The selected color to be shown as the initial color in advanced color picker.
-   * Only for advanced color picker.
    */
   selectedColor?: ColorValue;
   /**
@@ -129,31 +107,38 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
   useTheme();
 
-  const selectedColorRef = React.useRef<ColorValue | undefined>(selectedColor);
-
   const ref = React.useRef<HTMLDivElement>(null);
 
-  const [focusedColor, setFocusedColor] = React.useState<number | null>();
+  const [focusedColorIndex, setFocusedColorIndex] = React.useState<
+    number | null
+  >();
   const [activeColor, setActiveColor] = React.useState<ColorValue>(
-    typeof selectedColor === 'string'
-      ? ColorValue.fromString(selectedColor)
-      : ColorValue.fromString('#00121D'),
+    () => selectedColor ?? ColorValue.create('#00121D'),
   );
 
+  const [hsvColor, setHsvColor] = React.useState(() => activeColor.toHsv());
+
+  React.useEffect(() => {
+    const newColor = selectedColor ?? ColorValue.create('#00121D');
+    setActiveColor(newColor);
+    setHsvColor(newColor.toHsv());
+  }, [selectedColor]);
+
+  // colorSwatches may be supplied as children which requires looking through DOM
   React.useEffect(() => {
     const colorSwatches = Array.from<HTMLElement>(
       ref.current?.querySelectorAll('.iui-color-swatch, .iui-button') ?? [],
     );
-    if (focusedColor != null) {
-      colorSwatches[focusedColor]?.focus();
+    if (focusedColorIndex != null) {
+      colorSwatches[focusedColorIndex]?.focus();
       return;
     }
     const selectedIndex = colorSwatches.findIndex(
       (swatch) =>
         swatch.tabIndex === 0 || swatch.getAttribute('aria-selected') == 'true',
     );
-    setFocusedColor(selectedIndex > -1 ? selectedIndex : null);
-  }, [focusedColor]);
+    setFocusedColorIndex(selectedIndex > -1 ? selectedIndex : null);
+  }, [focusedColorIndex]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     const colorSwatches = Array.from<HTMLElement>(
@@ -207,58 +192,41 @@ export const ColorPicker = (props: ColorPickerProps) => {
     }
 
     if (newIndex >= 0 && newIndex < colorSwatches.length) {
-      setFocusedColor(newIndex);
+      setFocusedColorIndex(newIndex);
       event.preventDefault();
     }
   };
 
-  // Set style values for advanced color picker
-  const [dotColor, setDotColor] = React.useState(() =>
-    fillColor(selectedColor ?? ColorValue.create(0x000000)),
+  const hueSliderColor = React.useMemo(
+    () => ColorValue.create({ ...hsvColor, s: 100, v: 100 }),
+    [hsvColor],
   );
 
-  const [squareColor, setSquareColor] = React.useState(() =>
-    fillColor(ColorValue.fromHSV({ h: dotColor.hsv.h, s: 100, v: 100 })),
+  const sliderValue = React.useMemo(() => Math.round(hsvColor.h / 3.59), [
+    hsvColor,
+  ]);
+
+  const dotColorString = React.useMemo(
+    () => ColorValue.create(hsvColor).toHexString(),
+    [hsvColor],
   );
-  const [sliderValue, setSliderValue] = React.useState(() =>
-    Math.round(dotColor.hsv.h / 3.59),
-  );
-
-  const [squareTop, setSquareTop] = React.useState(() => 100 - dotColor.hsv.v);
-  const [squareLeft, setSquareLeft] = React.useState(() => dotColor.hsv.s);
-
-  React.useEffect(() => {
-    if (
-      selectedColor &&
-      selectedColorRef.current &&
-      !selectedColorRef.current.equals(selectedColor)
-    ) {
-      selectedColorRef.current = selectedColor;
-      const hsv = selectedColor.toHsv();
-      setActiveColor(selectedColor);
-      setSliderValue(Math.round(hsv.h / 3.59));
-      setSquareColor(
-        fillColor(ColorValue.fromHSV({ h: hsv.h, s: 100, v: 100 })),
-      );
-      setDotColor(fillColor(selectedColor));
-      setSquareTop(100 - hsv.v);
-      setSquareLeft(hsv.s);
-    }
-  }, [selectedColor]);
-
   const [activeDotIndex, setActiveDotIndex] = React.useState<
     number | undefined
   >(undefined);
 
+  const hueColorString = hueSliderColor.toHexString();
   const colorSquareStyle = getWindow()?.CSS?.supports?.(
-    `--hue: ${squareColor.hsl.displayString}`,
-    `--selected-color: ${dotColor.hsl.displayString}`,
+    `--hue: ${hueColorString}`,
+    `--selected-color: ${dotColorString}`,
   )
     ? {
-        '--hue': squareColor.hsl.displayString,
-        '--selected-color': dotColor.hsl.displayString,
+        '--hue': hueColorString,
+        '--selected-color': dotColorString,
       }
-    : { backgroundColor: squareColor.hsl.displayString };
+    : { backgroundColor: dotColorString };
+
+  const squareTop = 100 - hsvColor.v;
+  const squareLeft = hsvColor.s;
 
   const colorDotStyle = getWindow()?.CSS?.supports?.(
     `--top: ${squareTop.toString()}%`,
@@ -269,43 +237,32 @@ export const ColorPicker = (props: ColorPickerProps) => {
         '--left': squareLeft.toString() + '%',
       }
     : {
-        backgroundColor: dotColor.hsl.displayString,
+        backgroundColor: dotColorString,
         top: squareTop.toString() + '%',
         left: squareLeft.toString() + '%',
       };
 
   // Update slider change
   const updateSlider = React.useCallback(
-    (y: number, selectionChanged: boolean) => {
-      setSliderValue(y);
-
-      const hue = Math.round(y * 3.59);
-      const newSquareColor = ColorValue.fromHSV({
-        h: hue,
-        s: 100,
-        v: 100,
-      });
-      setSquareColor(fillColor(newSquareColor));
-
+    (huePercent: number, selectionChanged: boolean) => {
+      const hue = Math.round(huePercent * 3.59);
       const newDotColor = ColorValue.fromHSV({
         h: hue,
-        s: dotColor.hsv.s,
-        v: dotColor.hsv.v,
+        s: hsvColor.s,
+        v: hsvColor.v,
       });
+      setHsvColor(newDotColor.toHsv());
 
-      // Keep same s and v, Update hue
-      const color = fillColor(newDotColor);
-      setDotColor(color);
-
-      //Only update selected color when dragging is done
+      // Only update selected color when dragging is done
       if (selectionChanged) {
         onChangeCompleted?.(newDotColor);
       } else {
         onChange?.(newDotColor);
       }
     },
-    [dotColor.hsv.s, dotColor.hsv.v, onChange, onChangeCompleted],
+    [hsvColor.s, hsvColor.v, onChange, onChangeCompleted],
   );
+
   const onChangeColor = React.useCallback(
     (values: ReadonlyArray<number>) => {
       updateSlider(values[0], false);
@@ -325,21 +282,17 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
   const updateColorDot = React.useCallback(
     (x: number, y: number, selectionChanged: boolean) => {
-      setSquareTop(y);
-      setSquareLeft(x);
       const newColor = ColorValue.fromHSV({
-        h: squareColor.hsv.h,
+        h: hsvColor.h,
         s: x,
         v: 100 - y,
       });
-
-      const color = fillColor(newColor);
-      setDotColor(color);
+      setHsvColor(newColor.toHsv());
       if (selectionChanged) {
         onChangeCompleted?.(newColor);
       }
     },
-    [onChangeCompleted, squareColor.hsv.h],
+    [hsvColor.h, onChangeCompleted],
   );
 
   const updateSquareValue = React.useCallback(
