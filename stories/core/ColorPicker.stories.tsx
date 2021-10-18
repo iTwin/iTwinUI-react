@@ -58,15 +58,15 @@ const ColorsList = [
 ];
 
 export const Basic: Story<ColorPickerProps> = (args) => {
-  const [activeColor, setActiveColor] = React.useState('#00426B');
-  const [colorName, setColorName] = React.useState(ColorsList[2].name);
+  const [activeColor, setActiveColor] = React.useState('#005A92');
+  const [colorName, setColorName] = React.useState(ColorsList[5].name);
 
   const [opened, setOpened] = React.useState(false);
 
   const onColorChanged = (color: ColorValue) => {
     const colorString = color.toHexString();
     const index = ColorsList.findIndex(
-      (swatch) => swatch.color.toLowerCase() == colorString,
+      (swatch) => swatch.color.toLowerCase() === colorString,
     );
     setActiveColor(colorString);
     setColorName(ColorsList[index].name);
