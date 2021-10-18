@@ -12,6 +12,7 @@ import {
   InformationPanelProps,
   InformationPanelWrapper,
   InformationPanelHeader,
+  InformationPanelBody,
   Table,
   Text,
   LabeledTextarea,
@@ -23,7 +24,11 @@ import { CreeveyStoryParams } from 'creevey';
 
 export default {
   component: InformationPanel,
-  subcomponents: { InformationPanelWrapper, InformationPanelHeader },
+  subcomponents: {
+    InformationPanelWrapper,
+    InformationPanelHeader,
+    InformationPanelBody,
+  },
   argTypes: {
     className: { control: { disable: true } },
     style: { control: { disable: true } },
