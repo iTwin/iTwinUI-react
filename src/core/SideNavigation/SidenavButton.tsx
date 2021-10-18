@@ -12,9 +12,14 @@ import '@itwin/itwinui-css/css/side-navigation.css';
 
 export type SidenavButtonProps = {
   /**
-   * Whether the sidenav button is active.
+   * Whether the sidenav button is active,
+   * i.e. the current page corresponds to this button.
    */
   isActive?: boolean;
+  /**
+   * Whether the sidenav button only has submenu open.
+   */
+  isSubmenuOpen?: boolean;
 } & Omit<ButtonProps, 'styleType' | 'size'>;
 
 /**
@@ -30,6 +35,7 @@ export const SidenavButton = React.forwardRef<
     children,
     isActive = false,
     disabled = false,
+    isSubmenuOpen = false,
     ...rest
   } = props;
 
@@ -39,7 +45,10 @@ export const SidenavButton = React.forwardRef<
     <Button
       className={cx(
         'iui-sidenav-button',
-        { 'iui-active': isActive },
+        {
+          'iui-active': isActive,
+          'iui-submenu-open': isSubmenuOpen,
+        },
         className,
       )}
       size='large'
