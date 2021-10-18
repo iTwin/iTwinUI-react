@@ -8,9 +8,15 @@ import { CommonProps, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/information-panel.css';
 
 export type InformationPanelBodyProps = {
+  /**
+   * Content of the InformationPanelBody.
+   */
   children: React.ReactNode;
 } & Omit<CommonProps, 'title'>;
 
+/**
+ * Body of the `InformationPanel` containing the main content.
+ */
 export const InformationPanelBody = (props: InformationPanelBodyProps) => {
   const { className, children, ...rest } = props;
 

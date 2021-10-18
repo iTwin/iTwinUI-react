@@ -37,15 +37,13 @@ export type InformationPanelProps = {
  * @example
  * <InformationPanelWrapper>
  *   <Table ... /> // component to overlay
- *   <InformationPanel
- *     isOpen={true}
- *     header={
- *       <InformationPanelHeader onClose={() => {}}>
- *         <Text variant='subheading'>InfoPanel heading</Text>
- *       </InformationPanelHeader>
- *     }
- *   >
- *     <span>Info panel content</span>
+ *   <InformationPanel isOpen={true}>
+ *     <InformationPanelHeader onClose={() => {}}>
+ *       <Text variant='subheading'>InfoPanel heading</Text>
+ *     </InformationPanelHeader>
+ *     <InformationPanelBody>
+ *       <span>Info panel content</span>
+ *     </InformationPanelBody>
  *   </InformationPanel>
  * </InformationPanelWrapper>
  */
