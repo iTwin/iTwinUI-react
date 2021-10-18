@@ -9,7 +9,6 @@ import {
   ColorPickerProps,
   IconButton,
   ColorSwatch,
-  fillColor,
 } from '../../src/core';
 import { action } from '@storybook/addon-actions';
 import { ColorValue } from '../../src/core/utils/color/ColorValue';
@@ -25,36 +24,36 @@ export default {
 } as Meta<ColorPickerProps>;
 
 const ColorsList = [
-  { color: ColorValue.create('#FFFFFF'), name: 'WHITE' },
-  { color: ColorValue.create('#5A6973'), name: 'GREY' },
-  { color: ColorValue.create('#00121D'), name: 'KURETAKE BLACK MANGA' },
-  { color: ColorValue.create('#002A44'), name: 'RHAPSODY IN BLUE' },
-  { color: ColorValue.create('#00426B'), name: 'DARK IMPERIAL BLUE' },
-  { color: ColorValue.create('#005A92'), name: 'JETSKI RACE' },
-  { color: ColorValue.create('#0073BA'), name: 'FRENCH BLUE' },
-  { color: ColorValue.create('#008BE1'), name: 'BLUE COLA' },
-  { color: ColorValue.create('#30B0FF'), name: 'FANTASY CONSOLE SKY' },
-  { color: ColorValue.create('#58BFFF'), name: 'HELLO SUMMER' },
-  { color: ColorValue.create('#7FCEFF'), name: 'CHROMIS DAMSEL BLUE' },
-  { color: ColorValue.create('#A6DDFF'), name: 'DROPLET' },
-  { color: ColorValue.create('#CDECFF'), name: 'LUCID DREAMS' },
-  { color: ColorValue.create('#E5F5FD'), name: 'KODAMA WHITE' },
-  { color: ColorValue.create('#010200'), name: 'REGISTRATION BLACK' },
-  { color: ColorValue.create('#122306'), name: 'YUZU SOY' },
-  { color: ColorValue.create('#23450b'), name: 'FOREST GREEN' },
-  { color: ColorValue.create('#346711'), name: 'TATZELWURM GREEN' },
-  { color: ColorValue.create('#458816'), name: 'CHLOROPHYLL' },
-  { color: ColorValue.create('#56AA1C'), name: 'PLASTIC PINES' },
-  { color: ColorValue.create('#5FBB1F'), name: 'FIELD GREEN' },
-  { color: ColorValue.create('#67CC22'), name: 'GREEN HIGH' },
-  { color: ColorValue.create('#91E458'), name: 'LILLIPUTIAN LIME' },
-  { color: ColorValue.create('#B2EC8B'), name: 'GREEN DAY' },
-  { color: ColorValue.create('#D4F4BD'), name: 'TEA GREEN' },
-  { color: ColorValue.create('#EEF6E8'), name: 'VERDE PASTEL' },
-  { color: ColorValue.create('#9BA5AF'), name: 'SERYI GREY' },
-  { color: ColorValue.create('#CF0000'), name: 'RED EPIPHYLLUM' },
-  { color: ColorValue.create('#FF6300'), name: 'SAFETY ORANGE' },
-  { color: ColorValue.create('#FFC335'), name: 'RISE-N-SHINE' },
+  { color: ColorValue.create(0xffffff), name: 'WHITE' },
+  { color: ColorValue.create(0x5a6973), name: 'GREY' },
+  { color: ColorValue.create(0x00121d), name: 'KURETAKE BLACK MANGA' },
+  { color: ColorValue.create(0x002a44), name: 'RHAPSODY IN BLUE' },
+  { color: ColorValue.create(0x00426b), name: 'DARK IMPERIAL BLUE' },
+  { color: ColorValue.create(0x005a92), name: 'JETSKI RACE' },
+  { color: ColorValue.create(0x0073ba), name: 'FRENCH BLUE' },
+  { color: ColorValue.create(0x008be1), name: 'BLUE COLA' },
+  { color: ColorValue.create(0x30b0ff), name: 'FANTASY CONSOLE SKY' },
+  { color: ColorValue.create(0x58bfff), name: 'HELLO SUMMER' },
+  { color: ColorValue.create(0x7fceff), name: 'CHROMIS DAMSEL BLUE' },
+  { color: ColorValue.create(0xa6ddff), name: 'DROPLET' },
+  { color: ColorValue.create(0xcdecff), name: 'LUCID DREAMS' },
+  { color: ColorValue.create(0xe5f5fd), name: 'KODAMA WHITE' },
+  { color: ColorValue.create(0x010200), name: 'REGISTRATION BLACK' },
+  { color: ColorValue.create(0x122306), name: 'YUZU SOY' },
+  { color: ColorValue.create(0x23450b), name: 'FOREST GREEN' },
+  { color: ColorValue.create(0x346711), name: 'TATZELWURM GREEN' },
+  { color: ColorValue.create(0x458816), name: 'CHLOROPHYLL' },
+  { color: ColorValue.create(0x56aa1c), name: 'PLASTIC PINES' },
+  { color: ColorValue.create(0x5fbb1f), name: 'FIELD GREEN' },
+  { color: ColorValue.create(0x67cc22), name: 'GREEN HIGH' },
+  { color: ColorValue.create(0x91e458), name: 'LILLIPUTIAN LIME' },
+  { color: ColorValue.create(0xb2ec8b), name: 'GREEN DAY' },
+  { color: ColorValue.create(0xd4f4bd), name: 'TEA GREEN' },
+  { color: ColorValue.create(0xeef6e8), name: 'VERDE PASTEL' },
+  { color: ColorValue.create(0x9ba5af), name: 'SERYI GREY' },
+  { color: ColorValue.create(0xcf0000), name: 'RED EPIPHYLLUM' },
+  { color: ColorValue.create(0xff6300), name: 'SAFETY ORANGE' },
+  { color: ColorValue.create(0xffc335), name: 'RISE-N-SHINE' },
 ];
 
 export const Basic: Story<ColorPickerProps> = (args) => {
@@ -155,7 +154,7 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
 
   const onUpdateDisplayString = () => {
     if (colorDisplayString == undefined) {
-      setColorDisplayString(fillColor(selectedColor).hsl.displayString);
+      setColorDisplayString(selectedColor.toHslString());
     } else if (colorDisplayString.substring(0, 3) == 'hsl') {
       setColorDisplayString(selectedColor.toRgbString());
     } else if (colorDisplayString.substring(0, 3) == 'rgb') {
