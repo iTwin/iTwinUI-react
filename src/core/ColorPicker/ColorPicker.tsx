@@ -55,7 +55,7 @@ export type ColorBuilderProps = {
 
 export type ColorPaletteProps = {
   /** Available color values to show in palette */
-  colors?: Color[];
+  colors?: ColorValue[];
   /** Title shown above color palette (NOTE: do not supply a default or you will be responsible for localizing it.) */
   colorPaletteTitle?: string;
 };
@@ -99,20 +99,20 @@ export type ColorPickerProps = {
  * Basic ColorPicker component to display a palette of ColorSwatches
  * @example
  * <ColorPicker>
- *   <ColorSwatch key={1} color='#D4F4BD' onClick={onColorClick} />
- *   <ColorSwatch key={2} color='#EEF6E8' onClick={onColorClick} />
- *   <ColorSwatch key={3} color='#9BA5AF' onClick={onColorClick} />
- *   <ColorSwatch key={4} color='#002A44' onClick={onColorClick} />
+ *   <ColorSwatch key={1} color={ColorValue.create('#D4F4BD')} onClick={onColorClick} />
+ *   <ColorSwatch key={2} color={ColorValue.create('#EEF6E8')} onClick={onColorClick} />
+ *   <ColorSwatch key={3} color={ColorValue.create('#9BA5AF')} onClick={onColorClick} />
+ *   <ColorSwatch key={4} color={ColorValue.create('#002A44')} onClick={onColorClick} />
  * </ColorPicker>
  */
 /**
  * Advanced ColorPicker component to display a palette of ColorSwatches and color customization options
  * @example
  * <ColorPicker type='advanced' selectedColor={selectedColor} onSelectionChanged={onColorChanged}>
- *   <ColorSwatch key={1} color='#D4F4BD' onClick={onColorClick} />
- *   <ColorSwatch key={2} color='#EEF6E8' onClick={onColorClick} />
- *   <ColorSwatch key={3} color='#9BA5AF' onClick={onColorClick} />
- *   <ColorSwatch key={4} color='#002A44' onClick={onColorClick} />
+ *   <ColorSwatch key={1} color={ColorValue.create('#D4F4BD')} onClick={onColorClick} />
+ *   <ColorSwatch key={2} color={ColorValue.create('#EEF6E8')} onClick={onColorClick} />
+ *   <ColorSwatch key={3} color={ColorValue.create('#9BA5AF')} onClick={onColorClick} />
+ *   <ColorSwatch key={4} color={ColorValue.create('#002A44')} onClick={onColorClick} />
  * </ColorPicker>
  */
 export const ColorPicker = (props: ColorPickerProps) => {
@@ -495,19 +495,10 @@ export const ColorPicker = (props: ColorPickerProps) => {
                   key={index}
                   color={color}
                   onClick={() => {
-                    if (typeof color === 'string') {
-                      onChangeCompleted?.(ColorValue.fromString(color));
-                      // } else if (color.type === HSVColor) {
-                      //   onChangeCompleted(ColorValue.fromHSL(color));
-                      setActiveColor(ColorValue.fromString(color));
-                    }
+                    onChangeCompleted?.(color);
+                    setActiveColor(color);
                   }}
-                  isActive={
-                    typeof color === 'string'
-                      ? ColorValue.fromString(color).toHslString() ===
-                        activeColor?.toHslString()
-                      : false
-                  }
+                  isActive={color.equals(activeColor)}
                 />
               );
             })}

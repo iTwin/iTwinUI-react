@@ -10,7 +10,14 @@ import { ColorValue } from '../utils/color/ColorValue';
 it('should render in its most basic state', () => {
   const { container } = render(
     <ColorPicker
-      paletteProps={{ colors: ['#9BA5AF', '#23450b', '#00121D', '#002A44'] }}
+      paletteProps={{
+        colors: [
+          ColorValue.create('#9BA5AF'),
+          ColorValue.create('#23450b'),
+          ColorValue.create('#00121D'),
+          ColorValue.create('#002A44'),
+        ],
+      }}
     />,
   );
 
@@ -34,8 +41,15 @@ it('should add className and style correctly', () => {
 it('should initially focus on active color', () => {
   const { container } = render(
     <ColorPicker
-      paletteProps={{ colors: ['#9BA5AF', '#23450b', '#00121D', '#002A44'] }}
-      selectedColor={ColorValue.fromString('#23450b')}
+      paletteProps={{
+        colors: [
+          ColorValue.create('#9BA5AF'),
+          ColorValue.create('#23450b'),
+          ColorValue.create('#00121D'),
+          ColorValue.create('#002A44'),
+        ],
+      }}
+      selectedColor={ColorValue.create('#23450b')}
     />,
   );
 
@@ -57,20 +71,20 @@ it('should handle keyboard navigation', () => {
   const onColorClick = jest.fn();
 
   const colorsList = [
-    '#FFFFFF',
-    '#5A6973',
-    '#002A44',
-    '#00426B',
-    '#005A92',
-    '#0073BA',
-    '#30B0FF',
-    '#58BFFF',
-    '#7FCEFF',
-    '#A6DDFF',
-    '#00121D',
-    '#CDECFF',
-    '#E5F5FD',
-    '#010200',
+    ColorValue.create('#FFFFFF'),
+    ColorValue.create('#5A6973'),
+    ColorValue.create('#002A44'),
+    ColorValue.create('#00426B'),
+    ColorValue.create('#005A92'),
+    ColorValue.create('#0073BA'),
+    ColorValue.create('#30B0FF'),
+    ColorValue.create('#58BFFF'),
+    ColorValue.create('#7FCEFF'),
+    ColorValue.create('#A6DDFF'),
+    ColorValue.create('#00121D'),
+    ColorValue.create('#CDECFF'),
+    ColorValue.create('#E5F5FD'),
+    ColorValue.create('#010200'),
   ];
 
   const { container } = render(
@@ -78,7 +92,7 @@ it('should handle keyboard navigation', () => {
       paletteProps={{
         colors: colorsList,
       }}
-      selectedColor={ColorValue.fromString('#00121D')}
+      selectedColor={colorsList[10]}
       onChangeCompleted={onColorClick}
     />,
   );
@@ -197,7 +211,7 @@ it('should render advanced color picker with no color swatches', () => {
 it('should render advanced color picker with color swatches', () => {
   const { container } = render(
     <ColorPicker
-      paletteProps={{ colors: ['#FFFFFF'] }}
+      paletteProps={{ colors: [ColorValue.create('#FFFFFF')] }}
       builderProps={{ defaultColorInputType: 'HEX' }}
     />,
   );
@@ -218,7 +232,10 @@ it('should render advanced color picker with color swatches', () => {
 it('should render color picker with color palette title', () => {
   const { container } = render(
     <ColorPicker
-      paletteProps={{ colors: ['#FFFFFF'], colorPaletteTitle: 'Test Title' }}
+      paletteProps={{
+        colors: [ColorValue.create('#FFFFFF')],
+        colorPaletteTitle: 'Test Title',
+      }}
     />,
   );
 

@@ -5,9 +5,12 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import { ColorSwatch } from './ColorSwatch';
+import { ColorValue } from '../utils';
 
 it('should render in its most basic state', () => {
-  const { container } = render(<ColorSwatch color='#9BA5AF' />);
+  const { container } = render(
+    <ColorSwatch color={ColorValue.create('#9BA5AF')} />,
+  );
 
   const swatch = container.querySelector('.iui-color-swatch');
   expect(swatch).toBeTruthy();
@@ -17,7 +20,7 @@ it('should render in its most basic state', () => {
 it('should add className and style correctly', () => {
   const { container } = render(
     <ColorSwatch
-      color='#9BA5AF'
+      color={ColorValue.create('#9BA5AF')}
       className='test-class'
       style={{ width: '100px' }}
     />,
@@ -31,7 +34,9 @@ it('should add className and style correctly', () => {
 });
 
 it('should render active color swatch', () => {
-  const { container } = render(<ColorSwatch color='#9BA5AF' isActive={true} />);
+  const { container } = render(
+    <ColorSwatch color={ColorValue.create('#9BA5AF')} isActive={true} />,
+  );
 
   const swatch = container.querySelector('.iui-color-swatch');
   expect(swatch?.classList).toContain('iui-active');
@@ -40,17 +45,21 @@ it('should render active color swatch', () => {
 it('should set --swatch-color', () => {
   window.CSS = { supports: () => true, escape: (i) => i };
 
-  const { container } = render(<ColorSwatch color='#9BA5AF' />);
+  const { container } = render(
+    <ColorSwatch color={ColorValue.create('#9BA5AF')} />,
+  );
   const swatch = container.querySelector('.iui-color-swatch') as HTMLElement;
   expect(swatch).toBeTruthy();
-  expect(swatch.style.getPropertyValue('--swatch-color')).toEqual('#9BA5AF');
+  expect(swatch.style.getPropertyValue('--swatch-color')).toEqual(
+    '#9BA5AF'.toLowerCase(),
+  );
 });
 
 it('should handle color swatch onClick', () => {
   const onColorClick = jest.fn();
 
   const { container } = render(
-    <ColorSwatch color='#D4F4BD' onClick={onColorClick} />,
+    <ColorSwatch color={ColorValue.create('#D4F4BD')} onClick={onColorClick} />,
   );
 
   const swatch = container.querySelector('.iui-color-swatch') as HTMLElement;

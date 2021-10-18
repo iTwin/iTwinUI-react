@@ -5,14 +5,13 @@
 import React from 'react';
 import cx from 'classnames';
 import '@itwin/itwinui-css/css/color-picker.css';
-import { useTheme, getWindow } from '../utils';
-import { Color } from './ColorPicker';
+import { useTheme, getWindow, ColorValue } from '../utils';
 
 export type ColorSwatchProps = {
   /**
    * Color code.
    */
-  color: Color;
+  color: ColorValue;
   /**
    * Is color selected.
    */
@@ -22,7 +21,7 @@ export type ColorSwatchProps = {
 /**
  * ColorSwatch component to display a color within a basic color picker.
  * @example
- * <ColorSwatch color='#23450b'  onClick={onClick}/>
+ * <ColorSwatch color={ColorValue.create('#23450b'}  onClick={onClick}/>
  */
 export const ColorSwatch = React.forwardRef<HTMLDivElement, ColorSwatchProps>(
   (props, ref) => {
@@ -30,7 +29,7 @@ export const ColorSwatch = React.forwardRef<HTMLDivElement, ColorSwatchProps>(
 
     useTheme();
 
-    const c = typeof color === 'string' ? color : '#00121D';
+    const c = color.toHexString();
     const _style =
       color && getWindow()?.CSS?.supports?.(`--swatch-color: ${c}`)
         ? { '--swatch-color': c, ...style }

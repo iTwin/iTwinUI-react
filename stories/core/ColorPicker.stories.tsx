@@ -25,52 +25,49 @@ export default {
 } as Meta<ColorPickerProps>;
 
 const ColorsList = [
-  { color: '#FFFFFF', name: 'WHITE' },
-  { color: '#5A6973', name: 'GREY' },
-  { color: '#00121D', name: 'KURETAKE BLACK MANGA' },
-  { color: '#002A44', name: 'RHAPSODY IN BLUE' },
-  { color: '#00426B', name: 'DARK IMPERIAL BLUE' },
-  { color: '#005A92', name: 'JETSKI RACE' },
-  { color: '#0073BA', name: 'FRENCH BLUE' },
-  { color: '#008BE1', name: 'BLUE COLA' },
-  { color: '#30B0FF', name: 'FANTASY CONSOLE SKY' },
-  { color: '#58BFFF', name: 'HELLO SUMMER' },
-  { color: '#7FCEFF', name: 'CHROMIS DAMSEL BLUE' },
-  { color: '#A6DDFF', name: 'DROPLET' },
-  { color: '#CDECFF', name: 'LUCID DREAMS' },
-  { color: '#E5F5FD', name: 'KODAMA WHITE' },
-  { color: '#010200', name: 'REGISTRATION BLACK' },
-  { color: '#122306', name: 'YUZU SOY' },
-  { color: '#23450b', name: 'FOREST GREEN' },
-  { color: '#346711', name: 'TATZELWURM GREEN' },
-  { color: '#458816', name: 'CHLOROPHYLL' },
-  { color: '#56AA1C', name: 'PLASTIC PINES' },
-  { color: '#5FBB1F', name: 'FIELD GREEN' },
-  { color: '#67CC22', name: 'GREEN HIGH' },
-  { color: '#91E458', name: 'LILLIPUTIAN LIME' },
-  { color: '#B2EC8B', name: 'GREEN DAY' },
-  { color: '#D4F4BD', name: 'TEA GREEN' },
-  { color: '#EEF6E8', name: 'VERDE PASTEL' },
-  { color: '#9BA5AF', name: 'SERYI GREY' },
-  { color: '#CF0000', name: 'RED EPIPHYLLUM' },
-  { color: '#FF6300', name: 'SAFETY ORANGE' },
-  { color: '#FFC335', name: 'RISE-N-SHINE' },
+  { color: ColorValue.create('#FFFFFF'), name: 'WHITE' },
+  { color: ColorValue.create('#5A6973'), name: 'GREY' },
+  { color: ColorValue.create('#00121D'), name: 'KURETAKE BLACK MANGA' },
+  { color: ColorValue.create('#002A44'), name: 'RHAPSODY IN BLUE' },
+  { color: ColorValue.create('#00426B'), name: 'DARK IMPERIAL BLUE' },
+  { color: ColorValue.create('#005A92'), name: 'JETSKI RACE' },
+  { color: ColorValue.create('#0073BA'), name: 'FRENCH BLUE' },
+  { color: ColorValue.create('#008BE1'), name: 'BLUE COLA' },
+  { color: ColorValue.create('#30B0FF'), name: 'FANTASY CONSOLE SKY' },
+  { color: ColorValue.create('#58BFFF'), name: 'HELLO SUMMER' },
+  { color: ColorValue.create('#7FCEFF'), name: 'CHROMIS DAMSEL BLUE' },
+  { color: ColorValue.create('#A6DDFF'), name: 'DROPLET' },
+  { color: ColorValue.create('#CDECFF'), name: 'LUCID DREAMS' },
+  { color: ColorValue.create('#E5F5FD'), name: 'KODAMA WHITE' },
+  { color: ColorValue.create('#010200'), name: 'REGISTRATION BLACK' },
+  { color: ColorValue.create('#122306'), name: 'YUZU SOY' },
+  { color: ColorValue.create('#23450b'), name: 'FOREST GREEN' },
+  { color: ColorValue.create('#346711'), name: 'TATZELWURM GREEN' },
+  { color: ColorValue.create('#458816'), name: 'CHLOROPHYLL' },
+  { color: ColorValue.create('#56AA1C'), name: 'PLASTIC PINES' },
+  { color: ColorValue.create('#5FBB1F'), name: 'FIELD GREEN' },
+  { color: ColorValue.create('#67CC22'), name: 'GREEN HIGH' },
+  { color: ColorValue.create('#91E458'), name: 'LILLIPUTIAN LIME' },
+  { color: ColorValue.create('#B2EC8B'), name: 'GREEN DAY' },
+  { color: ColorValue.create('#D4F4BD'), name: 'TEA GREEN' },
+  { color: ColorValue.create('#EEF6E8'), name: 'VERDE PASTEL' },
+  { color: ColorValue.create('#9BA5AF'), name: 'SERYI GREY' },
+  { color: ColorValue.create('#CF0000'), name: 'RED EPIPHYLLUM' },
+  { color: ColorValue.create('#FF6300'), name: 'SAFETY ORANGE' },
+  { color: ColorValue.create('#FFC335'), name: 'RISE-N-SHINE' },
 ];
 
 export const Basic: Story<ColorPickerProps> = (args) => {
-  const [activeColor, setActiveColor] = React.useState('#00426B');
+  const [activeColor, setActiveColor] = React.useState(ColorsList[2]);
   const [colorName, setColorName] = React.useState(ColorsList[2].name);
 
   const [opened, setOpened] = React.useState(false);
 
   const onColorChanged = (color: ColorValue) => {
-    const colorString = color.toHexString();
-    const index = ColorsList.findIndex(
-      (swatch) => swatch.color.toLowerCase() == colorString,
-    );
-    setActiveColor(colorString);
+    const index = ColorsList.findIndex((swatch) => swatch.color.equals(color));
+    setActiveColor(ColorsList[index]);
     setColorName(ColorsList[index].name);
-    action(`Selected ${colorString}`)();
+    action(`Selected ${ColorsList[index].color.toHexString()}`)();
   };
 
   return (
@@ -78,7 +75,7 @@ export const Basic: Story<ColorPickerProps> = (args) => {
       <IconButton onClick={() => setOpened(!opened)}>
         <span
           style={{
-            backgroundColor: activeColor,
+            backgroundColor: activeColor.color.toHexString(),
             border: '1px solid',
           }}
         />
@@ -113,7 +110,7 @@ export const ColorSwatchOnly: Story<ColorPickerProps> = () => {
       {
         <div style={{ marginTop: 4, display: 'flex' }}>
           <ColorSwatch
-            color={'#5A6973'}
+            color={ColorValue.create('#5A6973')}
             onClick={() => {
               onClickColor(0);
             }}
@@ -121,7 +118,7 @@ export const ColorSwatchOnly: Story<ColorPickerProps> = () => {
             style={{ marginRight: 8 }}
           />
           <ColorSwatch
-            color={'#FFFFFF'}
+            color={ColorValue.create('#FFFFFF')}
             onClick={() => {
               onClickColor(1);
             }}
@@ -200,7 +197,11 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
 
 Advanced.args = {
   paletteProps: {
-    colors: ['#FFFFFF', '#5A6973', '#346711'],
+    colors: [
+      ColorValue.create('#FFFFFF'),
+      ColorValue.create('#5A6973'),
+      ColorValue.create('#346711'),
+    ],
     colorPaletteTitle: 'Saved Colors',
   },
   builderProps: {
