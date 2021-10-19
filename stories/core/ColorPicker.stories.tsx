@@ -82,7 +82,7 @@ export const Basic: Story<ColorPickerProps> = (args) => {
       <span style={{ marginLeft: 16 }}>{colorName}</span>
       {opened && (
         <div style={{ marginTop: 4 }}>
-          <ColorPicker onChangeCompleted={onColorChanged} {...args} />
+          <ColorPicker {...args} onChangeCompleted={onColorChanged} />
         </div>
       )}
     </>
@@ -185,8 +185,8 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
         <div style={{ marginTop: 4 }}>
           <ColorPicker
             selectedColor={selectedColor}
-            onChangeCompleted={onColorChanged}
             {...args}
+            onChangeCompleted={onColorChanged}
           />
         </div>
       )}
@@ -201,9 +201,9 @@ Advanced.args = {
       ColorValue.create('#5A6973'),
       ColorValue.create('#346711'),
     ],
-    colorPaletteTitle: 'Saved Colors',
+    colorPaletteTitle: undefined, // 'Saved Colors',
   },
   builderProps: {
-    defaultColorInputType: 'HEX',
+    defaultColorInputType: 'RGB',
   },
 };

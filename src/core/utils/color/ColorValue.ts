@@ -340,10 +340,6 @@ export class ColorValue {
    * *"#rrggbb"*
    */
   private static computeTbgrFromString(val: string): number {
-    if (typeof val !== 'string') {
-      return 0;
-    }
-
     val = val.toLowerCase();
     let m = /^((?:rgb|hsl)a?)\(\s*([^\)]*)\)/.exec(val);
     if (m) {
@@ -433,7 +429,7 @@ export class ColorValue {
       }
     }
 
-    return 0;
+    throw new Error('unable to parse string into ColorValue');
   }
 
   public get colors(): { r: number; g: number; b: number; t: number } {

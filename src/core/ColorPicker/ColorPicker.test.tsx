@@ -10,6 +10,7 @@ import { ColorValue } from '../utils/color/ColorValue';
 it('should render in its most basic state', () => {
   const { container } = render(
     <ColorPicker
+      onChangeCompleted={() => {}}
       paletteProps={{
         colors: [
           ColorValue.create('#9BA5AF'),
@@ -28,7 +29,11 @@ it('should render in its most basic state', () => {
 
 it('should add className and style correctly', () => {
   const { container } = render(
-    <ColorPicker className='test-class' style={{ width: '100px' }} />,
+    <ColorPicker
+      className='test-class'
+      style={{ width: '100px' }}
+      onChangeCompleted={() => {}}
+    />,
   );
 
   const swatch = container.querySelector(
@@ -41,6 +46,7 @@ it('should add className and style correctly', () => {
 it('should initially focus on active color', () => {
   const { container } = render(
     <ColorPicker
+      onChangeCompleted={() => {}}
       paletteProps={{
         colors: [
           ColorValue.create('#9BA5AF'),
@@ -180,7 +186,7 @@ it('should handle keyboard navigation', () => {
 });
 
 it('should render properly with no color swatches', () => {
-  const { container } = render(<ColorPicker />);
+  const { container } = render(<ColorPicker onChangeCompleted={() => {}} />);
 
   const colorSwatches = Array.from<HTMLElement>(
     container.querySelectorAll('.iui-color-swatch'),
@@ -193,7 +199,10 @@ it('should render properly with no color swatches', () => {
 
 it('should render advanced color picker with no color swatches', () => {
   const { container } = render(
-    <ColorPicker builderProps={{ defaultColorInputType: 'HEX' }} />,
+    <ColorPicker
+      builderProps={{ defaultColorInputType: 'HEX' }}
+      onChangeCompleted={() => {}}
+    />,
   );
 
   expect(container.querySelector(`.iui-color-picker`)).toBeTruthy();
@@ -203,6 +212,12 @@ it('should render advanced color picker with no color swatches', () => {
       `.iui-color-picker-input-container .iui-color-picker-section-label`,
     ),
   ).toBeTruthy();
+  const element = container.querySelector(
+    `.iui-color-picker-input-container .iui-color-picker-section-label`,
+  );
+  expect(element).toBeDefined();
+  expect(element?.textContent).toBe('HEX');
+
   expect(
     container.querySelector(
       `.iui-color-picker-palette-container .iui-color-picker-section-label`,
@@ -215,9 +230,10 @@ it('should render advanced color picker with no color swatches', () => {
   expect(container.querySelectorAll(`.iui-color-swatch`).length).toBe(0);
 });
 
-it('should render advanced color picker with color swatches', () => {
+it('should render advanced color picker with color swatches and no title', () => {
   const { container } = render(
     <ColorPicker
+      onChangeCompleted={() => {}}
       paletteProps={{ colors: [ColorValue.create('#FFFFFF')] }}
       builderProps={{ defaultColorInputType: 'HEX' }}
     />,
@@ -246,6 +262,7 @@ it('should render advanced color picker with color swatches', () => {
 it('should render color picker with color palette title', () => {
   const { container } = render(
     <ColorPicker
+      onChangeCompleted={() => {}}
       paletteProps={{
         colors: [ColorValue.create('#FFFFFF')],
         colorPaletteTitle: 'Test Title',

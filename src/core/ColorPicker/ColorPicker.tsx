@@ -12,13 +12,13 @@ import {
   useEventListener,
 } from '../utils';
 import cx from 'classnames';
-import { ColorValue } from '../utils/color/ColorValue';
+import { ColorValue, HsvColor } from '../utils/color/ColorValue';
 import { Slider } from '../Slider';
 import ColorSwatch from './ColorSwatch';
 import { IconButton } from '../Buttons';
 import { Input } from '../Input';
 
-// cspell: ignore borderless
+// cspell: ignore borderless tbgr
 
 const getVerticalPercentageOfRectangle = (rect: DOMRect, pointer: number) => {
   const position = getBoundedValue(pointer, rect.top, rect.bottom);
@@ -61,7 +61,7 @@ export type ColorPickerProps = {
    * This can be on pointerUp when thumb is done dragging,
    * or when user clicks on color builder components, or when user clicks on color swatch
    */
-  onChangeCompleted?: (color: ColorValue) => void;
+  onChangeCompleted: (color: ColorValue) => void;
   /**
    * Props used to determine what advanced color picker components to display
    * to allow user to build their own color.
@@ -118,17 +118,24 @@ export const ColorPicker = (props: ColorPickerProps) => {
   const [activeColor, setActiveColor] = React.useState<ColorValue>(
     () => selectedColor ?? ColorValue.create('#00121D'),
   );
-  const [inputType, setInputType] = React.useState<
-    'HEX' | 'HSL' | 'RGB' | 'NONE'
-  >(builderProps?.defaultColorInputType ?? 'NONE');
 
   const [hsvColor, setHsvColor] = React.useState(() => activeColor.toHsv());
+  const hsvColorValueRef = React.useRef(activeColor.tbgr);
 
+  // The following code is used to preserve the Hue after initial mount. If the current HSV value produces the same rgb value
+  // as the selectedColor prop then leave the HSV color unchanged. This prevents the jumping of HUE as the s/v values are changed
+  // by user moving the pointer.
   React.useEffect(() => {
     const newColor = selectedColor ?? ColorValue.create('#00121D');
-    setActiveColor(newColor);
-    setHsvColor(newColor.toHsv());
+    if (newColor.tbgr !== hsvColorValueRef.current) {
+      setHsvColor(newColor.toHsv());
+    }
   }, [selectedColor]);
+
+  const updateHsv = (newHsv: HsvColor, newColorValue: ColorValue) => {
+    hsvColorValueRef.current = newColorValue.tbgr;
+    setHsvColor(newHsv);
+  };
 
   // colorSwatches may be supplied as children which requires looking through DOM
   React.useEffect(() => {
@@ -141,7 +148,8 @@ export const ColorPicker = (props: ColorPickerProps) => {
     }
     const selectedIndex = colorSwatches.findIndex(
       (swatch) =>
-        swatch.tabIndex === 0 || swatch.getAttribute('aria-selected') == 'true',
+        swatch.tabIndex === 0 ||
+        swatch.getAttribute('aria-selected') === 'true',
     );
     setFocusedColorIndex(selectedIndex > -1 ? selectedIndex : null);
   }, [focusedColorIndex]);
@@ -175,7 +183,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
         // Look backwards for next ColorSwatch with same offsetLeft value
         for (let i = currentIndex - 1; i >= 0; i--) {
           if (
-            colorSwatches[i].offsetLeft ==
+            colorSwatches[i].offsetLeft ===
             colorSwatches[currentIndex].offsetLeft
           ) {
             newIndex = i;
@@ -205,7 +213,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
   };
 
   const hueSliderColor = React.useMemo(
-    () => ColorValue.create({ ...hsvColor, s: 100, v: 100 }),
+    () => ColorValue.create({ h: hsvColor.h, s: 100, v: 100 }),
     [hsvColor],
   );
 
@@ -249,20 +257,42 @@ export const ColorPicker = (props: ColorPickerProps) => {
         left: squareLeft.toString() + '%',
       };
 
+  // Update color
+  // const updateColor = React.useCallback(
+  //   (color: ColorValue, changeCompleted: boolean) => {
+  //     const hue = fillColor(
+  //       ColorValue.fromHSV({ h: color.toHSV().h, s: 100, v: 100 }),
+  //     );
+  //
+  //     setDotColor(fillColor(color));
+  //     setSquareColor(hue);
+  //     setSliderValue(Math.round(color.toHSV().h / 3.59));
+  //     setSquareTop(100 - color.toHSV().v);
+  //     setSquareLeft(color.toHSV().s);
+  //     if (changeCompleted) {
+  //       onChangeCompleted?.(color);
+  //     } else {
+  //       onChange?.(color);
+  //     }
+  //   },
+  //   [onChange, onChangeCompleted],
+  // );
+
   // Update slider change
   const updateSlider = React.useCallback(
     (huePercent: number, selectionChanged: boolean) => {
       const hue = Math.round(huePercent * 3.59);
-      const newDotColor = ColorValue.fromHSV({
+      const newHsv = {
         h: hue,
         s: hsvColor.s,
         v: hsvColor.v,
-      });
-      setHsvColor(newDotColor.toHsv());
+      };
+      const newDotColor = ColorValue.fromHSV(newHsv);
+      updateHsv(newHsv, newDotColor);
 
       // Only update selected color when dragging is done
       if (selectionChanged) {
-        onChangeCompleted?.(newDotColor);
+        onChangeCompleted(newDotColor);
       } else {
         onChange?.(newDotColor);
       }
@@ -270,14 +300,14 @@ export const ColorPicker = (props: ColorPickerProps) => {
     [hsvColor.s, hsvColor.v, onChange, onChangeCompleted],
   );
 
-  const onChangeColor = React.useCallback(
+  const onChangeHue = React.useCallback(
     (values: ReadonlyArray<number>) => {
       updateSlider(values[0], false);
     },
     [updateSlider],
   );
 
-  const onChangeColorCompleted = React.useCallback(
+  const onChangeHueCompleted = React.useCallback(
     (values: ReadonlyArray<number>) => {
       updateSlider(values[0], true);
     },
@@ -289,14 +319,15 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
   const updateColorDot = React.useCallback(
     (x: number, y: number, selectionChanged: boolean) => {
-      const newColor = ColorValue.fromHSV({
+      const newHsv = {
         h: hsvColor.h,
         s: x,
         v: 100 - y,
-      });
-      setHsvColor(newColor.toHsv());
+      };
+      const newColor = ColorValue.fromHSV(newHsv);
+      updateHsv(newHsv, newColor);
       if (selectionChanged) {
-        onChangeCompleted?.(newColor);
+        onChangeCompleted(newColor);
       }
     },
     [hsvColor.h, onChangeCompleted],
@@ -308,8 +339,8 @@ export const ColorPicker = (props: ColorPickerProps) => {
       callbackType: 'onChange' | 'onUpdate' | 'onClick',
     ) => {
       if (
-        (squareRef.current && activeDotIndex == 1) ||
-        (squareRef.current && callbackType == 'onClick')
+        (squareRef.current && activeDotIndex === 1) ||
+        (squareRef.current && callbackType === 'onClick')
       ) {
         const percentX = getHorizontalPercentageOfRectangle(
           squareRef.current.getBoundingClientRect(),
@@ -320,9 +351,9 @@ export const ColorPicker = (props: ColorPickerProps) => {
           event.clientY,
         );
 
-        if (callbackType == 'onChange' || callbackType == 'onClick') {
+        if (callbackType === 'onChange' || callbackType === 'onClick') {
           updateColorDot(percentX, percentY, true);
-        } else if (callbackType == 'onUpdate') {
+        } else if (callbackType === 'onUpdate') {
           updateColorDot(percentX, percentY, false);
         }
       }
@@ -399,20 +430,104 @@ export const ColorPicker = (props: ColorPickerProps) => {
     }
   };
 
-  // Handle swapping color input type
+  // Handle color inputs
+  const [inputType, setInputType] = React.useState<
+    'HEX' | 'HSL' | 'RGB' | 'NONE'
+  >(builderProps?.defaultColorInputType ?? 'NONE');
+
+  // need to use state since may have parsing error
+  const [hexInput, setHexInput] = React.useState(
+    ColorValue.create(hsvColor).toHexString(),
+  );
+
+  React.useEffect(() => {
+    setHexInput(ColorValue.create(hsvColor).toHexString());
+  }, [hsvColor]);
+
+  const [hslInput, setHslInput] = React.useState(() => {
+    const hslColor = ColorValue.create(hsvColor).toHsl();
+    return [
+      hslColor.h.toString(),
+      hslColor.s.toString(),
+      hslColor.l.toString(),
+    ];
+  });
+
+  React.useEffect(() => {
+    const hslColor = ColorValue.create(hsvColor).toHsl();
+    setHslInput([
+      hslColor.h.toString(),
+      hslColor.s.toString(),
+      hslColor.l.toString(),
+    ]);
+  }, [hsvColor]);
+
+  const [rgbInput, setRgbInput] = React.useState(() => {
+    const rgbColor = ColorValue.create(hsvColor).toRgb();
+    return [
+      rgbColor.r.toString(),
+      rgbColor.g.toString(),
+      rgbColor.b.toString(),
+    ];
+  });
+
+  React.useEffect(() => {
+    const rgbColor = ColorValue.create(hsvColor).toRgb();
+    setRgbInput([
+      rgbColor.r.toString(),
+      rgbColor.g.toString(),
+      rgbColor.b.toString(),
+    ]);
+  }, [hsvColor]);
+
   const onSwapColorType = React.useCallback(() => {
-    if (inputType == 'HEX') {
+    if (inputType === 'HEX') {
       setInputType('HSL');
-    } else if (inputType == 'HSL') {
+    } else if (inputType === 'HSL') {
       setInputType('RGB');
-    } else if (inputType == 'RGB') {
+    } else if (inputType === 'RGB') {
       setInputType('HEX');
     }
   }, [inputType]);
 
-  const colorHexString = ColorValue.create(hsvColor).toHexString();
-  const hslColor = ColorValue.create(hsvColor).toHsl();
-  const rgbColor = ColorValue.create(hsvColor).toRgb();
+  const handleColorInputChange = (
+    type: 'HSL' | 'HEX' | 'RGB',
+    value: string[],
+  ) => {
+    let color;
+
+    if (type === 'HEX') {
+      const colorString = value[0].startsWith('#') ? value[0] : `#${value[0]}`;
+      try {
+        color = ColorValue.fromString(colorString);
+        onChangeCompleted(color);
+        return;
+      } catch (_e) {
+        setHexInput(colorString);
+        return;
+      }
+    }
+
+    if (type === 'HSL') {
+      const values: string[] = value as string[];
+      color = ColorValue.fromHSL({
+        h: Number(values[0]),
+        s: Number(values[1]),
+        l: Number(values[2]),
+      });
+      onChangeCompleted(color);
+    }
+
+    if (type === 'RGB') {
+      const values: string[] = value as string[];
+      color = ColorValue.fromRGB({
+        r: Number(values[0]),
+        g: Number(values[1]),
+        b: Number(values[2]),
+      });
+      onChangeCompleted(color);
+    }
+  };
 
   return (
     <div
@@ -447,8 +562,8 @@ export const ColorPicker = (props: ColorPickerProps) => {
             tooltipProps={() => {
               return { visible: false };
             }}
-            onChange={onChangeColorCompleted}
-            onUpdate={onChangeColor}
+            onChange={onChangeHueCompleted}
+            onUpdate={onChangeHue}
           />
         </div>
       )}
@@ -464,24 +579,173 @@ export const ColorPicker = (props: ColorPickerProps) => {
             {inputType === 'HEX' && (
               <div className='iui-color-input-fields'>
                 <Input
-                  type={'small'}
-                  placeholder={'HEX'}
-                  value={colorHexString}
+                  key='hex'
+                  size='small'
+                  maxLength={7}
+                  minLength={1}
+                  placeholder='HEX'
+                  value={hexInput}
+                  onChange={(event) => {
+                    setHexInput(event.target.value);
+                  }}
+                  onFocus={(event) => event.target.select()}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault();
+                      handleColorInputChange('HEX', [hexInput]);
+                    }
+                  }}
+                  onBlur={(event) => {
+                    event.preventDefault();
+                    handleColorInputChange('HEX', [hexInput]);
+                  }}
                 />
               </div>
             )}
             {inputType === 'HSL' && (
               <div className='iui-color-input-fields'>
-                <Input type={'small'} placeholder={'H'} value={hslColor.h} />
-                <Input type={'small'} placeholder={'S'} value={hslColor.s} />
-                <Input type={'small'} placeholder={'L'} value={hslColor.l} />
+                <Input
+                  key='hsl-h'
+                  size='small'
+                  type='number'
+                  min='0'
+                  max='359'
+                  placeholder='H'
+                  value={hslInput[0]}
+                  onChange={(event) => {
+                    setHslInput([event.target.value, hslInput[1], hslInput[2]]);
+                  }}
+                  onFocus={(event) => event.target.select()}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault();
+                      handleColorInputChange('HSL', hslInput);
+                    }
+                  }}
+                  onBlur={(event) => {
+                    event.preventDefault();
+                    handleColorInputChange('HSL', hslInput);
+                  }}
+                />
+                <Input
+                  key='hsl-s'
+                  size='small'
+                  type='number'
+                  min='0'
+                  max='100'
+                  placeholder='S'
+                  value={hslInput[1]}
+                  onChange={(event) => {
+                    setHslInput([hslInput[0], event.target.value, hslInput[2]]);
+                  }}
+                  onFocus={(event) => event.target.select()}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault();
+                      handleColorInputChange('HSL', hslInput);
+                    }
+                  }}
+                  onBlur={(event) => {
+                    event.preventDefault();
+                    handleColorInputChange('HSL', hslInput);
+                  }}
+                />
+                <Input
+                  key='hsl-l'
+                  size='small'
+                  type='number'
+                  min='0'
+                  max='100'
+                  placeholder='L'
+                  value={hslInput[2]}
+                  onChange={(event) => {
+                    setHslInput([hslInput[0], hslInput[1], event.target.value]);
+                  }}
+                  onFocus={(event) => event.target.select()}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault();
+                      handleColorInputChange('HSL', hslInput);
+                    }
+                  }}
+                  onBlur={(event) => {
+                    event.preventDefault();
+                    handleColorInputChange('HSL', hslInput);
+                  }}
+                />
               </div>
             )}
-            {inputType == 'RGB' && (
+            {inputType === 'RGB' && (
               <div className='iui-color-input-fields'>
-                <Input type={'small'} placeholder={'R'} value={rgbColor.r} />
-                <Input type={'small'} placeholder={'G'} value={rgbColor.g} />
-                <Input type={'small'} placeholder={'B'} value={rgbColor.b} />
+                <Input
+                  key='rgb-r'
+                  size='small'
+                  type='number'
+                  min='0'
+                  max='255'
+                  placeholder='R'
+                  value={rgbInput[0]}
+                  onChange={(event) => {
+                    setRgbInput([event.target.value, rgbInput[1], rgbInput[2]]);
+                  }}
+                  onFocus={(event) => event.target.select()}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault();
+                      handleColorInputChange('RGB', rgbInput);
+                    }
+                  }}
+                  onBlur={(event) => {
+                    event.preventDefault();
+                    handleColorInputChange('RGB', rgbInput);
+                  }}
+                />
+                <Input
+                  key='rgb-g'
+                  size='small'
+                  type='number'
+                  min='0'
+                  max='255'
+                  placeholder='G'
+                  value={rgbInput[1]}
+                  onChange={(event) => {
+                    setRgbInput([rgbInput[0], event.target.value, rgbInput[2]]);
+                  }}
+                  onFocus={(event) => event.target.select()}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault();
+                      handleColorInputChange('RGB', rgbInput);
+                    }
+                  }}
+                  onBlur={(event) => {
+                    event.preventDefault();
+                    handleColorInputChange('RGB', rgbInput);
+                  }}
+                />
+                <Input
+                  key='rgb-b'
+                  size='small'
+                  type='number'
+                  min='0'
+                  max='255'
+                  placeholder={'B'}
+                  value={rgbInput[2]}
+                  onChange={(event) => {
+                    setRgbInput([rgbInput[0], rgbInput[1], event.target.value]);
+                  }}
+                  onFocus={(event) => event.target.select()}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault();
+                      handleColorInputChange('RGB', rgbInput);
+                    }
+                  }}
+                  onBlur={(event) => {
+                    event.preventDefault();
+                    handleColorInputChange('RGB', rgbInput);
+                  }}
+                />
               </div>
             )}
           </div>
@@ -504,7 +768,8 @@ export const ColorPicker = (props: ColorPickerProps) => {
                 <ColorSwatch
                   key={index}
                   color={color}
-                  onClick={() => {
+                  onClick={(event) => {
+                    event.preventDefault();
                     onChangeCompleted?.(color);
                     setActiveColor(color);
                   }}
