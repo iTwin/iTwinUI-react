@@ -482,7 +482,7 @@ export class ColorValue {
   }
 
   /** Compute the 0xTTBBGGRR color corresponding to the specified hue, saturation, lightness values. */
-  public static computeTbgrFromHSL(
+  private static computeTbgrFromHSL(
     /** 0-1 */
     h: number,
     /** 0-1 */
