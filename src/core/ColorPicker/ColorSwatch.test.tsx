@@ -7,7 +7,7 @@ import { fireEvent, render } from '@testing-library/react';
 import { ColorSwatch } from './ColorSwatch';
 import { ColorValue } from '../utils';
 
-it('should render in its most basic state', () => {
+it('should render in its most basic state with ColorValue', () => {
   const { container } = render(
     <ColorSwatch color={ColorValue.create('#9BA5AF')} />,
   );
@@ -15,6 +15,22 @@ it('should render in its most basic state', () => {
   const swatch = container.querySelector('.iui-color-swatch');
   expect(swatch).toBeTruthy();
   expect(swatch).toHaveStyle({ backgroundColor: '#9BA5AF' });
+});
+
+it('should render in its most basic state with color string', () => {
+  const { container } = render(<ColorSwatch color='#9BA5AF' />);
+
+  const swatch = container.querySelector('.iui-color-swatch');
+  expect(swatch).toBeTruthy();
+  expect(swatch).toHaveStyle({ backgroundColor: '#9BA5AF' });
+});
+
+it('should render in its most basic state with transparent color', () => {
+  const { container } = render(<ColorSwatch color='transparent' />);
+
+  const swatch = container.querySelector('.iui-color-swatch');
+  expect(swatch).toBeTruthy();
+  expect(swatch).toHaveStyle({ backgroundColor: 'transparent' });
 });
 
 it('should add className and style correctly', () => {

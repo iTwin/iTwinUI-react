@@ -22,16 +22,16 @@ export type ColorSwatchProps = {
 /**
  * ColorSwatch component to display a color within a basic color picker.
  * @example
- * <ColorSwatch color={ColorValue.create('#23450b'}  onClick={onClick}/>
+ * <ColorSwatch color='#23450b'  onClick={onClick}/>
+ * <ColorSwatch color={ColorValue.create({r: 255, g: 255, b: 0}}  onClick={onClick}/>
  */
 export const ColorSwatch = React.forwardRef<HTMLDivElement, ColorSwatchProps>(
   (props, ref) => {
     const { color, style, onClick, isActive, className, ...rest } = props;
-    const inColor = getColorValue(color);
-
     useTheme();
 
-    const c = inColor.toHexString();
+    const c =
+      typeof color === 'string' ? color : getColorValue(color).toHexString();
     const _style =
       color && getWindow()?.CSS?.supports?.(`--swatch-color: ${c}`)
         ? { '--swatch-color': c, ...style }
