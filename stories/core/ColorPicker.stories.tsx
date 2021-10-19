@@ -9,7 +9,7 @@ import {
   ColorPickerProps,
   IconButton,
   ColorSwatch,
-  fillColor,
+  Button,
 } from '../../src/core';
 import { action } from '@storybook/addon-actions';
 import { ColorValue } from '../../src/core/utils/color/ColorValue';
@@ -142,6 +142,8 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
   const [colorDisplayString, setColorDisplayString] = React.useState(
     selectedColor.toHslString(),
   );
+  const [displayType, setDisplayType] = React.useState(0); // 0 = HSL, 1= RGB, 2=HEX, 3=HSV
+
   // const [savedColors] = React.useState<Array<ColorValue>>([
   //   ColorValue.fromHSL({ h: 0, s: 100, l: 50 }),
   //   ColorValue.fromRGB({ r: 255, g: 98, b: 0 }),
@@ -152,23 +154,37 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
 
   const onColorChanged = (color: ColorValue) => {
     setSelectedColor(color);
-    setColorDisplayString(color.toHslString());
-    action(`Selected ${color.toHslString()}`)();
+    action(`Selected ${colorDisplayString}`)();
   };
 
-  const onUpdateDisplayString = () => {
-    if (colorDisplayString == undefined) {
-      setColorDisplayString(fillColor(selectedColor).hsl.displayString);
-    } else if (colorDisplayString.substring(0, 3) == 'hsl') {
-      setColorDisplayString(selectedColor.toRgbString());
-    } else if (colorDisplayString.substring(0, 3) == 'rgb') {
-      setColorDisplayString(selectedColor.toHsvString());
-    } else if (colorDisplayString.substring(0, 3) == 'hsv') {
-      setColorDisplayString(selectedColor.toHexString());
+  const onDisplayTypeChange = () => {
+    if (displayType === 3) {
+      setDisplayType(0);
     } else {
-      setColorDisplayString(selectedColor.toHslString());
+      setDisplayType(displayType + 1);
     }
   };
+
+  React.useEffect(() => {
+    switch (displayType) {
+      case 0: {
+        setColorDisplayString(selectedColor.toHslString());
+        break;
+      }
+      case 1: {
+        setColorDisplayString(selectedColor.toRgbString());
+        break;
+      }
+      case 2: {
+        setColorDisplayString(selectedColor.toHexString());
+        break;
+      }
+      case 3: {
+        setColorDisplayString(selectedColor.toHsvString());
+        break;
+      }
+    }
+  }, [displayType, selectedColor]);
 
   return (
     <>
@@ -180,10 +196,19 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
           }}
         />
       </IconButton>
-
-      <span style={{ marginLeft: 16 }} onClick={onUpdateDisplayString}>
-        {colorDisplayString ?? 'No color selected.'}
-      </span>
+      <Button
+        onClick={onDisplayTypeChange}
+        startIcon={
+          <svg viewBox='0 0 16 16' className='iui-icon' aria-hidden='true'>
+            <path d='m5 15-3.78125-3.5 3.78125-3.5v2h8v3h-8zm6-7 3.78125-3.5-3.78125-3.5v2h-8v3h8z' />
+          </svg>
+        }
+        styleType='default'
+      >
+        <span style={{ marginLeft: 16 }}>
+          {colorDisplayString ?? 'No color selected.'}
+        </span>
+      </Button>
 
       {opened && (
         <div style={{ marginTop: 4 }}>
