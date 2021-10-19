@@ -198,16 +198,16 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
       </IconButton>
       <Button
         onClick={onDisplayTypeChange}
-        startIcon={
+        endIcon={
           <svg viewBox='0 0 16 16' className='iui-icon' aria-hidden='true'>
             <path d='m5 15-3.78125-3.5 3.78125-3.5v2h8v3h-8zm6-7 3.78125-3.5-3.78125-3.5v2h-8v3h8z' />
           </svg>
         }
         styleType='default'
       >
-        <span style={{ marginLeft: 16 }}>
+        <div style={{ width: 115 }}>
           {colorDisplayString ?? 'No color selected.'}
-        </span>
+        </div>
       </Button>
 
       {opened && (
