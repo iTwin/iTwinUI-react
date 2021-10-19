@@ -12,13 +12,28 @@ import {
   useEventListener,
 } from '../utils';
 import cx from 'classnames';
-import { ColorValue, HsvColor } from '../utils/color/ColorValue';
+import { ColorType, ColorValue, HsvColor } from '../utils/color/ColorValue';
 import { Slider } from '../Slider';
 import ColorSwatch from './ColorSwatch';
 import { IconButton } from '../Buttons';
 import { Input } from '../Input';
 
 // cspell: ignore borderless tbgr
+
+export const getColorValue = (color: ColorType | ColorValue | undefined) => {
+  if (color instanceof ColorValue) {
+    return color;
+  }
+  if (undefined === color) {
+    return ColorValue.fromTbgr(0);
+  }
+
+  try {
+    return ColorValue.create(color);
+  } catch (_e) {
+    return ColorValue.fromTbgr(0);
+  }
+};
 
 const getVerticalPercentageOfRectangle = (rect: DOMRect, pointer: number) => {
   const position = getBoundedValue(pointer, rect.top, rect.bottom);
@@ -39,7 +54,7 @@ export type ColorBuilderProps = {
 
 export type ColorPaletteProps = {
   /** Available color values to show in palette */
-  colors?: ColorValue[];
+  colors?: Array<ColorType | ColorValue>;
   /** Title shown above color palette (NOTE: do not supply a default or you will be responsible for localizing it.) */
   colorPaletteTitle?: string;
 };
@@ -49,7 +64,7 @@ export type ColorPickerProps = {
   /**
    * The selected color to be shown as the initial color in advanced color picker.
    */
-  selectedColor?: ColorValue;
+  selectedColor?: ColorType | ColorValue;
   /**
    * Callback fired when the color value is internally updated during
    * operations like dragging a Thumb. Use this callback with caution as a
@@ -115,10 +130,10 @@ export const ColorPicker = (props: ColorPickerProps) => {
   const [focusedColorIndex, setFocusedColorIndex] = React.useState<
     number | null
   >();
-  const [activeColor, setActiveColor] = React.useState<ColorValue>(
-    () => selectedColor ?? ColorValue.create('#00121D'),
-  );
 
+  const inColor = getColorValue(selectedColor);
+
+  const [activeColor, setActiveColor] = React.useState<ColorValue>(inColor);
   const [hsvColor, setHsvColor] = React.useState(() => activeColor.toHsv());
   const rgbValueOfActiveColor = React.useRef(activeColor.toTbgr());
 
@@ -126,11 +141,11 @@ export const ColorPicker = (props: ColorPickerProps) => {
   // as the selectedColor prop then leave the HSV color unchanged. This prevents the jumping of HUE as the s/v values are changed
   // by user moving the pointer.
   React.useEffect(() => {
-    const newColor = selectedColor ?? ColorValue.create('#00121D');
+    const newColor = inColor;
     if (newColor.toTbgr() !== rgbValueOfActiveColor.current) {
       setHsvColor(newColor.toHsv());
     }
-  }, [selectedColor]);
+  }, [inColor]);
 
   const updateHsv = (newHsv: HsvColor, newColorValue: ColorValue) => {
     rgbValueOfActiveColor.current = newColorValue.toTbgr();
@@ -257,27 +272,6 @@ export const ColorPicker = (props: ColorPickerProps) => {
         left: squareLeft.toString() + '%',
       };
 
-  // Update color
-  // const updateColor = React.useCallback(
-  //   (color: ColorValue, changeCompleted: boolean) => {
-  //     const hue = fillColor(
-  //       ColorValue.fromHSV({ h: color.toHSV().h, s: 100, v: 100 }),
-  //     );
-  //
-  //     setDotColor(fillColor(color));
-  //     setSquareColor(hue);
-  //     setSliderValue(Math.round(color.toHSV().h / 3.59));
-  //     setSquareTop(100 - color.toHSV().v);
-  //     setSquareLeft(color.toHSV().s);
-  //     if (changeCompleted) {
-  //       onChangeCompleted?.(color);
-  //     } else {
-  //       onChange?.(color);
-  //     }
-  //   },
-  //   [onChange, onChangeCompleted],
-  // );
-
   // Update slider change
   const updateSlider = React.useCallback(
     (huePercent: number, selectionChanged: boolean) => {
@@ -287,7 +281,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
         s: hsvColor.s,
         v: hsvColor.v,
       };
-      const newDotColor = ColorValue.fromHSV(newHsv);
+      const newDotColor = ColorValue.create(newHsv);
       updateHsv(newHsv, newDotColor);
 
       // Only update selected color when dragging is done
@@ -324,7 +318,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
         s: x,
         v: 100 - y,
       };
-      const newColor = ColorValue.fromHSV(newHsv);
+      const newColor = ColorValue.create(newHsv);
       updateHsv(newHsv, newColor);
       if (selectionChanged) {
         onChangeCompleted(newColor);
@@ -510,7 +504,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
     if (type === 'HSL') {
       const values: string[] = value as string[];
-      color = ColorValue.fromHSL({
+      color = ColorValue.create({
         h: Number(values[0]),
         s: Number(values[1]),
         l: Number(values[2]),
@@ -520,7 +514,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
     if (type === 'RGB') {
       const values: string[] = value as string[];
-      color = ColorValue.fromRGB({
+      color = ColorValue.create({
         r: Number(values[0]),
         g: Number(values[1]),
         b: Number(values[2]),
@@ -762,7 +756,8 @@ export const ColorPicker = (props: ColorPickerProps) => {
             onKeyDown={handleKeyDown}
             ref={ref}
           >
-            {paletteProps.colors?.map((color, index) => {
+            {paletteProps.colors?.map((inColor, index) => {
+              const color = getColorValue(inColor);
               return (
                 <ColorSwatch
                   key={index}

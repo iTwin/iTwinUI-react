@@ -12,12 +12,7 @@ it('should render in its most basic state', () => {
     <ColorPicker
       onChangeCompleted={() => {}}
       paletteProps={{
-        colors: [
-          ColorValue.create('#9BA5AF'),
-          ColorValue.create('#23450b'),
-          ColorValue.create('#00121D'),
-          ColorValue.create('#002A44'),
-        ],
+        colors: ['#9BA5AF', '#23450b', '#00121D', '#002A44'],
       }}
     />,
   );

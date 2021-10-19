@@ -9,20 +9,20 @@ import { ColorValue } from './ColorValue';
 // A set of known colors by [HTML color name](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value),
 describe('ColorValue', () => {
   it('should properly handle RGB number values', () => {
-    const cadetBlueRgb = ColorValue.create(0x5f9ea0);
+    const cadetBlueRgb = ColorValue.create('#5f9ea0');
     const cadetBlueTbgr = ColorValue.fromTbgr(0xa09e5f);
-    expect(cadetBlueRgb.tbgr).toEqual(cadetBlueTbgr.tbgr);
+    expect(cadetBlueRgb.toTbgr()).toEqual(cadetBlueTbgr.toTbgr());
     expect(cadetBlueRgb.equals(cadetBlueTbgr)).toBeTruthy();
   });
 
   it('should properly handle RgbColor values', () => {
-    const cadetBlueRgb = ColorValue.create(0x5f9ea0);
+    const cadetBlueRgb = ColorValue.create('#5f9ea0');
     const cadetBlueColor = ColorValue.create({ r: 95, g: 158, b: 160 });
     expect(cadetBlueRgb.equals(cadetBlueColor)).toBeTruthy();
   });
 
   it('should properly handle RgbaColor values', () => {
-    const colorRgbNumber = ColorValue.create(0xc8141480);
+    const colorRgbNumber = ColorValue.create('#c8141480');
     const rgbColor = ColorValue.create({ r: 200, g: 20, b: 20, a: 0.5 });
     expect(colorRgbNumber.toRgbString()).toEqual(`rgb(200, 20, 20)`);
     expect(rgbColor.toRgbString()).toEqual(`rgb(200, 20, 20)`);
@@ -56,7 +56,7 @@ describe('ColorValue', () => {
   });
 
   it('should properly handle HexString values', () => {
-    const colorHex = ColorValue.create(0x5f9ea0);
+    const colorHex = ColorValue.create('#5f9ea0');
     const colorHexString = ColorValue.create(`#5f9ea0`);
     expect(colorHex.equals(colorHexString)).toBeTruthy();
     expect(colorHex.toRgbString()).toEqual(`rgb(95, 158, 160)`);
@@ -64,36 +64,27 @@ describe('ColorValue', () => {
 
   it('should properly handle standard HexString values', () => {
     // White
-    let colorHex = ColorValue.create(0xffffff);
-    let colorHexString = ColorValue.create(`#ffffff`);
-    expect(colorHex.equals(colorHexString)).toBeTruthy();
+    let colorHex = ColorValue.create(`#ffffff`);
     expect(colorHex.toRgbString()).toEqual(`rgb(255, 255, 255)`);
 
     // Black
-    colorHex = ColorValue.create(0x000000);
-    colorHexString = ColorValue.create(`#000000`);
-    expect(colorHex.equals(colorHexString)).toBeTruthy();
+    colorHex = ColorValue.create(`#000000`);
     expect(colorHex.toRgbString()).toEqual(`rgb(0, 0, 0)`);
 
     // Magenta
-    colorHex = ColorValue.create(0xff00ff);
-    colorHexString = ColorValue.create(`#ff00ff`);
-    expect(colorHex.equals(colorHexString)).toBeTruthy();
+    colorHex = ColorValue.create(`#ff00ff`);
     expect(colorHex.toRgbString()).toEqual(`rgb(255, 0, 255)`);
   });
 
   it('should properly handle 3 character HexString values', () => {
-    const colorHex = ColorValue.create(0xffff00);
     const colorHexString = ColorValue.create(`#ff0`);
-    // expect(colorHex.equals(colorHexString)).toBeTruthy();
-    expect(colorHex.toRgbString()).toEqual(`rgb(255, 255, 0)`);
     expect(colorHexString.toRgbString()).toEqual(`rgb(255, 255, 0)`);
   });
 
   it('should properly handle HexString values with alpha', () => {
-    const colorHex = ColorValue.create(0x5f9ea080);
-    const colorHexString = ColorValue.create(`#5f9ea080`);
-    expect(colorHex.equals(colorHexString)).toBeTruthy();
+    const colorRgba = ColorValue.create({ r: 95, g: 158, b: 160, a: 0.5 });
+    const colorHex = ColorValue.create(`#5f9ea080`);
+    expect(colorHex.equals(colorRgba)).toBeTruthy();
     expect(colorHex.toRgbString(true)).toEqual(`rgba(95, 158, 160, 0.50)`);
     expect(colorHex.toHexString(true)).toEqual(`#5f9ea080`);
   });

@@ -24,36 +24,36 @@ export default {
 } as Meta<ColorPickerProps>;
 
 const ColorsList = [
-  { color: ColorValue.create(0xffffff), name: 'WHITE' },
-  { color: ColorValue.create(0x5a6973), name: 'GREY' },
-  { color: ColorValue.create(0x00121d), name: 'KURETAKE BLACK MANGA' },
-  { color: ColorValue.create(0x002a44), name: 'RHAPSODY IN BLUE' },
-  { color: ColorValue.create(0x00426b), name: 'DARK IMPERIAL BLUE' },
-  { color: ColorValue.create(0x005a92), name: 'JETSKI RACE' },
-  { color: ColorValue.create(0x0073ba), name: 'FRENCH BLUE' },
-  { color: ColorValue.create(0x008be1), name: 'BLUE COLA' },
-  { color: ColorValue.create(0x30b0ff), name: 'FANTASY CONSOLE SKY' },
-  { color: ColorValue.create(0x58bfff), name: 'HELLO SUMMER' },
-  { color: ColorValue.create(0x7fceff), name: 'CHROMIS DAMSEL BLUE' },
-  { color: ColorValue.create(0xa6ddff), name: 'DROPLET' },
-  { color: ColorValue.create(0xcdecff), name: 'LUCID DREAMS' },
-  { color: ColorValue.create(0xe5f5fd), name: 'KODAMA WHITE' },
-  { color: ColorValue.create(0x010200), name: 'REGISTRATION BLACK' },
-  { color: ColorValue.create(0x122306), name: 'YUZU SOY' },
-  { color: ColorValue.create(0x23450b), name: 'FOREST GREEN' },
-  { color: ColorValue.create(0x346711), name: 'TATZELWURM GREEN' },
-  { color: ColorValue.create(0x458816), name: 'CHLOROPHYLL' },
-  { color: ColorValue.create(0x56aa1c), name: 'PLASTIC PINES' },
-  { color: ColorValue.create(0x5fbb1f), name: 'FIELD GREEN' },
-  { color: ColorValue.create(0x67cc22), name: 'GREEN HIGH' },
-  { color: ColorValue.create(0x91e458), name: 'LILLIPUTIAN LIME' },
-  { color: ColorValue.create(0xb2ec8b), name: 'GREEN DAY' },
-  { color: ColorValue.create(0xd4f4bd), name: 'TEA GREEN' },
-  { color: ColorValue.create(0xeef6e8), name: 'VERDE PASTEL' },
-  { color: ColorValue.create(0x9ba5af), name: 'SERYI GREY' },
-  { color: ColorValue.create(0xcf0000), name: 'RED EPIPHYLLUM' },
-  { color: ColorValue.create(0xff6300), name: 'SAFETY ORANGE' },
-  { color: ColorValue.create(0xffc335), name: 'RISE-N-SHINE' },
+  { color: '#ffffff', name: 'WHITE' },
+  { color: '#5a6973', name: 'GREY' },
+  { color: '#00121d', name: 'KURETAKE BLACK MANGA' },
+  { color: '#002a44', name: 'RHAPSODY IN BLUE' },
+  { color: '#00426b', name: 'DARK IMPERIAL BLUE' },
+  { color: '#005a92', name: 'JETSKI RACE' },
+  { color: '#0073ba', name: 'FRENCH BLUE' },
+  { color: '#008be1', name: 'BLUE COLA' },
+  { color: '#30b0ff', name: 'FANTASY CONSOLE SKY' },
+  { color: '#58bfff', name: 'HELLO SUMMER' },
+  { color: '#7fceff', name: 'CHROMIS DAMSEL BLUE' },
+  { color: '#a6ddff', name: 'DROPLET' },
+  { color: '#cdecff', name: 'LUCID DREAMS' },
+  { color: '#e5f5fd', name: 'KODAMA WHITE' },
+  { color: '#010200', name: 'REGISTRATION BLACK' },
+  { color: '#122306', name: 'YUZU SOY' },
+  { color: '#23450b', name: 'FOREST GREEN' },
+  { color: '#346711', name: 'TATZELWURM GREEN' },
+  { color: '#458816', name: 'CHLOROPHYLL' },
+  { color: '#56aa1c', name: 'PLASTIC PINES' },
+  { color: '#5fbb1f', name: 'FIELD GREEN' },
+  { color: '#67cc22', name: 'GREEN HIGH' },
+  { color: '#91e458', name: 'LILLIPUTIAN LIME' },
+  { color: '#b2ec8b', name: 'GREEN DAY' },
+  { color: '#d4f4bd', name: 'TEA GREEN' },
+  { color: '#eef6e8', name: 'VERDE PASTEL' },
+  { color: '#9ba5af', name: 'SERYI GREY' },
+  { color: '#cf0000', name: 'RED EPIPHYLLUM' },
+  { color: '#ff6300', name: 'SAFETY ORANGE' },
+  { color: '#ffc335', name: 'RISE-N-SHINE' },
 ];
 
 export const Basic: Story<ColorPickerProps> = (args) => {
@@ -63,10 +63,11 @@ export const Basic: Story<ColorPickerProps> = (args) => {
   const [opened, setOpened] = React.useState(false);
 
   const onColorChanged = (color: ColorValue) => {
-    const index = ColorsList.findIndex((swatch) => swatch.color.equals(color));
+    const hexString = color.toHslString();
+    const index = ColorsList.findIndex((swatch) => swatch.color === hexString);
     setActiveColor(ColorsList[index]);
     setColorName(ColorsList[index].name);
-    action(`Selected ${ColorsList[index].color.toHexString()}`)();
+    action(`Selected ${ColorsList[index].color}`)();
   };
 
   return (
@@ -74,7 +75,7 @@ export const Basic: Story<ColorPickerProps> = (args) => {
       <IconButton onClick={() => setOpened(!opened)}>
         <span
           style={{
-            backgroundColor: activeColor.color.toHexString(),
+            backgroundColor: activeColor.color,
             border: '1px solid',
           }}
         />
@@ -133,7 +134,7 @@ ColorSwatchOnly.args = {};
 export const Advanced: Story<ColorPickerProps> = (args) => {
   const [opened, setOpened] = React.useState(false);
   const [selectedColor, setSelectedColor] = React.useState<ColorValue>(
-    ColorValue.fromHSL({ h: 0, s: 100, l: 50 }),
+    ColorValue.create({ h: 0, s: 100, l: 50 }),
   );
   const [colorDisplayString, setColorDisplayString] = React.useState(
     selectedColor.toHslString(),
@@ -201,7 +202,7 @@ Advanced.args = {
       ColorValue.create('#5A6973'),
       ColorValue.create('#346711'),
     ],
-    colorPaletteTitle: undefined, // 'Saved Colors',
+    colorPaletteTitle: 'Saved Colors',
   },
   builderProps: {
     defaultColorInputType: 'RGB',
