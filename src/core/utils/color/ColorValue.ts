@@ -303,7 +303,7 @@ export class ColorValue {
    */
   private static computeTbgrFromString(val: string): number {
     val = val.toLowerCase();
-    let m = /^((?:rgb|hsl)a?)\(\s*([^\)]*)\)/.exec(val);
+    let m = /^((?:rgb|hsl)a?)\(([^\)]*)\)/.exec(val);
     if (m) {
       // rgb / hsl
       let color;
@@ -325,7 +325,7 @@ export class ColorValue {
       switch (name) {
         case 'rgb':
         case 'rgba':
-          color = /^(\d+%*)\s*[, ]\s*(\d+%*)\s*[, ]\s*(\d+%*)\s*([,\/]\s*([0-9]*\.?[0-9]+%*)\s*)?$/.exec(
+          color = /^(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*(\d*\.?\d+)\s*)?$/.exec(
             components,
           );
           if (color) {
@@ -334,14 +334,14 @@ export class ColorValue {
               intOrPercent(color[1]),
               intOrPercent(color[2]),
               intOrPercent(color[3]),
-              typeof color[5] === 'string' ? 255 - floatOrPercent(color[5]) : 0,
+              typeof color[4] === 'string' ? 255 - floatOrPercent(color[4]) : 0,
             );
           }
 
           break;
         case 'hsl':
         case 'hsla':
-          color = /^([0-9]*\.?[0-9]+)\s*,\s*(\d+)\%\s*,\s*(\d+)\%\s*(,\s*([0-9]*\.?[0-9]+)\s*)?$/.exec(
+          color = /^(\d*\.?\d+)\s*,\s*(\d+)\%\s*,\s*(\d+)\%\s*(?:,\s*(\d*\.?\d+)\s*)?$/.exec(
             components,
           );
           if (color) {
@@ -350,14 +350,15 @@ export class ColorValue {
             const s = parseInt(color[2], 10) / 100;
             const l = parseInt(color[3], 10) / 100;
             const t =
-              typeof color[5] === 'string' ? 255 - floatOrPercent(color[5]) : 0;
+              typeof color[4] === 'string' ? 255 - floatOrPercent(color[4]) : 0;
+            // typeof color[5] === 'string' ? 255 - floatOrPercent(color[5]) : 0;
             return this.computeTbgrFromHSL(h, s, l, t);
           }
 
           break;
       }
       // eslint-disable-next-line no-cond-assign
-    } else if ((m = /^\#([a-f0-9]+)$/.exec(val))) {
+    } else if ((m = /^\#([A-Fa-f\d]+)$/.exec(val))) {
       // hex color
       const hex = m[1];
       const size = hex.length;
