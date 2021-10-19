@@ -432,12 +432,8 @@ export class ColorValue {
     throw new Error('unable to parse string into ColorValue');
   }
 
-  public get colors(): { r: number; g: number; b: number; t: number } {
-    return ColorValue.getColors(this._tbgr);
-  }
-
   /** Get the r,g,b,t values encoded in an 0xTTBBGGRR value. Values will be integers between 0-255. */
-  public static getColors(tbgr: number) {
+  private static getColors(tbgr: number) {
     scratchUInt32[0] = tbgr;
     return {
       b: scratchBytes[2],
@@ -445,11 +441,6 @@ export class ColorValue {
       r: scratchBytes[0],
       t: scratchBytes[3],
     };
-  }
-
-  /** The color value of this ColorValue as an integer in the form 0xTTBBGGRR (red in the low byte) */
-  public get tbgr(): number {
-    return this._tbgr;
   }
 
   /** Get the RGB value of the 0xTTBBGGRR color as a number in 0xRRGGBB or 0xRRGGBBAA format */
@@ -537,7 +528,7 @@ export class ColorValue {
   /** Create an HslColor from this ColorValue */
   public toHsl(): HslColor {
     // internally h,s,l ranges are in 0.0 - 1.0
-    const col = this.colors;
+    const col = ColorValue.getColors(this._tbgr);
     col.r /= 255;
     col.g /= 255;
     col.b /= 255;
@@ -584,7 +575,7 @@ export class ColorValue {
 
   /** Create an [[HsvColor]] from this ColorValue */
   public toHsv(): HsvColor {
-    const { r, g, b } = this.colors;
+    const { r, g, b } = ColorValue.getColors(this._tbgr);
     let min = r < g ? r : g;
     if (b < min) {
       min = b;
