@@ -94,22 +94,26 @@ export type ColorPickerProps = {
 /**
  * Basic ColorPicker component to display a palette of ColorSwatches
  * @example
- * <ColorPicker>
- *   <ColorSwatch key={1} color={ColorValue.create('#D4F4BD')} onClick={onColorClick} />
- *   <ColorSwatch key={2} color={ColorValue.create('#EEF6E8')} onClick={onColorClick} />
- *   <ColorSwatch key={3} color={ColorValue.create('#9BA5AF')} onClick={onColorClick} />
- *   <ColorSwatch key={4} color={ColorValue.create('#002A44')} onClick={onColorClick} />
- * </ColorPicker>
+ * <ColorPicker
+ *    onChangeCompleted={onColorChanged}
+ *    selectedColor={activeColor}
+ *    paletteProps={{ colors: ['#FFFFFF', '#5A6973'] }}
+ * />
  */
 /**
- * Advanced ColorPicker component to display a palette of ColorSwatches and color customization options
+ * Advanced ColorPicker component to display color builder options, color input, and a palette of ColorSwatches
  * @example
- * <ColorPicker type='advanced' selectedColor={selectedColor} onSelectionChanged={onColorChanged}>
- *   <ColorSwatch key={1} color={ColorValue.create('#D4F4BD')} onClick={onColorClick} />
- *   <ColorSwatch key={2} color={ColorValue.create('#EEF6E8')} onClick={onColorClick} />
- *   <ColorSwatch key={3} color={ColorValue.create('#9BA5AF')} onClick={onColorClick} />
- *   <ColorSwatch key={4} color={ColorValue.create('#002A44')} onClick={onColorClick} />
- * </ColorPicker>
+ * <ColorPicker
+ *    onChangeCompleted={onColorChanged}
+ *    selectedColor={selectedColor}
+ *    paletteProps={{
+ *      colors: ['#FFFFFF', '#5A6973'],
+ *      colorPaletteTitle: 'Saved Colors',
+ *    }}
+ *   builderProps={{
+ *      defaultColorInputType: 'HSL',
+ *    }}
+ * />
  */
 export const ColorPicker = (props: ColorPickerProps) => {
   const {
@@ -132,7 +136,6 @@ export const ColorPicker = (props: ColorPickerProps) => {
   >();
 
   const inColor = getColorValue(selectedColor);
-
   const [activeColor, setActiveColor] = React.useState<ColorValue>(inColor);
   const [hsvColor, setHsvColor] = React.useState(() => activeColor.toHsv());
   const rgbValueOfActiveColor = React.useRef(activeColor.toTbgr());
@@ -240,10 +243,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
     () => ColorValue.create(hsvColor).toHexString(),
     [hsvColor],
   );
-  const [activeDotIndex, setActiveDotIndex] = React.useState<
-    number | undefined
-  >(undefined);
-
+  const [colorDotActive, setColorDotActive] = React.useState(false);
   const hueColorString = hueSliderColor.toHexString();
   const colorSquareStyle = getWindow()?.CSS?.supports?.(
     `--hue: ${hueColorString}`,
@@ -333,7 +333,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
       callbackType: 'onChange' | 'onUpdate' | 'onClick',
     ) => {
       if (
-        (squareRef.current && activeDotIndex === 1) ||
+        (squareRef.current && colorDotActive) ||
         (squareRef.current && callbackType === 'onClick')
       ) {
         const percentX = getHorizontalPercentageOfRectangle(
@@ -352,12 +352,12 @@ export const ColorPicker = (props: ColorPickerProps) => {
         }
       }
     },
-    [activeDotIndex, updateColorDot],
+    [colorDotActive, updateColorDot],
   );
   const handleSquarePointerUp = React.useCallback(
     (event: PointerEvent) => {
       updateSquareValue(event, 'onChange');
-      setActiveDotIndex(undefined);
+      setColorDotActive(false);
       event.preventDefault();
       event.stopPropagation();
     },
@@ -386,7 +386,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
   const handlePointerDownOnSquare = React.useCallback(
     (event: React.PointerEvent) => {
       updateSquareValue(event, 'onClick');
-      setActiveDotIndex(1);
+      setColorDotActive(true);
     },
     [updateSquareValue],
   );
@@ -540,7 +540,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
               className='iui-color-dot'
               style={colorDotStyle}
               onPointerDown={() => {
-                setActiveDotIndex(1);
+                setColorDotActive(true);
               }}
               onKeyDown={handleColorDotKeyDown}
               tabIndex={0}
