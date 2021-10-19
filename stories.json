@@ -82,6 +82,10 @@
       "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Header.stories.tsx",
       "framework": "react"
     },
+    "Core/InformationPanel": {
+      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/InformationPanel.stories.tsx",
+      "framework": "react"
+    },
     "Input/Input": {
       "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Input.stories.tsx",
       "framework": "react"
@@ -660,6 +664,15 @@
         "__id": "core-dropdownmenu--with-separator"
       }
     },
+    "core-dropdownmenu--with-content": {
+      "id": "core-dropdownmenu--with-content",
+      "name": "With Content",
+      "kind": "Core/DropdownMenu",
+      "story": "With Content",
+      "parameters": {
+        "__id": "core-dropdownmenu--with-content"
+      }
+    },
     "core-errorpage--unauthorized": {
       "id": "core-errorpage--unauthorized",
       "name": "Unauthorized",
@@ -786,6 +799,15 @@
         "__id": "core-expandableblock--status-icon"
       }
     },
+    "core-expandableblock--small": {
+      "id": "core-expandableblock--small",
+      "name": "Small",
+      "kind": "Core/ExpandableBlock",
+      "story": "Small",
+      "parameters": {
+        "__id": "core-expandableblock--small"
+      }
+    },
     "input-fieldset--basic": {
       "id": "input-fieldset--basic",
       "name": "Basic",
@@ -874,6 +896,42 @@
       "story": "Center Content",
       "parameters": {
         "__id": "core-header--center-content"
+      }
+    },
+    "core-informationpanel--basic": {
+      "id": "core-informationpanel--basic",
+      "name": "Basic",
+      "kind": "Core/InformationPanel",
+      "story": "Basic",
+      "parameters": {
+        "__id": "core-informationpanel--basic"
+      }
+    },
+    "core-informationpanel--horizontal": {
+      "id": "core-informationpanel--horizontal",
+      "name": "Horizontal",
+      "kind": "Core/InformationPanel",
+      "story": "Horizontal",
+      "parameters": {
+        "__id": "core-informationpanel--horizontal"
+      }
+    },
+    "core-informationpanel--custom-actions": {
+      "id": "core-informationpanel--custom-actions",
+      "name": "Custom Actions",
+      "kind": "Core/InformationPanel",
+      "story": "Custom Actions",
+      "parameters": {
+        "__id": "core-informationpanel--custom-actions"
+      }
+    },
+    "core-informationpanel--custom-width": {
+      "id": "core-informationpanel--custom-width",
+      "name": "Custom Width",
+      "kind": "Core/InformationPanel",
+      "story": "Custom Width",
+      "parameters": {
+        "__id": "core-informationpanel--custom-width"
       }
     },
     "input-input--basic": {
@@ -1416,6 +1474,15 @@
         "__id": "core-sidenavigation--active-item"
       }
     },
+    "core-sidenavigation--submenu": {
+      "id": "core-sidenavigation--submenu",
+      "name": "Submenu",
+      "kind": "Core/SideNavigation",
+      "story": "Submenu",
+      "parameters": {
+        "__id": "core-sidenavigation--submenu"
+      }
+    },
     "input-slider--basic": {
       "id": "input-slider--basic",
       "name": "Basic",
@@ -1621,6 +1688,24 @@
       "story": "Editable",
       "parameters": {
         "__id": "core-table--editable"
+      }
+    },
+    "core-table--with-paginator": {
+      "id": "core-table--with-paginator",
+      "name": "With Paginator",
+      "kind": "Core/Table",
+      "story": "With Paginator",
+      "parameters": {
+        "__id": "core-table--with-paginator"
+      }
+    },
+    "core-table--with-manual-paginator": {
+      "id": "core-table--with-manual-paginator",
+      "name": "With Manual Paginator",
+      "kind": "Core/Table",
+      "story": "With Manual Paginator",
+      "parameters": {
+        "__id": "core-table--with-manual-paginator"
       }
     },
     "core-tabs--default-tabs": {
@@ -1846,6 +1931,15 @@
       "story": "Anchor To Button",
       "parameters": {
         "__id": "core-toasts--anchor-to-button"
+      }
+    },
+    "core-toasts--close-individual": {
+      "id": "core-toasts--close-individual",
+      "name": "Close Individual",
+      "kind": "Core/Toasts",
+      "story": "Close Individual",
+      "parameters": {
+        "__id": "core-toasts--close-individual"
       }
     },
     "input-toggleswitch--basic": {
