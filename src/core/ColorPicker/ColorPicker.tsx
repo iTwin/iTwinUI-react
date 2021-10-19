@@ -431,6 +431,10 @@ export const ColorPicker = (props: ColorPickerProps) => {
     'HEX' | 'HSL' | 'RGB' | 'NONE'
   >(builderProps?.defaultColorInputType ?? 'NONE');
 
+  React.useEffect(() => {
+    setInputType(builderProps?.defaultColorInputType ?? 'NONE');
+  }, [builderProps]);
+
   // need to use state since may have parsing error
   const [hexInput, setHexInput] = React.useState(
     ColorValue.create(hsvColor).toHexString(),

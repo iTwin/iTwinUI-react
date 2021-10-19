@@ -184,6 +184,25 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
     }
   }, [displayType, selectedColor]);
 
+  const defaultColorInputType = React.useMemo<
+    'HSL' | 'RGB' | 'HEX' | 'NONE'
+  >(() => {
+    switch (displayType) {
+      case 0:
+        return 'HSL';
+      case 1:
+        return 'RGB';
+      case 2:
+        return 'HEX';
+      default:
+        return 'NONE';
+    }
+  }, [displayType]);
+
+  const builderProps = {
+    defaultColorInputType,
+  };
+
   return (
     <>
       <IconButton onClick={() => setOpened(!opened)}>
@@ -214,6 +233,7 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
             selectedColor={selectedColor}
             {...args}
             onChangeCompleted={onColorChanged}
+            builderProps={builderProps}
           />
         </div>
       )}
@@ -229,8 +249,5 @@ Advanced.args = {
       ColorValue.create('#346711'),
     ],
     colorPaletteTitle: 'Saved Colors',
-  },
-  builderProps: {
-    defaultColorInputType: 'RGB',
   },
 };
