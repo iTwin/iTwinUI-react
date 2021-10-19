@@ -19,7 +19,6 @@ export type TbgrColorValue = number;
 
 /**
  * A color defined by Red, Green, and Blue
- * @public
  */
 export type RgbColor = {
   /** 0-255 */
@@ -48,7 +47,6 @@ export type HslColor = {
 
 /**
  * A color defined by Hue, Saturation, and Value
- * @public
  */
 export type HsvColor = {
   /** 0-360 */
@@ -61,57 +59,51 @@ export type HsvColor = {
   a?: number;
 };
 
-/** All supported color specifications. */
+/**
+ * All supported color specifications.
+ */
 export type ColorType = string | RgbColor | HslColor | HsvColor;
 
-/** isRgbValue type guard. */
+/**
+ * isRgbValue type guard.
+ */
 export const isRgbColor = (value: ColorType): value is RgbColor => {
   return (
-    typeof value !== 'string' &&
-    typeof value !== 'number' &&
-    'r' in value &&
-    'g' in value &&
-    'b' in value
+    typeof value !== 'string' && 'r' in value && 'g' in value && 'b' in value
   );
 };
 
-/** isHslValue type guard. */
+/**
+ * isHslValue type guard.
+ */
 export const isHslColor = (value: ColorType): value is HslColor => {
   return (
-    typeof value !== 'string' &&
-    typeof value !== 'number' &&
-    'h' in value &&
-    's' in value &&
-    'l' in value
+    typeof value !== 'string' && 'h' in value && 's' in value && 'l' in value
   );
 };
 
-/** isHsvValue type guard. */
+/**
+ * isHsvValue type guard.
+ */
 export const isHsvColor = (value: ColorType): value is HsvColor => {
   return (
-    typeof value !== 'string' &&
-    typeof value !== 'number' &&
-    'h' in value &&
-    's' in value &&
-    'v' in value
+    typeof value !== 'string' && 'h' in value && 's' in value && 'v' in value
   );
 };
 
-/** is string type guard. */
+/**
+ * is string type guard.
+ */
 export const isStringColor = (value: ColorType): value is string => {
   return typeof value === 'string';
 };
 
-/** An immutable integer representation of a color.
+/**
+ * An immutable integer representation of a color.
  *
  * Colors are stored as 4 components: Red, Blue, Green, and Transparency (0=fully opaque). Each is an 8-bit integer between 0-255.
- *
- * Much confusion results from attempting to interpret those 4 one-byte values as a 4 byte integer. There are generally two sources
- * of confusion:
- *  1. The ordering of the Red, Green, Blue bytes; and
- *  2. Whether to specify transparency or opacity (sometimes referred to as "alpha").
- *
  * ColorValue uses `0xTTBBGGRR` (red in the low byte. 0==fully opaque in high byte) internally, but it also provides methods
+ * to return colors in popular web formats.
  *
  * The `create` method accepts any ColorType format.
  *
@@ -153,17 +145,23 @@ export class ColorValue {
     return ColorValue.fromTbgr(0);
   }
 
-  /** Convert this ColorValue to a 32 bit number representing the 0xTTBBGGRR value */
+  /**
+   * Convert this ColorValue to a 32 bit number representing the 0xTTBBGGRR value
+   */
   public toTbgr(): TbgrColorValue {
     return this._tbgr;
   }
 
-  /** Create a ColorValue from its 0xTTBBGGRR representation. */
+  /**
+   * Create a ColorValue from its 0xTTBBGGRR representation.
+   */
   public static fromTbgr(tbgr: TbgrColorValue): ColorValue {
     return new ColorValue(tbgr);
   }
 
-  /** Create a ColorValue from Red, Green, Blue, Transparency values. All inputs should be integers between 0-255. */
+  /**
+   * Create a ColorValue from Red, Green, Blue, Transparency values. All inputs should be integers between 0-255.
+   */
   private static fromRgbt(
     red: number,
     green: number,
@@ -175,7 +173,10 @@ export class ColorValue {
     );
   }
 
-  /** Compute the 0xTTBBGGRR value corresponding to the specified Red, Green, Blue, Transparency components. All inputs should be integers between 0-255. */
+  /**
+   * Compute the 0xTTBBGGRR value corresponding to the specified Red, Green, Blue, Transparency components.
+   *  All inputs should be integers between 0-255.
+   */
   private static computeTbgrFromComponents(
     red: number,
     green: number,
@@ -189,7 +190,8 @@ export class ColorValue {
     return scratchUInt32[0];
   }
 
-  /** Create a ColorValue from a string representation. The following representations are supported:
+  /**
+   * Create a ColorValue from a string representation. The following representations are supported:
    * *"rgb(255,0,0)"*
    * *"rgba(255,0,0,.2)"*
    * *"rgb(100%,0%,0%)"*
@@ -219,7 +221,9 @@ export class ColorValue {
     return ColorValue.fromRgbt(rgb.r, rgb.g, rgb.b, (1 - alpha) * 255);
   }
 
-  /** Create a ColorValue from an HsvColor */
+  /**
+   * Create a ColorValue from an HsvColor
+   */
   private static fromHSV(hsv: HsvColor): ColorValue {
     const alpha = hsv.a ?? 1;
     const transparency = (1 - alpha) * 255;
@@ -289,7 +293,8 @@ export class ColorValue {
     return ColorValue.fromRgbt(r, g, b, transparency);
   }
 
-  /** Compute the 0xTTBBGGRR value corresponding to a string representation of a color. The following representations are supported:
+  /**
+   * Compute the 0xTTBBGGRR value corresponding to a string representation of a color. The following representations are supported:
    * *"rgb(255,0,0)"*
    * *"rgba(255,0,0,.2)"*
    * *"rgb(100%,0%,0%)"*
@@ -389,7 +394,9 @@ export class ColorValue {
     throw new Error('unable to parse string into ColorValue');
   }
 
-  /** Get the r,g,b,t values encoded in an 0xTTBBGGRR value. Values will be integers between 0-255. */
+  /**
+   * Get the r,g,b,t values encoded in an 0xTTBBGGRR value. Values will be integers between 0-255.
+   */
   private static getColors(tbgr: number) {
     scratchUInt32[0] = tbgr;
     return {
@@ -400,7 +407,9 @@ export class ColorValue {
     };
   }
 
-  /** Get the RGB value of the 0xTTBBGGRR color as a number in 0xRRGGBB or 0xRRGGBBAA format */
+  /**
+   * Get the RGB value of the 0xTTBBGGRR color as a number in 0xRRGGBB or 0xRRGGBBAA format
+   */
   private getRgb(includeAlpha?: boolean): number {
     scratchUInt32[0] = this._tbgr;
     if (includeAlpha) {
@@ -415,18 +424,24 @@ export class ColorValue {
     return (scratchBytes[0] << 16) + (scratchBytes[1] << 8) + scratchBytes[2];
   }
 
-  /** Get the alpha value for this ColorDef. Will be between 0-255 */
+  /**
+   * Get the alpha value for this ColorDef. Will be between 0-255
+   */
   public getAlpha(): number {
     return ColorValue.getAlpha(this._tbgr);
   }
 
-  /** Extract the alpha value from a 0xTTBBGGRR color. */
+  /**
+   * Extract the alpha value from a 0xTTBBGGRR color.
+   */
   private static getAlpha(tbgr: number): number {
     scratchUInt32[0] = tbgr;
     return 255 - scratchBytes[3];
   }
 
-  /** Convert this ColorValue to a string in the form "#rrggbb" or "#rrggbbaa" where values are hex digits of the respective colors */
+  /**
+   * Convert this ColorValue to a string in the form "#rrggbb" or "#rrggbbaa" where values are hex digits of the respective colors
+   */
   public toHexString(includeAlpha?: boolean): string {
     if (includeAlpha) {
       return `#${this.getRgb(includeAlpha).toString(16)}`;
@@ -434,7 +449,9 @@ export class ColorValue {
     return `#${`000000${this.getRgb().toString(16)}`.slice(-6)}`;
   }
 
-  /** Compute the 0xTTBBGGRR color corresponding to the specified hue, saturation, lightness values. */
+  /**
+   * Compute the 0xTTBBGGRR color corresponding to the specified hue, saturation, lightness values.
+   */
   private static computeTbgrFromHSL(
     /** 0-1 */
     h: number,
@@ -487,8 +504,10 @@ export class ColorValue {
     );
   }
 
-  /** Get the alpha value for this ColorDef. Will be between 0-255 */
-  public toHsl(): HslColor {
+  /**
+   * Return HslColor from this ColorValue
+   */
+  public toHslColor(): HslColor {
     return ColorValue.toHsl(this._tbgr);
   }
 
@@ -534,18 +553,24 @@ export class ColorValue {
     };
   }
 
-  /** Create an [[RgbColor]] from this ColorValue */
-  public toRgb(): RgbColor {
+  /**
+   * Create an RgbColor from this ColorValue
+   */
+  public toRgbColor(): RgbColor {
     const { r, g, b } = ColorValue.getColors(this._tbgr);
     return { r, g, b, a: this.getAlpha() / 255 };
   }
 
-  /** Get the alpha value for this ColorDef. Will be between 0-255 */
-  public toHsv(): HsvColor {
+  /**
+   * Return HsvColor from this ColorValue
+   */
+  public toHsvColor(): HsvColor {
     return ColorValue.toHsv(this._tbgr);
   }
 
-  /** Create an [[HsvColor]] from this ColorValue */
+  /**
+   * Create an HsvColor from this ColorValue
+   */
   private static toHsv(tbgr: number): HsvColor {
     const { r, g, b } = ColorValue.getColors(tbgr);
     let min = r < g ? r : g;
@@ -607,7 +632,7 @@ export class ColorValue {
 
   /** Convert the 0xTTBBGGRR color to a string of the form "rgba(r,g,b,a)" where the color components are specified in decimal and the alpha component is a fraction. */
   public toRgbString(includeAlpha?: boolean): string {
-    const rgb = this.toRgb();
+    const rgb = this.toRgbColor();
     const rgbString = `${rgb.r}, ${rgb.g}, ${rgb.b}`;
 
     if (includeAlpha) {
@@ -619,7 +644,7 @@ export class ColorValue {
 
   /** Convert this ColorValue to a string in the form "hsl(h,s,l) or hsla(h,s,l,a)" - i.e hsl(120,50%,50%). */
   public toHslString(includeAlpha?: boolean): string {
-    const hsl = this.toHsl();
+    const hsl = this.toHslColor();
     const hslString = `${hsl.h}, ${hsl.s}%, ${hsl.l}%`;
     if (includeAlpha) {
       const alpha = hsl.a ?? 1;
@@ -630,7 +655,7 @@ export class ColorValue {
 
   /** Convert this ColorValue to a string in the form "hsv(h,s,v) or hsva(h,s,v,a)" - i.e hsv(120,50%,50%). */
   public toHsvString(includeAlpha?: boolean): string {
-    const hsv = this.toHsv();
+    const hsv = this.toHsvColor();
     const hsvString = `${hsv.h}, ${hsv.s}%, ${hsv.v}%`;
 
     if (includeAlpha) {

@@ -92,7 +92,7 @@ describe('ColorValue', () => {
   it('should properly handle HsvColor values', () => {
     const inValue = { h: 10, s: 100, v: 100 };
     const inHsvColor = ColorValue.create(inValue);
-    const outHsvColor = inHsvColor.toHsv();
+    const outHsvColor = inHsvColor.toHsvColor();
     expect(outHsvColor.h).toEqual(inValue.h);
     expect(outHsvColor.s).toEqual(inValue.s);
     expect(outHsvColor.v).toEqual(inValue.v);

@@ -137,7 +137,9 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
   const inColor = getColorValue(selectedColor);
   const [activeColor, setActiveColor] = React.useState<ColorValue>(inColor);
-  const [hsvColor, setHsvColor] = React.useState(() => activeColor.toHsv());
+  const [hsvColor, setHsvColor] = React.useState(() =>
+    activeColor.toHsvColor(),
+  );
   const rgbValueOfActiveColor = React.useRef(activeColor.toTbgr());
 
   // The following code is used to preserve the Hue after initial mount. If the current HSV value produces the same rgb value
@@ -146,7 +148,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
   React.useEffect(() => {
     const newColor = inColor;
     if (newColor.toTbgr() !== rgbValueOfActiveColor.current) {
-      setHsvColor(newColor.toHsv());
+      setHsvColor(newColor.toHsvColor());
     }
   }, [inColor]);
 
@@ -439,7 +441,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
   }, [hsvColor]);
 
   const [hslInput, setHslInput] = React.useState(() => {
-    const hslColor = ColorValue.create(hsvColor).toHsl();
+    const hslColor = ColorValue.create(hsvColor).toHslColor();
     return [
       hslColor.h.toString(),
       hslColor.s.toString(),
@@ -448,7 +450,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
   });
 
   React.useEffect(() => {
-    const hslColor = ColorValue.create(hsvColor).toHsl();
+    const hslColor = ColorValue.create(hsvColor).toHslColor();
     setHslInput([
       hslColor.h.toString(),
       hslColor.s.toString(),
@@ -457,7 +459,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
   }, [hsvColor]);
 
   const [rgbInput, setRgbInput] = React.useState(() => {
-    const rgbColor = ColorValue.create(hsvColor).toRgb();
+    const rgbColor = ColorValue.create(hsvColor).toRgbColor();
     return [
       rgbColor.r.toString(),
       rgbColor.g.toString(),
@@ -466,7 +468,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
   });
 
   React.useEffect(() => {
-    const rgbColor = ColorValue.create(hsvColor).toRgb();
+    const rgbColor = ColorValue.create(hsvColor).toRgbColor();
     setRgbInput([
       rgbColor.r.toString(),
       rgbColor.g.toString(),
