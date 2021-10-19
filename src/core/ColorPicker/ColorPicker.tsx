@@ -103,22 +103,26 @@ export type ColorPickerProps = {
 /**
  * Basic ColorPicker component to display a palette of ColorSwatches
  * @example
- * <ColorPicker>
- *   <ColorSwatch key={1} color='#D4F4BD' onClick={onColorClick} />
- *   <ColorSwatch key={2} color='#EEF6E8' onClick={onColorClick} />
- *   <ColorSwatch key={3} color='#9BA5AF' onClick={onColorClick} />
- *   <ColorSwatch key={4} color='#002A44' onClick={onColorClick} />
- * </ColorPicker>
+ * <ColorPicker
+ *    onChangeCompleted={onColorChanged}
+ *    selectedColor={activeColor}
+ *    paletteProps={{ colors: ['#FFFFFF', '#5A6973'] }}
+ * />
  */
 /**
- * Advanced ColorPicker component to display a palette of ColorSwatches and color customization options
+ * Advanced ColorPicker component to display color builder options, color input, and a palette of ColorSwatches
  * @example
- * <ColorPicker type='advanced' selectedColor={selectedColor} onSelectionChanged={onColorChanged}>
- *   <ColorSwatch key={1} color='#D4F4BD' onClick={onColorClick} />
- *   <ColorSwatch key={2} color='#EEF6E8' onClick={onColorClick} />
- *   <ColorSwatch key={3} color='#9BA5AF' onClick={onColorClick} />
- *   <ColorSwatch key={4} color='#002A44' onClick={onColorClick} />
- * </ColorPicker>
+ * <ColorPicker
+ *    onChangeCompleted={onColorChanged}
+ *    selectedColor={selectedColor}
+ *    paletteProps={{
+ *      colors: ['#FFFFFF', '#5A6973'],
+ *      colorPaletteTitle: 'Saved Colors',
+ *    }}
+ *   builderProps={{
+ *      defaultColorInputType: 'HSL',
+ *    }}
+ * />
  */
 export const ColorPicker = (props: ColorPickerProps) => {
   const {
@@ -231,9 +235,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
   );
   const [squareTop, setSquareTop] = React.useState(() => 100 - dotColor.hsv.v);
   const [squareLeft, setSquareLeft] = React.useState(() => dotColor.hsv.s);
-  const [activeDotIndex, setActiveDotIndex] = React.useState<
-    number | undefined
-  >(undefined);
+  const [colorDotActive, setColorDotActive] = React.useState(false);
 
   const colorSquareStyle = getWindow()?.CSS?.supports?.(
     `--hue: ${squareColor.hsl.displayString}`,
@@ -327,7 +329,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
       callbackType: 'onChange' | 'onUpdate' | 'onClick',
     ) => {
       if (
-        (squareRef.current && activeDotIndex === 1) ||
+        (squareRef.current && colorDotActive) ||
         (squareRef.current && callbackType === 'onClick')
       ) {
         const percentX = getHorizontalPercentageOfRectangle(
@@ -346,12 +348,12 @@ export const ColorPicker = (props: ColorPickerProps) => {
         }
       }
     },
-    [activeDotIndex, updateColorDot],
+    [colorDotActive, updateColorDot],
   );
   const handleSquarePointerUp = React.useCallback(
     (event: PointerEvent) => {
       updateSquareValue(event, 'onChange');
-      setActiveDotIndex(undefined);
+      setColorDotActive(false);
       event.preventDefault();
       event.stopPropagation();
     },
@@ -380,7 +382,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
   const handlePointerDownOnSquare = React.useCallback(
     (event: React.PointerEvent) => {
       updateSquareValue(event, 'onClick');
-      setActiveDotIndex(1);
+      setColorDotActive(true);
     },
     [updateSquareValue],
   );
@@ -545,7 +547,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
               className='iui-color-dot'
               style={colorDotStyle}
               onPointerDown={() => {
-                setActiveDotIndex(1);
+                setColorDotActive(true);
               }}
               onKeyDown={handleColorDotKeyDown}
               tabIndex={0}
@@ -668,7 +670,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
                   placeholder='R'
                   value={rgbInput[0]}
                   onChange={(event) => {
-                    setHslInput([event.target.value, rgbInput[1], rgbInput[2]]);
+                    setRgbInput([event.target.value, rgbInput[1], rgbInput[2]]);
                   }}
                   onKeyDown={(event) => {
                     if (event.key === 'Enter') {
@@ -687,7 +689,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
                   placeholder='G'
                   value={rgbInput[1]}
                   onChange={(event) => {
-                    setHslInput([rgbInput[0], event.target.value, rgbInput[2]]);
+                    setRgbInput([rgbInput[0], event.target.value, rgbInput[2]]);
                   }}
                   onKeyDown={(event) => {
                     if (event.key === 'Enter') {
@@ -706,7 +708,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
                   placeholder={'B'}
                   value={rgbInput[2]}
                   onChange={(event) => {
-                    setHslInput([rgbInput[0], rgbInput[1], event.target.value]);
+                    setRgbInput([rgbInput[0], rgbInput[1], event.target.value]);
                   }}
                   onKeyDown={(event) => {
                     if (event.key === 'Enter') {
