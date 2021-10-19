@@ -120,20 +120,20 @@ export const ColorPicker = (props: ColorPickerProps) => {
   );
 
   const [hsvColor, setHsvColor] = React.useState(() => activeColor.toHsv());
-  const hsvColorValueRef = React.useRef(activeColor.tbgr);
+  const rgbValueOfActiveColor = React.useRef(activeColor.tbgr);
 
   // The following code is used to preserve the Hue after initial mount. If the current HSV value produces the same rgb value
   // as the selectedColor prop then leave the HSV color unchanged. This prevents the jumping of HUE as the s/v values are changed
   // by user moving the pointer.
   React.useEffect(() => {
     const newColor = selectedColor ?? ColorValue.create('#00121D');
-    if (newColor.tbgr !== hsvColorValueRef.current) {
+    if (newColor.tbgr !== rgbValueOfActiveColor.current) {
       setHsvColor(newColor.toHsv());
     }
   }, [selectedColor]);
 
   const updateHsv = (newHsv: HsvColor, newColorValue: ColorValue) => {
-    hsvColorValueRef.current = newColorValue.tbgr;
+    rgbValueOfActiveColor.current = newColorValue.tbgr;
     setHsvColor(newHsv);
   };
 

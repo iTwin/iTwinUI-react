@@ -469,23 +469,8 @@ export class ColorValue {
 
   /** Get the alpha value for this ColorValue. Will be between 0-255 */
   public getAlpha(): number {
-    return ColorValue.getAlpha(this._tbgr);
-  }
-
-  /** Extract the alpha value from a 0xTTBBGGRR color. */
-  private static getAlpha(tbgr: number): number {
-    scratchUInt32[0] = tbgr;
+    scratchUInt32[0] = this._tbgr;
     return 255 - scratchBytes[3];
-  }
-
-  /** True if this ColorValue is fully opaque. */
-  public get isOpaque(): boolean {
-    return ColorValue.isOpaque(this._tbgr);
-  }
-
-  /** True if the specified 0xTTBBGGRR color is fully opaque. */
-  public static isOpaque(tbgr: number): boolean {
-    return 255 === this.getAlpha(tbgr);
   }
 
   /** Convert this ColorValue to a string in the form "#rrggbb" or "#rrggbbaa" where values are hex digits of the respective colors */
