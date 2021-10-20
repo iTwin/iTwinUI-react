@@ -58,8 +58,8 @@ const ColorsList = [
 ];
 
 export const Basic: Story<ColorPickerProps> = (args) => {
-  const [activeColor, setActiveColor] = React.useState(ColorsList[2]);
-  const [colorName, setColorName] = React.useState(ColorsList[2].name);
+  const [activeColor, setActiveColor] = React.useState(ColorsList[5]);
+  const [colorName, setColorName] = React.useState(ColorsList[5].name);
 
   const [opened, setOpened] = React.useState(false);
 
@@ -143,14 +143,6 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
     selectedColor.toHslString(),
   );
   const [displayType, setDisplayType] = React.useState(0); // 0 = HSL, 1= RGB, 2=HEX, 3=HSV
-
-  // const [savedColors] = React.useState<Array<ColorValue>>([
-  //   { h: 0, s: 100, l: 50 },
-  //   { r: 255, g: 98, b: 0 },
-  //   '#fec134'),
-  //   { h: 95, s: 83, v: 72 },
-  //   ColorValue.create({ h: 202, s: 100, l: 59 },
-  // ]);
 
   const onColorChanged = (color: ColorValue) => {
     setSelectedColor(color);
@@ -262,9 +254,12 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
 Advanced.args = {
   paletteProps: {
     colors: [
-      ColorValue.create('#FFFFFF'),
-      ColorValue.create('#5A6973'),
-      ColorValue.create('#346711'),
+      { h: 0, s: 100, l: 50 },
+      { r: 255, g: 98, b: 0 },
+      '#fec134',
+      '#5A6973',
+      { h: 95, s: 83, v: 72 },
+      { h: 250, s: 100, l: 59 },
     ],
     colorPaletteTitle: 'Saved Colors',
   },
