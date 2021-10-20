@@ -110,7 +110,7 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
     if (type === 'HEX') {
       const colorString = value[0].startsWith('#') ? value[0] : `#${value[0]}`;
       try {
-        color = ColorValue.create(colorString);
+        color = ColorValue.fromString(colorString);
         onChangeCompleted(color);
         return;
       } catch (_e) {

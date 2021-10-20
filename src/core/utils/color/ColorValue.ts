@@ -116,7 +116,11 @@ export class ColorValue {
    * *"hsl(120,50%,50%)"*
    * *"#rrggbb"*
    */
-  public static create(val: ColorType): ColorValue {
+  public static create(val?: ColorType): ColorValue {
+    if (!val) {
+      return ColorValue.fromTbgr(0);
+    }
+
     if (isRgbColor(val)) {
       return ColorValue.fromRGB(val);
     }
@@ -127,7 +131,7 @@ export class ColorValue {
       return ColorValue.fromHSV(val);
     }
     if (typeof val === 'string') {
-      return ColorValue.fromString(val);
+      return ColorValue.fromString(val, ColorValue.fromTbgr(0));
     }
     return ColorValue.fromTbgr(0);
   }
@@ -184,9 +188,16 @@ export class ColorValue {
    * *"rgb(100%,0%,0%)"*
    * *"hsl(120,50%,50%)"*
    * *"#rrggbb"*
+   * NOTE: If defaultColorIfNotParsed is not defined and string is invalid then error is thrown.
+   * This allows component builders to know if they received bad input from user.
    */
-  private static fromString(val: string): ColorValue {
-    return this.fromTbgr(this.computeTbgrFromString(val));
+  public static fromString(
+    val: string,
+    defaultColorIfNotParsed?: ColorValue,
+  ): ColorValue {
+    return this.fromTbgr(
+      this.computeTbgrFromString(val, defaultColorIfNotParsed?.toTbgr()),
+    );
   }
 
   /** Create a ColorValue from hue, saturation, lightness values.  */
@@ -288,7 +299,10 @@ export class ColorValue {
    * *"hsl(120,50%,50%)"*
    * *"#rrggbb"*
    */
-  private static computeTbgrFromString(val: string): number {
+  private static computeTbgrFromString(
+    val: string,
+    defaultColorIfNotParsed?: number,
+  ): number {
     val = val.toLowerCase();
     let m = /^((?:rgb|hsl)a?)\(([^\)]*)\)/.exec(val);
     if (m) {
@@ -378,6 +392,9 @@ export class ColorValue {
       }
     }
 
+    if (defaultColorIfNotParsed) {
+      return defaultColorIfNotParsed;
+    }
     throw new Error('unable to parse string into ColorValue');
   }
 

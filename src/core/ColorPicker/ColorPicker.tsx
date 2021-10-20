@@ -21,15 +21,7 @@ export const getColorValue = (color: ColorType | ColorValue | undefined) => {
   if (color instanceof ColorValue) {
     return color;
   }
-  if (undefined === color) {
-    return ColorValue.fromTbgr(0);
-  }
-
-  try {
-    return ColorValue.create(color);
-  } catch (_e) {
-    return ColorValue.fromTbgr(0);
-  }
+  return ColorValue.create(color);
 };
 
 const getVerticalPercentageOfRectangle = (rect: DOMRect, pointer: number) => {
