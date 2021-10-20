@@ -25,52 +25,52 @@ export default {
 } as Meta<ColorPickerProps>;
 
 const ColorsList = [
-  { color: '#FFFFFF', name: 'WHITE' },
-  { color: '#5A6973', name: 'GREY' },
-  { color: '#00121D', name: 'KURETAKE BLACK MANGA' },
-  { color: '#002A44', name: 'RHAPSODY IN BLUE' },
-  { color: '#00426B', name: 'DARK IMPERIAL BLUE' },
-  { color: '#005A92', name: 'JETSKI RACE' },
-  { color: '#0073BA', name: 'FRENCH BLUE' },
-  { color: '#008BE1', name: 'BLUE COLA' },
-  { color: '#30B0FF', name: 'FANTASY CONSOLE SKY' },
-  { color: '#58BFFF', name: 'HELLO SUMMER' },
-  { color: '#7FCEFF', name: 'CHROMIS DAMSEL BLUE' },
-  { color: '#A6DDFF', name: 'DROPLET' },
-  { color: '#CDECFF', name: 'LUCID DREAMS' },
-  { color: '#E5F5FD', name: 'KODAMA WHITE' },
+  { color: '#ffffff', name: 'WHITE' },
+  { color: '#5a6973', name: 'GREY' },
+  { color: '#00121d', name: 'KURETAKE BLACK MANGA' },
+  { color: '#002a44', name: 'RHAPSODY IN BLUE' },
+  { color: '#00426b', name: 'DARK IMPERIAL BLUE' },
+  { color: '#005a92', name: 'JETSKI RACE' },
+  { color: '#0073ba', name: 'FRENCH BLUE' },
+  { color: '#008be1', name: 'BLUE COLA' },
+  { color: '#30b0ff', name: 'FANTASY CONSOLE SKY' },
+  { color: '#58bfff', name: 'HELLO SUMMER' },
+  { color: '#7fceff', name: 'CHROMIS DAMSEL BLUE' },
+  { color: '#a6ddff', name: 'DROPLET' },
+  { color: '#cdecff', name: 'LUCID DREAMS' },
+  { color: '#e5f5fd', name: 'KODAMA WHITE' },
   { color: '#010200', name: 'REGISTRATION BLACK' },
   { color: '#122306', name: 'YUZU SOY' },
   { color: '#23450b', name: 'FOREST GREEN' },
   { color: '#346711', name: 'TATZELWURM GREEN' },
   { color: '#458816', name: 'CHLOROPHYLL' },
-  { color: '#56AA1C', name: 'PLASTIC PINES' },
-  { color: '#5FBB1F', name: 'FIELD GREEN' },
-  { color: '#67CC22', name: 'GREEN HIGH' },
-  { color: '#91E458', name: 'LILLIPUTIAN LIME' },
-  { color: '#B2EC8B', name: 'GREEN DAY' },
-  { color: '#D4F4BD', name: 'TEA GREEN' },
-  { color: '#EEF6E8', name: 'VERDE PASTEL' },
-  { color: '#9BA5AF', name: 'SERYI GREY' },
-  { color: '#CF0000', name: 'RED EPIPHYLLUM' },
-  { color: '#FF6300', name: 'SAFETY ORANGE' },
-  { color: '#FFC335', name: 'RISE-N-SHINE' },
+  { color: '#56aa1c', name: 'PLASTIC PINES' },
+  { color: '#5fbb1f', name: 'FIELD GREEN' },
+  { color: '#67cc22', name: 'GREEN HIGH' },
+  { color: '#91e458', name: 'LILLIPUTIAN LIME' },
+  { color: '#b2ec8b', name: 'GREEN DAY' },
+  { color: '#d4f4bd', name: 'TEA GREEN' },
+  { color: '#eef6e8', name: 'VERDE PASTEL' },
+  { color: '#9ba5af', name: 'SERYI GREY' },
+  { color: '#cf0000', name: 'RED EPIPHYLLUM' },
+  { color: '#ff6300', name: 'SAFETY ORANGE' },
+  { color: '#ffc335', name: 'RISE-N-SHINE' },
 ];
 
 export const Basic: Story<ColorPickerProps> = (args) => {
-  const [activeColor, setActiveColor] = React.useState('#005A92');
-  const [colorName, setColorName] = React.useState(ColorsList[5].name);
+  const [activeColor, setActiveColor] = React.useState(ColorsList[2]);
+  const [colorName, setColorName] = React.useState(ColorsList[2].name);
 
   const [opened, setOpened] = React.useState(false);
 
   const onColorChanged = (color: ColorValue) => {
-    const colorString = color.toHexString();
+    const hexString = color.toHexString();
     const index = ColorsList.findIndex(
-      (swatch) => swatch.color.toLowerCase() === colorString,
+      (swatch) => swatch.color === hexString.toLowerCase(),
     );
-    setActiveColor(colorString);
+    setActiveColor(ColorsList[index]);
     setColorName(ColorsList[index].name);
-    action(`Selected ${colorString}`)();
+    action(`Selected ${ColorsList[index].color}`)();
   };
 
   return (
@@ -78,7 +78,7 @@ export const Basic: Story<ColorPickerProps> = (args) => {
       <IconButton onClick={() => setOpened(!opened)}>
         <span
           style={{
-            backgroundColor: activeColor,
+            backgroundColor: activeColor.color,
             border: '1px solid',
           }}
         />
@@ -86,7 +86,7 @@ export const Basic: Story<ColorPickerProps> = (args) => {
       <span style={{ marginLeft: 16 }}>{colorName}</span>
       {opened && (
         <div style={{ marginTop: 4 }}>
-          <ColorPicker onChangeCompleted={onColorChanged} {...args} />
+          <ColorPicker {...args} onChangeCompleted={onColorChanged} />
         </div>
       )}
     </>
@@ -113,7 +113,7 @@ export const ColorSwatchOnly: Story<ColorPickerProps> = () => {
       {
         <div style={{ marginTop: 4, display: 'flex' }}>
           <ColorSwatch
-            color={'#5A6973'}
+            color={ColorValue.create('#5A6973')}
             onClick={() => {
               onClickColor(0);
             }}
@@ -121,7 +121,7 @@ export const ColorSwatchOnly: Story<ColorPickerProps> = () => {
             style={{ marginRight: 8 }}
           />
           <ColorSwatch
-            color={'#FFFFFF'}
+            color={ColorValue.create('#FFFFFF')}
             onClick={() => {
               onClickColor(1);
             }}
@@ -137,7 +137,7 @@ ColorSwatchOnly.args = {};
 export const Advanced: Story<ColorPickerProps> = (args) => {
   const [opened, setOpened] = React.useState(false);
   const [selectedColor, setSelectedColor] = React.useState<ColorValue>(
-    ColorValue.fromHSL({ h: 0, s: 100, l: 50 }),
+    ColorValue.create({ h: 0, s: 100, l: 50 }),
   );
   const [colorDisplayString, setColorDisplayString] = React.useState(
     selectedColor.toHslString(),
@@ -145,11 +145,11 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
   const [displayType, setDisplayType] = React.useState(0); // 0 = HSL, 1= RGB, 2=HEX, 3=HSV
 
   // const [savedColors] = React.useState<Array<ColorValue>>([
-  //   ColorValue.fromHSL({ h: 0, s: 100, l: 50 }),
-  //   ColorValue.fromRGB({ r: 255, g: 98, b: 0 }),
-  //   ColorValue.fromString('#fec134'),
-  //   ColorValue.fromHSV({ h: 95, s: 83, v: 72 }),
-  //   ColorValue.fromHSL({ h: 202, s: 100, l: 59 }),
+  //   { h: 0, s: 100, l: 50 },
+  //   { r: 255, g: 98, b: 0 },
+  //   '#fec134'),
+  //   { h: 95, s: 83, v: 72 },
+  //   ColorValue.create({ h: 202, s: 100, l: 59 },
   // ]);
 
   const onColorChanged = (color: ColorValue) => {
@@ -186,6 +186,41 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
     }
   }, [displayType, selectedColor]);
 
+  const defaultColorInputType = React.useMemo<
+    'HSL' | 'RGB' | 'HEX' | 'NONE'
+  >(() => {
+    switch (displayType) {
+      case 0:
+        return 'HSL';
+      case 1:
+        return 'RGB';
+      case 2:
+        return 'HEX';
+      default:
+        return 'NONE';
+    }
+  }, [displayType]);
+
+  const builderProps = {
+    defaultColorInputType,
+    onInputTypeChanged: (inputType: 'HSL' | 'RGB' | 'HEX' | 'NONE') => {
+      switch (inputType) {
+        case 'HSL':
+          setDisplayType(0);
+          break;
+        case 'RGB':
+          setDisplayType(1);
+          break;
+        case 'HEX':
+          setDisplayType(2);
+          break;
+        default:
+          setDisplayType(3);
+          break;
+      }
+    },
+  };
+
   return (
     <>
       <IconButton onClick={() => setOpened(!opened)}>
@@ -214,8 +249,9 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
         <div style={{ marginTop: 4 }}>
           <ColorPicker
             selectedColor={selectedColor}
-            onChangeCompleted={onColorChanged}
             {...args}
+            onChangeCompleted={onColorChanged}
+            builderProps={builderProps}
           />
         </div>
       )}
@@ -225,10 +261,11 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
 
 Advanced.args = {
   paletteProps: {
-    colors: ['#FFFFFF', '#5A6973', '#346711'],
+    colors: [
+      ColorValue.create('#FFFFFF'),
+      ColorValue.create('#5A6973'),
+      ColorValue.create('#346711'),
+    ],
     colorPaletteTitle: 'Saved Colors',
-  },
-  builderProps: {
-    defaultColorInputType: 'HEX',
   },
 };
