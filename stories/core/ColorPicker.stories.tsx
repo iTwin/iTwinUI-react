@@ -64,8 +64,10 @@ export const Basic: Story<ColorPickerProps> = (args) => {
   const [opened, setOpened] = React.useState(false);
 
   const onColorChanged = (color: ColorValue) => {
-    const hexString = color.toHslString();
-    const index = ColorsList.findIndex((swatch) => swatch.color === hexString);
+    const hexString = color.toHexString();
+    const index = ColorsList.findIndex(
+      (swatch) => swatch.color === hexString.toLowerCase(),
+    );
     setActiveColor(ColorsList[index]);
     setColorName(ColorsList[index].name);
     action(`Selected ${ColorsList[index].color}`)();

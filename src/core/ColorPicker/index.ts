@@ -8,3 +8,6 @@ export default './ColorPicker';
 
 export { ColorSwatch } from './ColorSwatch';
 export type { ColorSwatchProps } from './ColorSwatch';
+
+export { ColorInputPanel } from './ColorInputPanel';
+export type { ColorInputPanelProps } from './ColorInputPanel';

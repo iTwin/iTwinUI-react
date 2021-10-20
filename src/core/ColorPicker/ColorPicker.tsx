@@ -15,10 +15,7 @@ import cx from 'classnames';
 import { ColorType, ColorValue, HsvColor } from '../utils/color/ColorValue';
 import { Slider } from '../Slider';
 import ColorSwatch from './ColorSwatch';
-import { IconButton } from '../Buttons';
-import { Input } from '../Input';
-
-// cspell: ignore borderless tbgr
+import ColorInputPanel from './ColorInputPanel';
 
 export const getColorValue = (color: ColorType | ColorValue | undefined) => {
   if (color instanceof ColorValue) {
@@ -137,10 +134,15 @@ export const ColorPicker = (props: ColorPickerProps) => {
     number | null
   >();
 
-  const inColor = getColorValue(selectedColor);
-  const [activeColor, setActiveColor] = React.useState<ColorValue>(inColor);
+  const inColor = React.useMemo(() => getColorValue(selectedColor), [
+    selectedColor,
+  ]);
+  const rgbValueOfActiveColor = React.useRef(inColor.toTbgr());
 
-  const rgbValueOfActiveColor = React.useRef(activeColor.toTbgr());
+  const [activeColor, setActiveColor] = React.useState<ColorValue>(inColor);
+  React.useEffect(() => {
+    setActiveColor(inColor);
+  }, [inColor]);
 
   const [hsvColor, setHsvColor] = React.useState(() =>
     activeColor.toHsvColor(),
@@ -151,9 +153,9 @@ export const ColorPicker = (props: ColorPickerProps) => {
   // by user moving the pointer.
   React.useEffect(() => {
     if (inColor.toTbgr() !== rgbValueOfActiveColor.current) {
+      rgbValueOfActiveColor.current = inColor.toTbgr();
       setHsvColor(inColor.toHsvColor());
     }
-    setActiveColor(inColor);
   }, [inColor]);
 
   const applyHsvColorChange = React.useCallback(
@@ -434,110 +436,6 @@ export const ColorPicker = (props: ColorPickerProps) => {
   };
 
   // Handle color inputs
-  const [inputType, setInputType] = React.useState<
-    'HEX' | 'HSL' | 'RGB' | 'NONE'
-  >(builderProps?.defaultColorInputType ?? 'NONE');
-
-  React.useEffect(() => {
-    setInputType(builderProps?.defaultColorInputType ?? 'NONE');
-  }, [builderProps]);
-
-  // need to use state since may have parsing error
-  const [hexInput, setHexInput] = React.useState(activeColor.toHexString());
-
-  React.useEffect(() => {
-    setHexInput(activeColor.toHexString());
-  }, [activeColor]);
-
-  const [hslInput, setHslInput] = React.useState(() => {
-    const hslColor = activeColor.toHslColor();
-    return [
-      hslColor.h.toString(),
-      hslColor.s.toString(),
-      hslColor.l.toString(),
-    ];
-  });
-
-  React.useEffect(() => {
-    const hslColor = activeColor.toHslColor();
-    setHslInput([
-      hslColor.h.toString(),
-      hslColor.s.toString(),
-      hslColor.l.toString(),
-    ]);
-  }, [activeColor]);
-
-  const [rgbInput, setRgbInput] = React.useState(() => {
-    const rgbColor = activeColor.toRgbColor();
-    return [
-      rgbColor.r.toString(),
-      rgbColor.g.toString(),
-      rgbColor.b.toString(),
-    ];
-  });
-
-  React.useEffect(() => {
-    const rgbColor = activeColor.toRgbColor();
-    setRgbInput([
-      rgbColor.r.toString(),
-      rgbColor.g.toString(),
-      rgbColor.b.toString(),
-    ]);
-  }, [activeColor]);
-
-  const onSwapColorType = React.useCallback(() => {
-    let newInputType: 'HEX' | 'HSL' | 'RGB' | 'NONE' = 'NONE';
-
-    if (inputType === 'HEX') {
-      newInputType = 'HSL';
-    } else if (inputType === 'HSL') {
-      newInputType = 'RGB';
-    } else if (inputType === 'RGB') {
-      newInputType = 'HEX';
-    }
-    setInputType(newInputType);
-    builderProps?.onInputTypeChanged?.(newInputType);
-  }, [builderProps, inputType]);
-
-  const handleColorInputChange = (
-    type: 'HSL' | 'HEX' | 'RGB',
-    value: string[],
-  ) => {
-    let color;
-
-    if (type === 'HEX') {
-      const colorString = value[0].startsWith('#') ? value[0] : `#${value[0]}`;
-      try {
-        color = ColorValue.fromString(colorString);
-        onChangeCompleted(color);
-        return;
-      } catch (_e) {
-        setHexInput(colorString);
-        return;
-      }
-    }
-
-    if (type === 'HSL') {
-      const values: string[] = value as string[];
-      color = ColorValue.create({
-        h: Number(values[0]),
-        s: Number(values[1]),
-        l: Number(values[2]),
-      });
-      onChangeCompleted(color);
-    }
-
-    if (type === 'RGB') {
-      const values: string[] = value as string[];
-      color = ColorValue.create({
-        r: Number(values[0]),
-        g: Number(values[1]),
-        b: Number(values[2]),
-      });
-      onChangeCompleted(color);
-    }
-  };
-
   return (
     <div
       className={cx('iui-color-picker', className)}
@@ -576,189 +474,16 @@ export const ColorPicker = (props: ColorPickerProps) => {
           />
         </div>
       )}
-      {builderProps && inputType != 'NONE' && (
-        <div className='iui-color-picker-input-container'>
-          <div className='iui-color-picker-section-label'>{inputType}</div>
-          <div className='iui-color-input'>
-            <IconButton styleType={'borderless'} onClick={onSwapColorType}>
-              <svg viewBox='0 0 16 16' className='iui-icon' aria-hidden='true'>
-                <path d='m5 15-3.78125-3.5 3.78125-3.5v2h8v3h-8zm6-7 3.78125-3.5-3.78125-3.5v2h-8v3h8z' />
-              </svg>
-            </IconButton>
-            {inputType === 'HEX' && (
-              <div className='iui-color-input-fields'>
-                <Input
-                  size='small'
-                  maxLength={7}
-                  minLength={1}
-                  placeholder='HEX'
-                  value={hexInput}
-                  onChange={(event) => {
-                    setHexInput(event.target.value);
-                  }}
-                  onFocus={(event) => event.target.select()}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      event.preventDefault();
-                      handleColorInputChange('HEX', [hexInput]);
-                    }
-                  }}
-                  onBlur={(event) => {
-                    event.preventDefault();
-                    handleColorInputChange('HEX', [hexInput]);
-                  }}
-                />
-              </div>
-            )}
-            {inputType === 'HSL' && (
-              <div className='iui-color-input-fields'>
-                <Input
-                  key='hsl-h'
-                  size='small'
-                  type='number'
-                  min='0'
-                  max='359'
-                  placeholder='H'
-                  value={hslInput[0]}
-                  onChange={(event) => {
-                    setHslInput([event.target.value, hslInput[1], hslInput[2]]);
-                  }}
-                  onFocus={(event) => event.target.select()}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      event.preventDefault();
-                      handleColorInputChange('HSL', hslInput);
-                    }
-                  }}
-                  onBlur={(event) => {
-                    event.preventDefault();
-                    handleColorInputChange('HSL', hslInput);
-                  }}
-                />
-                <Input
-                  key='hsl-s'
-                  size='small'
-                  type='number'
-                  min='0'
-                  max='100'
-                  placeholder='S'
-                  value={hslInput[1]}
-                  onChange={(event) => {
-                    setHslInput([hslInput[0], event.target.value, hslInput[2]]);
-                  }}
-                  onFocus={(event) => event.target.select()}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      event.preventDefault();
-                      handleColorInputChange('HSL', hslInput);
-                    }
-                  }}
-                  onBlur={(event) => {
-                    event.preventDefault();
-                    handleColorInputChange('HSL', hslInput);
-                  }}
-                />
-                <Input
-                  key='hsl-l'
-                  size='small'
-                  type='number'
-                  min='0'
-                  max='100'
-                  placeholder='L'
-                  value={hslInput[2]}
-                  onChange={(event) => {
-                    setHslInput([hslInput[0], hslInput[1], event.target.value]);
-                  }}
-                  onFocus={(event) => event.target.select()}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      event.preventDefault();
-                      handleColorInputChange('HSL', hslInput);
-                    }
-                  }}
-                  onBlur={(event) => {
-                    event.preventDefault();
-                    handleColorInputChange('HSL', hslInput);
-                  }}
-                />
-              </div>
-            )}
-            {inputType === 'RGB' && (
-              <div className='iui-color-input-fields'>
-                <Input
-                  key='rgb-r'
-                  size='small'
-                  type='number'
-                  min='0'
-                  max='255'
-                  placeholder='R'
-                  value={rgbInput[0]}
-                  onChange={(event) => {
-                    setRgbInput([event.target.value, rgbInput[1], rgbInput[2]]);
-                  }}
-                  onFocus={(event) => event.target.select()}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      event.preventDefault();
-                      handleColorInputChange('RGB', rgbInput);
-                    }
-                  }}
-                  onBlur={(event) => {
-                    event.preventDefault();
-                    handleColorInputChange('RGB', rgbInput);
-                  }}
-                />
-                <Input
-                  key='rgb-g'
-                  size='small'
-                  type='number'
-                  min='0'
-                  max='255'
-                  placeholder='G'
-                  value={rgbInput[1]}
-                  onChange={(event) => {
-                    setRgbInput([rgbInput[0], event.target.value, rgbInput[2]]);
-                  }}
-                  onFocus={(event) => event.target.select()}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      event.preventDefault();
-                      handleColorInputChange('RGB', rgbInput);
-                    }
-                  }}
-                  onBlur={(event) => {
-                    event.preventDefault();
-                    handleColorInputChange('RGB', rgbInput);
-                  }}
-                />
-                <Input
-                  key='rgb-b'
-                  size='small'
-                  type='number'
-                  min='0'
-                  max='255'
-                  placeholder={'B'}
-                  value={rgbInput[2]}
-                  onChange={(event) => {
-                    setRgbInput([rgbInput[0], rgbInput[1], event.target.value]);
-                  }}
-                  onFocus={(event) => event.target.select()}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      event.preventDefault();
-                      handleColorInputChange('RGB', rgbInput);
-                    }
-                  }}
-                  onBlur={(event) => {
-                    event.preventDefault();
-                    handleColorInputChange('RGB', rgbInput);
-                  }}
-                />
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      {builderProps &&
+        builderProps.defaultColorInputType &&
+        builderProps.defaultColorInputType != 'NONE' && (
+          <ColorInputPanel
+            activeColor={activeColor}
+            currentInputType={builderProps?.defaultColorInputType ?? 'NONE'}
+            onInputTypeChanged={builderProps?.onInputTypeChanged}
+            onChangeCompleted={onChangeCompleted}
+          />
+        )}
       {paletteProps && (
         <div className='iui-color-picker-palette-container'>
           {paletteProps.colorPaletteTitle && (

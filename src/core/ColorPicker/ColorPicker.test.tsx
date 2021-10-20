@@ -4,8 +4,15 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
-import { ColorPicker } from './ColorPicker';
+import { getColorValue, ColorPicker } from './ColorPicker';
 import { ColorValue } from '../utils/color/ColorValue';
+
+it('should convert color list to ColorValues', () => {
+  ['#9BA5AF', '#23450b', '#00121D', '#002A44'].forEach((value) => {
+    const color = getColorValue(value);
+    expect(color.toHexString()).toEqual(value.toLowerCase());
+  });
+});
 
 it('should render in its most basic state', () => {
   const { container } = render(
