@@ -50,6 +50,8 @@ export type ColorBuilderProps = {
    * Set to NONE to use advanced color builder without showing color input
    */
   defaultColorInputType?: 'HSL' | 'RGB' | 'HEX' | 'NONE';
+  /** Callback fired when user changes input type */
+  onInputTypeChanged?: (inputType: 'HSL' | 'RGB' | 'HEX' | 'NONE') => void;
 };
 
 export type ColorPaletteProps = {
@@ -137,25 +139,43 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
   const inColor = getColorValue(selectedColor);
   const [activeColor, setActiveColor] = React.useState<ColorValue>(inColor);
+
+  const rgbValueOfActiveColor = React.useRef(activeColor.toTbgr());
+
   const [hsvColor, setHsvColor] = React.useState(() =>
     activeColor.toHsvColor(),
   );
-  const rgbValueOfActiveColor = React.useRef(activeColor.toTbgr());
 
   // The following code is used to preserve the Hue after initial mount. If the current HSV value produces the same rgb value
   // as the selectedColor prop then leave the HSV color unchanged. This prevents the jumping of HUE as the s/v values are changed
   // by user moving the pointer.
   React.useEffect(() => {
-    const newColor = inColor;
-    if (newColor.toTbgr() !== rgbValueOfActiveColor.current) {
-      setHsvColor(newColor.toHsvColor());
+    if (inColor.toTbgr() !== rgbValueOfActiveColor.current) {
+      setHsvColor(inColor.toHsvColor());
     }
+    setActiveColor(inColor);
   }, [inColor]);
 
-  const updateHsv = (newHsv: HsvColor, newColorValue: ColorValue) => {
-    rgbValueOfActiveColor.current = newColorValue.toTbgr();
-    setHsvColor(newHsv);
-  };
+  const applyHsvColorChange = React.useCallback(
+    (newColor: HsvColor, selectionChanged: boolean) => {
+      // save the HSV values
+      setHsvColor(newColor);
+      const newActiveColor = ColorValue.create(newColor);
+
+      // Only update selected color when dragging is done
+      if (selectionChanged) {
+        onChangeCompleted(newActiveColor);
+      } else {
+        onChange?.(newActiveColor);
+      }
+
+      rgbValueOfActiveColor.current = newActiveColor.toTbgr();
+
+      // this converts it to store in tbgr
+      setActiveColor(newActiveColor);
+    },
+    [onChange, onChangeCompleted],
+  );
 
   // colorSwatches may be supplied as children which requires looking through DOM
   React.useEffect(() => {
@@ -241,10 +261,9 @@ export const ColorPicker = (props: ColorPickerProps) => {
     hsvColor,
   ]);
 
-  const dotColorString = React.useMemo(
-    () => ColorValue.create(hsvColor).toHexString(),
-    [hsvColor],
-  );
+  const dotColorString = React.useMemo(() => activeColor.toHexString(), [
+    activeColor,
+  ]);
   const [colorDotActive, setColorDotActive] = React.useState(false);
   const hueColorString = hueSliderColor.toHexString();
   const colorSquareStyle = getWindow()?.CSS?.supports?.(
@@ -278,22 +297,14 @@ export const ColorPicker = (props: ColorPickerProps) => {
   const updateSlider = React.useCallback(
     (huePercent: number, selectionChanged: boolean) => {
       const hue = Math.round(huePercent * 3.59);
-      const newHsv = {
+      const newHsvColor = {
         h: hue,
         s: hsvColor.s,
         v: hsvColor.v,
       };
-      const newDotColor = ColorValue.create(newHsv);
-      updateHsv(newHsv, newDotColor);
-
-      // Only update selected color when dragging is done
-      if (selectionChanged) {
-        onChangeCompleted(newDotColor);
-      } else {
-        onChange?.(newDotColor);
-      }
+      applyHsvColorChange(newHsvColor, selectionChanged);
     },
-    [hsvColor.s, hsvColor.v, onChange, onChangeCompleted],
+    [applyHsvColorChange, hsvColor.s, hsvColor.v],
   );
 
   const onChangeHue = React.useCallback(
@@ -315,18 +326,14 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
   const updateColorDot = React.useCallback(
     (x: number, y: number, selectionChanged: boolean) => {
-      const newHsv = {
+      const newHsvColor = {
         h: hsvColor.h,
         s: x,
         v: 100 - y,
       };
-      const newColor = ColorValue.create(newHsv);
-      updateHsv(newHsv, newColor);
-      if (selectionChanged) {
-        onChangeCompleted(newColor);
-      }
+      applyHsvColorChange(newHsvColor, selectionChanged);
     },
-    [hsvColor.h, onChangeCompleted],
+    [applyHsvColorChange, hsvColor.h],
   );
 
   const updateSquareValue = React.useCallback(
@@ -436,16 +443,14 @@ export const ColorPicker = (props: ColorPickerProps) => {
   }, [builderProps]);
 
   // need to use state since may have parsing error
-  const [hexInput, setHexInput] = React.useState(
-    ColorValue.create(hsvColor).toHexString(),
-  );
+  const [hexInput, setHexInput] = React.useState(activeColor.toHexString());
 
   React.useEffect(() => {
-    setHexInput(ColorValue.create(hsvColor).toHexString());
-  }, [hsvColor]);
+    setHexInput(activeColor.toHexString());
+  }, [activeColor]);
 
   const [hslInput, setHslInput] = React.useState(() => {
-    const hslColor = ColorValue.create(hsvColor).toHslColor();
+    const hslColor = activeColor.toHslColor();
     return [
       hslColor.h.toString(),
       hslColor.s.toString(),
@@ -454,16 +459,16 @@ export const ColorPicker = (props: ColorPickerProps) => {
   });
 
   React.useEffect(() => {
-    const hslColor = ColorValue.create(hsvColor).toHslColor();
+    const hslColor = activeColor.toHslColor();
     setHslInput([
       hslColor.h.toString(),
       hslColor.s.toString(),
       hslColor.l.toString(),
     ]);
-  }, [hsvColor]);
+  }, [activeColor]);
 
   const [rgbInput, setRgbInput] = React.useState(() => {
-    const rgbColor = ColorValue.create(hsvColor).toRgbColor();
+    const rgbColor = activeColor.toRgbColor();
     return [
       rgbColor.r.toString(),
       rgbColor.g.toString(),
@@ -472,23 +477,27 @@ export const ColorPicker = (props: ColorPickerProps) => {
   });
 
   React.useEffect(() => {
-    const rgbColor = ColorValue.create(hsvColor).toRgbColor();
+    const rgbColor = activeColor.toRgbColor();
     setRgbInput([
       rgbColor.r.toString(),
       rgbColor.g.toString(),
       rgbColor.b.toString(),
     ]);
-  }, [hsvColor]);
+  }, [activeColor]);
 
   const onSwapColorType = React.useCallback(() => {
+    let newInputType: 'HEX' | 'HSL' | 'RGB' | 'NONE' = 'NONE';
+
     if (inputType === 'HEX') {
-      setInputType('HSL');
+      newInputType = 'HSL';
     } else if (inputType === 'HSL') {
-      setInputType('RGB');
+      newInputType = 'RGB';
     } else if (inputType === 'RGB') {
-      setInputType('HEX');
+      newInputType = 'HEX';
     }
-  }, [inputType]);
+    setInputType(newInputType);
+    builderProps?.onInputTypeChanged?.(newInputType);
+  }, [builderProps, inputType]);
 
   const handleColorInputChange = (
     type: 'HSL' | 'HEX' | 'RGB',

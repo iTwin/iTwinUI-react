@@ -201,6 +201,22 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
 
   const builderProps = {
     defaultColorInputType,
+    onInputTypeChanged: (inputType: 'HSL' | 'RGB' | 'HEX' | 'NONE') => {
+      switch (inputType) {
+        case 'HSL':
+          setDisplayType(0);
+          break;
+        case 'RGB':
+          setDisplayType(1);
+          break;
+        case 'HEX':
+          setDisplayType(2);
+          break;
+        default:
+          setDisplayType(3);
+          break;
+      }
+    },
   };
 
   return (
