@@ -145,11 +145,11 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
   const [displayType, setDisplayType] = React.useState(0); // 0 = HSL, 1= RGB, 2=HEX, 3=HSV
 
   // const [savedColors] = React.useState<Array<ColorValue>>([
-  //   ColorValue.fromHSL({ h: 0, s: 100, l: 50 }),
-  //   ColorValue.fromRGB({ r: 255, g: 98, b: 0 }),
-  //   ColorValue.fromString('#fec134'),
-  //   ColorValue.fromHSV({ h: 95, s: 83, v: 72 }),
-  //   ColorValue.fromHSL({ h: 202, s: 100, l: 59 }),
+  //   { h: 0, s: 100, l: 50 },
+  //   { r: 255, g: 98, b: 0 },
+  //   '#fec134'),
+  //   { h: 95, s: 83, v: 72 },
+  //   ColorValue.create({ h: 202, s: 100, l: 59 },
   // ]);
 
   const onColorChanged = (color: ColorValue) => {

@@ -449,7 +449,7 @@ it('should render color picker with color palette title', () => {
 //   let color = fillColor(hslColor);
 //   expect(color.hsv.displayString).toEqual('hsv(0, 100%, 100%)');
 
-//   const hexColor = ColorValue.fromString('#ff0000');
+//   const hexColor = ColorValue.create('#ff0000');
 //   color = fillColor(hexColor);
 //   expect(color.hsv.displayString).toEqual('hsv(0, 100%, 100%)');
 

@@ -13,11 +13,6 @@ const scratchBytes = new Uint8Array(4);
 const scratchUInt32 = new Uint32Array(scratchBytes.buffer);
 
 /**
- * An unsigned 32-bit integer in 0xTTBBGGRR format
- */
-export type TbgrColorValue = number;
-
-/**
  * A color defined by Red, Green, and Blue
  */
 export type RgbColor = {
@@ -92,13 +87,6 @@ export const isHsvColor = (value: ColorType): value is HsvColor => {
 };
 
 /**
- * is string type guard.
- */
-export const isStringColor = (value: ColorType): value is string => {
-  return typeof value === 'string';
-};
-
-/**
  * An immutable integer representation of a color.
  *
  * Colors are stored as 4 components: Red, Blue, Green, and Transparency (0=fully opaque). Each is an 8-bit integer between 0-255.
@@ -120,7 +108,6 @@ export class ColorValue {
   /**
    * Create a new ColorValue.
    * @param val value to use.
-   * If a number, it is interpreted as a 0xRRGGBB or 0xRRGGBBAA value.
    *
    * If a string, must be in one of the following forms:
    * *"rgb(255,0,0)"*
@@ -139,23 +126,23 @@ export class ColorValue {
     if (isHsvColor(val)) {
       return ColorValue.fromHSV(val);
     }
-    if (isStringColor(val)) {
+    if (typeof val === 'string') {
       return ColorValue.fromString(val);
     }
     return ColorValue.fromTbgr(0);
   }
 
   /**
-   * Convert this ColorValue to a 32 bit number representing the 0xTTBBGGRR value
+   * Convert this ColorValue to an unsigned 32 bit integer representing the 0xTTBBGGRR value
    */
-  public toTbgr(): TbgrColorValue {
+  public toTbgr(): number {
     return this._tbgr;
   }
 
   /**
    * Create a ColorValue from its 0xTTBBGGRR representation.
    */
-  public static fromTbgr(tbgr: TbgrColorValue): ColorValue {
+  public static fromTbgr(tbgr: number): ColorValue {
     return new ColorValue(tbgr);
   }
 
@@ -198,7 +185,7 @@ export class ColorValue {
    * *"hsl(120,50%,50%)"*
    * *"#rrggbb"*
    */
-  public static fromString(val: string): ColorValue {
+  private static fromString(val: string): ColorValue {
     return this.fromTbgr(this.computeTbgrFromString(val));
   }
 
