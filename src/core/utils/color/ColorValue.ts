@@ -338,7 +338,6 @@ export class ColorValue {
             const l = parseInt(color[3], 10) / 100;
             const t =
               typeof color[4] === 'string' ? 255 - floatOrPercent(color[4]) : 0;
-            // typeof color[5] === 'string' ? 255 - floatOrPercent(color[5]) : 0;
             return this.computeTbgrFromHSL(h, s, l, t);
           }
 
