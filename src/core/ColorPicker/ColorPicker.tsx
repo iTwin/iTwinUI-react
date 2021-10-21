@@ -18,6 +18,7 @@ import cx from 'classnames';
 import { Slider } from '../Slider';
 import { ColorSwatch } from './ColorSwatch';
 import { ColorInputPanel, ColorInputPanelProps } from './ColorInputPanel';
+import { ColorPalette } from './ColorPalette';
 
 export const getColorValue = (color: ColorType | ColorValue | undefined) => {
   if (color instanceof ColorValue) {
@@ -46,7 +47,7 @@ export type ColorPaletteProps = {
   /**
    * Available color values to show in palette.
    */
-  colors?: Array<ColorType | ColorValue>;
+  colors: Array<ColorType | ColorValue>;
   /**
    * Title shown above color palette.
    */
@@ -125,10 +126,6 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
   const ref = React.useRef<HTMLDivElement>(null);
 
-  const [focusedColorIndex, setFocusedColorIndex] = React.useState<
-    number | null
-  >();
-
   const inColor = React.useMemo(() => getColorValue(selectedColor), [
     selectedColor,
   ]);
@@ -174,87 +171,12 @@ export const ColorPicker = (props: ColorPickerProps) => {
     [onChange, onChangeCompleted],
   );
 
-  // colorSwatches may be supplied as children which requires looking through DOM
-  React.useEffect(() => {
-    const colorSwatches = Array.from<HTMLElement>(
-      ref.current?.querySelectorAll('.iui-color-swatch, .iui-button') ?? [],
-    );
-    if (focusedColorIndex != null) {
-      colorSwatches[focusedColorIndex]?.focus();
-      return;
-    }
-    const selectedIndex = colorSwatches.findIndex(
-      (swatch) =>
-        swatch.tabIndex === 0 ||
-        swatch.getAttribute('aria-selected') === 'true',
-    );
-    setFocusedColorIndex(selectedIndex > -1 ? selectedIndex : null);
-  }, [focusedColorIndex]);
-
-  // Color palette arrow key navigation
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    const colorSwatches = Array.from<HTMLElement>(
-      ref.current?.querySelectorAll('.iui-color-swatch, .iui-button') ?? [],
-    );
-    if (!colorSwatches.length) {
-      return;
-    }
-
-    const currentlyFocused = colorSwatches.findIndex(
-      (swatch) => swatch === ref.current?.ownerDocument.activeElement,
-    );
-    const currentIndex = currentlyFocused > -1 ? currentlyFocused : 0;
-    let newIndex = -1;
-
-    switch (event.key) {
-      case 'ArrowDown': {
-        // Look for next ColorSwatch with same offsetLeft value
-        newIndex = colorSwatches.findIndex(
-          (swatch, index) =>
-            index > currentIndex &&
-            swatch.offsetLeft === colorSwatches[currentIndex].offsetLeft,
-        );
-        break;
-      }
-      case 'ArrowUp': {
-        // Look backwards for next ColorSwatch with same offsetLeft value
-        for (let i = currentIndex - 1; i >= 0; i--) {
-          if (
-            colorSwatches[i].offsetLeft ===
-            colorSwatches[currentIndex].offsetLeft
-          ) {
-            newIndex = i;
-            break;
-          }
-        }
-        break;
-      }
-      case 'ArrowLeft':
-        newIndex = Math.max(currentIndex - 1, 0);
-        break;
-      case 'ArrowRight':
-        newIndex = Math.min(currentIndex + 1, colorSwatches.length - 1);
-        break;
-      case 'Enter':
-      case ' ':
-      case 'Spacebar':
-        colorSwatches[currentIndex].click();
-        event.preventDefault();
-        return;
-    }
-
-    if (newIndex >= 0 && newIndex < colorSwatches.length) {
-      setFocusedColorIndex(newIndex);
-      event.preventDefault();
-    }
-  };
-
   const hueSliderColor = React.useMemo(
     () => ColorValue.create({ h: hsvColor.h, s: 100, v: 100 }),
     [hsvColor],
   );
 
-  const sliderValue = React.useMemo(() => hsvColor.h / 3.59, [hsvColor]);
+  const sliderValue = React.useMemo(() => hsvColor.h, [hsvColor]);
 
   const dotColorString = React.useMemo(() => activeColor.toHexString(), [
     activeColor,
@@ -291,7 +213,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
   // Update slider change
   const updateSlider = React.useCallback(
     (huePercent: number, selectionChanged: boolean) => {
-      const hue = Math.round(huePercent * 3.59);
+      const hue = Math.round(huePercent);
       const newHsvColor = {
         h: hue,
         s: hsvColor.s,
@@ -465,7 +387,8 @@ export const ColorPicker = (props: ColorPickerProps) => {
             }}
             onChange={onChangeHueCompleted}
             onUpdate={onChangeHue}
-            step={0.3}
+            min={0}
+            max={359}
           />
         </div>
       )}
@@ -485,8 +408,8 @@ export const ColorPicker = (props: ColorPickerProps) => {
               {paletteProps.colorPaletteTitle}
             </div>
           )}
-          <div className='iui-color-palette' onKeyDown={handleKeyDown}>
-            {paletteProps.colors?.map((inColor, index) => {
+          <ColorPalette>
+            {paletteProps.colors.map((inColor, index) => {
               const color = getColorValue(inColor);
               return (
                 <ColorSwatch
@@ -501,10 +424,10 @@ export const ColorPicker = (props: ColorPickerProps) => {
                 />
               );
             })}
-            {children}
-          </div>
+          </ColorPalette>
         </div>
       )}
+      {children}
     </div>
   );
 };

@@ -4,10 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import '@itwin/itwinui-css/css/color-picker.css';
-import { ColorValue } from '../utils/color/ColorValue';
 import { IconButton } from '../Buttons';
 import { Input } from '../Input';
-import { InputContainer } from '../utils';
+import { ColorValue, InputContainer, useTheme } from '../utils';
 
 export type ColorInputPanelProps = {
   /**
@@ -49,6 +48,8 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
     onChangeCompleted,
     onColorFormatChanged,
   } = props;
+
+  useTheme();
 
   const [currentFormat, setCurrentFormat] = React.useState(defaultColorFormat);
 
@@ -387,7 +388,7 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
   );
 
   return (
-    <>
+    <div>
       <div className='iui-color-picker-section-label'>
         {currentFormat.toUpperCase()}
       </div>
@@ -409,7 +410,7 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
           {currentFormat === 'rgb' && rgbInputs}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
