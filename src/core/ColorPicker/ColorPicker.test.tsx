@@ -420,21 +420,19 @@ it('should handle arrow key navigation on color dot', () => {
   expect(colorDot.style.getPropertyValue('--left')).toEqual('100%');
   expect(colorDot.style.getPropertyValue('--top')).toEqual('0%');
 
-  // Go down and select with enter
+  // Go down
   fireEvent.keyDown(colorDot, { key: 'ArrowDown' });
   fireEvent.keyDown(colorDot, { key: 'ArrowDown' });
-  fireEvent.keyDown(colorDot, { key: 'Enter' });
-  expect(onSelectionChanged).toHaveBeenCalledTimes(1);
+  expect(onSelectionChanged).toHaveBeenCalledTimes(2);
   expect(colorDot.style.getPropertyValue('--top')).toEqual('2%');
   expect(colorDot.style.getPropertyValue('--left')).toEqual('100%');
   expect(colorPicker.style.getPropertyValue('--selected-color')).toEqual(
     '#fa0000',
   );
 
-  // Go left and select with space
+  // Go left
   fireEvent.keyDown(colorDot, { key: 'ArrowLeft' });
-  fireEvent.keyDown(colorDot, { key: ' ' });
-  expect(onSelectionChanged).toHaveBeenCalledTimes(2);
+  expect(onSelectionChanged).toHaveBeenCalledTimes(3);
   expect(colorDot.style.getPropertyValue('--top')).toEqual('2%');
   expect(colorDot.style.getPropertyValue('--left')).toEqual('99%');
   expect(colorPicker.style.getPropertyValue('--selected-color')).toEqual(
@@ -540,21 +538,25 @@ it('should handle pointer down/move/up from color square', () => {
     buttons: 1,
     clientX: 210,
   });
-  expect(handleOnChange).toHaveBeenCalledTimes(1);
+  expect(handleOnUpdate).toHaveBeenCalledTimes(1);
+  expect(handleOnChange).toHaveBeenCalledTimes(0);
+  expect(document.activeElement).toBe(colorDot);
 
   fireEvent.pointerMove(colorPicker.ownerDocument, {
     pointerId: 5,
     buttons: 1,
     clientX: 410,
   });
-  expect(handleOnUpdate).toHaveBeenCalledTimes(1);
+  expect(handleOnUpdate).toHaveBeenCalledTimes(2);
+  expect(handleOnChange).toHaveBeenCalledTimes(0);
 
   fireEvent.pointerUp(colorPicker.ownerDocument, {
     pointerId: 5,
     buttons: 1,
     clientX: 410,
   });
-  expect(handleOnChange).toHaveBeenCalledTimes(2);
+  expect(handleOnUpdate).toHaveBeenCalledTimes(2);
+  expect(handleOnChange).toHaveBeenCalledTimes(1);
 });
 
 it('should render advanced color picker with input fields', () => {

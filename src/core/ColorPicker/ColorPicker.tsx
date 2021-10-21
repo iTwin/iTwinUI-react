@@ -351,9 +351,9 @@ export const ColorPicker = (props: ColorPickerProps) => {
           event.clientY,
         );
 
-        if (callbackType === 'onChange' || callbackType === 'onClick') {
+        if (callbackType === 'onChange') {
           updateColorDot(percentX, percentY, true);
-        } else if (callbackType === 'onUpdate') {
+        } else if (callbackType === 'onUpdate' || callbackType === 'onClick') {
           updateColorDot(percentX, percentY, false);
         }
       }
@@ -391,8 +391,10 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
   const handlePointerDownOnSquare = React.useCallback(
     (event: React.PointerEvent) => {
+      event.preventDefault();
       updateSquareValue(event, 'onClick');
       setColorDotActive(true);
+      colorDotRef.current?.focus();
     },
     [updateSquareValue],
   );
@@ -406,29 +408,26 @@ export const ColorPicker = (props: ColorPickerProps) => {
     switch (event.key) {
       case 'ArrowDown': {
         y = Math.min(y + 1, 100);
-        updateColorDot(x, y, false);
+        updateColorDot(x, y, true);
         break;
       }
       case 'ArrowUp': {
         y = Math.max(y - 1, 0);
-        updateColorDot(x, y, false);
+        updateColorDot(x, y, true);
         break;
       }
       case 'ArrowLeft':
         x = Math.max(x - 1, 0);
-        updateColorDot(x, y, false);
+        updateColorDot(x, y, true);
         break;
       case 'ArrowRight':
         x = Math.min(x + 1, 100);
-        updateColorDot(x, y, false);
-        break;
-      case 'Enter':
-      case ' ':
-      case 'Spacebar':
         updateColorDot(x, y, true);
         break;
     }
   };
+
+  const colorDotRef = React.useRef<HTMLDivElement>(null);
 
   return (
     <div
@@ -449,9 +448,11 @@ export const ColorPicker = (props: ColorPickerProps) => {
               style={colorDotStyle}
               onPointerDown={() => {
                 setColorDotActive(true);
+                colorDotRef.current?.focus();
               }}
               onKeyDown={handleColorDotKeyDown}
               tabIndex={0}
+              ref={colorDotRef}
             />
           </div>
 
