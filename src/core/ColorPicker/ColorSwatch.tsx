@@ -20,10 +20,10 @@ export type ColorSwatchProps = {
 } & Omit<React.ComponentPropsWithRef<'div'>, 'color'>;
 
 /**
- * ColorSwatch component to display a color within a basic color picker.
+ * ColorSwatch component to display within a color palette.
  * @example
  * <ColorSwatch color='#23450b'  onClick={onClick}/>
- * <ColorSwatch color={ColorValue.create({r: 255, g: 255, b: 0}}  onClick={onClick}/>
+ * <ColorSwatch color={{ r: 255, g: 255, b: 0 }}  onClick={onClick}/>
  */
 export const ColorSwatch = React.forwardRef<HTMLDivElement, ColorSwatchProps>(
   (props, ref) => {

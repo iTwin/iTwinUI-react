@@ -36,17 +36,23 @@ const getHorizontalPercentageOfRectangle = (rect: DOMRect, pointer: number) => {
 export type ColorBuilderProps = {
   /**
    * Show HSL, RGB, or HEX input values.
-   * Set to NONE to use advanced color builder without showing color input
+   * Set to NONE to use advanced color builder without showing color input.
    */
   defaultColorInputType?: 'HSL' | 'RGB' | 'HEX' | 'NONE';
-  /** Callback fired when user changes input type */
+  /**
+   * Callback fired when user changes input type.
+   */
   onInputTypeChanged?: (inputType: 'HSL' | 'RGB' | 'HEX' | 'NONE') => void;
 };
 
 export type ColorPaletteProps = {
-  /** Available color values to show in palette */
+  /**
+   * Available color values to show in palette.
+   */
   colors?: Array<ColorType | ColorValue>;
-  /** Title shown above color palette (NOTE: do not supply a default or you will be responsible for localizing it.) */
+  /**
+   * Title shown above color palette.
+   */
   colorPaletteTitle?: string;
 };
 
@@ -83,7 +89,7 @@ export type ColorPickerProps = {
 } & Omit<CommonProps, 'title'>;
 
 /**
- * Basic ColorPicker component to display a palette of ColorSwatches
+ * Basic ColorPicker to display a palette of ColorSwatches
  * @example
  * <ColorPicker
  *    onChangeCompleted={onColorChanged}
@@ -92,7 +98,7 @@ export type ColorPickerProps = {
  * />
  */
 /**
- * Advanced ColorPicker component to display color builder options, color input, and a palette of ColorSwatches
+ * Advanced ColorPicker to display color builder options, color input, and a palette of ColorSwatches
  * @example
  * <ColorPicker
  *    onChangeCompleted={onColorChanged}
@@ -427,7 +433,6 @@ export const ColorPicker = (props: ColorPickerProps) => {
     }
   };
 
-  // Handle color inputs
   return (
     <div
       className={cx('iui-color-picker', className)}

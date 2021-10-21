@@ -12,19 +12,20 @@ import { InputContainer } from '../utils';
 // cspell: ignore borderless tbgr
 
 export type ColorInputPanelProps = {
-  /** Active RGB-based color */
+  /**
+   * Active RGB-based color.
+   */
   activeColor: ColorValue;
-  /** active HUE value */
+  /**
+   * Active HUE value.
+   */
   activeHue: number;
   /**
-   * Show HSL, RGB, or HEX input values.
-   * Set to NONE to use advanced color builder without showing color input
+   * The currently selected input type to be displayed in the panel.
    */
   currentInputType: 'HSL' | 'RGB' | 'HEX' | 'NONE';
   /**
-   * Callback fired when selectedColor is done changing.
-   * This can be on pointerUp when thumb is done dragging,
-   * or when user clicks on color builder components, or when user clicks on color swatch
+   * Callback fired when activeColor changed from the panel input.
    */
   onChangeCompleted: (color: ColorValue) => void;
   /**
