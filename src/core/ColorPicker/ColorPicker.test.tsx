@@ -558,6 +558,47 @@ it('should handle pointer down/move/up from color square', () => {
 });
 
 it('should render advanced color picker with input fields', () => {
+  const { container } = render(
+    <ColorPicker
+      builderProps={{
+        defaultColorFormat: 'hex',
+      }}
+      onChangeCompleted={() => {}}
+    />,
+  );
+
+  expect(
+    container.querySelectorAll(`.iui-color-picker-section-label`).length,
+  ).toBe(1);
+  const element = container.querySelectorAll(
+    `.iui-color-picker-section-label`,
+  )[0];
+  expect(element).toBeDefined();
+  expect(element?.textContent).toBe('HEX');
+
+  expect(container.querySelector('.iui-color-input')).toBeTruthy();
+  expect(container.querySelector('.iui-color-input-fields')).toBeTruthy();
+  expect(container.querySelectorAll('.iui-input-container').length).toBe(1);
+
+  const swapButton = container.querySelector(
+    '.iui-button.iui-borderless',
+  ) as HTMLButtonElement;
+  expect(swapButton).toBeTruthy();
+
+  swapButton.click();
+  expect(element.textContent).toBe('HSL');
+  expect(container.querySelectorAll('.iui-input-container').length).toBe(3);
+
+  swapButton.click();
+  expect(element.textContent).toBe('RGB');
+  expect(container.querySelectorAll('.iui-input-container').length).toBe(3);
+
+  swapButton.click();
+  expect(element.textContent).toBe('HEX');
+  expect(container.querySelectorAll('.iui-input-container').length).toBe(1);
+});
+
+it('should handle onColorFormatChanged', () => {
   const inputChange = jest.fn();
 
   const { container } = render(
@@ -590,18 +631,6 @@ it('should render advanced color picker with input fields', () => {
 
   swapButton.click();
   expect(inputChange).toHaveBeenCalledTimes(1);
-  expect(element.textContent).toBe('HSL');
-  expect(container.querySelectorAll('.iui-input-container').length).toBe(3);
-
-  swapButton.click();
-  expect(inputChange).toHaveBeenCalledTimes(2);
-  expect(element.textContent).toBe('RGB');
-  expect(container.querySelectorAll('.iui-input-container').length).toBe(3);
-
-  swapButton.click();
-  expect(inputChange).toHaveBeenCalledTimes(3);
-  expect(element.textContent).toBe('HEX');
-  expect(container.querySelectorAll('.iui-input-container').length).toBe(1);
 });
 
 it('should handle hex input change', () => {
@@ -618,7 +647,6 @@ it('should handle hex input change', () => {
 
   const input = container.querySelectorAll('input')[0] as HTMLInputElement;
   expect(input).toBeTruthy();
-  input.focus();
   fireEvent.change(input, { target: { value: '#FF6200' } });
   fireEvent.keyDown(input, { key: 'Enter' });
   expect(handleOnChange).toHaveBeenCalledTimes(1);
@@ -627,6 +655,16 @@ it('should handle hex input change', () => {
   fireEvent.change(input, { target: { value: '#A' } });
   fireEvent.keyDown(input, { key: 'Enter' });
   expect(handleOnChange).toHaveBeenCalledTimes(1);
+
+  // Should not update with keys other than Enter
+  fireEvent.change(input, { target: { value: '#A' } });
+  fireEvent.keyDown(input, { key: ' ' });
+  expect(handleOnChange).toHaveBeenCalledTimes(1);
+
+  // Should update even if # was not typed in
+  fireEvent.change(input, { target: { value: 'FF6200' } });
+  fireEvent.keyDown(input, { key: 'Enter' });
+  expect(handleOnChange).toHaveBeenCalledTimes(2);
 });
 
 it('should handle hsl input change', () => {
@@ -671,6 +709,16 @@ it('should handle hsl input change', () => {
 
   fireEvent.change(l, { target: { value: '5000' } });
   fireEvent.keyDown(l, { key: 'Enter' });
+  expect(handleOnChange).toHaveBeenCalledTimes(3);
+
+  // Should not update with keys other than Enter
+  fireEvent.keyDown(h, { key: ' ' });
+  expect(handleOnChange).toHaveBeenCalledTimes(3);
+
+  fireEvent.keyDown(s, { key: ' ' });
+  expect(handleOnChange).toHaveBeenCalledTimes(3);
+
+  fireEvent.keyDown(l, { key: ' ' });
   expect(handleOnChange).toHaveBeenCalledTimes(3);
 });
 
@@ -717,4 +765,138 @@ it('should handle rgb input change', () => {
   fireEvent.change(b, { target: { value: '5000' } });
   fireEvent.keyDown(b, { key: 'Enter' });
   expect(handleOnChange).toHaveBeenCalledTimes(3);
+
+  // Should not update with keys other than Enter
+  fireEvent.keyDown(r, { key: ' ' });
+  expect(handleOnChange).toHaveBeenCalledTimes(3);
+
+  fireEvent.keyDown(g, { key: ' ' });
+  expect(handleOnChange).toHaveBeenCalledTimes(3);
+
+  fireEvent.keyDown(b, { key: ' ' });
+  expect(handleOnChange).toHaveBeenCalledTimes(3);
+});
+
+it('should handle hex input change with lose focus', () => {
+  const handleOnChange = jest.fn();
+
+  const { container } = render(
+    <ColorPicker
+      builderProps={{
+        defaultColorFormat: 'hex',
+      }}
+      onChangeCompleted={handleOnChange}
+    />,
+  );
+
+  const input = container.querySelectorAll('input')[0] as HTMLInputElement;
+  expect(input).toBeTruthy();
+  input.focus();
+  fireEvent.change(input, { target: { value: '#FF6200' } });
+  input.blur();
+  expect(handleOnChange).toHaveBeenCalledTimes(1);
+});
+
+it('should handle hsl input change with lose focus', () => {
+  const handleOnChange = jest.fn();
+
+  const { container } = render(
+    <ColorPicker
+      builderProps={{
+        defaultColorFormat: 'hsl',
+      }}
+      onChangeCompleted={handleOnChange}
+    />,
+  );
+
+  const h = container.querySelectorAll('input')[0] as HTMLInputElement;
+  const s = container.querySelectorAll('input')[1] as HTMLInputElement;
+  const l = container.querySelectorAll('input')[2] as HTMLInputElement;
+  expect(h).toBeTruthy();
+  expect(s).toBeTruthy();
+  expect(l).toBeTruthy();
+
+  h.focus();
+  fireEvent.change(h, { target: { value: '100' } });
+  h.blur();
+  expect(handleOnChange).toHaveBeenCalledTimes(1);
+
+  s.focus();
+  fireEvent.change(s, { target: { value: '50' } });
+  s.blur();
+  expect(handleOnChange).toHaveBeenCalledTimes(2);
+
+  l.focus();
+  fireEvent.change(l, { target: { value: '50' } });
+  l.blur();
+  expect(handleOnChange).toHaveBeenCalledTimes(3);
+});
+
+it('should handle rgb input change with lose focus', () => {
+  const handleOnChange = jest.fn();
+
+  const { container } = render(
+    <ColorPicker
+      builderProps={{
+        defaultColorFormat: 'rgb',
+      }}
+      onChangeCompleted={handleOnChange}
+    />,
+  );
+
+  const r = container.querySelectorAll('input')[0] as HTMLInputElement;
+  const g = container.querySelectorAll('input')[1] as HTMLInputElement;
+  const b = container.querySelectorAll('input')[2] as HTMLInputElement;
+  expect(r).toBeTruthy();
+  expect(g).toBeTruthy();
+  expect(b).toBeTruthy();
+
+  r.focus();
+  fireEvent.change(r, { target: { value: '100' } });
+  r.blur();
+  expect(handleOnChange).toHaveBeenCalledTimes(1);
+
+  g.focus();
+  fireEvent.change(g, { target: { value: '50' } });
+  g.blur();
+  expect(handleOnChange).toHaveBeenCalledTimes(2);
+
+  b.focus();
+  fireEvent.change(b, { target: { value: '50' } });
+  b.blur();
+  expect(handleOnChange).toHaveBeenCalledTimes(3);
+});
+
+it('should preserve hue when color dot is black/at bottom of square', () => {
+  window.CSS = { supports: () => true, escape: (i) => i };
+
+  const { container } = render(
+    <ColorPicker
+      onChangeCompleted={() => {}}
+      selectedColor={{ h: 140, s: 60, l: 1 }}
+      builderProps={{
+        defaultColorFormat: 'hex',
+      }}
+    />,
+  );
+
+  const colorPicker = container.querySelector(
+    '.iui-color-picker',
+  ) as HTMLElement;
+  expect(colorPicker.style.getPropertyValue('--selected-color')).toBe(
+    '#010402',
+  );
+  expect(colorPicker.style.getPropertyValue('--hue')).toBe('#00ff55');
+
+  const colorDot = container.querySelector('.iui-color-dot') as HTMLElement;
+  expect(colorDot).toBeTruthy();
+  expect(colorDot.style.getPropertyValue('--left')).toEqual('75%');
+  expect(colorDot.style.getPropertyValue('--top')).toEqual('98%');
+
+  // Go to bottom of square and hue should be preserved
+  fireEvent.keyDown(colorDot, { key: 'ArrowDown' });
+  fireEvent.keyDown(colorDot, { key: 'ArrowDown' });
+  expect(colorDot.style.getPropertyValue('--left')).toEqual('75%');
+  expect(colorDot.style.getPropertyValue('--top')).toEqual('100%');
+  expect(colorPicker.style.getPropertyValue('--hue')).toBe('#00ff55');
 });
