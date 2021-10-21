@@ -12,7 +12,10 @@ import { InputContainer } from '../utils';
 // cspell: ignore borderless tbgr
 
 export type ColorInputPanelProps = {
+  /** Active RGB-based color */
   activeColor: ColorValue;
+  /** active HUE value */
+  activeHue: number;
   /**
    * Show HSL, RGB, or HEX input values.
    * Set to NONE to use advanced color builder without showing color input
@@ -32,6 +35,7 @@ export type ColorInputPanelProps = {
 export const ColorInputPanel = (props: ColorInputPanelProps) => {
   const {
     activeColor,
+    activeHue,
     currentInputType,
     onChangeCompleted,
     onInputTypeChanged,
@@ -55,21 +59,17 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
 
   const [hslInput, setHslInput] = React.useState(() => {
     const hslColor = activeColor.toHslColor();
-    return [
-      hslColor.h.toString(),
-      hslColor.s.toString(),
-      hslColor.l.toString(),
-    ];
+    return [activeHue.toString(), hslColor.s.toString(), hslColor.l.toString()];
   });
 
   React.useEffect(() => {
     const hslColor = activeColor.toHslColor();
     setHslInput([
-      hslColor.h.toString(),
+      activeHue.toString(),
       hslColor.s.toString(),
       hslColor.l.toString(),
     ]);
-  }, [activeColor, inputType]);
+  }, [activeColor, activeHue, inputType]);
 
   const [rgbInput, setRgbInput] = React.useState(() => {
     const rgbColor = activeColor.toRgbColor();

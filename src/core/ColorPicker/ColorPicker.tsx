@@ -471,6 +471,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
         builderProps.defaultColorInputType != 'NONE' && (
           <ColorInputPanel
             activeColor={activeColor}
+            activeHue={hsvColor.h}
             currentInputType={builderProps?.defaultColorInputType ?? 'NONE'}
             onInputTypeChanged={builderProps?.onInputTypeChanged}
             onChangeCompleted={onChangeCompleted}
