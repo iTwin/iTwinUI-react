@@ -254,9 +254,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
     [hsvColor],
   );
 
-  const sliderValue = React.useMemo(() => Math.round(hsvColor.h / 3.59), [
-    hsvColor,
-  ]);
+  const sliderValue = React.useMemo(() => hsvColor.h / 3.59, [hsvColor]);
 
   const dotColorString = React.useMemo(() => activeColor.toHexString(), [
     activeColor,
@@ -467,6 +465,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
             }}
             onChange={onChangeHueCompleted}
             onUpdate={onChangeHue}
+            step={0.3}
           />
         </div>
       )}
