@@ -392,15 +392,17 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
         {currentFormat.toUpperCase()}
       </div>
       <div className='iui-color-input'>
-        <IconButton
-          styleType='borderless'
-          onClick={swapColorFormat}
-          size='small'
-        >
-          <svg viewBox='0 0 16 16' className='iui-icon' aria-hidden>
-            <path d='m5 15-3.78125-3.5 3.78125-3.5v2h8v3h-8zm6-7 3.78125-3.5-3.78125-3.5v2h-8v3h8z' />
-          </svg>
-        </IconButton>
+        {allowedColorFormats.length > 1 && (
+          <IconButton
+            styleType='borderless'
+            onClick={swapColorFormat}
+            size='small'
+          >
+            <svg viewBox='0 0 16 16' className='iui-icon' aria-hidden>
+              <path d='m5 15-3.78125-3.5 3.78125-3.5v2h8v3h-8zm6-7 3.78125-3.5-3.78125-3.5v2h-8v3h8z' />
+            </svg>
+          </IconButton>
+        )}
         <div className='iui-color-input-fields'>
           {currentFormat === 'hex' && hexInputField}
           {currentFormat === 'hsl' && hslInputs}

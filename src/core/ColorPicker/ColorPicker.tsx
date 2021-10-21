@@ -35,9 +35,11 @@ const getHorizontalPercentageOfRectangle = (rect: DOMRect, pointer: number) => {
   return ((position - rect.left) / rect.width) * 100;
 };
 
-export type ColorBuilderProps = Pick<
-  ColorInputPanelProps,
-  'defaultColorFormat' | 'allowedColorFormats' | 'onColorFormatChanged'
+export type ColorBuilderProps = Partial<
+  Pick<
+    ColorInputPanelProps,
+    'defaultColorFormat' | 'allowedColorFormats' | 'onColorFormatChanged'
+  >
 >;
 
 export type ColorPaletteProps = {
@@ -96,15 +98,15 @@ export type ColorPickerProps = {
  * Advanced ColorPicker to display color builder options, color input, and a palette of ColorSwatches
  * @example
  * <ColorPicker
- *    onChangeCompleted={onColorChanged}
- *    selectedColor={selectedColor}
- *    paletteProps={{
- *      colors: ['#FFFFFF', '#5A6973'],
- *      colorPaletteTitle: 'Saved Colors',
- *    }}
+ *   onChangeCompleted={onColorChanged}
+ *   selectedColor={selectedColor}
+ *   paletteProps={{
+ *     colors: ['#FFFFFF', '#5A6973'],
+ *     colorPaletteTitle: 'Saved Colors',
+ *   }}
  *   builderProps={{
- *      defaultColorInputType: 'HSL',
- *    }}
+ *     defaultColorFormat: 'hsl',
+ *   }}
  * />
  */
 export const ColorPicker = (props: ColorPickerProps) => {
