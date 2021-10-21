@@ -10,9 +10,11 @@ import {
   IconButton,
   ColorSwatch,
   Button,
+  ButtonGroup,
 } from '../../src/core';
 import { action } from '@storybook/addon-actions';
 import { ColorValue } from '../../src/core/utils/color/ColorValue';
+import { CreeveyStoryParams } from 'creevey';
 
 export default {
   component: ColorPicker,
@@ -22,6 +24,18 @@ export default {
     children: { control: { disable: true } },
   },
   title: 'Core/ColorPicker',
+  parameters: {
+    creevey: {
+      tests: {
+        async open() {
+          const button = await this.browser.findElement({ css: '.iui-button' });
+          await button.click();
+          const opened = await this.takeScreenshot();
+          await this.expect({ opened }).to.matchImages();
+        },
+      },
+    } as CreeveyStoryParams,
+  },
 } as Meta<ColorPickerProps>;
 
 const ColorsList = [
@@ -76,11 +90,9 @@ export const Basic: Story<ColorPickerProps> = (args) => {
   return (
     <>
       <IconButton onClick={() => setOpened(!opened)}>
-        <span
-          style={{
-            backgroundColor: activeColor.color,
-            border: '1px solid',
-          }}
+        <ColorSwatch
+          style={{ pointerEvents: 'none' }}
+          color={activeColor.color}
         />
       </IconButton>
       <span style={{ marginLeft: 16 }}>{colorName}</span>
@@ -100,142 +112,59 @@ Basic.args = {
   },
 };
 
-export const ColorSwatchOnly: Story<ColorPickerProps> = () => {
-  const [activeIndex, setActiveIndex] = React.useState(0);
-
-  const onClickColor = (index: number) => {
-    action(`Clicked color ${ColorsList[index].color}`)();
-    setActiveIndex(index);
-  };
-
-  return (
-    <>
-      {
-        <div style={{ marginTop: 4, display: 'flex' }}>
-          <ColorSwatch
-            color={ColorValue.create('#5A6973')}
-            onClick={() => {
-              onClickColor(0);
-            }}
-            isActive={0 === activeIndex}
-            style={{ marginRight: 8 }}
-          />
-          <ColorSwatch
-            color={ColorValue.create('#FFFFFF')}
-            onClick={() => {
-              onClickColor(1);
-            }}
-            isActive={1 === activeIndex}
-          />
-        </div>
-      }
-    </>
-  );
-};
-ColorSwatchOnly.args = {};
-
 export const Advanced: Story<ColorPickerProps> = (args) => {
   const [opened, setOpened] = React.useState(false);
   const [selectedColor, setSelectedColor] = React.useState<ColorValue>(
     ColorValue.create({ h: 0, s: 100, l: 50 }),
   );
-  const [colorDisplayString, setColorDisplayString] = React.useState(
-    selectedColor.toHslString(),
-  );
-  const [displayType, setDisplayType] = React.useState(0); // 0 = HSL, 1= RGB, 2=HEX, 3=HSV
+
+  const formats = ['hsl', 'rgb', 'hex'] as const;
+  const [currentFormat, setCurrentFormat] = React.useState<
+    typeof formats[number]
+  >(formats[0]);
 
   const onColorChanged = (color: ColorValue) => {
     setSelectedColor(color);
-    action(`Selected ${colorDisplayString}`)();
+    action(`Selected ${getDisplayString(color)}`)();
   };
 
-  const onDisplayTypeChange = () => {
-    if (displayType === 3) {
-      setDisplayType(0);
-    } else {
-      setDisplayType(displayType + 1);
+  const getDisplayString = (color = selectedColor) => {
+    switch (currentFormat) {
+      case 'hsl':
+        return color.toHslString();
+      case 'rgb':
+        return color.toRgbString();
+      case 'hex':
+        return color.toHexString();
     }
-  };
-
-  React.useEffect(() => {
-    switch (displayType) {
-      case 0: {
-        setColorDisplayString(selectedColor.toHslString());
-        break;
-      }
-      case 1: {
-        setColorDisplayString(selectedColor.toRgbString());
-        break;
-      }
-      case 2: {
-        setColorDisplayString(selectedColor.toHexString());
-        break;
-      }
-      case 3: {
-        setColorDisplayString(selectedColor.toHsvString());
-        break;
-      }
-    }
-  }, [displayType, selectedColor]);
-
-  const defaultColorInputType = React.useMemo<
-    'HSL' | 'RGB' | 'HEX' | 'NONE'
-  >(() => {
-    switch (displayType) {
-      case 0:
-        return 'HSL';
-      case 1:
-        return 'RGB';
-      case 2:
-        return 'HEX';
-      default:
-        return 'NONE';
-    }
-  }, [displayType]);
-
-  const builderProps = {
-    defaultColorInputType,
-    onInputTypeChanged: (inputType: 'HSL' | 'RGB' | 'HEX' | 'NONE') => {
-      switch (inputType) {
-        case 'HSL':
-          setDisplayType(0);
-          break;
-        case 'RGB':
-          setDisplayType(1);
-          break;
-        case 'HEX':
-          setDisplayType(2);
-          break;
-        default:
-          setDisplayType(3);
-          break;
-      }
-    },
   };
 
   return (
     <>
-      <IconButton onClick={() => setOpened(!opened)}>
-        <span
-          style={{
-            backgroundColor: selectedColor.toHslString(),
-            border: '1px solid',
+      <ButtonGroup>
+        <IconButton onClick={() => setOpened(!opened)}>
+          <ColorSwatch
+            style={{ pointerEvents: 'none' }}
+            color={selectedColor}
+          />
+        </IconButton>
+        <Button
+          onClick={() => {
+            setCurrentFormat(
+              formats[(formats.indexOf(currentFormat) + 1) % formats.length],
+            );
           }}
-        />
-      </IconButton>
-      <Button
-        onClick={onDisplayTypeChange}
-        endIcon={
-          <svg viewBox='0 0 16 16' className='iui-icon' aria-hidden='true'>
-            <path d='m5 15-3.78125-3.5 3.78125-3.5v2h8v3h-8zm6-7 3.78125-3.5-3.78125-3.5v2h-8v3h8z' />
-          </svg>
-        }
-        styleType='default'
-      >
-        <div style={{ width: 115 }}>
-          {colorDisplayString ?? 'No color selected.'}
-        </div>
-      </Button>
+          endIcon={
+            <svg viewBox='0 0 16 16' className='iui-icon' aria-hidden='true'>
+              <path d='m5 15-3.78125-3.5 3.78125-3.5v2h8v3h-8zm6-7 3.78125-3.5-3.78125-3.5v2h-8v3h8z' />
+            </svg>
+          }
+        >
+          <div style={{ width: 115 }}>
+            {getDisplayString() ?? 'No color selected.'}
+          </div>
+        </Button>
+      </ButtonGroup>
 
       {opened && (
         <div style={{ marginTop: 4 }}>
@@ -243,7 +172,10 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
             selectedColor={selectedColor}
             {...args}
             onChangeCompleted={onColorChanged}
-            builderProps={builderProps}
+            builderProps={{
+              defaultColorFormat: currentFormat,
+              onColorFormatChanged: setCurrentFormat,
+            }}
           />
         </div>
       )}

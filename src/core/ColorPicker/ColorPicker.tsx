@@ -10,12 +10,14 @@ import {
   getBoundedValue,
   getWindow,
   useEventListener,
+  ColorType,
+  ColorValue,
+  HsvColor,
 } from '../utils';
 import cx from 'classnames';
-import { ColorType, ColorValue, HsvColor } from '../utils/color/ColorValue';
 import { Slider } from '../Slider';
-import ColorSwatch from './ColorSwatch';
-import ColorInputPanel from './ColorInputPanel';
+import { ColorSwatch } from './ColorSwatch';
+import { ColorInputPanel, ColorInputPanelProps } from './ColorInputPanel';
 
 export const getColorValue = (color: ColorType | ColorValue | undefined) => {
   if (color instanceof ColorValue) {
@@ -33,17 +35,10 @@ const getHorizontalPercentageOfRectangle = (rect: DOMRect, pointer: number) => {
   return ((position - rect.left) / rect.width) * 100;
 };
 
-export type ColorBuilderProps = {
-  /**
-   * Show HSL, RGB, or HEX input values.
-   * Set to NONE to use advanced color builder without showing color input.
-   */
-  defaultColorInputType?: 'HSL' | 'RGB' | 'HEX' | 'NONE';
-  /**
-   * Callback fired when user changes input type.
-   */
-  onInputTypeChanged?: (inputType: 'HSL' | 'RGB' | 'HEX' | 'NONE') => void;
-};
+export type ColorBuilderProps = Pick<
+  ColorInputPanelProps,
+  'defaultColorFormat' | 'allowedColorFormats' | 'onColorFormatChanged'
+>;
 
 export type ColorPaletteProps = {
   /**
@@ -471,17 +466,15 @@ export const ColorPicker = (props: ColorPickerProps) => {
           />
         </div>
       )}
-      {builderProps &&
-        builderProps.defaultColorInputType &&
-        builderProps.defaultColorInputType != 'NONE' && (
-          <ColorInputPanel
-            activeColor={activeColor}
-            activeHue={hsvColor.h}
-            currentInputType={builderProps?.defaultColorInputType ?? 'NONE'}
-            onInputTypeChanged={builderProps?.onInputTypeChanged}
-            onChangeCompleted={onChangeCompleted}
-          />
-        )}
+      {builderProps && builderProps.defaultColorFormat && (
+        <ColorInputPanel
+          activeColor={activeColor}
+          activeHue={hsvColor.h}
+          defaultColorFormat={builderProps?.defaultColorFormat}
+          onColorFormatChanged={builderProps?.onColorFormatChanged}
+          onChangeCompleted={onChangeCompleted}
+        />
+      )}
       {paletteProps && (
         <div className='iui-color-picker-palette-container'>
           {paletteProps.colorPaletteTitle && (
