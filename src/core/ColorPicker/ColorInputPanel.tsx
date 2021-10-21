@@ -7,6 +7,7 @@ import '@itwin/itwinui-css/css/color-picker.css';
 import { ColorValue } from '../utils/color/ColorValue';
 import { IconButton } from '../Buttons';
 import { Input } from '../Input';
+import { InputContainer } from '../utils';
 
 // cspell: ignore borderless tbgr
 
@@ -53,7 +54,8 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
 
   React.useEffect(() => {
     setHexInput(activeColor.toHexString());
-  }, [activeColor]);
+    setValidHexInput(true);
+  }, [activeColor, inputType]);
 
   const [hslInput, setHslInput] = React.useState(() => {
     const hslColor = activeColor.toHslColor();
@@ -67,7 +69,7 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
       hslColor.s.toString(),
       hslColor.l.toString(),
     ]);
-  }, [activeColor, activeHue]);
+  }, [activeColor, activeHue, inputType]);
 
   const [rgbInput, setRgbInput] = React.useState(() => {
     const rgbColor = activeColor.toRgbColor();
@@ -86,6 +88,8 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
       rgbColor.b.toString(),
     ]);
   }, [activeColor]);
+
+  const [validHexInput, setValidHexInput] = React.useState(true);
 
   const onSwapColorType = React.useCallback(() => {
     let newInputType: 'HEX' | 'HSL' | 'RGB' | 'NONE' = 'NONE';
@@ -112,29 +116,46 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
       try {
         color = ColorValue.fromString(colorString);
         onChangeCompleted(color);
+        setValidHexInput(true);
         return;
       } catch (_e) {
         setHexInput(colorString);
+        setValidHexInput(false);
         return;
       }
     }
 
     if (type === 'HSL') {
-      const values: string[] = value as string[];
+      const h = Number(value[0]);
+      const s = Number(value[1]);
+      const l = Number(value[2]);
+
+      if (h < 0 || h > 360 || s < 0 || s > 100 || l < 0 || l > 100) {
+        setHslInput(value);
+        return;
+      }
       color = ColorValue.create({
-        h: Number(values[0]),
-        s: Number(values[1]),
-        l: Number(values[2]),
+        h: h,
+        s: s,
+        l: l,
       });
       onChangeCompleted(color);
     }
 
     if (type === 'RGB') {
-      const values: string[] = value as string[];
+      const r = Number(value[0]);
+      const g = Number(value[1]);
+      const b = Number(value[2]);
+
+      if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
+        setRgbInput(value);
+        return;
+      }
+
       color = ColorValue.create({
-        r: Number(values[0]),
-        g: Number(values[1]),
-        b: Number(values[2]),
+        r: r,
+        g: g,
+        b: b,
       });
       onChangeCompleted(color);
     }
@@ -144,180 +165,234 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
     <div className='iui-color-picker-input-container'>
       <div className='iui-color-picker-section-label'>{inputType}</div>
       <div className='iui-color-input'>
-        <IconButton styleType={'borderless'} onClick={onSwapColorType}>
+        <IconButton
+          styleType='borderless'
+          onClick={onSwapColorType}
+          size='small'
+        >
           <svg viewBox='0 0 16 16' className='iui-icon' aria-hidden='true'>
             <path d='m5 15-3.78125-3.5 3.78125-3.5v2h8v3h-8zm6-7 3.78125-3.5-3.78125-3.5v2h-8v3h8z' />
           </svg>
         </IconButton>
         {inputType === 'HEX' && (
           <div className='iui-color-input-fields'>
-            <Input
-              size='small'
-              maxLength={7}
-              minLength={1}
-              placeholder='HEX'
-              value={hexInput}
-              onChange={(event) => {
-                setHexInput(event.target.value);
-              }}
-              onFocus={(event) => event.target.select()}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
+            <InputContainer status={validHexInput ? undefined : 'negative'}>
+              <Input
+                size='small'
+                maxLength={7}
+                minLength={1}
+                placeholder='HEX'
+                value={hexInput}
+                onChange={(event) => {
+                  setHexInput(event.target.value);
+                }}
+                onFocus={(event) => event.target.select()}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    handleColorInputChange('HEX', [hexInput]);
+                  }
+                }}
+                onBlur={(event) => {
                   event.preventDefault();
                   handleColorInputChange('HEX', [hexInput]);
-                }
-              }}
-              onBlur={(event) => {
-                event.preventDefault();
-                handleColorInputChange('HEX', [hexInput]);
-              }}
-            />
+                }}
+              />
+            </InputContainer>
           </div>
         )}
         {inputType === 'HSL' && (
           <div className='iui-color-input-fields'>
-            <Input
-              key='hsl-h'
-              size='small'
-              type='number'
-              min='0'
-              max='359'
-              placeholder='H'
-              value={hslInput[0]}
-              onChange={(event) => {
-                setHslInput([event.target.value, hslInput[1], hslInput[2]]);
-              }}
-              onFocus={(event) => event.target.select()}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
+            <InputContainer
+              status={
+                Number(hslInput[0]) < 0 || Number(hslInput[0]) > 360
+                  ? 'negative'
+                  : undefined
+              }
+            >
+              <Input
+                key='hsl-h'
+                size='small'
+                type='number'
+                min='0'
+                max='359'
+                placeholder='H'
+                value={hslInput[0]}
+                onChange={(event) => {
+                  setHslInput([event.target.value, hslInput[1], hslInput[2]]);
+                }}
+                onFocus={(event) => event.target.select()}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    handleColorInputChange('HSL', hslInput);
+                  }
+                }}
+                onBlur={(event) => {
                   event.preventDefault();
                   handleColorInputChange('HSL', hslInput);
-                }
-              }}
-              onBlur={(event) => {
-                event.preventDefault();
-                handleColorInputChange('HSL', hslInput);
-              }}
-            />
-            <Input
-              key='hsl-s'
-              size='small'
-              type='number'
-              min='0'
-              max='100'
-              placeholder='S'
-              value={hslInput[1]}
-              onChange={(event) => {
-                setHslInput([hslInput[0], event.target.value, hslInput[2]]);
-              }}
-              onFocus={(event) => event.target.select()}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
+                }}
+              />
+            </InputContainer>
+            <InputContainer
+              status={
+                Number(hslInput[1]) < 0 || Number(hslInput[1]) > 100
+                  ? 'negative'
+                  : undefined
+              }
+            >
+              <Input
+                key='hsl-s'
+                size='small'
+                type='number'
+                min='0'
+                max='100'
+                placeholder='S'
+                value={hslInput[1]}
+                onChange={(event) => {
+                  setHslInput([hslInput[0], event.target.value, hslInput[2]]);
+                }}
+                onFocus={(event) => event.target.select()}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    handleColorInputChange('HSL', hslInput);
+                  }
+                }}
+                onBlur={(event) => {
                   event.preventDefault();
                   handleColorInputChange('HSL', hslInput);
-                }
-              }}
-              onBlur={(event) => {
-                event.preventDefault();
-                handleColorInputChange('HSL', hslInput);
-              }}
-            />
-            <Input
-              key='hsl-l'
-              size='small'
-              type='number'
-              min='0'
-              max='100'
-              placeholder='L'
-              value={hslInput[2]}
-              onChange={(event) => {
-                setHslInput([hslInput[0], hslInput[1], event.target.value]);
-              }}
-              onFocus={(event) => event.target.select()}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
+                }}
+              />
+            </InputContainer>
+            <InputContainer
+              status={
+                Number(hslInput[2]) < 0 || Number(hslInput[2]) > 100
+                  ? 'negative'
+                  : undefined
+              }
+            >
+              <Input
+                key='hsl-l'
+                size='small'
+                type='number'
+                min='0'
+                max='100'
+                placeholder='L'
+                value={hslInput[2]}
+                onChange={(event) => {
+                  setHslInput([hslInput[0], hslInput[1], event.target.value]);
+                }}
+                onFocus={(event) => event.target.select()}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    handleColorInputChange('HSL', hslInput);
+                  }
+                }}
+                onBlur={(event) => {
                   event.preventDefault();
                   handleColorInputChange('HSL', hslInput);
-                }
-              }}
-              onBlur={(event) => {
-                event.preventDefault();
-                handleColorInputChange('HSL', hslInput);
-              }}
-            />
+                }}
+              />
+            </InputContainer>
           </div>
         )}
         {inputType === 'RGB' && (
           <div className='iui-color-input-fields'>
-            <Input
-              key='rgb-r'
-              size='small'
-              type='number'
-              min='0'
-              max='255'
-              placeholder='R'
-              value={rgbInput[0]}
-              onChange={(event) => {
-                setRgbInput([event.target.value, rgbInput[1], rgbInput[2]]);
-              }}
-              onFocus={(event) => event.target.select()}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
+            <InputContainer
+              status={
+                Number(rgbInput[0]) < 0 || Number(rgbInput[0]) > 255
+                  ? 'negative'
+                  : undefined
+              }
+            >
+              <Input
+                key='rgb-r'
+                size='small'
+                type='number'
+                min='0'
+                max='255'
+                placeholder='R'
+                value={rgbInput[0]}
+                onChange={(event) => {
+                  setRgbInput([event.target.value, rgbInput[1], rgbInput[2]]);
+                }}
+                onFocus={(event) => event.target.select()}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    handleColorInputChange('RGB', rgbInput);
+                  }
+                }}
+                onBlur={(event) => {
                   event.preventDefault();
                   handleColorInputChange('RGB', rgbInput);
-                }
-              }}
-              onBlur={(event) => {
-                event.preventDefault();
-                handleColorInputChange('RGB', rgbInput);
-              }}
-            />
-            <Input
-              key='rgb-g'
-              size='small'
-              type='number'
-              min='0'
-              max='255'
-              placeholder='G'
-              value={rgbInput[1]}
-              onChange={(event) => {
-                setRgbInput([rgbInput[0], event.target.value, rgbInput[2]]);
-              }}
-              onFocus={(event) => event.target.select()}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
+                }}
+              />
+            </InputContainer>
+            <InputContainer
+              status={
+                Number(rgbInput[1]) < 0 || Number(rgbInput[1]) > 255
+                  ? 'negative'
+                  : undefined
+              }
+            >
+              <Input
+                key='rgb-g'
+                size='small'
+                type='number'
+                min='0'
+                max='255'
+                placeholder='G'
+                value={rgbInput[1]}
+                onChange={(event) => {
+                  setRgbInput([rgbInput[0], event.target.value, rgbInput[2]]);
+                }}
+                onFocus={(event) => event.target.select()}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    handleColorInputChange('RGB', rgbInput);
+                  }
+                }}
+                onBlur={(event) => {
                   event.preventDefault();
                   handleColorInputChange('RGB', rgbInput);
-                }
-              }}
-              onBlur={(event) => {
-                event.preventDefault();
-                handleColorInputChange('RGB', rgbInput);
-              }}
-            />
-            <Input
-              key='rgb-b'
-              size='small'
-              type='number'
-              min='0'
-              max='255'
-              placeholder={'B'}
-              value={rgbInput[2]}
-              onChange={(event) => {
-                setRgbInput([rgbInput[0], rgbInput[1], event.target.value]);
-              }}
-              onFocus={(event) => event.target.select()}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
+                }}
+              />
+            </InputContainer>
+            <InputContainer
+              status={
+                Number(rgbInput[2]) < 0 || Number(rgbInput[2]) > 255
+                  ? 'negative'
+                  : undefined
+              }
+            >
+              <Input
+                key='rgb-b'
+                size='small'
+                type='number'
+                min='0'
+                max='255'
+                placeholder={'B'}
+                value={rgbInput[2]}
+                onChange={(event) => {
+                  setRgbInput([rgbInput[0], rgbInput[1], event.target.value]);
+                }}
+                onFocus={(event) => event.target.select()}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    handleColorInputChange('RGB', rgbInput);
+                  }
+                }}
+                onBlur={(event) => {
                   event.preventDefault();
                   handleColorInputChange('RGB', rgbInput);
-                }
-              }}
-              onBlur={(event) => {
-                event.preventDefault();
-                handleColorInputChange('RGB', rgbInput);
-              }}
-            />
+                }}
+              />
+            </InputContainer>
           </div>
         )}
       </div>
