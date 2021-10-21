@@ -79,6 +79,19 @@ export type {
   HorizontalTabProps,
 } from './Tabs';
 
+export {
+  InformationPanel,
+  InformationPanelWrapper,
+  InformationPanelHeader,
+  InformationPanelBody,
+} from './InformationPanel';
+export type {
+  InformationPanelProps,
+  InformationPanelWrapperProps,
+  InformationPanelHeaderProps,
+  InformationPanelBodyProps,
+} from './InformationPanel';
+
 export { Input } from './Input';
 export type { InputProps } from './Input';
 
@@ -94,8 +107,13 @@ export type { LabeledSelectProps } from './LabeledSelect';
 export { LabeledTextarea } from './LabeledTextarea';
 export type { LabeledTextareaProps } from './LabeledTextarea';
 
-export { Menu, MenuItem, MenuDivider } from './Menu';
-export type { MenuProps, MenuItemProps } from './Menu';
+export { Menu, MenuItem, MenuDivider, MenuExtraContent } from './Menu';
+export type {
+  MenuProps,
+  MenuItemProps,
+  MenuDividerProps,
+  MenuExtraContentProps,
+} from './Menu';
 
 export { Modal, ModalButtonBar } from './Modal';
 export type { ModalProps, ModalButtonBarProps } from './Modal';
@@ -115,8 +133,18 @@ export type { RadioTileGroupProps, RadioTileProps } from './RadioTiles';
 export { Select } from './Select';
 export type { SelectProps, SelectOption, ItemRendererProps } from './Select';
 
-export { SideNavigation, SidenavButton } from './SideNavigation';
-export type { SideNavigationProps, SidenavButtonProps } from './SideNavigation';
+export {
+  SideNavigation,
+  SidenavButton,
+  SidenavSubmenu,
+  SidenavSubmenuHeader,
+} from './SideNavigation';
+export type {
+  SideNavigationProps,
+  SidenavButtonProps,
+  SidenavSubmenuProps,
+  SidenavSubmenuHeaderProps,
+} from './SideNavigation';
 
 export { Slider } from './Slider';
 export type { SliderProps } from './Slider';
