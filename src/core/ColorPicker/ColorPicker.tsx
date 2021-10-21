@@ -434,6 +434,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
     <div
       className={cx('iui-color-picker', className)}
       style={colorSquareStyle}
+      ref={ref}
       {...rest}
     >
       {builderProps && (
@@ -478,17 +479,13 @@ export const ColorPicker = (props: ColorPickerProps) => {
         />
       )}
       {paletteProps && (
-        <div className='iui-color-picker-palette-container'>
+        <div>
           {paletteProps.colorPaletteTitle && (
             <div className='iui-color-picker-section-label'>
               {paletteProps.colorPaletteTitle}
             </div>
           )}
-          <div
-            className='iui-color-palette'
-            onKeyDown={handleKeyDown}
-            ref={ref}
-          >
+          <div className='iui-color-palette' onKeyDown={handleKeyDown}>
             {paletteProps.colors?.map((inColor, index) => {
               const color = getColorValue(inColor);
               return (

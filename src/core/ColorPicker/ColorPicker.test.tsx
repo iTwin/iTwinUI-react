@@ -199,10 +199,34 @@ it('should render properly with no color swatches', () => {
   expect(container.querySelector(`.iui-color-palette`)).toBeFalsy();
 });
 
+it('should render properly with palette title and no color swatches', () => {
+  const { container } = render(
+    <ColorPicker
+      onChangeCompleted={() => {}}
+      paletteProps={{ colorPaletteTitle: 'Test Title' }}
+    />,
+  );
+
+  const colorSwatches = Array.from<HTMLElement>(
+    container.querySelectorAll('.iui-color-swatch'),
+  );
+  expect(colorSwatches).toBeTruthy();
+  expect(colorSwatches.length).toEqual(0);
+
+  const colorPalette = container.querySelector(
+    `.iui-color-palette`,
+  ) as HTMLElement;
+  expect(colorPalette).toBeTruthy();
+
+  fireEvent.keyDown(colorPalette, { key: 'ArrowDown' });
+});
+
 it('should render advanced color picker with no color swatches', () => {
   const { container } = render(
     <ColorPicker
-      builderProps={{ defaultColorInputType: 'HEX' }}
+      builderProps={{
+        defaultColorFormat: 'hex',
+      }}
       onChangeCompleted={() => {}}
     />,
   );
@@ -210,21 +234,13 @@ it('should render advanced color picker with no color swatches', () => {
   expect(container.querySelector(`.iui-color-picker`)).toBeTruthy();
   expect(container.querySelector(`.iui-color-selection-wrapper`)).toBeTruthy();
   expect(
-    container.querySelector(
-      `.iui-color-picker-input-container .iui-color-picker-section-label`,
-    ),
-  ).toBeTruthy();
-  const element = container.querySelector(
-    `.iui-color-picker-input-container .iui-color-picker-section-label`,
-  );
+    container.querySelectorAll(`.iui-color-picker-section-label`).length,
+  ).toBe(1);
+  const element = container.querySelectorAll(
+    `.iui-color-picker-section-label`,
+  )[0];
   expect(element).toBeDefined();
   expect(element?.textContent).toBe('HEX');
-
-  expect(
-    container.querySelector(
-      `.iui-color-picker-palette-container .iui-color-picker-section-label`,
-    ),
-  ).toBeFalsy();
   expect(container.querySelector(`.iui-color-palette`)).toBeFalsy();
   expect(container.querySelector(`.iui-color-field`)).toBeTruthy();
   expect(container.querySelector(`.iui-hue-slider`)).toBeTruthy();
@@ -237,22 +253,21 @@ it('should render advanced color picker with color swatches and no title', () =>
     <ColorPicker
       onChangeCompleted={() => {}}
       paletteProps={{ colors: [ColorValue.create('#FFFFFF')] }}
-      builderProps={{ defaultColorInputType: 'HEX' }}
+      builderProps={{
+        defaultColorFormat: 'hex',
+      }}
     />,
   );
 
   expect(container.querySelector(`.iui-color-picker`)).toBeTruthy();
   expect(container.querySelector(`.iui-color-selection-wrapper`)).toBeTruthy();
   expect(
-    container.querySelector(
-      `.iui-color-picker-input-container .iui-color-picker-section-label`,
-    ),
-  ).toBeTruthy();
+    container.querySelectorAll(`.iui-color-picker-section-label`).length,
+  ).toBe(1);
   expect(
-    container.querySelector(
-      `.iui-color-picker-palette-container .iui-color-picker-section-label`,
-    ),
-  ).toBeFalsy();
+    container.querySelectorAll(`.iui-color-picker-section-label`)[0]
+      .textContent,
+  ).toBe('HEX');
   expect(container.querySelector(`.iui-color-palette`)).toBeTruthy();
   expect(container.querySelector(`.iui-color-field`)).toBeTruthy();
   expect(container.querySelector(`.iui-hue-slider`)).toBeTruthy();
@@ -284,184 +299,422 @@ it('should render color picker with color palette title', () => {
   ).toEqual('Test Title');
 });
 
-// it('should set the selected color', () => {
-//   window.CSS = { supports: () => true, escape: (i) => i };
+it('should set the selected color', () => {
+  window.CSS = { supports: () => true, escape: (i) => i };
 
-//   const { container } = render(
-//     <ColorPicker
-//       selectedColor={ColorValue.fromHSL({ h: 42, s: 100, l: 50 })}
-//     />,
-//   );
+  const { container } = render(
+    <ColorPicker
+      onChangeCompleted={() => {}}
+      selectedColor={{ h: 42, s: 100, l: 50 }}
+      builderProps={{
+        defaultColorFormat: 'hex',
+      }}
+    />,
+  );
 
-//   //Set the correct square color
-//   const square = container.querySelector('.iui-color-field') as HTMLElement;
-//   expect(square).toBeTruthy();
-//   expect(square.style.getPropertyValue('--color')).toEqual(
-//     'hsl(42, 100%, 50%)',
-//   );
+  //Set the correct square color
+  const colorPicker = container.querySelector(
+    '.iui-color-picker',
+  ) as HTMLElement;
+  expect(colorPicker.style.getPropertyValue('--selected-color')).toBe(
+    '#ffb300',
+  );
+  expect(colorPicker.style.getPropertyValue('--hue')).toBe('#ffb300');
+});
 
-//   //Set the correct dot color
-//   const colorDot = container.querySelector('.iui-color-dot') as HTMLElement;
-//   expect(colorDot).toBeTruthy();
-//   expect(colorDot.style.getPropertyValue('--selected-color')).toEqual(
-//     'hsl(42, 100%, 50%)',
-//   );
-// });
+it('should set the dot positions', () => {
+  window.CSS = { supports: () => true, escape: (i) => i };
 
-// it('should set the dot positions', () => {
-//   window.CSS = { supports: () => true, escape: (i) => i };
+  const { container } = render(
+    <ColorPicker
+      onChangeCompleted={() => {}}
+      selectedColor={{ h: 42, s: 100, l: 50 }}
+      builderProps={{}}
+    />,
+  );
 
-//   const { container } = render(
-//     <ColorPicker
-//       selectedColor={ColorValue.fromHSL({ h: 42, s: 100, l: 50 })}
-//     />,
-//   );
+  //Set the correct position on color square
+  const colorDot = container.querySelector('.iui-color-dot') as HTMLElement;
+  expect(colorDot).toBeTruthy();
+  expect(colorDot.style.getPropertyValue('--left')).toEqual('100%');
+  expect(colorDot.style.getPropertyValue('--top')).toEqual('0%');
 
-//   //Set the correct position on color square
-//   const colorDot = container.querySelector('.iui-color-dot') as HTMLElement;
-//   expect(colorDot).toBeTruthy();
-//   expect(colorDot.style.getPropertyValue('--left')).toEqual('100%');
-//   expect(colorDot.style.getPropertyValue('--top')).toEqual('0%');
+  // Set the correct position on the slider
+  const sliderDot = container.querySelector('.iui-slider-thumb') as HTMLElement;
+  expect(sliderDot).toBeTruthy();
+  expect(sliderDot.style.getPropertyValue('left')).toEqual('12%');
+});
 
-//   //Set the correct position on the slider
-//   const sliderDot = container.querySelector(
-//     '.iui-color-dot.iui-white',
-//   ) as HTMLElement;
-//   expect(sliderDot).toBeTruthy();
-//   expect(sliderDot.style.getPropertyValue('--top')).toEqual('12%');
-// });
+it('should handle arrow key navigation on slider dot', () => {
+  window.CSS = { supports: () => true, escape: (i) => i };
 
-// it('should handle arrow key navigation on slider dot', () => {
-//   const onSelectionChanged = jest.fn();
+  const onSelectionChanged = jest.fn();
 
-//   const { container } = render(
-//     <ColorPicker
-//       onChangeCompleted={onSelectionChanged}
-//       selectedColor={ColorValue.fromHSL({ h: 0, s: 100, l: 50 })}
-//     />,
-//   );
+  const { container } = render(
+    <ColorPicker
+      onChangeCompleted={onSelectionChanged}
+      selectedColor={{ h: 0, s: 100, l: 50 }}
+      builderProps={{}}
+    />,
+  );
 
-//   const square = container.querySelector('.iui-color-field') as HTMLElement;
-//   expect(square).toBeTruthy();
-//   expect(square.style.getPropertyValue('--color')).toEqual('hsl(0, 100%, 50%)');
+  const colorPicker = container.querySelector(
+    '.iui-color-picker',
+  ) as HTMLElement;
+  expect(colorPicker.style.getPropertyValue('--selected-color')).toBe(
+    '#ff0000',
+  );
+  expect(colorPicker.style.getPropertyValue('--hue')).toBe('#ff0000');
 
-//   const sliderDot = container.querySelector(
-//     '.iui-color-dot.iui-white',
-//   ) as HTMLElement;
-//   expect(sliderDot).toBeTruthy();
-//   expect(sliderDot.style.getPropertyValue('--top')).toEqual('0%');
+  const sliderDot = container.querySelector('.iui-slider-thumb') as HTMLElement;
+  expect(sliderDot).toBeTruthy();
+  expect(sliderDot.style.getPropertyValue('left')).toEqual('0%');
 
-//   // Go down and select with enter
-//   fireEvent.keyDown(sliderDot, { key: 'ArrowDown' });
-//   fireEvent.keyDown(sliderDot, { key: 'ArrowDown' });
-//   fireEvent.keyDown(sliderDot, { key: 'Enter' });
-//   expect(onSelectionChanged).toHaveBeenCalledTimes(1);
-//   expect(sliderDot.style.getPropertyValue('--top')).toEqual('2%');
-//   expect(square.style.getPropertyValue('--color')).toEqual('hsl(7, 100%, 50%)');
+  // Go right
+  fireEvent.keyDown(sliderDot, { key: 'ArrowRight' });
+  fireEvent.keyDown(sliderDot, { key: 'ArrowRight' });
+  expect(onSelectionChanged).toHaveBeenCalledTimes(2);
+  expect(sliderDot.style.getPropertyValue('left')).toEqual('2%');
+  expect(colorPicker.style.getPropertyValue('--hue')).toEqual('#ff1e00');
 
-//   // Go up and select with space
-//   fireEvent.keyDown(sliderDot, { key: 'ArrowUp' });
-//   fireEvent.keyDown(sliderDot, { key: ' ' });
-//   expect(onSelectionChanged).toHaveBeenCalledTimes(2);
-//   expect(sliderDot.style.getPropertyValue('--top')).toEqual('1%');
-//   expect(square.style.getPropertyValue('--color')).toEqual('hsl(4, 100%, 50%)');
+  // Go left
+  fireEvent.keyDown(sliderDot, { key: 'ArrowLeft' });
+  expect(onSelectionChanged).toHaveBeenCalledTimes(3);
+  expect(sliderDot.style.getPropertyValue('left')).toEqual('1%');
+  expect(colorPicker.style.getPropertyValue('--hue')).toEqual('#ff1100');
 
-//   // Go up to the top
-//   fireEvent.keyDown(sliderDot, { key: 'ArrowUp' });
-//   expect(sliderDot.style.getPropertyValue('--top')).toEqual('0%');
-//   fireEvent.keyDown(sliderDot, { key: 'ArrowUp' });
-//   expect(sliderDot.style.getPropertyValue('--top')).toEqual('0%');
-// });
+  // Go left to edge
+  fireEvent.keyDown(sliderDot, { key: 'ArrowLeft' });
+  expect(sliderDot.style.getPropertyValue('left')).toEqual('0%');
+  fireEvent.keyDown(sliderDot, { key: 'ArrowLeft' });
+  expect(sliderDot.style.getPropertyValue('left')).toEqual('0%');
+});
 
-// it('should handle arrow key navigation on color dot', () => {
-//   const onSelectionChanged = jest.fn();
+it('should handle arrow key navigation on color dot', () => {
+  window.CSS = { supports: () => true, escape: (i) => i };
 
-//   const { container } = render(
-//     <ColorPicker
-//       onChangeCompleted={onSelectionChanged}
-//       selectedColor={ColorValue.fromHSL({ h: 0, s: 100, l: 50 })}
-//     />,
-//   );
+  const onSelectionChanged = jest.fn();
 
-//   const square = container.querySelector('.iui-color-field') as HTMLElement;
-//   expect(square).toBeTruthy();
-//   expect(square.style.getPropertyValue('--color')).toEqual('hsl(0, 100%, 50%)');
+  const { container } = render(
+    <ColorPicker
+      onChangeCompleted={onSelectionChanged}
+      selectedColor={{ h: 0, s: 100, l: 50 }}
+      builderProps={{}}
+    />,
+  );
 
-//   const colorDot = container.querySelector('.iui-color-dot') as HTMLElement;
-//   expect(colorDot).toBeTruthy();
-//   expect(colorDot.style.getPropertyValue('--left')).toEqual('100%');
-//   expect(colorDot.style.getPropertyValue('--top')).toEqual('0%');
+  const colorPicker = container.querySelector(
+    '.iui-color-picker',
+  ) as HTMLElement;
+  expect(colorPicker.style.getPropertyValue('--selected-color')).toBe(
+    '#ff0000',
+  );
+  expect(colorPicker.style.getPropertyValue('--hue')).toBe('#ff0000');
 
-//   // Go down and select with enter
-//   fireEvent.keyDown(colorDot, { key: 'ArrowDown' });
-//   fireEvent.keyDown(colorDot, { key: 'ArrowDown' });
-//   fireEvent.keyDown(colorDot, { key: 'Enter' });
-//   expect(onSelectionChanged).toHaveBeenCalledTimes(1);
-//   expect(colorDot.style.getPropertyValue('--top')).toEqual('2%');
-//   expect(colorDot.style.getPropertyValue('--left')).toEqual('100%');
-//   expect(colorDot.style.getPropertyValue('--selected-color')).toEqual(
-//     'hsl(0, 100%, 49%)',
-//   );
+  const sliderDot = container.querySelector('.iui-slider-thumb') as HTMLElement;
+  expect(sliderDot).toBeTruthy();
+  expect(sliderDot.style.getPropertyValue('left')).toEqual('0%');
 
-//   // Go left and select with space
-//   fireEvent.keyDown(colorDot, { key: 'ArrowLeft' });
-//   fireEvent.keyDown(colorDot, { key: ' ' });
-//   expect(onSelectionChanged).toHaveBeenCalledTimes(2);
-//   expect(colorDot.style.getPropertyValue('--top')).toEqual('2%');
-//   expect(colorDot.style.getPropertyValue('--left')).toEqual('99%');
-//   expect(colorDot.style.getPropertyValue('--selected-color')).toEqual(
-//     'hsl(0, 98%, 49%)',
-//   );
+  const colorDot = container.querySelector('.iui-color-dot') as HTMLElement;
+  expect(colorDot).toBeTruthy();
+  expect(colorDot.style.getPropertyValue('--left')).toEqual('100%');
+  expect(colorDot.style.getPropertyValue('--top')).toEqual('0%');
 
-//   // Go up to top
-//   fireEvent.keyDown(colorDot, { key: 'ArrowUp' });
-//   fireEvent.keyDown(colorDot, { key: 'ArrowUp' });
-//   expect(colorDot.style.getPropertyValue('--top')).toEqual('0%');
-//   expect(colorDot.style.getPropertyValue('--left')).toEqual('99%');
-//   expect(colorDot.style.getPropertyValue('--selected-color')).toEqual(
-//     'hsl(0, 100%, 51%)',
-//   );
-//   fireEvent.keyDown(colorDot, { key: 'ArrowUp' });
-//   expect(colorDot.style.getPropertyValue('--top')).toEqual('0%');
-//   expect(colorDot.style.getPropertyValue('--left')).toEqual('99%');
-//   expect(colorDot.style.getPropertyValue('--selected-color')).toEqual(
-//     'hsl(0, 100%, 51%)',
-//   );
+  // Go down and select with enter
+  fireEvent.keyDown(colorDot, { key: 'ArrowDown' });
+  fireEvent.keyDown(colorDot, { key: 'ArrowDown' });
+  fireEvent.keyDown(colorDot, { key: 'Enter' });
+  expect(onSelectionChanged).toHaveBeenCalledTimes(1);
+  expect(colorDot.style.getPropertyValue('--top')).toEqual('2%');
+  expect(colorDot.style.getPropertyValue('--left')).toEqual('100%');
+  expect(colorPicker.style.getPropertyValue('--selected-color')).toEqual(
+    '#fa0000',
+  );
 
-//   // Go right to the edge
-//   fireEvent.keyDown(colorDot, { key: 'ArrowRight' });
-//   expect(colorDot.style.getPropertyValue('--top')).toEqual('0%');
-//   expect(colorDot.style.getPropertyValue('--left')).toEqual('100%');
-//   expect(colorDot.style.getPropertyValue('--selected-color')).toEqual(
-//     'hsl(0, 100%, 50%)',
-//   );
-//   fireEvent.keyDown(colorDot, { key: 'ArrowUp' });
-//   expect(colorDot.style.getPropertyValue('--top')).toEqual('0%');
-//   expect(colorDot.style.getPropertyValue('--left')).toEqual('100%');
-//   expect(colorDot.style.getPropertyValue('--selected-color')).toEqual(
-//     'hsl(0, 100%, 50%)',
-//   );
-// });
+  // Go left and select with space
+  fireEvent.keyDown(colorDot, { key: 'ArrowLeft' });
+  fireEvent.keyDown(colorDot, { key: ' ' });
+  expect(onSelectionChanged).toHaveBeenCalledTimes(2);
+  expect(colorDot.style.getPropertyValue('--top')).toEqual('2%');
+  expect(colorDot.style.getPropertyValue('--left')).toEqual('99%');
+  expect(colorPicker.style.getPropertyValue('--selected-color')).toEqual(
+    '#fa0202',
+  );
 
-// it('should handle color conversion', () => {
-//   // Any color to hsv
-//   const hslColor = ColorValue.fromHSL({ h: 0, s: 100, l: 50 });
-//   let color = fillColor(hslColor);
-//   expect(color.hsv.displayString).toEqual('hsv(0, 100%, 100%)');
+  // Go up to top
+  fireEvent.keyDown(colorDot, { key: 'ArrowUp' });
+  fireEvent.keyDown(colorDot, { key: 'ArrowUp' });
+  expect(colorDot.style.getPropertyValue('--top')).toEqual('0%');
+  expect(colorDot.style.getPropertyValue('--left')).toEqual('99%');
+  expect(colorPicker.style.getPropertyValue('--selected-color')).toEqual(
+    '#ff0303',
+  );
 
-//   const hexColor = ColorValue.create('#ff0000');
-//   color = fillColor(hexColor);
-//   expect(color.hsv.displayString).toEqual('hsv(0, 100%, 100%)');
+  fireEvent.keyDown(colorDot, { key: 'ArrowUp' });
+  expect(colorDot.style.getPropertyValue('--top')).toEqual('0%');
+  expect(colorDot.style.getPropertyValue('--left')).toEqual('99%');
+  expect(colorPicker.style.getPropertyValue('--selected-color')).toEqual(
+    '#ff0303',
+  );
 
-//   const rgbColor = ColorValue.fromRGB({ r: 255, g: 0, b: 0 });
-//   color = fillColor(rgbColor);
-//   expect(color.hsv.displayString).toEqual('hsv(0, 100%, 100%)');
+  // Go right to the edge
+  fireEvent.keyDown(colorDot, { key: 'ArrowRight' });
+  expect(colorDot.style.getPropertyValue('--top')).toEqual('0%');
+  expect(colorDot.style.getPropertyValue('--left')).toEqual('100%');
+  expect(colorPicker.style.getPropertyValue('--selected-color')).toEqual(
+    '#ff0000',
+  );
 
-//   //hsv to any color
-//   const hsvColor = ColorValue.fromHSV({ h: 0, s: 100, v: 100 });
-//   color = fillColor(hsvColor);
+  fireEvent.keyDown(colorDot, { key: 'ArrowUp' });
+  expect(colorDot.style.getPropertyValue('--top')).toEqual('0%');
+  expect(colorDot.style.getPropertyValue('--left')).toEqual('100%');
+  expect(colorPicker.style.getPropertyValue('--selected-color')).toEqual(
+    '#ff0000',
+  );
+});
 
-//   expect(color.hsl.displayString).toEqual('hsl(0, 100%, 50%)');
-//   expect(color.hex.hex).toEqual('#ff0000');
-//   expect(color.rgb.displayString).toEqual('rgb(255, 0, 0)');
-// });
+it('should call onChange and onChangeCompleted from hueSlider', () => {
+  const handleOnUpdate = jest.fn();
+  const handleOnChange = jest.fn();
+
+  const { container } = render(
+    <ColorPicker
+      onChangeCompleted={handleOnChange}
+      onChange={handleOnUpdate}
+      selectedColor={{ h: 0, s: 100, l: 50 }}
+      builderProps={{}}
+    />,
+  );
+
+  const sliderContainer = container.querySelector(
+    '.iui-slider-container',
+  ) as HTMLDivElement;
+  const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
+
+  fireEvent.pointerDown(thumb, {
+    pointerId: 5,
+    buttons: 1,
+    clientX: 210,
+  });
+
+  fireEvent.pointerMove(sliderContainer, {
+    pointerId: 5,
+    buttons: 1,
+    clientX: 410,
+  });
+  expect(handleOnUpdate).toHaveBeenCalledTimes(1);
+
+  fireEvent.pointerUp(sliderContainer, {
+    pointerId: 5,
+    buttons: 1,
+    clientX: 410,
+  });
+
+  expect(handleOnChange).toHaveBeenCalledTimes(2);
+});
+
+it('should handle pointer down/move/up from color square', () => {
+  const handleOnUpdate = jest.fn();
+  const handleOnChange = jest.fn();
+
+  const { container } = render(
+    <ColorPicker
+      onChangeCompleted={handleOnChange}
+      onChange={handleOnUpdate}
+      selectedColor={{ h: 0, s: 100, l: 50 }}
+      paletteProps={{ colors: [{ h: 0, s: 100, l: 50 }] }}
+      builderProps={{}}
+    />,
+  );
+
+  const colorPicker = container.querySelector(
+    '.iui-color-picker',
+  ) as HTMLElement;
+  expect(colorPicker).toBeTruthy();
+
+  const colorDot = container.querySelector('.iui-color-dot') as HTMLElement;
+  expect(colorDot).toBeTruthy();
+
+  fireEvent.pointerDown(colorDot, {
+    pointerId: 5,
+    buttons: 1,
+    clientX: 210,
+  });
+  expect(handleOnChange).toHaveBeenCalledTimes(1);
+
+  fireEvent.pointerMove(colorPicker.ownerDocument, {
+    pointerId: 5,
+    buttons: 1,
+    clientX: 410,
+  });
+  expect(handleOnUpdate).toHaveBeenCalledTimes(1);
+
+  fireEvent.pointerUp(colorPicker.ownerDocument, {
+    pointerId: 5,
+    buttons: 1,
+    clientX: 410,
+  });
+  expect(handleOnChange).toHaveBeenCalledTimes(2);
+});
+
+it('should render advanced color picker with input fields', () => {
+  const inputChange = jest.fn();
+
+  const { container } = render(
+    <ColorPicker
+      builderProps={{
+        defaultColorFormat: 'hex',
+        onColorFormatChanged: inputChange,
+      }}
+      onChangeCompleted={() => {}}
+    />,
+  );
+
+  expect(
+    container.querySelectorAll(`.iui-color-picker-section-label`).length,
+  ).toBe(1);
+  const element = container.querySelectorAll(
+    `.iui-color-picker-section-label`,
+  )[0];
+  expect(element).toBeDefined();
+  expect(element?.textContent).toBe('HEX');
+
+  expect(container.querySelector('.iui-color-input')).toBeTruthy();
+  expect(container.querySelector('.iui-color-input-fields')).toBeTruthy();
+  expect(container.querySelectorAll('.iui-input-container').length).toBe(1);
+
+  const swapButton = container.querySelector(
+    '.iui-button.iui-borderless',
+  ) as HTMLButtonElement;
+  expect(swapButton).toBeTruthy();
+
+  swapButton.click();
+  expect(inputChange).toHaveBeenCalledTimes(1);
+  expect(element.textContent).toBe('HSL');
+  expect(container.querySelectorAll('.iui-input-container').length).toBe(3);
+
+  swapButton.click();
+  expect(inputChange).toHaveBeenCalledTimes(2);
+  expect(element.textContent).toBe('RGB');
+  expect(container.querySelectorAll('.iui-input-container').length).toBe(3);
+
+  swapButton.click();
+  expect(inputChange).toHaveBeenCalledTimes(3);
+  expect(element.textContent).toBe('HEX');
+  expect(container.querySelectorAll('.iui-input-container').length).toBe(1);
+});
+
+it('should handle hex input change', () => {
+  const handleOnChange = jest.fn();
+
+  const { container } = render(
+    <ColorPicker
+      builderProps={{
+        defaultColorFormat: 'hex',
+      }}
+      onChangeCompleted={handleOnChange}
+    />,
+  );
+
+  const input = container.querySelectorAll('input')[0] as HTMLInputElement;
+  expect(input).toBeTruthy();
+  input.focus();
+  fireEvent.change(input, { target: { value: '#FF6200' } });
+  fireEvent.keyDown(input, { key: 'Enter' });
+  expect(handleOnChange).toHaveBeenCalledTimes(1);
+
+  // Should not update with invalid input
+  fireEvent.change(input, { target: { value: '#A' } });
+  fireEvent.keyDown(input, { key: 'Enter' });
+  expect(handleOnChange).toHaveBeenCalledTimes(1);
+});
+
+it('should handle hsl input change', () => {
+  const handleOnChange = jest.fn();
+
+  const { container } = render(
+    <ColorPicker
+      builderProps={{
+        defaultColorFormat: 'hsl',
+      }}
+      onChangeCompleted={handleOnChange}
+    />,
+  );
+
+  const h = container.querySelectorAll('input')[0] as HTMLInputElement;
+  const s = container.querySelectorAll('input')[1] as HTMLInputElement;
+  const l = container.querySelectorAll('input')[2] as HTMLInputElement;
+  expect(h).toBeTruthy();
+  expect(s).toBeTruthy();
+  expect(l).toBeTruthy();
+
+  fireEvent.change(h, { target: { value: '100' } });
+  fireEvent.keyDown(h, { key: 'Enter' });
+  expect(handleOnChange).toHaveBeenCalledTimes(1);
+
+  fireEvent.change(s, { target: { value: '50' } });
+  fireEvent.keyDown(s, { key: 'Enter' });
+  expect(handleOnChange).toHaveBeenCalledTimes(2);
+
+  fireEvent.change(l, { target: { value: '50' } });
+  fireEvent.keyDown(l, { key: 'Enter' });
+  expect(handleOnChange).toHaveBeenCalledTimes(3);
+
+  // Should not update with invalid input
+  fireEvent.change(h, { target: { value: '-1' } });
+  fireEvent.keyDown(h, { key: 'Enter' });
+  expect(handleOnChange).toHaveBeenCalledTimes(3);
+
+  fireEvent.change(s, { target: { value: '101' } });
+  fireEvent.keyDown(s, { key: 'Enter' });
+  expect(handleOnChange).toHaveBeenCalledTimes(3);
+
+  fireEvent.change(l, { target: { value: '5000' } });
+  fireEvent.keyDown(l, { key: 'Enter' });
+  expect(handleOnChange).toHaveBeenCalledTimes(3);
+});
+
+it('should handle rgb input change', () => {
+  const handleOnChange = jest.fn();
+
+  const { container } = render(
+    <ColorPicker
+      builderProps={{
+        defaultColorFormat: 'rgb',
+      }}
+      onChangeCompleted={handleOnChange}
+    />,
+  );
+
+  const r = container.querySelectorAll('input')[0] as HTMLInputElement;
+  const g = container.querySelectorAll('input')[1] as HTMLInputElement;
+  const b = container.querySelectorAll('input')[2] as HTMLInputElement;
+  expect(r).toBeTruthy();
+  expect(g).toBeTruthy();
+  expect(b).toBeTruthy();
+
+  fireEvent.change(r, { target: { value: '100' } });
+  fireEvent.keyDown(r, { key: 'Enter' });
+  expect(handleOnChange).toHaveBeenCalledTimes(1);
+
+  fireEvent.change(g, { target: { value: '50' } });
+  fireEvent.keyDown(g, { key: 'Enter' });
+  expect(handleOnChange).toHaveBeenCalledTimes(2);
+
+  fireEvent.change(b, { target: { value: '50' } });
+  fireEvent.keyDown(b, { key: 'Enter' });
+  expect(handleOnChange).toHaveBeenCalledTimes(3);
+
+  // Should not update with invalid input
+  fireEvent.change(r, { target: { value: '-1' } });
+  fireEvent.keyDown(r, { key: 'Enter' });
+  expect(handleOnChange).toHaveBeenCalledTimes(3);
+
+  fireEvent.change(g, { target: { value: '256' } });
+  fireEvent.keyDown(g, { key: 'Enter' });
+  expect(handleOnChange).toHaveBeenCalledTimes(3);
+
+  fireEvent.change(b, { target: { value: '5000' } });
+  fireEvent.keyDown(b, { key: 'Enter' });
+  expect(handleOnChange).toHaveBeenCalledTimes(3);
+});
