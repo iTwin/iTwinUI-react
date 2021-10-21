@@ -27,6 +27,7 @@ export default {
   parameters: {
     docs: { source: { excludeDecorators: true } },
     creevey: {
+      skip: { stories: ['Disabled Items'] },
       tests: {
         async open() {
           const closed = await this.takeScreenshot();
@@ -322,7 +323,10 @@ export const Controlled: Story<Partial<ComboBoxProps<string>>> = (args) => {
       options={options}
       inputProps={{ placeholder: 'Select a country' }}
       value={countryValue}
-      onChange={(value: string) => setCountryValue(value)}
+      onChange={(value: string) => {
+        action(value)();
+        setCountryValue(value);
+      }}
       {...args}
     />
   );
