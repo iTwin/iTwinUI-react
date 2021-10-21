@@ -342,7 +342,7 @@ it('should set the dot positions', () => {
   // Set the correct position on the slider
   const sliderDot = container.querySelector('.iui-slider-thumb') as HTMLElement;
   expect(sliderDot).toBeTruthy();
-  expect(sliderDot.style.getPropertyValue('left')).toEqual('12%');
+  expect(sliderDot.style.getPropertyValue('left')).toEqual('11.6991643454039%');
 });
 
 it('should handle arrow key navigation on slider dot', () => {
@@ -374,14 +374,18 @@ it('should handle arrow key navigation on slider dot', () => {
   fireEvent.keyDown(sliderDot, { key: 'ArrowRight' });
   fireEvent.keyDown(sliderDot, { key: 'ArrowRight' });
   expect(onSelectionChanged).toHaveBeenCalledTimes(2);
-  expect(sliderDot.style.getPropertyValue('left')).toEqual('2%');
-  expect(colorPicker.style.getPropertyValue('--hue')).toEqual('#ff1e00');
+  expect(sliderDot.style.getPropertyValue('left')).toEqual(
+    '0.5571030640668524%',
+  );
+  expect(colorPicker.style.getPropertyValue('--hue')).toEqual('#ff0800');
 
   // Go left
   fireEvent.keyDown(sliderDot, { key: 'ArrowLeft' });
   expect(onSelectionChanged).toHaveBeenCalledTimes(3);
-  expect(sliderDot.style.getPropertyValue('left')).toEqual('1%');
-  expect(colorPicker.style.getPropertyValue('--hue')).toEqual('#ff1100');
+  expect(sliderDot.style.getPropertyValue('left')).toEqual(
+    '0.2785515320334262%',
+  );
+  expect(colorPicker.style.getPropertyValue('--hue')).toEqual('#ff0400');
 
   // Go left to edge
   fireEvent.keyDown(sliderDot, { key: 'ArrowLeft' });
