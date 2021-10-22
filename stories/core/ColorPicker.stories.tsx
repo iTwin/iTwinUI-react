@@ -27,6 +27,7 @@ export default {
   title: 'Core/ColorPicker',
   parameters: {
     creevey: {
+      captureElement: '.iui-color-picker',
       tests: {
         async open() {
           const button = await this.browser.findElement({ css: '.iui-button' });
