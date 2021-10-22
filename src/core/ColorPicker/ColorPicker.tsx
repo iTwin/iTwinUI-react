@@ -299,6 +299,19 @@ export const ColorPicker = (props: ColorPickerProps) => {
     ref.current?.ownerDocument,
   );
 
+  const handleSquarePointerLeave = React.useCallback(
+    (event: PointerEvent): void => {
+      updateSquareValue(event, 'onChange');
+      setColorDotActive(false);
+    },
+    [updateSquareValue],
+  );
+  useEventListener(
+    'pointerleave',
+    handleSquarePointerLeave,
+    ref.current?.ownerDocument,
+  );
+
   const keysPressed = React.useRef<Record<string, boolean>>({}); // keep track of which keys are currently pressed
 
   // Arrow key navigation for color dot
