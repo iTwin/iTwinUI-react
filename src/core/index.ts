@@ -233,6 +233,5 @@ export type {
   WizardLocalization,
 } from './Wizard';
 
-export { getUserColor, useTheme } from './utils';
+export { getUserColor, useTheme, ColorValue } from './utils';
 export type { ThemeType } from './utils';
-export type { ColorValue } from './utils';

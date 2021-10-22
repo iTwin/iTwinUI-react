@@ -11,11 +11,11 @@ import {
   ColorSwatch,
   Button,
   ButtonGroup,
+  ColorValue,
 } from '../../src/core';
-import { action } from '@storybook/addon-actions';
-import { ColorValue } from '../../src/core/utils/color/ColorValue';
-import { CreeveyStoryParams } from 'creevey';
 import { Popover } from '../../src/core/utils';
+import { action } from '@storybook/addon-actions';
+import { CreeveyStoryParams } from 'creevey';
 
 export default {
   component: ColorPicker,
