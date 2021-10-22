@@ -329,11 +329,13 @@ it('should handle arrow key navigation on slider dot', () => {
 });
 
 it('should handle arrow key navigation on color dot', () => {
-  const onSelectionChanged = jest.fn();
+  const onChange = jest.fn();
+  const onChangeComplete = jest.fn();
 
   const { container } = render(
     <ColorPicker
-      onChangeCompleted={onSelectionChanged}
+      onChange={onChange}
+      onChangeCompleted={onChangeComplete}
       selectedColor={{ h: 0, s: 100, l: 50 }}
       builderProps={{}}
     />,
@@ -359,20 +361,31 @@ it('should handle arrow key navigation on color dot', () => {
   // Go down
   fireEvent.keyDown(colorDot, { key: 'ArrowDown' });
   fireEvent.keyDown(colorDot, { key: 'ArrowDown' });
-  expect(onSelectionChanged).toHaveBeenCalledTimes(2);
+  expect(onChange).toHaveBeenCalledTimes(2);
+  expect(onChangeComplete).not.toHaveBeenCalled();
   expect(colorDot.style.getPropertyValue('--top')).toEqual('2%');
   expect(colorDot.style.getPropertyValue('--left')).toEqual('100%');
   expect(colorPicker.style.getPropertyValue('--selected-color')).toEqual(
     '#fa0000',
   );
+  fireEvent.keyUp(colorDot, { key: 'ArrowDown' });
+  expect(onChangeComplete).toHaveBeenNthCalledWith(
+    1,
+    ColorValue.create('#fa0000'),
+  );
 
   // Go left
   fireEvent.keyDown(colorDot, { key: 'ArrowLeft' });
-  expect(onSelectionChanged).toHaveBeenCalledTimes(3);
+  expect(onChange).toHaveBeenCalledTimes(3);
   expect(colorDot.style.getPropertyValue('--top')).toEqual('2%');
   expect(colorDot.style.getPropertyValue('--left')).toEqual('99%');
   expect(colorPicker.style.getPropertyValue('--selected-color')).toEqual(
     '#fa0202',
+  );
+  fireEvent.keyUp(colorDot, { key: 'ArrowLeft' });
+  expect(onChangeComplete).toHaveBeenNthCalledWith(
+    2,
+    ColorValue.create('#fa0202'),
   );
 
   // Go up to top
@@ -390,6 +403,11 @@ it('should handle arrow key navigation on color dot', () => {
   expect(colorPicker.style.getPropertyValue('--selected-color')).toEqual(
     '#ff0303',
   );
+  fireEvent.keyUp(colorDot, { key: 'ArrowUp' });
+  expect(onChangeComplete).toHaveBeenNthCalledWith(
+    3,
+    ColorValue.create('#ff0303'),
+  );
 
   // Go right to the edge
   fireEvent.keyDown(colorDot, { key: 'ArrowRight' });
@@ -398,12 +416,23 @@ it('should handle arrow key navigation on color dot', () => {
   expect(colorPicker.style.getPropertyValue('--selected-color')).toEqual(
     '#ff0000',
   );
+  fireEvent.keyUp(colorDot, { key: 'ArrowRight' });
+  expect(onChangeComplete).toHaveBeenNthCalledWith(
+    4,
+    ColorValue.create('#ff0000'),
+  );
 
+  // Go up
   fireEvent.keyDown(colorDot, { key: 'ArrowUp' });
   expect(colorDot.style.getPropertyValue('--top')).toEqual('0%');
   expect(colorDot.style.getPropertyValue('--left')).toEqual('100%');
   expect(colorPicker.style.getPropertyValue('--selected-color')).toEqual(
     '#ff0000',
+  );
+  fireEvent.keyUp(colorDot, { key: 'ArrowUp' });
+  expect(onChangeComplete).toHaveBeenNthCalledWith(
+    5,
+    ColorValue.create('#ff0000'),
   );
 });
 

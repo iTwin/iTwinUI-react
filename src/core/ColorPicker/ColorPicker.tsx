@@ -71,8 +71,8 @@ export type ColorPickerProps = {
   onChange?: (color: ColorValue) => void;
   /**
    * Callback fired when selectedColor is done changing.
-   * This can be on pointerUp when thumb is done dragging,
-   * or when user clicks on color builder components, or when user clicks on color swatch
+   * This can be on pointerUp or keyUp when thumb is done dragging,
+   * or when user clicks on color builder components, or when user clicks on color swatch.
    */
   onChangeCompleted: (color: ColorValue) => void;
   /**
@@ -233,7 +233,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
   const updateColorDot = React.useCallback(
     (x: number, y: number, selectionChanged: boolean) => {
-      const newHsvColor = {
+      const newHsvColor: HsvColor = {
         h: hsvColor.h,
         s: x,
         v: 100 - y,
@@ -299,30 +299,51 @@ export const ColorPicker = (props: ColorPickerProps) => {
     ref.current?.ownerDocument,
   );
 
+  const keysPressed = React.useRef<Record<string, boolean>>({}); // keep track of which keys are currently pressed
+
   // Arrow key navigation for color dot
-  const handleColorDotKeyDown = (
-    event: React.KeyboardEvent<HTMLDivElement>,
-  ) => {
+  const handleColorDotKeyDown = (event: React.KeyboardEvent) => {
     let x = squareLeft;
     let y = squareTop;
+    keysPressed.current[event.key] = true;
     switch (event.key) {
       case 'ArrowDown': {
         y = Math.min(y + 1, 100);
-        updateColorDot(x, y, true);
+        updateColorDot(x, y, false);
         break;
       }
       case 'ArrowUp': {
         y = Math.max(y - 1, 0);
-        updateColorDot(x, y, true);
+        updateColorDot(x, y, false);
         break;
       }
       case 'ArrowLeft':
         x = Math.max(x - 1, 0);
-        updateColorDot(x, y, true);
+        updateColorDot(x, y, false);
         break;
       case 'ArrowRight':
         x = Math.min(x + 1, 100);
-        updateColorDot(x, y, true);
+        updateColorDot(x, y, false);
+        break;
+    }
+  };
+
+  const handleColorDotKeyUp = (event: React.KeyboardEvent) => {
+    keysPressed.current[event.key] = false;
+    switch (event.key) {
+      case 'ArrowUp':
+      case 'ArrowDown':
+      case 'ArrowLeft':
+      case 'ArrowRight':
+        if (
+          keysPressed.current['ArrowUp'] ||
+          keysPressed.current['ArrowDown'] ||
+          keysPressed.current['ArrowLeft'] ||
+          keysPressed.current['ArrowRight']
+        ) {
+          return;
+        }
+        onChangeCompleted?.(ColorValue.create(hsvColor));
         break;
     }
   };
@@ -354,6 +375,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
                 colorDotRef.current?.focus();
               }}
               onKeyDown={handleColorDotKeyDown}
+              onKeyUp={handleColorDotKeyUp}
               tabIndex={0}
               ref={colorDotRef}
             />
