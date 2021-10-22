@@ -49,7 +49,7 @@ export type ColorPaletteProps = {
    */
   colors: Array<ColorType | ColorValue>;
   /**
-   * Title shown above color palette.
+   * Label shown above color palette.
    */
   colorPaletteTitle?: string;
 };
@@ -65,7 +65,7 @@ export type ColorPickerProps = {
   selectedColor?: ColorType | ColorValue;
   /**
    * Callback fired when the color value is internally updated during
-   * operations like dragging a Thumb. Use this callback with caution as a
+   * operations like dragging a thumb. Use this callback with caution as a
    * high-volume of updates will occur when dragging.
    */
   onChange?: (color: ColorValue) => void;
@@ -78,28 +78,27 @@ export type ColorPickerProps = {
   /**
    * Props used to determine what advanced color picker components to display
    * to allow user to build their own color.
-   * If undefined, paletteProps must be defined.
+   *
+   * If not specified, the color builder and inputs will not be shown.
    */
   builderProps?: ColorBuilderProps;
   /**
    * Props used to display a palette of colors
-   * If used in combination with builderProps then the palette is shown below the builder components
-   * If undefined, builderProps must be defined.
+   * If used in combination with builderProps then the palette is shown below the builder components.
+   *
+   * If not specified, the color palette will not be shown.
    */
   paletteProps?: ColorPaletteProps;
 } & Omit<CommonProps, 'title'>;
 
 /**
- * Basic ColorPicker to display a palette of ColorSwatches
+ * ColorPicker to display color builder options, color inputs, and a palette of ColorSwatches.
  * @example
  * <ColorPicker
  *    onChangeCompleted={onColorChanged}
  *    selectedColor={activeColor}
  *    paletteProps={{ colors: ['#FFFFFF', '#5A6973'] }}
  * />
- */
-/**
- * Advanced ColorPicker to display color builder options, color input, and a palette of ColorSwatches
  * @example
  * <ColorPicker
  *   onChangeCompleted={onColorChanged}
@@ -132,7 +131,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
   const inColor = React.useMemo(() => getColorValue(selectedColor), [
     selectedColor,
   ]);
-  const rgbValueOfActiveColor = React.useRef(inColor.toTbgr());
+  const activeColorTbgr = React.useRef(inColor.toTbgr());
 
   const [activeColor, setActiveColor] = React.useState<ColorValue>(inColor); // Color of colorDot or active ColorSwatch
   React.useEffect(() => {
@@ -147,8 +146,8 @@ export const ColorPicker = (props: ColorPickerProps) => {
   // as the selectedColor prop then leave the HSV color unchanged. This prevents the jumping of HUE as the s/v values are changed
   // by user moving the pointer.
   React.useEffect(() => {
-    if (inColor.toTbgr() !== rgbValueOfActiveColor.current) {
-      rgbValueOfActiveColor.current = inColor.toTbgr();
+    if (inColor.toTbgr() !== activeColorTbgr.current) {
+      activeColorTbgr.current = inColor.toTbgr();
       setHsvColor(inColor.toHsvColor());
     }
   }, [inColor]);
@@ -166,7 +165,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
         onChange?.(newActiveColor);
       }
 
-      rgbValueOfActiveColor.current = newActiveColor.toTbgr();
+      activeColorTbgr.current = newActiveColor.toTbgr();
 
       // this converts it to store in tbgr
       setActiveColor(newActiveColor);
@@ -195,7 +194,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
         '--hue': hueColorString,
         '--selected-color': dotColorString,
       }
-    : { backgroundColor: dotColorString };
+    : { backgroundColor: hueColorString };
 
   const squareTop = 100 - hsvColor.v;
   const squareLeft = hsvColor.s;
@@ -366,13 +365,11 @@ export const ColorPicker = (props: ColorPickerProps) => {
             values={[sliderValue]}
             className='iui-hue-slider'
             trackDisplayMode='none'
-            tooltipProps={() => {
-              return { visible: false };
-            }}
-            onChange={(values: ReadonlyArray<number>) => {
+            tooltipProps={() => ({ visible: false })}
+            onChange={(values) => {
               updateSlider(values[0], true);
             }}
-            onUpdate={(values: ReadonlyArray<number>) => {
+            onUpdate={(values) => {
               updateSlider(values[0], false);
             }}
             min={0}

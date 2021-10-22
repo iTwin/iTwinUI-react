@@ -15,6 +15,7 @@ import {
 import { action } from '@storybook/addon-actions';
 import { ColorValue } from '../../src/core/utils/color/ColorValue';
 import { CreeveyStoryParams } from 'creevey';
+import { Popover } from '../../src/core/utils';
 
 export default {
   component: ColorPicker,
@@ -75,8 +76,6 @@ export const Basic: Story<ColorPickerProps> = (args) => {
   const [activeColor, setActiveColor] = React.useState(ColorsList[5]);
   const [colorName, setColorName] = React.useState(ColorsList[5].name);
 
-  const [opened, setOpened] = React.useState(false);
-
   const onColorChanged = (color: ColorValue) => {
     const hexString = color.toHexString();
     const index = ColorsList.findIndex(
@@ -89,35 +88,35 @@ export const Basic: Story<ColorPickerProps> = (args) => {
 
   return (
     <>
-      <IconButton onClick={() => setOpened(!opened)}>
-        <ColorSwatch
-          style={{ pointerEvents: 'none' }}
-          color={activeColor.color}
-        />
-      </IconButton>
-      <span style={{ marginLeft: 16 }}>{colorName}</span>
-      {opened && (
-        <div style={{ marginTop: 4 }}>
+      <Popover
+        content={
           <ColorPicker
             selectedColor={activeColor.color}
             {...args}
             onChangeCompleted={onColorChanged}
           />
-        </div>
-      )}
+        }
+        trigger='click'
+        placement='bottom-start'
+      >
+        <IconButton>
+          <ColorSwatch
+            style={{ pointerEvents: 'none' }}
+            color={activeColor.color}
+          />
+        </IconButton>
+      </Popover>
+      <span style={{ marginLeft: 16 }}>{colorName}</span>
     </>
   );
 };
 Basic.args = {
   paletteProps: {
-    colors: ColorsList.map((color) => {
-      return color.color;
-    }),
+    colors: ColorsList.map(({ color }) => color),
   },
 };
 
 export const Advanced: Story<ColorPickerProps> = (args) => {
-  const [opened, setOpened] = React.useState(false);
   const [selectedColor, setSelectedColor] = React.useState<ColorValue>(
     ColorValue.create({ h: 0, s: 100, l: 50 }),
   );
@@ -146,12 +145,29 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
   return (
     <>
       <ButtonGroup>
-        <IconButton onClick={() => setOpened(!opened)}>
-          <ColorSwatch
-            style={{ pointerEvents: 'none' }}
-            color={selectedColor}
-          />
-        </IconButton>
+        <Popover
+          content={
+            <ColorPicker
+              selectedColor={selectedColor}
+              {...args}
+              onChangeCompleted={onColorChanged}
+              builderProps={{
+                defaultColorFormat: currentFormat,
+                onColorFormatChanged: setCurrentFormat,
+              }}
+            />
+          }
+          appendTo={() => document.body}
+          trigger='click'
+          placement='bottom-start'
+        >
+          <IconButton>
+            <ColorSwatch
+              style={{ pointerEvents: 'none' }}
+              color={selectedColor}
+            />
+          </IconButton>
+        </Popover>
         <Button
           onClick={() => {
             setCurrentFormat(
@@ -169,20 +185,6 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
           </div>
         </Button>
       </ButtonGroup>
-
-      {opened && (
-        <div style={{ marginTop: 4 }}>
-          <ColorPicker
-            selectedColor={selectedColor}
-            {...args}
-            onChangeCompleted={onColorChanged}
-            builderProps={{
-              defaultColorFormat: currentFormat,
-              onColorFormatChanged: setCurrentFormat,
-            }}
-          />
-        </div>
-      )}
     </>
   );
 };

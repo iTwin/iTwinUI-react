@@ -4,9 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 import { ColorValue } from './ColorValue';
 
-// cspell:ignore cadetblue hsla tbgr
-
-// A set of known colors by [HTML color name](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value),
 describe('ColorValue', () => {
   it('should properly handle RGB number values', () => {
     const cadetBlueRgb = ColorValue.create('#5f9ea0');

@@ -11,14 +11,29 @@ import {
 } from '../utils';
 import '@itwin/itwinui-css/css/color-picker.css';
 
+type ColorPaletteProps = {
+  /**
+   * Should the first active or enabled be automatically focused?
+   * @default false
+   */
+  setFocus?: boolean;
+  /**
+   * Color swatches to be passed as children.
+   */
+  children: React.ReactNode;
+} & Omit<CommonProps, 'title'>;
+
+/**
+ * Color palette to show a group of `ColorSwatch` components.
+ * @example
+ * <ColorPalette>
+ *   <ColorSwatch color='#ffffff' />
+ *   <ColorSwatch color='#000000' />
+ *   // ...
+ * </ColorPalette>
+ */
 export const ColorPalette = React.forwardRef(
-  (
-    props: { setFocus?: boolean; children: React.ReactNode } & Omit<
-      CommonProps,
-      'title'
-    >,
-    ref: React.Ref<HTMLDivElement>,
-  ) => {
+  (props: ColorPaletteProps, ref: React.Ref<HTMLDivElement>) => {
     const { setFocus = false, children } = props;
 
     useTheme();

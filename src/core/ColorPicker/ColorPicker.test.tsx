@@ -159,18 +159,6 @@ it('should handle keyboard navigation on color swatches', () => {
   expect(colorSwatches[12]).toHaveFocus();
 });
 
-it('should render properly with no color swatches', () => {
-  const { container } = render(<ColorPicker onChangeCompleted={() => {}} />);
-
-  const colorSwatches = Array.from<HTMLElement>(
-    container.querySelectorAll('.iui-color-swatch'),
-  );
-  expect(colorSwatches).toBeTruthy();
-  expect(colorSwatches.length).toEqual(0);
-
-  expect(container.querySelector(`.iui-color-palette`)).toBeFalsy();
-});
-
 it('should render advanced color picker with no color swatches', () => {
   const { container } = render(
     <ColorPicker
