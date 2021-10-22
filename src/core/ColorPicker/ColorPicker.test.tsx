@@ -7,6 +7,10 @@ import { fireEvent, render } from '@testing-library/react';
 import { getColorValue, ColorPicker } from './ColorPicker';
 import { ColorValue } from '../utils/color/ColorValue';
 
+beforeAll(() => {
+  window.CSS = { supports: () => true, escape: (i) => i };
+});
+
 it('should convert color list to ColorValues', () => {
   ['#9BA5AF', '#23450b', '#00121D', '#002A44'].forEach((value) => {
     const color = getColorValue(value);
@@ -246,8 +250,6 @@ it('should render color picker with color palette title', () => {
 });
 
 it('should set the selected color', () => {
-  window.CSS = { supports: () => true, escape: (i) => i };
-
   const { container } = render(
     <ColorPicker
       onChangeCompleted={() => {}}
@@ -269,8 +271,6 @@ it('should set the selected color', () => {
 });
 
 it('should set the dot positions', () => {
-  window.CSS = { supports: () => true, escape: (i) => i };
-
   const { container } = render(
     <ColorPicker
       onChangeCompleted={() => {}}
@@ -294,8 +294,6 @@ it('should set the dot positions', () => {
 });
 
 it('should handle arrow key navigation on slider dot', () => {
-  window.CSS = { supports: () => true, escape: (i) => i };
-
   const onSelectionChanged = jest.fn();
 
   const { container } = render(
@@ -343,8 +341,6 @@ it('should handle arrow key navigation on slider dot', () => {
 });
 
 it('should handle arrow key navigation on color dot', () => {
-  window.CSS = { supports: () => true, escape: (i) => i };
-
   const onSelectionChanged = jest.fn();
 
   const { container } = render(
@@ -880,8 +876,6 @@ it('should handle rgb input change with lose focus', () => {
 });
 
 it('should preserve hue when color dot is black/at bottom of square', () => {
-  window.CSS = { supports: () => true, escape: (i) => i };
-
   const { container } = render(
     <ColorPicker
       onChangeCompleted={() => {}}
