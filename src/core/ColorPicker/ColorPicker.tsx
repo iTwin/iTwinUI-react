@@ -55,9 +55,12 @@ export type ColorPaletteProps = {
 };
 
 export type ColorPickerProps = {
+  /**
+   * Content shown below the color builder and color palette.
+   */
   children?: React.ReactNode;
   /**
-   * The selected color to be shown as the initial color in advanced color picker.
+   * The selected color within color picker.
    */
   selectedColor?: ColorType | ColorValue;
   /**
@@ -273,7 +276,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
         if (callbackType === 'onChange') {
           updateColorDot(percentX, percentY, true);
-        } else if (callbackType === 'onUpdate' || callbackType === 'onClick') {
+        } else {
           updateColorDot(percentX, percentY, false);
         }
       }
@@ -399,6 +402,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
           defaultColorFormat={builderProps?.defaultColorFormat}
           onColorFormatChanged={builderProps?.onColorFormatChanged}
           onChangeCompleted={onChangeCompleted}
+          allowedColorFormats={builderProps?.allowedColorFormats}
         />
       )}
       {paletteProps && (

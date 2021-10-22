@@ -199,28 +199,6 @@ it('should render properly with no color swatches', () => {
   expect(container.querySelector(`.iui-color-palette`)).toBeFalsy();
 });
 
-it('should render properly with palette title and no color swatches', () => {
-  const { container } = render(
-    <ColorPicker
-      onChangeCompleted={() => {}}
-      paletteProps={{ colorPaletteTitle: 'Test Title' }}
-    />,
-  );
-
-  const colorSwatches = Array.from<HTMLElement>(
-    container.querySelectorAll('.iui-color-swatch'),
-  );
-  expect(colorSwatches).toBeTruthy();
-  expect(colorSwatches.length).toEqual(0);
-
-  const colorPalette = container.querySelector(
-    `.iui-color-palette`,
-  ) as HTMLElement;
-  expect(colorPalette).toBeTruthy();
-
-  fireEvent.keyDown(colorPalette, { key: 'ArrowDown' });
-});
-
 it('should render advanced color picker with no color swatches', () => {
   const { container } = render(
     <ColorPicker
