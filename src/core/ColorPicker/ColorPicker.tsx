@@ -134,7 +134,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
   ]);
   const rgbValueOfActiveColor = React.useRef(inColor.toTbgr());
 
-  const [activeColor, setActiveColor] = React.useState<ColorValue>(inColor);
+  const [activeColor, setActiveColor] = React.useState<ColorValue>(inColor); // Color of colorDot or active ColorSwatch
   React.useEffect(() => {
     setActiveColor(inColor);
   }, [inColor]);
@@ -174,13 +174,14 @@ export const ColorPicker = (props: ColorPickerProps) => {
     [onChange, onChangeCompleted],
   );
 
+  // Set values for slider
   const hueSliderColor = React.useMemo(
     () => ColorValue.create({ h: hsvColor.h, s: 100, v: 100 }),
     [hsvColor],
   );
-
   const sliderValue = React.useMemo(() => hsvColor.h, [hsvColor]);
 
+  // Set values for color square and color dot
   const dotColorString = React.useMemo(() => activeColor.toHexString(), [
     activeColor,
   ]);
@@ -227,22 +228,9 @@ export const ColorPicker = (props: ColorPickerProps) => {
     [applyHsvColorChange, hsvColor.s, hsvColor.v],
   );
 
-  const onChangeHue = React.useCallback(
-    (values: ReadonlyArray<number>) => {
-      updateSlider(values[0], false);
-    },
-    [updateSlider],
-  );
-
-  const onChangeHueCompleted = React.useCallback(
-    (values: ReadonlyArray<number>) => {
-      updateSlider(values[0], true);
-    },
-    [updateSlider],
-  );
-
   // Update Color field square change
   const squareRef = React.useRef<HTMLDivElement>(null);
+  const colorDotRef = React.useRef<HTMLDivElement>(null);
 
   const updateColorDot = React.useCallback(
     (x: number, y: number, selectionChanged: boolean) => {
@@ -312,16 +300,6 @@ export const ColorPicker = (props: ColorPickerProps) => {
     ref.current?.ownerDocument,
   );
 
-  const handlePointerDownOnSquare = React.useCallback(
-    (event: React.PointerEvent) => {
-      event.preventDefault();
-      updateSquareValue(event, 'onClick');
-      setColorDotActive(true);
-      colorDotRef.current?.focus();
-    },
-    [updateSquareValue],
-  );
-
   // Arrow key navigation for color dot
   const handleColorDotKeyDown = (
     event: React.KeyboardEvent<HTMLDivElement>,
@@ -350,8 +328,6 @@ export const ColorPicker = (props: ColorPickerProps) => {
     }
   };
 
-  const colorDotRef = React.useRef<HTMLDivElement>(null);
-
   return (
     <div
       className={cx('iui-color-picker', className)}
@@ -364,7 +340,12 @@ export const ColorPicker = (props: ColorPickerProps) => {
           <div
             className='iui-color-field'
             ref={squareRef}
-            onPointerDown={handlePointerDownOnSquare}
+            onPointerDown={(event: React.PointerEvent) => {
+              event.preventDefault();
+              updateSquareValue(event, 'onClick');
+              setColorDotActive(true);
+              colorDotRef.current?.focus();
+            }}
           >
             <div
               className='iui-color-dot'
@@ -388,8 +369,12 @@ export const ColorPicker = (props: ColorPickerProps) => {
             tooltipProps={() => {
               return { visible: false };
             }}
-            onChange={onChangeHueCompleted}
-            onUpdate={onChangeHue}
+            onChange={(values: ReadonlyArray<number>) => {
+              updateSlider(values[0], true);
+            }}
+            onUpdate={(values: ReadonlyArray<number>) => {
+              updateSlider(values[0], false);
+            }}
             min={0}
             max={359}
           />
