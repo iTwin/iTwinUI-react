@@ -13,6 +13,7 @@ import {
   ColorType,
   ColorValue,
   HsvColor,
+  getTabbableElements,
 } from '../utils';
 import cx from 'classnames';
 import { Slider } from '../Slider';
@@ -74,7 +75,7 @@ export type ColorPickerProps = {
    * This can be on pointerUp or keyUp when thumb is done dragging,
    * or when user clicks on color builder components, or when user clicks on color swatch.
    */
-  onChangeCompleted: (color: ColorValue) => void;
+  onChangeCompleted?: (color: ColorValue) => void;
   /**
    * Props used to determine what advanced color picker components to display
    * to allow user to build their own color.
@@ -89,6 +90,11 @@ export type ColorPickerProps = {
    * If not specified, the color palette will not be shown.
    */
   paletteProps?: ColorPaletteProps;
+  /**
+   * If true, the first focusable element in the color picker will automatically be focused.
+   * @default false
+   */
+  setFocus?: boolean;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -121,12 +127,21 @@ export const ColorPicker = (props: ColorPickerProps) => {
     onChangeCompleted,
     builderProps,
     paletteProps,
+    setFocus = false,
     ...rest
   } = props;
 
   useTheme();
 
   const ref = React.useRef<HTMLDivElement>(null);
+
+  // set focus on the first tabbable element
+  React.useEffect(() => {
+    if (ref.current && setFocus) {
+      const tabbableElements = getTabbableElements(ref.current);
+      (tabbableElements[0] as HTMLElement).focus();
+    }
+  }, [setFocus]);
 
   const inColor = React.useMemo(() => getColorValue(selectedColor), [
     selectedColor,
@@ -160,7 +175,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
       // Only update selected color when dragging is done
       if (selectionChanged) {
-        onChangeCompleted(newActiveColor);
+        onChangeCompleted?.(newActiveColor);
       } else {
         onChange?.(newActiveColor);
       }

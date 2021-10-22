@@ -23,6 +23,7 @@ export default {
     className: { control: { disable: true } },
     style: { control: { disable: true } },
     children: { control: { disable: true } },
+    id: { control: { disable: true } },
   },
   title: 'Core/ColorPicker',
   parameters: {
@@ -74,6 +75,7 @@ const ColorsList = [
 ];
 
 export const Basic: Story<ColorPickerProps> = (args) => {
+  const [isOpen, setIsOpen] = React.useState(false);
   const [activeColor, setActiveColor] = React.useState(ColorsList[5]);
   const [colorName, setColorName] = React.useState(ColorsList[5].name);
 
@@ -97,10 +99,10 @@ export const Basic: Story<ColorPickerProps> = (args) => {
             onChangeCompleted={onColorChanged}
           />
         }
-        trigger='click'
+        visible={isOpen}
         placement='bottom-start'
       >
-        <IconButton>
+        <IconButton onClick={() => setIsOpen((open) => !open)}>
           <ColorSwatch
             style={{ pointerEvents: 'none' }}
             color={activeColor.color}
@@ -118,6 +120,7 @@ Basic.args = {
 };
 
 export const Advanced: Story<ColorPickerProps> = (args) => {
+  const [isOpen, setIsOpen] = React.useState(false);
   const [selectedColor, setSelectedColor] = React.useState<ColorValue>(
     ColorValue.create({ h: 0, s: 100, l: 50 }),
   );
@@ -159,10 +162,10 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
             />
           }
           appendTo={() => document.body}
-          trigger='click'
+          visible={isOpen}
           placement='bottom-start'
         >
-          <IconButton>
+          <IconButton onClick={() => setIsOpen((open) => !open)}>
             <ColorSwatch
               style={{ pointerEvents: 'none' }}
               color={selectedColor}

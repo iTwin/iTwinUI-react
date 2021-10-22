@@ -923,3 +923,15 @@ it('should preserve hue when color dot is black/at bottom of square', () => {
   expect(colorDot.style.getPropertyValue('--top')).toEqual('100%');
   expect(colorPicker.style.getPropertyValue('--hue')).toBe('#00ff55');
 });
+
+it('should set focus if setFocus is true', () => {
+  const { container } = render(<ColorPicker builderProps={{}} setFocus />);
+  expect(container.querySelector('.iui-color-picker')).toBeTruthy();
+  expect(container.querySelector('.iui-color-dot')).toHaveFocus(); // first tabbable element
+});
+
+it('should not set focus if setFocus is false', () => {
+  const { container } = render(<ColorPicker builderProps={{}} />);
+  expect(container.querySelector('.iui-color-picker')).toBeTruthy();
+  expect(container.querySelector('.iui-color-dot')).not.toHaveFocus();
+});

@@ -32,7 +32,7 @@ export type ColorInputPanelProps = {
   /**
    * Callback fired when activeColor changed from the panel input.
    */
-  onChangeCompleted: (color: ColorValue) => void;
+  onChangeCompleted?: (color: ColorValue) => void;
   /**
    * Callback fired when colorFormat is changed.
    */
@@ -121,7 +121,7 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
         color = ColorValue.fromString(colorString);
         setValidHexInput(true);
         if (activeColor.toHexString() != colorString) {
-          onChangeCompleted(color);
+          onChangeCompleted?.(color);
         }
         return;
       } catch (_e) {
@@ -150,7 +150,7 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
         s: s,
         l: l,
       });
-      onChangeCompleted(color);
+      onChangeCompleted?.(color);
     }
 
     if (format === 'rgb') {
@@ -172,7 +172,7 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
         g: g,
         b: b,
       });
-      onChangeCompleted(color);
+      onChangeCompleted?.(color);
     }
   };
 
