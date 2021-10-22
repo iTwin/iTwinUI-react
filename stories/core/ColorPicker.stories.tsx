@@ -98,7 +98,11 @@ export const Basic: Story<ColorPickerProps> = (args) => {
       <span style={{ marginLeft: 16 }}>{colorName}</span>
       {opened && (
         <div style={{ marginTop: 4 }}>
-          <ColorPicker {...args} onChangeCompleted={onColorChanged} />
+          <ColorPicker
+            selectedColor={activeColor.color}
+            {...args}
+            onChangeCompleted={onColorChanged}
+          />
         </div>
       )}
     </>

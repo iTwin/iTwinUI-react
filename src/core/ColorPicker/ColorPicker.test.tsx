@@ -45,7 +45,7 @@ it('should add className and style correctly', () => {
   expect(swatch.style.width).toBe('100px');
 });
 
-it('should initially focus on active color', () => {
+it('should set tabIndex on active color swatch', () => {
   const { container } = render(
     <ColorPicker
       onChangeCompleted={() => {}}
@@ -64,18 +64,14 @@ it('should initially focus on active color', () => {
   const colorSwatches = Array.from<HTMLElement>(
     container.querySelectorAll('.iui-color-swatch'),
   );
-  const focusedIndex = colorSwatches.findIndex(
-    (swatch) => swatch === document.activeElement,
-  );
-  const activeIndex = colorSwatches.findIndex(
-    (swatch) =>
-      swatch.tabIndex === 0 || swatch.getAttribute('aria-selected') == 'true',
-  );
 
-  expect(focusedIndex).toEqual(activeIndex);
+  expect((colorSwatches[0] as HTMLDivElement).tabIndex).toBe(-1);
+  expect((colorSwatches[1] as HTMLDivElement).tabIndex).toBe(0);
+  expect((colorSwatches[2] as HTMLDivElement).tabIndex).toBe(-1);
+  expect((colorSwatches[3] as HTMLDivElement).tabIndex).toBe(-1);
 });
 
-it('should handle keyboard navigation', () => {
+it('should handle keyboard navigation on color swatches', () => {
   const onColorClick = jest.fn();
 
   const colorsList = [
@@ -116,75 +112,47 @@ it('should handle keyboard navigation', () => {
   ) as HTMLElement;
   expect(colorPalette).toBeTruthy();
 
-  let focusedIndex = -1;
-  let expectedIndex = -1;
+  colorSwatches[10].focus();
 
   // Go Down
-  focusedIndex = colorSwatches.findIndex(
-    (swatch) => swatch === document.activeElement,
-  );
-  expectedIndex = colorSwatches.findIndex(
-    (swatch, index) =>
-      index > focusedIndex &&
-      swatch.offsetLeft === colorSwatches[focusedIndex].offsetLeft,
-  );
-
   fireEvent.keyDown(colorPalette, { key: 'ArrowDown' });
 
   colorSwatches.forEach((item, index) => {
-    expect(document.activeElement === item).toBe(expectedIndex === index);
+    expect(document.activeElement === item).toBe(11 === index);
   });
 
   // Go Up
-  focusedIndex = colorSwatches.findIndex(
-    (swatch) => swatch === document.activeElement,
-  );
-  for (let i = focusedIndex - 1; i >= 0; i--) {
-    if (colorSwatches[i].offsetLeft == colorSwatches[focusedIndex].offsetLeft) {
-      expectedIndex = i;
-      break;
-    }
-  }
-
   fireEvent.keyDown(colorPalette, { key: 'ArrowUp' });
 
   colorSwatches.forEach((item, index) => {
-    expect(document.activeElement === item).toBe(expectedIndex === index);
+    expect(document.activeElement === item).toBe(10 === index);
   });
 
   // Go Left
-  focusedIndex = colorSwatches.findIndex(
-    (swatch) => swatch === document.activeElement,
-  );
-  expectedIndex = focusedIndex - 1;
-
   fireEvent.keyDown(colorPalette, { key: 'ArrowLeft' });
 
   colorSwatches.forEach((item, index) => {
-    expect(document.activeElement === item).toBe(expectedIndex === index);
+    expect(document.activeElement === item).toBe(9 === index);
   });
 
   // Go Right
-  focusedIndex = colorSwatches.findIndex(
-    (swatch) => swatch === document.activeElement,
-  );
-  expectedIndex = focusedIndex + 1;
-
   fireEvent.keyDown(colorPalette, { key: 'ArrowRight' });
 
   colorSwatches.forEach((item, index) => {
-    expect(document.activeElement === item).toBe(expectedIndex === index);
+    expect(document.activeElement === item).toBe(10 === index);
   });
 
   // Go right and select with enter
   fireEvent.keyDown(colorPalette, { key: 'ArrowRight' });
   fireEvent.keyDown(colorPalette, { key: 'Enter' });
   expect(onColorClick).toHaveBeenCalledTimes(1);
+  expect(colorSwatches[11]).toHaveFocus();
 
   // Go right and select with space
   fireEvent.keyDown(colorPalette, { key: 'ArrowRight' });
   fireEvent.keyDown(colorPalette, { key: ' ' });
   expect(onColorClick).toHaveBeenCalledTimes(2);
+  expect(colorSwatches[12]).toHaveFocus();
 });
 
 it('should render properly with no color swatches', () => {
@@ -320,7 +288,9 @@ it('should set the dot positions', () => {
   // Set the correct position on the slider
   const sliderDot = container.querySelector('.iui-slider-thumb') as HTMLElement;
   expect(sliderDot).toBeTruthy();
-  expect(sliderDot.style.getPropertyValue('left')).toEqual('11.6991643454039%');
+  expect(sliderDot.style.getPropertyValue('left')).toEqual(
+    '11.699164345403899%',
+  );
 });
 
 it('should handle arrow key navigation on slider dot', () => {
@@ -580,6 +550,64 @@ it('should render advanced color picker with input fields', () => {
   swapButton.click();
   expect(element.textContent).toBe('HEX');
   expect(container.querySelectorAll('.iui-input-container').length).toBe(1);
+});
+
+it('should only show allowed color formats on input panel', () => {
+  const { container } = render(
+    <ColorPicker
+      builderProps={{
+        defaultColorFormat: 'hex',
+        allowedColorFormats: ['hex', 'hsl'],
+      }}
+      onChangeCompleted={() => {}}
+    />,
+  );
+
+  expect(
+    container.querySelectorAll(`.iui-color-picker-section-label`).length,
+  ).toBe(1);
+  const element = container.querySelectorAll(
+    `.iui-color-picker-section-label`,
+  )[0];
+  expect(element).toBeDefined();
+  expect(element?.textContent).toBe('HEX');
+
+  const swapButton = container.querySelector(
+    '.iui-button.iui-borderless',
+  ) as HTMLButtonElement;
+  expect(swapButton).toBeTruthy();
+
+  swapButton.click();
+  expect(element.textContent).toBe('HSL');
+
+  swapButton.click();
+  expect(element.textContent).toBe('HEX');
+});
+
+it('should not show swap button if only 1 color format allowed on input panel', () => {
+  const { container } = render(
+    <ColorPicker
+      builderProps={{
+        defaultColorFormat: 'hex',
+        allowedColorFormats: ['hex'],
+      }}
+      onChangeCompleted={() => {}}
+    />,
+  );
+
+  expect(
+    container.querySelectorAll(`.iui-color-picker-section-label`).length,
+  ).toBe(1);
+  const element = container.querySelectorAll(
+    `.iui-color-picker-section-label`,
+  )[0];
+  expect(element).toBeDefined();
+  expect(element?.textContent).toBe('HEX');
+
+  const swapButton = container.querySelector(
+    '.iui-button.iui-borderless',
+  ) as HTMLButtonElement;
+  expect(swapButton).toBeFalsy();
 });
 
 it('should handle onColorFormatChanged', () => {
