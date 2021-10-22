@@ -119,8 +119,10 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
       const colorString = value[0].startsWith('#') ? value[0] : `#${value[0]}`;
       try {
         color = ColorValue.fromString(colorString);
-        onChangeCompleted(color);
         setValidHexInput(true);
+        if (activeColor.toHexString() != colorString) {
+          onChangeCompleted(color);
+        }
         return;
       } catch (_e) {
         setHexInput(colorString);
@@ -138,6 +140,11 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
         setHslInput(value);
         return;
       }
+      const hsl = activeColor.toHslColor();
+      if (hsl.h === h && hsl.s === s && hsl.l === l) {
+        return;
+      }
+
       color = ColorValue.create({
         h: h,
         s: s,
@@ -153,6 +160,10 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
 
       if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
         setRgbInput(value);
+        return;
+      }
+      const rgb = activeColor.toRgbColor();
+      if (rgb.r === r && rgb.g === g && rgb.b === b) {
         return;
       }
 
@@ -174,9 +185,11 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
         placeholder='HEX'
         value={hexInput}
         onChange={(event) => {
-          setHexInput(event.target.value);
+          const value = event.target.value.startsWith('#')
+            ? event.target.value
+            : `#${event.target.value}`;
+          setHexInput(value);
         }}
-        onFocus={(event) => event.target.select()}
         onKeyDown={(event) => {
           if (event.key === 'Enter') {
             event.preventDefault();
@@ -211,7 +224,6 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
           onChange={(event) => {
             setHslInput([event.target.value, hslInput[1], hslInput[2]]);
           }}
-          onFocus={(event) => event.target.select()}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
               event.preventDefault();
@@ -242,7 +254,6 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
           onChange={(event) => {
             setHslInput([hslInput[0], event.target.value, hslInput[2]]);
           }}
-          onFocus={(event) => event.target.select()}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
               event.preventDefault();
@@ -273,7 +284,6 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
           onChange={(event) => {
             setHslInput([hslInput[0], hslInput[1], event.target.value]);
           }}
-          onFocus={(event) => event.target.select()}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
               event.preventDefault();
@@ -309,7 +319,6 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
           onChange={(event) => {
             setRgbInput([event.target.value, rgbInput[1], rgbInput[2]]);
           }}
-          onFocus={(event) => event.target.select()}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
               event.preventDefault();
@@ -340,7 +349,6 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
           onChange={(event) => {
             setRgbInput([rgbInput[0], event.target.value, rgbInput[2]]);
           }}
-          onFocus={(event) => event.target.select()}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
               event.preventDefault();
@@ -371,7 +379,6 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
           onChange={(event) => {
             setRgbInput([rgbInput[0], rgbInput[1], event.target.value]);
           }}
-          onFocus={(event) => event.target.select()}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
               event.preventDefault();
