@@ -27,11 +27,6 @@ export type ColorPaletteProps = {
    */
   colors?: Array<ColorType | ColorValue>;
   /**
-   * Should the first active or enabled child be automatically focused?
-   * @default false
-   */
-  setFocus?: boolean;
-  /**
    * Pass any custom swatches as children.
    */
   children?: React.ReactNode;
@@ -50,14 +45,7 @@ export type ColorPaletteProps = {
  */
 export const ColorPalette = React.forwardRef(
   (props: ColorPaletteProps, ref: React.Ref<HTMLDivElement>) => {
-    const {
-      setFocus = false,
-      colors,
-      label,
-      className,
-      children,
-      ...rest
-    } = props;
+    const { colors, label, className, children, ...rest } = props;
 
     useTheme();
 
@@ -76,8 +64,8 @@ export const ColorPalette = React.forwardRef(
       }
     };
 
-    const refs = useMergedRefs(ref, setDefaultTabIndex);
     const paletteRef = React.useRef<HTMLDivElement>(null);
+    const paletteRefs = useMergedRefs(paletteRef, setDefaultTabIndex);
 
     // Color palette arrow key navigation
     const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -137,38 +125,27 @@ export const ColorPalette = React.forwardRef(
       }
     };
 
-    // colorSwatches may be supplied as children which requires looking through DOM
+    // call focus() when focusedIndex changes
     React.useEffect(() => {
-      const swatches = getFocusableElements(
-        paletteRef.current,
-      ) as HTMLElement[];
-
       if (focusedIndex != null) {
+        const swatches = getFocusableElements(
+          paletteRef.current,
+        ) as HTMLElement[];
         swatches[focusedIndex]?.focus();
-        return;
       }
-
-      if (setFocus) {
-        const selectedIndex = swatches.findIndex(
-          (swatch) =>
-            swatch.tabIndex === 0 ||
-            swatch.getAttribute('aria-selected') === 'true',
-        );
-        setFocusedIndex(selectedIndex > -1 ? selectedIndex : undefined);
-      }
-    }, [focusedIndex, setFocus]);
+    }, [focusedIndex]);
 
     return (
       <div
         className={cx('iui-color-palette-wrapper', className)}
-        ref={refs}
+        ref={ref}
         {...rest}
       >
         {label && <div className='iui-color-picker-section-label'>{label}</div>}
         <div
           className='iui-color-palette'
           onKeyDown={handleKeyDown}
-          ref={paletteRef}
+          ref={paletteRefs}
         >
           {children}
           {colors &&
