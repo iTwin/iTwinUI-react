@@ -52,45 +52,20 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
     setCurrentFormat(defaultColorFormat);
   }, [defaultColorFormat]);
 
-  // need to use state since may have parsing error
-  const [hexInput, setHexInput] = React.useState(activeColor.toHexString());
-
+  // need to use state since input may have parsing error
+  const [input, setInput] = React.useState<Array<string>>([]);
   React.useEffect(() => {
-    setHexInput(activeColor.toHexString());
-    setValidHexInput(true);
-  }, [activeColor, currentFormat]);
-
-  const [hslInput, setHslInput] = React.useState(() => {
-    const hslColor = activeColor.toHslColor();
-    return [activeHue.toString(), hslColor.s.toString(), hslColor.l.toString()];
-  });
-
-  React.useEffect(() => {
-    const hslColor = activeColor.toHslColor();
-    setHslInput([
-      activeHue.toString(), // used to preserve hue for 0,0,0 edge case
-      hslColor.s.toString(),
-      hslColor.l.toString(),
-    ]);
+    if (currentFormat === 'hsl') {
+      const hsl = activeColor.toHslColor();
+      // use activeHue to preserve hue for 0,0,0 edge case
+      setInput([activeHue.toString(), hsl.s.toString(), hsl.l.toString()]);
+    } else if (currentFormat === 'rgb') {
+      const rgb = activeColor.toRgbColor();
+      setInput([rgb.r.toString(), rgb.g.toString(), rgb.b.toString()]);
+    } else {
+      setInput([activeColor.toHexString()]);
+    }
   }, [activeColor, activeHue, currentFormat]);
-
-  const [rgbInput, setRgbInput] = React.useState(() => {
-    const rgbColor = activeColor.toRgbColor();
-    return [
-      rgbColor.r.toString(),
-      rgbColor.g.toString(),
-      rgbColor.b.toString(),
-    ];
-  });
-
-  React.useEffect(() => {
-    const rgbColor = activeColor.toRgbColor();
-    setRgbInput([
-      rgbColor.r.toString(),
-      rgbColor.g.toString(),
-      rgbColor.b.toString(),
-    ]);
-  }, [activeColor]);
 
   const [validHexInput, setValidHexInput] = React.useState(true);
 
@@ -103,32 +78,26 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
     setCurrentFormat(newFormat);
   }, [currentFormat, allowedColorFormats]);
 
-  const handleColorInputChange = (
-    format: typeof defaultColorFormat,
-    value: string[],
-  ) => {
+  const handleColorInputChange = (format: typeof defaultColorFormat) => {
     let color;
 
     if (format === 'hex') {
-      const colorString = value[0].startsWith('#') ? value[0] : `#${value[0]}`;
       try {
-        color = ColorValue.fromString(colorString);
+        color = ColorValue.fromString(input[0]);
         setValidHexInput(true);
-        if (activeColor.toHexString() != colorString) {
-          onChangeCompleted?.(color);
+        if (activeColor.toHexString() === input[0]) {
+          return;
         }
-        return;
       } catch (_e) {
-        setHexInput(colorString);
         setValidHexInput(false);
         return;
       }
     }
 
     if (format === 'hsl') {
-      const h = Number(value[0]);
-      const s = Number(value[1]);
-      const l = Number(value[2]);
+      const h = Number(input[0]);
+      const s = Number(input[1]);
+      const l = Number(input[2]);
 
       if (h < 0 || h > 360 || s < 0 || s > 100 || l < 0 || l > 100) {
         return;
@@ -139,13 +108,12 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
       }
 
       color = ColorValue.create({ h, s, l });
-      onChangeCompleted?.(color);
     }
 
     if (format === 'rgb') {
-      const r = Number(value[0]);
-      const g = Number(value[1]);
-      const b = Number(value[2]);
+      const r = Number(input[0]);
+      const g = Number(input[1]);
+      const b = Number(input[2]);
 
       if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
         return;
@@ -156,6 +124,9 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
       }
 
       color = ColorValue.create({ r, g, b });
+    }
+
+    if (color) {
       onChangeCompleted?.(color);
     }
   };
@@ -167,22 +138,22 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
         maxLength={7}
         minLength={1}
         placeholder='HEX'
-        value={hexInput}
+        value={input[0]}
         onChange={(event) => {
           const value = event.target.value.startsWith('#')
             ? event.target.value
             : `#${event.target.value}`;
-          setHexInput(value);
+          setInput([value]);
         }}
         onKeyDown={(event) => {
           if (event.key === 'Enter') {
             event.preventDefault();
-            handleColorInputChange('hex', [hexInput]);
+            handleColorInputChange('hex');
           }
         }}
         onBlur={(event) => {
           event.preventDefault();
-          handleColorInputChange('hex', [hexInput]);
+          handleColorInputChange('hex');
         }}
       />
     </InputContainer>
@@ -192,7 +163,7 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
     <>
       <InputContainer
         status={
-          Number(hslInput[0]) < 0 || Number(hslInput[0]) > 360
+          Number(input[0]) < 0 || Number(input[0]) > 360
             ? 'negative'
             : undefined
         }
@@ -203,25 +174,25 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
           min='0'
           max='359'
           placeholder='H'
-          value={hslInput[0]}
+          value={input[0]}
           onChange={(event) => {
-            setHslInput([event.target.value, hslInput[1], hslInput[2]]);
+            setInput([event.target.value, input[1], input[2]]);
           }}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
               event.preventDefault();
-              handleColorInputChange('hsl', hslInput);
+              handleColorInputChange('hsl');
             }
           }}
           onBlur={(event) => {
             event.preventDefault();
-            handleColorInputChange('hsl', hslInput);
+            handleColorInputChange('hsl');
           }}
         />
       </InputContainer>
       <InputContainer
         status={
-          Number(hslInput[1]) < 0 || Number(hslInput[1]) > 100
+          Number(input[1]) < 0 || Number(input[1]) > 100
             ? 'negative'
             : undefined
         }
@@ -232,25 +203,25 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
           min='0'
           max='100'
           placeholder='S'
-          value={hslInput[1]}
+          value={input[1]}
           onChange={(event) => {
-            setHslInput([hslInput[0], event.target.value, hslInput[2]]);
+            setInput([input[0], event.target.value, input[2]]);
           }}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
               event.preventDefault();
-              handleColorInputChange('hsl', hslInput);
+              handleColorInputChange('hsl');
             }
           }}
           onBlur={(event) => {
             event.preventDefault();
-            handleColorInputChange('hsl', hslInput);
+            handleColorInputChange('hsl');
           }}
         />
       </InputContainer>
       <InputContainer
         status={
-          Number(hslInput[2]) < 0 || Number(hslInput[2]) > 100
+          Number(input[2]) < 0 || Number(input[2]) > 100
             ? 'negative'
             : undefined
         }
@@ -261,19 +232,19 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
           min='0'
           max='100'
           placeholder='L'
-          value={hslInput[2]}
+          value={input[2]}
           onChange={(event) => {
-            setHslInput([hslInput[0], hslInput[1], event.target.value]);
+            setInput([input[0], input[1], event.target.value]);
           }}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
               event.preventDefault();
-              handleColorInputChange('hsl', hslInput);
+              handleColorInputChange('hsl');
             }
           }}
           onBlur={(event) => {
             event.preventDefault();
-            handleColorInputChange('hsl', hslInput);
+            handleColorInputChange('hsl');
           }}
         />
       </InputContainer>
@@ -284,7 +255,7 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
     <>
       <InputContainer
         status={
-          Number(rgbInput[0]) < 0 || Number(rgbInput[0]) > 255
+          Number(input[0]) < 0 || Number(input[0]) > 255
             ? 'negative'
             : undefined
         }
@@ -295,25 +266,25 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
           min='0'
           max='255'
           placeholder='R'
-          value={rgbInput[0]}
+          value={input[0]}
           onChange={(event) => {
-            setRgbInput([event.target.value, rgbInput[1], rgbInput[2]]);
+            setInput([event.target.value, input[1], input[2]]);
           }}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
               event.preventDefault();
-              handleColorInputChange('rgb', rgbInput);
+              handleColorInputChange('rgb');
             }
           }}
           onBlur={(event) => {
             event.preventDefault();
-            handleColorInputChange('rgb', rgbInput);
+            handleColorInputChange('rgb');
           }}
         />
       </InputContainer>
       <InputContainer
         status={
-          Number(rgbInput[1]) < 0 || Number(rgbInput[1]) > 255
+          Number(input[1]) < 0 || Number(input[1]) > 255
             ? 'negative'
             : undefined
         }
@@ -324,25 +295,25 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
           min='0'
           max='255'
           placeholder='G'
-          value={rgbInput[1]}
+          value={input[1]}
           onChange={(event) => {
-            setRgbInput([rgbInput[0], event.target.value, rgbInput[2]]);
+            setInput([input[0], event.target.value, input[2]]);
           }}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
               event.preventDefault();
-              handleColorInputChange('rgb', rgbInput);
+              handleColorInputChange('rgb');
             }
           }}
           onBlur={(event) => {
             event.preventDefault();
-            handleColorInputChange('rgb', rgbInput);
+            handleColorInputChange('rgb');
           }}
         />
       </InputContainer>
       <InputContainer
         status={
-          Number(rgbInput[2]) < 0 || Number(rgbInput[2]) > 255
+          Number(input[2]) < 0 || Number(input[2]) > 255
             ? 'negative'
             : undefined
         }
@@ -353,19 +324,19 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
           min='0'
           max='255'
           placeholder={'B'}
-          value={rgbInput[2]}
+          value={input[2]}
           onChange={(event) => {
-            setRgbInput([rgbInput[0], rgbInput[1], event.target.value]);
+            setInput([input[0], input[1], event.target.value]);
           }}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
               event.preventDefault();
-              handleColorInputChange('rgb', rgbInput);
+              handleColorInputChange('rgb');
             }
           }}
           onBlur={(event) => {
             event.preventDefault();
-            handleColorInputChange('rgb', rgbInput);
+            handleColorInputChange('rgb');
           }}
         />
       </InputContainer>
