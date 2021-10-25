@@ -38,10 +38,7 @@ const getHorizontalPercentageOfRectangle = (rect: DOMRect, pointer: number) => {
 };
 
 export type ColorBuilderProps = Partial<
-  Pick<
-    ColorInputPanelProps,
-    'defaultColorFormat' | 'allowedColorFormats' | 'onColorFormatChanged'
-  >
+  Pick<ColorInputPanelProps, 'defaultColorFormat' | 'allowedColorFormats'>
 >;
 
 export type ColorPaletteProps = {
@@ -432,7 +429,6 @@ export const ColorPicker = (props: ColorPickerProps) => {
           activeColor={activeColor}
           activeHue={hsvColor.h}
           defaultColorFormat={builderProps?.defaultColorFormat}
-          onColorFormatChanged={builderProps?.onColorFormatChanged}
           onChangeCompleted={onChangeCompleted}
           allowedColorFormats={builderProps?.allowedColorFormats}
         />

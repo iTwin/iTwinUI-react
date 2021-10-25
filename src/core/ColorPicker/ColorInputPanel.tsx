@@ -33,10 +33,6 @@ export type ColorInputPanelProps = {
    * Callback fired when activeColor changed from the panel input.
    */
   onChangeCompleted?: (color: ColorValue) => void;
-  /**
-   * Callback fired when colorFormat is changed.
-   */
-  onColorFormatChanged?: (format: 'hsl' | 'rgb' | 'hex') => void;
 };
 
 export const ColorInputPanel = (props: ColorInputPanelProps) => {
@@ -46,7 +42,6 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
     defaultColorFormat,
     allowedColorFormats = ['hsl', 'rgb', 'hex'],
     onChangeCompleted,
-    onColorFormatChanged,
   } = props;
 
   useTheme();
@@ -106,8 +101,7 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
           allowedColorFormats.length
       ] ?? allowedColorFormats[0];
     setCurrentFormat(newFormat);
-    onColorFormatChanged?.(newFormat);
-  }, [currentFormat, onColorFormatChanged, allowedColorFormats]);
+  }, [currentFormat, allowedColorFormats]);
 
   const handleColorInputChange = (
     format: typeof defaultColorFormat,

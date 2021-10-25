@@ -623,41 +623,6 @@ it('should not show swap button if only 1 color format allowed on input panel', 
   expect(swapButton).toBeFalsy();
 });
 
-it('should handle onColorFormatChanged', () => {
-  const inputChange = jest.fn();
-
-  const { container } = render(
-    <ColorPicker
-      builderProps={{
-        defaultColorFormat: 'hex',
-        onColorFormatChanged: inputChange,
-      }}
-      onChangeCompleted={() => {}}
-    />,
-  );
-
-  expect(
-    container.querySelectorAll(`.iui-color-picker-section-label`).length,
-  ).toBe(1);
-  const element = container.querySelectorAll(
-    `.iui-color-picker-section-label`,
-  )[0];
-  expect(element).toBeDefined();
-  expect(element?.textContent).toBe('HEX');
-
-  expect(container.querySelector('.iui-color-input')).toBeTruthy();
-  expect(container.querySelector('.iui-color-input-fields')).toBeTruthy();
-  expect(container.querySelectorAll('.iui-input-container').length).toBe(1);
-
-  const swapButton = container.querySelector(
-    '.iui-button.iui-borderless',
-  ) as HTMLButtonElement;
-  expect(swapButton).toBeTruthy();
-
-  swapButton.click();
-  expect(inputChange).toHaveBeenCalledTimes(1);
-});
-
 it('should handle hex input change', () => {
   const handleOnChange = jest.fn();
 

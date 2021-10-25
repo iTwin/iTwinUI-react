@@ -157,7 +157,6 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
               onChangeCompleted={onColorChanged}
               builderProps={{
                 defaultColorFormat: currentFormat,
-                onColorFormatChanged: setCurrentFormat,
               }}
             />
           }
