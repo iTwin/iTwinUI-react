@@ -97,9 +97,13 @@ export const isHsvColor = (value: ColorType): value is HsvColor => {
 export class ColorValue {
   private readonly _tbgr: number;
 
-  private constructor(tbgr: number) {
+  /** hue value provided by user */
+  private readonly _hue?: number;
+
+  private constructor(tbgr: number, hue?: number) {
     scratchUInt32[0] = tbgr; // Force to be a 32-bit unsigned integer
     this._tbgr = scratchUInt32[0];
+    this._hue = hue;
   }
 
   /**
@@ -200,13 +204,14 @@ export class ColorValue {
   /** Create a ColorValue from hue, saturation, lightness values.  */
   private static fromHSL(hsl: HslColor): ColorValue {
     const alpha = hsl.a ?? 1;
-    return this.fromTbgr(
+    return new ColorValue(
       this.computeTbgrFromHSL(
         hsl.h / 360,
         hsl.s / 100,
         hsl.l / 100,
         (1 - alpha) * 255,
       ),
+      hsl.h,
     );
   }
 
@@ -285,7 +290,10 @@ export class ColorValue {
         break; // magenta-ish
     }
 
-    return ColorValue.fromRgbt(r, g, b, transparency);
+    return new ColorValue(
+      ColorValue.computeTbgrFromComponents(r, g, b, transparency),
+      hsv.h,
+    );
   }
 
   /**
@@ -509,7 +517,10 @@ export class ColorValue {
    * Return HslColor from this ColorValue
    */
   public toHslColor(): HslColor {
-    return ColorValue.toHsl(this._tbgr);
+    return {
+      ...ColorValue.toHsl(this._tbgr),
+      ...(this._hue != undefined && { h: this._hue }),
+    };
   }
 
   /** Create an HslColor from this ColorValue */
@@ -566,7 +577,10 @@ export class ColorValue {
    * Return HsvColor from this ColorValue
    */
   public toHsvColor(): HsvColor {
-    return ColorValue.toHsv(this._tbgr);
+    return {
+      ...ColorValue.toHsv(this._tbgr),
+      ...(this._hue != undefined && { h: this._hue }),
+    };
   }
 
   /**
@@ -646,7 +660,7 @@ export class ColorValue {
   /** Convert this ColorValue to a string in the form "hsl(h,s,l) or hsla(h,s,l,a)" - i.e hsl(120,50%,50%). */
   public toHslString(includeAlpha?: boolean): string {
     const hsl = this.toHslColor();
-    const hslString = `${hsl.h}, ${hsl.s}%, ${hsl.l}%`;
+    const hslString = `${this._hue ?? hsl.h}, ${hsl.s}%, ${hsl.l}%`;
     if (includeAlpha) {
       const alpha = hsl.a ?? 1;
       return `hsla(${hslString}, ${alpha.toFixed(2)})`;
@@ -657,7 +671,7 @@ export class ColorValue {
   /** Convert this ColorValue to a string in the form "hsv(h,s,v) or hsva(h,s,v,a)" - i.e hsv(120,50%,50%). */
   public toHsvString(includeAlpha?: boolean): string {
     const hsv = this.toHsvColor();
-    const hsvString = `${hsv.h}, ${hsv.s}%, ${hsv.v}%`;
+    const hsvString = `${this._hue ?? hsv.h}, ${hsv.s}%, ${hsv.v}%`;
 
     if (includeAlpha) {
       const alpha = hsv.a ?? 1;
