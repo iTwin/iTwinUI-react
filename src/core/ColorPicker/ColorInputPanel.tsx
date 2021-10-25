@@ -45,7 +45,11 @@ export const ColorInputPanel = React.forwardRef(
 
     useTheme();
 
-    const { activeColor, hsvColor, onChangeComplete } = useColorPickerContext();
+    const {
+      activeColor,
+      applyHsvColorChange,
+      hsvColor,
+    } = useColorPickerContext();
 
     const [currentFormat, setCurrentFormat] = React.useState(
       defaultColorFormat,
@@ -97,9 +101,7 @@ export const ColorInputPanel = React.forwardRef(
       }
 
       if (currentFormat === 'hsl') {
-        const h = Number(input[0]);
-        const s = Number(input[1]);
-        const l = Number(input[2]);
+        const [h, s, l] = input.map(Number);
 
         if (h < 0 || h > 360 || s < 0 || s > 100 || l < 0 || l > 100) {
           return;
@@ -113,9 +115,7 @@ export const ColorInputPanel = React.forwardRef(
       }
 
       if (currentFormat === 'rgb') {
-        const r = Number(input[0]);
-        const g = Number(input[1]);
-        const b = Number(input[2]);
+        const [r, g, b] = input.map(Number);
 
         if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
           return;
@@ -129,7 +129,7 @@ export const ColorInputPanel = React.forwardRef(
       }
 
       if (color) {
-        onChangeComplete?.(color);
+        applyHsvColorChange(color.toHsvColor(), true);
       }
     };
 
