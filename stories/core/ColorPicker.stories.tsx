@@ -161,7 +161,7 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
               <ColorBuilder />
               <ColorInputPanel defaultColorFormat='hsl' />
               <ColorPalette
-                label='Saved colors'
+                label='Saved Colors'
                 colors={[
                   { h: 0, s: 100, l: 50 },
                   { r: 255, g: 98, b: 0 },
