@@ -12,6 +12,9 @@ import {
   Button,
   ButtonGroup,
   ColorValue,
+  ColorPalette,
+  ColorBuilder,
+  ColorInputPanel,
 } from '../../src/core';
 import { Popover } from '../../src/core/utils';
 import { action } from '@storybook/addon-actions';
@@ -19,6 +22,7 @@ import { CreeveyStoryParams } from 'creevey';
 
 export default {
   component: ColorPicker,
+  subcomponents: { ColorBuilder, ColorPalette, ColorInputPanel, ColorSwatch },
   argTypes: {
     className: { control: { disable: true } },
     style: { control: { disable: true } },
@@ -96,8 +100,10 @@ export const Basic: Story<ColorPickerProps> = (args) => {
           <ColorPicker
             selectedColor={activeColor.color}
             {...args}
-            onChangeCompleted={onColorChanged}
-          />
+            onChangeComplete={onColorChanged}
+          >
+            <ColorPalette colors={ColorsList.map(({ color }) => color)} />
+          </ColorPicker>
         }
         visible={isOpen}
         placement='bottom-start'
@@ -113,11 +119,7 @@ export const Basic: Story<ColorPickerProps> = (args) => {
     </>
   );
 };
-Basic.args = {
-  paletteProps: {
-    colors: ColorsList.map(({ color }) => color),
-  },
-};
+Basic.args = {};
 
 export const Advanced: Story<ColorPickerProps> = (args) => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -154,11 +156,22 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
             <ColorPicker
               selectedColor={selectedColor}
               {...args}
-              onChangeCompleted={onColorChanged}
-              builderProps={{
-                defaultColorFormat: currentFormat,
-              }}
-            />
+              onChangeComplete={onColorChanged}
+            >
+              <ColorBuilder />
+              <ColorInputPanel defaultColorFormat='hsl' />
+              <ColorPalette
+                label='Saved colors'
+                colors={[
+                  { h: 0, s: 100, l: 50 },
+                  { r: 255, g: 98, b: 0 },
+                  '#fec134',
+                  '#5A6973',
+                  { h: 95, s: 83, v: 72 },
+                  { h: 250, s: 100, l: 59 },
+                ]}
+              />
+            </ColorPicker>
           }
           appendTo={() => document.body}
           visible={isOpen}
@@ -192,16 +205,4 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
   );
 };
 
-Advanced.args = {
-  paletteProps: {
-    colors: [
-      { h: 0, s: 100, l: 50 },
-      { r: 255, g: 98, b: 0 },
-      '#fec134',
-      '#5A6973',
-      { h: 95, s: 83, v: 72 },
-      { h: 250, s: 100, l: 59 },
-    ],
-    colorPaletteTitle: 'Saved Colors',
-  },
-};
+Advanced.args = {};

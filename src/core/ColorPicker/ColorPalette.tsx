@@ -3,28 +3,44 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
+import cx from 'classnames';
 import {
+  ColorType,
+  ColorValue,
   CommonProps,
   getFocusableElements,
   useMergedRefs,
   useTheme,
 } from '../utils';
+import { getColorValue } from './ColorPicker';
+import { ColorSwatch } from './ColorSwatch';
+import { useColorPickerContext } from './ColorPickerContext';
 import '@itwin/itwinui-css/css/color-picker.css';
 
-type ColorPaletteProps = {
+export type ColorPaletteProps = {
   /**
-   * Should the first active or enabled be automatically focused?
+   * Label shown above the palette.
+   */
+  label?: React.ReactNode;
+  /**
+   * List of colors shown as swatches in the palette.
+   */
+  colors?: Array<ColorType | ColorValue>;
+  /**
+   * Should the first active or enabled child be automatically focused?
    * @default false
    */
   setFocus?: boolean;
   /**
-   * Color swatches to be passed as children.
+   * Pass any custom swatches as children.
    */
-  children: React.ReactNode;
+  children?: React.ReactNode;
 } & Omit<CommonProps, 'title'>;
 
 /**
- * Color palette to show a group of `ColorSwatch` components.
+ * `ColorPalette` is used to show a group of `ColorSwatch` components.
+ * @example
+ * <ColorPalette colors={['#ffffff', '#000000']} />
  * @example
  * <ColorPalette>
  *   <ColorSwatch color='#ffffff' />
@@ -34,9 +50,22 @@ type ColorPaletteProps = {
  */
 export const ColorPalette = React.forwardRef(
   (props: ColorPaletteProps, ref: React.Ref<HTMLDivElement>) => {
-    const { setFocus = false, children } = props;
+    const {
+      setFocus = false,
+      colors,
+      label,
+      className,
+      children,
+      ...rest
+    } = props;
 
     useTheme();
+
+    const {
+      activeColor,
+      setActiveColor,
+      onChangeComplete,
+    } = useColorPickerContext();
 
     const [focusedIndex, setFocusedIndex] = React.useState<number>();
 
@@ -47,8 +76,8 @@ export const ColorPalette = React.forwardRef(
       }
     };
 
+    const refs = useMergedRefs(ref, setDefaultTabIndex);
     const paletteRef = React.useRef<HTMLDivElement>(null);
-    const refs = useMergedRefs(ref, paletteRef, setDefaultTabIndex);
 
     // Color palette arrow key navigation
     const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -130,8 +159,35 @@ export const ColorPalette = React.forwardRef(
     }, [focusedIndex, setFocus]);
 
     return (
-      <div className='iui-color-palette' onKeyDown={handleKeyDown} ref={refs}>
-        {children}
+      <div
+        className={cx('iui-color-palette-wrapper', className)}
+        ref={refs}
+        {...rest}
+      >
+        {label && <div className='iui-color-picker-section-label'>{label}</div>}
+        <div
+          className='iui-color-palette'
+          onKeyDown={handleKeyDown}
+          ref={paletteRef}
+        >
+          {children}
+          {colors &&
+            colors.map((_color, index) => {
+              const color = getColorValue(_color);
+              return (
+                <ColorSwatch
+                  key={index}
+                  color={color}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    onChangeComplete?.(color);
+                    setActiveColor(color);
+                  }}
+                  isActive={color.equals(activeColor)}
+                />
+              );
+            })}
+        </div>
       </div>
     );
   },

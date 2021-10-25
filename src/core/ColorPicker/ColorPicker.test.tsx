@@ -5,7 +5,10 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import { getColorValue, ColorPicker } from './ColorPicker';
-import { ColorValue } from '../utils/color/ColorValue';
+import { ColorValue } from '../utils';
+import { ColorPalette } from './ColorPalette';
+import { ColorBuilder } from './ColorBuilder';
+import { ColorInputPanel } from './ColorInputPanel';
 
 beforeAll(() => {
   window.CSS = { supports: () => true, escape: (i) => i };
@@ -20,12 +23,9 @@ it('should convert color list to ColorValues', () => {
 
 it('should render in its most basic state', () => {
   const { container } = render(
-    <ColorPicker
-      onChangeCompleted={() => {}}
-      paletteProps={{
-        colors: ['#9BA5AF', '#23450b', '#00121D', '#002A44'],
-      }}
-    />,
+    <ColorPicker>
+      <ColorPalette colors={['#9BA5AF', '#23450b', '#00121D', '#002A44']} />
+    </ColorPicker>,
   );
 
   expect(container.querySelector(`.iui-color-picker`)).toBeTruthy();
@@ -35,34 +35,23 @@ it('should render in its most basic state', () => {
 
 it('should add className and style correctly', () => {
   const { container } = render(
-    <ColorPicker
-      className='test-class'
-      style={{ width: '100px' }}
-      onChangeCompleted={() => {}}
-    />,
+    <ColorPicker className='test-class' style={{ width: '100px' }}>
+      <ColorBuilder />
+    </ColorPicker>,
   );
 
   const swatch = container.querySelector(
     '.iui-color-picker.test-class',
   ) as HTMLElement;
   expect(swatch).toBeTruthy();
-  expect(swatch.style.width).toBe('100px');
+  expect(swatch).toHaveStyle('width: 100px');
 });
 
 it('should set tabIndex on active color swatch', () => {
   const { container } = render(
-    <ColorPicker
-      onChangeCompleted={() => {}}
-      paletteProps={{
-        colors: [
-          ColorValue.create('#9BA5AF'),
-          ColorValue.create('#23450b'),
-          ColorValue.create('#00121D'),
-          ColorValue.create('#002A44'),
-        ],
-      }}
-      selectedColor={ColorValue.create('#23450b')}
-    />,
+    <ColorPicker selectedColor={ColorValue.create('#23450b')}>
+      <ColorPalette colors={['#9BA5AF', '#23450b', '#00121D', '#002A44']} />
+    </ColorPicker>,
   );
 
   const colorSwatches = Array.from<HTMLElement>(
@@ -96,13 +85,9 @@ it('should handle keyboard navigation on color swatches', () => {
   ];
 
   const { container } = render(
-    <ColorPicker
-      paletteProps={{
-        colors: colorsList,
-      }}
-      selectedColor={colorsList[10]}
-      onChangeCompleted={onColorClick}
-    />,
+    <ColorPicker selectedColor={colorsList[10]} onChangeComplete={onColorClick}>
+      <ColorPalette colors={colorsList} />
+    </ColorPicker>,
   );
 
   const colorSwatches = Array.from<HTMLElement>(
@@ -161,12 +146,10 @@ it('should handle keyboard navigation on color swatches', () => {
 
 it('should render advanced color picker with no color swatches', () => {
   const { container } = render(
-    <ColorPicker
-      builderProps={{
-        defaultColorFormat: 'hex',
-      }}
-      onChangeCompleted={() => {}}
-    />,
+    <ColorPicker>
+      <ColorBuilder />
+      <ColorInputPanel defaultColorFormat='hex' />
+    </ColorPicker>,
   );
 
   expect(container.querySelector(`.iui-color-picker`)).toBeTruthy();
@@ -188,13 +171,11 @@ it('should render advanced color picker with no color swatches', () => {
 
 it('should render advanced color picker with color swatches and no title', () => {
   const { container } = render(
-    <ColorPicker
-      onChangeCompleted={() => {}}
-      paletteProps={{ colors: [ColorValue.create('#FFFFFF')] }}
-      builderProps={{
-        defaultColorFormat: 'hex',
-      }}
-    />,
+    <ColorPicker>
+      <ColorBuilder />
+      <ColorInputPanel defaultColorFormat='hex' />
+      <ColorPalette colors={['#FFFFFF']} />
+    </ColorPicker>,
   );
 
   expect(container.querySelector(`.iui-color-picker`)).toBeTruthy();
@@ -216,13 +197,9 @@ it('should render advanced color picker with color swatches and no title', () =>
 
 it('should render color picker with color palette title', () => {
   const { container } = render(
-    <ColorPicker
-      onChangeCompleted={() => {}}
-      paletteProps={{
-        colors: [ColorValue.create('#FFFFFF')],
-        colorPaletteTitle: 'Test Title',
-      }}
-    />,
+    <ColorPicker>
+      <ColorPalette colors={['#FFFFFF']} label='Test Title' />
+    </ColorPicker>,
   );
 
   expect(container.querySelector(`.iui-color-picker`)).toBeTruthy();
@@ -239,32 +216,23 @@ it('should render color picker with color palette title', () => {
 
 it('should set the selected color', () => {
   const { container } = render(
-    <ColorPicker
-      onChangeCompleted={() => {}}
-      selectedColor={{ h: 42, s: 100, l: 50 }}
-      builderProps={{
-        defaultColorFormat: 'hex',
-      }}
-    />,
+    <ColorPicker selectedColor={{ h: 42, s: 100, l: 50 }}>
+      <ColorBuilder />
+    </ColorPicker>,
   );
 
   //Set the correct square color
-  const colorPicker = container.querySelector(
-    '.iui-color-picker',
+  const colorBuilder = container.querySelector(
+    '.iui-color-picker .iui-color-field',
   ) as HTMLElement;
-  expect(colorPicker.style.getPropertyValue('--selected-color')).toBe(
-    '#ffb300',
-  );
-  expect(colorPicker.style.getPropertyValue('--hue')).toBe('#ffb300');
+  expect(colorBuilder).toHaveStyle('--hue: #ffb300; --selected-color: #ffb300');
 });
 
 it('should set the dot positions', () => {
   const { container } = render(
-    <ColorPicker
-      onChangeCompleted={() => {}}
-      selectedColor={{ h: 42, s: 100, l: 50 }}
-      builderProps={{}}
-    />,
+    <ColorPicker selectedColor={{ h: 42, s: 100, l: 50 }}>
+      <ColorBuilder />
+    </ColorPicker>,
   );
 
   //Set the correct position on color square
@@ -286,19 +254,17 @@ it('should handle arrow key navigation on slider dot', () => {
 
   const { container } = render(
     <ColorPicker
-      onChangeCompleted={onSelectionChanged}
+      onChangeComplete={onSelectionChanged}
       selectedColor={{ h: 0, s: 100, l: 50 }}
-      builderProps={{}}
-    />,
+    >
+      <ColorBuilder />
+    </ColorPicker>,
   );
 
-  const colorPicker = container.querySelector(
-    '.iui-color-picker',
+  const colorBuilder = container.querySelector(
+    '.iui-color-picker .iui-color-field',
   ) as HTMLElement;
-  expect(colorPicker.style.getPropertyValue('--selected-color')).toBe(
-    '#ff0000',
-  );
-  expect(colorPicker.style.getPropertyValue('--hue')).toBe('#ff0000');
+  expect(colorBuilder).toHaveStyle('--hue: #ff0000; --selected-color: #ff0000');
 
   const sliderDot = container.querySelector('.iui-slider-thumb') as HTMLElement;
   expect(sliderDot).toBeTruthy();
@@ -311,7 +277,7 @@ it('should handle arrow key navigation on slider dot', () => {
   expect(sliderDot.style.getPropertyValue('left')).toEqual(
     '0.5571030640668524%',
   );
-  expect(colorPicker.style.getPropertyValue('--hue')).toEqual('#ff0800');
+  expect(colorBuilder).toHaveStyle('--hue: #ff0800');
 
   // Go left
   fireEvent.keyDown(sliderDot, { key: 'ArrowLeft' });
@@ -319,7 +285,7 @@ it('should handle arrow key navigation on slider dot', () => {
   expect(sliderDot.style.getPropertyValue('left')).toEqual(
     '0.2785515320334262%',
   );
-  expect(colorPicker.style.getPropertyValue('--hue')).toEqual('#ff0400');
+  expect(colorBuilder).toHaveStyle('--hue: #ff0400');
 
   // Go left to edge
   fireEvent.keyDown(sliderDot, { key: 'ArrowLeft' });
@@ -335,19 +301,18 @@ it('should handle arrow key navigation on color dot', () => {
   const { container } = render(
     <ColorPicker
       onChange={onChange}
-      onChangeCompleted={onChangeComplete}
+      onChangeComplete={onChangeComplete}
       selectedColor={{ h: 0, s: 100, l: 50 }}
-      builderProps={{}}
-    />,
+    >
+      <ColorBuilder />
+    </ColorPicker>,
   );
 
-  const colorPicker = container.querySelector(
-    '.iui-color-picker',
+  const colorBuilder = container.querySelector(
+    '.iui-color-picker .iui-color-field',
   ) as HTMLElement;
-  expect(colorPicker.style.getPropertyValue('--selected-color')).toBe(
-    '#ff0000',
-  );
-  expect(colorPicker.style.getPropertyValue('--hue')).toBe('#ff0000');
+
+  expect(colorBuilder).toHaveStyle('--hue: #ff0000; --selected-color: #ff0000');
 
   const sliderDot = container.querySelector('.iui-slider-thumb') as HTMLElement;
   expect(sliderDot).toBeTruthy();
@@ -365,9 +330,7 @@ it('should handle arrow key navigation on color dot', () => {
   expect(onChangeComplete).not.toHaveBeenCalled();
   expect(colorDot.style.getPropertyValue('--top')).toEqual('2%');
   expect(colorDot.style.getPropertyValue('--left')).toEqual('100%');
-  expect(colorPicker.style.getPropertyValue('--selected-color')).toEqual(
-    '#fa0000',
-  );
+  expect(colorBuilder).toHaveStyle('--selected-color: #fa0000');
   fireEvent.keyUp(colorDot, { key: 'ArrowDown' });
   expect(onChangeComplete).toHaveBeenNthCalledWith(
     1,
@@ -379,9 +342,8 @@ it('should handle arrow key navigation on color dot', () => {
   expect(onChange).toHaveBeenCalledTimes(3);
   expect(colorDot.style.getPropertyValue('--top')).toEqual('2%');
   expect(colorDot.style.getPropertyValue('--left')).toEqual('99%');
-  expect(colorPicker.style.getPropertyValue('--selected-color')).toEqual(
-    '#fa0202',
-  );
+  expect(colorBuilder).toHaveStyle('--selected-color: #fa0202');
+
   fireEvent.keyUp(colorDot, { key: 'ArrowLeft' });
   expect(onChangeComplete).toHaveBeenNthCalledWith(
     2,
@@ -393,16 +355,12 @@ it('should handle arrow key navigation on color dot', () => {
   fireEvent.keyDown(colorDot, { key: 'ArrowUp' });
   expect(colorDot.style.getPropertyValue('--top')).toEqual('0%');
   expect(colorDot.style.getPropertyValue('--left')).toEqual('99%');
-  expect(colorPicker.style.getPropertyValue('--selected-color')).toEqual(
-    '#ff0303',
-  );
+  expect(colorBuilder).toHaveStyle('--selected-color: #ff0303');
 
   fireEvent.keyDown(colorDot, { key: 'ArrowUp' });
   expect(colorDot.style.getPropertyValue('--top')).toEqual('0%');
   expect(colorDot.style.getPropertyValue('--left')).toEqual('99%');
-  expect(colorPicker.style.getPropertyValue('--selected-color')).toEqual(
-    '#ff0303',
-  );
+  expect(colorBuilder).toHaveStyle('--selected-color: #ff0303');
   fireEvent.keyUp(colorDot, { key: 'ArrowUp' });
   expect(onChangeComplete).toHaveBeenNthCalledWith(
     3,
@@ -413,9 +371,7 @@ it('should handle arrow key navigation on color dot', () => {
   fireEvent.keyDown(colorDot, { key: 'ArrowRight' });
   expect(colorDot.style.getPropertyValue('--top')).toEqual('0%');
   expect(colorDot.style.getPropertyValue('--left')).toEqual('100%');
-  expect(colorPicker.style.getPropertyValue('--selected-color')).toEqual(
-    '#ff0000',
-  );
+  expect(colorBuilder).toHaveStyle('--selected-color: #ff0000');
   fireEvent.keyUp(colorDot, { key: 'ArrowRight' });
   expect(onChangeComplete).toHaveBeenNthCalledWith(
     4,
@@ -426,9 +382,7 @@ it('should handle arrow key navigation on color dot', () => {
   fireEvent.keyDown(colorDot, { key: 'ArrowUp' });
   expect(colorDot.style.getPropertyValue('--top')).toEqual('0%');
   expect(colorDot.style.getPropertyValue('--left')).toEqual('100%');
-  expect(colorPicker.style.getPropertyValue('--selected-color')).toEqual(
-    '#ff0000',
-  );
+  expect(colorBuilder).toHaveStyle('--selected-color: #ff0000');
   fireEvent.keyUp(colorDot, { key: 'ArrowUp' });
   expect(onChangeComplete).toHaveBeenNthCalledWith(
     5,
@@ -436,17 +390,18 @@ it('should handle arrow key navigation on color dot', () => {
   );
 });
 
-it('should call onChange and onChangeCompleted from hueSlider', () => {
+it('should call onChange and onChangeComplete from hueSlider', () => {
   const handleOnUpdate = jest.fn();
   const handleOnChange = jest.fn();
 
   const { container } = render(
     <ColorPicker
-      onChangeCompleted={handleOnChange}
+      onChangeComplete={handleOnChange}
       onChange={handleOnUpdate}
       selectedColor={{ h: 0, s: 100, l: 50 }}
-      builderProps={{}}
-    />,
+    >
+      <ColorBuilder />
+    </ColorPicker>,
   );
 
   const sliderContainer = container.querySelector(
@@ -482,12 +437,13 @@ it('should handle pointer down/move/up from color square', () => {
 
   const { container } = render(
     <ColorPicker
-      onChangeCompleted={handleOnChange}
+      onChangeComplete={handleOnChange}
       onChange={handleOnUpdate}
       selectedColor={{ h: 0, s: 100, l: 50 }}
-      paletteProps={{ colors: [{ h: 0, s: 100, l: 50 }] }}
-      builderProps={{}}
-    />,
+    >
+      <ColorBuilder />
+      <ColorPalette colors={[{ h: 0, s: 100, l: 50 }]} />
+    </ColorPicker>,
   );
 
   const colorPicker = container.querySelector(
@@ -526,12 +482,10 @@ it('should handle pointer down/move/up from color square', () => {
 
 it('should render advanced color picker with input fields', () => {
   const { container } = render(
-    <ColorPicker
-      builderProps={{
-        defaultColorFormat: 'hex',
-      }}
-      onChangeCompleted={() => {}}
-    />,
+    <ColorPicker>
+      <ColorBuilder />
+      <ColorInputPanel defaultColorFormat='hex' />
+    </ColorPicker>,
   );
 
   expect(
@@ -567,13 +521,13 @@ it('should render advanced color picker with input fields', () => {
 
 it('should only show allowed color formats on input panel', () => {
   const { container } = render(
-    <ColorPicker
-      builderProps={{
-        defaultColorFormat: 'hex',
-        allowedColorFormats: ['hex', 'hsl'],
-      }}
-      onChangeCompleted={() => {}}
-    />,
+    <ColorPicker>
+      <ColorBuilder />
+      <ColorInputPanel
+        defaultColorFormat='hex'
+        allowedColorFormats={['hex', 'hsl']}
+      />
+    </ColorPicker>,
   );
 
   expect(
@@ -599,13 +553,10 @@ it('should only show allowed color formats on input panel', () => {
 
 it('should not show swap button if only 1 color format allowed on input panel', () => {
   const { container } = render(
-    <ColorPicker
-      builderProps={{
-        defaultColorFormat: 'hex',
-        allowedColorFormats: ['hex'],
-      }}
-      onChangeCompleted={() => {}}
-    />,
+    <ColorPicker>
+      <ColorBuilder />
+      <ColorInputPanel defaultColorFormat='hex' allowedColorFormats={['hex']} />
+    </ColorPicker>,
   );
 
   expect(
@@ -627,12 +578,10 @@ it('should handle hex input change', () => {
   const handleOnChange = jest.fn();
 
   const { container } = render(
-    <ColorPicker
-      builderProps={{
-        defaultColorFormat: 'hex',
-      }}
-      onChangeCompleted={handleOnChange}
-    />,
+    <ColorPicker onChangeComplete={handleOnChange}>
+      <ColorBuilder />
+      <ColorInputPanel defaultColorFormat='hex' />
+    </ColorPicker>,
   );
 
   const input = container.querySelectorAll('input')[0] as HTMLInputElement;
@@ -661,12 +610,10 @@ it('should handle hsl input change', () => {
   const handleOnChange = jest.fn();
 
   const { container } = render(
-    <ColorPicker
-      builderProps={{
-        defaultColorFormat: 'hsl',
-      }}
-      onChangeCompleted={handleOnChange}
-    />,
+    <ColorPicker onChangeComplete={handleOnChange}>
+      <ColorBuilder />
+      <ColorInputPanel defaultColorFormat='hsl' />
+    </ColorPicker>,
   );
 
   const h = container.querySelectorAll('input')[0] as HTMLInputElement;
@@ -716,12 +663,10 @@ it('should handle rgb input change', () => {
   const handleOnChange = jest.fn();
 
   const { container } = render(
-    <ColorPicker
-      builderProps={{
-        defaultColorFormat: 'rgb',
-      }}
-      onChangeCompleted={handleOnChange}
-    />,
+    <ColorPicker onChangeComplete={handleOnChange}>
+      <ColorBuilder />
+      <ColorInputPanel defaultColorFormat='rgb' />
+    </ColorPicker>,
   );
 
   const r = container.querySelectorAll('input')[0] as HTMLInputElement;
@@ -771,12 +716,10 @@ it('should handle hex input change with lose focus', () => {
   const handleOnChange = jest.fn();
 
   const { container } = render(
-    <ColorPicker
-      builderProps={{
-        defaultColorFormat: 'hex',
-      }}
-      onChangeCompleted={handleOnChange}
-    />,
+    <ColorPicker onChangeComplete={handleOnChange}>
+      <ColorBuilder />
+      <ColorInputPanel defaultColorFormat='hex' />
+    </ColorPicker>,
   );
 
   const input = container.querySelectorAll('input')[0] as HTMLInputElement;
@@ -791,12 +734,10 @@ it('should handle hsl input change with lose focus', () => {
   const handleOnChange = jest.fn();
 
   const { container } = render(
-    <ColorPicker
-      builderProps={{
-        defaultColorFormat: 'hsl',
-      }}
-      onChangeCompleted={handleOnChange}
-    />,
+    <ColorPicker onChangeComplete={handleOnChange}>
+      <ColorBuilder />
+      <ColorInputPanel defaultColorFormat='hsl' />
+    </ColorPicker>,
   );
 
   const h = container.querySelectorAll('input')[0] as HTMLInputElement;
@@ -826,12 +767,10 @@ it('should handle rgb input change with lose focus', () => {
   const handleOnChange = jest.fn();
 
   const { container } = render(
-    <ColorPicker
-      builderProps={{
-        defaultColorFormat: 'rgb',
-      }}
-      onChangeCompleted={handleOnChange}
-    />,
+    <ColorPicker onChangeComplete={handleOnChange}>
+      <ColorBuilder />
+      <ColorInputPanel defaultColorFormat='rgb' />
+    </ColorPicker>,
   );
 
   const r = container.querySelectorAll('input')[0] as HTMLInputElement;
@@ -859,22 +798,18 @@ it('should handle rgb input change with lose focus', () => {
 
 it('should preserve hue when color dot is black/at bottom of square', () => {
   const { container } = render(
-    <ColorPicker
-      onChangeCompleted={() => {}}
-      selectedColor={{ h: 140, s: 60, l: 1 }}
-      builderProps={{
-        defaultColorFormat: 'hex',
-      }}
-    />,
+    <ColorPicker selectedColor={{ h: 140, s: 60, l: 1 }}>
+      <ColorBuilder />
+    </ColorPicker>,
   );
 
-  const colorPicker = container.querySelector(
-    '.iui-color-picker',
+  const colorBuilder = container.querySelector(
+    '.iui-color-picker .iui-color-field',
   ) as HTMLElement;
-  expect(colorPicker.style.getPropertyValue('--selected-color')).toBe(
+  expect(colorBuilder.style.getPropertyValue('--selected-color')).toBe(
     '#010402',
   );
-  expect(colorPicker.style.getPropertyValue('--hue')).toBe('#00ff55');
+  expect(colorBuilder.style.getPropertyValue('--hue')).toBe('#00ff55');
 
   const colorDot = container.querySelector('.iui-color-dot') as HTMLElement;
   expect(colorDot).toBeTruthy();
@@ -886,17 +821,25 @@ it('should preserve hue when color dot is black/at bottom of square', () => {
   fireEvent.keyDown(colorDot, { key: 'ArrowDown' });
   expect(colorDot.style.getPropertyValue('--left')).toEqual('75%');
   expect(colorDot.style.getPropertyValue('--top')).toEqual('100%');
-  expect(colorPicker.style.getPropertyValue('--hue')).toBe('#00ff55');
+  expect(colorBuilder.style.getPropertyValue('--hue')).toBe('#00ff55');
 });
 
 it('should set focus if setFocus is true', () => {
-  const { container } = render(<ColorPicker builderProps={{}} setFocus />);
+  const { container } = render(
+    <ColorPicker setFocus>
+      <ColorBuilder />
+    </ColorPicker>,
+  );
   expect(container.querySelector('.iui-color-picker')).toBeTruthy();
   expect(container.querySelector('.iui-color-dot')).toHaveFocus(); // first tabbable element
 });
 
 it('should not set focus if setFocus is false', () => {
-  const { container } = render(<ColorPicker builderProps={{}} />);
+  const { container } = render(
+    <ColorPicker>
+      <ColorBuilder />
+    </ColorPicker>,
+  );
   expect(container.querySelector('.iui-color-picker')).toBeTruthy();
   expect(container.querySelector('.iui-color-dot')).not.toHaveFocus();
 });
