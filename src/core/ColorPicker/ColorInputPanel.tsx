@@ -137,7 +137,6 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
       const l = Number(value[2]);
 
       if (h < 0 || h > 360 || s < 0 || s > 100 || l < 0 || l > 100) {
-        setHslInput(value);
         return;
       }
       const hsl = activeColor.toHslColor();
@@ -145,11 +144,7 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
         return;
       }
 
-      color = ColorValue.create({
-        h: h,
-        s: s,
-        l: l,
-      });
+      color = ColorValue.create({ h, s, l });
       onChangeCompleted?.(color);
     }
 
@@ -159,7 +154,6 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
       const b = Number(value[2]);
 
       if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
-        setRgbInput(value);
         return;
       }
       const rgb = activeColor.toRgbColor();
@@ -167,11 +161,7 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
         return;
       }
 
-      color = ColorValue.create({
-        r: r,
-        g: g,
-        b: b,
-      });
+      color = ColorValue.create({ r, g, b });
       onChangeCompleted?.(color);
     }
   };
@@ -214,7 +204,6 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
         }
       >
         <Input
-          key='hsl-h'
           size='small'
           type='number'
           min='0'
@@ -244,7 +233,6 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
         }
       >
         <Input
-          key='hsl-s'
           size='small'
           type='number'
           min='0'
@@ -274,7 +262,6 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
         }
       >
         <Input
-          key='hsl-l'
           size='small'
           type='number'
           min='0'
@@ -309,7 +296,6 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
         }
       >
         <Input
-          key='rgb-r'
           size='small'
           type='number'
           min='0'
@@ -339,7 +325,6 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
         }
       >
         <Input
-          key='rgb-g'
           size='small'
           type='number'
           min='0'
@@ -369,7 +354,6 @@ export const ColorInputPanel = (props: ColorInputPanelProps) => {
         }
       >
         <Input
-          key='rgb-b'
           size='small'
           type='number'
           min='0'
