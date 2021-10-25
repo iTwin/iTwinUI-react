@@ -642,7 +642,7 @@ export class ColorValue {
 
   /** True if the value of this ColorValue is the same as another ColorValue. */
   public equals(other: ColorValue): boolean {
-    return this._tbgr === other._tbgr;
+    return this._tbgr === other._tbgr && this._hue === other._hue;
   }
 
   /** Convert the 0xTTBBGGRR color to a string of the form "rgba(r,g,b,a)" where the color components are specified in decimal and the alpha component is a fraction. */
