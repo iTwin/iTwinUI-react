@@ -195,7 +195,7 @@ it('should render active and disabled sidebar buttons', () => {
   expect(mainItems).toHaveLength(3);
 
   expect(mainItems[0]).toHaveClass('iui-active');
-  expect((mainItems[1] as HTMLButtonElement).disabled).toBeTruthy();
+  expect(mainItems[1]).toBeDisabled();
   expect(mainItems[2]).toHaveClass('iui-submenu-open');
 });
 
