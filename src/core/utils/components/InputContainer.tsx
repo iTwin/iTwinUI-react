@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
+import { useMergedRefs } from '../hooks';
 
 export type InputContainerProps<T extends React.ElementType = 'div'> = {
   as?: T;
@@ -21,58 +22,79 @@ export type InputContainerProps<T extends React.ElementType = 'div'> = {
  * Input container to wrap inputs with label, and add optional message and icon.
  * @private
  */
-export const InputContainer = <T extends React.ElementType = 'div'>(
-  props: InputContainerProps<T>,
-) => {
-  const {
-    as: Element = 'div',
-    label,
-    disabled,
-    required,
-    status,
-    message,
-    icon,
-    isLabelInline,
-    isIconInline,
-    children,
-    className,
-    style,
-    ...rest
-  } = props;
+export const InputContainer = React.forwardRef(
+  <T extends React.ElementType = 'div'>(
+    props: InputContainerProps<T>,
+    ref: React.Ref<HTMLElement>,
+  ) => {
+    const {
+      as: Element = 'div',
+      label,
+      disabled,
+      required,
+      status,
+      message,
+      icon,
+      isLabelInline,
+      isIconInline,
+      children,
+      className,
+      style,
+      ...rest
+    } = props;
 
-  return (
-    <Element
-      className={cx(
-        'iui-input-container',
-        {
-          'iui-disabled': disabled,
-          [`iui-${status}`]: !!status,
-          'iui-inline-label': isLabelInline,
-          'iui-inline-icon': isIconInline,
-          'iui-with-message': !!message && !isLabelInline,
-        },
-        className,
-      )}
-      style={style}
-      {...rest}
-    >
-      {label && (
-        <div
-          className={cx('iui-label', {
-            'iui-required': required,
+    const [inlinePadding, setInlinePadding] = React.useState(40);
+    const updateInlinePadding = React.useCallback(
+      (el: HTMLElement) => {
+        if (el && icon && isIconInline) {
+          const iconWidth = el.querySelector('.iui-input-icon')?.clientWidth;
+          setInlinePadding((iconWidth ?? 0) + 12);
+        }
+      },
+      [icon, isIconInline],
+    );
+
+    const refs = useMergedRefs(ref, updateInlinePadding);
+
+    return (
+      <Element
+        className={cx(
+          'iui-input-container',
+          {
+            'iui-disabled': disabled,
+            [`iui-${status}`]: !!status,
+            'iui-inline-label': isLabelInline,
+            'iui-inline-icon': isIconInline,
+            'iui-with-message': !!message && !isLabelInline,
+          },
+          className,
+        )}
+        style={{
+          ...(isIconInline &&
+            icon && { '--inline-icon-width': `${inlinePadding}px` }),
+          ...style,
+        }}
+        ref={refs}
+        {...rest}
+      >
+        {label && (
+          <div
+            className={cx('iui-label', {
+              'iui-required': required,
+            })}
+          >
+            {label}
+          </div>
+        )}
+        {children}
+        {icon &&
+          React.cloneElement(icon, {
+            className: cx('iui-input-icon', icon.props?.className),
           })}
-        >
-          {label}
-        </div>
-      )}
-      {children}
-      {icon &&
-        React.cloneElement(icon, {
-          className: cx('iui-input-icon', icon.props?.className),
-        })}
-      {message && !isLabelInline && (
-        <div className='iui-message'>{message}</div>
-      )}
-    </Element>
-  );
-};
+        {message && !isLabelInline && (
+          <div className='iui-message'>{message}</div>
+        )}
+      </Element>
+    );
+  },
+);
