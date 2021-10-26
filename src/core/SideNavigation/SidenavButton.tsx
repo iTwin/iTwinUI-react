@@ -17,7 +17,8 @@ export type SidenavButtonProps = {
    */
   isActive?: boolean;
   /**
-   * Whether the sidenav button only has submenu open.
+   * Whether the sidenav button only has submenu open,
+   * i.e. submenu is open but the current page does not correspond to this button.
    */
   isSubmenuOpen?: boolean;
 } & Omit<ButtonProps, 'styleType' | 'size'>;
