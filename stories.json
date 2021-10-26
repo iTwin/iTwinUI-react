@@ -46,6 +46,10 @@
       "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Checkbox.stories.tsx",
       "framework": "react"
     },
+    "Core/ColorPicker": {
+      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ColorPicker.stories.tsx",
+      "framework": "react"
+    },
     "Core/ComboBox": {
       "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ComboBox.stories.tsx",
       "framework": "react"
@@ -554,6 +558,24 @@
       "story": "Loading",
       "parameters": {
         "__id": "input-checkbox--loading"
+      }
+    },
+    "core-colorpicker--basic": {
+      "id": "core-colorpicker--basic",
+      "name": "Basic",
+      "kind": "Core/ColorPicker",
+      "story": "Basic",
+      "parameters": {
+        "__id": "core-colorpicker--basic"
+      }
+    },
+    "core-colorpicker--advanced": {
+      "id": "core-colorpicker--advanced",
+      "name": "Advanced",
+      "kind": "Core/ColorPicker",
+      "story": "Advanced",
+      "parameters": {
+        "__id": "core-colorpicker--advanced"
       }
     },
     "core-combobox--basic": {
