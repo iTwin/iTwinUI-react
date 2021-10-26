@@ -144,7 +144,7 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
       case 'rgb':
         return color.toRgbString();
       case 'hex':
-        return color.toHexString();
+        return color.toHexString().toUpperCase();
     }
   };
 
@@ -159,7 +159,7 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
               onChangeComplete={onColorChanged}
             >
               <ColorBuilder />
-              <ColorInputPanel defaultColorFormat='hsl' />
+              <ColorInputPanel defaultColorFormat={currentFormat} />
               <ColorPalette
                 label='Saved Colors'
                 colors={[
@@ -191,7 +191,7 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
             );
           }}
           endIcon={
-            <svg viewBox='0 0 16 16' className='iui-icon' aria-hidden='true'>
+            <svg viewBox='0 0 16 16' aria-hidden>
               <path d='m5 15-3.78125-3.5 3.78125-3.5v2h8v3h-8zm6-7 3.78125-3.5-3.78125-3.5v2h-8v3h8z' />
             </svg>
           }
