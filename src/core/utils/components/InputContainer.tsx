@@ -5,6 +5,7 @@
 import React from 'react';
 import cx from 'classnames';
 import { useMergedRefs } from '../hooks';
+import { getWindow } from '../functions';
 
 export type InputContainerProps<T extends React.ElementType = 'div'> = {
   as?: T;
@@ -47,8 +48,16 @@ export const InputContainer = React.forwardRef(
     const updateInlinePadding = React.useCallback(
       (el: HTMLElement) => {
         if (el && icon && isIconInline) {
-          const iconWidth = el.querySelector('.iui-input-icon')?.clientWidth;
-          setInlinePadding((iconWidth ?? 0) + 12);
+          const iconEl = el.querySelector('.iui-input-icon') as HTMLElement;
+          const iconStyles = getWindow()?.getComputedStyle(iconEl);
+          if (!iconEl || !iconStyles) {
+            return;
+          }
+          const iconWidth = parseInt(iconStyles.width, 10);
+          const iconMargin =
+            parseInt(iconStyles.marginInlineStart) +
+            parseInt(iconStyles.marginInlineEnd);
+          setInlinePadding(iconWidth + iconMargin + 12);
         }
       },
       [icon, isIconInline],
