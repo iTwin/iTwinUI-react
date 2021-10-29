@@ -49,6 +49,7 @@ export const ColorInputPanel = React.forwardRef(
       activeColor,
       applyHsvColorChange,
       hsvColor,
+      showAlpha,
     } = useColorPickerContext();
 
     const [currentFormat, setCurrentFormat] = React.useState(
@@ -63,11 +64,27 @@ export const ColorInputPanel = React.forwardRef(
     React.useEffect(() => {
       if (currentFormat === 'hsl') {
         const hsl = activeColor.toHslColor();
+        const a = hsl.a
+          ? hsl.a.toFixed(2)
+          : (activeColor.getAlpha() / 255).toFixed(2);
         // use activeHue to preserve hue for 0,0,0 edge case
-        setInput([hsvColor.h.toString(), hsl.s.toString(), hsl.l.toString()]);
+        setInput([
+          hsvColor.h.toString(),
+          hsl.s.toString(),
+          hsl.l.toString(),
+          a.toString(),
+        ]);
       } else if (currentFormat === 'rgb') {
         const rgb = activeColor.toRgbColor();
-        setInput([rgb.r.toString(), rgb.g.toString(), rgb.b.toString()]);
+        const a = rgb.a
+          ? rgb.a.toFixed(2)
+          : (activeColor.getAlpha() / 255).toFixed(2);
+        setInput([
+          rgb.r.toString(),
+          rgb.g.toString(),
+          rgb.b.toString(),
+          a.toString(),
+        ]);
       } else {
         setInput([activeColor.toHexString()]);
       }
@@ -86,6 +103,7 @@ export const ColorInputPanel = React.forwardRef(
 
     const handleColorInputChange = () => {
       let color;
+      let alpha = 1;
 
       if (currentFormat === 'hex') {
         try {
@@ -101,35 +119,59 @@ export const ColorInputPanel = React.forwardRef(
       }
 
       if (currentFormat === 'hsl') {
-        const [h, s, l] = input.map(Number);
+        const [h, s, l, a] = input.map(Number);
 
-        if (h < 0 || h > 360 || s < 0 || s > 100 || l < 0 || l > 100) {
+        if (
+          h < 0 ||
+          h > 360 ||
+          s < 0 ||
+          s > 100 ||
+          l < 0 ||
+          l > 100 ||
+          a < 0 ||
+          a > 1
+        ) {
           return;
         }
         const hsl = activeColor.toHslColor();
-        if (hsl.h === h && hsl.s === s && hsl.l === l) {
+        if (hsl.h === h && hsl.s === s && hsl.l === l && hsl.a === a) {
           return;
         }
 
-        color = ColorValue.create({ h, s, l });
+        color = ColorValue.create({ h, s, l, a });
+        alpha = a;
       }
 
       if (currentFormat === 'rgb') {
-        const [r, g, b] = input.map(Number);
+        const [r, g, b, a] = input.map(Number);
 
-        if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
+        if (
+          r < 0 ||
+          r > 255 ||
+          g < 0 ||
+          g > 255 ||
+          b < 0 ||
+          b > 255 ||
+          a < 0 ||
+          a > 1
+        ) {
           return;
         }
         const rgb = activeColor.toRgbColor();
-        if (rgb.r === r && rgb.g === g && rgb.b === b) {
+        if (rgb.r === r && rgb.g === g && rgb.b === b && rgb.a === a) {
           return;
         }
 
-        color = ColorValue.create({ r, g, b });
+        color = ColorValue.create({ r, g, b, a });
+        alpha = a;
       }
 
       if (color) {
-        applyHsvColorChange(color.toHsvColor(), true);
+        const hsv = color.toHsvColor();
+        if (showAlpha) {
+          hsv.a = alpha;
+        }
+        applyHsvColorChange(hsv, true);
       }
     };
 
@@ -178,7 +220,7 @@ export const ColorInputPanel = React.forwardRef(
             placeholder='H'
             value={input[0]}
             onChange={(event) => {
-              setInput([event.target.value, input[1], input[2]]);
+              setInput([event.target.value, input[1], input[2], input[3]]);
             }}
             onKeyDown={(event) => {
               if (event.key === 'Enter') {
@@ -207,7 +249,7 @@ export const ColorInputPanel = React.forwardRef(
             placeholder='S'
             value={input[1]}
             onChange={(event) => {
-              setInput([input[0], event.target.value, input[2]]);
+              setInput([input[0], event.target.value, input[2], input[3]]);
             }}
             onKeyDown={(event) => {
               if (event.key === 'Enter') {
@@ -236,7 +278,7 @@ export const ColorInputPanel = React.forwardRef(
             placeholder='L'
             value={input[2]}
             onChange={(event) => {
-              setInput([input[0], input[1], event.target.value]);
+              setInput([input[0], input[1], event.target.value, input[3]]);
             }}
             onKeyDown={(event) => {
               if (event.key === 'Enter') {
@@ -250,6 +292,38 @@ export const ColorInputPanel = React.forwardRef(
             }}
           />
         </InputContainer>
+        {showAlpha && (
+          <InputContainer
+            status={
+              Number(input[3]) < 0 || Number(input[3]) > 1
+                ? 'negative'
+                : undefined
+            }
+          >
+            <Input
+              size='small'
+              type='number'
+              min='0'
+              max='1'
+              step='.01'
+              placeholder='A'
+              value={input[3]}
+              onChange={(event) => {
+                setInput([input[0], input[1], input[2], event.target.value]);
+              }}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  event.preventDefault();
+                  handleColorInputChange();
+                }
+              }}
+              onBlur={(event) => {
+                event.preventDefault();
+                handleColorInputChange();
+              }}
+            />
+          </InputContainer>
+        )}
       </>
     );
 
@@ -270,7 +344,7 @@ export const ColorInputPanel = React.forwardRef(
             placeholder='R'
             value={input[0]}
             onChange={(event) => {
-              setInput([event.target.value, input[1], input[2]]);
+              setInput([event.target.value, input[1], input[2], input[3]]);
             }}
             onKeyDown={(event) => {
               if (event.key === 'Enter') {
@@ -299,7 +373,7 @@ export const ColorInputPanel = React.forwardRef(
             placeholder='G'
             value={input[1]}
             onChange={(event) => {
-              setInput([input[0], event.target.value, input[2]]);
+              setInput([input[0], event.target.value, input[2], input[3]]);
             }}
             onKeyDown={(event) => {
               if (event.key === 'Enter') {
@@ -328,7 +402,7 @@ export const ColorInputPanel = React.forwardRef(
             placeholder={'B'}
             value={input[2]}
             onChange={(event) => {
-              setInput([input[0], input[1], event.target.value]);
+              setInput([input[0], input[1], event.target.value, input[3]]);
             }}
             onKeyDown={(event) => {
               if (event.key === 'Enter') {
@@ -342,6 +416,38 @@ export const ColorInputPanel = React.forwardRef(
             }}
           />
         </InputContainer>
+        {showAlpha && (
+          <InputContainer
+            status={
+              Number(input[3]) < 0 || Number(input[3]) > 1
+                ? 'negative'
+                : undefined
+            }
+          >
+            <Input
+              size='small'
+              type='number'
+              min='0'
+              max='1'
+              step='.01'
+              placeholder='A'
+              value={input[3]}
+              onChange={(event) => {
+                setInput([input[0], input[1], input[2], event.target.value]);
+              }}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  event.preventDefault();
+                  handleColorInputChange();
+                }
+              }}
+              onBlur={(event) => {
+                event.preventDefault();
+                handleColorInputChange();
+              }}
+            />
+          </InputContainer>
+        )}
       </>
     );
 
@@ -352,7 +458,9 @@ export const ColorInputPanel = React.forwardRef(
         {...rest}
       >
         <div className='iui-color-picker-section-label'>
-          {currentFormat.toUpperCase()}
+          {showAlpha && currentFormat != 'hex'
+            ? currentFormat.toUpperCase() + 'A'
+            : currentFormat.toUpperCase()}
         </div>
         <div className='iui-color-input'>
           {allowedColorFormats.length > 1 && (

@@ -50,6 +50,12 @@ export type ColorPickerProps = {
    * @default false
    */
   setFocus?: boolean;
+  /**
+   * If true, then alpha value is shown so it can be set,
+   * opacity slider will also be visible.
+   * @default false
+   */
+  showAlpha?: boolean;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -73,6 +79,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
     onChange,
     onChangeComplete,
     setFocus = false,
+    showAlpha = false,
     ...rest
   } = props;
 
@@ -142,6 +149,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
           hsvColor,
           applyHsvColorChange,
           onChangeComplete,
+          showAlpha,
         }}
       >
         {children}

@@ -48,6 +48,7 @@ export const ColorBuilder = React.forwardRef(
       hsvColor,
       onChangeComplete,
       applyHsvColorChange,
+      showAlpha,
     } = useColorPickerContext();
 
     // Set values for slider
@@ -56,6 +57,10 @@ export const ColorBuilder = React.forwardRef(
       [hsvColor],
     );
     const sliderValue = React.useMemo(() => hsvColor.h, [hsvColor]);
+    const alphaValue = React.useMemo(() => (showAlpha ? hsvColor.a ?? 1 : 1), [
+      hsvColor,
+      showAlpha,
+    ]);
 
     // Set values for color square and color dot
     const dotColorString = React.useMemo(() => activeColor.toHexString(), [
@@ -69,6 +74,14 @@ export const ColorBuilder = React.forwardRef(
       ? {
           '--hue': hueColorString,
           '--selected-color': dotColorString,
+        }
+      : { backgroundColor: hueColorString };
+
+    const opacitySliderStyle = getWindow()?.CSS?.supports?.(
+      `--selected-color: ${hueColorString}`,
+    )
+      ? {
+          '--selected-color': hueColorString,
         }
       : { backgroundColor: hueColorString };
 
@@ -96,10 +109,26 @@ export const ColorBuilder = React.forwardRef(
           h: hue,
           s: hsvColor.s,
           v: hsvColor.v,
+          a: hsvColor.a,
         };
         applyHsvColorChange(newHsvColor, selectionChanged);
       },
-      [applyHsvColorChange, hsvColor.s, hsvColor.v],
+      [applyHsvColorChange, hsvColor],
+    );
+
+    // Update opacity slider change
+    const updateOpacitySlider = React.useCallback(
+      (alphaPercent: number, selectionChanged: boolean) => {
+        const alpha = Number(alphaPercent.toFixed(2));
+        const newHsvColor = {
+          h: hsvColor.h,
+          s: hsvColor.s,
+          v: hsvColor.v,
+          a: alpha,
+        };
+        applyHsvColorChange(newHsvColor, selectionChanged);
+      },
+      [applyHsvColorChange, hsvColor],
     );
 
     // Update Color field square change
@@ -112,10 +141,11 @@ export const ColorBuilder = React.forwardRef(
           h: hsvColor.h,
           s: x,
           v: 100 - y,
+          a: hsvColor.a,
         };
         applyHsvColorChange(newHsvColor, selectionChanged);
       },
-      [applyHsvColorChange, hsvColor.h],
+      [applyHsvColorChange, hsvColor],
     );
 
     const updateSquareValue = React.useCallback(
@@ -283,6 +313,27 @@ export const ColorBuilder = React.forwardRef(
           min={0}
           max={359}
         />
+
+        {showAlpha && (
+          <Slider
+            minLabel=''
+            maxLabel=''
+            values={[alphaValue]}
+            className='iui-opacity-slider'
+            trackDisplayMode='none'
+            tooltipProps={() => ({ visible: false })}
+            onChange={(values) => {
+              updateOpacitySlider(values[0], true);
+            }}
+            onUpdate={(values) => {
+              updateOpacitySlider(values[0], false);
+            }}
+            min={0}
+            max={1}
+            step={0.01}
+            style={opacitySliderStyle}
+          />
+        )}
       </div>
     );
   },
