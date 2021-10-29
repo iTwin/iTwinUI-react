@@ -244,7 +244,10 @@ export const Opacity: Story<ColorPickerProps> = (args) => {
               showAlpha={true}
             >
               <ColorBuilder />
-              <ColorInputPanel defaultColorFormat={currentFormat} />
+              <ColorInputPanel
+                defaultColorFormat={currentFormat}
+                allowedColorFormats={['hsl', 'rgb']}
+              />
               <ColorPalette
                 label='Saved Colors'
                 colors={[

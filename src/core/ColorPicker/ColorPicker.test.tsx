@@ -8,6 +8,7 @@ import { getColorValue, ColorPicker } from './ColorPicker';
 import { ColorPalette } from './ColorPalette';
 import { ColorBuilder } from './ColorBuilder';
 import { ColorInputPanel } from './ColorInputPanel';
+import { ColorValue } from '../utils';
 
 beforeAll(() => {
   window.CSS = { supports: () => true, escape: (i) => i };
@@ -132,7 +133,10 @@ it('should set the selected color', () => {
 
 it('should set the dot positions', () => {
   const { container } = render(
-    <ColorPicker selectedColor={{ h: 42, s: 100, l: 50 }}>
+    <ColorPicker
+      selectedColor={{ h: 42, s: 100, l: 50, a: 0.8 }}
+      showAlpha={true}
+    >
       <ColorBuilder />
     </ColorPicker>,
   );
@@ -144,14 +148,25 @@ it('should set the dot positions', () => {
   expect(colorDot.style.getPropertyValue('--top')).toEqual('0%');
 
   // Set the correct position on the slider
-  const sliderDot = container.querySelector('.iui-slider-thumb') as HTMLElement;
+  const sliderDot = container.querySelectorAll(
+    '.iui-slider-thumb',
+  )[0] as HTMLElement;
   expect(sliderDot).toBeTruthy();
   expect(sliderDot.style.getPropertyValue('left')).toEqual(
     '11.699164345403899%',
   );
+
+  // Set the correct position on the opacity slider
+  const opacityDot = container.querySelectorAll(
+    '.iui-slider-thumb',
+  )[1] as HTMLElement;
+  expect(opacityDot).toBeTruthy();
+  expect(opacityDot.style.getPropertyValue('left')).toEqual(
+    '80.3921568627451%',
+  );
 });
 
-it('should handle arrow key navigation on slider dot', () => {
+it('should handle arrow key navigation on hue slider dot', () => {
   const onSelectionChanged = jest.fn();
 
   const { container } = render(
@@ -491,13 +506,18 @@ it('should handle hex input change', () => {
   fireEvent.change(input, { target: { value: 'FF6200' } });
   fireEvent.keyDown(input, { key: 'Enter' });
   expect(handleOnChange).toHaveBeenCalledTimes(2);
+
+  // Should not update with same value
+  fireEvent.change(input, { target: { value: '#ff6200' } });
+  fireEvent.keyDown(input, { key: 'Enter' });
+  expect(handleOnChange).toHaveBeenCalledTimes(2);
 });
 
 it('should handle hsl input change', () => {
   const handleOnChange = jest.fn();
 
   const { container } = render(
-    <ColorPicker onChangeComplete={handleOnChange}>
+    <ColorPicker onChangeComplete={handleOnChange} showAlpha={true}>
       <ColorBuilder />
       <ColorInputPanel defaultColorFormat='hsl' />
     </ColorPicker>,
@@ -506,10 +526,27 @@ it('should handle hsl input change', () => {
   const h = container.querySelectorAll('input')[0] as HTMLInputElement;
   const s = container.querySelectorAll('input')[1] as HTMLInputElement;
   const l = container.querySelectorAll('input')[2] as HTMLInputElement;
+  const a = container.querySelectorAll('input')[3] as HTMLInputElement;
   expect(h).toBeTruthy();
   expect(s).toBeTruthy();
   expect(l).toBeTruthy();
+  expect(a).toBeTruthy();
 
+  // Should not update if value hasn't changed
+  fireEvent.change(h, { target: { value: '0' } });
+  fireEvent.keyDown(h, { key: 'Enter' });
+
+  fireEvent.change(s, { target: { value: '0' } });
+  fireEvent.keyDown(s, { key: 'Enter' });
+
+  fireEvent.change(l, { target: { value: '0' } });
+  fireEvent.keyDown(l, { key: 'Enter' });
+
+  fireEvent.change(a, { target: { value: '1' } });
+  fireEvent.keyDown(a, { key: 'Enter' });
+  expect(handleOnChange).not.toHaveBeenCalled;
+
+  // Should call handleOnChange
   fireEvent.change(h, { target: { value: '100' } });
   fireEvent.keyDown(h, { key: 'Enter' });
   expect(handleOnChange).toHaveBeenCalledTimes(1);
@@ -522,35 +559,46 @@ it('should handle hsl input change', () => {
   fireEvent.keyDown(l, { key: 'Enter' });
   expect(handleOnChange).toHaveBeenCalledTimes(3);
 
+  fireEvent.change(a, { target: { value: '.50' } });
+  fireEvent.keyDown(a, { key: 'Enter' });
+  expect(handleOnChange).toHaveBeenCalledTimes(4);
+
   // Should not update with invalid input
   fireEvent.change(h, { target: { value: '-1' } });
   fireEvent.keyDown(h, { key: 'Enter' });
-  expect(handleOnChange).toHaveBeenCalledTimes(3);
+  expect(handleOnChange).toHaveBeenCalledTimes(4);
 
   fireEvent.change(s, { target: { value: '101' } });
   fireEvent.keyDown(s, { key: 'Enter' });
-  expect(handleOnChange).toHaveBeenCalledTimes(3);
+  expect(handleOnChange).toHaveBeenCalledTimes(4);
 
   fireEvent.change(l, { target: { value: '5000' } });
   fireEvent.keyDown(l, { key: 'Enter' });
-  expect(handleOnChange).toHaveBeenCalledTimes(3);
+  expect(handleOnChange).toHaveBeenCalledTimes(4);
+
+  fireEvent.change(a, { target: { value: '2' } });
+  fireEvent.keyDown(a, { key: 'Enter' });
+  expect(handleOnChange).toHaveBeenCalledTimes(4);
 
   // Should not update with keys other than Enter
   fireEvent.keyDown(h, { key: ' ' });
-  expect(handleOnChange).toHaveBeenCalledTimes(3);
+  expect(handleOnChange).toHaveBeenCalledTimes(4);
 
   fireEvent.keyDown(s, { key: ' ' });
-  expect(handleOnChange).toHaveBeenCalledTimes(3);
+  expect(handleOnChange).toHaveBeenCalledTimes(4);
 
   fireEvent.keyDown(l, { key: ' ' });
-  expect(handleOnChange).toHaveBeenCalledTimes(3);
+  expect(handleOnChange).toHaveBeenCalledTimes(4);
+
+  fireEvent.keyDown(a, { key: ' ' });
+  expect(handleOnChange).toHaveBeenCalledTimes(4);
 });
 
 it('should handle rgb input change', () => {
   const handleOnChange = jest.fn();
 
   const { container } = render(
-    <ColorPicker onChangeComplete={handleOnChange}>
+    <ColorPicker onChangeComplete={handleOnChange} showAlpha={true}>
       <ColorBuilder />
       <ColorInputPanel defaultColorFormat='rgb' />
     </ColorPicker>,
@@ -559,10 +607,27 @@ it('should handle rgb input change', () => {
   const r = container.querySelectorAll('input')[0] as HTMLInputElement;
   const g = container.querySelectorAll('input')[1] as HTMLInputElement;
   const b = container.querySelectorAll('input')[2] as HTMLInputElement;
+  const a = container.querySelectorAll('input')[3] as HTMLInputElement;
   expect(r).toBeTruthy();
   expect(g).toBeTruthy();
   expect(b).toBeTruthy();
+  expect(a).toBeTruthy();
 
+  // Should not update if value hasn't changed
+  fireEvent.change(r, { target: { value: '0' } });
+  fireEvent.keyDown(r, { key: 'Enter' });
+
+  fireEvent.change(g, { target: { value: '0' } });
+  fireEvent.keyDown(g, { key: 'Enter' });
+
+  fireEvent.change(b, { target: { value: '0' } });
+  fireEvent.keyDown(b, { key: 'Enter' });
+
+  fireEvent.change(a, { target: { value: '1' } });
+  fireEvent.keyDown(a, { key: 'Enter' });
+  expect(handleOnChange).not.toHaveBeenCalled;
+
+  // Should call handleOnChange
   fireEvent.change(r, { target: { value: '100' } });
   fireEvent.keyDown(r, { key: 'Enter' });
   expect(handleOnChange).toHaveBeenCalledTimes(1);
@@ -575,28 +640,39 @@ it('should handle rgb input change', () => {
   fireEvent.keyDown(b, { key: 'Enter' });
   expect(handleOnChange).toHaveBeenCalledTimes(3);
 
+  fireEvent.change(a, { target: { value: '.51' } });
+  fireEvent.keyDown(a, { key: 'Enter' });
+  expect(handleOnChange).toHaveBeenCalledTimes(4);
+
   // Should not update with invalid input
   fireEvent.change(r, { target: { value: '-1' } });
   fireEvent.keyDown(r, { key: 'Enter' });
-  expect(handleOnChange).toHaveBeenCalledTimes(3);
+  expect(handleOnChange).toHaveBeenCalledTimes(4);
 
   fireEvent.change(g, { target: { value: '256' } });
   fireEvent.keyDown(g, { key: 'Enter' });
-  expect(handleOnChange).toHaveBeenCalledTimes(3);
+  expect(handleOnChange).toHaveBeenCalledTimes(4);
 
   fireEvent.change(b, { target: { value: '5000' } });
   fireEvent.keyDown(b, { key: 'Enter' });
-  expect(handleOnChange).toHaveBeenCalledTimes(3);
+  expect(handleOnChange).toHaveBeenCalledTimes(4);
+
+  fireEvent.change(a, { target: { value: '2' } });
+  fireEvent.keyDown(a, { key: 'Enter' });
+  expect(handleOnChange).toHaveBeenCalledTimes(4);
 
   // Should not update with keys other than Enter
   fireEvent.keyDown(r, { key: ' ' });
-  expect(handleOnChange).toHaveBeenCalledTimes(3);
+  expect(handleOnChange).toHaveBeenCalledTimes(4);
 
   fireEvent.keyDown(g, { key: ' ' });
-  expect(handleOnChange).toHaveBeenCalledTimes(3);
+  expect(handleOnChange).toHaveBeenCalledTimes(4);
 
   fireEvent.keyDown(b, { key: ' ' });
-  expect(handleOnChange).toHaveBeenCalledTimes(3);
+  expect(handleOnChange).toHaveBeenCalledTimes(4);
+
+  fireEvent.keyDown(a, { key: ' ' });
+  expect(handleOnChange).toHaveBeenCalledTimes(4);
 });
 
 it('should handle hex input change with lose focus', () => {
@@ -621,7 +697,7 @@ it('should handle hsl input change with lose focus', () => {
   const handleOnChange = jest.fn();
 
   const { container } = render(
-    <ColorPicker onChangeComplete={handleOnChange}>
+    <ColorPicker onChangeComplete={handleOnChange} showAlpha={true}>
       <ColorBuilder />
       <ColorInputPanel defaultColorFormat='hsl' />
     </ColorPicker>,
@@ -630,9 +706,11 @@ it('should handle hsl input change with lose focus', () => {
   const h = container.querySelectorAll('input')[0] as HTMLInputElement;
   const s = container.querySelectorAll('input')[1] as HTMLInputElement;
   const l = container.querySelectorAll('input')[2] as HTMLInputElement;
+  const a = container.querySelectorAll('input')[3] as HTMLInputElement;
   expect(h).toBeTruthy();
   expect(s).toBeTruthy();
   expect(l).toBeTruthy();
+  expect(a).toBeTruthy();
 
   h.focus();
   fireEvent.change(h, { target: { value: '100' } });
@@ -648,13 +726,18 @@ it('should handle hsl input change with lose focus', () => {
   fireEvent.change(l, { target: { value: '50' } });
   l.blur();
   expect(handleOnChange).toHaveBeenCalledTimes(3);
+
+  a.focus();
+  fireEvent.change(a, { target: { value: '.50' } });
+  a.blur();
+  expect(handleOnChange).toHaveBeenCalledTimes(4);
 });
 
 it('should handle rgb input change with lose focus', () => {
   const handleOnChange = jest.fn();
 
   const { container } = render(
-    <ColorPicker onChangeComplete={handleOnChange}>
+    <ColorPicker onChangeComplete={handleOnChange} showAlpha={true}>
       <ColorBuilder />
       <ColorInputPanel defaultColorFormat='rgb' />
     </ColorPicker>,
@@ -663,9 +746,11 @@ it('should handle rgb input change with lose focus', () => {
   const r = container.querySelectorAll('input')[0] as HTMLInputElement;
   const g = container.querySelectorAll('input')[1] as HTMLInputElement;
   const b = container.querySelectorAll('input')[2] as HTMLInputElement;
+  const a = container.querySelectorAll('input')[3] as HTMLInputElement;
   expect(r).toBeTruthy();
   expect(g).toBeTruthy();
   expect(b).toBeTruthy();
+  expect(a).toBeTruthy();
 
   r.focus();
   fireEvent.change(r, { target: { value: '100' } });
@@ -681,6 +766,11 @@ it('should handle rgb input change with lose focus', () => {
   fireEvent.change(b, { target: { value: '50' } });
   b.blur();
   expect(handleOnChange).toHaveBeenCalledTimes(3);
+
+  a.focus();
+  fireEvent.change(a, { target: { value: '.50' } });
+  a.blur();
+  expect(handleOnChange).toHaveBeenCalledTimes(4);
 });
 
 it('should preserve hue when color dot is black/at bottom of square', () => {
@@ -729,4 +819,64 @@ it('should not set focus if setFocus is false', () => {
   );
   expect(container.querySelector('.iui-color-picker')).toBeTruthy();
   expect(container.querySelector('.iui-color-dot')).not.toHaveFocus();
+});
+
+it('should render advanced color picker with opacity slider', () => {
+  const { container } = render(
+    <ColorPicker showAlpha={true}>
+      <ColorBuilder />
+      <ColorInputPanel defaultColorFormat='hsl' />
+    </ColorPicker>,
+  );
+
+  expect(container.querySelector(`.iui-color-picker`)).toBeTruthy();
+  expect(container.querySelector(`.iui-color-selection-wrapper`)).toBeTruthy();
+  expect(
+    container.querySelectorAll(`.iui-color-picker-section-label`).length,
+  ).toBe(1);
+  const element = container.querySelectorAll(
+    `.iui-color-picker-section-label`,
+  )[0];
+  expect(element).toBeDefined();
+  expect(element?.textContent).toBe('HSLA');
+  expect(container.querySelector(`.iui-color-field`)).toBeTruthy();
+  expect(container.querySelector(`.iui-hue-slider`)).toBeTruthy();
+  expect(container.querySelector(`.iui-opacity-slider`)).toBeTruthy();
+  expect(container.querySelector(`.iui-color-dot`)).toBeTruthy();
+  expect(container.querySelectorAll('input').length).toBe(4);
+});
+
+it('should handle arrow key navigation on opacity slider dot', () => {
+  const onSelectionChanged = jest.fn();
+  const selectedColor = ColorValue.create({ h: 0, s: 100, l: 50 });
+  const { container } = render(
+    <ColorPicker
+      showAlpha={true}
+      onChangeComplete={onSelectionChanged}
+      selectedColor={selectedColor}
+    >
+      <ColorBuilder />
+    </ColorPicker>,
+  );
+
+  const colorBuilder = container.querySelector(
+    '.iui-color-picker .iui-color-field',
+  ) as HTMLElement;
+  expect(colorBuilder).toHaveStyle('--hue: #ff0000; --selected-color: #ff0000');
+
+  const opacityDot = container.querySelectorAll(
+    '.iui-slider-thumb',
+  )[1] as HTMLElement;
+  expect(opacityDot).toBeTruthy();
+  expect(opacityDot.style.getPropertyValue('left')).toEqual('100%');
+
+  // Go left
+  fireEvent.keyDown(opacityDot, { key: 'ArrowLeft' });
+  expect(onSelectionChanged).toHaveBeenCalledTimes(1);
+  expect(opacityDot.style.getPropertyValue('left')).toEqual('99%');
+
+  // Go right
+  fireEvent.keyDown(opacityDot, { key: 'ArrowRight' });
+  expect(onSelectionChanged).toHaveBeenCalledTimes(2);
+  expect(opacityDot.style.getPropertyValue('left')).toEqual('100%');
 });
