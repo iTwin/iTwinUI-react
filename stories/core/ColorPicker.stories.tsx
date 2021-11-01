@@ -213,7 +213,7 @@ export const WithAlpha: Story<ColorPickerProps> = (args) => {
     ColorValue.create({ r: 90, g: 105, b: 115, a: 0.4 }),
   );
 
-  const formats = ['hsl', 'rgb'] as const;
+  const formats = ['hsl', 'rgb', 'hex'] as const;
   const [currentFormat, setCurrentFormat] = React.useState<
     typeof formats[number]
   >(formats[0]);
@@ -229,6 +229,8 @@ export const WithAlpha: Story<ColorPickerProps> = (args) => {
         return color.toHslString(true);
       case 'rgb':
         return color.toRgbString(true);
+      case 'hex':
+        return color.toHexString(true);
     }
   };
 
@@ -244,15 +246,12 @@ export const WithAlpha: Story<ColorPickerProps> = (args) => {
               showAlpha={true}
             >
               <ColorBuilder />
-              <ColorInputPanel
-                defaultColorFormat={currentFormat}
-                allowedColorFormats={['hsl', 'rgb']}
-              />
+              <ColorInputPanel defaultColorFormat={currentFormat} />
               <ColorPalette
                 label='Saved Colors'
                 colors={[
                   { r: 90, g: 105, b: 115, a: 1 },
-                  { r: 90, g: 105, b: 115, a: 0.8 },
+                  { r: 90, g: 105, b: 115, a: 0.81 },
                   { r: 90, g: 105, b: 115, a: 0.4 },
                 ]}
               />

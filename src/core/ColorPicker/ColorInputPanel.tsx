@@ -85,9 +85,9 @@ export const ColorInputPanel = React.forwardRef(
           a.toString(),
         ]);
       } else {
-        setInput([activeColor.toHexString()]);
+        setInput([activeColor.toHexString(showAlpha)]);
       }
-    }, [activeColor, hsvColor.h, currentFormat]);
+    }, [activeColor, hsvColor.h, currentFormat, showAlpha]);
 
     const [validHexInput, setValidHexInput] = React.useState(true);
 
@@ -107,7 +107,7 @@ export const ColorInputPanel = React.forwardRef(
         try {
           color = ColorValue.fromString(input[0]);
           setValidHexInput(true);
-          if (activeColor.toHexString() === input[0]) {
+          if (activeColor.toHexString(showAlpha) === input[0]) {
             return;
           }
         } catch (_e) {
@@ -172,7 +172,7 @@ export const ColorInputPanel = React.forwardRef(
       <InputContainer status={validHexInput ? undefined : 'negative'}>
         <Input
           size='small'
-          maxLength={7}
+          maxLength={showAlpha ? 9 : 7}
           minLength={1}
           placeholder='HEX'
           value={input[0]}
