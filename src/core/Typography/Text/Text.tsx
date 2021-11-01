@@ -4,10 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import cx from 'classnames';
 import React from 'react';
-import { useTheme, CommonProps } from '../../utils';
+import { useTheme, PolymorphicComponentPropsWithRef } from '../../utils';
 import '@itwin/itwinui-css/css/text.css';
 
-type TextOwnProps<T extends React.ElementType | React.ComponentType = 'div'> = {
+type TextOwnProps<T extends React.ElementType> = {
   /**
    * What element should the text be rendered as?
    * @default 'div'
@@ -36,12 +36,15 @@ type TextOwnProps<T extends React.ElementType | React.ComponentType = 'div'> = {
    * @default false
    */
   isSkeleton?: boolean;
-} & CommonProps;
+};
 
 export type TextProps<
-  T extends React.ElementType | React.ComponentType = 'div'
-> = TextOwnProps<T> &
-  Omit<React.ComponentPropsWithoutRef<T>, keyof TextOwnProps<T>>;
+  T extends React.ElementType = 'div'
+> = PolymorphicComponentPropsWithRef<T, TextOwnProps<T>>;
+
+type TextComponent = <T extends React.ElementType = 'div'>(
+  props: TextProps<T>,
+) => React.ReactElement | null;
 
 /**
  * Polymorphic typography component to render any kind of text as any kind of element.
@@ -53,34 +56,38 @@ export type TextProps<
  * <Text isMuted>Some muted text.</Text>
  * <Text isSkeleton>Skeleton text</Text>
  */
-export const Text = <T extends React.ElementType | React.ComponentType = 'div'>(
-  props: TextProps<T>,
-) => {
-  const {
-    variant = 'body',
-    as: Element = 'div',
-    className,
-    isMuted = false,
-    isSkeleton = false,
-    ...rest
-  } = props;
+export const Text: TextComponent = React.forwardRef(
+  <T extends React.ElementType = 'div'>(
+    props: TextProps<T>,
+    ref: React.ComponentPropsWithRef<T>['ref'],
+  ) => {
+    const {
+      variant = 'body',
+      as: Element = 'div',
+      className,
+      isMuted = false,
+      isSkeleton = false,
+      ...rest
+    } = props;
 
-  useTheme();
+    useTheme();
 
-  return (
-    <Element
-      className={cx(
-        {
-          [`iui-text-${variant}`]: variant !== 'body',
-          'iui-text-block': variant === 'body',
-          'iui-text-muted': isMuted,
-          'iui-skeleton': isSkeleton,
-        },
-        className,
-      )}
-      {...rest}
-    />
-  );
-};
+    return (
+      <Element
+        className={cx(
+          {
+            [`iui-text-${variant}`]: variant !== 'body',
+            'iui-text-block': variant === 'body',
+            'iui-text-muted': isMuted,
+            'iui-skeleton': isSkeleton,
+          },
+          className,
+        )}
+        ref={ref}
+        {...rest}
+      />
+    );
+  },
+);
 
 export default Text;

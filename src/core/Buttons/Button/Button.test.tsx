@@ -158,3 +158,15 @@ it('should render without label correctly', () => {
     expect(icon).toEqual(placeholderIcon);
   });
 });
+
+it('should render as anchor element', () => {
+  const { container } = render(
+    <Button as='a' href='https://example.com/'>
+      label
+    </Button>,
+  );
+
+  const button = container.querySelector('a.iui-button') as HTMLButtonElement;
+  expect(button).toHaveTextContent('label');
+  expect(button).toHaveAttribute('href', 'https://example.com/');
+});

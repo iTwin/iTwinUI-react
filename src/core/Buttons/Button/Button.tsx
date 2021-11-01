@@ -5,10 +5,10 @@
 import cx from 'classnames';
 import React from 'react';
 
-import { useTheme } from '../../utils';
+import { PolymorphicComponentPropsWithRef, useTheme } from '../../utils';
 import '@itwin/itwinui-css/css/button.css';
 
-export type ButtonProps = {
+type ButtonOwnProps<T extends React.ElementType> = {
   /**
    * Modify size of the button.
    */
@@ -31,7 +31,20 @@ export type ButtonProps = {
    * Content of the button.
    */
   children?: React.ReactNode;
-} & React.ButtonHTMLAttributes<HTMLButtonElement>;
+  /**
+   * What element should the button be rendered as?
+   * @default 'button'
+   */
+  as?: T;
+};
+
+export type ButtonProps<
+  T extends React.ElementType = 'button'
+> = PolymorphicComponentPropsWithRef<T, ButtonOwnProps<T>>;
+
+type ButtonComponent = <T extends React.ElementType = 'button'>(
+  props: ButtonProps<T>,
+) => React.ReactElement | null;
 
 /**
  * Generic button component
@@ -42,8 +55,11 @@ export type ButtonProps = {
  * <Button size='small' styleType='cta'>This is a small call to action button</Button>
  * <Button startIcon={<SvgAdd />}>New</Button>
  */
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (props, ref) => {
+export const Button: ButtonComponent = React.forwardRef(
+  <T extends React.ElementType = 'button'>(
+    props: ButtonProps<T>,
+    ref: React.ComponentPropsWithRef<T>['ref'],
+  ) => {
     const {
       children,
       className,
@@ -53,13 +69,14 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       type = 'button',
       startIcon,
       endIcon,
+      as: Element = 'button',
       ...rest
     } = props;
 
     useTheme();
 
     return (
-      <button
+      <Element
         ref={ref}
         className={cx(
           'iui-button',
@@ -84,7 +101,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           React.cloneElement(endIcon, {
             className: cx('iui-icon', endIcon.props.className),
           })}
-      </button>
+      </Element>
     );
   },
 );
