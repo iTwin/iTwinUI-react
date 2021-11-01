@@ -51,8 +51,7 @@ export type ColorPickerProps = {
    */
   setFocus?: boolean;
   /**
-   * If true, then alpha value is shown so it can be set,
-   * opacity slider will also be visible.
+   * If true, ColorBuilder will show the alpha slider and ColorInputPanel will show an alpha input.
    * @default false
    */
   showAlpha?: boolean;

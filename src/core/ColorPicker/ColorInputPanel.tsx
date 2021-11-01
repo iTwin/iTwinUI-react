@@ -64,9 +64,8 @@ export const ColorInputPanel = React.forwardRef(
     React.useEffect(() => {
       if (currentFormat === 'hsl') {
         const hsl = activeColor.toHslColor();
-        const a = hsl.a
-          ? hsl.a.toFixed(2)
-          : (activeColor.getAlpha() / 255).toFixed(2);
+        const a =
+          hsl.a?.toFixed(2) ?? (activeColor.getAlpha() / 255).toFixed(2);
         // use activeHue to preserve hue for 0,0,0 edge case
         setInput([
           hsvColor.h.toString(),
@@ -103,7 +102,6 @@ export const ColorInputPanel = React.forwardRef(
 
     const handleColorInputChange = () => {
       let color;
-      let alpha = 1;
 
       if (currentFormat === 'hex') {
         try {
@@ -139,7 +137,6 @@ export const ColorInputPanel = React.forwardRef(
         }
 
         color = ColorValue.create({ h, s, l, a });
-        alpha = a;
       }
 
       if (currentFormat === 'rgb') {
@@ -163,14 +160,10 @@ export const ColorInputPanel = React.forwardRef(
         }
 
         color = ColorValue.create({ r, g, b, a });
-        alpha = a;
       }
 
       if (color) {
         const hsv = color.toHsvColor();
-        if (showAlpha) {
-          hsv.a = alpha;
-        }
         applyHsvColorChange(hsv, true);
       }
     };

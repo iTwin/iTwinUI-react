@@ -544,7 +544,7 @@ it('should handle hsl input change', () => {
 
   fireEvent.change(a, { target: { value: '1' } });
   fireEvent.keyDown(a, { key: 'Enter' });
-  expect(handleOnChange).not.toHaveBeenCalled;
+  expect(handleOnChange).not.toHaveBeenCalled();
 
   // Should call handleOnChange
   fireEvent.change(h, { target: { value: '100' } });
@@ -872,11 +872,48 @@ it('should handle arrow key navigation on opacity slider dot', () => {
 
   // Go left
   fireEvent.keyDown(opacityDot, { key: 'ArrowLeft' });
-  expect(onSelectionChanged).toHaveBeenCalledTimes(1);
+  expect(onSelectionChanged).toHaveBeenNthCalledWith(1, {
+    _hue: 0,
+    _tbgr: 33554687,
+  });
   expect(opacityDot.style.getPropertyValue('left')).toEqual('99%');
 
   // Go right
   fireEvent.keyDown(opacityDot, { key: 'ArrowRight' });
-  expect(onSelectionChanged).toHaveBeenCalledTimes(2);
+  expect(onSelectionChanged).toHaveBeenNthCalledWith(2, {
+    _hue: 0,
+    _tbgr: 255,
+  });
   expect(opacityDot.style.getPropertyValue('left')).toEqual('100%');
+});
+
+it('should render color picker when alpha is false', () => {
+  const onSelectionChanged = jest.fn();
+  const selectedColor = ColorValue.create({ h: 0, s: 100, l: 50 });
+  const { container } = render(
+    <ColorPicker
+      showAlpha={false}
+      onChangeComplete={onSelectionChanged}
+      selectedColor={selectedColor}
+    >
+      <ColorBuilder />
+    </ColorPicker>,
+  );
+
+  const colorBuilder = container.querySelector(
+    '.iui-color-picker .iui-color-field',
+  ) as HTMLElement;
+  expect(colorBuilder).toHaveStyle('--hue: #ff0000; --selected-color: #ff0000');
+
+  const hueSlider = container.querySelector('.iui-hue-slider') as HTMLElement;
+  expect(hueSlider).toBeTruthy();
+
+  const opacitySlider = container.querySelector(
+    '.iui-opacity-slider',
+  ) as HTMLElement;
+  expect(opacitySlider).toBeFalsy();
+
+  // Should only have hue slider thumb
+  const sliderThumbs = container.querySelectorAll('.iui-slider-thumb');
+  expect(sliderThumbs.length).toEqual(1);
 });

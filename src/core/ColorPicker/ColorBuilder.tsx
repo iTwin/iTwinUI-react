@@ -80,9 +80,7 @@ export const ColorBuilder = React.forwardRef(
     const opacitySliderStyle = getWindow()?.CSS?.supports?.(
       `--selected-color: ${hueColorString}`,
     )
-      ? {
-          '--selected-color': hueColorString,
-        }
+      ? { '--selected-color': hueColorString }
       : { backgroundColor: hueColorString };
 
     const squareTop = 100 - hsvColor.v;
@@ -102,7 +100,7 @@ export const ColorBuilder = React.forwardRef(
         };
 
     // Update slider change
-    const updateSlider = React.useCallback(
+    const updateHueSlider = React.useCallback(
       (huePercent: number, selectionChanged: boolean) => {
         const hue = Math.round(huePercent);
         const newHsvColor = {
@@ -305,10 +303,10 @@ export const ColorBuilder = React.forwardRef(
           trackDisplayMode='none'
           tooltipProps={() => ({ visible: false })}
           onChange={(values) => {
-            updateSlider(values[0], true);
+            updateHueSlider(values[0], true);
           }}
           onUpdate={(values) => {
-            updateSlider(values[0], false);
+            updateHueSlider(values[0], false);
           }}
           min={0}
           max={359}

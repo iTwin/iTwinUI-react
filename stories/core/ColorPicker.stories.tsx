@@ -207,7 +207,7 @@ export const Advanced: Story<ColorPickerProps> = (args) => {
 
 Advanced.args = {};
 
-export const Opacity: Story<ColorPickerProps> = (args) => {
+export const WithAlpha: Story<ColorPickerProps> = (args) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [selectedColor, setSelectedColor] = React.useState<ColorValue>(
     ColorValue.create({ r: 90, g: 105, b: 115, a: 0.4 }),
@@ -290,4 +290,4 @@ export const Opacity: Story<ColorPickerProps> = (args) => {
   );
 };
 
-Opacity.args = {};
+WithAlpha.args = {};
