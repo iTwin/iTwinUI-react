@@ -872,18 +872,18 @@ it('should handle arrow key navigation on opacity slider dot', () => {
 
   // Go left
   fireEvent.keyDown(opacityDot, { key: 'ArrowLeft' });
-  expect(onSelectionChanged).toHaveBeenNthCalledWith(1, {
-    _hue: 0,
-    _tbgr: 33554687,
-  });
+  expect(onSelectionChanged).toHaveBeenNthCalledWith(
+    1,
+    ColorValue.create({ h: 0, s: 100, l: 50, a: 0.99 }),
+  );
   expect(opacityDot.style.getPropertyValue('left')).toEqual('99%');
 
   // Go right
   fireEvent.keyDown(opacityDot, { key: 'ArrowRight' });
-  expect(onSelectionChanged).toHaveBeenNthCalledWith(2, {
-    _hue: 0,
-    _tbgr: 255,
-  });
+  expect(onSelectionChanged).toHaveBeenNthCalledWith(
+    2,
+    ColorValue.create({ h: 0, s: 100, l: 50, a: 1 }),
+  );
   expect(opacityDot.style.getPropertyValue('left')).toEqual('100%');
 });
 
@@ -916,4 +916,12 @@ it('should render color picker when alpha is false', () => {
   // Should only have hue slider thumb
   const sliderThumbs = container.querySelectorAll('.iui-slider-thumb');
   expect(sliderThumbs.length).toEqual(1);
+
+  const sliderDot = sliderThumbs[0] as HTMLElement;
+  expect(sliderDot).toBeTruthy();
+
+  fireEvent.keyDown(sliderDot, { key: 'ArrowRight' });
+  expect(onSelectionChanged).toHaveBeenCalledWith(
+    ColorValue.create({ h: 1, s: 100, l: 50 }),
+  );
 });
