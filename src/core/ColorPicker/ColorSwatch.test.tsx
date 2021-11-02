@@ -8,11 +8,12 @@ import { ColorSwatch } from './ColorSwatch';
 import { ColorValue } from '../utils';
 
 it('should render in its most basic state with ColorValue', () => {
-  const { container } = render(<ColorSwatch color={'#9BA5AF'} />);
-
+  const { container } = render(
+    <ColorSwatch color={ColorValue.create('#9BA5AF')} />,
+  );
   const swatch = container.querySelector('.iui-color-swatch');
   expect(swatch).toBeTruthy();
-  expect(swatch).toHaveStyle({ backgroundColor: '#9BA5AF' });
+  expect(swatch).toHaveStyle({ backgroundColor: 'rgb(156, 156, 156)' });
 });
 
 it('should render in its most basic state with color string', () => {

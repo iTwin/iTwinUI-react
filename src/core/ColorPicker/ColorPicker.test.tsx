@@ -480,7 +480,7 @@ it('should handle hex input change', () => {
   const handleOnChange = jest.fn();
 
   const { container } = render(
-    <ColorPicker onChangeComplete={handleOnChange}>
+    <ColorPicker onChangeComplete={handleOnChange} showAlpha={true}>
       <ColorBuilder />
       <ColorInputPanel defaultColorFormat='hex' />
     </ColorPicker>,
@@ -492,25 +492,30 @@ it('should handle hex input change', () => {
   fireEvent.keyDown(input, { key: 'Enter' });
   expect(handleOnChange).toHaveBeenCalledTimes(1);
 
+  // Should handle hex input with alpha value
+  fireEvent.change(input, { target: { value: '#5A6973CF' } });
+  fireEvent.keyDown(input, { key: 'Enter' });
+  expect(handleOnChange).toHaveBeenCalledTimes(2);
+
   // Should not update with invalid input
   fireEvent.change(input, { target: { value: '#A' } });
   fireEvent.keyDown(input, { key: 'Enter' });
-  expect(handleOnChange).toHaveBeenCalledTimes(1);
+  expect(handleOnChange).toHaveBeenCalledTimes(2);
 
   // Should not update with keys other than Enter
   fireEvent.change(input, { target: { value: '#A' } });
   fireEvent.keyDown(input, { key: ' ' });
-  expect(handleOnChange).toHaveBeenCalledTimes(1);
+  expect(handleOnChange).toHaveBeenCalledTimes(2);
 
   // Should update even if # was not typed in
-  fireEvent.change(input, { target: { value: 'FF6200' } });
+  fireEvent.change(input, { target: { value: '5A697366' } });
   fireEvent.keyDown(input, { key: 'Enter' });
-  expect(handleOnChange).toHaveBeenCalledTimes(2);
+  expect(handleOnChange).toHaveBeenCalledTimes(3);
 
   // Should not update with same value
-  fireEvent.change(input, { target: { value: '#ff6200' } });
+  fireEvent.change(input, { target: { value: '#5a697366' } });
   fireEvent.keyDown(input, { key: 'Enter' });
-  expect(handleOnChange).toHaveBeenCalledTimes(2);
+  expect(handleOnChange).toHaveBeenCalledTimes(3);
 });
 
 it('should handle hsl input change', () => {
@@ -887,31 +892,26 @@ it('should handle arrow key navigation on opacity slider dot', () => {
   expect(opacityDot.style.getPropertyValue('left')).toEqual('100%');
 });
 
-it('should render color picker when alpha is false', () => {
-  const onSelectionChanged = jest.fn();
+it('should render color picker and handle onChangeCompleted when alpha is false', () => {
+  const handleOnChange = jest.fn();
   const selectedColor = ColorValue.create({ h: 0, s: 100, l: 50 });
   const { container } = render(
     <ColorPicker
       showAlpha={false}
-      onChangeComplete={onSelectionChanged}
+      onChangeComplete={handleOnChange}
       selectedColor={selectedColor}
     >
       <ColorBuilder />
+      <ColorInputPanel defaultColorFormat={'hex'} />
     </ColorPicker>,
   );
 
-  const colorBuilder = container.querySelector(
-    '.iui-color-picker .iui-color-field',
-  ) as HTMLElement;
-  expect(colorBuilder).toHaveStyle('--hue: #ff0000; --selected-color: #ff0000');
-
-  const hueSlider = container.querySelector('.iui-hue-slider') as HTMLElement;
-  expect(hueSlider).toBeTruthy();
-
-  const opacitySlider = container.querySelector(
-    '.iui-opacity-slider',
-  ) as HTMLElement;
-  expect(opacitySlider).toBeFalsy();
+  expect(
+    container.querySelector('.iui-color-picker .iui-color-field'),
+  ).toHaveStyle('--hue: #ff0000; --selected-color: #ff0000');
+  expect(container.querySelector('.iui-hue-slider')).toBeTruthy();
+  expect(container.querySelector('.iui-opacity-slider')).toBeFalsy();
+  expect(container.querySelector('.iui-color-input-wrapper')).toBeTruthy();
 
   // Should only have hue slider thumb
   const sliderThumbs = container.querySelectorAll('.iui-slider-thumb');
@@ -920,8 +920,85 @@ it('should render color picker when alpha is false', () => {
   const sliderDot = sliderThumbs[0] as HTMLElement;
   expect(sliderDot).toBeTruthy();
 
+  // Should handle hue slider change
   fireEvent.keyDown(sliderDot, { key: 'ArrowRight' });
-  expect(onSelectionChanged).toHaveBeenCalledWith(
+  expect(handleOnChange).toHaveBeenCalledWith(
     ColorValue.create({ h: 1, s: 100, l: 50 }),
+  );
+});
+
+it('should handle hex input when alpha is false', () => {
+  const handleOnChange = jest.fn();
+  const selectedColor = ColorValue.create({ h: 0, s: 100, l: 50 });
+  const { container } = render(
+    <ColorPicker
+      showAlpha={false}
+      onChangeComplete={handleOnChange}
+      selectedColor={selectedColor}
+    >
+      <ColorInputPanel defaultColorFormat={'hex'} />
+    </ColorPicker>,
+  );
+
+  const inputs = container.querySelectorAll('input');
+  expect(inputs.length).toBe(1);
+  const input = inputs[0] as HTMLInputElement;
+  expect(input).toBeTruthy();
+
+  fireEvent.change(input, { target: { value: '#FF6200' } });
+  fireEvent.keyDown(input, { key: 'Enter' });
+
+  expect(handleOnChange).toHaveBeenCalledWith(ColorValue.create('#FF6200'));
+});
+
+it('should handle hsl input when alpha is false', () => {
+  const handleOnChange = jest.fn();
+  const selectedColor = ColorValue.create({ h: 0, s: 100, l: 50 });
+  const { container } = render(
+    <ColorPicker
+      showAlpha={false}
+      onChangeComplete={handleOnChange}
+      selectedColor={selectedColor}
+    >
+      <ColorInputPanel defaultColorFormat={'hsl'} />
+    </ColorPicker>,
+  );
+
+  const inputs = container.querySelectorAll('input');
+  expect(inputs.length).toBe(3);
+  const input = inputs[0] as HTMLInputElement;
+  expect(input).toBeTruthy();
+
+  fireEvent.change(input, { target: { value: '100' } });
+  fireEvent.keyDown(input, { key: 'Enter' });
+
+  expect(handleOnChange).toHaveBeenCalledWith(
+    ColorValue.create({ h: 100, s: 100, l: 50 }),
+  );
+});
+
+it('should handle rgb input when alpha is false', () => {
+  const handleOnChange = jest.fn();
+  const selectedColor = ColorValue.create({ h: 0, s: 100, l: 50 });
+  const { container } = render(
+    <ColorPicker
+      showAlpha={false}
+      onChangeComplete={handleOnChange}
+      selectedColor={selectedColor}
+    >
+      <ColorInputPanel defaultColorFormat={'rgb'} />
+    </ColorPicker>,
+  );
+
+  const inputs = container.querySelectorAll('input');
+  expect(inputs.length).toBe(3);
+  const input = inputs[0] as HTMLInputElement;
+  expect(input).toBeTruthy();
+
+  fireEvent.change(input, { target: { value: '41' } });
+  fireEvent.keyDown(input, { key: 'Enter' });
+
+  expect(handleOnChange).toHaveBeenCalledWith(
+    ColorValue.create({ r: 41, g: 0, b: 0 }),
   );
 });
