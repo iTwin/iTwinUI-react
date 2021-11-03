@@ -9,7 +9,7 @@ import { ColorValue } from '../utils';
 
 it('should render in its most basic state with ColorValue', () => {
   const { container } = render(
-    <ColorSwatch color={ColorValue.create('#9BA5AF')} />,
+    <ColorSwatch color={ColorValue.create('rgb(156, 156, 156)')} />,
   );
   const swatch = container.querySelector('.iui-color-swatch');
   expect(swatch).toBeTruthy();

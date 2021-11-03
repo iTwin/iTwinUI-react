@@ -948,7 +948,11 @@ it('should handle hex input when alpha is false', () => {
   fireEvent.change(input, { target: { value: '#FF6200' } });
   fireEvent.keyDown(input, { key: 'Enter' });
 
-  expect(handleOnChange).toHaveBeenCalledWith(ColorValue.create('#FF6200'));
+  const withoutHue = ColorValue.create('#FF6200');
+  // Create color using hsv to ensure that _hue is defined.
+  expect(handleOnChange).toHaveBeenCalledWith(
+    ColorValue.create(withoutHue.toHsvColor()),
+  );
 });
 
 it('should handle hsl input when alpha is false', () => {
@@ -998,7 +1002,9 @@ it('should handle rgb input when alpha is false', () => {
   fireEvent.change(input, { target: { value: '41' } });
   fireEvent.keyDown(input, { key: 'Enter' });
 
+  const withoutHue = ColorValue.create({ r: 41, g: 0, b: 0 });
+  // Create color using hsv to ensure that _hue is defined.
   expect(handleOnChange).toHaveBeenCalledWith(
-    ColorValue.create({ r: 41, g: 0, b: 0 }),
+    ColorValue.create(withoutHue.toHsvColor()),
   );
 });

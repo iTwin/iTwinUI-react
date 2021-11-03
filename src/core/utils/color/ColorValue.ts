@@ -148,8 +148,7 @@ export class ColorValue {
    * Create a ColorValue from its 0xTTBBGGRR representation.
    */
   public static fromTbgr(tbgr: number): ColorValue {
-    const color = new ColorValue(tbgr);
-    return new ColorValue(tbgr, color.toHsvColor().h);
+    return new ColorValue(tbgr);
   }
 
   /**
