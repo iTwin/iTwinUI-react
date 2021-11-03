@@ -75,19 +75,24 @@ export const ColorInputPanel = React.forwardRef(
         ]);
       } else if (currentFormat === 'rgb') {
         const rgb = activeColor.toRgbColor();
-        const a = rgb.a
-          ? rgb.a.toFixed(2)
-          : (activeColor.getAlpha() / 255).toFixed(2);
+        const a =
+          rgb.a?.toFixed(2) ?? (activeColor.getAlpha() / 255).toFixed(2);
         setInput([
           rgb.r.toString(),
           rgb.g.toString(),
           rgb.b.toString(),
           a.toString(),
         ]);
-      } else {
-        setInput([activeColor.toHexString(showAlpha)]);
       }
     }, [activeColor, hsvColor.h, currentFormat, showAlpha]);
+
+    const [hexInput, setHexInput] = React.useState(
+      activeColor.toHexString(showAlpha),
+    );
+    React.useEffect(() => {
+      setHexInput(activeColor.toHexString(showAlpha));
+      setValidHexInput(true);
+    }, [activeColor, currentFormat, showAlpha]);
 
     const [validHexInput, setValidHexInput] = React.useState(true);
 
@@ -105,9 +110,10 @@ export const ColorInputPanel = React.forwardRef(
 
       if (currentFormat === 'hex') {
         try {
-          color = ColorValue.fromString(input[0]);
+          const value = hexInput.replace(/ /g, ''); //remove white space from input
+          color = ColorValue.create(value);
           setValidHexInput(true);
-          if (activeColor.toHexString(showAlpha) === input[0]) {
+          if (activeColor.toHexString(showAlpha) === value) {
             return;
           }
         } catch (_e) {
@@ -175,12 +181,12 @@ export const ColorInputPanel = React.forwardRef(
           maxLength={showAlpha ? 9 : 7}
           minLength={1}
           placeholder='HEX'
-          value={input[0]}
+          value={hexInput}
           onChange={(event) => {
             const value = event.target.value.startsWith('#')
               ? event.target.value
               : `#${event.target.value}`;
-            setInput([value]);
+            setHexInput(value);
           }}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
