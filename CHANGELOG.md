@@ -1,101 +1,107 @@
 # Changelog
 
+### [1.23.2](https://www.github.com/iTwin/iTwinUI-react/compare/v1.23.1...v1.23.2) (2021-11-04)
+
+### Fixes
+
+- **Header:** fixed hover effects on header logo.
+
 ### [1.23.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.23.0...v1.23.1) (2021-11-02)
 
 ### Fixes
 
-* **Select:** Set max-width to 2x min-width ([#407](https://www.github.com/iTwin/iTwinUI-react/issues/407)) ([b863b1d](https://www.github.com/iTwin/iTwinUI-react/commit/b863b1d8917be9b64954bce03d75f60eb5f80d7a))
-* **SideNavigation:** Add `isSubmenuOpen` prop to `SidenavButton`. ([#388](https://www.github.com/iTwin/iTwinUI-react/issues/388)) ([d9b8a34](https://www.github.com/iTwin/iTwinUI-react/commit/d9b8a34f35c17507c9a9e38fa0543aab43038e0a))
-  * This prop allows for proper styling when submenu is open but page is not active.
+- **Select:** Set max-width to 2x min-width ([#407](https://www.github.com/iTwin/iTwinUI-react/issues/407)) ([b863b1d](https://www.github.com/iTwin/iTwinUI-react/commit/b863b1d8917be9b64954bce03d75f60eb5f80d7a))
+- **SideNavigation:** Add `isSubmenuOpen` prop to `SidenavButton`. ([#388](https://www.github.com/iTwin/iTwinUI-react/issues/388)) ([d9b8a34](https://www.github.com/iTwin/iTwinUI-react/commit/d9b8a34f35c17507c9a9e38fa0543aab43038e0a))
+  - This prop allows for proper styling when submenu is open but page is not active.
 
 ## [1.23.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.22.0...v1.23.0) (2021-10-26)
 
 ### What's new
 
-* **ColorPicker:** Add new `ColorPicker` component ([#346](https://www.github.com/iTwin/iTwinUI-react/issues/346)) ([5a82af9](https://www.github.com/iTwin/iTwinUI-react/commit/5a82af9e5ff76b77d3681a496e3af4da7928d890))
-  * Add new subcomponents: `ColorBuilder`, `ColorInputPanel`, and `ColorPalette`
+- **ColorPicker:** Add new `ColorPicker` component ([#346](https://www.github.com/iTwin/iTwinUI-react/issues/346)) ([5a82af9](https://www.github.com/iTwin/iTwinUI-react/commit/5a82af9e5ff76b77d3681a496e3af4da7928d890))
+  - Add new subcomponents: `ColorBuilder`, `ColorInputPanel`, and `ColorPalette`
 
 ## [1.22.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.21.1...v1.22.0) (2021-10-19)
 
 ### What's new
 
-* **InformationPanel:** Add new `InformationPanel` component ([#364](https://www.github.com/iTwin/iTwinUI-react/issues/364)) ([95c6483](https://www.github.com/iTwin/iTwinUI-react/commit/95c648353dc1053c740a5cbc2a5c5df38cec266b))
-* **Alert:** Add new `clickableTextProps` prop ([#357](https://www.github.com/iTwin/iTwinUI-react/issues/357)) ([a5b7ec2](https://www.github.com/iTwin/iTwinUI-react/commit/a5b7ec25aacb5490a01b971ae22a77fe9c174013))
-* **ExpandableBlock:** Add small size ([#372](https://www.github.com/iTwin/iTwinUI-react/issues/372)) ([08f7df8](https://www.github.com/iTwin/iTwinUI-react/commit/08f7df87029d1c1cf5009dc122248da91a7ec076))
-* **Menu:** Added `MenuExtraContent` component ([#375](https://www.github.com/iTwin/iTwinUI-react/issues/375)) ([382fdb5](https://www.github.com/iTwin/iTwinUI-react/commit/382fdb54e906a247c2f3a82b25c624c460f8b3d2))
-* **RadioTileGroup:** Add `status`, `message` and `svgIcon` props ([#355](https://www.github.com/iTwin/iTwinUI-react/issues/355)) ([7a65110](https://www.github.com/iTwin/iTwinUI-react/commit/7a65110479f8422603b438065a18fcd2b19db147))
-* **SideNavigation:** Add new `submenu` prop and `SidenavSubmenu` component ([#376](https://www.github.com/iTwin/iTwinUI-react/issues/376)) ([1c8e0c5](https://www.github.com/iTwin/iTwinUI-react/commit/1c8e0c5500452f5d4368e73c952b99fd51bad262))
-* **Table:** Added pagination support  ([#351](https://www.github.com/iTwin/iTwinUI-react/issues/351)) ([6d7eb8f](https://www.github.com/iTwin/iTwinUI-react/commit/6d7eb8fa52a38d87ffbaed19bdf344c1e2d905b1))
-* **Toaster:** Return `close` function for individual toasts ([#370](https://www.github.com/iTwin/iTwinUI-react/issues/370)) ([905e56b](https://www.github.com/iTwin/iTwinUI-react/commit/905e56b8051e33b5a6e394b248a2e77ea08798ce))
+- **InformationPanel:** Add new `InformationPanel` component ([#364](https://www.github.com/iTwin/iTwinUI-react/issues/364)) ([95c6483](https://www.github.com/iTwin/iTwinUI-react/commit/95c648353dc1053c740a5cbc2a5c5df38cec266b))
+- **Alert:** Add new `clickableTextProps` prop ([#357](https://www.github.com/iTwin/iTwinUI-react/issues/357)) ([a5b7ec2](https://www.github.com/iTwin/iTwinUI-react/commit/a5b7ec25aacb5490a01b971ae22a77fe9c174013))
+- **ExpandableBlock:** Add small size ([#372](https://www.github.com/iTwin/iTwinUI-react/issues/372)) ([08f7df8](https://www.github.com/iTwin/iTwinUI-react/commit/08f7df87029d1c1cf5009dc122248da91a7ec076))
+- **Menu:** Added `MenuExtraContent` component ([#375](https://www.github.com/iTwin/iTwinUI-react/issues/375)) ([382fdb5](https://www.github.com/iTwin/iTwinUI-react/commit/382fdb54e906a247c2f3a82b25c624c460f8b3d2))
+- **RadioTileGroup:** Add `status`, `message` and `svgIcon` props ([#355](https://www.github.com/iTwin/iTwinUI-react/issues/355)) ([7a65110](https://www.github.com/iTwin/iTwinUI-react/commit/7a65110479f8422603b438065a18fcd2b19db147))
+- **SideNavigation:** Add new `submenu` prop and `SidenavSubmenu` component ([#376](https://www.github.com/iTwin/iTwinUI-react/issues/376)) ([1c8e0c5](https://www.github.com/iTwin/iTwinUI-react/commit/1c8e0c5500452f5d4368e73c952b99fd51bad262))
+- **Table:** Added pagination support ([#351](https://www.github.com/iTwin/iTwinUI-react/issues/351)) ([6d7eb8f](https://www.github.com/iTwin/iTwinUI-react/commit/6d7eb8fa52a38d87ffbaed19bdf344c1e2d905b1))
+- **Toaster:** Return `close` function for individual toasts ([#370](https://www.github.com/iTwin/iTwinUI-react/issues/370)) ([905e56b](https://www.github.com/iTwin/iTwinUI-react/commit/905e56b8051e33b5a6e394b248a2e77ea08798ce))
 
 ### Fixes
 
-* **ComboBox:** `onChange` no longer gets called on mount ([#373](https://www.github.com/iTwin/iTwinUI-react/issues/373)) ([db5406a](https://www.github.com/iTwin/iTwinUI-react/commit/db5406a4c3a43aeb09f2dadc932379f7dd1a564f))
-* **ComboBox:** Reset filteredOptions if options are updated ([#381](https://www.github.com/iTwin/iTwinUI-react/issues/381)) ([7bda333](https://www.github.com/iTwin/iTwinUI-react/commit/7bda3336cd3fff98f7de7ad404d1829dc12aae6b))
+- **ComboBox:** `onChange` no longer gets called on mount ([#373](https://www.github.com/iTwin/iTwinUI-react/issues/373)) ([db5406a](https://www.github.com/iTwin/iTwinUI-react/commit/db5406a4c3a43aeb09f2dadc932379f7dd1a564f))
+- **ComboBox:** Reset filteredOptions if options are updated ([#381](https://www.github.com/iTwin/iTwinUI-react/issues/381)) ([7bda333](https://www.github.com/iTwin/iTwinUI-react/commit/7bda3336cd3fff98f7de7ad404d1829dc12aae6b))
 
 ### [1.21.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.21.0...v1.21.1) (2021-10-07)
 
 ### Fixes
 
-* **RadioTilesGroup:** Fixed z-index issue and added wrap ([#359](https://www.github.com/iTwin/iTwinUI-react/issues/359)) ([3461b0f](https://www.github.com/iTwin/iTwinUI-react/commit/3461b0f4ad33ac545208029fcf26613ca8f9823c))
+- **RadioTilesGroup:** Fixed z-index issue and added wrap ([#359](https://www.github.com/iTwin/iTwinUI-react/issues/359)) ([3461b0f](https://www.github.com/iTwin/iTwinUI-react/commit/3461b0f4ad33ac545208029fcf26613ca8f9823c))
 
 ## [1.21.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.20.0...v1.21.0) (2021-10-05)
 
 ### What's new
 
-* **ComboBox:** Add new `ComboBox` component with list autocomplete (list is filtered when typing in input) ([#338](https://www.github.com/iTwin/iTwinUI-react/issues/338)) ([92ac59e](https://www.github.com/iTwin/iTwinUI-react/commit/92ac59e01614bb658783d8a49aa7558f6bf61938))
-* **Tile:** Make `thumbnail` prop optional ([#354](https://www.github.com/iTwin/iTwinUI-react/issues/354)) ([b5a5a4e](https://www.github.com/iTwin/iTwinUI-react/commit/b5a5a4ed295ffd373180b84635ed198966f3a993))
+- **ComboBox:** Add new `ComboBox` component with list autocomplete (list is filtered when typing in input) ([#338](https://www.github.com/iTwin/iTwinUI-react/issues/338)) ([92ac59e](https://www.github.com/iTwin/iTwinUI-react/commit/92ac59e01614bb658783d8a49aa7558f6bf61938))
+- **Tile:** Make `thumbnail` prop optional ([#354](https://www.github.com/iTwin/iTwinUI-react/issues/354)) ([b5a5a4e](https://www.github.com/iTwin/iTwinUI-react/commit/b5a5a4ed295ffd373180b84635ed198966f3a993))
 
 ## [1.20.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.19.0...v1.20.0) (2021-09-28)
 
 ### What's new
 
-* **Menu:** Added `MenuDivider` component. ([#323](https://www.github.com/iTwin/iTwinUI-react/issues/323)) ([91fdafb](https://www.github.com/iTwin/iTwinUI-react/commit/91fdafb8150842afdb87c9c0ced936791b57a9a4))
-* **Table:** Added a flag `selectRowOnClick`. ([#337](https://www.github.com/iTwin/iTwinUI-react/issues/337)) ([20cba1d](https://www.github.com/iTwin/iTwinUI-react/commit/20cba1d847cb140466aea77a8958bb638662926b))
+- **Menu:** Added `MenuDivider` component. ([#323](https://www.github.com/iTwin/iTwinUI-react/issues/323)) ([91fdafb](https://www.github.com/iTwin/iTwinUI-react/commit/91fdafb8150842afdb87c9c0ced936791b57a9a4))
+- **Table:** Added a flag `selectRowOnClick`. ([#337](https://www.github.com/iTwin/iTwinUI-react/issues/337)) ([20cba1d](https://www.github.com/iTwin/iTwinUI-react/commit/20cba1d847cb140466aea77a8958bb638662926b))
 
 ## [1.19.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.18.0...v1.19.0) (2021-09-21)
 
 ### What's new
 
-* **LabeledInput** and **LabeledTextarea**: Add new `iconDisplayStyle` prop to allow hybrid layouts. ([#309](https://www.github.com/iTwin/iTwinUI-react/issues/309)) ([45b82c2](https://www.github.com/iTwin/iTwinUI-react/commit/45b82c2232c09c4b54b2db14eb53bb3be3bd276a))
-* **Toasts**: Add new `animateOutTo` prop for improved exit animation. ([#316](https://www.github.com/iTwin/iTwinUI-react/issues/316)) ([886efff](https://www.github.com/iTwin/iTwinUI-react/commit/886efff098d0cee98d0bcd9bd096c20f8f51d931))
+- **LabeledInput** and **LabeledTextarea**: Add new `iconDisplayStyle` prop to allow hybrid layouts. ([#309](https://www.github.com/iTwin/iTwinUI-react/issues/309)) ([45b82c2](https://www.github.com/iTwin/iTwinUI-react/commit/45b82c2232c09c4b54b2db14eb53bb3be3bd276a))
+- **Toasts**: Add new `animateOutTo` prop for improved exit animation. ([#316](https://www.github.com/iTwin/iTwinUI-react/issues/316)) ([886efff](https://www.github.com/iTwin/iTwinUI-react/commit/886efff098d0cee98d0bcd9bd096c20f8f51d931))
 
 ## [1.18.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.17.0...v1.18.0) (2021-09-13)
 
 ### What's new
 
-* **ExpandableBlock:** Add new `status` and `endIcon` props ([#303](https://www.github.com/iTwin/iTwinUI-react/issues/303)) ([3285db2](https://www.github.com/iTwin/iTwinUI-react/commit/3285db20efd9bda9d7b86ff3dbaea15759bc65f6))
-* **Table:** Editable cell. Pass `EditableCell` component to column `cellRenderer` property. ([#307](https://www.github.com/iTwin/iTwinUI-react/issues/307)) ([0457702](https://www.github.com/iTwin/iTwinUI-react/commit/0457702e476a0770f9e114e60b024df3c1092342))
+- **ExpandableBlock:** Add new `status` and `endIcon` props ([#303](https://www.github.com/iTwin/iTwinUI-react/issues/303)) ([3285db2](https://www.github.com/iTwin/iTwinUI-react/commit/3285db20efd9bda9d7b86ff3dbaea15759bc65f6))
+- **Table:** Editable cell. Pass `EditableCell` component to column `cellRenderer` property. ([#307](https://www.github.com/iTwin/iTwinUI-react/issues/307)) ([0457702](https://www.github.com/iTwin/iTwinUI-react/commit/0457702e476a0770f9e114e60b024df3c1092342))
 
 ### Fixes
 
-* **Tooltip:** Fixed `Tooltip` content clipping when it is next to the viewport edge ([#314](https://www.github.com/iTwin/iTwinUI-react/issues/314)) ([5661310](https://www.github.com/iTwin/iTwinUI-react/commit/56613109ae483b1f610ddfb75c9e062072247c8b))
+- **Tooltip:** Fixed `Tooltip` content clipping when it is next to the viewport edge ([#314](https://www.github.com/iTwin/iTwinUI-react/issues/314)) ([5661310](https://www.github.com/iTwin/iTwinUI-react/commit/56613109ae483b1f610ddfb75c9e062072247c8b))
 
 ## [1.17.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.16.2...v1.17.0) (2021-08-31)
 
 ### What's new
 
-* **Toaster:** Add settings to customize placement and order ([#276](https://www.github.com/iTwin/iTwinUI-react/issues/276)) ([5101330](https://www.github.com/iTwin/iTwinUI-react/commit/510133015231876c2dc05421bd52b7deaacb6877))
-* **Modal:** Focus is now trapped inside modal ([#282](https://www.github.com/iTwin/iTwinUI-react/issues/282)) ([95ea900](https://www.github.com/iTwin/iTwinUI-react/commit/95ea900adfb1bb626597ddcfbcc395f5412a60a4))
-* **Wizard:** Improve accessibility and forward ref ([#290](https://www.github.com/iTwin/iTwinUI-react/issues/290)) ([69cfa62](https://www.github.com/iTwin/iTwinUI-react/commit/69cfa62aafdf9ddfa1658c1fa50556364db8eec6))
+- **Toaster:** Add settings to customize placement and order ([#276](https://www.github.com/iTwin/iTwinUI-react/issues/276)) ([5101330](https://www.github.com/iTwin/iTwinUI-react/commit/510133015231876c2dc05421bd52b7deaacb6877))
+- **Modal:** Focus is now trapped inside modal ([#282](https://www.github.com/iTwin/iTwinUI-react/issues/282)) ([95ea900](https://www.github.com/iTwin/iTwinUI-react/commit/95ea900adfb1bb626597ddcfbcc395f5412a60a4))
+- **Wizard:** Improve accessibility and forward ref ([#290](https://www.github.com/iTwin/iTwinUI-react/issues/290)) ([69cfa62](https://www.github.com/iTwin/iTwinUI-react/commit/69cfa62aafdf9ddfa1658c1fa50556364db8eec6))
 
 ### Fixes
 
-* `svgIcon` prop can now override status icon in all input groups and labeled inputs ([#295](https://www.github.com/iTwin/iTwinUI-react/issues/295)) ([4eac51e](https://www.github.com/iTwin/iTwinUI-react/commit/4eac51e41d300b42f8f74d1f218acba1e607039e))
-* **DropdownButton:** Forward ref to allow popovers ([#297](https://www.github.com/iTwin/iTwinUI-react/issues/297)) ([d4aa6a3](https://www.github.com/iTwin/iTwinUI-react/commit/d4aa6a3dcaf0f3896fa0e77c63af2da343f20542))
-* **HeaderButton:** Removed native `name` prop to allow ReactNode ([#301](https://www.github.com/iTwin/iTwinUI-react/issues/301)) ([4001d6d](https://www.github.com/iTwin/iTwinUI-react/commit/4001d6da33e26b4ebf5403e1121edf72abc26c7c))
+- `svgIcon` prop can now override status icon in all input groups and labeled inputs ([#295](https://www.github.com/iTwin/iTwinUI-react/issues/295)) ([4eac51e](https://www.github.com/iTwin/iTwinUI-react/commit/4eac51e41d300b42f8f74d1f218acba1e607039e))
+- **DropdownButton:** Forward ref to allow popovers ([#297](https://www.github.com/iTwin/iTwinUI-react/issues/297)) ([d4aa6a3](https://www.github.com/iTwin/iTwinUI-react/commit/d4aa6a3dcaf0f3896fa0e77c63af2da343f20542))
+- **HeaderButton:** Removed native `name` prop to allow ReactNode ([#301](https://www.github.com/iTwin/iTwinUI-react/issues/301)) ([4001d6d](https://www.github.com/iTwin/iTwinUI-react/commit/4001d6da33e26b4ebf5403e1121edf72abc26c7c))
 
 ### [1.16.2](https://www.github.com/iTwin/iTwinUI-react/compare/v1.16.1...v1.16.2) (2021-08-25)
 
 ### Fixes
 
-* **Table:** Fixed failing user tests by copying filter functions from `react-table` ([#292](https://www.github.com/iTwin/iTwinUI-react/issues/292)) ([53ace9e](https://www.github.com/iTwin/iTwinUI-react/commit/53ace9e0c1beacd4dfc0deb151f93a0bd4f659a3))
+- **Table:** Fixed failing user tests by copying filter functions from `react-table` ([#292](https://www.github.com/iTwin/iTwinUI-react/issues/292)) ([53ace9e](https://www.github.com/iTwin/iTwinUI-react/commit/53ace9e0c1beacd4dfc0deb151f93a0bd4f659a3))
 
 ### [1.16.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.16.0...v1.16.1) (2021-08-24)
 
 ### Fixes
 
-* **Fixed a bug in `VerticalTabs` where it was not rendered correctly.** ([#283](https://www.github.com/iTwin/iTwinUI-react/issues/283)) ([325d51d](https://www.github.com/iTwin/iTwinUI-react/commit/325d51d09101d7c7091009eda4be381d76d24fe8))
+- **Fixed a bug in `VerticalTabs` where it was not rendered correctly.** ([#283](https://www.github.com/iTwin/iTwinUI-react/issues/283)) ([325d51d](https://www.github.com/iTwin/iTwinUI-react/commit/325d51d09101d7c7091009eda4be381d76d24fe8))
 
 ## [1.16.0] (2021-08-24)
 
