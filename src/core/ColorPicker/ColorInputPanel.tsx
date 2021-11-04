@@ -60,7 +60,7 @@ export const ColorInputPanel = React.forwardRef(
     }, [defaultColorFormat]);
 
     // need to use state since input may have parsing error
-    const [input, setInput] = React.useState<Array<string>>([]);
+    const [input, setInput] = React.useState<Array<string>>(['', '', '', '']);
     React.useEffect(() => {
       if (currentFormat === 'hsl') {
         const hsl = activeColor.toHslColor();
@@ -83,16 +83,11 @@ export const ColorInputPanel = React.forwardRef(
           rgb.b.toString(),
           a.toString(),
         ]);
+      } else {
+        setInput([activeColor.toHexString(showAlpha)]);
+        setValidHexInput(true);
       }
     }, [activeColor, hsvColor.h, currentFormat, showAlpha]);
-
-    const [hexInput, setHexInput] = React.useState(
-      activeColor.toHexString(showAlpha),
-    );
-    React.useEffect(() => {
-      setHexInput(activeColor.toHexString(showAlpha));
-      setValidHexInput(true);
-    }, [activeColor, currentFormat, showAlpha]);
 
     const [validHexInput, setValidHexInput] = React.useState(true);
 
@@ -110,10 +105,10 @@ export const ColorInputPanel = React.forwardRef(
 
       if (currentFormat === 'hex') {
         try {
-          const value = hexInput.replace(/ /g, ''); //remove white space from input
+          const value = input[0].replace(/ /g, '').toLowerCase(); //remove white space from input
           color = ColorValue.create(value);
           setValidHexInput(true);
-          if (activeColor.toHexString(showAlpha) === value) {
+          if (activeColor.toHexString(showAlpha).toLowerCase() === value) {
             return;
           }
         } catch (_e) {
@@ -181,12 +176,12 @@ export const ColorInputPanel = React.forwardRef(
           maxLength={showAlpha ? 9 : 7}
           minLength={1}
           placeholder='HEX'
-          value={hexInput}
+          value={input[0]}
           onChange={(event) => {
             const value = event.target.value.startsWith('#')
               ? event.target.value
               : `#${event.target.value}`;
-            setHexInput(value);
+            setInput([value]);
           }}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
@@ -217,7 +212,7 @@ export const ColorInputPanel = React.forwardRef(
             min='0'
             max='359'
             placeholder='H'
-            value={input[0]}
+            value={input[0] ?? ''}
             onChange={(event) => {
               setInput([event.target.value, input[1], input[2], input[3]]);
             }}
@@ -246,7 +241,7 @@ export const ColorInputPanel = React.forwardRef(
             min='0'
             max='100'
             placeholder='S'
-            value={input[1]}
+            value={input[1] ?? ''}
             onChange={(event) => {
               setInput([input[0], event.target.value, input[2], input[3]]);
             }}
@@ -275,7 +270,7 @@ export const ColorInputPanel = React.forwardRef(
             min='0'
             max='100'
             placeholder='L'
-            value={input[2]}
+            value={input[2] ?? ''}
             onChange={(event) => {
               setInput([input[0], input[1], event.target.value, input[3]]);
             }}
@@ -306,7 +301,7 @@ export const ColorInputPanel = React.forwardRef(
               max='1'
               step='.01'
               placeholder='A'
-              value={input[3]}
+              value={input[3] ?? ''}
               onChange={(event) => {
                 setInput([input[0], input[1], input[2], event.target.value]);
               }}
@@ -341,7 +336,7 @@ export const ColorInputPanel = React.forwardRef(
             min='0'
             max='255'
             placeholder='R'
-            value={input[0]}
+            value={input[0] ?? ''}
             onChange={(event) => {
               setInput([event.target.value, input[1], input[2], input[3]]);
             }}
@@ -370,7 +365,7 @@ export const ColorInputPanel = React.forwardRef(
             min='0'
             max='255'
             placeholder='G'
-            value={input[1]}
+            value={input[1] ?? ''}
             onChange={(event) => {
               setInput([input[0], event.target.value, input[2], input[3]]);
             }}
@@ -399,7 +394,7 @@ export const ColorInputPanel = React.forwardRef(
             min='0'
             max='255'
             placeholder={'B'}
-            value={input[2]}
+            value={input[2] ?? ''}
             onChange={(event) => {
               setInput([input[0], input[1], event.target.value, input[3]]);
             }}
@@ -430,7 +425,7 @@ export const ColorInputPanel = React.forwardRef(
               max='1'
               step='.01'
               placeholder='A'
-              value={input[3]}
+              value={input[3] ?? ''}
               onChange={(event) => {
                 setInput([input[0], input[1], input[2], event.target.value]);
               }}
