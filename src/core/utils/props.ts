@@ -29,11 +29,19 @@ export type CommonProps = {
   id?: string;
 } & StylingProps;
 
+/**
+ * Merges provided Props with the props of T.
+ *
+ * T can be any native HTML element or a custom component.
+ */
 export type PolymorphicComponentProps<
   T extends React.ElementType,
   Props = Record<string, unknown>
 > = Props & Omit<React.ComponentPropsWithoutRef<T>, keyof Props>;
 
+/**
+ * Adds correct ref type to {@link PolymorphicComponentProps}.
+ */
 export type PolymorphicComponentPropsWithRef<
   T extends React.ElementType,
   Props = Record<string, unknown>
