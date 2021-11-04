@@ -5,10 +5,14 @@
 import cx from 'classnames';
 import React from 'react';
 
-import { PolymorphicComponentPropsWithRef, useTheme } from '../../utils';
+import {
+  PolymorphicComponentPropsWithRef,
+  AsProp,
+  useTheme,
+} from '../../utils';
 import '@itwin/itwinui-css/css/button.css';
 
-type ButtonOwnProps<T extends React.ElementType> = {
+type ButtonOwnProps = {
   /**
    * Modify size of the button.
    */
@@ -31,19 +35,14 @@ type ButtonOwnProps<T extends React.ElementType> = {
    * Content of the button.
    */
   children?: React.ReactNode;
-  /**
-   * What element should the button be rendered as?
-   * @default 'button'
-   */
-  as?: T;
 };
 
 export type ButtonProps<
   T extends React.ElementType = 'button'
-> = PolymorphicComponentPropsWithRef<T, ButtonOwnProps<T>>;
+> = PolymorphicComponentPropsWithRef<T, ButtonOwnProps>;
 
 type ButtonComponent = <T extends React.ElementType = 'button'>(
-  props: ButtonProps<T>,
+  props: ButtonProps<T> & AsProp<T>,
 ) => React.ReactElement | null;
 
 /**
@@ -57,7 +56,7 @@ type ButtonComponent = <T extends React.ElementType = 'button'>(
  */
 export const Button: ButtonComponent = React.forwardRef(
   <T extends React.ElementType = 'button'>(
-    props: ButtonProps<T>,
+    props: ButtonProps<T> & AsProp<T>,
     ref: React.ComponentPropsWithRef<T>['ref'],
   ) => {
     const {

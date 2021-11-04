@@ -48,3 +48,10 @@ export type PolymorphicComponentPropsWithRef<
 > = PolymorphicComponentProps<T, Props> & {
   ref?: React.ComponentPropsWithRef<T>['ref'];
 };
+
+export type AsProp<T> = {
+  /**
+   * What element should this component be rendered as?
+   */
+  as?: T;
+};
