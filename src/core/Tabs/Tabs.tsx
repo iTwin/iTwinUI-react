@@ -2,17 +2,17 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import cx from "classnames";
-import React from "react";
+import cx from 'classnames';
+import React from 'react';
 import {
   useTheme,
   useResizeObserver,
   useMergedRefs,
   getBoundedValue,
   CommonProps,
-} from "../utils";
-import "@itwin/itwinui-css/css/tabs.css";
-import { Tab } from "./Tab";
+} from '../utils';
+import '@itwin/itwinui-css/css/tabs.css';
+import { Tab } from './Tab';
 
 export type TabsProps = {
   /**
@@ -33,22 +33,22 @@ export type TabsProps = {
    * Use 'manual' if tab panel content is not preloaded.
    * @default 'auto'
    */
-  focusActivationMode?: "auto" | "manual";
+  focusActivationMode?: 'auto' | 'manual';
   /**
    * Color of the bar on the active tab.
    * @default 'blue'
    */
-  color?: "blue" | "green";
+  color?: 'blue' | 'green';
   /**
    * Type of the tabs.
    * @default 'default'
    */
-  type?: "default" | "borderless" | "pill";
+  type?: 'default' | 'borderless' | 'pill';
   /**
    * Orientation of the tabs.
    * @default 'horizontal'
    */
-  orientation?: "horizontal" | "vertical";
+  orientation?: 'horizontal' | 'vertical';
   /**
    * Custom CSS class name for tabs.
    */
@@ -61,11 +61,11 @@ export type TabsProps = {
    * Content inside the tab panel.
    */
   children?: React.ReactNode;
-} & Omit<CommonProps, "title">;
+} & Omit<CommonProps, 'title'>;
 
-export type HorizontalTabsProps = Omit<TabsProps, "orientation">;
-export type VerticalTabsProps = Omit<TabsProps, "orientation" | "type"> & {
-  type?: "default" | "borderless";
+export type HorizontalTabsProps = Omit<TabsProps, 'orientation'>;
+export type VerticalTabsProps = Omit<TabsProps, 'orientation' | 'type'> & {
+  type?: 'default' | 'borderless';
 };
 
 /**
@@ -97,10 +97,10 @@ export const Tabs = (props: TabsProps) => {
     labels,
     activeIndex,
     onTabSelected,
-    focusActivationMode = "auto",
-    type = "default",
-    color = "blue",
-    orientation = "horizontal",
+    focusActivationMode = 'auto',
+    type = 'default',
+    color = 'blue',
+    orientation = 'horizontal',
     tabsClassName,
     contentClassName,
     className,
@@ -115,18 +115,20 @@ export const Tabs = (props: TabsProps) => {
   const tablistRef = React.useRef<HTMLUListElement>(null);
 
   const [tabsWidth, setTabsWidth] = React.useState(
-    () => tablistRef.current?.getBoundingClientRect().width
+    () => tablistRef.current?.getBoundingClientRect().width,
   );
   const updateTabsWidth = React.useCallback(
     ({ width }) => setTabsWidth(width),
-    []
+    [],
   );
 
   const [tablistSizeRef] = useResizeObserver(updateTabsWidth);
   const refs = useMergedRefs(tablistRef, tablistSizeRef);
 
   const [currentActiveIndex, setCurrentActiveIndex] = React.useState(() =>
-    activeIndex != null ? getBoundedValue(activeIndex, 0, labels.length - 1) : 0
+    activeIndex != null
+      ? getBoundedValue(activeIndex, 0, labels.length - 1)
+      : 0,
   );
   React.useLayoutEffect(() => {
     if (activeIndex != null && currentActiveIndex !== activeIndex) {
@@ -136,21 +138,21 @@ export const Tabs = (props: TabsProps) => {
 
   const [stripeStyle, setStripeStyle] = React.useState<React.CSSProperties>({});
   React.useLayoutEffect(() => {
-    if (type !== "default") {
+    if (type !== 'default') {
       const activeTab = tablistRef.current?.children[
         currentActiveIndex
       ] as HTMLElement;
       const activeTabRect = activeTab?.getBoundingClientRect();
 
       setStripeStyle({
-        width: orientation === "horizontal" ? activeTabRect?.width : undefined,
-        height: orientation === "vertical" ? activeTabRect?.height : undefined,
+        width: orientation === 'horizontal' ? activeTabRect?.width : undefined,
+        height: orientation === 'vertical' ? activeTabRect?.height : undefined,
         left:
-          orientation === "horizontal"
+          orientation === 'horizontal'
             ? activeTab?.offsetLeft
             : activeTabRect?.width - 2,
         top:
-          orientation === "horizontal"
+          orientation === 'horizontal'
             ? activeTabRect?.height - 2
             : activeTab?.offsetTop,
       });
@@ -160,7 +162,7 @@ export const Tabs = (props: TabsProps) => {
   const [focusedIndex, setFocusedIndex] = React.useState<number | undefined>();
   React.useEffect(() => {
     if (tablistRef.current && focusedIndex !== undefined) {
-      const tab = tablistRef.current.querySelectorAll(".iui-tab")[focusedIndex];
+      const tab = tablistRef.current.querySelectorAll('.iui-tab')[focusedIndex];
       (tab as HTMLElement)?.focus();
     }
   }, [focusedIndex]);
@@ -168,8 +170,8 @@ export const Tabs = (props: TabsProps) => {
   const [hasSublabel, setHasSublabel] = React.useState(false); // used for setting size
   React.useLayoutEffect(() => {
     setHasSublabel(
-      type !== "pill" && // pill tabs should never have sublabels
-        !!tablistRef.current?.querySelector(".iui-tab-description") // check directly for the sublabel class
+      type !== 'pill' && // pill tabs should never have sublabels
+        !!tablistRef.current?.querySelector('.iui-tab-description'), // check directly for the sublabel class
     );
   }, [type]);
 
@@ -199,43 +201,43 @@ export const Tabs = (props: TabsProps) => {
         newIndex = (newIndex + delta + labels.length) % labels.length;
       } while (isTabDisabled(newIndex) && newIndex !== focusedIndex);
       setFocusedIndex(newIndex);
-      focusActivationMode === "auto" && onTabClick(newIndex);
+      focusActivationMode === 'auto' && onTabClick(newIndex);
     };
 
     switch (event.key) {
-      case "ArrowDown": {
-        if (orientation === "vertical") {
+      case 'ArrowDown': {
+        if (orientation === 'vertical') {
           focusTab(+1);
           event.preventDefault();
         }
         break;
       }
-      case "ArrowRight": {
-        if (orientation === "horizontal") {
+      case 'ArrowRight': {
+        if (orientation === 'horizontal') {
           focusTab(+1);
           event.preventDefault();
         }
         break;
       }
-      case "ArrowUp": {
-        if (orientation === "vertical") {
+      case 'ArrowUp': {
+        if (orientation === 'vertical') {
           focusTab(-1);
           event.preventDefault();
         }
         break;
       }
-      case "ArrowLeft": {
-        if (orientation === "horizontal") {
+      case 'ArrowLeft': {
+        if (orientation === 'horizontal') {
           focusTab(-1);
           event.preventDefault();
         }
         break;
       }
-      case "Enter":
-      case " ":
-      case "Spacebar": {
+      case 'Enter':
+      case ' ':
+      case 'Spacebar': {
         event.preventDefault();
-        if (focusActivationMode === "manual" && focusedIndex !== undefined) {
+        if (focusActivationMode === 'manual' && focusedIndex !== undefined) {
           onTabClick(focusedIndex);
         }
         break;
@@ -247,22 +249,22 @@ export const Tabs = (props: TabsProps) => {
 
   return (
     <div
-      className={cx("iui-tabs-wrapper", `iui-${orientation}`, className)}
+      className={cx('iui-tabs-wrapper', `iui-${orientation}`, className)}
       style={style}
       id={id}
     >
       <ul
         className={cx(
-          "iui-tabs",
+          'iui-tabs',
           `iui-${type}`,
           {
-            "iui-green": color === "green",
-            "iui-animated": type !== "default",
-            "iui-large": hasSublabel,
+            'iui-green': color === 'green',
+            'iui-animated': type !== 'default',
+            'iui-large': hasSublabel,
           },
-          tabsClassName
+          tabsClassName,
         )}
-        role="tablist"
+        role='tablist'
         ref={refs}
         onKeyDown={onKeyDown}
         {...rest}
@@ -278,7 +280,7 @@ export const Tabs = (props: TabsProps) => {
                 <Tab
                   label={label}
                   className={cx({
-                    "iui-active": index === currentActiveIndex,
+                    'iui-active': index === currentActiveIndex,
                   })}
                   tabIndex={index === currentActiveIndex ? 0 : -1}
                   onClick={onClick}
@@ -287,9 +289,9 @@ export const Tabs = (props: TabsProps) => {
               ) : (
                 React.cloneElement(label, {
                   className: cx(label.props.className, {
-                    "iui-active": index === currentActiveIndex,
+                    'iui-active': index === currentActiveIndex,
                   }),
-                  "aria-selected": index === currentActiveIndex,
+                  'aria-selected': index === currentActiveIndex,
                   tabIndex: index === currentActiveIndex ? 0 : -1,
                   onClick: (args: unknown) => {
                     onClick();
@@ -301,13 +303,13 @@ export const Tabs = (props: TabsProps) => {
           );
         })}
       </ul>
-      {type !== "default" && (
-        <div className="iui-tab-stripe" style={stripeStyle} />
+      {type !== 'default' && (
+        <div className='iui-tab-stripe' style={stripeStyle} />
       )}
       {children && (
         <div
-          className={cx("iui-tabs-content", contentClassName)}
-          role="tabpanel"
+          className={cx('iui-tabs-content', contentClassName)}
+          role='tabpanel'
         >
           {children}
         </div>
@@ -327,7 +329,7 @@ export const Tabs = (props: TabsProps) => {
  * <HorizontalTabs labels={tabs} activeIndex={1}>Tabpanel content</HorizontalTabs>
  */
 export const HorizontalTabs = (props: HorizontalTabsProps) => (
-  <Tabs orientation="horizontal" {...props} />
+  <Tabs orientation='horizontal' {...props} />
 );
 
 /**
@@ -341,7 +343,7 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => (
  * <VerticalTabs labels={tabs} activeIndex={1}>Tabpanel content</VerticalTabs>
  */
 export const VerticalTabs = (props: VerticalTabsProps) => (
-  <Tabs orientation="vertical" {...props} />
+  <Tabs orientation='vertical' {...props} />
 );
 
 export default Tabs;
