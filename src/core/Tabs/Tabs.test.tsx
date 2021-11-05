@@ -248,3 +248,20 @@ it('should set focused index when tab is clicked', () => {
   expect(mockOnTabSelected).toBeCalledWith(2);
   expect(document.activeElement).toBe(tabs[2]);
 });
+
+it('should propagate styling props to tabs wrapper', () => {
+  const { container } = renderComponent({
+    className: 'test-class',
+    style: { height: 100 },
+    id: 'my-tabs-wrapper',
+  });
+
+  const rootEl = container.querySelector(
+    '#my-tabs-wrapper.iui-tabs-wrapper',
+  ) as HTMLElement;
+  expect(rootEl).toHaveClass('test-class');
+  expect(rootEl).toHaveStyle('height: 100px');
+
+  expect(container.querySelectorAll('.iui-tab').length).toBe(3);
+  screen.getByText('Test content');
+});

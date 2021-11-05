@@ -60,7 +60,7 @@ export type TabsProps = {
    * Content inside the tab panel.
    */
   children?: React.ReactNode;
-};
+} & Omit<CommonProps, 'title'>;
 
 export type HorizontalTabsProps = Omit<TabsProps, 'orientation'>;
 export type VerticalTabsProps = Omit<TabsProps, 'orientation' | 'type'> & {
@@ -102,6 +102,9 @@ export const Tabs = (props: TabsProps) => {
     orientation = 'horizontal',
     tabsClassName,
     contentClassName,
+    className,
+    style,
+    id,
     children,
     ...rest
   } = props;
@@ -244,7 +247,11 @@ export const Tabs = (props: TabsProps) => {
   };
 
   return (
-    <div className={cx('iui-tabs-wrapper', `iui-${orientation}`)}>
+    <div
+      className={cx('iui-tabs-wrapper', `iui-${orientation}`, className)}
+      style={style}
+      id={id}
+    >
       <ul
         className={cx(
           'iui-tabs',
