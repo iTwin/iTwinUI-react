@@ -134,8 +134,8 @@ export const Tabs = (props: TabsProps) => {
 
   const [stripeStyle, setStripeStyle] = React.useState<React.CSSProperties>({});
   React.useLayoutEffect(() => {
-    if (type !== 'default') {
-      const activeTab = tablistRef.current?.children[
+    if (tablistRef.current != undefined && type !== 'default') {
+      const activeTab = tablistRef.current.children[
         currentActiveIndex
       ] as HTMLElement;
       const activeTabRect = activeTab?.getBoundingClientRect();
@@ -145,12 +145,12 @@ export const Tabs = (props: TabsProps) => {
         height: orientation === 'vertical' ? activeTabRect?.height : undefined,
         left:
           orientation === 'horizontal'
-            ? activeTab?.offsetLeft
+            ? activeTab.offsetLeft - tablistRef.current.scrollLeft
             : activeTabRect?.width - 2,
         top:
           orientation === 'horizontal'
             ? activeTabRect?.height - 2
-            : activeTab?.offsetTop,
+            : activeTab.offsetTop - tablistRef.current.scrollTop,
       });
     }
   }, [currentActiveIndex, type, orientation, tabsWidth]);
