@@ -54,11 +54,11 @@ export const ColorBuilder = React.forwardRef(
     // Set values for slider
     const hueSliderColor = React.useMemo(
       () => ColorValue.create({ h: hsvColor.h, s: 100, v: 100 }),
-      [hsvColor],
+      [hsvColor.h],
     );
     const sliderValue = React.useMemo(() => hsvColor.h, [hsvColor]);
     const alphaValue = React.useMemo(() => (showAlpha ? hsvColor.a ?? 1 : 1), [
-      hsvColor,
+      hsvColor.a,
       showAlpha,
     ]);
 

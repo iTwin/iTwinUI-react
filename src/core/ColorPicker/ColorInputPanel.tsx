@@ -64,24 +64,19 @@ export const ColorInputPanel = React.forwardRef(
     React.useEffect(() => {
       if (currentFormat === 'hsl') {
         const hsl = activeColor.toHslColor();
-        const a =
-          hsl.a?.toFixed(2) ?? (activeColor.getAlpha() / 255).toFixed(2);
-        // use activeHue to preserve hue for 0,0,0 edge case
         setInput([
-          hsvColor.h.toString(),
+          hsvColor.h.toString(), // use hsvColor to preserve hue for 0,0,0 edge case
           hsl.s.toString(),
           hsl.l.toString(),
-          a.toString(),
+          hsl.a?.toFixed(2) ?? (activeColor.getAlpha() / 255).toFixed(2),
         ]);
       } else if (currentFormat === 'rgb') {
         const rgb = activeColor.toRgbColor();
-        const a =
-          rgb.a?.toFixed(2) ?? (activeColor.getAlpha() / 255).toFixed(2);
         setInput([
           rgb.r.toString(),
           rgb.g.toString(),
           rgb.b.toString(),
-          a.toString(),
+          rgb.a?.toFixed(2) ?? (activeColor.getAlpha() / 255).toFixed(2),
         ]);
       } else {
         setInput([activeColor.toHexString(showAlpha)]);
@@ -105,7 +100,7 @@ export const ColorInputPanel = React.forwardRef(
 
       if (currentFormat === 'hex') {
         try {
-          const value = input[0].replace(/ /g, '').toLowerCase(); //remove white space from input
+          const value = input[0].replace(/ /g, '').toLowerCase(); // remove white space from input
           color = ColorValue.create(value);
           setValidHexInput(true);
           if (activeColor.toHexString(showAlpha).toLowerCase() === value) {
@@ -164,8 +159,7 @@ export const ColorInputPanel = React.forwardRef(
       }
 
       if (color) {
-        const hsv = color.toHsvColor();
-        applyHsvColorChange(hsv, true);
+        applyHsvColorChange(color.toHsvColor(), true);
       }
     };
 
