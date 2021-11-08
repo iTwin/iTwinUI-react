@@ -6,10 +6,14 @@ import cx from 'classnames';
 import React from 'react';
 
 import { ButtonProps } from '../Button';
-import { useTheme } from '../../utils';
+import {
+  AsProp,
+  PolymorphicComponentPropsWithRef,
+  useTheme,
+} from '../../utils';
 import '@itwin/itwinui-css/css/button.css';
 
-export type IconButtonProps = {
+type IconButtonOwnProps = {
   /**
    * Button gets active style.
    * @default false
@@ -17,14 +21,25 @@ export type IconButtonProps = {
   isActive?: boolean;
 } & Omit<ButtonProps, 'startIcon' | 'endIcon'>;
 
+export type IconButtonProps<
+  T extends React.ElementType = 'button'
+> = PolymorphicComponentPropsWithRef<T, IconButtonOwnProps>;
+
+type IconButtonComponent = <T extends React.ElementType = 'button'>(
+  props: IconButtonProps<T> & AsProp<T>,
+) => React.ReactElement | null;
+
 /**
  * Icon button
  * @example
  * <IconButton><SvgAdd /></IconButton>
  * <IconButton styleType='borderless'><SvgAdd /></IconButton>
  */
-export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
-  (props, ref) => {
+export const IconButton: IconButtonComponent = React.forwardRef(
+  <T extends React.ElementType = 'button'>(
+    props: IconButtonProps<T> & AsProp<T>,
+    ref: React.ComponentPropsWithRef<T>['ref'],
+  ) => {
     const {
       isActive,
       children,
@@ -32,13 +47,14 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       size,
       type = 'button',
       className,
+      as: Element = 'button',
       ...rest
     } = props;
 
     useTheme();
 
     return (
-      <button
+      <Element
         ref={ref}
         className={cx(
           'iui-button',
@@ -56,7 +72,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
           className: cx('iui-icon', (children as JSX.Element).props.className),
           'aria-hidden': true,
         })}
-      </button>
+      </Element>
     );
   },
 );
