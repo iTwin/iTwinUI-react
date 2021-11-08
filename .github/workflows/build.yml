@@ -23,7 +23,7 @@ jobs:
 
       - run: yarn install --frozen-lockfile
 
-      - run: yarn audit --groups dependencies
+      - run: yarn audit
 
       - run: yarn lint
       - run: yarn lint:copyright ${{ github.workspace }}/*/**.{js,ts,tsx}
@@ -51,10 +51,10 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v1.16
         if: always()
         with:
-          files: 'coverage/junit.xml'
+          files: "coverage/junit.xml"
           comment_mode: off
-          check_name: 'Test results'
-          fail_on: 'nothing'
+          check_name: "Test results"
+          fail_on: "nothing"
 
   visual-test:
     name: Run visual tests
