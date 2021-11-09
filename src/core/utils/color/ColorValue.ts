@@ -196,9 +196,11 @@ export class ColorValue {
     val: string,
     defaultColorIfNotParsed?: ColorValue,
   ): ColorValue {
-    return this.fromTbgr(
-      this.computeTbgrFromString(val, defaultColorIfNotParsed?.toTbgr()),
+    const [tbgr, hue] = this.computeTbgrFromString(
+      val,
+      defaultColorIfNotParsed?.toTbgr(),
     );
+    return new ColorValue(tbgr, hue);
   }
 
   /** Create a ColorValue from hue, saturation, lightness values.  */
@@ -209,7 +211,7 @@ export class ColorValue {
         hsl.h / 360,
         hsl.s / 100,
         hsl.l / 100,
-        (1 - alpha) * 255,
+        Math.round((1 - alpha) * 255),
       ),
       hsl.h,
     );
@@ -218,7 +220,12 @@ export class ColorValue {
   /** Create a ColorValue from an RgbColor */
   private static fromRGB(rgb: RgbColor): ColorValue {
     const alpha = rgb.a ?? 1;
-    return ColorValue.fromRgbt(rgb.r, rgb.g, rgb.b, (1 - alpha) * 255);
+    return ColorValue.fromRgbt(
+      rgb.r,
+      rgb.g,
+      rgb.b,
+      Math.round((1 - alpha) * 255),
+    );
   }
 
   /**
@@ -226,7 +233,7 @@ export class ColorValue {
    */
   private static fromHSV(hsv: HsvColor): ColorValue {
     const alpha = hsv.a ?? 1;
-    const transparency = (1 - alpha) * 255;
+    const transparency = Math.round((1 - alpha) * 255);
 
     // Check for simple case first.
     if (!hsv.s || hsv.h === -1) {
@@ -307,7 +314,7 @@ export class ColorValue {
   private static computeTbgrFromString(
     val: string,
     defaultColorIfNotParsed?: number,
-  ): number {
+  ): [number, number | undefined] {
     val = val.toLowerCase();
     let m = /^((?:rgb|hsl)a?)\(([^\)]*)\)/.exec(val);
     if (m) {
@@ -336,12 +343,17 @@ export class ColorValue {
           );
           if (color) {
             // rgb(255,0,0) rgba(255,0,0,0.5)
-            return this.computeTbgrFromComponents(
-              intOrPercent(color[1]),
-              intOrPercent(color[2]),
-              intOrPercent(color[3]),
-              typeof color[4] === 'string' ? 255 - floatOrPercent(color[4]) : 0,
-            );
+            return [
+              this.computeTbgrFromComponents(
+                intOrPercent(color[1]),
+                intOrPercent(color[2]),
+                intOrPercent(color[3]),
+                typeof color[4] === 'string'
+                  ? 255 - floatOrPercent(color[4])
+                  : 0,
+              ),
+              undefined,
+            ];
           }
 
           break;
@@ -352,12 +364,12 @@ export class ColorValue {
           );
           if (color) {
             // hsl(120,50%,50%) hsla(120,50%,50%,0.5)
-            const h = parseFloat(color[1]) / 360;
+            const h = parseFloat(color[1]);
             const s = parseInt(color[2], 10) / 100;
             const l = parseInt(color[3], 10) / 100;
             const t =
               typeof color[4] === 'string' ? 255 - floatOrPercent(color[4]) : 0;
-            return this.computeTbgrFromHSL(h, s, l, t);
+            return [this.computeTbgrFromHSL(h / 360, s, l, t), h];
           }
 
           break;
@@ -370,35 +382,44 @@ export class ColorValue {
 
       if (size === 3) {
         // #ff0
-        return this.computeTbgrFromComponents(
-          parseInt(hex.charAt(0) + hex.charAt(0), 16),
-          parseInt(hex.charAt(1) + hex.charAt(1), 16),
-          parseInt(hex.charAt(2) + hex.charAt(2), 16),
-          0,
-        );
+        return [
+          this.computeTbgrFromComponents(
+            parseInt(hex.charAt(0) + hex.charAt(0), 16),
+            parseInt(hex.charAt(1) + hex.charAt(1), 16),
+            parseInt(hex.charAt(2) + hex.charAt(2), 16),
+            0,
+          ),
+          undefined,
+        ];
       }
       if (size === 6) {
         // #ff0000
-        return this.computeTbgrFromComponents(
-          parseInt(hex.charAt(0) + hex.charAt(1), 16),
-          parseInt(hex.charAt(2) + hex.charAt(3), 16),
-          parseInt(hex.charAt(4) + hex.charAt(5), 16),
-          0,
-        );
+        return [
+          this.computeTbgrFromComponents(
+            parseInt(hex.charAt(0) + hex.charAt(1), 16),
+            parseInt(hex.charAt(2) + hex.charAt(3), 16),
+            parseInt(hex.charAt(4) + hex.charAt(5), 16),
+            0,
+          ),
+          undefined,
+        ];
       }
       if (size === 8) {
         // #ff0000ff
-        return this.computeTbgrFromComponents(
-          parseInt(hex.charAt(0) + hex.charAt(1), 16),
-          parseInt(hex.charAt(2) + hex.charAt(3), 16),
-          parseInt(hex.charAt(4) + hex.charAt(5), 16),
-          255 - parseInt(hex.charAt(6) + hex.charAt(7), 16),
-        );
+        return [
+          this.computeTbgrFromComponents(
+            parseInt(hex.charAt(0) + hex.charAt(1), 16),
+            parseInt(hex.charAt(2) + hex.charAt(3), 16),
+            parseInt(hex.charAt(4) + hex.charAt(5), 16),
+            255 - parseInt(hex.charAt(6) + hex.charAt(7), 16),
+          ),
+          undefined,
+        ];
       }
     }
 
     if (defaultColorIfNotParsed) {
-      return defaultColorIfNotParsed;
+      return [defaultColorIfNotParsed, undefined];
     }
     throw new Error('unable to parse string into ColorValue');
   }
@@ -562,9 +583,9 @@ export class ColorValue {
     }
 
     return {
-      h: Math.round(hue * 360),
-      s: Math.round(saturation * 100),
-      l: Math.round(lightness * 100),
+      h: hue * 360,
+      s: saturation * 100,
+      l: lightness * 100,
       a: this.getAlpha(tbgr) / 255,
     };
   }
@@ -603,9 +624,14 @@ export class ColorValue {
     }
 
     /* amount of "blackness" present */
-    const v = Math.floor((max / 255.0) * 100 + 0.5);
+
+    // const v = Math.floor((max / 255.0) * 100 + 0.5);
+    const v = Number(((max / 255.0) * 100).toFixed(2));
     const deltaRgb = max - min;
-    const s = max !== 0.0 ? Math.floor((deltaRgb / max) * 100 + 0.5) : 0;
+    // const s = max !== 0.0 ? Math.floor((deltaRgb / max) * 100 + 0.5) : 0;
+    const tempS = max !== 0.0 ? (deltaRgb / max) * 100 : 0;
+    const s = Number(tempS.toFixed(2));
+
     let h = 0;
 
     if (s) {
@@ -632,7 +658,8 @@ export class ColorValue {
         intermediateHue += 360;
       }
 
-      h = Math.floor(intermediateHue + 0.5);
+      // h = Math.floor(intermediateHue + 0.5);
+      h = Number(intermediateHue.toFixed(2));
 
       if (h >= 360) {
         h = 0;
@@ -649,6 +676,13 @@ export class ColorValue {
     return this._tbgr === other._tbgr && this._hue === other._hue;
   }
 
+  public static getFormattedColorNumber(value: number, precision = 2) {
+    if (0 === precision) {
+      Math.round(value).toString();
+    }
+    return Number(value.toFixed(precision)).toString();
+  }
+
   /** Convert the 0xTTBBGGRR color to a string of the form "rgba(r,g,b,a)" where the color components are specified in decimal and the alpha component is a fraction. */
   public toRgbString(includeAlpha?: boolean): string {
     const rgb = this.toRgbColor();
@@ -656,7 +690,7 @@ export class ColorValue {
 
     if (includeAlpha) {
       const alpha = rgb.a ?? 1;
-      return `rgba(${rgbString}, ${alpha.toFixed(2)})`;
+      return `rgba(${rgbString}, ${ColorValue.getFormattedColorNumber(alpha)})`;
     }
     return `rgb(${rgbString})`;
   }
@@ -664,10 +698,14 @@ export class ColorValue {
   /** Convert this ColorValue to a string in the form "hsl(h,s,l) or hsla(h,s,l,a)" - i.e hsl(120,50%,50%). */
   public toHslString(includeAlpha?: boolean): string {
     const hsl = this.toHslColor();
-    const hslString = `${this._hue ?? hsl.h}, ${hsl.s}%, ${hsl.l}%`;
+    const hslString = `${ColorValue.getFormattedColorNumber(
+      this._hue ?? hsl.h,
+    )}, ${ColorValue.getFormattedColorNumber(
+      hsl.s,
+    )}%, ${ColorValue.getFormattedColorNumber(hsl.l)}%`;
     if (includeAlpha) {
       const alpha = hsl.a ?? 1;
-      return `hsla(${hslString}, ${alpha.toFixed(2)})`;
+      return `hsla(${hslString}, ${ColorValue.getFormattedColorNumber(alpha)})`;
     }
     return `hsl(${hslString})`;
   }
@@ -679,7 +717,7 @@ export class ColorValue {
 
     if (includeAlpha) {
       const alpha = hsv.a ?? 1;
-      return `hsva(${hsvString}, ${alpha.toFixed(2)})`;
+      return `hsva(${hsvString}, ${ColorValue.getFormattedColorNumber(alpha)})`;
     }
     return `hsv(${hsvString})`;
   }
