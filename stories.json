@@ -578,6 +578,15 @@
         "__id": "core-colorpicker--advanced"
       }
     },
+    "core-colorpicker--with-alpha": {
+      "id": "core-colorpicker--with-alpha",
+      "name": "With Alpha",
+      "kind": "Core/ColorPicker",
+      "story": "With Alpha",
+      "parameters": {
+        "__id": "core-colorpicker--with-alpha"
+      }
+    },
     "core-combobox--basic": {
       "id": "core-combobox--basic",
       "name": "Basic",
