@@ -209,6 +209,7 @@ export const ColorInputPanel = React.forwardRef(
             type='number'
             min='0'
             max='359'
+            step='.01'
             placeholder='H'
             value={input[0] ?? ''}
             onChange={(event) => {
@@ -238,6 +239,7 @@ export const ColorInputPanel = React.forwardRef(
             type='number'
             min='0'
             max='100'
+            step='.01'
             placeholder='S'
             value={input[1] ?? ''}
             onChange={(event) => {
@@ -267,6 +269,7 @@ export const ColorInputPanel = React.forwardRef(
             type='number'
             min='0'
             max='100'
+            step='.01'
             placeholder='L'
             value={input[2] ?? ''}
             onChange={(event) => {
