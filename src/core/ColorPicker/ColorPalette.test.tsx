@@ -16,10 +16,10 @@ beforeAll(() => {
 
 it('should render in its most basic state', () => {
   const colors = [
-    'hsla(210, 11%, 65%, 1)',
-    'hsla(95, 73%, 16%, 1)',
-    'hsla(203, 100%, 6%, 1)',
-    'hsla(203, 100%, 13%, 1)',
+    'hsla(210, 11%, 65%, 1.00)',
+    'hsla(95, 73%, 16%, 1.00)',
+    'hsla(203, 100%, 6%, 1.00)',
+    'hsla(203, 100%, 13%, 1.00)',
   ];
   // required due to precision error going from hsl -> tbgr -> hsl
   const expectedStyleString = [
@@ -45,10 +45,10 @@ it('should render in its most basic state', () => {
 
 it('should render with selectedColor', () => {
   const colors = [
-    'hsla(210, 11%, 65%, 1)',
-    'hsla(95, 73%, 16%, 1)',
-    'hsla(203, 100%, 6%, 1)',
-    'hsla(203, 100%, 13%, 1)',
+    'hsla(210, 11%, 65%, 1.00)',
+    'hsla(95, 73%, 16%, 1.00)',
+    'hsla(203, 100%, 6%, 1.00)',
+    'hsla(203, 100%, 13%, 1.00)',
   ];
   // required due to precision error going from hsl -> tbgr -> hsl
   const expectedStyleString = [
@@ -80,10 +80,10 @@ it('should render with selectedColor', () => {
 
 it('should render with selectedColor 0', () => {
   const colors = [
-    'hsla(210, 11%, 65%, 1)',
-    'hsla(95, 73%, 16%, 1)',
-    'hsla(203, 100%, 6%, 1)',
-    'hsla(203, 100%, 13%, 1)',
+    'hsla(210, 11%, 65%, 1.00)',
+    'hsla(95, 73%, 16%, 1.00)',
+    'hsla(203, 100%, 6%, 1.00)',
+    'hsla(203, 100%, 13%, 1.00)',
   ];
   // required due to precision error going from hsl -> tbgr -> hsl
   const expectedStyleString = [
