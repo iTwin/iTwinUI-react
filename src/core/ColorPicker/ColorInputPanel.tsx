@@ -70,6 +70,7 @@ export const ColorInputPanel = React.forwardRef(
           ColorValue.getFormattedColorNumber(hsl.l),
           ColorValue.getFormattedColorNumber(
             hsl.a ?? activeColor.getAlpha() / 255,
+            2,
           ),
         ]);
       } else if (currentFormat === 'rgb') {
@@ -80,6 +81,7 @@ export const ColorInputPanel = React.forwardRef(
           rgb.b.toString(),
           ColorValue.getFormattedColorNumber(
             rgb.a ?? activeColor.getAlpha() / 255,
+            2,
           ),
         ]);
       } else {
@@ -209,7 +211,7 @@ export const ColorInputPanel = React.forwardRef(
             type='number'
             min='0'
             max='359'
-            step='.01'
+            step='.1'
             placeholder='H'
             value={input[0] ?? ''}
             onChange={(event) => {
@@ -239,7 +241,7 @@ export const ColorInputPanel = React.forwardRef(
             type='number'
             min='0'
             max='100'
-            step='.01'
+            step='.1'
             placeholder='S'
             value={input[1] ?? ''}
             onChange={(event) => {
@@ -269,7 +271,7 @@ export const ColorInputPanel = React.forwardRef(
             type='number'
             min='0'
             max='100'
-            step='.01'
+            step='.1'
             placeholder='L'
             value={input[2] ?? ''}
             onChange={(event) => {

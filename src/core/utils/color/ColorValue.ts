@@ -653,7 +653,7 @@ export class ColorValue {
 
   /** True if the value of this ColorValue is the same as another ColorValue. */
   public equals(other: ColorValue): boolean {
-    return this._tbgr === other._tbgr && this._hue === other._hue;
+    return this._tbgr === other._tbgr;
   }
 
   public static getFormattedColorNumber(value: number, precision = 1) {
@@ -670,7 +670,10 @@ export class ColorValue {
 
     if (includeAlpha) {
       const alpha = rgb.a ?? 1;
-      return `rgba(${rgbString}, ${ColorValue.getFormattedColorNumber(alpha)})`;
+      return `rgba(${rgbString}, ${ColorValue.getFormattedColorNumber(
+        alpha,
+        2,
+      )})`;
     }
     return `rgb(${rgbString})`;
   }
@@ -685,7 +688,10 @@ export class ColorValue {
     )}%, ${ColorValue.getFormattedColorNumber(hsl.l)}%`;
     if (includeAlpha) {
       const alpha = hsl.a ?? 1;
-      return `hsla(${hslString}, ${ColorValue.getFormattedColorNumber(alpha)})`;
+      return `hsla(${hslString}, ${ColorValue.getFormattedColorNumber(
+        alpha,
+        2,
+      )})`;
     }
     return `hsl(${hslString})`;
   }
@@ -697,7 +703,10 @@ export class ColorValue {
 
     if (includeAlpha) {
       const alpha = hsv.a ?? 1;
-      return `hsva(${hsvString}, ${ColorValue.getFormattedColorNumber(alpha)})`;
+      return `hsva(${hsvString}, ${ColorValue.getFormattedColorNumber(
+        alpha,
+        2,
+      )})`;
     }
     return `hsv(${hsvString})`;
   }
