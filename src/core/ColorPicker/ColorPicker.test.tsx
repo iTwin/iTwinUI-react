@@ -398,7 +398,7 @@ it('should preserve hue when color dot is black/at bottom of square', () => {
   const colorDot = container.querySelector('.iui-color-dot') as HTMLElement;
   expect(colorDot).toBeTruthy();
   expect(colorDot.style.getPropertyValue('--left')).toEqual('75%');
-  expect(colorDot.style.getPropertyValue('--top')).toEqual('98.43%');
+  expect(colorDot.style.getPropertyValue('--top')).toEqual('98.4%');
 
   // Go to bottom of square and hue should be preserved
   fireEvent.keyDown(colorDot, { key: 'ArrowDown' });

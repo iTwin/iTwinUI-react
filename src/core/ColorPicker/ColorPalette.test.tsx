@@ -23,10 +23,10 @@ it('should render in its most basic state', () => {
   ];
   // required due to precision error going from hsl -> tbgr -> hsl
   const expectedStyleString = [
-    'hsla(210, 11.24%, 65.1%, 1)',
-    'hsla(95, 73.17%, 16.08%, 1)',
-    'hsla(203, 100%, 6.08%, 1)',
-    'hsla(203, 100%, 12.94%, 1)',
+    'hsla(210, 11.2%, 65.1%, 1)',
+    'hsla(95, 73.2%, 16.1%, 1)',
+    'hsla(203, 100%, 6.1%, 1)',
+    'hsla(203, 100%, 12.9%, 1)',
   ];
 
   const { container } = render(
@@ -52,10 +52,10 @@ it('should render with selectedColor', () => {
   ];
   // required due to precision error going from hsl -> tbgr -> hsl
   const expectedStyleString = [
-    'hsla(210, 11.24%, 65.1%, 1)',
-    'hsla(95, 73.17%, 16.08%, 1)',
-    'hsla(203, 100%, 6.08%, 1)',
-    'hsla(203, 100%, 12.94%, 1)',
+    'hsla(210, 11.2%, 65.1%, 1)',
+    'hsla(95, 73.2%, 16.1%, 1)',
+    'hsla(203, 100%, 6.1%, 1)',
+    'hsla(203, 100%, 12.9%, 1)',
   ];
 
   const { container } = render(
@@ -87,10 +87,10 @@ it('should render with selectedColor 0', () => {
   ];
   // required due to precision error going from hsl -> tbgr -> hsl
   const expectedStyleString = [
-    'hsla(210, 11.24%, 65.1%, 1)',
-    'hsla(95, 73.17%, 16.08%, 1)',
-    'hsla(203, 100%, 6.08%, 1)',
-    'hsla(203, 100%, 12.94%, 1)',
+    'hsla(210, 11.2%, 65.1%, 1)',
+    'hsla(95, 73.2%, 16.1%, 1)',
+    'hsla(203, 100%, 6.1%, 1)',
+    'hsla(203, 100%, 12.9%, 1)',
   ];
 
   const { container } = render(

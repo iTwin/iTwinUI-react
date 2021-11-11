@@ -550,42 +550,42 @@ export class ColorValue {
 
   /** Create an HslColor from this ColorValue */
   private static toHsl(tbgr: number): HslColor {
-    // internally h,s,l ranges are in 0.0 - 1.0
-    const col = ColorValue.getColors(tbgr);
-    col.r /= 255;
-    col.g /= 255;
-    col.b /= 255;
-    const max = Math.max(col.r, col.g, col.b);
-    const min = Math.min(col.r, col.g, col.b);
-
+    const { r, g, b } = ColorValue.getColors(tbgr);
+    const red = r / 255;
+    const green = g / 255;
+    const blue = b / 255;
+    const cMin = Math.min(red, green, blue);
+    const cMax = Math.max(red, green, blue);
+    const delta = cMax - cMin;
     let hue = 0;
-    let saturation;
-    const lightness = (min + max) / 2.0;
+    let saturation = 0;
 
-    if (min === max) {
-      saturation = 0;
+    if (0 === delta) {
+      hue = 0;
+    } else if (red === cMax) {
+      hue = ((green - blue) / delta) % 6;
+    } else if (green === cMax) {
+      hue = (blue - red) / delta + 2;
     } else {
-      const delta = max - min;
-      saturation =
-        lightness <= 0.5 ? delta / (max + min) : delta / (2 - max - min);
-      switch (max) {
-        case col.r:
-          hue = (col.g - col.b) / delta + (col.g < col.b ? 6 : 0);
-          break;
-        case col.g:
-          hue = (col.b - col.r) / delta + 2;
-          break;
-        case col.b:
-          hue = (col.r - col.g) / delta + 4;
-          break;
-      }
-      hue /= 6;
+      hue = (red - green) / delta + 4;
     }
 
+    hue = Math.round(hue * 60);
+    if (hue < 0) {
+      hue += 360;
+    }
+
+    let lightness = (cMax + cMin) / 2;
+    saturation = delta == 0 ? 0 : delta / (1 - Math.abs(2 * lightness - 1));
+
+    // round values to 1 decimal place
+    saturation = Number((saturation * 100).toFixed(1));
+    lightness = Number((lightness * 100).toFixed(1));
+
     return {
-      h: hue * 360,
-      s: saturation * 100,
-      l: lightness * 100,
+      h: hue,
+      s: saturation,
+      l: lightness,
       a: this.getAlpha(tbgr) / 255,
     };
   }
@@ -613,62 +613,42 @@ export class ColorValue {
    */
   private static toHsv(tbgr: number): HsvColor {
     const { r, g, b } = ColorValue.getColors(tbgr);
-    let min = r < g ? r : g;
-    if (b < min) {
-      min = b;
-    }
+    const red = r / 255;
+    const green = g / 255;
+    const blue = b / 255;
+    const cMin = Math.min(red, green, blue);
+    const cMax = Math.max(red, green, blue);
+    const delta = cMax - cMin;
+    let hue = 0;
 
-    let max = r > g ? r : g;
-    if (b > max) {
-      max = b;
-    }
-
-    /* amount of "blackness" present */
-
-    // const v = Math.floor((max / 255.0) * 100 + 0.5);
-    const v = Number(((max / 255.0) * 100).toFixed(2));
-    const deltaRgb = max - min;
-    // const s = max !== 0.0 ? Math.floor((deltaRgb / max) * 100 + 0.5) : 0;
-    const tempS = max !== 0.0 ? (deltaRgb / max) * 100 : 0;
-    const s = Number(tempS.toFixed(2));
-
-    let h = 0;
-
-    if (s) {
-      const redDistance = (max - r) / deltaRgb;
-      const greenDistance = (max - g) / deltaRgb;
-      const blueDistance = (max - b) / deltaRgb;
-
-      let intermediateHue: number;
-      if (r === max) {
-        /* color between yellow & magenta */
-        intermediateHue = blueDistance - greenDistance;
-      } else if (g === max) {
-        /* color between cyan & yellow */
-        intermediateHue = 2.0 + redDistance - blueDistance;
-      } else {
-        /* color between magenta & cyan */
-        intermediateHue = 4.0 + greenDistance - redDistance;
-      }
-
-      /* intermediate hue is [0..6] */
-      intermediateHue *= 60;
-
-      if (intermediateHue < 0.0) {
-        intermediateHue += 360;
-      }
-
-      // h = Math.floor(intermediateHue + 0.5);
-      h = Number(intermediateHue.toFixed(2));
-
-      if (h >= 360) {
-        h = 0;
-      }
+    if (0 === delta) {
+      hue = 0;
+    } else if (red === cMax) {
+      hue = ((green - blue) / delta) % 6;
+    } else if (green === cMax) {
+      hue = (blue - red) / delta + 2;
     } else {
-      h = 0;
+      hue = (red - green) / delta + 4;
     }
 
-    return { h, s, v, a: this.getAlpha(tbgr) / 255 };
+    hue = Math.round(hue * 60);
+    if (hue < 0) {
+      hue += 360;
+    }
+
+    let brightness = cMax;
+    let saturation = cMax === 0 ? 0 : delta / cMax;
+
+    // round values to 1 decimal place
+    saturation = Number((saturation * 100).toFixed(1));
+    brightness = Number((brightness * 100).toFixed(1));
+
+    return {
+      h: hue,
+      s: saturation,
+      v: brightness,
+      a: this.getAlpha(tbgr) / 255,
+    };
   }
 
   /** True if the value of this ColorValue is the same as another ColorValue. */
@@ -676,7 +656,7 @@ export class ColorValue {
     return this._tbgr === other._tbgr && this._hue === other._hue;
   }
 
-  public static getFormattedColorNumber(value: number, precision = 2) {
+  public static getFormattedColorNumber(value: number, precision = 1) {
     if (0 === precision) {
       Math.round(value).toString();
     }
