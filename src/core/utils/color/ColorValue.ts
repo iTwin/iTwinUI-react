@@ -576,7 +576,7 @@ export class ColorValue {
     }
 
     let lightness = (cMax + cMin) / 2;
-    saturation = delta == 0 ? 0 : delta / (1 - Math.abs(2 * lightness - 1));
+    saturation = 0 === delta ? 0 : delta / (1 - Math.abs(2 * lightness - 1));
 
     // round values to 1 decimal place
     saturation = Number((saturation * 100).toFixed(1));
