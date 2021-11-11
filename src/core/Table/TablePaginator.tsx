@@ -28,6 +28,7 @@ const defaultLocalization = {
   previousPage: 'Previous page',
   nextPage: 'Next page',
   goToPageLabel: (page: number) => `Go to page ${page}`,
+  rowsPerPageLabel: 'Rows per page',
 } as const;
 
 export type TablePaginatorProps = {
@@ -58,12 +59,7 @@ export type TablePaginatorProps = {
     /**
      * Function that returns a label for the range of rows within the current page and the length of the whole data.
      * @default
-     *  (
-     *  startIndex: number,
-     *  endIndex: number,
-     *  totalRows: number,
-     *  isLoading: boolean,
-     *  ) =>
+     *  (startIndex, endIndex, totalRows, isLoading) =>
      *    isLoading
      *      ? `${startIndex}-${endIndex}…`
      *      : `${startIndex}-${endIndex} of ${totalRows}`;
@@ -89,6 +85,11 @@ export type TablePaginatorProps = {
      * @default (page: number) => `Go to page ${page}`
      */
     goToPageLabel?: (page: number) => string;
+    /**
+     * A label shown next to the page size selector. Use `null` to hide.
+     * @default 'Rows per page'
+     */
+    rowsPerPageLabel?: string | null;
   };
 } & TablePaginatorRendererProps &
   Omit<CommonProps, 'title'>;
@@ -311,6 +312,11 @@ export const TablePaginator = (props: TablePaginatorProps) => {
         </IconButton>
       </div>
       <div className='iui-right'>
+        {localization.rowsPerPageLabel && (
+          <span className='iui-paginator-page-size-label'>
+            {localization.rowsPerPageLabel}
+          </span>
+        )}
         {pageSizeList && onPageSizeChange && !!totalRowsCount && (
           <DropdownButton
             styleType='borderless'
