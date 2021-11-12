@@ -243,7 +243,7 @@ export const Tabs = (props: TabsProps) => {
     }
   };
 
-  const isIE = !getWindow()?.CSS?.supports('--stripe-width', '100px');
+  const isIE = !getWindow()?.CSS?.supports?.('--stripe-width', '100px');
 
   return (
     <div
