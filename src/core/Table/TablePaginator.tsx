@@ -11,7 +11,15 @@ import { ButtonGroup } from '../ButtonGroup';
 import { IconButton, Button, DropdownButton } from '../Buttons';
 import { ProgressRadial } from '../ProgressIndicators';
 import { MenuItem } from '../Menu';
-import { CommonProps, getBoundedValue, useTheme, useOverflow } from '../utils';
+import { Text } from '../Typography';
+import {
+  CommonProps,
+  getBoundedValue,
+  useTheme,
+  useOverflow,
+  useResizeObserver,
+  useMergedRefs,
+} from '../utils';
 import { TablePaginatorRendererProps } from './Table';
 
 const defaultLocalization = {
@@ -178,6 +186,13 @@ export const TablePaginator = (props: TablePaginatorProps) => {
   );
   const [overflowRef, visibleCount] = useOverflow(pageList);
 
+  const paginatorRef = React.useRef<HTMLDivElement>(null);
+  const [currentWidth, setCurrentWidth] = React.useState(
+    () => paginatorRef.current?.offsetWidth ?? 0,
+  );
+  const [resizeRef] = useResizeObserver(({ width }) => setCurrentWidth(width));
+  const paginatorRefs = useMergedRefs(paginatorRef, resizeRef);
+
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     // alt + arrow keys are used by browser/assistive technologies
     if (event.altKey) {
@@ -256,7 +271,11 @@ export const TablePaginator = (props: TablePaginatorProps) => {
   );
 
   return (
-    <div className={cx('iui-paginator', className)} {...rest}>
+    <div
+      className={cx('iui-paginator', className)}
+      ref={paginatorRefs}
+      {...rest}
+    >
       <div className='iui-left' />
       <div className='iui-center' ref={overflowRef}>
         <IconButton
@@ -312,10 +331,10 @@ export const TablePaginator = (props: TablePaginatorProps) => {
         </IconButton>
       </div>
       <div className='iui-right'>
-        {localization.rowsPerPageLabel && (
-          <span className='iui-paginator-page-size-label'>
+        {localization.rowsPerPageLabel && currentWidth >= 1024 && (
+          <Text isMuted as='span'>
             {localization.rowsPerPageLabel}
-          </span>
+          </Text>
         )}
         {pageSizeList && onPageSizeChange && !!totalRowsCount && (
           <DropdownButton
