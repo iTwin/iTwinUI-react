@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.24.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.23.2...v1.24.0) (2021-11-09)
+
+### What's new
+
+* **ColorPicker:** Add `showAlpha` prop to show opacity slider and input ([#408](https://www.github.com/iTwin/iTwinUI-react/issues/408)) ([a2a7528](https://www.github.com/iTwin/iTwinUI-react/commit/a2a75283f20d2fad937361779cbe04dc99d0cc74))
+
+### [1.23.2](https://www.github.com/iTwin/iTwinUI-react/compare/v1.23.1...v1.23.2) (2021-11-04)
+
+### Fixes
+
+* **Header:** Fixed hover effects on header logo. ([#413](https://www.github.com/iTwin/iTwinUI-react/issues/413)) ([a360a8e](https://www.github.com/iTwin/iTwinUI-react/commit/a360a8e5db6c98017d151d7f7e6d4e3ba768eb04))
+
 ### [1.23.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.23.0...v1.23.1) (2021-11-02)
 
 ### Fixes
