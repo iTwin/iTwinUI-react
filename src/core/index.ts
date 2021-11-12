@@ -247,3 +247,6 @@ export type {
 
 export { getUserColor, useTheme, ColorValue } from './utils';
 export type { ThemeType } from './utils';
+
+export { Label } from './Label';
+export type { LabelProps } from './Label';
