@@ -45,6 +45,7 @@ export const ColorInputPanel = React.forwardRef(
 
     useTheme();
 
+    const hslContainerRef = React.useRef<HTMLDivElement>(null);
     const {
       activeColor,
       applyHsvColorChange,
@@ -197,6 +198,13 @@ export const ColorInputPanel = React.forwardRef(
       </InputContainer>
     );
 
+    const isFocusInside = (focused?: EventTarget | null) =>
+      !!(
+        focused &&
+        hslContainerRef.current &&
+        hslContainerRef.current.contains(focused as HTMLElement)
+      );
+
     const hslInputs = (
       <>
         <InputContainer
@@ -225,7 +233,9 @@ export const ColorInputPanel = React.forwardRef(
             }}
             onBlur={(event) => {
               event.preventDefault();
-              // handleColorInputChange();
+              if (!isFocusInside(event.relatedTarget)) {
+                handleColorInputChange();
+              }
             }}
           />
         </InputContainer>
@@ -255,7 +265,9 @@ export const ColorInputPanel = React.forwardRef(
             }}
             onBlur={(event) => {
               event.preventDefault();
-              // handleColorInputChange();
+              if (!isFocusInside(event.relatedTarget)) {
+                handleColorInputChange();
+              }
             }}
           />
         </InputContainer>
@@ -285,7 +297,9 @@ export const ColorInputPanel = React.forwardRef(
             }}
             onBlur={(event) => {
               event.preventDefault();
-              // handleColorInputChange();
+              if (!isFocusInside(event.relatedTarget)) {
+                handleColorInputChange();
+              }
             }}
           />
         </InputContainer>
@@ -316,7 +330,9 @@ export const ColorInputPanel = React.forwardRef(
               }}
               onBlur={(event) => {
                 event.preventDefault();
-                handleColorInputChange();
+                if (!isFocusInside(event.relatedTarget)) {
+                  handleColorInputChange();
+                }
               }}
             />
           </InputContainer>
@@ -471,11 +487,17 @@ export const ColorInputPanel = React.forwardRef(
               </svg>
             </IconButton>
           )}
-          <div className='iui-color-input-fields'>
-            {currentFormat === 'hex' && hexInputField}
-            {currentFormat === 'hsl' && hslInputs}
-            {currentFormat === 'rgb' && rgbInputs}
-          </div>
+          {currentFormat === 'hex' && (
+            <div className='iui-color-input-fields'>{hexInputField}</div>
+          )}
+          {currentFormat === 'rgb' && (
+            <div className='iui-color-input-fields'>{rgbInputs}</div>
+          )}
+          {currentFormat === 'hsl' && (
+            <div ref={hslContainerRef} className='iui-color-input-fields'>
+              {hslInputs}
+            </div>
+          )}
         </div>
       </div>
     );
