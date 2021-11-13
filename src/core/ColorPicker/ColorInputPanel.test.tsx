@@ -355,7 +355,7 @@ it('should handle hex input change with lose focus', () => {
   expect(handleOnChange).toHaveBeenCalledTimes(1);
 });
 
-it('should handle hsl input change with lose focus', () => {
+it('should NOT handle hsl input change with lose focus', () => {
   const handleOnChange = jest.fn();
 
   const { container } = render(
@@ -376,22 +376,30 @@ it('should handle hsl input change with lose focus', () => {
   h.focus();
   fireEvent.change(h, { target: { value: '100' } });
   h.blur();
-  expect(handleOnChange).toHaveBeenCalledTimes(1);
+  // expect(handleOnChange).toHaveBeenCalledTimes(1);
 
   s.focus();
   fireEvent.change(s, { target: { value: '50' } });
   s.blur();
-  expect(handleOnChange).toHaveBeenCalledTimes(2);
+  // expect(handleOnChange).toHaveBeenCalledTimes(2);
 
   l.focus();
   fireEvent.change(l, { target: { value: '50' } });
   l.blur();
-  expect(handleOnChange).toHaveBeenCalledTimes(3);
+  // expect(handleOnChange).toHaveBeenCalledTimes(3);
 
+  // only an enter key on H, S, or L will trigger update
+  fireEvent.keyDown(l, { key: 'Enter' });
+  const hslColorValue = ColorValue.create({ h: 100, s: 50, l: 50 });
+  expect(handleOnChange).toHaveBeenCalledWith(hslColorValue);
+  expect(handleOnChange).toHaveBeenCalledTimes(1);
+
+  // a blur on alpha will trigger update
   a.focus();
   fireEvent.change(a, { target: { value: '.50' } });
   a.blur();
-  expect(handleOnChange).toHaveBeenCalledTimes(4);
+  // expect(handleOnChange).toHaveBeenCalledTimes(4);
+  expect(handleOnChange).toHaveBeenCalledTimes(2);
 });
 
 it('should handle rgb input change with lose focus', () => {

@@ -225,7 +225,7 @@ export const ColorInputPanel = React.forwardRef(
             }}
             onBlur={(event) => {
               event.preventDefault();
-              handleColorInputChange();
+              // handleColorInputChange();
             }}
           />
         </InputContainer>
@@ -255,7 +255,7 @@ export const ColorInputPanel = React.forwardRef(
             }}
             onBlur={(event) => {
               event.preventDefault();
-              handleColorInputChange();
+              // handleColorInputChange();
             }}
           />
         </InputContainer>
@@ -285,7 +285,7 @@ export const ColorInputPanel = React.forwardRef(
             }}
             onBlur={(event) => {
               event.preventDefault();
-              handleColorInputChange();
+              // handleColorInputChange();
             }}
           />
         </InputContainer>
