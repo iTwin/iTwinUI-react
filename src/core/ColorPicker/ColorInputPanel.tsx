@@ -165,7 +165,7 @@ export const ColorInputPanel = React.forwardRef(
       }
 
       if (color) {
-        applyHsvColorChange(color.toHsvColor(), true);
+        applyHsvColorChange(color.toHsvColor(), true, color);
       }
     };
 
