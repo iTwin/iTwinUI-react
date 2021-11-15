@@ -51,11 +51,8 @@ export const useOverflow = <T extends HTMLElement>(
   const resizeObserverRef = React.useRef(observer);
 
   React.useLayoutEffect(() => {
-    // Reset when width was increased
-    if (previousContainerWidth.current < containerWidth && !disabled) {
-      setVisibleCount(Math.min(items.length, STARTING_MAX_ITEMS_COUNT));
-      needsFullRerender.current = true;
-    }
+    setVisibleCount(Math.min(items.length, STARTING_MAX_ITEMS_COUNT));
+    needsFullRerender.current = true;
   }, [containerWidth, disabled, items]);
 
   const mergedRefs = useMergedRefs(containerRef, resizeRef);
