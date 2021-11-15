@@ -387,7 +387,7 @@ it('should NOT handle hsl input change with lose focus', () => {
   expect(handleOnChange).toHaveBeenCalledTimes(1);
 });
 
-it('should handle rgb input change with lose focus', () => {
+it('should NOT handle rgb input change with lose focus', () => {
   const handleOnChange = jest.fn();
 
   const { container } = render(
@@ -407,23 +407,14 @@ it('should handle rgb input change with lose focus', () => {
 
   r.focus();
   fireEvent.change(r, { target: { value: '100' } });
-  r.blur();
-  expect(handleOnChange).toHaveBeenCalledTimes(1);
-
   g.focus();
   fireEvent.change(g, { target: { value: '50' } });
-  g.blur();
-  expect(handleOnChange).toHaveBeenCalledTimes(2);
-
   b.focus();
   fireEvent.change(b, { target: { value: '50' } });
-  b.blur();
-  expect(handleOnChange).toHaveBeenCalledTimes(3);
-
   a.focus();
   fireEvent.change(a, { target: { value: '.50' } });
   a.blur();
-  expect(handleOnChange).toHaveBeenCalledTimes(4);
+  expect(handleOnChange).toHaveBeenCalledTimes(1);
 });
 
 it('should handle hex input when alpha is false', () => {
