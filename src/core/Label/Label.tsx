@@ -20,6 +20,11 @@ type LabelOwnProps<T extends React.ElementType = 'label'> = {
    * @default 'block'
    */
   displayStyle?: 'block' | 'inline';
+  /**
+   * Set to true if the label's associated input is required.
+   * This adds an asterisk next to the label text.
+   */
+  required?: boolean;
 };
 
 export type LabelProps<
@@ -37,12 +42,29 @@ export type LabelProps<
 export const Label = <T extends React.ElementType = 'label'>(
   props: LabelProps<T>,
 ) => {
-  const { as: Element = 'label', className, children, ...rest } = props;
+  const {
+    as: Element = 'label',
+    displayStyle = 'block',
+    required,
+    className,
+    children,
+    ...rest
+  } = props;
 
   useTheme();
 
   return (
-    <Element className={cx('iui-input-label', className)} {...rest}>
+    <Element
+      className={cx(
+        'iui-input-label',
+        {
+          'iui-inline': displayStyle === 'inline',
+          'iui-required': required,
+        },
+        className,
+      )}
+      {...rest}
+    >
       {children}
     </Element>
   );
