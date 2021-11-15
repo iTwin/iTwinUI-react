@@ -6,7 +6,7 @@ import React from 'react';
 import { useMergedRefs } from './useMergedRefs';
 import { useResizeObserver } from './useResizeObserver';
 
-const STARTING_ITEMS_COUNT = 20;
+const STARTING_MAX_ITEMS_COUNT = 20;
 
 /**
  * Hook that observes the size of an element and returns the number of items
@@ -36,7 +36,7 @@ export const useOverflow = <T extends HTMLElement>(
   const containerRef = React.useRef<T>(null);
 
   const [visibleCount, setVisibleCount] = React.useState(() =>
-    Math.min(items.length, STARTING_ITEMS_COUNT),
+    Math.min(items.length, STARTING_MAX_ITEMS_COUNT),
   );
 
   const needsFullRerender = React.useRef(true);
@@ -53,7 +53,7 @@ export const useOverflow = <T extends HTMLElement>(
   React.useLayoutEffect(() => {
     // Reset when width was increased
     if (previousContainerWidth.current < containerWidth && !disabled) {
-      setVisibleCount(Math.min(items.length, STARTING_ITEMS_COUNT));
+      setVisibleCount(Math.min(items.length, STARTING_MAX_ITEMS_COUNT));
       needsFullRerender.current = true;
     }
   }, [containerWidth, disabled, items]);
