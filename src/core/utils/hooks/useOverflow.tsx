@@ -35,7 +35,7 @@ export const useOverflow = <T extends HTMLElement>(
 ) => {
   const containerRef = React.useRef<T>(null);
 
-  const [visibleCount, setVisibleCount] = React.useState(
+  const [visibleCount, setVisibleCount] = React.useState(() =>
     Math.min(items.length, STARTING_ITEMS_COUNT),
   );
 
@@ -52,11 +52,11 @@ export const useOverflow = <T extends HTMLElement>(
 
   React.useLayoutEffect(() => {
     // Reset when width was increased
-    if (previousContainerWidth.current < containerWidth) {
+    if (previousContainerWidth.current < containerWidth && !disabled) {
       setVisibleCount(Math.min(items.length, STARTING_ITEMS_COUNT));
       needsFullRerender.current = true;
     }
-  }, [containerWidth, items]);
+  }, [containerWidth, disabled, items]);
 
   const mergedRefs = useMergedRefs(containerRef, resizeRef);
 

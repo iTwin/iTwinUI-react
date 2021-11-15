@@ -46,10 +46,11 @@ const assertBaseElement = (
   });
 };
 
+const useOverflowMock = jest
+  .spyOn(UseOverflow, 'useOverflow')
+  .mockImplementation((items) => [jest.fn(), items.length]);
 beforeEach(() => {
-  jest
-    .spyOn(UseOverflow, 'useOverflow')
-    .mockImplementation((items) => [jest.fn(), items.length]);
+  useOverflowMock.mockImplementation((items) => [jest.fn(), items.length]);
 });
 
 it('should render all elements in default state', () => {
@@ -86,7 +87,7 @@ it('should accept currentIndex prop', () => {
 });
 
 it('should overflow when there is not enough space', () => {
-  jest.spyOn(UseOverflow, 'useOverflow').mockReturnValue([jest.fn(), 2]);
+  useOverflowMock.mockReturnValue([jest.fn(), 2]);
   const { container } = renderComponent();
 
   expect(container.querySelector('.iui-breadcrumbs')).toBeTruthy();
@@ -100,30 +101,8 @@ it('should overflow when there is not enough space', () => {
   expect(breadcrumbs[2].textContent).toEqual('Item 2');
 });
 
-it('should restore hidden items when there is enough space again', () => {
-  jest.spyOn(UseOverflow, 'useOverflow').mockReturnValue([jest.fn(), 2]);
-
-  const { container, rerender } = renderComponent();
-
-  expect(container.querySelector('.iui-breadcrumbs')).toBeTruthy();
-  expect(container.querySelectorAll('.iui-breadcrumbs-item')).toHaveLength(3);
-  expect(container.querySelector('.iui-ellipsis')?.textContent).toEqual('…');
-
-  jest.spyOn(UseOverflow, 'useOverflow').mockReturnValue([jest.fn(), 3]);
-  rerender(
-    <Breadcrumbs>
-      {[...Array(3)].map((_, index) => (
-        <Button key={index}>Item {index}</Button>
-      ))}
-    </Breadcrumbs>,
-  );
-
-  expect(container.querySelector('.iui-ellipsis')).toBeFalsy();
-  assertBaseElement(container);
-});
-
-it('should hide first item on very small widths', () => {
-  jest.spyOn(UseOverflow, 'useOverflow').mockReturnValue([jest.fn(), 1]);
+it('should should the last item when only one is visible', () => {
+  useOverflowMock.mockReturnValue([jest.fn(), 1]);
 
   const { container } = renderComponent();
 

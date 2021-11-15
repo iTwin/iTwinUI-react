@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { render, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import React from 'react';
 import { useOverflow } from './useOverflow';
 import * as UseResizeObserver from './useResizeObserver';
@@ -18,15 +18,19 @@ const MockComponent = ({
   return <div ref={overflowRef}>{children.slice(0, visibleCount)}</div>;
 };
 
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
 it('should overflow when there is not enough space', async () => {
-  const scrollWidthSpy = jest
+  jest
     .spyOn(HTMLDivElement.prototype, 'scrollWidth', 'get')
     .mockReturnValueOnce(120)
     .mockReturnValue(100);
-  const offsetWidthSpy = jest
+  jest
     .spyOn(HTMLDivElement.prototype, 'offsetWidth', 'get')
     .mockReturnValue(100);
-  const childOffsetWidthSpy = jest
+  jest
     .spyOn(HTMLSpanElement.prototype, 'offsetWidth', 'get')
     .mockReturnValue(25);
 
@@ -41,22 +45,18 @@ it('should overflow when there is not enough space', async () => {
   await waitFor(() => {
     expect(container.querySelectorAll('span')).toHaveLength(4);
   });
-
-  scrollWidthSpy.mockRestore();
-  offsetWidthSpy.mockRestore();
-  childOffsetWidthSpy.mockRestore();
 });
 
 it('should overflow when there is not enough space but container fits 30 items', async () => {
-  const scrollWidthSpy = jest
+  jest
     .spyOn(HTMLDivElement.prototype, 'scrollWidth', 'get')
     .mockReturnValueOnce(300)
     .mockReturnValueOnce(600)
     .mockReturnValue(300);
-  const offsetWidthSpy = jest
+  jest
     .spyOn(HTMLDivElement.prototype, 'offsetWidth', 'get')
     .mockReturnValue(300);
-  const childOffsetWidthSpy = jest
+  jest
     .spyOn(HTMLSpanElement.prototype, 'offsetWidth', 'get')
     .mockReturnValue(10);
 
@@ -71,10 +71,6 @@ it('should overflow when there is not enough space but container fits 30 items',
   await waitFor(() => {
     expect(container.querySelectorAll('span')).toHaveLength(30);
   });
-
-  scrollWidthSpy.mockRestore();
-  offsetWidthSpy.mockRestore();
-  childOffsetWidthSpy.mockRestore();
 });
 
 it('should restore hidden items when space is available again', async () => {
@@ -95,7 +91,7 @@ it('should restore hidden items when space is available again', async () => {
   const offsetWidthSpy = jest
     .spyOn(HTMLDivElement.prototype, 'offsetWidth', 'get')
     .mockReturnValue(100);
-  const childOffsetWidthSpy = jest
+  jest
     .spyOn(HTMLSpanElement.prototype, 'offsetWidth', 'get')
     .mockReturnValue(25);
 
@@ -120,25 +116,20 @@ it('should restore hidden items when space is available again', async () => {
       ))}
     </MockComponent>,
   );
-  onResizeFn({ width: 125 } as DOMRectReadOnly);
+
+  act(() => onResizeFn({ width: 125 } as DOMRectReadOnly));
 
   await waitFor(() => {
     expect(container.querySelectorAll('span')).toHaveLength(5);
   });
-
-  scrollWidthSpy.mockRestore();
-  offsetWidthSpy.mockRestore();
-  childOffsetWidthSpy.mockRestore();
 });
 
 it('should not overflow when disabled', () => {
-  const scrollWidthSpy = jest
+  jest
     .spyOn(HTMLElement.prototype, 'scrollWidth', 'get')
     .mockReturnValueOnce(120)
     .mockReturnValue(100);
-  const offsetWidthSpy = jest
-    .spyOn(HTMLElement.prototype, 'offsetWidth', 'get')
-    .mockReturnValue(100);
+  jest.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(100);
 
   const { container } = render(
     <MockComponent disableOverflow>
@@ -149,7 +140,4 @@ it('should not overflow when disabled', () => {
   );
 
   expect(container.querySelectorAll('span')).toHaveLength(5);
-
-  scrollWidthSpy.mockRestore();
-  offsetWidthSpy.mockRestore();
 });
