@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.24.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.24.0...v1.24.1) (2021-11-16)
+
+
+### Fixes
+
+* **useOverflow:** Fixed the hook to handle more items ([#428](https://www.github.com/iTwin/iTwinUI-react/issues/428)) ([1d947fc](https://www.github.com/iTwin/iTwinUI-react/commit/1d947fc3f55091b9b6da1ed7e7fa167b931cb8a0))
+
 ## [1.24.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.23.2...v1.24.0) (2021-11-09)
 
 ### What's new
