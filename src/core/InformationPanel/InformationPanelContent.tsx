@@ -60,7 +60,7 @@ export const InformationPanelContent = (
 
   useTheme();
 
-  const [resizeRef, contentWidth] = useResizableWidth();
+  const [resizeRef, contentWidth] = useContainerWidth();
 
   return (
     <div
@@ -77,20 +77,36 @@ export const InformationPanelContent = (
   );
 };
 
-const useResizableWidth = (disabled = false) => {
-  const ref = React.useRef<HTMLDivElement>(null);
+export const useContainerWidth = <T extends HTMLElement>(
+  watchResizes = true,
+) => {
+  const [contentWidth, setContentWidth] = React.useState(0);
 
-  const [contentWidth, setContentWidth] = React.useState(
-    () => ref.current?.getBoundingClientRect().width ?? 0,
-  );
+  // callback ref to set initial contentWidth only once
+  const isInitialized = React.useRef(false);
+  const ref = React.useCallback((element: T) => {
+    if (!element) {
+      return;
+    }
+    if (!isInitialized.current) {
+      setContentWidth(element.getBoundingClientRect().width);
+    } else {
+      isInitialized.current = true;
+    }
+  }, []);
 
   const updateWidth = React.useCallback(
     ({ width }) => setContentWidth(width),
     [],
   );
 
-  const [resizeRef] = useResizeObserver(updateWidth);
-  const refs = useMergedRefs(ref, !disabled ? resizeRef : undefined);
+  const [resizeRef, resizeObserver] = useResizeObserver(updateWidth);
+
+  if (!watchResizes) {
+    resizeObserver?.disconnect();
+  }
+
+  const refs = useMergedRefs(ref, watchResizes ? resizeRef : undefined);
 
   return [refs, contentWidth] as const;
 };
