@@ -202,6 +202,10 @@
       "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Kbd.stories.tsx",
       "framework": "react"
     },
+    "Typography/Label": {
+      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Label.stories.tsx",
+      "framework": "react"
+    },
     "Typography/Leading": {
       "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Leading.stories.tsx",
       "framework": "react"
@@ -612,6 +616,15 @@
       "story": "Disabled Items",
       "parameters": {
         "__id": "core-combobox--disabled-items"
+      }
+    },
+    "core-combobox--with-label": {
+      "id": "core-combobox--with-label",
+      "name": "With Label",
+      "kind": "Core/ComboBox",
+      "story": "With Label",
+      "parameters": {
+        "__id": "core-combobox--with-label"
       }
     },
     "core-datepicker--basic": {
@@ -2160,6 +2173,33 @@
       "story": "Predefined Key",
       "parameters": {
         "__id": "typography-keyboard-key--predefined-key"
+      }
+    },
+    "typography-label--basic": {
+      "id": "typography-label--basic",
+      "name": "Basic",
+      "kind": "Typography/Label",
+      "story": "Basic",
+      "parameters": {
+        "__id": "typography-label--basic"
+      }
+    },
+    "typography-label--inline": {
+      "id": "typography-label--inline",
+      "name": "Inline",
+      "kind": "Typography/Label",
+      "story": "Inline",
+      "parameters": {
+        "__id": "typography-label--inline"
+      }
+    },
+    "typography-label--polymorphic": {
+      "id": "typography-label--polymorphic",
+      "name": "Polymorphic",
+      "kind": "Typography/Label",
+      "story": "Polymorphic",
+      "parameters": {
+        "__id": "typography-label--polymorphic"
       }
     },
     "typography-leading--base": {
