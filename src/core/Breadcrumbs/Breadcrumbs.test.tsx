@@ -101,7 +101,7 @@ it('should overflow when there is not enough space', () => {
   expect(breadcrumbs[2].textContent).toEqual('Item 2');
 });
 
-it('should should the last item when only one is visible', () => {
+it('should show the last item when only one can be visible', () => {
   useOverflowMock.mockReturnValue([jest.fn(), 1]);
 
   const { container } = renderComponent();

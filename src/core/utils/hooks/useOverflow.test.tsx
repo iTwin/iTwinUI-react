@@ -133,11 +133,49 @@ it('should not overflow when disabled', () => {
 
   const { container } = render(
     <MockComponent disableOverflow>
-      {[...Array(5)].map((_, i) => (
+      {[...Array(50)].map((_, i) => (
         <span key={i}>Test {i}</span>
       ))}
     </MockComponent>,
   );
 
-  expect(container.querySelectorAll('span')).toHaveLength(5);
+  expect(container.querySelectorAll('span')).toHaveLength(50);
+});
+
+it('should hide items and then show them all when overflow is disabled', async () => {
+  jest
+    .spyOn(HTMLDivElement.prototype, 'scrollWidth', 'get')
+    .mockReturnValueOnce(300)
+    .mockReturnValueOnce(600)
+    .mockReturnValue(300);
+  jest
+    .spyOn(HTMLDivElement.prototype, 'offsetWidth', 'get')
+    .mockReturnValue(300);
+  jest
+    .spyOn(HTMLSpanElement.prototype, 'offsetWidth', 'get')
+    .mockReturnValue(10);
+
+  const { container, rerender } = render(
+    <MockComponent>
+      {[...Array(100)].map((_, i) => (
+        <span key={i}>Test {i}</span>
+      ))}
+    </MockComponent>,
+  );
+
+  await waitFor(() => {
+    expect(container.querySelectorAll('span')).toHaveLength(30);
+  });
+
+  rerender(
+    <MockComponent disableOverflow>
+      {[...Array(100)].map((_, i) => (
+        <span key={i}>Test {i}</span>
+      ))}
+    </MockComponent>,
+  );
+
+  await waitFor(() => {
+    expect(container.querySelectorAll('span')).toHaveLength(100);
+  });
 });
