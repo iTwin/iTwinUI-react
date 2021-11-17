@@ -12,15 +12,9 @@ import { IconButton, Button, DropdownButton } from '../Buttons';
 import { ProgressRadial } from '../ProgressIndicators';
 import { MenuItem } from '../Menu';
 import { Text } from '../Typography';
-import {
-  CommonProps,
-  getBoundedValue,
-  useTheme,
-  useOverflow,
-  useResizeObserver,
-  useMergedRefs,
-} from '../utils';
+import { CommonProps, getBoundedValue, useTheme, useOverflow } from '../utils';
 import { TablePaginatorRendererProps } from './Table';
+import { useContainerWidth } from '../utils/hooks/useContainerWidth';
 
 const defaultLocalization = {
   pageSizeLabel: (size: number) => `${size} per page`,
@@ -186,12 +180,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
   );
   const [overflowRef, visibleCount] = useOverflow(pageList);
 
-  const paginatorRef = React.useRef<HTMLDivElement>(null);
-  const [currentWidth, setCurrentWidth] = React.useState(
-    () => paginatorRef.current?.offsetWidth ?? 0,
-  );
-  const [resizeRef] = useResizeObserver(({ width }) => setCurrentWidth(width));
-  const paginatorRefs = useMergedRefs(paginatorRef, resizeRef);
+  const [paginatorResizeRef, paginatorWidth] = useContainerWidth();
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     // alt + arrow keys are used by browser/assistive technologies
@@ -273,7 +262,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
   return (
     <div
       className={cx('iui-paginator', className)}
-      ref={paginatorRefs}
+      ref={paginatorResizeRef}
       {...rest}
     >
       <div className='iui-left' />
@@ -331,7 +320,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
         </IconButton>
       </div>
       <div className='iui-right'>
-        {localization.rowsPerPageLabel && currentWidth >= 1024 && (
+        {localization.rowsPerPageLabel && paginatorWidth >= 1024 && (
           <Text isMuted as='span'>
             {localization.rowsPerPageLabel}
           </Text>
