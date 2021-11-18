@@ -4,8 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import cx from 'classnames';
 import React from 'react';
-import { CommonProps, useTheme } from '../utils';
-import { useContainerWidth } from '../utils/hooks/useContainerWidth';
+import { CommonProps, useTheme, useContainerWidth } from '../utils';
 import '@itwin/itwinui-css/css/information-panel.css';
 
 export type InformationPanelContentProps = {
