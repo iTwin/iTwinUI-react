@@ -26,17 +26,11 @@ export const useContainerWidth = <T extends HTMLElement>(
 ) => {
   const [contentWidth, setContentWidth] = React.useState(0);
 
-  // callback ref to set initial contentWidth only once
-  const isInitialized = React.useRef(false);
   const ref = React.useCallback((element: T) => {
     if (!element) {
       return;
     }
-    if (!isInitialized.current) {
-      setContentWidth(element.getBoundingClientRect().width);
-    } else {
-      isInitialized.current = true;
-    }
+    setContentWidth(element.getBoundingClientRect().width);
   }, []);
 
   const updateWidth = React.useCallback(

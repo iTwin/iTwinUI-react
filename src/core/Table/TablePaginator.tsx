@@ -12,9 +12,14 @@ import { IconButton, Button, DropdownButton } from '../Buttons';
 import { ProgressRadial } from '../ProgressIndicators';
 import { MenuItem } from '../Menu';
 import { Text } from '../Typography';
-import { CommonProps, getBoundedValue, useTheme, useOverflow } from '../utils';
+import {
+  CommonProps,
+  getBoundedValue,
+  useTheme,
+  useOverflow,
+  useContainerWidth,
+} from '../utils';
 import { TablePaginatorRendererProps } from './Table';
-import { useContainerWidth } from '../utils/hooks/useContainerWidth';
 
 const defaultLocalization = {
   pageSizeLabel: (size: number) => `${size} per page`,
