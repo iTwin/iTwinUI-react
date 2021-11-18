@@ -68,7 +68,7 @@ it('should not update value when resized if disabled', () => {
       triggerResize = onResize;
       return [jest.fn(), ({ disconnect } as unknown) as ResizeObserver];
     });
-  const { result, waitFor } = renderHook(() => useContainerWidth(false));
+  const { result } = renderHook(() => useContainerWidth(false));
   const element = document.createElement('div');
   Object.defineProperties(element, {
     getBoundingClientRect: { value: () => ({ width: 100 }) },
@@ -80,6 +80,6 @@ it('should not update value when resized if disabled', () => {
   expect(result.current[1]).toEqual(100);
 
   act(() => triggerResize({ width: 125 } as DOMRect));
-  waitFor(() => expect(result.current[1]).toEqual(100));
+  expect(result.current[1]).toEqual(100);
   expect(disconnect).toHaveBeenCalled();
 });
