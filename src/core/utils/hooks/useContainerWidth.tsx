@@ -34,7 +34,6 @@ export const useContainerWidth = <T extends HTMLElement>(
     }
     if (!isInitialized.current) {
       setContentWidth(element.getBoundingClientRect().width);
-    } else {
       isInitialized.current = true;
     }
   }, []);
