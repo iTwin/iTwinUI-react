@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.25.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.25.0...v1.25.1) (2021-11-18)
+
+
+### Fixes
+
+* **DatePicker:** Make date arg required in `onChange` ([#437](https://www.github.com/iTwin/iTwinUI-react/issues/437)) ([ee79248](https://www.github.com/iTwin/iTwinUI-react/commit/ee792488a10e43a9b0f8ea6d77c30ef1897eb86c))
+
 ## [1.25.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.24.0...v1.25.0) (2021-11-16)
 
 ### What's new
