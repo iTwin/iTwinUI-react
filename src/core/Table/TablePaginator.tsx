@@ -235,6 +235,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
   }
 
   const hasNoRows = totalPagesCount === 0;
+  const showPaginator = totalRowsCount > pageSize || isLoading;
 
   const ellipsis = (
     <span className={cx('iui-ellipsis', { 'iui-small': size === 'small' })}>
@@ -257,59 +258,61 @@ export const TablePaginator = (props: TablePaginatorProps) => {
   return (
     <div className={cx('iui-paginator', className)} {...rest}>
       <div className='iui-left' />
-      <div className='iui-center' ref={overflowRef}>
-        <IconButton
-          styleType='borderless'
-          disabled={currentPage === 0 || hasNoRows}
-          onClick={() => onPageChange(currentPage - 1)}
-          size={buttonSize}
-          aria-label={localization.previousPage}
-        >
-          <SvgChevronLeft />
-        </IconButton>
-        <ButtonGroup onKeyDown={onKeyDown} ref={pageListRef}>
-          {(() => {
-            if (hasNoRows) {
-              return noRowsContent;
-            }
-            if (visibleCount === 1) {
-              return pageButton(focusedIndex);
-            }
-            return (
-              <>
-                {startPage !== 0 && (
-                  <>
-                    {pageButton(0, 0)}
-                    {ellipsis}
-                  </>
-                )}
-                {pageList.slice(startPage, endPage)}
-                {endPage !== totalPagesCount && !isLoading && (
-                  <>
-                    {ellipsis}
-                    {pageButton(totalPagesCount - 1, 0)}
-                  </>
-                )}
-                {isLoading && (
-                  <>
-                    {ellipsis}
-                    <ProgressRadial indeterminate size='small' />
-                  </>
-                )}
-              </>
-            );
-          })()}
-        </ButtonGroup>
-        <IconButton
-          styleType='borderless'
-          disabled={currentPage === totalPagesCount - 1 || hasNoRows}
-          onClick={() => onPageChange(currentPage + 1)}
-          size={buttonSize}
-          aria-label={localization.nextPage}
-        >
-          <SvgChevronRight />
-        </IconButton>
-      </div>
+      {showPaginator && (
+        <div className='iui-center' ref={overflowRef}>
+          <IconButton
+            styleType='borderless'
+            disabled={currentPage === 0}
+            onClick={() => onPageChange(currentPage - 1)}
+            size={buttonSize}
+            aria-label={localization.previousPage}
+          >
+            <SvgChevronLeft />
+          </IconButton>
+          <ButtonGroup onKeyDown={onKeyDown} ref={pageListRef}>
+            {(() => {
+              if (hasNoRows) {
+                return noRowsContent;
+              }
+              if (visibleCount === 1) {
+                return pageButton(focusedIndex);
+              }
+              return (
+                <>
+                  {startPage !== 0 && (
+                    <>
+                      {pageButton(0, 0)}
+                      {ellipsis}
+                    </>
+                  )}
+                  {pageList.slice(startPage, endPage)}
+                  {endPage !== totalPagesCount && !isLoading && (
+                    <>
+                      {ellipsis}
+                      {pageButton(totalPagesCount - 1, 0)}
+                    </>
+                  )}
+                  {isLoading && (
+                    <>
+                      {ellipsis}
+                      <ProgressRadial indeterminate size='small' />
+                    </>
+                  )}
+                </>
+              );
+            })()}
+          </ButtonGroup>
+          <IconButton
+            styleType='borderless'
+            disabled={currentPage === totalPagesCount - 1 || hasNoRows}
+            onClick={() => onPageChange(currentPage + 1)}
+            size={buttonSize}
+            aria-label={localization.nextPage}
+          >
+            <SvgChevronRight />
+          </IconButton>
+        </div>
+      )}
       <div className='iui-right'>
         {pageSizeList && onPageSizeChange && !!totalRowsCount && (
           <DropdownButton
