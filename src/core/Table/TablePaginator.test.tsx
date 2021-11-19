@@ -79,15 +79,16 @@ it('should render currently visible rows info and page size selector', () => {
 it('should render without paginator when rows count is less than page size', () => {
   const { container } = renderComponent({
     totalRowsCount: 10,
+    pageSizeList: [10, 25, 50],
   });
-
   const pageSizeSelector = container.querySelector(
     '.iui-dropdown',
   ) as HTMLButtonElement;
+
   expect(pageSizeSelector).toBeTruthy();
   expect(pageSizeSelector.textContent).toEqual('1-10 of 10');
 
-  const paginator = container.querySelector('.iui-paginator') as HTMLElement;
+  const paginator = container.querySelector('.iui-center') as HTMLElement;
   expect(paginator).not.toBeTruthy();
 });
 
