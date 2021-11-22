@@ -235,7 +235,8 @@ export const TablePaginator = (props: TablePaginatorProps) => {
   }
 
   const hasNoRows = totalPagesCount === 0;
-  const showPaginator = totalRowsCount > pageSize || isLoading;
+  const showPagesList = totalRowsCount > pageSize || isLoading;
+  const showPageSizeList = pageSizeList && onPageSizeChange && !!totalRowsCount;
 
   const ellipsis = (
     <span className={cx('iui-ellipsis', { 'iui-small': size === 'small' })}>
@@ -255,10 +256,14 @@ export const TablePaginator = (props: TablePaginatorProps) => {
     </>
   );
 
+  if (!showPagesList && !showPageSizeList) {
+    return null;
+  }
+
   return (
     <div className={cx('iui-paginator', className)} {...rest}>
       <div className='iui-left' />
-      {showPaginator && (
+      {showPagesList && (
         <div className='iui-center' ref={overflowRef}>
           <IconButton
             styleType='borderless'
@@ -314,7 +319,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
         </div>
       )}
       <div className='iui-right'>
-        {pageSizeList && onPageSizeChange && !!totalRowsCount && (
+        {showPageSizeList && (
           <DropdownButton
             styleType='borderless'
             size={buttonSize}

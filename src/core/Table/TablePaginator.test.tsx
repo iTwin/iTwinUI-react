@@ -76,7 +76,7 @@ it('should render currently visible rows info and page size selector', () => {
   expect(onPageSizeChange).toHaveBeenCalledWith(25);
 });
 
-it('should render without paginator when rows count is less than page size', () => {
+it('should render without page list', () => {
   const { container } = renderComponent({
     totalRowsCount: 10,
     pageSizeList: [10, 25, 50],
@@ -89,6 +89,13 @@ it('should render without paginator when rows count is less than page size', () 
   expect(pageSizeSelector.textContent).toEqual('1-10 of 10');
 
   const paginator = container.querySelector('.iui-center') as HTMLElement;
+  expect(paginator).not.toBeTruthy();
+});
+
+it('should render without page list and page size list', () => {
+  const { container } = renderComponent({ totalRowsCount: 10 });
+
+  const paginator = container.querySelector('.iui-paginator') as HTMLElement;
   expect(paginator).not.toBeTruthy();
 });
 
