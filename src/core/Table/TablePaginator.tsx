@@ -245,6 +245,8 @@ export const TablePaginator = (props: TablePaginatorProps) => {
   }
 
   const hasNoRows = totalPagesCount === 0;
+  const showPagesList = totalPagesCount > 1 || isLoading;
+  const showPageSizeList = pageSizeList && onPageSizeChange && !!totalRowsCount;
 
   const ellipsis = (
     <span className={cx('iui-ellipsis', { 'iui-small': size === 'small' })}>
@@ -264,6 +266,10 @@ export const TablePaginator = (props: TablePaginatorProps) => {
     </>
   );
 
+  if (!showPagesList && !showPageSizeList) {
+    return null;
+  }
+
   return (
     <div
       className={cx('iui-paginator', className)}
@@ -271,91 +277,95 @@ export const TablePaginator = (props: TablePaginatorProps) => {
       {...rest}
     >
       <div className='iui-left' />
-      <div className='iui-center' ref={overflowRef}>
-        <IconButton
-          styleType='borderless'
-          disabled={currentPage === 0 || hasNoRows}
-          onClick={() => onPageChange(currentPage - 1)}
-          size={buttonSize}
-          aria-label={localization.previousPage}
-        >
-          <SvgChevronLeft />
-        </IconButton>
-        <ButtonGroup onKeyDown={onKeyDown} ref={pageListRef}>
-          {(() => {
-            if (hasNoRows) {
-              return noRowsContent;
-            }
-            if (visibleCount === 1) {
-              return pageButton(focusedIndex);
-            }
-            return (
-              <>
-                {startPage !== 0 && (
-                  <>
-                    {pageButton(0, 0)}
-                    {ellipsis}
-                  </>
-                )}
-                {pageList.slice(startPage, endPage)}
-                {endPage !== totalPagesCount && !isLoading && (
-                  <>
-                    {ellipsis}
-                    {pageButton(totalPagesCount - 1, 0)}
-                  </>
-                )}
-                {isLoading && (
-                  <>
-                    {ellipsis}
-                    <ProgressRadial indeterminate size='small' />
-                  </>
-                )}
-              </>
-            );
-          })()}
-        </ButtonGroup>
-        <IconButton
-          styleType='borderless'
-          disabled={currentPage === totalPagesCount - 1 || hasNoRows}
-          onClick={() => onPageChange(currentPage + 1)}
-          size={buttonSize}
-          aria-label={localization.nextPage}
-        >
-          <SvgChevronRight />
-        </IconButton>
-      </div>
-      <div className='iui-right'>
-        {localization.rowsPerPageLabel && paginatorWidth >= 1024 && (
-          <Text isMuted as='span'>
-            {localization.rowsPerPageLabel}
-          </Text>
-        )}
-        {pageSizeList && onPageSizeChange && !!totalRowsCount && (
-          <DropdownButton
+      {showPagesList && (
+        <div className='iui-center' ref={overflowRef}>
+          <IconButton
             styleType='borderless'
+            disabled={currentPage === 0}
+            onClick={() => onPageChange(currentPage - 1)}
             size={buttonSize}
-            menuItems={(close) =>
-              pageSizeList.map((size) => (
-                <MenuItem
-                  key={size}
-                  isSelected={size === pageSize}
-                  onClick={() => {
-                    close();
-                    onPageSizeChange(size);
-                  }}
-                >
-                  {localization.pageSizeLabel(size)}
-                </MenuItem>
-              ))
-            }
+            aria-label={localization.previousPage}
           >
-            {localization.rangeLabel(
-              currentPage * pageSize + 1,
-              Math.min(totalRowsCount, (currentPage + 1) * pageSize),
-              totalRowsCount,
-              isLoading,
+            <SvgChevronLeft />
+          </IconButton>
+          <ButtonGroup onKeyDown={onKeyDown} ref={pageListRef}>
+            {(() => {
+              if (hasNoRows) {
+                return noRowsContent;
+              }
+              if (visibleCount === 1) {
+                return pageButton(focusedIndex);
+              }
+              return (
+                <>
+                  {startPage !== 0 && (
+                    <>
+                      {pageButton(0, 0)}
+                      {ellipsis}
+                    </>
+                  )}
+                  {pageList.slice(startPage, endPage)}
+                  {endPage !== totalPagesCount && !isLoading && (
+                    <>
+                      {ellipsis}
+                      {pageButton(totalPagesCount - 1, 0)}
+                    </>
+                  )}
+                  {isLoading && (
+                    <>
+                      {ellipsis}
+                      <ProgressRadial indeterminate size='small' />
+                    </>
+                  )}
+                </>
+              );
+            })()}
+          </ButtonGroup>
+          <IconButton
+            styleType='borderless'
+            disabled={currentPage === totalPagesCount - 1 || hasNoRows}
+            onClick={() => onPageChange(currentPage + 1)}
+            size={buttonSize}
+            aria-label={localization.nextPage}
+          >
+            <SvgChevronRight />
+          </IconButton>
+        </div>
+      )}
+      <div className='iui-right'>
+        {showPageSizeList && (
+          <>
+            {localization.rowsPerPageLabel && paginatorWidth >= 1024 && (
+              <Text isMuted as='span'>
+                {localization.rowsPerPageLabel}
+              </Text>
             )}
-          </DropdownButton>
+            <DropdownButton
+              styleType='borderless'
+              size={buttonSize}
+              menuItems={(close) =>
+                pageSizeList.map((size) => (
+                  <MenuItem
+                    key={size}
+                    isSelected={size === pageSize}
+                    onClick={() => {
+                      close();
+                      onPageSizeChange(size);
+                    }}
+                  >
+                    {localization.pageSizeLabel(size)}
+                  </MenuItem>
+                ))
+              }
+            >
+              {localization.rangeLabel(
+                currentPage * pageSize + 1,
+                Math.min(totalRowsCount, (currentPage + 1) * pageSize),
+                totalRowsCount,
+                isLoading,
+              )}
+            </DropdownButton>
+          </>
         )}
       </div>
     </div>
