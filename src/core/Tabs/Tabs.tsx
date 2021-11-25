@@ -6,9 +6,10 @@ import cx from 'classnames';
 import React from 'react';
 import {
   useTheme,
-  useResizeObserver,
   useMergedRefs,
   getBoundedValue,
+  getWindow,
+  useContainerWidth,
 } from '../utils';
 import '@itwin/itwinui-css/css/tabs.css';
 import { Tab } from './Tab';
@@ -109,16 +110,7 @@ export const Tabs = (props: TabsProps) => {
   useTheme();
 
   const tablistRef = React.useRef<HTMLUListElement>(null);
-
-  const [tabsWidth, setTabsWidth] = React.useState(
-    () => tablistRef.current?.getBoundingClientRect().width,
-  );
-  const updateTabsWidth = React.useCallback(
-    ({ width }) => setTabsWidth(width),
-    [],
-  );
-
-  const [tablistSizeRef] = useResizeObserver(updateTabsWidth);
+  const [tablistSizeRef, tabsWidth] = useContainerWidth(type !== 'default');
   const refs = useMergedRefs(tablistRef, tablistSizeRef);
 
   const [currentActiveIndex, setCurrentActiveIndex] = React.useState(() =>
@@ -132,25 +124,24 @@ export const Tabs = (props: TabsProps) => {
     }
   }, [activeIndex, currentActiveIndex, labels.length]);
 
-  const [stripeStyle, setStripeStyle] = React.useState<React.CSSProperties>({});
+  // CSS custom properties to place the active stripe
+  const [stripeProperties, setStripeProperties] = React.useState({});
   React.useLayoutEffect(() => {
-    if (type !== 'default') {
-      const activeTab = tablistRef.current?.children[
+    if (type !== 'default' && tablistRef.current != undefined) {
+      const activeTab = tablistRef.current.children[
         currentActiveIndex
       ] as HTMLElement;
-      const activeTabRect = activeTab?.getBoundingClientRect();
+      const activeTabRect = activeTab.getBoundingClientRect();
 
-      setStripeStyle({
-        width: orientation === 'horizontal' ? activeTabRect?.width : undefined,
-        height: orientation === 'vertical' ? activeTabRect?.height : undefined,
-        left:
-          orientation === 'horizontal'
-            ? activeTab?.offsetLeft
-            : activeTabRect?.width - 2,
-        top:
-          orientation === 'horizontal'
-            ? activeTabRect?.height - 2
-            : activeTab?.offsetTop,
+      setStripeProperties({
+        ...(orientation === 'horizontal' && {
+          '--stripe-width': `${activeTabRect.width}px`,
+          '--stripe-left': `${activeTab.offsetLeft}px`,
+        }),
+        ...(orientation === 'vertical' && {
+          '--stripe-height': `${activeTabRect.height}px`,
+          '--stripe-top': `${activeTab.offsetTop}px`,
+        }),
       });
     }
   }, [currentActiveIndex, type, orientation, tabsWidth]);
@@ -243,15 +234,21 @@ export const Tabs = (props: TabsProps) => {
     }
   };
 
+  const isIE = !getWindow()?.CSS?.supports?.('--stripe-width', '100px');
+
   return (
-    <div className={cx('iui-tabs-wrapper', `iui-${orientation}`)}>
+    <div
+      className={cx('iui-tabs-wrapper', `iui-${orientation}`)}
+      style={stripeProperties}
+    >
       <ul
         className={cx(
           'iui-tabs',
           `iui-${type}`,
           {
             'iui-green': color === 'green',
-            'iui-animated': type !== 'default',
+            'iui-animated': type !== 'default' && !isIE,
+            'iui-not-animated': isIE,
             'iui-large': hasSublabel,
           },
           tabsClassName,
@@ -295,9 +292,6 @@ export const Tabs = (props: TabsProps) => {
           );
         })}
       </ul>
-      {type !== 'default' && (
-        <div className='iui-tab-stripe' style={stripeStyle} />
-      )}
       {children && (
         <div
           className={cx('iui-tabs-content', contentClassName)}

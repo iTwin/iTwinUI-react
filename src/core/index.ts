@@ -32,6 +32,21 @@ export type { ButtonGroupProps } from './ButtonGroup';
 export { Checkbox } from './Checkbox';
 export type { CheckboxProps } from './Checkbox';
 
+export {
+  ColorPicker,
+  ColorSwatch,
+  ColorBuilder,
+  ColorInputPanel,
+  ColorPalette,
+} from './ColorPicker';
+export type {
+  ColorPickerProps,
+  ColorSwatchProps,
+  ColorBuilderProps,
+  ColorInputPanelProps,
+  ColorPaletteProps,
+} from './ColorPicker';
+
 export { ComboBox } from './ComboBox';
 export type { ComboBoxProps } from './ComboBox';
 
@@ -80,15 +95,20 @@ export {
   InformationPanel,
   InformationPanelWrapper,
   InformationPanelHeader,
+  InformationPanelBody,
 } from './InformationPanel';
 export type {
   InformationPanelProps,
   InformationPanelWrapperProps,
   InformationPanelHeaderProps,
+  InformationPanelBodyProps,
 } from './InformationPanel';
 
 export { Input } from './Input';
 export type { InputProps } from './Input';
+
+export { Label } from './Label';
+export type { LabelProps } from './Label';
 
 export { LabeledInput } from './LabeledInput';
 export type { LabeledInputProps } from './LabeledInput';
@@ -228,5 +248,5 @@ export type {
   WizardLocalization,
 } from './Wizard';
 
-export { getUserColor, useTheme } from './utils';
+export { getUserColor, useTheme, ColorValue } from './utils';
 export type { ThemeType } from './utils';
