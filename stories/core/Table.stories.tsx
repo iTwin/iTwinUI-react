@@ -92,7 +92,7 @@ export const Basic: Story<Partial<TableProps>> = (args) => {
   ) => action(props.row.original.name)();
 
   const columns = useMemo(
-    () => [
+    (): Column[] => [
       {
         Header: 'Table',
         columns: [
@@ -105,7 +105,7 @@ export const Basic: Story<Partial<TableProps>> = (args) => {
             id: 'description',
             Header: 'Description',
             accessor: 'description',
-            maxWidth: 200,
+            // maxWidth: 200,
           },
           {
             id: 'click-me',
@@ -141,6 +141,7 @@ export const Basic: Story<Partial<TableProps>> = (args) => {
       data={data}
       emptyTableContent='No data.'
       {...args}
+      isResizable
     />
   );
 };
@@ -352,6 +353,7 @@ export const Filters: Story<Partial<TableProps>> = (args) => {
             fieldType: 'number',
             Filter: tableFilters.NumberRangeFilter(translatedLabels),
             filter: 'between',
+            disableResizing: true,
           },
           {
             id: 'name',
@@ -366,7 +368,8 @@ export const Filters: Story<Partial<TableProps>> = (args) => {
             accessor: 'description',
             fieldType: 'text',
             Filter: tableFilters.TextFilter(translatedLabels),
-            maxWidth: 200,
+            // maxWidth: 200,
+            minWidth: 100,
           },
           {
             id: 'ids',
@@ -377,6 +380,7 @@ export const Filters: Story<Partial<TableProps>> = (args) => {
             },
             Filter: tableFilters.TextFilter(translatedLabels),
             filter: 'includes',
+            disableResizing: true,
           },
           {
             id: 'startDate',
@@ -389,6 +393,8 @@ export const Filters: Story<Partial<TableProps>> = (args) => {
               translatedLabels,
             }),
             filter: 'betweenDate',
+            // width: 100,
+            disableResizing: true,
           },
           {
             id: 'endDate',
@@ -457,6 +463,7 @@ export const Filters: Story<Partial<TableProps>> = (args) => {
       emptyTableContent='No data.'
       onFilter={onFilter}
       {...args}
+      isResizable
     />
   );
 };

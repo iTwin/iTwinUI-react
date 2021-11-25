@@ -22,7 +22,7 @@ import {
   usePagination,
 } from 'react-table';
 import { ProgressRadial } from '../ProgressIndicators';
-import { useTheme, CommonProps } from '../utils';
+import { useTheme, CommonProps, useResizeObserver } from '../utils';
 import '@itwin/itwinui-css/css/table.css';
 import SvgSortDown from '@itwin/itwinui-icons-react/cjs/icons/SortDown';
 import SvgSortUp from '@itwin/itwinui-icons-react/cjs/icons/SortUp';
@@ -35,6 +35,7 @@ import {
   useSelectionCell,
   useSubRowFiltering,
   useSubRowSelection,
+  useResizeColumns,
 } from './hooks';
 import {
   onExpandHandler,
@@ -198,6 +199,12 @@ export type TableProps<
    * @default 25
    */
   pageSize?: number;
+  /**
+   * Flag whether columns are resizable.
+   * In order to disable resizing for specific column, set `disableResizing: true` for that column.
+   * @default false
+   */
+  isResizable?: boolean;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -278,6 +285,7 @@ export const Table = <
     selectRowOnClick = true,
     paginatorRenderer,
     pageSize = 25,
+    isResizable = false,
     ...rest
   } = props;
 
@@ -293,6 +301,8 @@ export const Table = <
     }),
     [],
   );
+
+  const tableBody = React.useRef<HTMLDivElement>(null);
 
   // useRef prevents from rerendering when one of these callbacks changes
   const onBottomReachedRef = React.useRef(onBottomReached);
@@ -336,6 +346,18 @@ export const Table = <
           onSelectHandler(newState, instance, onSelect, isRowDisabled);
           break;
         }
+        case 'tableResized': {
+          newState = {
+            ...newState,
+            columnResizing: {
+              ...newState.columnResizing,
+              columnWidths: {
+                ...action.columnWidths,
+              },
+            },
+          };
+          break;
+        }
         default:
           break;
       }
@@ -373,6 +395,7 @@ export const Table = <
       initialState: { pageSize, ...props.initialState },
     },
     useFlexLayout,
+    useResizeColumns,
     useFilters,
     useSubRowFiltering(hasAnySubRows),
     useSortBy,
@@ -397,6 +420,7 @@ export const Table = <
     page,
     gotoPage,
     setPageSize,
+    flatHeaders,
   } = instance;
 
   const ariaDataAttributes = Object.entries(rest).reduce(
@@ -456,10 +480,66 @@ export const Table = <
     ],
   );
 
+  const previousTableWidth = React.useRef(0);
+  const onTableResize = React.useCallback(
+    ({ width }: DOMRectReadOnly) => {
+      if (width === previousTableWidth.current) {
+        return;
+      }
+      if (previousTableWidth.current === 0) {
+        previousTableWidth.current = width;
+        console.log('onTableResize', width);
+        return;
+      }
+      // Leave resize handling to the flex
+      if (Object.keys(state.columnResizing.columnWidths).length === 0) {
+        return;
+      }
+      const oldWidth =
+        previousTableWidth.current || tableBody.current?.clientWidth || 0;
+      console.log(oldWidth, width);
+      let staticSizeColumnWidthSum = 0;
+      flatHeaders.forEach((column) => {
+        if (
+          !state.columnResizing.columnWidths[column.id] &&
+          column.originalWidth
+        ) {
+          staticSizeColumnWidthSum += Number(column.width);
+        }
+      });
+      const resizedColumnWidthSum = oldWidth - staticSizeColumnWidthSum;
+      console.log('notResizableColumnWidthSum', staticSizeColumnWidthSum);
+      const newColumnWidths: Record<string, number> = {};
+      flatHeaders.forEach((column) => {
+        if (
+          column.width &&
+          (state.columnResizing.columnWidths[column.id] ||
+            !column.originalWidth)
+        ) {
+          console.log(column.id, column.width);
+          const ratio = Number(column.width) / resizedColumnWidthSum;
+          newColumnWidths[column.id] =
+            (width - staticSizeColumnWidthSum) * ratio;
+          console.log(column.id, ratio, newColumnWidths[column.id]);
+        }
+      });
+      dispatch({ type: 'tableResized', columnWidths: newColumnWidths });
+      previousTableWidth.current = width;
+      console.log('tableResized', newColumnWidths);
+    },
+    [dispatch, state.columnResizing.columnWidths, flatHeaders],
+  );
+  const [resizeRef] = useResizeObserver(onTableResize);
+
   return (
     <>
       <div
-        ref={(element) => setOwnerDocument(element?.ownerDocument)}
+        ref={(element) => {
+          setOwnerDocument(element?.ownerDocument);
+          if (isResizable) {
+            resizeRef(element);
+          }
+        }}
         id={id}
         {...getTableProps({
           className: cx(
@@ -478,7 +558,7 @@ export const Table = <
             });
             return (
               <div {...headerGroupProps} key={headerGroupProps.key}>
-                {headerGroup.headers.map((column) => {
+                {headerGroup.headers.map((column, index) => {
                   const columnProps = column.getHeaderProps({
                     ...column.getSortByToggleProps(),
                     className: cx(
@@ -494,6 +574,11 @@ export const Table = <
                       {...columnProps}
                       key={columnProps.key}
                       title={undefined}
+                      ref={(el) => {
+                        if (el) {
+                          column.resizeWidth = el.offsetWidth;
+                        }
+                      }}
                     >
                       {column.render('Header')}
                       {!isLoading && (data.length != 0 || areFiltersSet) && (
@@ -517,6 +602,16 @@ export const Table = <
                           )}
                         </div>
                       )}
+                      {isResizable &&
+                        column.isResizerVisible &&
+                        index !== headerGroup.headers.length - 1 && (
+                          <div
+                            {...column.getResizerProps()}
+                            className='iui-resizer'
+                          >
+                            <div className='iui-resizer-bar' />
+                          </div>
+                        )}
                     </div>
                   );
                 })}
@@ -524,7 +619,12 @@ export const Table = <
             );
           })}
         </div>
-        <div {...getTableBodyProps({ className: 'iui-table-body' })}>
+        <div
+          {...getTableBodyProps({
+            className: 'iui-table-body',
+          })}
+          ref={tableBody}
+        >
           {data.length !== 0 &&
             page.map((row: Row<T>) => {
               prepareRow(row);

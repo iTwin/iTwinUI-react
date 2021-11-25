@@ -1668,3 +1668,357 @@ it('should change page size', () => {
   expect(rows[0].querySelector('.iui-cell')?.textContent).toEqual('Name1');
   expect(rows[49].querySelector('.iui-cell')?.textContent).toEqual('Name50');
 });
+
+it('should handle resize by increasing width of current column and decreasing the next ones', () => {
+  jest.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(100);
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    isResizable: true,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  const resizer = container.querySelector('.iui-resizer') as HTMLDivElement;
+  expect(resizer).toBeTruthy();
+
+  fireEvent.mouseDown(resizer, { clientX: 100 });
+  fireEvent.mouseMove(resizer, { clientX: 150 });
+  fireEvent.mouseUp(resizer);
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  expect(headerCells).toHaveLength(3);
+
+  expect(headerCells[0].style.width).toBe('150px');
+  expect(headerCells[1].style.width).toBe('50px');
+  expect(headerCells[2].style.width).toBe('100px');
+});
+
+it('should handle resize with touch', () => {
+  jest.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(100);
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    isResizable: true,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  const resizer = container.querySelector('.iui-resizer') as HTMLDivElement;
+  expect(resizer).toBeTruthy();
+
+  fireEvent.touchStart(resizer, { touches: [{ clientX: 100 }] });
+  fireEvent.touchMove(resizer, { touches: [{ clientX: 150 }] });
+  fireEvent.touchEnd(resizer);
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  expect(headerCells).toHaveLength(3);
+
+  expect(headerCells[0].style.width).toBe('150px');
+  expect(headerCells[1].style.width).toBe('50px');
+  expect(headerCells[2].style.width).toBe('100px');
+});
+
+it('should prevent from resizing past 1px width', () => {
+  jest.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(100);
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    isResizable: true,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  const resizer = container.querySelector('.iui-resizer') as HTMLDivElement;
+  expect(resizer).toBeTruthy();
+
+  fireEvent.mouseDown(resizer, { clientX: 100 });
+  fireEvent.mouseMove(resizer, { clientX: 198 });
+  fireEvent.mouseMove(resizer, { clientX: 300 });
+  fireEvent.mouseUp(resizer);
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  expect(headerCells).toHaveLength(3);
+
+  expect(headerCells[0].style.width).toBe('198px');
+  expect(headerCells[1].style.width).toBe('2px');
+  expect(headerCells[2].style.width).toBe('100px');
+});
+
+it('should prevent from resizing past max-width', () => {
+  jest.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(100);
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          maxWidth: 150,
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+          maxWidth: 150,
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    isResizable: true,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  const resizer = container.querySelector('.iui-resizer') as HTMLDivElement;
+  expect(resizer).toBeTruthy();
+
+  // Current column
+  fireEvent.mouseDown(resizer, { clientX: 100 });
+  fireEvent.mouseMove(resizer, { clientX: 150 });
+  fireEvent.mouseMove(resizer, { clientX: 200 });
+  fireEvent.mouseUp(resizer);
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  expect(headerCells).toHaveLength(3);
+
+  expect(headerCells[0].style.width).toBe('150px');
+  expect(headerCells[1].style.width).toBe('50px');
+  expect(headerCells[2].style.width).toBe('100px');
+
+  // Next column
+  fireEvent.mouseDown(resizer, { clientX: 150 });
+  fireEvent.mouseMove(resizer, { clientX: 50 });
+  fireEvent.mouseMove(resizer, { clientX: 10 });
+  fireEvent.mouseUp(resizer);
+
+  expect(headerCells[0].style.width).toBe('50px');
+  expect(headerCells[1].style.width).toBe('150px');
+  expect(headerCells[2].style.width).toBe('100px');
+});
+
+it('should prevent from resizing past min-width', () => {
+  jest.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(100);
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          minWidth: 50,
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+          minWidth: 50,
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    isResizable: true,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  const resizer = container.querySelector('.iui-resizer') as HTMLDivElement;
+  expect(resizer).toBeTruthy();
+
+  // Current column
+  fireEvent.mouseDown(resizer, { clientX: 100 });
+  fireEvent.mouseMove(resizer, { clientX: 50 });
+  fireEvent.mouseMove(resizer, { clientX: 10 });
+  fireEvent.mouseUp(resizer);
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  expect(headerCells).toHaveLength(3);
+
+  expect(headerCells[0].style.width).toBe('50px');
+  expect(headerCells[1].style.width).toBe('150px');
+  expect(headerCells[2].style.width).toBe('100px');
+
+  // Next column
+  fireEvent.mouseDown(resizer, { clientX: 50 });
+  fireEvent.mouseMove(resizer, { clientX: 150 });
+  fireEvent.mouseMove(resizer, { clientX: 190 });
+  fireEvent.mouseUp(resizer);
+
+  expect(headerCells[0].style.width).toBe('150px');
+  expect(headerCells[1].style.width).toBe('50px');
+  expect(headerCells[2].style.width).toBe('100px');
+});
+
+it('should not resize column with disabled resize but resize closest ones', () => {
+  jest.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(100);
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+          disableResizing: true,
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+          disableResizing: true,
+        },
+        {
+          id: 'edit',
+          Header: 'edit',
+          Cell: () => 'Edit',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    isResizable: true,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  // Current column
+  const nameResizer = container.querySelector('.iui-resizer') as HTMLDivElement;
+  expect(nameResizer).toBeTruthy();
+
+  fireEvent.mouseDown(nameResizer, { clientX: 100 });
+  fireEvent.mouseMove(nameResizer, { clientX: 150 });
+  fireEvent.mouseUp(nameResizer);
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  expect(headerCells).toHaveLength(4);
+
+  expect(headerCells[0].style.width).toBe('150px');
+  expect(headerCells[1].style.width).toBe('100px');
+  expect(headerCells[2].style.width).toBe('100px');
+  expect(headerCells[3].style.width).toBe('50px');
+
+  // Description column shouldn't have resizer because resizing is disabled for it
+  // and next column also isn't resizable
+  const descriptionResizer = container.querySelector(
+    '.iui-cell:nth-of-type(2) .iui-resizer',
+  ) as HTMLDivElement;
+  expect(descriptionResizer).toBeFalsy();
+
+  // Last column
+  const viewResizer = container.querySelector(
+    '.iui-cell:nth-of-type(3) .iui-resizer',
+  ) as HTMLDivElement;
+  expect(viewResizer).toBeTruthy();
+
+  fireEvent.mouseDown(viewResizer, { clientX: 350 });
+  fireEvent.mouseMove(viewResizer, { clientX: 250 });
+  fireEvent.mouseUp(viewResizer);
+
+  expect(headerCells[0].style.width).toBe('50px');
+  expect(headerCells[1].style.width).toBe('100px');
+  expect(headerCells[2].style.width).toBe('100px');
+  expect(headerCells[3].style.width).toBe('150px');
+});
