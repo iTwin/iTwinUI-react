@@ -1525,7 +1525,7 @@ export const WithPaginator: Story<Partial<TableProps>> = (args) => {
 
   const data = useMemo(
     () =>
-      Array(495)
+      Array(5005)
         .fill(null)
         .map((_, index) => generateItem(index)),
     [generateItem],
@@ -1550,7 +1550,7 @@ export const WithPaginator: Story<Partial<TableProps>> = (args) => {
         data={data}
         pageSize={25}
         paginatorRenderer={paginator}
-        style={{ maxHeight: '100%' }}
+        style={{ height: '100%' }}
       />
     </>
   );
@@ -1639,7 +1639,7 @@ export const WithManualPaginator: Story<Partial<TableProps>> = (args) => {
         currentPage={currentPage}
         isLoading={false}
         // Imagining we know the total count of data items
-        totalRowsCount={500}
+        totalRowsCount={60000}
       />
     ),
     [currentPage, pageSizeList],
@@ -1655,7 +1655,7 @@ export const WithManualPaginator: Story<Partial<TableProps>> = (args) => {
         data={data}
         pageSize={25}
         paginatorRenderer={paginator}
-        style={{ maxHeight: '100%' }}
+        style={{ height: '100%' }}
         manualPagination
       />
     </>
