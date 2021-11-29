@@ -18,6 +18,7 @@ import { SvgChevronRight } from '@itwin/itwinui-icons-react';
 import { EditableCell } from './cells';
 import { TablePaginator } from './TablePaginator';
 import * as UseOverflow from '../utils/hooks/useOverflow';
+import * as UseResizeObserver from '../utils/hooks/useResizeObserver';
 
 const intersectionCallbacks = new Map<Element, () => void>();
 jest
@@ -2025,4 +2026,65 @@ it('should not resize column with disabled resize but resize closest ones', () =
   expect(headerCells[1].style.width).toBe('100px');
   expect(headerCells[2].style.width).toBe('100px');
   expect(headerCells[3].style.width).toBe('150px');
+});
+
+it('should handle table resize only when some columns were resized', () => {
+  const htmlWidthMock = jest
+    .spyOn(HTMLElement.prototype, 'offsetWidth', 'get')
+    .mockReturnValue(100);
+  let triggerResize: (size: DOMRectReadOnly) => void = jest.fn();
+  jest
+    .spyOn(UseResizeObserver, 'useResizeObserver')
+    .mockImplementation((onResize) => {
+      triggerResize = onResize;
+      return [
+        jest.fn(),
+        ({ disconnect: jest.fn() } as unknown) as ResizeObserver,
+      ];
+    });
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({ columns, isResizable: true });
+
+  // Initial render
+  triggerResize({ width: 300 } as DOMRectReadOnly);
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  expect(headerCells).toHaveLength(3);
+  headerCells.forEach((cell) => expect(cell.style.width).toBe('0px'));
+
+  const resizer = container.querySelector('.iui-resizer') as HTMLDivElement;
+  expect(resizer).toBeTruthy();
+
+  fireEvent.mouseDown(resizer, { clientX: 100 });
+  fireEvent.mouseMove(resizer, { clientX: 150 });
+  fireEvent.mouseUp(resizer);
+
+  act(() => {
+    htmlWidthMock.mockReturnValue(50);
+    triggerResize({ width: 150 } as DOMRectReadOnly);
+  });
+  headerCells.forEach((cell) => expect(cell.style.width).toBe('50px'));
 });

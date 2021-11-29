@@ -146,5 +146,6 @@ export const TableRowMemoized = React.memo(
     prevProp.rowProps === nextProp.rowProps &&
     prevProp.expanderCell === nextProp.expanderCell &&
     prevProp.tableHasSubRows === nextProp.tableHasSubRows &&
-    !nextProp.state.columnResizing.isResizingColumn,
+    !nextProp.state.columnResizing.isResizingColumn &&
+    !nextProp.state.isTableResizing,
 ) as typeof TableRow;

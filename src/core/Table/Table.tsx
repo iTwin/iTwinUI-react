@@ -45,6 +45,8 @@ import {
 import { onSingleSelectHandler } from './actionHandlers/selectHandler';
 
 const singleRowSelectedAction = 'singleRowSelected';
+const tableResizingAction = 'tableResizing';
+const tableResizedAction = 'tableResized';
 
 export type TablePaginatorRendererProps = {
   /**
@@ -346,9 +348,17 @@ export const Table = <
           onSelectHandler(newState, instance, onSelect, isRowDisabled);
           break;
         }
-        case 'tableResized': {
+        case tableResizingAction: {
           newState = {
             ...newState,
+            isTableResizing: true,
+          };
+          break;
+        }
+        case tableResizedAction: {
+          newState = {
+            ...newState,
+            isTableResizing: false,
             columnResizing: {
               ...newState.columnResizing,
               columnWidths: {
@@ -480,56 +490,48 @@ export const Table = <
     ],
   );
 
+  const columnRefs = React.useRef<Record<string, HTMLDivElement>>({});
+  const isTableResizing = React.useRef(false);
   const previousTableWidth = React.useRef(0);
   const onTableResize = React.useCallback(
     ({ width }: DOMRectReadOnly) => {
       if (width === previousTableWidth.current) {
         return;
       }
-      if (previousTableWidth.current === 0) {
-        previousTableWidth.current = width;
-        console.log('onTableResize', width);
-        return;
-      }
+      previousTableWidth.current = width;
+
+      // Update column widths when table was resized
+      flatHeaders.forEach((header) => {
+        if (columnRefs.current[header.id]) {
+          header.resizeWidth = columnRefs.current[header.id].offsetWidth;
+        }
+      });
+
       // Leave resize handling to the flex
       if (Object.keys(state.columnResizing.columnWidths).length === 0) {
         return;
       }
-      const oldWidth =
-        previousTableWidth.current || tableBody.current?.clientWidth || 0;
-      console.log(oldWidth, width);
-      let staticSizeColumnWidthSum = 0;
-      flatHeaders.forEach((column) => {
-        if (
-          !state.columnResizing.columnWidths[column.id] &&
-          column.originalWidth
-        ) {
-          staticSizeColumnWidthSum += Number(column.width);
-        }
-      });
-      const resizedColumnWidthSum = oldWidth - staticSizeColumnWidthSum;
-      console.log('notResizableColumnWidthSum', staticSizeColumnWidthSum);
-      const newColumnWidths: Record<string, number> = {};
-      flatHeaders.forEach((column) => {
-        if (
-          column.width &&
-          (state.columnResizing.columnWidths[column.id] ||
-            !column.originalWidth)
-        ) {
-          console.log(column.id, column.width);
-          const ratio = Number(column.width) / resizedColumnWidthSum;
-          newColumnWidths[column.id] =
-            (width - staticSizeColumnWidthSum) * ratio;
-          console.log(column.id, ratio, newColumnWidths[column.id]);
-        }
-      });
-      dispatch({ type: 'tableResized', columnWidths: newColumnWidths });
-      previousTableWidth.current = width;
-      console.log('tableResized', newColumnWidths);
+
+      isTableResizing.current = true;
+      dispatch({ type: tableResizingAction });
     },
     [dispatch, state.columnResizing.columnWidths, flatHeaders],
   );
   const [resizeRef] = useResizeObserver(onTableResize);
+
+  React.useLayoutEffect(() => {
+    if (isTableResizing.current) {
+      isTableResizing.current = false;
+      const newColumnWidths: Record<string, number> = {};
+      flatHeaders.forEach((column) => {
+        if (columnRefs.current[column.id]) {
+          newColumnWidths[column.id] =
+            columnRefs.current[column.id].offsetWidth;
+        }
+      });
+      dispatch({ type: tableResizedAction, columnWidths: newColumnWidths });
+    }
+  });
 
   return (
     <>
@@ -567,7 +569,7 @@ export const Table = <
                       { 'iui-sorted': column.isSorted },
                       column.columnClassName,
                     ),
-                    style: { ...getCellStyle(column) },
+                    style: { ...getCellStyle(column, state.isTableResizing) },
                   });
                   return (
                     <div
@@ -576,6 +578,7 @@ export const Table = <
                       title={undefined}
                       ref={(el) => {
                         if (el) {
+                          columnRefs.current[column.id] = el;
                           column.resizeWidth = el.offsetWidth;
                         }
                       }}

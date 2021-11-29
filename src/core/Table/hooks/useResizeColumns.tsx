@@ -1,3 +1,7 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import {
   actions,
@@ -16,13 +20,7 @@ export const useResizeColumns = <T extends Record<string, unknown>>(
   hooks: Hooks<T>,
 ) => {
   hooks.getResizerProps = [defaultGetResizerProps];
-  // hooks.getHeaderProps.push({
-  //   style: {
-  //     position: 'relative',
-  //   },
-  // });
   hooks.stateReducers.push(reducer);
-  // hooks.useInstance.push(useInstance);
   hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions);
 };
 
@@ -309,7 +307,6 @@ const useInstanceBeforeDimensions = <T extends Record<string, unknown>>(
 ) => {
   const {
     flatHeaders,
-    // disableResizing,
     getHooks,
     state: { columnResizing },
   } = instance;
