@@ -102,7 +102,7 @@ export const Basic: Story<InformationPanelProps> = (args) => {
           <Text variant='subheading'>Row {openRowIndex ?? 0}</Text>
         </InformationPanelHeader>
         <InformationPanelBody>
-          <InformationPanelContent responsiveBreakpoint={250}>
+          <InformationPanelContent displayStyle='inline'>
             <Label htmlFor='name-input'>File name</Label>
             <Input
               size='small'
@@ -206,9 +206,7 @@ export const CustomActions: Story<InformationPanelProps> = (args) => {
         </InformationPanelHeader>
         <InformationPanelBody>
           {openRowIndex != undefined && (
-            <InformationPanelContent
-              responsiveBreakpoint={Number.POSITIVE_INFINITY}
-            >
+            <InformationPanelContent>
               <Label htmlFor='name-input'>Name</Label>
               <Input
                 id='name-input'

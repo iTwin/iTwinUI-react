@@ -6,7 +6,6 @@ import React from 'react';
 import { render } from '@testing-library/react';
 
 import { InformationPanelContent } from './InformationPanelContent';
-import * as UseContainerWidth from '../utils/hooks/useContainerWidth';
 
 it('should render in its most basic state', () => {
   const { container } = render(
@@ -20,15 +19,11 @@ it('should render in its most basic state', () => {
   expect(element).toHaveTextContent('inner content');
 });
 
-it.each(['inline', 'stacked'] as const)(
-  'should render with responsiveBreakpoint (%s)',
-  (layout) => {
-    jest
-      .spyOn(UseContainerWidth, 'useContainerWidth')
-      .mockReturnValue([jest.fn(), layout === 'inline' ? 400 : 200]);
-
+it.each(['inline', 'default'] as const)(
+  'should render with (%s) displayStyle',
+  (displayStyle) => {
     const { container } = render(
-      <InformationPanelContent responsiveBreakpoint={300}>
+      <InformationPanelContent displayStyle={displayStyle}>
         inner content
       </InformationPanelContent>,
     );
@@ -37,7 +32,7 @@ it.each(['inline', 'stacked'] as const)(
     ) as HTMLElement;
     expect(element).toHaveTextContent('inner content');
 
-    if (layout === 'inline') {
+    if (displayStyle === 'inline') {
       expect(element).toHaveClass('iui-inline');
     } else {
       expect(element).not.toHaveClass('iui-inline');

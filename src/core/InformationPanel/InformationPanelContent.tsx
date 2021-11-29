@@ -4,40 +4,37 @@
  *--------------------------------------------------------------------------------------------*/
 import cx from 'classnames';
 import React from 'react';
-import { CommonProps, useTheme, useContainerWidth } from '../utils';
+import { CommonProps, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/information-panel.css';
 
 export type InformationPanelContentProps = {
   /**
-   * Maximum width of the panel below which layout will shift from two columns to one,
-   * i.e. label and input will display on separate lines for widths lower than this value.
+   * If set to 'inline', the label/input pairs will be shown on the same line.
+   * The component handles the spacing and alignment automatically.
    *
-   * If set to 0, the layout will always be two columns.
-   * If set to `Number.POSITIVE_INFINITY`, the layout will always be one column.
-   *
-   * @default 0
+   * @default 'default'
    */
-  responsiveBreakpoint?: number;
+  displayStyle?: 'default' | 'inline';
   /**
    * Content of the component.
-   * Should be pairs of `Label` and input components.
+   * Should ideally be pairs of `Label` and input components.
    */
   children: React.ReactNode;
 } & Omit<CommonProps, 'title'>;
 
 /**
  * The `InformationPanelContent` component should be used inside `InformationPanelBody`
- * to style rows of key/value pairs, where the key is represented by a `Label` component
+ * to style rows of key/value pairs, where the key is ideally represented by a `Label` component
  * and the value can be any input element (including readonly inputs for non-modifiable fields).
  *
- * By default, the pairs are displayed as a two-column grid so the label and input are next to each other,
- * but if the panel is resized to a narrow width, the label and input will display as stacked.
+ * By default, the pairs are displayed of label and input are displayed  in separate lines,
+ * but displayStyle can be set to 'inline' to show them in the same line with correct alignment.
  *
  * You can use multiple `InformationPanelContent` instances inside one `InformationPanelBody`; this is
  * useful when you want to show other content, e.g. separate headings for different sections of key/value pairs.
  *
  * @example
- * <InformationPanelContent>
+ * <InformationPanelContent displayStyle='inline'>
  *   <Label htmlFor='name-input'>File name</Label>
  *   <Input id='name-input' value='Alpha.mp3' />
  *
@@ -51,20 +48,17 @@ export type InformationPanelContentProps = {
 export const InformationPanelContent = (
   props: InformationPanelContentProps,
 ) => {
-  const { className, responsiveBreakpoint = 0, children, ...rest } = props;
+  const { className, displayStyle = 'default', children, ...rest } = props;
 
   useTheme();
-
-  const [resizeRef, contentWidth] = useContainerWidth();
 
   return (
     <div
       className={cx(
         'iui-information-body-content',
-        { 'iui-inline': contentWidth >= responsiveBreakpoint },
+        { 'iui-inline': displayStyle === 'inline' },
         className,
       )}
-      ref={resizeRef}
       {...rest}
     >
       {children}
