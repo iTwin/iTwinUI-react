@@ -15,7 +15,7 @@ it('should render in its most basic state', () => {
   const element = container.querySelector(
     '.iui-information-body-content',
   ) as HTMLElement;
-  expect(element).toHaveClass('iui-inline');
+  expect(element).not.toHaveClass('iui-inline');
   expect(element).toHaveTextContent('inner content');
 });
 
