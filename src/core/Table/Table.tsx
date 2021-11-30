@@ -481,7 +481,6 @@ export const Table = <
   );
 
   const columnRefs = React.useRef<Record<string, HTMLDivElement>>({});
-  const isTableResizing = React.useRef(false);
   const previousTableWidth = React.useRef(0);
   const onTableResize = React.useCallback(
     ({ width }: DOMRectReadOnly) => {
@@ -504,7 +503,6 @@ export const Table = <
         return;
       }
 
-      isTableResizing.current = true;
       dispatch({ type: tableResizeStartAction });
     },
     [dispatch, state.columnResizing.columnWidths, flatHeaders],
@@ -513,8 +511,7 @@ export const Table = <
 
   // Flexbox handles columns resize so we take new column widths before browser repaints.
   React.useLayoutEffect(() => {
-    if (isTableResizing.current) {
-      isTableResizing.current = false;
+    if (state.isTableResizing) {
       const newColumnWidths: Record<string, number> = {};
       flatHeaders.forEach((column) => {
         if (columnRefs.current[column.id]) {
