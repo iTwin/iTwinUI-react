@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
-import { MenuItem, Select, TextTruncation } from '../../src/core';
+import { MenuItem, Select, MiddleTextTruncation } from '../../src/core';
 import { SelectProps } from '../../src/core/Select/Select';
 import { useState } from '@storybook/addons';
 import SvgSmileyHappy from '@itwin/itwinui-icons-react/cjs/icons/SmileyHappy';
@@ -303,7 +303,7 @@ Custom.args = {
   ],
 };
 
-export const MiddleTextTruncation: Story<SelectProps<string>> = (args) => {
+export const TruncateMiddleText: Story<SelectProps<string>> = (args) => {
   const {
     options = [
       {
@@ -331,11 +331,11 @@ export const MiddleTextTruncation: Story<SelectProps<string>> = (args) => {
         placeholder={placeholder}
         itemRenderer={(option) => (
           <MenuItem>
-            <TextTruncation text={option.label} />
+            <MiddleTextTruncation text={option.label} />
           </MenuItem>
         )}
         selectedItemRenderer={(option) => (
-          <TextTruncation text={option.label} />
+          <MiddleTextTruncation text={option.label} />
         )}
       />
     </div>
