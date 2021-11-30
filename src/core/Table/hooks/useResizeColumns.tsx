@@ -2,6 +2,33 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+/**
+ * Copied from react-table as useResizerColumns does not have ownerDocument check also
+ * made some changes to resize sibling/next column on resize.
+ */
+/**
+ * MIT License
+ *
+ * Copyright (c) 2016 Tanner Linsley
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 import React from 'react';
 import {
   actions,
@@ -17,14 +44,14 @@ import {
 } from 'react-table';
 
 export const useResizeColumns = <T extends Record<string, unknown>>(
-  hooks: Hooks<T>,
-) => {
-  hooks.getResizerProps = [defaultGetResizerProps];
+  ownerDocument: Document | undefined,
+) => (hooks: Hooks<T>) => {
+  hooks.getResizerProps = [defaultGetResizerProps(ownerDocument)];
   hooks.stateReducers.push(reducer);
   hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions);
 };
 
-const defaultGetResizerProps = (
+const defaultGetResizerProps = (ownerDocument: Document | undefined) => (
   props: TableKeyedProps,
   {
     instance,
@@ -36,6 +63,10 @@ const defaultGetResizerProps = (
     nextHeader: HeaderGroup;
   },
 ) => {
+  if (!ownerDocument) {
+    return props;
+  }
+
   const { dispatch, flatHeaders } = instance;
 
   const onResizeStart = (
@@ -59,7 +90,7 @@ const defaultGetResizerProps = (
     });
 
     const headerIdWidths = getLeafHeaders(header).map((d) => [d.id, d.width]);
-    const siblingHeaderIdWidths = nextHeader
+    const nextHeaderIdWidths = nextHeader
       ? getLeafHeaders(nextHeader).map((d) => [d.id, d.width])
       : [];
 
@@ -71,18 +102,18 @@ const defaultGetResizerProps = (
       dispatch({
         type: actions.columnDoneResizing,
       });
-    // const parentDomRect = (e.target as HTMLElement).parentElement?.parentElement?.parentElement?.getBoundingClientRect();
+
     const handlersAndEvents = {
       mouse: {
         moveEvent: 'mousemove',
         moveHandler: (e: MouseEvent) => dispatchMove(e.clientX),
         upEvent: 'mouseup',
         upHandler: () => {
-          document.removeEventListener(
+          ownerDocument.removeEventListener(
             'mousemove',
             handlersAndEvents.mouse.moveHandler,
           );
-          document.removeEventListener(
+          ownerDocument.removeEventListener(
             'mouseup',
             handlersAndEvents.mouse.upHandler,
           );
@@ -101,11 +132,11 @@ const defaultGetResizerProps = (
         },
         upEvent: 'touchend',
         upHandler: () => {
-          document.removeEventListener(
+          ownerDocument.removeEventListener(
             handlersAndEvents.touch.moveEvent,
             handlersAndEvents.touch.moveHandler,
           );
-          document.removeEventListener(
+          ownerDocument.removeEventListener(
             handlersAndEvents.touch.upEvent,
             handlersAndEvents.touch.moveHandler,
           );
@@ -120,12 +151,12 @@ const defaultGetResizerProps = (
     const passiveIfSupported = passiveEventSupported()
       ? { passive: false }
       : false;
-    document.addEventListener(
+    ownerDocument.addEventListener(
       events.moveEvent,
       events.moveHandler,
       passiveIfSupported,
     );
-    document.addEventListener(
+    ownerDocument.addEventListener(
       events.upEvent,
       events.upHandler,
       passiveIfSupported,
@@ -135,9 +166,9 @@ const defaultGetResizerProps = (
       type: actions.columnStartResizing,
       columnId: header.id,
       columnWidth: header.width,
-      siblingColumnWidth: nextHeader?.width,
+      nextColumnWidth: nextHeader?.width,
       headerIdWidths,
-      siblingHeaderIdWidths,
+      nextHeaderIdWidths,
       clientX,
     });
   };
@@ -147,10 +178,12 @@ const defaultGetResizerProps = (
     {
       onMouseDown: (e: React.TouchEvent & React.MouseEvent) => {
         e.persist();
+        e.stopPropagation();
         onResizeStart(e, header);
       },
       onTouchStart: (e: React.TouchEvent & React.MouseEvent) => {
         e.persist();
+        e.stopPropagation();
         onResizeStart(e, header);
       },
       style: {
@@ -193,9 +226,9 @@ const reducer = <T extends Record<string, unknown>>(
       clientX,
       columnId,
       columnWidth,
-      siblingColumnWidth,
+      nextColumnWidth,
       headerIdWidths,
-      siblingHeaderIdWidths,
+      nextHeaderIdWidths,
     } = action;
 
     return {
@@ -204,9 +237,9 @@ const reducer = <T extends Record<string, unknown>>(
         ...newState.columnResizing,
         startX: clientX,
         columnWidth,
-        siblingColumnWidth,
+        nextColumnWidth,
         headerIdWidths,
-        siblingHeaderIdWidths,
+        nextHeaderIdWidths,
         isResizingColumn: columnId,
       },
     };
@@ -217,61 +250,25 @@ const reducer = <T extends Record<string, unknown>>(
     const {
       startX = 0,
       columnWidth = 1,
-      siblingColumnWidth = 1,
+      nextColumnWidth = 1,
       headerIdWidths = [],
-      siblingHeaderIdWidths = [],
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } = newState.columnResizing as any;
+      nextHeaderIdWidths = [],
+    } = newState.columnResizing;
 
     const deltaX = clientX - startX;
-    const percentageDeltaX = deltaX / columnWidth;
 
-    const newColumnWidths: Record<string, number> = {};
-    (headerIdWidths as [string, number][]).forEach(
-      ([headerId, headerWidth]) => {
-        newColumnWidths[headerId] = Math.max(
-          headerWidth + headerWidth * percentageDeltaX,
-          0,
-        );
-      },
+    const newColumnWidths = getColumnWidths(
+      headerIdWidths,
+      deltaX / columnWidth,
+    );
+    const newNextColumnWidths = getColumnWidths(
+      nextHeaderIdWidths,
+      -deltaX / nextColumnWidth,
     );
 
-    const newSiblingColumnWidths: Record<string, number> = {};
-    (siblingHeaderIdWidths as [string, number][]).forEach(
-      ([headerId, headerWidth]) => {
-        newSiblingColumnWidths[headerId] = Math.max(
-          headerWidth - headerWidth * (deltaX / siblingColumnWidth),
-          0,
-        );
-      },
-    );
-
-    for (const [headerId, width] of Object.entries(newColumnWidths)) {
-      const header = instance?.flatHeaders.find((h) => h.id === headerId);
-      if (
-        header &&
-        (width < (header.minWidth || 0) ||
-          width > (header.maxWidth || Infinity))
-      ) {
-        return newState;
-      }
-    }
-
-    for (const [headerId, width] of Object.entries(newSiblingColumnWidths)) {
-      const header = instance?.flatHeaders.find((h) => h.id === headerId);
-      if (
-        header &&
-        (width < (header.minWidth || 0) ||
-          width > (header.maxWidth || Infinity))
-      ) {
-        return newState;
-      }
-    }
-
-    // Prevents from going outside bounds
     if (
-      Object.values(newColumnWidths).some((width) => width <= 1) ||
-      Object.values(newSiblingColumnWidths).some((width) => width <= 1)
+      !isNewColumnWidthsValid(newColumnWidths, instance?.flatHeaders) ||
+      !isNewColumnWidthsValid(newNextColumnWidths, instance?.flatHeaders)
     ) {
       return newState;
     }
@@ -283,7 +280,7 @@ const reducer = <T extends Record<string, unknown>>(
         columnWidths: {
           ...newState.columnResizing.columnWidths,
           ...newColumnWidths,
-          ...newSiblingColumnWidths,
+          ...newNextColumnWidths,
         },
       },
     };
@@ -300,6 +297,45 @@ const reducer = <T extends Record<string, unknown>>(
     };
   }
   return newState;
+};
+
+const getColumnWidths = (
+  headerIdWidths: [string, number][],
+  deltaPercentage: number,
+) => {
+  const columnWidths: Record<string, number> = {};
+  headerIdWidths.forEach(([headerId, headerWidth]) => {
+    columnWidths[headerId] = Math.max(
+      headerWidth + headerWidth * deltaPercentage,
+      0,
+    );
+  });
+  return columnWidths;
+};
+
+const isNewColumnWidthsValid = <T extends Record<string, unknown>>(
+  columnWidths: Record<string, number>,
+  headers: ColumnInstance<T>[] | undefined,
+) => {
+  // Prevents from going outside the column bounds
+  if (Object.values(columnWidths).some((width) => width <= 1)) {
+    return false;
+  }
+
+  for (const [headerId, width] of Object.entries(columnWidths)) {
+    const header = headers?.find((h) => h.id === headerId);
+    if (!header) {
+      continue;
+    }
+
+    const minWidth = header.minWidth || 0;
+    const maxWidth = header.maxWidth || Infinity;
+    if (width < minWidth || width > maxWidth) {
+      return false;
+    }
+  }
+
+  return true;
 };
 
 const useInstanceBeforeDimensions = <T extends Record<string, unknown>>(
@@ -325,6 +361,8 @@ const useInstanceBeforeDimensions = <T extends Record<string, unknown>>(
 
     header.canResize =
       header.disableResizing != null ? !header.disableResizing : true;
+    // Show resizer when header is resizable or when next header is resizable
+    // and there is resizable columns on the left side of the resizer.
     header.isResizerVisible =
       header.canResize ||
       (headerToResize && instance.flatHeaders[index + 1]?.canResize);
@@ -374,18 +412,18 @@ function getLeafHeaders(header: HeaderGroup) {
   return leafHeaders;
 }
 
+// https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#safely_detecting_option_support
 let passiveSupported: boolean | null = null;
-export function passiveEventSupported() {
+const passiveEventSupported = () => {
   // memoize support to avoid adding multiple test events
-  if (typeof passiveSupported === 'boolean') {
+  if (passiveSupported != null) {
     return passiveSupported;
   }
-  let supported = false;
   try {
     const options = {
       once: true,
       get passive() {
-        supported = true;
+        passiveSupported = true;
         return false;
       },
     };
@@ -395,9 +433,8 @@ export function passiveEventSupported() {
       () => {},
       options,
     );
-  } catch (err) {
-    supported = false;
+  } catch {
+    passiveSupported = false;
   }
-  passiveSupported = supported;
   return passiveSupported;
-}
+};

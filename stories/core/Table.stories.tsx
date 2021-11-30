@@ -32,6 +32,7 @@ import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
 import { action } from '@storybook/addon-actions';
 import { CreeveyMeta, CreeveyStoryParams } from 'creevey';
+import { followCursor } from 'tippy.js';
 
 export default {
   title: 'Core/Table',
@@ -92,7 +93,7 @@ export const Basic: Story<Partial<TableProps>> = (args) => {
   ) => action(props.row.original.name)();
 
   const columns = useMemo(
-    (): Column[] => [
+    () => [
       {
         Header: 'Table',
         columns: [
@@ -105,7 +106,7 @@ export const Basic: Story<Partial<TableProps>> = (args) => {
             id: 'description',
             Header: 'Description',
             accessor: 'description',
-            // maxWidth: 200,
+            maxWidth: 200,
           },
           {
             id: 'click-me',
@@ -141,7 +142,6 @@ export const Basic: Story<Partial<TableProps>> = (args) => {
       data={data}
       emptyTableContent='No data.'
       {...args}
-      isResizable
     />
   );
 };
@@ -353,7 +353,6 @@ export const Filters: Story<Partial<TableProps>> = (args) => {
             fieldType: 'number',
             Filter: tableFilters.NumberRangeFilter(translatedLabels),
             filter: 'between',
-            disableResizing: true,
           },
           {
             id: 'name',
@@ -368,8 +367,7 @@ export const Filters: Story<Partial<TableProps>> = (args) => {
             accessor: 'description',
             fieldType: 'text',
             Filter: tableFilters.TextFilter(translatedLabels),
-            // maxWidth: 200,
-            minWidth: 100,
+            maxWidth: 200,
           },
           {
             id: 'ids',
@@ -380,7 +378,6 @@ export const Filters: Story<Partial<TableProps>> = (args) => {
             },
             Filter: tableFilters.TextFilter(translatedLabels),
             filter: 'includes',
-            disableResizing: true,
           },
           {
             id: 'startDate',
@@ -393,8 +390,6 @@ export const Filters: Story<Partial<TableProps>> = (args) => {
               translatedLabels,
             }),
             filter: 'betweenDate',
-            // width: 100,
-            disableResizing: true,
           },
           {
             id: 'endDate',
@@ -463,7 +458,6 @@ export const Filters: Story<Partial<TableProps>> = (args) => {
       emptyTableContent='No data.'
       onFilter={onFilter}
       {...args}
-      isResizable
     />
   );
 };
@@ -1342,12 +1336,16 @@ export const Full: Story<Partial<TableProps>> = (args) => {
         rowProps={rowProps}
         isSelectable
         isSortable
+        isResizable
         {...args}
       />
       <Tooltip
         reference={rowRefMap.current[hoveredRowIndex]}
         content={`Hovered over ${data[hoveredRowIndex].name}.`}
         placement='bottom'
+        followCursor
+        offset={[0, 16]}
+        plugins={[followCursor]}
       />
     </>
   );
@@ -1361,6 +1359,7 @@ Full.args = {
   ],
   isSelectable: true,
   isSortable: true,
+  isResizable: true,
 };
 
 export const Condensed: Story<Partial<TableProps>> = Basic.bind({});
@@ -1682,4 +1681,141 @@ WithManualPaginator.argTypes = {
   parameters: {
     docs: { source: { excludeDecorators: true } },
   },
+};
+
+export const ResizableColumns: Story<Partial<TableProps>> = (args) => {
+  type TableStoryDataType = {
+    index: number;
+    name: string;
+    description: string;
+    id: string;
+    startDate: Date;
+    endDate: Date;
+  };
+
+  const columns = useMemo(
+    (): Column<TableStoryDataType>[] => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'index',
+            Header: '#',
+            accessor: 'index',
+            width: 80,
+            disableResizing: true,
+          },
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            fieldType: 'text',
+            minWidth: 100,
+          },
+          {
+            id: 'id',
+            Header: 'ID',
+            accessor: 'id',
+            width: 100,
+            disableResizing: true,
+          },
+          {
+            id: 'startDate',
+            Header: 'Start date',
+            accessor: 'startDate',
+            Cell: (props: CellProps<TableStoryDataType>) => {
+              return props.row.original.startDate.toLocaleDateString('en-US');
+            },
+            width: 100,
+            disableResizing: true,
+          },
+          {
+            id: 'endDate',
+            Header: 'End date',
+            Cell: (props: CellProps<TableStoryDataType>) => {
+              return props.row.original.endDate.toLocaleDateString('en-US');
+            },
+            maxWidth: 200,
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const data = useMemo(
+    () => [
+      {
+        index: 1,
+        name: 'Name1',
+        description: 'Description1',
+        id: '111',
+        startDate: new Date('May 1, 2021'),
+        endDate: new Date('Jun 1, 2021'),
+      },
+      {
+        index: 2,
+        name: 'Name2',
+        description: 'Description2',
+        id: '222',
+        startDate: new Date('May 2, 2021'),
+        endDate: new Date('Jun 2, 2021'),
+      },
+      {
+        index: 3,
+        name: 'Name3',
+        description: 'Description3',
+        id: '333',
+        startDate: new Date('May 3, 2021'),
+        endDate: new Date('Jun 3, 2021'),
+      },
+    ],
+    [],
+  );
+
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      emptyTableContent='No data.'
+      isResizable
+      isSortable
+      {...args}
+    />
+  );
+};
+
+ResizableColumns.args = {
+  isResizable: true,
+  data: [
+    {
+      index: 1,
+      name: 'Name1',
+      description: 'Description1',
+      id: '111',
+      startDate: new Date('May 1, 2021'),
+      endDate: new Date('Jun 1, 2021'),
+    },
+    {
+      index: 2,
+      name: 'Name2',
+      description: 'Description2',
+      id: '222',
+      startDate: new Date('May 2, 2021'),
+      endDate: new Date('Jun 2, 2021'),
+    },
+    {
+      index: 3,
+      name: 'Name3',
+      description: 'Description3',
+      id: '333',
+      startDate: new Date('May 3, 2021'),
+      endDate: new Date('Jun 3, 2021'),
+    },
+  ],
 };

@@ -386,7 +386,7 @@ it('should not trigger onSelect when sorting and filtering', () => {
   expect(nameHeader).toBeTruthy();
   expect(nameHeader.classList).not.toContain('iui-sorted');
 
-  nameHeader.click();
+  fireEvent.mouseDown(nameHeader);
   expect(onSort).toHaveBeenCalled();
   expect(onSelect).not.toHaveBeenCalled();
 
@@ -450,7 +450,7 @@ it('should sort name column correctly', () => {
   expect(sortIcon).toBeTruthy();
 
   //first click
-  nameHeader.click();
+  fireEvent.mouseDown(nameHeader);
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(nameHeader.classList).toContain('iui-sorted');
   assertRowsData(rows, sortedByName);
@@ -466,7 +466,7 @@ it('should sort name column correctly', () => {
   );
 
   //second click
-  nameHeader.click();
+  fireEvent.mouseDown(nameHeader);
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(nameHeader.classList).toContain('iui-sorted');
   assertRowsData(rows, [...sortedByName].reverse());
@@ -482,7 +482,7 @@ it('should sort name column correctly', () => {
   );
 
   //third click resets it
-  nameHeader.click();
+  fireEvent.mouseDown(nameHeader);
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(nameHeader.classList).not.toContain('iui-sorted');
   assertRowsData(rows, mocked);
@@ -2026,6 +2026,52 @@ it('should not resize column with disabled resize but resize closest ones', () =
   expect(headerCells[1].style.width).toBe('100px');
   expect(headerCells[2].style.width).toBe('100px');
   expect(headerCells[3].style.width).toBe('150px');
+});
+
+it('should not trigger sort when resizing', () => {
+  jest.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(100);
+  const onSort = jest.fn();
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    isResizable: true,
+    isSortable: true,
+    onSort,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  const resizer = container.querySelector('.iui-resizer') as HTMLDivElement;
+  expect(resizer).toBeTruthy();
+
+  fireEvent.mouseDown(resizer, { clientX: 100 });
+  fireEvent.mouseMove(resizer, { clientX: 150 });
+  fireEvent.mouseUp(resizer);
+  fireEvent.click(resizer);
+
+  expect(onSort).not.toHaveBeenCalled();
 });
 
 it('should handle table resize only when some columns were resized', () => {

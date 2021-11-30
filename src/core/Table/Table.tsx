@@ -304,8 +304,6 @@ export const Table = <
     [],
   );
 
-  const tableBody = React.useRef<HTMLDivElement>(null);
-
   // useRef prevents from rerendering when one of these callbacks changes
   const onBottomReachedRef = React.useRef(onBottomReached);
   const onRowInViewportRef = React.useRef(onRowInViewport);
@@ -405,7 +403,7 @@ export const Table = <
       initialState: { pageSize, ...props.initialState },
     },
     useFlexLayout,
-    useResizeColumns,
+    useResizeColumns(ownerDocument),
     useFilters,
     useSubRowFiltering(hasAnySubRows),
     useSortBy,
@@ -519,6 +517,7 @@ export const Table = <
   );
   const [resizeRef] = useResizeObserver(onTableResize);
 
+  // Flexbox handles columns resize so we take new column widths before browser repaints.
   React.useLayoutEffect(() => {
     if (isTableResizing.current) {
       isTableResizing.current = false;
@@ -561,8 +560,18 @@ export const Table = <
             return (
               <div {...headerGroupProps} key={headerGroupProps.key}>
                 {headerGroup.headers.map((column, index) => {
+                  const {
+                    onClick: onSortClick,
+                    ...sortByProps
+                  } = column.getSortByToggleProps() as {
+                    onClick:
+                      | React.MouseEventHandler<HTMLDivElement>
+                      | undefined;
+                    style: React.CSSProperties;
+                    title: string;
+                  };
                   const columnProps = column.getHeaderProps({
-                    ...column.getSortByToggleProps(),
+                    ...sortByProps,
                     className: cx(
                       'iui-cell',
                       { 'iui-actionable': column.canSort },
@@ -582,6 +591,7 @@ export const Table = <
                           column.resizeWidth = el.offsetWidth;
                         }
                       }}
+                      onMouseDown={onSortClick}
                     >
                       {column.render('Header')}
                       {!isLoading && (data.length != 0 || areFiltersSet) && (
@@ -611,6 +621,7 @@ export const Table = <
                           <div
                             {...column.getResizerProps()}
                             className='iui-resizer'
+                            onClick={(e) => e.stopPropagation()}
                           >
                             <div className='iui-resizer-bar' />
                           </div>
@@ -626,7 +637,6 @@ export const Table = <
           {...getTableBodyProps({
             className: 'iui-table-body',
           })}
-          ref={tableBody}
         >
           {data.length !== 0 &&
             page.map((row: Row<T>) => {
