@@ -1675,7 +1675,9 @@ it('should change page size', () => {
 });
 
 it('should handle resize by increasing width of current column and decreasing the next ones', () => {
-  jest.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(100);
+  jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 100 } as DOMRect);
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Header name',
@@ -1724,7 +1726,9 @@ it('should handle resize by increasing width of current column and decreasing th
 });
 
 it('should handle resize with touch', () => {
-  jest.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(100);
+  jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 100 } as DOMRect);
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Header name',
@@ -1773,7 +1777,9 @@ it('should handle resize with touch', () => {
 });
 
 it('should prevent from resizing past 1px width', () => {
-  jest.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(100);
+  jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 100 } as DOMRect);
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Header name',
@@ -1823,7 +1829,9 @@ it('should prevent from resizing past 1px width', () => {
 });
 
 it('should prevent from resizing past max-width', () => {
-  jest.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(100);
+  jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 100 } as DOMRect);
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Header name',
@@ -1886,7 +1894,9 @@ it('should prevent from resizing past max-width', () => {
 });
 
 it('should prevent from resizing past min-width', () => {
-  jest.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(100);
+  jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 100 } as DOMRect);
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Header name',
@@ -1949,7 +1959,9 @@ it('should prevent from resizing past min-width', () => {
 });
 
 it('should not resize column with disabled resize but resize closest ones', () => {
-  jest.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(100);
+  jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 100 } as DOMRect);
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Header name',
@@ -2029,7 +2041,9 @@ it('should not resize column with disabled resize but resize closest ones', () =
 });
 
 it('should not trigger sort when resizing', () => {
-  jest.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(100);
+  jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 100 } as DOMRect);
   const onSort = jest.fn();
   const columns: Column<TestDataType>[] = [
     {
@@ -2076,8 +2090,9 @@ it('should not trigger sort when resizing', () => {
 
 it('should handle table resize only when some columns were resized', () => {
   const htmlWidthMock = jest
-    .spyOn(HTMLElement.prototype, 'offsetWidth', 'get')
-    .mockReturnValue(100);
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 100 } as DOMRect);
+
   let triggerResize: (size: DOMRectReadOnly) => void = jest.fn();
   jest
     .spyOn(UseResizeObserver, 'useResizeObserver')
@@ -2129,7 +2144,7 @@ it('should handle table resize only when some columns were resized', () => {
   fireEvent.mouseUp(resizer);
 
   act(() => {
-    htmlWidthMock.mockReturnValue(50);
+    htmlWidthMock.mockReturnValue({ width: 50 } as DOMRect);
     triggerResize({ width: 150 } as DOMRectReadOnly);
   });
   headerCells.forEach((cell) => expect(cell.style.width).toBe('50px'));

@@ -43,10 +43,14 @@ import {
   onSelectHandler,
 } from './actionHandlers';
 import { onSingleSelectHandler } from './actionHandlers/selectHandler';
+import {
+  onTableResizeEnd,
+  onTableResizeStart,
+} from './actionHandlers/resizeHandler';
 
 const singleRowSelectedAction = 'singleRowSelected';
-const tableResizingAction = 'tableResizing';
-const tableResizedAction = 'tableResized';
+const tableResizeStartAction = 'tableResizeStart';
+const tableResizeEndAction = 'tableResizeEnd';
 
 export type TablePaginatorRendererProps = {
   /**
@@ -346,24 +350,12 @@ export const Table = <
           onSelectHandler(newState, instance, onSelect, isRowDisabled);
           break;
         }
-        case tableResizingAction: {
-          newState = {
-            ...newState,
-            isTableResizing: true,
-          };
+        case tableResizeStartAction: {
+          newState = onTableResizeStart(newState);
           break;
         }
-        case tableResizedAction: {
-          newState = {
-            ...newState,
-            isTableResizing: false,
-            columnResizing: {
-              ...newState.columnResizing,
-              columnWidths: {
-                ...action.columnWidths,
-              },
-            },
-          };
+        case tableResizeEndAction: {
+          newState = onTableResizeEnd(newState, action);
           break;
         }
         default:
@@ -501,7 +493,9 @@ export const Table = <
       // Update column widths when table was resized
       flatHeaders.forEach((header) => {
         if (columnRefs.current[header.id]) {
-          header.resizeWidth = columnRefs.current[header.id].offsetWidth;
+          header.resizeWidth = columnRefs.current[
+            header.id
+          ].getBoundingClientRect().width;
         }
       });
 
@@ -511,7 +505,7 @@ export const Table = <
       }
 
       isTableResizing.current = true;
-      dispatch({ type: tableResizingAction });
+      dispatch({ type: tableResizeStartAction });
     },
     [dispatch, state.columnResizing.columnWidths, flatHeaders],
   );
@@ -524,11 +518,12 @@ export const Table = <
       const newColumnWidths: Record<string, number> = {};
       flatHeaders.forEach((column) => {
         if (columnRefs.current[column.id]) {
-          newColumnWidths[column.id] =
-            columnRefs.current[column.id].offsetWidth;
+          newColumnWidths[column.id] = columnRefs.current[
+            column.id
+          ].getBoundingClientRect().width;
         }
       });
-      dispatch({ type: tableResizedAction, columnWidths: newColumnWidths });
+      dispatch({ type: tableResizeEndAction, columnWidths: newColumnWidths });
     }
   });
 
@@ -588,7 +583,7 @@ export const Table = <
                       ref={(el) => {
                         if (el) {
                           columnRefs.current[column.id] = el;
-                          column.resizeWidth = el.offsetWidth;
+                          column.resizeWidth = el.getBoundingClientRect().width;
                         }
                       }}
                       onMouseDown={onSortClick}
