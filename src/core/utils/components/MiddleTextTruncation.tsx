@@ -24,7 +24,7 @@ export type MiddleTextTruncationProps = {
  * Truncates text with the ellipsis in the middle,
  * leaving defined number of chars at the end.
  * @example
- * <MiddleTextTruncation text='Here can be a very long text' />
+ * <MiddleTextTruncation text='ThisIsMyVeryLongFileName.dgn' />
  */
 export const MiddleTextTruncation = (props: MiddleTextTruncationProps) => {
   const { text, endCharsCount = 6, style, ...rest } = props;
