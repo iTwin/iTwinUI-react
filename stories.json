@@ -1500,6 +1500,15 @@
         "__id": "input-select--custom"
       }
     },
+    "input-select--truncate-middle-text": {
+      "id": "input-select--truncate-middle-text",
+      "name": "Truncate Middle Text",
+      "kind": "Input/Select",
+      "story": "Truncate Middle Text",
+      "parameters": {
+        "__id": "input-select--truncate-middle-text"
+      }
+    },
     "core-sidenavigation--basic": {
       "id": "core-sidenavigation--basic",
       "name": "Basic",
