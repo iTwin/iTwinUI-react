@@ -96,12 +96,14 @@ export {
   InformationPanelWrapper,
   InformationPanelHeader,
   InformationPanelBody,
+  InformationPanelContent,
 } from './InformationPanel';
 export type {
   InformationPanelProps,
   InformationPanelWrapperProps,
   InformationPanelHeaderProps,
   InformationPanelBodyProps,
+  InformationPanelContentProps,
 } from './InformationPanel';
 
 export { Input } from './Input';
@@ -248,5 +250,10 @@ export type {
   WizardLocalization,
 } from './Wizard';
 
-export { getUserColor, useTheme, ColorValue } from './utils';
-export type { ThemeType } from './utils';
+export {
+  getUserColor,
+  useTheme,
+  ColorValue,
+  MiddleTextTruncation,
+} from './utils';
+export type { ThemeType, MiddleTextTruncationProps } from './utils';
