@@ -312,7 +312,7 @@ it('should render with custom localization', () => {
   expect(pageSizeSelector.textContent).toEqual('1-10 of test 195');
 
   expect(
-    container.querySelector('.iui-right .iui-text-block'),
+    container.querySelector('.iui-paginator-page-size-label'),
   ).toHaveTextContent('Items per test page');
 
   pageSizeSelector.click();
@@ -330,7 +330,7 @@ it('should not show rowsPerPageLabel on narrow widths', () => {
     .mockReturnValue([jest.fn(), 600]);
 
   const { container } = renderComponent();
-  expect(container.querySelector('.iui-right .iui-text-block')).toBeFalsy();
+  expect(container.querySelector('.iui-paginator-page-size-label')).toBeFalsy();
 });
 
 it('should render with custom className and style', () => {

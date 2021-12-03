@@ -336,7 +336,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
         {showPageSizeList && (
           <>
             {localization.rowsPerPageLabel && paginatorWidth >= 1024 && (
-              <Text isMuted as='span'>
+              <Text as='span' className='iui-paginator-page-size-label'>
                 {localization.rowsPerPageLabel}
               </Text>
             )}
