@@ -6,7 +6,7 @@ import { ColumnInstance } from 'react-table';
 
 export const getCellStyle = <T extends Record<string, unknown>>(
   column: ColumnInstance<T>,
-  isTableResizing = false,
+  isTableResizing: boolean,
 ): React.CSSProperties | undefined => {
   const style = {} as React.CSSProperties;
   style.flex = `1 1 145px`;
