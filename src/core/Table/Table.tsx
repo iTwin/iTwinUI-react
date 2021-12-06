@@ -208,6 +208,8 @@ export type TableProps<
   /**
    * Flag whether columns are resizable.
    * In order to disable resizing for specific column, set `disableResizing: true` for that column.
+   *
+   * If you want to use it in older browsers e.g. IE, then you need to have `ResizeObserver` polyfill.
    * @default false
    */
   isResizable?: boolean;
@@ -498,7 +500,7 @@ export const Table = <
         }
       });
 
-      // Leave resize handling to the flex
+      // If no column was resized then leave table resize handling to the flexbox
       if (Object.keys(state.columnResizing.columnWidths).length === 0) {
         return;
       }
@@ -578,7 +580,7 @@ export const Table = <
                       key={columnProps.key}
                       title={undefined}
                       ref={(el) => {
-                        if (el) {
+                        if (el && isResizable) {
                           columnRefs.current[column.id] = el;
                           column.resizeWidth = el.getBoundingClientRect().width;
                         }
@@ -613,7 +615,6 @@ export const Table = <
                           <div
                             {...column.getResizerProps()}
                             className='iui-resizer'
-                            onClick={(e) => e.stopPropagation()}
                           >
                             <div className='iui-resizer-bar' />
                           </div>

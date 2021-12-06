@@ -3,8 +3,12 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 /**
- * Copied from react-table as useResizerColumns does not have ownerDocument check also
- * made some changes to resize sibling/next column on resize.
+ * Copied from react-table as useResizeColumns and made some changes:
+ *  - Added TS typings
+ *  - Added sibling/next column resize when resizing
+ *  - Favoring min/max widths when resizing
+ *  - Added owner document support
+ * @link https://github.com/tannerlinsley/react-table/blob/master/src/plugin-hooks/useResizeColumns.js
  */
 /**
  * MIT License
@@ -51,6 +55,12 @@ export const useResizeColumns = <T extends Record<string, unknown>>(
   hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions);
 };
 
+const isTouchEvent = (
+  event: React.MouseEvent | React.TouchEvent,
+): event is React.TouchEvent => {
+  return event.type === 'touchstart';
+};
+
 const defaultGetResizerProps = (ownerDocument: Document | undefined) => (
   props: TableKeyedProps,
   {
@@ -70,16 +80,12 @@ const defaultGetResizerProps = (ownerDocument: Document | undefined) => (
   const { dispatch, flatHeaders } = instance;
 
   const onResizeStart = (
-    e: React.TouchEvent & React.MouseEvent,
+    e: React.TouchEvent | React.MouseEvent,
     header: HeaderGroup,
   ) => {
-    let isTouchEvent = false;
-    if (e.type === 'touchstart') {
-      // lets not respond to multiple touches (e.g. 2 or 3 fingers)
-      if (e.touches && e.touches.length > 1) {
-        return;
-      }
-      isTouchEvent = true;
+    // lets not respond to multiple touches (e.g. 2 or 3 fingers)
+    if (isTouchEvent(e) && e.touches && e.touches.length > 1) {
+      return;
     }
 
     // Setting `width` here because it might take several rerenders until actual column width is set.
@@ -94,7 +100,9 @@ const defaultGetResizerProps = (ownerDocument: Document | undefined) => (
       ? getLeafHeaders(nextHeader).map((d) => [d.id, d.width])
       : [];
 
-    const clientX = isTouchEvent ? Math.round(e.touches[0].clientX) : e.clientX;
+    const clientX = isTouchEvent(e)
+      ? Math.round(e.touches[0].clientX)
+      : e.clientX;
 
     const dispatchMove = (clientXPos: number) =>
       dispatch({ type: actions.columnResizing, clientX: clientXPos });
@@ -128,7 +136,6 @@ const defaultGetResizerProps = (ownerDocument: Document | undefined) => (
             e.stopPropagation();
           }
           dispatchMove(e.touches[0].clientX);
-          return false;
         },
         upEvent: 'touchend',
         upHandler: () => {
@@ -145,7 +152,7 @@ const defaultGetResizerProps = (ownerDocument: Document | undefined) => (
       },
     };
 
-    const events = isTouchEvent
+    const events = isTouchEvent(e)
       ? handlersAndEvents.touch
       : handlersAndEvents.mouse;
     const passiveIfSupported = passiveEventSupported()
@@ -176,12 +183,12 @@ const defaultGetResizerProps = (ownerDocument: Document | undefined) => (
   return [
     props,
     {
-      onMouseDown: (e: React.TouchEvent & React.MouseEvent) => {
+      onMouseDown: (e: React.MouseEvent) => {
         e.persist();
         e.stopPropagation();
         onResizeStart(e, header);
       },
-      onTouchStart: (e: React.TouchEvent & React.MouseEvent) => {
+      onTouchStart: (e: React.TouchEvent) => {
         e.persist();
         e.stopPropagation();
         onResizeStart(e, header);
@@ -379,11 +386,10 @@ const getPreviousResizableHeader = <T extends Record<string, unknown>>(
   headerColumn: ColumnInstance<T>,
   instance: TableInstance<T>,
 ) => {
-  const headerIndex = instance.flatHeaders.findIndex(
-    (h) => h.id === headerColumn.id,
-  );
-  return [...instance.flatHeaders]
-    .slice(1, headerIndex)
+  const headersList = headerColumn.parent?.columns || instance.flatHeaders;
+  const headerIndex = headersList.findIndex((h) => h.id === headerColumn.id);
+  return [...headersList]
+    .slice(0, headerIndex)
     .reverse()
     .find((h) => !h.disableResizing);
 };
@@ -392,10 +398,9 @@ const getNextResizableHeader = <T extends Record<string, unknown>>(
   headerColumn: ColumnInstance<T>,
   instance: TableInstance<T>,
 ) => {
-  const headerIndex = instance.flatHeaders.findIndex(
-    (h) => h.id === headerColumn.id,
-  );
-  return [...instance.flatHeaders]
+  const headersList = headerColumn.parent?.columns || instance.flatHeaders;
+  const headerIndex = headersList.findIndex((h) => h.id === headerColumn.id);
+  return [...headersList]
     .slice(headerIndex + 1)
     .find((h) => !h.disableResizing);
 };
