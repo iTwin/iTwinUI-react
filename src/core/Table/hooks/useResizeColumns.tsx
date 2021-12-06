@@ -371,8 +371,8 @@ const useInstanceBeforeDimensions = <T extends Record<string, unknown>>(
     // Show resizer when header is resizable or when next header is resizable
     // and there is resizable columns on the left side of the resizer.
     header.isResizerVisible =
-      header.canResize ||
-      (headerToResize && instance.flatHeaders[index + 1]?.canResize);
+      (header.canResize && !!nextResizableHeader) ||
+      (headerToResize && !!instance.flatHeaders[index + 1]?.canResize);
 
     header.getResizerProps = makePropGetter(getHooks().getResizerProps, {
       instance: getInstance(),

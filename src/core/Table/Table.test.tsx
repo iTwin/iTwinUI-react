@@ -2040,6 +2040,47 @@ it('should not resize column with disabled resize but resize closest ones', () =
   expect(headerCells[3].style.width).toBe('150px');
 });
 
+it('should not show resizer then there are no next resizable columns', () => {
+  jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 100 } as DOMRect);
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+          disableResizing: true,
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    isResizable: true,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  const descriptionResizer = container.querySelector(
+    '.iui-cell:nth-of-type(2) .iui-resizer',
+  ) as HTMLDivElement;
+  expect(descriptionResizer).toBeFalsy();
+});
+
 it('should not trigger sort when resizing', () => {
   jest
     .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
