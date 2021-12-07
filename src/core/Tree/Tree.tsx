@@ -3,11 +3,12 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { useTheme } from '../utils';
+import { CommonProps, useTheme } from '../utils';
+import 'D:/itwinUI/iTwinUI/lib/css/tree.css'; //'@itwin/itwinui-css/css/tree.css';
 
 export type TreeProps = {
   children?: React.ReactNode;
-};
+} & CommonProps;
 
 /**
  * Describe me here!
@@ -15,9 +16,16 @@ export type TreeProps = {
  * Example usages go here!
  */
 export const Tree = (props: TreeProps) => {
-  const { ...rest } = props;
+  const { children, ...rest } = props;
   useTheme();
-  return <div {...rest} />;
+
+  return (
+    <div {...rest}>
+      <ul className='iui-tree' role='tree'>
+        {children}
+      </ul>
+    </div>
+  );
 };
 
 export default Tree;
