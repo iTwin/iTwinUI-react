@@ -7,6 +7,7 @@ import { CommonProps, getWindow, useTheme } from '../utils';
 import 'D:/itwinUI/iTwinUI/lib/css/tree.css'; //'@itwin/itwinui-css/css/tree.css';
 import { SvgChevronRight } from '@itwin/itwinui-icons-react';
 import { IconButton } from '../Buttons/IconButton';
+import { Checkbox } from '../Checkbox/Checkbox';
 import cx from 'classnames';
 
 export type TreeNodeProps = {
@@ -36,6 +37,20 @@ export type TreeNodeProps = {
    */
   onSelected?: () => void;
   /**
+   * Icon shown before title and caption content.
+   */
+  icon?: JSX.Element;
+  /**
+   * Should checkbox be shown before TreeNode.
+   * @default false
+   */
+  showCheckbox?: boolean;
+  /**
+   * Is TreeNode disabled.
+   * @default false
+   */
+  isDisabled?: boolean;
+  /**
    * Sub-nodes, shown and hidden by expanding TreeNode.
    * Recommended to use TreeNode components.
    */
@@ -51,13 +66,16 @@ export const TreeNode = (props: TreeNodeProps) => {
   const {
     title,
     caption,
-    isExpanded,
+    isExpanded = false,
     isActive,
     depthLevel = 0,
     children,
     style,
     className,
     onSelected,
+    icon,
+    showCheckbox = false,
+    isDisabled = false,
     ...rest
   } = props;
   useTheme();
@@ -78,6 +96,7 @@ export const TreeNode = (props: TreeNodeProps) => {
       <div
         className={cx('iui-tree-node', {
           'iui-active': active,
+          'iui-disabled': isDisabled,
           className,
         })}
         style={style_level}
@@ -86,6 +105,9 @@ export const TreeNode = (props: TreeNodeProps) => {
           onSelected?.();
         }}
       >
+        {showCheckbox && (
+          <Checkbox className='iui-tree-node-checkbox' disabled={isDisabled} />
+        )}
         <div className='iui-tree-node-content'>
           {children && (
             <IconButton
@@ -94,6 +116,7 @@ export const TreeNode = (props: TreeNodeProps) => {
               onClick={() => {
                 setExpanded(!expanded);
               }}
+              disabled={isDisabled}
             >
               <SvgChevronRight
                 className={cx('iui-tree-node-content-expander-icon', {
@@ -102,6 +125,10 @@ export const TreeNode = (props: TreeNodeProps) => {
               />
             </IconButton>
           )}
+          {icon &&
+            React.cloneElement(icon, {
+              className: cx('iui-tree-node-content-icon', icon.props.className),
+            })}
           <span className='iui-tree-node-content-label'>
             <div className='iui-tree-node-content-title'>{title}</div>
             <div className='iui-tree-node-content-caption'>{caption}</div>
@@ -117,6 +144,9 @@ export const TreeNode = (props: TreeNodeProps) => {
                 title={node.props['title']}
                 caption={node.props['caption']}
                 onSelected={onSelected}
+                icon={node.props['icon']}
+                showCheckbox={showCheckbox}
+                isDisabled={node.props['isDisabled']}
                 depthLevel={depthLevel + 1}
               >
                 {node.props['children']}

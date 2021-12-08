@@ -13,6 +13,11 @@ export type TreeProps = {
    */
   onNodeSelected?: () => void;
   /**
+   * Should Tree show checkboxes before TreeNodes.
+   * @default false
+   */
+  showCheckboxes?: boolean;
+  /**
    * Items inside tree.
    * Recommended to use TreeNode component.
    */
@@ -25,7 +30,7 @@ export type TreeProps = {
  * Example usages go here!
  */
 export const Tree = (props: TreeProps) => {
-  const { onNodeSelected, children, ...rest } = props;
+  const { onNodeSelected, showCheckboxes, children, ...rest } = props;
   useTheme();
 
   return (
@@ -38,6 +43,9 @@ export const Tree = (props: TreeProps) => {
               title={node.props['title']}
               caption={node.props['caption']}
               onSelected={onNodeSelected}
+              icon={node.props['icon']}
+              showCheckbox={showCheckboxes}
+              isDisabled={node.props['isDisabled']}
             >
               {node.props['children']}
             </TreeNode>
