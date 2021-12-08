@@ -23,12 +23,21 @@ export type TreeNodeProps = {
    */
   isExpanded?: boolean;
   /**
+   * Is node selected.
+   */
+  isActive?: boolean;
+  /**
    * Depth of node.
    * @default 0
    */
   depthLevel?: number;
   /**
+   * Callback fired when selecting TreeNode.
+   */
+  onSelected?: () => void;
+  /**
    * Sub-nodes, shown and hidden by expanding TreeNode.
+   * Recommended to use TreeNode components.
    */
   children?: React.ReactNode;
 } & CommonProps;
@@ -43,9 +52,12 @@ export const TreeNode = (props: TreeNodeProps) => {
     title,
     caption,
     isExpanded,
+    isActive,
     depthLevel = 0,
     children,
     style,
+    className,
+    onSelected,
     ...rest
   } = props;
   useTheme();
@@ -55,14 +67,25 @@ export const TreeNode = (props: TreeNodeProps) => {
       getWindow()?.CSS?.supports?.(`--level: ${depthLevel}`)
         ? { '--level': depthLevel, ...style }
         : { marginLeft: depthLevel ? depthLevel * 28 : 0, ...style },
-    [],
+    [depthLevel, style],
   );
 
   const [expanded, setExpanded] = React.useState(isExpanded);
+  const [active, setActive] = React.useState(isActive);
 
   return (
     <li role='treeitem' aria-expanded={expanded} {...rest}>
-      <div className='iui-tree-node' style={style_level}>
+      <div
+        className={cx('iui-tree-node', {
+          'iui-active': active,
+          className,
+        })}
+        style={style_level}
+        onClick={() => {
+          setActive(!active);
+          onSelected?.();
+        }}
+      >
         <div className='iui-tree-node-content'>
           {children && (
             <IconButton
@@ -81,12 +104,27 @@ export const TreeNode = (props: TreeNodeProps) => {
           )}
           <span className='iui-tree-node-content-label'>
             <div className='iui-tree-node-content-title'>{title}</div>
+            <div className='iui-tree-node-content-caption'>{caption}</div>
           </span>
         </div>
       </div>
       {children && expanded && (
         <ul className='iui-sub-tree' role='group'>
-          {children}
+          {React.Children.map(children, (node, index) =>
+            React.isValidElement(node) ? (
+              <TreeNode
+                key={index + node.props['title']}
+                title={node.props['title']}
+                caption={node.props['caption']}
+                onSelected={onSelected}
+                depthLevel={depthLevel + 1}
+              >
+                {node.props['children']}
+              </TreeNode>
+            ) : (
+              node
+            ),
+          )}
         </ul>
       )}
     </li>

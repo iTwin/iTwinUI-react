@@ -5,6 +5,7 @@
 import { Story, Meta } from '@storybook/react';
 import React from 'react';
 import { Tree, TreeProps, TreeNode } from '../../src/core';
+import { action } from '@storybook/addon-actions';
 
 export default {
   component: Tree,
@@ -16,23 +17,27 @@ export default {
 } as Meta<TreeProps>;
 
 export const Basic: Story<TreeProps> = (args) => {
+  const onSelectedNodeChange = () => {
+    action(`Selected a node`)();
+  };
+
   return (
-    <Tree {...args}>
-      <TreeNode title='Node 1'>
-        <TreeNode title='Node 1.1' depthLevel={1} />
+    <Tree onNodeSelected={onSelectedNodeChange} {...args}>
+      <TreeNode title='Node 1' caption='Node Caption'>
+        <TreeNode title='Node 1.1' />
       </TreeNode>
       <TreeNode title='Node 2'>
-        <TreeNode title='Node 2.1' depthLevel={1}>
-          <TreeNode title={'Node 2.1.1'} depthLevel={2} />
+        <TreeNode title='Node 2.1'>
+          <TreeNode title={'Node 2.1.1'} caption='Node Caption' />
         </TreeNode>
-        <TreeNode title='Node 2.2' depthLevel={1}>
-          <TreeNode title='Node 2.2.1' depthLevel={2}>
-            <TreeNode title={'Node 2.2.1.1'} depthLevel={3} />
+        <TreeNode title='Node 2.2'>
+          <TreeNode title='Node 2.2.1'>
+            <TreeNode title={'Node 2.2.1.1'} caption='Node Caption' />
           </TreeNode>
         </TreeNode>
       </TreeNode>
       <TreeNode title='Node 3'>
-        <TreeNode title={'Node 3.1'} depthLevel={2} />
+        <TreeNode title={'Node 3.1'} caption='Node Caption' />
       </TreeNode>
     </Tree>
   );
