@@ -2040,7 +2040,7 @@ it('should not resize column with disabled resize but resize closest ones', () =
   expect(headerCells[3].style.width).toBe('150px');
 });
 
-it('should not show resizer then there are no next resizable columns', () => {
+it('should not show resizer when there are no next resizable columns', () => {
   jest
     .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
     .mockReturnValue({ width: 100 } as DOMRect);

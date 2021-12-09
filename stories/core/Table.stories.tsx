@@ -32,7 +32,6 @@ import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
 import { action } from '@storybook/addon-actions';
 import { CreeveyMeta, CreeveyStoryParams } from 'creevey';
-import { followCursor } from 'tippy.js';
 
 export default {
   title: 'Core/Table',
@@ -1343,9 +1342,6 @@ export const Full: Story<Partial<TableProps>> = (args) => {
         reference={rowRefMap.current[hoveredRowIndex]}
         content={`Hovered over ${data[hoveredRowIndex].name}.`}
         placement='bottom'
-        followCursor
-        offset={[0, 16]}
-        plugins={[followCursor]}
       />
     </>
   );
