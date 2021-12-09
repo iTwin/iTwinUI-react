@@ -7,6 +7,7 @@ import { action } from '@storybook/addon-actions';
 import React from 'react';
 import { ComboBox, ComboBoxProps, Label, SelectOption } from '../../src/core';
 import { CreeveyStoryParams } from 'creevey';
+import { SvgStatusError } from '@itwin/itwinui-icons-react';
 
 export default {
   component: ComboBox,
@@ -16,6 +17,7 @@ export default {
     id: { control: { disable: true } },
     options: { control: { disable: true } },
     dropdownMenuProps: { control: { disable: true } },
+    message: { control: { type: 'text' } },
   },
   decorators: [
     (Story) => (
@@ -387,3 +389,30 @@ export const WithLabel: Story<Partial<ComboBoxProps<string>>> = (args) => {
 WithLabel.args = {
   inputProps: { id: 'combo-input', placeholder: 'Select a country' },
 } as ComboBoxProps<string>;
+
+export const WithStatus: Story<Partial<ComboBoxProps<string>>> = (args) => {
+  const options = React.useMemo(() => countriesList, []);
+
+  return (
+    <ComboBox
+      options={options}
+      inputProps={{ placeholder: 'Select a country' }}
+      onChange={(value: string) => action(value ?? '')()}
+      status='negative'
+      message={
+        <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+          <SvgStatusError style={{ fill: 'currentColor', height: 16 }} />
+          Status message
+        </div>
+      }
+      {...args}
+    />
+  );
+};
+WithStatus.args = {
+  inputProps: { placeholder: 'Select a country' },
+  status: 'negative',
+};
+WithStatus.argTypes = {
+  message: { control: { disable: true } },
+};

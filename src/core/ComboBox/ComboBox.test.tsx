@@ -298,3 +298,19 @@ it('should accept inputProps', () => {
   );
   expect(container.querySelector('.iui-menu')?.id).toBe(`${inputId}-cb-list`);
 });
+
+it('should accept status and message props', () => {
+  const { container } = renderComponent({
+    status: 'negative',
+    message: 'error message',
+  });
+
+  expect(container.querySelector('.iui-input-container')).toHaveClass(
+    'iui-negative',
+    'iui-with-message',
+  );
+
+  expect(container.querySelector('.iui-message')).toHaveTextContent(
+    'error message',
+  );
+});
