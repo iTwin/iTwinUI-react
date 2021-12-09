@@ -2190,3 +2190,15 @@ it('should handle table resize only when some columns were resized', () => {
   });
   headerCells.forEach((cell) => expect(cell.style.width).toBe('50px'));
 });
+
+it('should not render resizer when resizer is disabled', () => {
+  const { container } = renderComponent(undefined);
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  expect(headerCells).toHaveLength(3);
+
+  const resizer = container.querySelector('.iui-resizer') as HTMLDivElement;
+  expect(resizer).toBeFalsy();
+});
