@@ -11,7 +11,6 @@ import { ButtonGroup } from '../ButtonGroup';
 import { IconButton, Button, DropdownButton } from '../Buttons';
 import { ProgressRadial } from '../ProgressIndicators';
 import { MenuItem } from '../Menu';
-import { Text } from '../Typography';
 import {
   CommonProps,
   getBoundedValue,
@@ -335,11 +334,12 @@ export const TablePaginator = (props: TablePaginatorProps) => {
       <div className='iui-right'>
         {showPageSizeList && (
           <>
-            {localization.rowsPerPageLabel && paginatorWidth >= 1024 && (
-              <Text as='span' className='iui-paginator-page-size-label'>
-                {localization.rowsPerPageLabel}
-              </Text>
-            )}
+            {localization.rowsPerPageLabel !== null &&
+              paginatorWidth >= 1024 && (
+                <span className='iui-paginator-page-size-label'>
+                  {localization.rowsPerPageLabel}
+                </span>
+              )}
             <DropdownButton
               styleType='borderless'
               size={buttonSize}

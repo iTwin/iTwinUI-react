@@ -333,6 +333,17 @@ it('should not show rowsPerPageLabel on narrow widths', () => {
   expect(container.querySelector('.iui-paginator-page-size-label')).toBeFalsy();
 });
 
+it('should hide rowsPerPageLabel if null is passed', () => {
+  jest
+    .spyOn(UseContainerWidth, 'useContainerWidth')
+    .mockReturnValue([jest.fn(), 1200]);
+
+  const { container } = renderComponent({
+    localization: { rowsPerPageLabel: null },
+  });
+  expect(container.querySelector('.iui-paginator-page-size-label')).toBeFalsy();
+});
+
 it('should render with custom className and style', () => {
   const { container } = renderComponent({
     className: 'test-class',
