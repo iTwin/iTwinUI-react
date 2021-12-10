@@ -18,6 +18,7 @@ import { SvgChevronRight } from '@itwin/itwinui-icons-react';
 import { EditableCell } from './cells';
 import { TablePaginator } from './TablePaginator';
 import * as UseOverflow from '../utils/hooks/useOverflow';
+import * as UseResizeObserver from '../utils/hooks/useResizeObserver';
 
 const intersectionCallbacks = new Map<Element, () => void>();
 jest
@@ -153,7 +154,7 @@ function assertRowsData(rows: NodeListOf<Element>, data = mockedData()) {
 
 const setFilter = (container: HTMLElement, value: string) => {
   const filterIcon = container.querySelector(
-    '.iui-filter-button .iui-icon',
+    '.iui-filter-button .iui-button-icon',
   ) as HTMLElement;
   expect(filterIcon).toBeTruthy();
   fireEvent.click(filterIcon);
@@ -169,7 +170,7 @@ const setFilter = (container: HTMLElement, value: string) => {
 
 const clearFilter = (container: HTMLElement) => {
   const filterIcon = container.querySelector(
-    '.iui-filter-button .iui-icon',
+    '.iui-filter-button .iui-button-icon',
   ) as HTMLElement;
   expect(filterIcon).toBeTruthy();
   fireEvent.click(filterIcon);
@@ -385,7 +386,7 @@ it('should not trigger onSelect when sorting and filtering', () => {
   expect(nameHeader).toBeTruthy();
   expect(nameHeader.classList).not.toContain('iui-sorted');
 
-  nameHeader.click();
+  fireEvent.mouseDown(nameHeader);
   expect(onSort).toHaveBeenCalled();
   expect(onSelect).not.toHaveBeenCalled();
 
@@ -449,7 +450,7 @@ it('should sort name column correctly', () => {
   expect(sortIcon).toBeTruthy();
 
   //first click
-  nameHeader.click();
+  fireEvent.mouseDown(nameHeader);
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(nameHeader.classList).toContain('iui-sorted');
   assertRowsData(rows, sortedByName);
@@ -465,7 +466,7 @@ it('should sort name column correctly', () => {
   );
 
   //second click
-  nameHeader.click();
+  fireEvent.mouseDown(nameHeader);
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(nameHeader.classList).toContain('iui-sorted');
   assertRowsData(rows, [...sortedByName].reverse());
@@ -481,7 +482,7 @@ it('should sort name column correctly', () => {
   );
 
   //third click resets it
-  nameHeader.click();
+  fireEvent.mouseDown(nameHeader);
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(nameHeader.classList).not.toContain('iui-sorted');
   assertRowsData(rows, mocked);
@@ -612,7 +613,7 @@ it('should clear filter', () => {
   expect(rows.length).toBe(1);
 
   const filterIcon = container.querySelector(
-    '.iui-filter-button .iui-icon',
+    '.iui-filter-button .iui-button-icon',
   ) as HTMLElement;
   expect(filterIcon).toBeTruthy();
   fireEvent.click(filterIcon);
@@ -697,7 +698,7 @@ it('should not show filter icon when filter component is not set', () => {
   expect(rows.length).toBe(3);
 
   const filterIcon = container.querySelector(
-    '.iui-filter-button .iui-icon',
+    '.iui-filter-button .iui-button-icon',
   ) as HTMLElement;
   expect(filterIcon).toBeFalsy();
 });
@@ -729,7 +730,7 @@ it('should show message and active filter icon when there is no data after filte
   expect(rows.length).toBe(0);
   screen.getByText('No results. Clear filter.');
   const filterIcon = container.querySelector(
-    '.iui-filter-button.iui-active .iui-icon',
+    '.iui-filter-button.iui-active .iui-button-icon',
   ) as HTMLElement;
   expect(filterIcon).toBeTruthy();
 });
@@ -779,7 +780,7 @@ it('should show message and active filter icon when there is no data after manua
   expect(rows.length).toBe(0);
   screen.getByText('No results. Clear filter.');
   const filterIcon = container.querySelector(
-    '.iui-filter-button.iui-active .iui-icon',
+    '.iui-filter-button.iui-active .iui-button-icon',
   ) as HTMLElement;
   expect(filterIcon).toBeTruthy();
 });
@@ -905,10 +906,12 @@ it('should expand correctly', () => {
   });
   const {
     container: { firstChild: expanderIcon },
-  } = render(<SvgChevronRight className='iui-icon' aria-hidden />);
+  } = render(<SvgChevronRight className='iui-button-icon' aria-hidden />);
 
   expect(
-    container.querySelectorAll('.iui-button.iui-borderless > .iui-icon')[0],
+    container.querySelectorAll(
+      '.iui-button.iui-borderless > .iui-button-icon',
+    )[0],
   ).toEqual(expanderIcon);
 
   act(() => {
@@ -1671,4 +1674,533 @@ it('should change page size', () => {
   expect(rows).toHaveLength(50);
   expect(rows[0].querySelector('.iui-cell')?.textContent).toEqual('Name1');
   expect(rows[49].querySelector('.iui-cell')?.textContent).toEqual('Name50');
+});
+
+it('should handle resize by increasing width of current column and decreasing the next ones', () => {
+  jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 100 } as DOMRect);
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    isResizable: true,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  const resizer = container.querySelector('.iui-resizer') as HTMLDivElement;
+  expect(resizer).toBeTruthy();
+
+  fireEvent.mouseDown(resizer, { clientX: 100 });
+  fireEvent.mouseMove(resizer, { clientX: 150 });
+  fireEvent.mouseUp(resizer);
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  expect(headerCells).toHaveLength(3);
+
+  expect(headerCells[0].style.width).toBe('150px');
+  expect(headerCells[1].style.width).toBe('50px');
+  expect(headerCells[2].style.width).toBe('100px');
+});
+
+it('should handle resize with touch', () => {
+  jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 100 } as DOMRect);
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    isResizable: true,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  const resizer = container.querySelector('.iui-resizer') as HTMLDivElement;
+  expect(resizer).toBeTruthy();
+
+  fireEvent.touchStart(resizer, { touches: [{ clientX: 100 }] });
+  fireEvent.touchMove(resizer, { touches: [{ clientX: 150 }] });
+  fireEvent.touchEnd(resizer);
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  expect(headerCells).toHaveLength(3);
+
+  expect(headerCells[0].style.width).toBe('150px');
+  expect(headerCells[1].style.width).toBe('50px');
+  expect(headerCells[2].style.width).toBe('100px');
+});
+
+it('should prevent from resizing past 1px width', () => {
+  jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 100 } as DOMRect);
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    isResizable: true,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  const resizer = container.querySelector('.iui-resizer') as HTMLDivElement;
+  expect(resizer).toBeTruthy();
+
+  fireEvent.mouseDown(resizer, { clientX: 100 });
+  fireEvent.mouseMove(resizer, { clientX: 198 });
+  fireEvent.mouseMove(resizer, { clientX: 300 });
+  fireEvent.mouseUp(resizer);
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  expect(headerCells).toHaveLength(3);
+
+  expect(headerCells[0].style.width).toBe('198px');
+  expect(headerCells[1].style.width).toBe('2px');
+  expect(headerCells[2].style.width).toBe('100px');
+});
+
+it('should prevent from resizing past max-width', () => {
+  jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 100 } as DOMRect);
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          maxWidth: 150,
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+          maxWidth: 150,
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    isResizable: true,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  const resizer = container.querySelector('.iui-resizer') as HTMLDivElement;
+  expect(resizer).toBeTruthy();
+
+  // Current column
+  fireEvent.mouseDown(resizer, { clientX: 100 });
+  fireEvent.mouseMove(resizer, { clientX: 150 });
+  fireEvent.mouseMove(resizer, { clientX: 200 });
+  fireEvent.mouseUp(resizer);
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  expect(headerCells).toHaveLength(3);
+
+  expect(headerCells[0].style.width).toBe('150px');
+  expect(headerCells[1].style.width).toBe('50px');
+  expect(headerCells[2].style.width).toBe('100px');
+
+  // Next column
+  fireEvent.mouseDown(resizer, { clientX: 150 });
+  fireEvent.mouseMove(resizer, { clientX: 50 });
+  fireEvent.mouseMove(resizer, { clientX: 10 });
+  fireEvent.mouseUp(resizer);
+
+  expect(headerCells[0].style.width).toBe('50px');
+  expect(headerCells[1].style.width).toBe('150px');
+  expect(headerCells[2].style.width).toBe('100px');
+});
+
+it('should prevent from resizing past min-width', () => {
+  jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 100 } as DOMRect);
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          minWidth: 50,
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+          minWidth: 50,
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    isResizable: true,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  const resizer = container.querySelector('.iui-resizer') as HTMLDivElement;
+  expect(resizer).toBeTruthy();
+
+  // Current column
+  fireEvent.mouseDown(resizer, { clientX: 100 });
+  fireEvent.mouseMove(resizer, { clientX: 50 });
+  fireEvent.mouseMove(resizer, { clientX: 10 });
+  fireEvent.mouseUp(resizer);
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  expect(headerCells).toHaveLength(3);
+
+  expect(headerCells[0].style.width).toBe('50px');
+  expect(headerCells[1].style.width).toBe('150px');
+  expect(headerCells[2].style.width).toBe('100px');
+
+  // Next column
+  fireEvent.mouseDown(resizer, { clientX: 50 });
+  fireEvent.mouseMove(resizer, { clientX: 150 });
+  fireEvent.mouseMove(resizer, { clientX: 190 });
+  fireEvent.mouseUp(resizer);
+
+  expect(headerCells[0].style.width).toBe('150px');
+  expect(headerCells[1].style.width).toBe('50px');
+  expect(headerCells[2].style.width).toBe('100px');
+});
+
+it('should not resize column with disabled resize but resize closest ones', () => {
+  jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 100 } as DOMRect);
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+          disableResizing: true,
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+          disableResizing: true,
+        },
+        {
+          id: 'edit',
+          Header: 'edit',
+          Cell: () => 'Edit',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    isResizable: true,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  // Current column
+  const nameResizer = container.querySelector('.iui-resizer') as HTMLDivElement;
+  expect(nameResizer).toBeTruthy();
+
+  fireEvent.mouseDown(nameResizer, { clientX: 100 });
+  fireEvent.mouseMove(nameResizer, { clientX: 150 });
+  fireEvent.mouseUp(nameResizer);
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  expect(headerCells).toHaveLength(4);
+
+  expect(headerCells[0].style.width).toBe('150px');
+  expect(headerCells[1].style.width).toBe('100px');
+  expect(headerCells[2].style.width).toBe('100px');
+  expect(headerCells[3].style.width).toBe('50px');
+
+  // Description column shouldn't have resizer because resizing is disabled for it
+  // and next column also isn't resizable
+  const descriptionResizer = container.querySelector(
+    '.iui-cell:nth-of-type(2) .iui-resizer',
+  ) as HTMLDivElement;
+  expect(descriptionResizer).toBeFalsy();
+
+  // Last column
+  const viewResizer = container.querySelector(
+    '.iui-cell:nth-of-type(3) .iui-resizer',
+  ) as HTMLDivElement;
+  expect(viewResizer).toBeTruthy();
+
+  fireEvent.mouseDown(viewResizer, { clientX: 350 });
+  fireEvent.mouseMove(viewResizer, { clientX: 250 });
+  fireEvent.mouseUp(viewResizer);
+
+  expect(headerCells[0].style.width).toBe('50px');
+  expect(headerCells[1].style.width).toBe('100px');
+  expect(headerCells[2].style.width).toBe('100px');
+  expect(headerCells[3].style.width).toBe('150px');
+});
+
+it('should not show resizer when there are no next resizable columns', () => {
+  jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 100 } as DOMRect);
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+          disableResizing: true,
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    isResizable: true,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  const descriptionResizer = container.querySelector(
+    '.iui-cell:nth-of-type(2) .iui-resizer',
+  ) as HTMLDivElement;
+  expect(descriptionResizer).toBeFalsy();
+});
+
+it('should not trigger sort when resizing', () => {
+  jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 100 } as DOMRect);
+  const onSort = jest.fn();
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    isResizable: true,
+    isSortable: true,
+    onSort,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  const resizer = container.querySelector('.iui-resizer') as HTMLDivElement;
+  expect(resizer).toBeTruthy();
+
+  fireEvent.mouseDown(resizer, { clientX: 100 });
+  fireEvent.mouseMove(resizer, { clientX: 150 });
+  fireEvent.mouseUp(resizer);
+  fireEvent.click(resizer);
+
+  expect(onSort).not.toHaveBeenCalled();
+});
+
+it('should handle table resize only when some columns were resized', () => {
+  const htmlWidthMock = jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 100 } as DOMRect);
+
+  let triggerResize: (size: DOMRectReadOnly) => void = jest.fn();
+  jest
+    .spyOn(UseResizeObserver, 'useResizeObserver')
+    .mockImplementation((onResize) => {
+      triggerResize = onResize;
+      return [
+        jest.fn(),
+        ({ disconnect: jest.fn() } as unknown) as ResizeObserver,
+      ];
+    });
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({ columns, isResizable: true });
+
+  // Initial render
+  triggerResize({ width: 300 } as DOMRectReadOnly);
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  expect(headerCells).toHaveLength(3);
+  headerCells.forEach((cell) => expect(cell.style.width).toBe('0px'));
+
+  const resizer = container.querySelector('.iui-resizer') as HTMLDivElement;
+  expect(resizer).toBeTruthy();
+
+  fireEvent.mouseDown(resizer, { clientX: 100 });
+  fireEvent.mouseMove(resizer, { clientX: 150 });
+  fireEvent.mouseUp(resizer);
+
+  act(() => {
+    htmlWidthMock.mockReturnValue({ width: 50 } as DOMRect);
+    triggerResize({ width: 150 } as DOMRectReadOnly);
+  });
+  headerCells.forEach((cell) => expect(cell.style.width).toBe('50px'));
+});
+
+it('should not render resizer when resizer is disabled', () => {
+  const { container } = renderComponent(undefined);
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  expect(headerCells).toHaveLength(3);
+
+  const resizer = container.querySelector('.iui-resizer') as HTMLDivElement;
+  expect(resizer).toBeFalsy();
 });
