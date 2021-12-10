@@ -24,25 +24,29 @@ export const Basic: Story<TreeProps> = (args) => {
 
   return (
     <Tree onNodeSelected={onSelectedNodeChange} showCheckboxes={true} {...args}>
-      <TreeNode title='Node 1' caption='Node Caption' icon={<SvgPlaceholder />}>
-        <TreeNode title='Node 1.1' />
+      <TreeNode
+        label='Node 1'
+        sublabel='Node Caption'
+        icon={<SvgPlaceholder />}
+      >
+        <TreeNode label='Node 1.1' />
       </TreeNode>
-      <TreeNode title='Node 2'>
-        <TreeNode title='Node 2.1' icon={<SvgPlaceholder />}>
+      <TreeNode label='Node 2'>
+        <TreeNode label='Node 2.1' icon={<SvgPlaceholder />}>
           <TreeNode
-            title={'Node 2.1.1'}
-            caption='Node Caption'
+            label={'Node 2.1.1'}
+            sublabel='Node Caption'
             isDisabled={true}
           />
         </TreeNode>
-        <TreeNode title='Node 2.2'>
-          <TreeNode title='Node 2.2.1'>
-            <TreeNode title={'Node 2.2.1.1'} caption='Node Caption' />
+        <TreeNode label='Node 2.2'>
+          <TreeNode label='Node 2.2.1'>
+            <TreeNode label={'Node 2.2.1.1'} sublabel='Node Caption' />
           </TreeNode>
         </TreeNode>
       </TreeNode>
-      <TreeNode title='Node 3' isDisabled={true}>
-        <TreeNode title={'Node 3.1'} caption='Node Caption' />
+      <TreeNode label='Node 3' isDisabled={true}>
+        <TreeNode label={'Node 3.1'} sublabel='Node Caption' />
       </TreeNode>
     </Tree>
   );

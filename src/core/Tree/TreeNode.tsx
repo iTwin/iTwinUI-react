@@ -9,42 +9,26 @@ import { SvgChevronRight } from '@itwin/itwinui-icons-react';
 import { IconButton } from '../Buttons/IconButton';
 import { Checkbox } from '../Checkbox/Checkbox';
 import cx from 'classnames';
+import { TreeContext } from './Tree';
 
 export type TreeNodeProps = {
   /**
    * The main text displayed on the node.
    */
-  title: React.ReactNode;
+  label: React.ReactNode;
   /**
-   * Small note displayed below title.
+   * Small note displayed below main label.
    */
-  caption?: React.ReactNode;
-  /**
-   * Is node expanded, used to show sub-nodes.
-   */
-  isExpanded?: boolean;
-  /**
-   * Is node selected.
-   */
-  isActive?: boolean;
+  sublabel?: React.ReactNode;
   /**
    * Depth of node.
    * @default 0
    */
   depthLevel?: number;
   /**
-   * Callback fired when selecting TreeNode.
-   */
-  onSelected?: () => void;
-  /**
    * Icon shown before title and caption content.
    */
   icon?: JSX.Element;
-  /**
-   * Should checkbox be shown before TreeNode.
-   * @default false
-   */
-  showCheckbox?: boolean;
   /**
    * Is TreeNode disabled.
    * @default false
@@ -64,17 +48,13 @@ export type TreeNodeProps = {
  */
 export const TreeNode = (props: TreeNodeProps) => {
   const {
-    title,
-    caption,
-    isExpanded = false,
-    isActive,
+    label,
+    sublabel,
     depthLevel = 0,
     children,
     style,
     className,
-    onSelected,
     icon,
-    showCheckbox = false,
     isDisabled = false,
     ...rest
   } = props;
@@ -88,24 +68,34 @@ export const TreeNode = (props: TreeNodeProps) => {
     [depthLevel, style],
   );
 
-  const [expanded, setExpanded] = React.useState(isExpanded);
-  const [active, setActive] = React.useState(isActive);
+  const context = React.useContext(TreeContext);
+  const [expanded, setExpanded] = React.useState(false);
+  const isSelected = React.useMemo(() => {
+    return context?.selectedNode === label;
+  }, [context?.selectedNode, label]);
 
   return (
     <li role='treeitem' aria-expanded={expanded} {...rest}>
       <div
         className={cx('iui-tree-node', {
-          'iui-active': active,
+          'iui-active': isSelected,
           'iui-disabled': isDisabled,
           className,
         })}
         style={style_level}
-        onClick={() => {
-          setActive(!active);
-          onSelected?.();
+        onClick={(e) => {
+          if (e.currentTarget != e.target) {
+            return;
+          }
+          if (isSelected) {
+            context?.setSelectedNode('');
+          } else if (!isDisabled) {
+            context?.setSelectedNode(label);
+            context?.onNodeSelected?.();
+          }
         }}
       >
-        {showCheckbox && (
+        {context?.showCheckboxes && (
           <Checkbox className='iui-tree-node-checkbox' disabled={isDisabled} />
         )}
         <div className='iui-tree-node-content'>
@@ -130,30 +120,17 @@ export const TreeNode = (props: TreeNodeProps) => {
               className: cx('iui-tree-node-content-icon', icon.props.className),
             })}
           <span className='iui-tree-node-content-label'>
-            <div className='iui-tree-node-content-title'>{title}</div>
-            <div className='iui-tree-node-content-caption'>{caption}</div>
+            <div className='iui-tree-node-content-title'>{label}</div>
+            <div className='iui-tree-node-content-caption'>{sublabel}</div>
           </span>
         </div>
       </div>
       {children && expanded && (
         <ul className='iui-sub-tree' role='group'>
-          {React.Children.map(children, (node, index) =>
-            React.isValidElement(node) ? (
-              <TreeNode
-                key={index + node.props['title']}
-                title={node.props['title']}
-                caption={node.props['caption']}
-                onSelected={onSelected}
-                icon={node.props['icon']}
-                showCheckbox={showCheckbox}
-                isDisabled={node.props['isDisabled']}
-                depthLevel={depthLevel + 1}
-              >
-                {node.props['children']}
-              </TreeNode>
-            ) : (
-              node
-            ),
+          {React.Children.map(children, (node) =>
+            React.isValidElement(node)
+              ? React.cloneElement(node, { depthLevel: depthLevel + 1 })
+              : node,
           )}
         </ul>
       )}

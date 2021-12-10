@@ -3,9 +3,21 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { TreeNode } from './TreeNode';
 import { CommonProps, useTheme } from '../utils';
 import 'D:/itwinUI/iTwinUI/lib/css/tree.css'; //'@itwin/itwinui-css/css/tree.css';
+import cx from 'classnames';
+
+export const TreeContext = React.createContext<
+  | {
+      selectedNode?: React.ReactNode;
+      setSelectedNode: (
+        node: React.ReactNode | ((prev: React.ReactNode) => React.ReactNode),
+      ) => void;
+      onNodeSelected?: () => void;
+      showCheckboxes?: boolean;
+    }
+  | undefined
+>(undefined);
 
 export type TreeProps = {
   /**
@@ -30,31 +42,30 @@ export type TreeProps = {
  * Example usages go here!
  */
 export const Tree = (props: TreeProps) => {
-  const { onNodeSelected, showCheckboxes, children, ...rest } = props;
+  const {
+    onNodeSelected,
+    showCheckboxes,
+    children,
+    className,
+    ...rest
+  } = props;
   useTheme();
 
+  const [selectedNode, setSelectedNode] = React.useState('');
+
   return (
-    <div {...rest}>
-      <ul className='iui-tree' role='tree'>
-        {React.Children.map(children, (node, index) =>
-          React.isValidElement(node) ? (
-            <TreeNode
-              key={index + node.props['title']}
-              title={node.props['title']}
-              caption={node.props['caption']}
-              onSelected={onNodeSelected}
-              icon={node.props['icon']}
-              showCheckbox={showCheckboxes}
-              isDisabled={node.props['isDisabled']}
-            >
-              {node.props['children']}
-            </TreeNode>
-          ) : (
-            node
-          ),
-        )}
+    <TreeContext.Provider
+      value={{
+        selectedNode: selectedNode,
+        setSelectedNode: setSelectedNode,
+        onNodeSelected: onNodeSelected,
+        showCheckboxes: showCheckboxes,
+      }}
+    >
+      <ul className={cx('iui-tree', className)} role='tree' {...rest}>
+        {children}
       </ul>
-    </div>
+    </TreeContext.Provider>
   );
 };
 
