@@ -1547,6 +1547,7 @@ export const WithPaginator: Story<Partial<TableProps>> = (args) => {
         emptyTableContent='No data.'
         isSelectable
         isSortable
+        isStriped
         {...args}
         columns={columns}
         data={data}
@@ -1561,6 +1562,7 @@ export const WithPaginator: Story<Partial<TableProps>> = (args) => {
 WithPaginator.args = {
   isSelectable: true,
   isSortable: true,
+  isStriped: true,
 };
 
 WithPaginator.decorators = [

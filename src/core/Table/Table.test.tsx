@@ -2204,3 +2204,9 @@ it('should not render resizer when resizer is disabled', () => {
   const resizer = container.querySelector('.iui-resizer') as HTMLDivElement;
   expect(resizer).toBeFalsy();
 });
+
+it('should render zebra striped table', () => {
+  const { container } = renderComponent({ isStriped: true });
+
+  expect(container.querySelector('.iui-table.iui-zebra-striping')).toBeTruthy();
+});
