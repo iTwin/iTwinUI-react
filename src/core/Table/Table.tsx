@@ -547,7 +547,7 @@ export const Table = <
             'iui-table',
             {
               [`iui-${density}`]: density !== 'default',
-              ['iui-zebra-striping']: isStriped,
+              'iui-zebra-striping': isStriped,
             },
             className,
           ),
