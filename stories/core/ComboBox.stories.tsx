@@ -414,6 +414,6 @@ export const WithStatus: Story<Partial<ComboBoxProps<string>>> = (args) => {
   );
 };
 WithStatus.args = {
-  inputProps: { placeholder: 'Select a country' },
+  inputProps: { id: 'country-input', placeholder: 'Select a country' },
   status: 'negative',
 };
