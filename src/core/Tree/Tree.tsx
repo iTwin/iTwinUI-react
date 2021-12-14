@@ -10,13 +10,14 @@ import cx from 'classnames';
 export const TreeContext = React.createContext<
   | {
       selectedNode?: React.ReactNode;
-      setSelectedNode: (
+      setSelectedNode?: (
         node: React.ReactNode | ((prev: React.ReactNode) => React.ReactNode),
       ) => void;
       onNodeSelected?: () => void;
       onNodeExpanded?: () => void;
       checkbox?: React.ReactNode;
       onNodeCheckboxSelected?: () => void;
+      nodeDepth?: number;
     }
   | undefined
 >(undefined);

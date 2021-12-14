@@ -20,11 +20,6 @@ export type TreeNodeProps = {
    */
   sublabel?: React.ReactNode;
   /**
-   * Depth of node.
-   * @default 0
-   */
-  depthLevel?: number;
-  /**
    * Icon shown before title and caption content.
    */
   icon?: JSX.Element;
@@ -49,7 +44,6 @@ export const TreeNode = (props: TreeNodeProps) => {
   const {
     label,
     sublabel,
-    depthLevel = 0,
     children,
     style,
     className,
@@ -59,15 +53,17 @@ export const TreeNode = (props: TreeNodeProps) => {
   } = props;
   useTheme();
 
+  const context = React.useContext(TreeContext);
+  const currentDepth = context?.nodeDepth ?? 0;
+
   const styleLevel = React.useMemo(
     () =>
-      getWindow()?.CSS?.supports?.(`--level: ${depthLevel}`)
-        ? { '--level': depthLevel, ...style }
-        : { marginLeft: depthLevel ? depthLevel * 28 : 0, ...style },
-    [depthLevel, style],
+      getWindow()?.CSS?.supports?.(`--level: ${currentDepth}`)
+        ? { '--level': currentDepth, ...style }
+        : { marginLeft: currentDepth ? currentDepth * 28 : 0, ...style },
+    [currentDepth, style],
   );
 
-  const context = React.useContext(TreeContext);
   const [expanded, setExpanded] = React.useState(false);
   const [isChecked, setIsChecked] = React.useState(
     React.isValidElement(context?.checkbox)
@@ -92,9 +88,9 @@ export const TreeNode = (props: TreeNodeProps) => {
             return;
           }
           if (isSelected) {
-            context?.setSelectedNode('');
+            context?.setSelectedNode?.('');
           } else if (!isDisabled) {
-            context?.setSelectedNode(label);
+            context?.setSelectedNode?.(label);
             context?.onNodeSelected?.();
           }
         }}
@@ -140,11 +136,19 @@ export const TreeNode = (props: TreeNodeProps) => {
       </div>
       {children && expanded && (
         <ul className='iui-sub-tree' role='group'>
-          {React.Children.map(children, (node) =>
-            React.isValidElement(node)
-              ? React.cloneElement(node, { depthLevel: depthLevel + 1 })
-              : node,
-          )}
+          <TreeContext.Provider
+            value={{
+              selectedNode: context?.selectedNode,
+              setSelectedNode: context?.setSelectedNode,
+              onNodeSelected: context?.onNodeSelected,
+              onNodeExpanded: context?.onNodeExpanded,
+              checkbox: context?.checkbox,
+              onNodeCheckboxSelected: context?.onNodeCheckboxSelected,
+              nodeDepth: currentDepth + 1,
+            }}
+          >
+            {React.Children.map(children, (node) => node)}
+          </TreeContext.Provider>
         </ul>
       )}
     </li>
