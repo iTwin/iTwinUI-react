@@ -545,9 +545,7 @@ export const Table = <
         {...getTableProps({
           className: cx(
             'iui-table',
-            {
-              [`iui-${density}`]: density !== 'default',
-            },
+            { [`iui-${density}`]: density !== 'default' },
             className,
           ),
           style,
