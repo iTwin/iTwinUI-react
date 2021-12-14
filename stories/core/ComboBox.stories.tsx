@@ -402,10 +402,10 @@ export const WithStatus: Story<Partial<ComboBoxProps<string>>> = (args) => {
       status={args.status ?? 'negative'}
       message='Country is required.'
     >
-      <Label>Country</Label>
+      <Label htmlFor='country-input'>Country</Label>
       <ComboBox
         options={options}
-        inputProps={{ placeholder: 'Select a country' }}
+        inputProps={{ id: 'country-input', placeholder: 'Select a country' }}
         onChange={(value: string) => action(value ?? '')()}
         status='negative'
         {...args}
