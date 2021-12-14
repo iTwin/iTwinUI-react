@@ -5,7 +5,13 @@
 import { Story, Meta } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import React from 'react';
-import { ComboBox, ComboBoxProps, Label, SelectOption } from '../../src/core';
+import {
+  ComboBox,
+  ComboBoxProps,
+  InputGroup,
+  Label,
+  SelectOption,
+} from '../../src/core';
 import { CreeveyStoryParams } from 'creevey';
 
 export default {
@@ -392,13 +398,19 @@ export const WithStatus: Story<Partial<ComboBoxProps<string>>> = (args) => {
   const options = React.useMemo(() => countriesList, []);
 
   return (
-    <ComboBox
-      options={options}
-      inputProps={{ placeholder: 'Select a country' }}
-      onChange={(value: string) => action(value ?? '')()}
-      status='negative'
-      {...args}
-    />
+    <InputGroup
+      status={args.status ?? 'negative'}
+      message='Country is required.'
+    >
+      <Label>Country</Label>
+      <ComboBox
+        options={options}
+        inputProps={{ placeholder: 'Select a country' }}
+        onChange={(value: string) => action(value ?? '')()}
+        status='negative'
+        {...args}
+      />
+    </InputGroup>
   );
 };
 WithStatus.args = {
