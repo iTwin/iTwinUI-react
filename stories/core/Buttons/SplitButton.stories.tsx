@@ -17,7 +17,6 @@ export default {
   },
   parameters: {
     creevey: {
-      captureElement: null,
       tests: {
         async open() {
           const button = await this.browser.findElement({
@@ -31,7 +30,11 @@ export default {
         },
       },
     },
+    docs: {
+      source: { excludeDecorators: true },
+    },
   },
+  decorators: [(Story) => <div style={{ minHeight: 150 }}>{Story()}</div>],
 } as Meta<SplitButtonProps> & CreeveyMeta;
 
 export const Basic: Story<SplitButtonProps> = (args) => {
