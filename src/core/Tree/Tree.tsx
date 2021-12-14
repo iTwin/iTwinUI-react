@@ -14,7 +14,9 @@ export const TreeContext = React.createContext<
         node: React.ReactNode | ((prev: React.ReactNode) => React.ReactNode),
       ) => void;
       onNodeSelected?: () => void;
-      showCheckboxes?: boolean;
+      onNodeExpanded?: () => void;
+      checkbox?: React.ReactNode;
+      onNodeCheckboxSelected?: () => void;
     }
   | undefined
 >(undefined);
@@ -25,10 +27,18 @@ export type TreeProps = {
    */
   onNodeSelected?: () => void;
   /**
-   * Should Tree show checkboxes before TreeNodes.
-   * @default false
+   * Callback fired when expanding a TreeNode.
    */
-  showCheckboxes?: boolean;
+  onNodeExpanded?: () => void;
+  /**
+   * Callback fired when checking a TreeNode's checkbox.
+   */
+  onNodeCheckboxSelected?: () => void;
+  /**
+   * Checkbox to be shown before TreeNodes, if undefined checkbox will not be shown.
+   * Recommended to use Checkbox component.
+   */
+  checkbox?: React.ReactNode;
   /**
    * Items inside tree.
    * Recommended to use TreeNode component.
@@ -44,7 +54,9 @@ export type TreeProps = {
 export const Tree = (props: TreeProps) => {
   const {
     onNodeSelected,
-    showCheckboxes,
+    onNodeExpanded,
+    checkbox,
+    onNodeCheckboxSelected,
     children,
     className,
     ...rest
@@ -56,10 +68,12 @@ export const Tree = (props: TreeProps) => {
   return (
     <TreeContext.Provider
       value={{
-        selectedNode: selectedNode,
-        setSelectedNode: setSelectedNode,
-        onNodeSelected: onNodeSelected,
-        showCheckboxes: showCheckboxes,
+        selectedNode,
+        setSelectedNode,
+        onNodeSelected,
+        onNodeExpanded,
+        checkbox,
+        onNodeCheckboxSelected,
       }}
     >
       <ul className={cx('iui-tree', className)} role='tree' {...rest}>

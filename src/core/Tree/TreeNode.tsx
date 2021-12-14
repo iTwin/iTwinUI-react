@@ -7,7 +7,6 @@ import { CommonProps, getWindow, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/tree.css';
 import { SvgChevronRight } from '@itwin/itwinui-icons-react';
 import { IconButton } from '../Buttons/IconButton';
-import { Checkbox } from '../Checkbox/Checkbox';
 import cx from 'classnames';
 import { TreeContext } from './Tree';
 
@@ -60,7 +59,7 @@ export const TreeNode = (props: TreeNodeProps) => {
   } = props;
   useTheme();
 
-  const style_level = React.useMemo(
+  const styleLevel = React.useMemo(
     () =>
       getWindow()?.CSS?.supports?.(`--level: ${depthLevel}`)
         ? { '--level': depthLevel, ...style }
@@ -70,6 +69,11 @@ export const TreeNode = (props: TreeNodeProps) => {
 
   const context = React.useContext(TreeContext);
   const [expanded, setExpanded] = React.useState(false);
+  const [isChecked, setIsChecked] = React.useState(
+    React.isValidElement(context?.checkbox)
+      ? context?.checkbox.props['checked']
+      : false,
+  );
   const isSelected = React.useMemo(() => {
     return context?.selectedNode === label;
   }, [context?.selectedNode, label]);
@@ -82,7 +86,7 @@ export const TreeNode = (props: TreeNodeProps) => {
           'iui-disabled': isDisabled,
           className,
         })}
-        style={style_level}
+        style={styleLevel}
         onClick={(e) => {
           if (e.currentTarget != e.target) {
             return;
@@ -95,9 +99,17 @@ export const TreeNode = (props: TreeNodeProps) => {
           }
         }}
       >
-        {context?.showCheckboxes && (
-          <Checkbox className='iui-tree-node-checkbox' disabled={isDisabled} />
-        )}
+        {context?.checkbox && React.isValidElement(context?.checkbox)
+          ? React.cloneElement(context?.checkbox, {
+              className: 'iui-tree-node-checkbox',
+              disabled: isDisabled,
+              checked: isChecked,
+              onClick: () => {
+                setIsChecked(!isChecked);
+                context.onNodeCheckboxSelected?.();
+              },
+            })
+          : context?.checkbox}
         <div className='iui-tree-node-content'>
           {children && (
             <IconButton
@@ -105,6 +117,7 @@ export const TreeNode = (props: TreeNodeProps) => {
               size='small'
               onClick={() => {
                 setExpanded(!expanded);
+                context?.onNodeExpanded?.();
               }}
               disabled={isDisabled}
             >
