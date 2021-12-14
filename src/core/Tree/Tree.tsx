@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { CommonProps, useTheme } from '../utils';
-import 'D:/itwinUI/iTwinUI/lib/css/tree.css'; //'@itwin/itwinui-css/css/tree.css';
+import '@itwin/itwinui-css/css/tree.css';
 import cx from 'classnames';
 
 export const TreeContext = React.createContext<

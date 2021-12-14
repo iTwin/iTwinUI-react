@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { CommonProps, getWindow, useTheme } from '../utils';
-import 'D:/itwinUI/iTwinUI/lib/css/tree.css'; //'@itwin/itwinui-css/css/tree.css';
+import '@itwin/itwinui-css/css/tree.css';
 import { SvgChevronRight } from '@itwin/itwinui-icons-react';
 import { IconButton } from '../Buttons/IconButton';
 import { Checkbox } from '../Checkbox/Checkbox';
