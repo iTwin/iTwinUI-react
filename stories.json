@@ -564,6 +564,15 @@
         "__id": "input-checkbox--loading"
       }
     },
+    "input-checkbox--visibility": {
+      "id": "input-checkbox--visibility",
+      "name": "Visibility",
+      "kind": "Input/Checkbox",
+      "story": "Visibility",
+      "parameters": {
+        "__id": "input-checkbox--visibility"
+      }
+    },
     "core-colorpicker--basic": {
       "id": "core-colorpicker--basic",
       "name": "Basic",
@@ -625,6 +634,15 @@
       "story": "With Label",
       "parameters": {
         "__id": "core-combobox--with-label"
+      }
+    },
+    "core-combobox--with-status": {
+      "id": "core-combobox--with-status",
+      "name": "With Status",
+      "kind": "Core/ComboBox",
+      "story": "With Status",
+      "parameters": {
+        "__id": "core-combobox--with-status"
       }
     },
     "core-datepicker--basic": {
@@ -1759,6 +1777,15 @@
       "story": "With Manual Paginator",
       "parameters": {
         "__id": "core-table--with-manual-paginator"
+      }
+    },
+    "core-table--resizable-columns": {
+      "id": "core-table--resizable-columns",
+      "name": "Resizable Columns",
+      "kind": "Core/Table",
+      "story": "Resizable Columns",
+      "parameters": {
+        "__id": "core-table--resizable-columns"
       }
     },
     "core-tabs--default-tabs": {
