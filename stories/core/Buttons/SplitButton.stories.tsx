@@ -21,7 +21,7 @@ export default {
       tests: {
         async open() {
           const button = await this.browser.findElement({
-            css: '.iui-button:last-child',
+            css: '.iui-button-split-menu > *:last-child > .iui-button',
           });
           const closed = await this.takeScreenshot();
 
