@@ -547,7 +547,6 @@ export const Table = <
             'iui-table',
             {
               [`iui-${density}`]: density !== 'default',
-              'iui-zebra-striping': isStriped,
             },
             className,
           ),
@@ -637,7 +636,9 @@ export const Table = <
         </div>
         <div
           {...getTableBodyProps({
-            className: 'iui-table-body',
+            className: cx('iui-table-body', {
+              'iui-zebra-striping': isStriped,
+            }),
           })}
         >
           {data.length !== 0 &&

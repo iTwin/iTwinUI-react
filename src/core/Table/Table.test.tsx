@@ -2208,5 +2208,7 @@ it('should not render resizer when resizer is disabled', () => {
 it('should render zebra striped table', () => {
   const { container } = renderComponent({ isStriped: true });
 
-  expect(container.querySelector('.iui-table.iui-zebra-striping')).toBeTruthy();
+  expect(
+    container.querySelector('.iui-table-body.iui-zebra-striping'),
+  ).toBeTruthy();
 });
