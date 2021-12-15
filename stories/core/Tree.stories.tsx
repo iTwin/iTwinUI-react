@@ -18,8 +18,11 @@ export default {
 } as Meta<TreeProps>;
 
 export const Basic: Story<TreeProps> = (args) => {
-  const onSelectedNodeChange = () => {
-    action(`Selected a node`)();
+  const onSelectedNodeChange = (
+    event: React.SyntheticEvent,
+    nodeIds: React.ReactNode[],
+  ) => {
+    action(`Selected node ` + nodeIds[0])();
   };
   const onNodeExpanded = () => {
     action(`Expanded a node`)();
@@ -35,33 +38,42 @@ export const Basic: Story<TreeProps> = (args) => {
         label='Node 1'
         sublabel='Node Caption'
         icon={<SvgPlaceholder />}
+        nodeId='1'
       >
-        <TreeNode label='Node 1.1' />
+        <TreeNode label='Node 1.1' nodeId='1.1' />
       </TreeNode>
-      <TreeNode label='Node 2'>
-        <TreeNode label='Node 2.1' icon={<SvgPlaceholder />}>
+      <TreeNode label='Node 2' nodeId='2'>
+        <TreeNode label='Node 2.1' icon={<SvgPlaceholder />} nodeId='2.1'>
           <TreeNode
             label={'Node 2.1.1'}
             sublabel='Node Caption'
             isDisabled={true}
+            nodeId='2.1.1'
           />
         </TreeNode>
-        <TreeNode label='Node 2.2'>
-          <TreeNode label='Node 2.2.1'>
-            <TreeNode label={'Node 2.2.1.1'} sublabel='Node Caption' />
+        <TreeNode label='Node 2.2' nodeId='2.2'>
+          <TreeNode label='Node 2.2.1' nodeId='2.2.1'>
+            <TreeNode
+              label={'Node 2.2.1.1'}
+              sublabel='Node Caption'
+              nodeId='2.2.1.1'
+            />
           </TreeNode>
         </TreeNode>
       </TreeNode>
-      <TreeNode label='Node 3' isDisabled={true}>
-        <TreeNode label={'Node 3.1'} sublabel='Node Caption' />
+      <TreeNode label='Node 3' isDisabled={true} nodeId='3'>
+        <TreeNode label={'Node 3.1'} sublabel='Node Caption' nodeId='3.1' />
       </TreeNode>
     </Tree>
   );
 };
 
 export const WithCheckbox: Story<TreeProps> = (args) => {
-  const onSelectedNodeChange = () => {
-    action(`Selected a node`)();
+  const onSelectedNodeChange = (
+    event: React.SyntheticEvent,
+    nodeIds: React.ReactNode[],
+  ) => {
+    action(`Selected node ` + nodeIds[0])();
   };
   const onNodeExpanded = () => {
     action(`Expanded a node`)();
@@ -79,28 +91,102 @@ export const WithCheckbox: Story<TreeProps> = (args) => {
       {...args}
     >
       <TreeNode
-        label='Node 1'
+        label='Facility 1'
         sublabel='Node Caption'
         icon={<SvgPlaceholder />}
+        nodeId='1'
       >
-        <TreeNode label='Node 1.1' />
+        <TreeNode label='Unit 1' nodeId='1.1' />
       </TreeNode>
-      <TreeNode label='Node 2'>
-        <TreeNode label='Node 2.1' icon={<SvgPlaceholder />}>
+      <TreeNode label='Facility 2' nodeId='2'>
+        <TreeNode label='Unit 1' icon={<SvgPlaceholder />} nodeId='2.1'>
           <TreeNode
-            label={'Node 2.1.1'}
+            label={'System A'}
             sublabel='Node Caption'
             isDisabled={true}
+            nodeId='2.1.1'
           />
         </TreeNode>
-        <TreeNode label='Node 2.2'>
-          <TreeNode label='Node 2.2.1'>
-            <TreeNode label={'Node 2.2.1.1'} sublabel='Node Caption' />
+        <TreeNode label='Unit 2' nodeId='2.2'>
+          <TreeNode label='System A' nodeId='2.2.1'>
+            <TreeNode
+              label={'Subsystem'}
+              sublabel='Node Caption'
+              nodeId='2.2.1.1'
+            />
+            <TreeNode label={'Subsystem'} nodeId='2.2.1.2' />
+          </TreeNode>
+          <TreeNode label='System B' nodeId='2.2.2'>
+            <TreeNode
+              label={'Subsystem'}
+              sublabel='Node Caption'
+              nodeId='2.2.2.1'
+            />
           </TreeNode>
         </TreeNode>
       </TreeNode>
-      <TreeNode label='Node 3' isDisabled={true}>
-        <TreeNode label={'Node 3.1'} sublabel='Node Caption' />
+      <TreeNode label='Facility 3' isDisabled={true} nodeId='3'>
+        <TreeNode label={'Unit 1'} sublabel='Node Caption' nodeId='3.1' />
+      </TreeNode>
+    </Tree>
+  );
+};
+
+export const Multiselection: Story<TreeProps> = (args) => {
+  const onSelectedNodeChange = (
+    event: React.SyntheticEvent,
+    nodeIds: React.ReactNode[],
+  ) => {
+    action(`Selected ` + nodeIds[nodeIds.length - 1])();
+  };
+  const onNodeExpanded = () => {
+    action(`Expanded a node`)();
+  };
+
+  return (
+    <Tree
+      onNodeSelected={onSelectedNodeChange}
+      onNodeExpanded={onNodeExpanded}
+      selectionType='multi'
+      {...args}
+    >
+      <TreeNode
+        label='Facility 1'
+        sublabel='Node Caption'
+        icon={<SvgPlaceholder />}
+        nodeId='1'
+      >
+        <TreeNode label='Unit 1' nodeId='1.1' />
+      </TreeNode>
+      <TreeNode label='Facility 2' nodeId='2'>
+        <TreeNode label='Unit 1' icon={<SvgPlaceholder />} nodeId='2.1'>
+          <TreeNode
+            label={'System A'}
+            sublabel='Node Caption'
+            isDisabled={true}
+            nodeId='2.1.1'
+          />
+        </TreeNode>
+        <TreeNode label='Unit 2' nodeId='2.2'>
+          <TreeNode label='System A' nodeId='2.2.1'>
+            <TreeNode
+              label={'Subsystem'}
+              sublabel='Node Caption'
+              nodeId='2.2.1.1'
+            />
+            <TreeNode label={'Subsystem'} nodeId='2.2.1.2' />
+          </TreeNode>
+          <TreeNode label='System B' nodeId='2.2.2'>
+            <TreeNode
+              label={'Subsystem'}
+              sublabel='Node Caption'
+              nodeId='2.2.2.1'
+            />
+          </TreeNode>
+        </TreeNode>
+      </TreeNode>
+      <TreeNode label='Facility 3' isDisabled={true} nodeId='3'>
+        <TreeNode label={'Unit 1'} sublabel='Node Caption' nodeId='3.1' />
       </TreeNode>
     </Tree>
   );

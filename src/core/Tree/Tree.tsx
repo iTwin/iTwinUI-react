@@ -9,15 +9,19 @@ import cx from 'classnames';
 
 export const TreeContext = React.createContext<
   | {
-      selectedNode?: React.ReactNode;
+      selectedNodes?: Array<string>;
       setSelectedNode?: (
-        node: React.ReactNode | ((prev: React.ReactNode) => React.ReactNode),
+        node: Array<string> | ((prev: Array<string>) => Array<string>),
       ) => void;
-      onNodeSelected?: () => void;
+      onNodeSelected?: (
+        event: React.SyntheticEvent,
+        nodeIds: Array<string>,
+      ) => void;
       onNodeExpanded?: () => void;
       checkbox?: React.ReactNode;
       onNodeCheckboxSelected?: () => void;
       nodeDepth?: number;
+      selectionType?: 'single' | 'multi' | 'none';
     }
   | undefined
 >(undefined);
@@ -26,7 +30,10 @@ export type TreeProps = {
   /**
    * Callback fired when selecting a TreeNode.
    */
-  onNodeSelected?: () => void;
+  onNodeSelected?: (
+    event: React.SyntheticEvent,
+    nodeIds: Array<string>,
+  ) => void;
   /**
    * Callback fired when expanding a TreeNode.
    */
@@ -40,6 +47,14 @@ export type TreeProps = {
    * Recommended to use Checkbox component.
    */
   checkbox?: React.ReactNode;
+  /**
+   * Type of selection for Tree.
+   * Single allows only 1 TreeNode to be selected at a time.
+   * Multi allows multiple TreeNodes to be selected.
+   * None does not allow selection of TreeNodes.
+   * @default single
+   */
+  selectionType?: 'single' | 'multi' | 'none';
   /**
    * Items inside tree.
    * Recommended to use TreeNode component.
@@ -58,23 +73,25 @@ export const Tree = (props: TreeProps) => {
     onNodeExpanded,
     checkbox,
     onNodeCheckboxSelected,
+    selectionType = 'single',
     children,
     className,
     ...rest
   } = props;
   useTheme();
 
-  const [selectedNode, setSelectedNode] = React.useState('');
+  const [selectedNodes, setSelectedNode] = React.useState<Array<string>>();
 
   return (
     <TreeContext.Provider
       value={{
-        selectedNode,
+        selectedNodes,
         setSelectedNode,
         onNodeSelected,
         onNodeExpanded,
         checkbox,
         onNodeCheckboxSelected,
+        selectionType,
       }}
     >
       <ul className={cx('iui-tree', className)} role='tree' {...rest}>

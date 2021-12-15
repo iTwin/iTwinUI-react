@@ -12,6 +12,10 @@ import { TreeContext } from './Tree';
 
 export type TreeNodeProps = {
   /**
+   * Unique id for TreeNode.
+   */
+  nodeId: string;
+  /**
    * The main text displayed on the node.
    */
   label: React.ReactNode;
@@ -42,6 +46,7 @@ export type TreeNodeProps = {
  */
 export const TreeNode = (props: TreeNodeProps) => {
   const {
+    nodeId,
     label,
     sublabel,
     children,
@@ -70,9 +75,51 @@ export const TreeNode = (props: TreeNodeProps) => {
       ? context?.checkbox.props['checked']
       : false,
   );
+
+  const selectedNodes = React.useMemo(() => {
+    let nodes = Array<string>();
+    if (context?.selectionType === 'single' && context?.selectedNodes?.[0]) {
+      nodes = [context?.selectedNodes?.[0]];
+    } else if (context?.selectionType === 'multi') {
+      nodes = context?.selectedNodes ?? [];
+    }
+    return nodes;
+  }, [context?.selectedNodes, context?.selectionType]);
+
   const isSelected = React.useMemo(() => {
-    return context?.selectedNode === label;
-  }, [context?.selectedNode, label]);
+    let selected = false;
+    selectedNodes?.forEach((node) => {
+      if (node === nodeId) {
+        selected = true;
+      }
+    });
+    return selected;
+  }, [selectedNodes, nodeId]);
+
+  const onNodeClick = (e: React.SyntheticEvent<Element, Event>) => {
+    if (context?.selectionType === 'none' || isDisabled) {
+      return;
+    } else if (context?.selectionType === 'single') {
+      if (isSelected) {
+        context?.setSelectedNode?.([]);
+        return;
+      }
+      context?.setSelectedNode?.([nodeId]);
+      context?.onNodeSelected?.(e, [nodeId]);
+    } else if (context?.selectionType === 'multi') {
+      const nodes = Array<string>();
+      selectedNodes?.forEach((node) => {
+        if (node != nodeId) {
+          nodes.push(node);
+        }
+      });
+      if (!isSelected) {
+        nodes.push(nodeId);
+        context?.onNodeSelected?.(e, nodes);
+      }
+      context?.setSelectedNode?.(nodes);
+    }
+  };
 
   return (
     <li role='treeitem' aria-expanded={expanded} {...rest}>
@@ -83,17 +130,7 @@ export const TreeNode = (props: TreeNodeProps) => {
           className,
         })}
         style={styleLevel}
-        onClick={(e) => {
-          if (e.currentTarget != e.target) {
-            return;
-          }
-          if (isSelected) {
-            context?.setSelectedNode?.('');
-          } else if (!isDisabled) {
-            context?.setSelectedNode?.(label);
-            context?.onNodeSelected?.();
-          }
-        }}
+        onClick={(e) => onNodeClick(e)}
       >
         {context?.checkbox && React.isValidElement(context?.checkbox)
           ? React.cloneElement(context?.checkbox, {
@@ -111,9 +148,10 @@ export const TreeNode = (props: TreeNodeProps) => {
             <IconButton
               styleType='borderless'
               size='small'
-              onClick={() => {
+              onClick={(e) => {
                 setExpanded(!expanded);
                 context?.onNodeExpanded?.();
+                e.stopPropagation();
               }}
               disabled={isDisabled}
             >
@@ -138,16 +176,11 @@ export const TreeNode = (props: TreeNodeProps) => {
         <ul className='iui-sub-tree' role='group'>
           <TreeContext.Provider
             value={{
-              selectedNode: context?.selectedNode,
-              setSelectedNode: context?.setSelectedNode,
-              onNodeSelected: context?.onNodeSelected,
-              onNodeExpanded: context?.onNodeExpanded,
-              checkbox: context?.checkbox,
-              onNodeCheckboxSelected: context?.onNodeCheckboxSelected,
+              ...context,
               nodeDepth: currentDepth + 1,
             }}
           >
-            {React.Children.map(children, (node) => node)}
+            {children}
           </TreeContext.Provider>
         </ul>
       )}
