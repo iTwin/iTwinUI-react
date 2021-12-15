@@ -217,7 +217,7 @@ export type TableProps<
    * Style of the table.
    * @default 'default'
    */
-  styleType?: 'default' | 'zebra';
+  styleType?: 'default' | 'zebra-rows';
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -635,7 +635,7 @@ export const Table = <
         <div
           {...getTableBodyProps({
             className: cx('iui-table-body', {
-              'iui-zebra-striping': styleType === 'zebra',
+              'iui-zebra-striping': styleType === 'zebra-rows',
             }),
           })}
         >

@@ -1816,7 +1816,7 @@ ResizableColumns.args = {
   ],
 };
 
-export const ZebraStriped: Story<Partial<TableProps>> = (args) => {
+export const ZebraStripedRows: Story<Partial<TableProps>> = (args) => {
   const columns = useMemo(
     () => [
       {
@@ -1878,7 +1878,7 @@ export const ZebraStriped: Story<Partial<TableProps>> = (args) => {
         emptyTableContent='No data.'
         isSelectable
         isSortable
-        styleType='zebra'
+        styleType='zebra-rows'
         {...args}
         columns={columns}
         data={data}
@@ -1888,8 +1888,8 @@ export const ZebraStriped: Story<Partial<TableProps>> = (args) => {
   );
 };
 
-ZebraStriped.args = {
+ZebraStripedRows.args = {
   isSelectable: true,
   isSortable: true,
-  styleType: 'zebra',
+  styleType: 'zebra-rows',
 };
