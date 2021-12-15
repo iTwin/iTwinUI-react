@@ -214,10 +214,10 @@ export type TableProps<
    */
   isResizable?: boolean;
   /**
-   * Use to have zebra-striped table rows.
-   * @default false
+   * Style of the table.
+   * @default 'default'
    */
-  isStriped?: boolean;
+  styleType?: 'default' | 'zebra';
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -299,7 +299,7 @@ export const Table = <
     paginatorRenderer,
     pageSize = 25,
     isResizable = false,
-    isStriped = false,
+    styleType = 'default',
     ...rest
   } = props;
 
@@ -635,7 +635,7 @@ export const Table = <
         <div
           {...getTableBodyProps({
             className: cx('iui-table-body', {
-              'iui-zebra-striping': isStriped,
+              'iui-zebra-striping': styleType === 'zebra',
             }),
           })}
         >

@@ -1547,7 +1547,6 @@ export const WithPaginator: Story<Partial<TableProps>> = (args) => {
         emptyTableContent='No data.'
         isSelectable
         isSortable
-        isStriped
         {...args}
         columns={columns}
         data={data}
@@ -1562,7 +1561,6 @@ export const WithPaginator: Story<Partial<TableProps>> = (args) => {
 WithPaginator.args = {
   isSelectable: true,
   isSortable: true,
-  isStriped: true,
 };
 
 WithPaginator.decorators = [
@@ -1816,4 +1814,82 @@ ResizableColumns.args = {
       endDate: new Date('Jun 3, 2021'),
     },
   ],
+};
+
+export const ZebraStriped: Story<Partial<TableProps>> = (args) => {
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+            Filter: tableFilters.TextFilter(),
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+            Filter: tableFilters.TextFilter(),
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  type TableStoryDataType = {
+    name: string;
+    description: string;
+    subRows: TableStoryDataType[];
+  };
+
+  const generateItem = useCallback(
+    (index: number, parentRow = '', depth = 0): TableStoryDataType => {
+      const keyValue = parentRow ? `${parentRow}.${index}` : `${index}`;
+      return {
+        name: `Name ${keyValue}`,
+        description: `Description ${keyValue}`,
+        subRows:
+          depth < 2
+            ? Array(Math.round(index % 5))
+                .fill(null)
+                .map((_, index) => generateItem(index, keyValue, depth + 1))
+            : [],
+      };
+    },
+    [],
+  );
+
+  const data = useMemo(
+    () =>
+      Array(20)
+        .fill(null)
+        .map((_, index) => generateItem(index)),
+    [generateItem],
+  );
+
+  return (
+    <>
+      <Table
+        emptyTableContent='No data.'
+        isSelectable
+        isSortable
+        styleType='zebra'
+        {...args}
+        columns={columns}
+        data={data}
+        style={{ height: '100%' }}
+      />
+    </>
+  );
+};
+
+ZebraStriped.args = {
+  isSelectable: true,
+  isSortable: true,
+  styleType: 'zebra',
 };
