@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.27.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.27.0...v1.27.1) (2021-12-16)
+
+
+### Fixes
+
+* **Table:** Prevents from triggering sort when filtering ([#487](https://www.github.com/iTwin/iTwinUI-react/issues/487)) ([d1e6165](https://www.github.com/iTwin/iTwinUI-react/commit/d1e61655bddffc37fa3f91b95766145f18392844))
+
 ## [1.27.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.26.1...v1.27.0) (2021-12-14)
 
 ### What's new
