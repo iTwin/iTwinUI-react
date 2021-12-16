@@ -38,6 +38,7 @@ export const BaseFilter = (props: BaseFilterProps) => {
     <div
       className={cx('iui-column-filter', className)}
       style={style}
+      // Prevents from triggering sort
       onMouseDown={(e: React.MouseEvent) => {
         e.stopPropagation();
       }}

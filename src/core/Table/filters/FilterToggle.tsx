@@ -59,6 +59,7 @@ export const FilterToggle = <T extends Record<string, unknown>>(
             onClick={() => {
               setIsVisible((v) => !v);
             }}
+            // Prevents from triggering sort
             onMouseDown={(e) => e.stopPropagation()}
             {...rest}
           >
