@@ -131,6 +131,7 @@ export const TreeNode = (props: TreeNodeProps) => {
         })}
         style={styleLevel}
         onClick={(e) => onNodeClick(e)}
+        tabIndex={isSelected ? 0 : -1}
       >
         {context?.checkbox && React.isValidElement(context?.checkbox)
           ? React.cloneElement(context?.checkbox, {

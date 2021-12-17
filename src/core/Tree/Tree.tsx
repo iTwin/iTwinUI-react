@@ -80,6 +80,73 @@ export const Tree = (props: TreeProps) => {
   } = props;
   useTheme();
 
+  const treeRef = React.useRef<HTMLUListElement>(null);
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLUListElement>) => {
+    const nodes: Array<HTMLElement> = Array.from(
+      treeRef.current?.querySelectorAll('.iui-tree-node:not(.iui-disabled)') ||
+        [],
+    );
+
+    if (!nodes.length) {
+      return;
+    }
+
+    let newIndex = -1;
+    const currentIndex = nodes.findIndex(
+      (node) => node === treeRef.current?.ownerDocument.activeElement,
+    );
+
+    const expander = nodes[currentIndex].querySelector(
+      '.iui-tree-node-content-expander-icon',
+    ) as HTMLElement;
+
+    switch (event.key) {
+      case 'ArrowDown': {
+        newIndex = currentIndex + 1;
+        break;
+      }
+      case 'ArrowUp': {
+        newIndex = currentIndex - 1;
+        break;
+      }
+      case 'ArrowLeft':
+        if (
+          expander === null ||
+          !expander?.classList.contains(
+            'iui-tree-node-content-expander-icon-expanded',
+          )
+        ) {
+          newIndex = currentIndex - 1;
+        } else {
+          expander.parentElement?.click();
+        }
+        break;
+      case 'ArrowRight':
+        if (
+          expander === null ||
+          expander?.classList.contains(
+            'iui-tree-node-content-expander-icon-expanded',
+          )
+        ) {
+          newIndex = currentIndex + 1;
+        } else {
+          expander.parentElement?.click();
+          return;
+        }
+        break;
+      case 'Enter':
+      case ' ':
+      case 'Spacebar':
+        nodes[currentIndex].click();
+        return;
+    }
+
+    if (newIndex >= 0 && newIndex < nodes.length) {
+      nodes[newIndex].focus();
+    }
+  };
+
   const [selectedNodes, setSelectedNode] = React.useState<Array<string>>();
 
   return (
@@ -94,7 +161,13 @@ export const Tree = (props: TreeProps) => {
         selectionType,
       }}
     >
-      <ul className={cx('iui-tree', className)} role='tree' {...rest}>
+      <ul
+        className={cx('iui-tree', className)}
+        role='tree'
+        onKeyDown={handleKeyDown}
+        ref={treeRef}
+        {...rest}
+      >
         {children}
       </ul>
     </TreeContext.Provider>
