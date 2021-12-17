@@ -25,14 +25,14 @@ afterEach(() => {
 });
 
 it('should respect os theme (light)', () => {
-  window.matchMedia = jest.fn().mockReturnValue({ matches: false });
+  window.matchMedia = jest.fn().mockReturnValueOnce({ matches: false });
 
   render(<ThemeProvider theme='os' />);
   expectLightTheme();
 });
 
 it('should respect os theme (dark)', () => {
-  window.matchMedia = jest.fn().mockReturnValue({ matches: true });
+  window.matchMedia = jest.fn().mockReturnValueOnce({ matches: true });
 
   render(<ThemeProvider theme='os' />);
   expectDarkTheme();
