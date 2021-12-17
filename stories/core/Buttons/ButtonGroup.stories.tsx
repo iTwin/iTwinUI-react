@@ -4,10 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import {
+  Button,
   ButtonGroup,
   ButtonGroupProps,
   DropdownMenu,
   IconButton,
+  Input,
   MenuItem,
   Text,
 } from '../../../src/core';
@@ -119,3 +121,24 @@ Overflow.parameters = {
     ignoreElements: ['small'],
   } as CreeveyStoryParams,
 };
+
+export const InputButtonCombo: Story<ButtonGroupProps> = (args) => {
+  return (
+    <ButtonGroup {...args}>
+      <Input
+        defaultValue={window.location.toString()}
+        readOnly
+        style={{ minWidth: '30ch' }}
+      />
+      <Button
+        onClick={async () => {
+          await navigator.clipboard.writeText(window.location.toString());
+          action('Copied current url to clipboard');
+        }}
+      >
+        Copy
+      </Button>
+    </ButtonGroup>
+  );
+};
+InputButtonCombo.parameters = {};
