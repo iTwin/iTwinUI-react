@@ -40,6 +40,19 @@ export const useTheme = (
       return;
     }
 
+    const prefersDarkMediaQuery = getWindow()?.matchMedia?.(
+      '(prefers-color-scheme: dark)',
+    );
+    const addPreferredTheme = ({
+      matches: isDark,
+    }: MediaQueryList | MediaQueryListEvent) => {
+      if (isDark) {
+        addDarkTheme(ownerDocument);
+      } else {
+        addLightTheme(ownerDocument);
+      }
+    };
+
     switch (theme) {
       case 'light':
         addLightTheme(ownerDocument);
@@ -48,8 +61,9 @@ export const useTheme = (
         addDarkTheme(ownerDocument);
         break;
       case 'os':
-        if (getWindow()?.matchMedia?.('(prefers-color-scheme: dark)').matches) {
-          addDarkTheme(ownerDocument);
+        if (prefersDarkMediaQuery != undefined) {
+          addPreferredTheme(prefersDarkMediaQuery);
+          prefersDarkMediaQuery.addEventListener('change', addPreferredTheme);
         } else {
           addLightTheme(ownerDocument);
         }
@@ -61,6 +75,10 @@ export const useTheme = (
           addLightTheme(ownerDocument);
         }
     }
+
+    return () => {
+      prefersDarkMediaQuery?.removeEventListener('change', addPreferredTheme);
+    };
   }, [ownerDocument, theme]);
 };
 
