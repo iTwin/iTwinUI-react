@@ -43,7 +43,8 @@ export const useTheme = (
     const prefersDarkMediaQuery = getWindow()?.matchMedia?.(
       '(prefers-color-scheme: dark)',
     );
-    const addPreferredTheme = ({
+
+    const addOSTheme = ({
       matches: isDark,
     }: MediaQueryList | MediaQueryListEvent) => {
       if (isDark) {
@@ -55,15 +56,17 @@ export const useTheme = (
 
     switch (theme) {
       case 'light':
+        prefersDarkMediaQuery?.removeEventListener?.('change', addOSTheme);
         addLightTheme(ownerDocument);
         break;
       case 'dark':
+        prefersDarkMediaQuery?.removeEventListener?.('change', addOSTheme);
         addDarkTheme(ownerDocument);
         break;
       case 'os':
         if (prefersDarkMediaQuery != undefined) {
-          addPreferredTheme(prefersDarkMediaQuery);
-          prefersDarkMediaQuery.addEventListener?.('change', addPreferredTheme);
+          addOSTheme(prefersDarkMediaQuery);
+          prefersDarkMediaQuery.addEventListener?.('change', addOSTheme);
         } else {
           addLightTheme(ownerDocument);
         }
@@ -77,7 +80,7 @@ export const useTheme = (
     }
 
     return () => {
-      prefersDarkMediaQuery?.removeEventListener?.('change', addPreferredTheme);
+      prefersDarkMediaQuery?.removeEventListener?.('change', addOSTheme);
     };
   }, [ownerDocument, theme]);
 };
