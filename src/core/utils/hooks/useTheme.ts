@@ -63,7 +63,7 @@ export const useTheme = (
       case 'os':
         if (prefersDarkMediaQuery != undefined) {
           addPreferredTheme(prefersDarkMediaQuery);
-          prefersDarkMediaQuery.addEventListener('change', addPreferredTheme);
+          prefersDarkMediaQuery.addEventListener?.('change', addPreferredTheme);
         } else {
           addLightTheme(ownerDocument);
         }
@@ -77,7 +77,7 @@ export const useTheme = (
     }
 
     return () => {
-      prefersDarkMediaQuery?.removeEventListener('change', addPreferredTheme);
+      prefersDarkMediaQuery?.removeEventListener?.('change', addPreferredTheme);
     };
   }, [ownerDocument, theme]);
 };
