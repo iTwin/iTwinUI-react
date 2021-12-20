@@ -17,9 +17,6 @@ export const TreeContext = React.createContext<
         event: React.SyntheticEvent,
         nodeIds: Array<string>,
       ) => void;
-      onNodeExpanded?: () => void;
-      checkbox?: React.ReactNode;
-      onNodeCheckboxSelected?: () => void;
       nodeDepth?: number;
       selectionType?: 'single' | 'multi' | 'none';
     }
@@ -34,19 +31,6 @@ export type TreeProps = {
     event: React.SyntheticEvent,
     nodeIds: Array<string>,
   ) => void;
-  /**
-   * Callback fired when expanding a TreeNode.
-   */
-  onNodeExpanded?: () => void;
-  /**
-   * Callback fired when checking a TreeNode's checkbox.
-   */
-  onNodeCheckboxSelected?: () => void;
-  /**
-   * Checkbox to be shown before TreeNodes, if undefined checkbox will not be shown.
-   * Recommended to use Checkbox component.
-   */
-  checkbox?: React.ReactNode;
   /**
    * Type of selection for Tree.
    * Single allows only 1 TreeNode to be selected at a time.
@@ -70,9 +54,6 @@ export type TreeProps = {
 export const Tree = (props: TreeProps) => {
   const {
     onNodeSelected,
-    onNodeExpanded,
-    checkbox,
-    onNodeCheckboxSelected,
     selectionType = 'single',
     children,
     className,
@@ -147,30 +128,83 @@ export const Tree = (props: TreeProps) => {
     }
   };
 
+  const getNodeDepth = (nodeId: string) => {
+    let depth = 0;
+    let parentFound = getParentId(nodeId);
+
+    while (parentFound != '') {
+      depth++;
+      parentFound = getParentId(parentFound);
+    }
+
+    return depth;
+  };
+
+  const getParentId = (nodeId: string) => {
+    let parentId = '';
+    React.Children.map(children, (node) => {
+      if (React.isValidElement(node)) {
+        const subNodes = (node.props['subNodeIds'] as Array<string>) || [];
+        const isAChild = subNodes.find((id) => {
+          return id === nodeId;
+        });
+        if (isAChild) {
+          parentId = node.props['nodeId'];
+        }
+      }
+    });
+    return parentId;
+  };
+
+  const getParentNode = (nodeId: string) => {
+    const parentId = getParentId(nodeId);
+    let parent = undefined;
+
+    React.Children.map(children, (node) => {
+      if (React.isValidElement(node)) {
+        if (node.props['nodeId'] === parentId) {
+          parent = React.cloneElement(node, {
+            parentNode: getParentNode(node.props['nodeId']),
+          });
+        }
+      }
+    });
+
+    return parent;
+  };
+
   const [selectedNodes, setSelectedNode] = React.useState<Array<string>>();
 
   return (
-    <TreeContext.Provider
-      value={{
-        selectedNodes,
-        setSelectedNode,
-        onNodeSelected,
-        onNodeExpanded,
-        checkbox,
-        onNodeCheckboxSelected,
-        selectionType,
-      }}
+    <ul
+      className={cx('iui-tree', className)}
+      role='tree'
+      onKeyDown={handleKeyDown}
+      ref={treeRef}
+      {...rest}
     >
-      <ul
-        className={cx('iui-tree', className)}
-        role='tree'
-        onKeyDown={handleKeyDown}
-        ref={treeRef}
-        {...rest}
-      >
-        {children}
-      </ul>
-    </TreeContext.Provider>
+      {React.Children.map(children, (child) => {
+        if (React.isValidElement(child)) {
+          return (
+            <TreeContext.Provider
+              value={{
+                selectedNodes,
+                setSelectedNode,
+                onNodeSelected,
+                selectionType,
+                nodeDepth: getNodeDepth(child.props['nodeId']),
+              }}
+            >
+              {React.cloneElement(child, {
+                parentNode: getParentNode(child.props['nodeId']),
+              })}
+            </TreeContext.Provider>
+          );
+        } else {
+          return child;
+        }
+      })}
+    </ul>
   );
 };
 
