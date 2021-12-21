@@ -11,7 +11,7 @@ import { Placement } from 'tippy.js';
 import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
 import SvgCaretUpSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretUpSmall';
 
-import { useTheme } from '../../utils/hooks/useTheme';
+import { useTheme } from '../../utils';
 import '@itwin/itwinui-css/css/button.css';
 
 export type SplitButtonProps = {
@@ -83,20 +83,28 @@ export const SplitButton = (props: SplitButtonProps) => {
       title={title}
       ref={ref}
     >
-      <Button styleType={styleType} size={size} onClick={onClick} {...rest}>
-        {children}
-      </Button>
-      <DropdownMenu
-        placement={menuPlacement}
-        menuItems={menuItems}
-        style={{ minWidth: menuWidth }}
-        onShow={React.useCallback(() => setIsMenuOpen(true), [])}
-        onHide={React.useCallback(() => setIsMenuOpen(false), [])}
-      >
-        <IconButton styleType={styleType} size={size} disabled={props.disabled}>
-          {isMenuOpen ? <SvgCaretUpSmall /> : <SvgCaretDownSmall />}
-        </IconButton>
-      </DropdownMenu>
+      <div>
+        <Button styleType={styleType} size={size} onClick={onClick} {...rest}>
+          {children}
+        </Button>
+      </div>
+      <div>
+        <DropdownMenu
+          placement={menuPlacement}
+          menuItems={menuItems}
+          style={{ minWidth: menuWidth }}
+          onShow={React.useCallback(() => setIsMenuOpen(true), [])}
+          onHide={React.useCallback(() => setIsMenuOpen(false), [])}
+        >
+          <IconButton
+            styleType={styleType}
+            size={size}
+            disabled={props.disabled}
+          >
+            {isMenuOpen ? <SvgCaretUpSmall /> : <SvgCaretDownSmall />}
+          </IconButton>
+        </DropdownMenu>
+      </div>
     </span>
   );
 };

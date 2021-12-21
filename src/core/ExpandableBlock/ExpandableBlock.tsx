@@ -5,12 +5,14 @@
 import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import cx from 'classnames';
 import React from 'react';
-import { CommonProps } from '../utils/props';
-import { CSSTransition } from 'react-transition-group';
 
-import { useTheme } from '../utils/hooks/useTheme';
+import {
+  CommonProps,
+  useTheme,
+  StatusIconMap,
+  WithCSSTransition,
+} from '../utils';
 import '@itwin/itwinui-css/css/expandable-block.css';
-import { StatusIconMap } from '../utils/common';
 
 export type ExpandableBlockProps = {
   /**
@@ -44,6 +46,11 @@ export type ExpandableBlockProps = {
    * Content in the expandable block.
    */
   children: React.ReactNode;
+  /**
+   * Modify size of the ExpandableBlock.
+   * @default 'default'
+   */
+  size?: 'default' | 'small';
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -66,6 +73,7 @@ export const ExpandableBlock = (props: ExpandableBlockProps) => {
     isExpanded = false,
     endIcon,
     status,
+    size = 'default',
     ...rest
   } = props;
 
@@ -77,8 +85,6 @@ export const ExpandableBlock = (props: ExpandableBlockProps) => {
   React.useEffect(() => {
     setExpanded(isExpanded);
   }, [isExpanded]);
-
-  const expandedHeight = React.useRef(0);
 
   const handleToggle = () => {
     setExpanded(!expanded);
@@ -99,8 +105,11 @@ export const ExpandableBlock = (props: ExpandableBlockProps) => {
     <div
       className={cx(
         'iui-expandable-block',
-        { 'iui-with-caption': !!caption },
-        { 'iui-expanded': expanded },
+        {
+          'iui-with-caption': !!caption,
+          'iui-expanded': expanded,
+          'iui-small': size === 'small',
+        },
         className,
       )}
       style={style}
@@ -127,31 +136,11 @@ export const ExpandableBlock = (props: ExpandableBlockProps) => {
             ),
           })}
       </div>
-
-      <CSSTransition
-        in={expanded}
-        timeout={200}
-        unmountOnExit={true}
-        onEnter={(node) => (node.style.height = `0px`)}
-        onEntering={(node) =>
-          (node.style.height = `${expandedHeight.current}px`)
-        }
-        onEntered={(node) => (node.style.height = 'auto')}
-        onExit={(node) => (node.style.height = `${expandedHeight.current}px`)}
-        onExiting={(node) => (node.style.height = `0px`)}
-        classNames='iui'
-      >
-        <div
-          className='iui-expandable-content'
-          ref={(ref) => {
-            if (ref) {
-              expandedHeight.current = ref.offsetHeight;
-            }
-          }}
-        >
+      <WithCSSTransition in={expanded}>
+        <div className='iui-expandable-content'>
           <div>{children}</div>
         </div>
-      </CSSTransition>
+      </WithCSSTransition>
     </div>
   );
 };

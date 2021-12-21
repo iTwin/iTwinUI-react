@@ -19,11 +19,11 @@ import {
   ActionType,
   TableInstance,
   useExpanded,
+  usePagination,
 } from 'react-table';
 import { ProgressRadial } from '../ProgressIndicators';
-import { useTheme } from '../utils/hooks/useTheme';
+import { useTheme, CommonProps, useResizeObserver } from '../utils';
 import '@itwin/itwinui-css/css/table.css';
-import { CommonProps } from '../utils/props';
 import SvgSortDown from '@itwin/itwinui-icons-react/cjs/icons/SortDown';
 import SvgSortUp from '@itwin/itwinui-icons-react/cjs/icons/SortUp';
 import { getCellStyle } from './utils';
@@ -35,6 +35,7 @@ import {
   useSelectionCell,
   useSubRowFiltering,
   useSubRowSelection,
+  useResizeColumns,
 } from './hooks';
 import {
   onExpandHandler,
@@ -42,9 +43,48 @@ import {
   onSelectHandler,
 } from './actionHandlers';
 import { onSingleSelectHandler } from './actionHandlers/selectHandler';
+import {
+  onTableResizeEnd,
+  onTableResizeStart,
+} from './actionHandlers/resizeHandler';
 import VirtualScroll from './VirtualScroll';
 
 const singleRowSelectedAction = 'singleRowSelected';
+const tableResizeStartAction = 'tableResizeStart';
+const tableResizeEndAction = 'tableResizeEnd';
+
+export type TablePaginatorRendererProps = {
+  /**
+   * The zero-based index of the current page.
+   */
+  currentPage: number;
+  /**
+   * Total number of rows.
+   */
+  totalRowsCount: number;
+  /**
+   * Number of rows per page.
+   */
+  pageSize: number;
+  /**
+   * Callback when page is changed.
+   */
+  onPageChange: (page: number) => void;
+  /**
+   * Callback when page size is changed.
+   */
+  onPageSizeChange: (size: number) => void;
+  /**
+   * Modify the size of the pagination (adjusts the elements size).
+   * @default 'default' if Table density is `default` else `small`
+   */
+  size?: 'default' | 'small';
+  /**
+   * Flag whether data is still loading and total rows count is not known.
+   * @default false
+   */
+  isLoading?: boolean;
+};
 
 /**
  * Table props.
@@ -147,6 +187,39 @@ export type TableProps<
    */
   density?: 'default' | 'condensed' | 'extra-condensed';
   /**
+   * Flag whether to select a row when clicked anywhere inside of it.
+   * @default true
+   */
+  selectRowOnClick?: boolean;
+  /**
+   * Function that takes `TablePaginatorRendererProps` as an argument and returns pagination component.
+   *
+   * Recommended to use `TablePaginator`. Passing `props` to `TablePaginator` handles all state management and is enough for basic use-cases.
+   * @example
+   * (props: TablePaginatorRendererProps) => (
+   *   <TablePaginator {...props} />
+   * )
+   */
+  paginatorRenderer?: (props: TablePaginatorRendererProps) => React.ReactNode;
+  /**
+   * Number of rows per page.
+   * @default 25
+   */
+  pageSize?: number;
+  /**
+   * Flag whether columns are resizable.
+   * In order to disable resizing for specific column, set `disableResizing: true` for that column.
+   *
+   * If you want to use it in older browsers e.g. IE, then you need to have `ResizeObserver` polyfill.
+   * @default false
+   */
+  isResizable?: boolean;
+  /**
+   * Style of the table.
+   * @default 'default'
+   */
+  styleType?: 'default' | 'zebra-rows';
+  /**
    * Virtualization is used for the scrollable container.
    * Recommended to use with scroll on table body.
    * @default false
@@ -229,6 +302,11 @@ export const Table = <
     density = 'default',
     selectSubRows = true,
     getSubRows,
+    selectRowOnClick = true,
+    paginatorRenderer,
+    pageSize = 25,
+    isResizable = false,
+    styleType = 'default',
     useVirtualization = false,
     ...rest
   } = props;
@@ -288,6 +366,14 @@ export const Table = <
           onSelectHandler(newState, instance, onSelect, isRowDisabled);
           break;
         }
+        case tableResizeStartAction: {
+          newState = onTableResizeStart(newState);
+          break;
+        }
+        case tableResizeEndAction: {
+          newState = onTableResizeEnd(newState, action);
+          break;
+        }
         default:
           break;
       }
@@ -311,6 +397,8 @@ export const Table = <
 
   const instance = useTable<T>(
     {
+      manualPagination: !paginatorRenderer, // Prevents from paginating rows in regular table without pagination
+      paginateExpandedRows: false, // When false, it shows sub-rows in the current page instead of splitting them
       ...props,
       columns,
       defaultColumn,
@@ -320,12 +408,15 @@ export const Table = <
       selectSubRows,
       data,
       getSubRows,
+      initialState: { pageSize, ...props.initialState },
     },
     useFlexLayout,
+    useResizeColumns(ownerDocument),
     useFilters,
     useSubRowFiltering(hasAnySubRows),
     useSortBy,
     useExpanded,
+    usePagination,
     useRowSelect,
     useSubRowSelection,
     useExpanderCell(subComponent, expanderCell, isRowDisabled),
@@ -342,6 +433,10 @@ export const Table = <
     allColumns,
     filteredFlatRows,
     dispatch,
+    page,
+    gotoPage,
+    setPageSize,
+    flatHeaders,
   } = instance;
 
   const ariaDataAttributes = Object.entries(rest).reduce(
@@ -359,7 +454,7 @@ export const Table = <
   const onRowClickHandler = React.useCallback(
     (event: React.MouseEvent, row: Row<T>) => {
       const isDisabled = isRowDisabled?.(row.original);
-      if (isSelectable && !isDisabled) {
+      if (isSelectable && !isDisabled && selectRowOnClick) {
         if (!row.isSelected && !event.ctrlKey) {
           dispatch({
             type: singleRowSelectedAction,
@@ -369,104 +464,192 @@ export const Table = <
           row.toggleRowSelected(!row.isSelected);
         }
       }
-      !isDisabled && onRowClick?.(event, row);
+      if (!isDisabled) {
+        onRowClick?.(event, row);
+      }
     },
-    [dispatch, isSelectable, onRowClick, isRowDisabled],
+    [isRowDisabled, isSelectable, selectRowOnClick, dispatch, onRowClick],
   );
 
+  React.useEffect(() => {
+    setPageSize(pageSize);
+  }, [pageSize, setPageSize]);
+
+  const paginatorRendererProps: TablePaginatorRendererProps = React.useMemo(
+    () => ({
+      currentPage: state.pageIndex,
+      pageSize: state.pageSize,
+      totalRowsCount: rows.length,
+      size: density !== 'default' ? 'small' : 'default',
+      isLoading,
+      onPageChange: gotoPage,
+      onPageSizeChange: setPageSize,
+    }),
+    [
+      density,
+      gotoPage,
+      isLoading,
+      rows.length,
+      setPageSize,
+      state.pageIndex,
+      state.pageSize,
+    ],
+  );
+
+  const columnRefs = React.useRef<Record<string, HTMLDivElement>>({});
+  const previousTableWidth = React.useRef(0);
+  const onTableResize = React.useCallback(
+    ({ width }: DOMRectReadOnly) => {
+      if (width === previousTableWidth.current) {
+        return;
+      }
+      previousTableWidth.current = width;
+
+      // Update column widths when table was resized
+      flatHeaders.forEach((header) => {
+        if (columnRefs.current[header.id]) {
+          header.resizeWidth = columnRefs.current[
+            header.id
+          ].getBoundingClientRect().width;
+        }
+      });
+
+      // If no column was resized then leave table resize handling to the flexbox
+      if (Object.keys(state.columnResizing.columnWidths).length === 0) {
+        return;
+      }
+
+      dispatch({ type: tableResizeStartAction });
+    },
+    [dispatch, state.columnResizing.columnWidths, flatHeaders],
+  );
+  const [resizeRef] = useResizeObserver(onTableResize);
+
+  // Flexbox handles columns resize so we take new column widths before browser repaints.
+  React.useLayoutEffect(() => {
+    if (state.isTableResizing) {
+      const newColumnWidths: Record<string, number> = {};
+      flatHeaders.forEach((column) => {
+        if (columnRefs.current[column.id]) {
+          newColumnWidths[column.id] = columnRefs.current[
+            column.id
+          ].getBoundingClientRect().width;
+        }
+      });
+      dispatch({ type: tableResizeEndAction, columnWidths: newColumnWidths });
+    }
+  });
+
   return (
-    <div
-      ref={(element) => setOwnerDocument(element?.ownerDocument)}
-      id={id}
-      {...getTableProps({
-        className: cx(
-          'iui-table',
-          { [`iui-${density}`]: density !== 'default' },
-          className,
-        ),
-        style,
-      })}
-      {...ariaDataAttributes}
-    >
-      <div className='iui-table-header'>
-        {headerGroups.slice(1).map((headerGroup: HeaderGroup<T>) => {
-          const headerGroupProps = headerGroup.getHeaderGroupProps({
-            className: 'iui-row',
-          });
-          return (
-            <div {...headerGroupProps} key={headerGroupProps.key}>
-              {headerGroup.headers.map((column) => {
-                const columnProps = column.getHeaderProps({
-                  ...column.getSortByToggleProps(),
-                  className: cx(
-                    'iui-cell',
-                    { 'iui-actionable': column.canSort },
-                    { 'iui-sorted': column.isSorted },
-                    column.columnClassName,
-                  ),
-                  style: { ...getCellStyle(column) },
-                });
-                return (
-                  <div {...columnProps} key={columnProps.key} title={undefined}>
-                    {column.render('Header')}
-                    {!isLoading && (data.length != 0 || areFiltersSet) && (
-                      <FilterToggle
-                        column={column}
-                        ownerDocument={ownerDocument}
-                      />
-                    )}
-                    {!isLoading && data.length != 0 && column.canSort && (
-                      <div className='iui-cell-end-icon'>
-                        {column.isSorted && column.isSortedDesc ? (
-                          <SvgSortUp
-                            className='iui-icon iui-sort'
-                            aria-hidden
-                          />
-                        ) : (
-                          <SvgSortDown
-                            className='iui-icon iui-sort'
-                            aria-hidden
-                          />
-                        )}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          );
+    <>
+      <div
+        ref={(element) => {
+          setOwnerDocument(element?.ownerDocument);
+          if (isResizable) {
+            resizeRef(element);
+          }
+        }}
+        id={id}
+        {...getTableProps({
+          className: cx(
+            'iui-table',
+            { [`iui-${density}`]: density !== 'default' },
+            className,
+          ),
+          style,
         })}
-      </div>
-      <div {...getTableBodyProps({ className: 'iui-table-body' })}>
-        {data.length !== 0 && (
-          <>
-            {useVirtualization && (
-              <VirtualScroll>
-                {rows.map((row: Row<T>) => {
-                  prepareRow(row);
+        {...ariaDataAttributes}
+      >
+        <div className='iui-table-header'>
+          {headerGroups.slice(1).map((headerGroup: HeaderGroup<T>) => {
+            const headerGroupProps = headerGroup.getHeaderGroupProps({
+              className: 'iui-row',
+            });
+            return (
+              <div {...headerGroupProps} key={headerGroupProps.key}>
+                {headerGroup.headers.map((column, index) => {
+                  const {
+                    onClick: onSortClick,
+                    ...sortByProps
+                  } = column.getSortByToggleProps() as {
+                    onClick:
+                      | React.MouseEventHandler<HTMLDivElement>
+                      | undefined;
+                    style: React.CSSProperties;
+                    title: string;
+                  };
+                  const columnProps = column.getHeaderProps({
+                    ...sortByProps,
+                    className: cx(
+                      'iui-cell',
+                      { 'iui-actionable': column.canSort },
+                      { 'iui-sorted': column.isSorted },
+                      column.columnClassName,
+                    ),
+                    style: { ...getCellStyle(column, !!state.isTableResizing) },
+                  });
                   return (
-                    <TableRowMemoized
-                      row={row}
-                      rowProps={rowProps}
-                      isLast={row.index === data.length - 1}
-                      onRowInViewport={onRowInViewportRef}
-                      onBottomReached={onBottomReachedRef}
-                      intersectionMargin={intersectionMargin}
-                      state={state}
-                      key={row.getRowProps().key}
-                      onClick={onRowClickHandler}
-                      subComponent={subComponent}
-                      isDisabled={!!isRowDisabled?.(row.original)}
-                      tableHasSubRows={hasAnySubRows}
-                      tableInstance={instance}
-                      expanderCell={expanderCell}
-                    />
+                    <div
+                      {...columnProps}
+                      key={columnProps.key}
+                      title={undefined}
+                      ref={(el) => {
+                        if (el && isResizable) {
+                          columnRefs.current[column.id] = el;
+                          column.resizeWidth = el.getBoundingClientRect().width;
+                        }
+                      }}
+                      onMouseDown={onSortClick}
+                    >
+                      {column.render('Header')}
+                      {!isLoading && (data.length != 0 || areFiltersSet) && (
+                        <FilterToggle
+                          column={column}
+                          ownerDocument={ownerDocument}
+                        />
+                      )}
+                      {!isLoading && data.length != 0 && column.canSort && (
+                        <div className='iui-cell-end-icon'>
+                          {column.isSorted && column.isSortedDesc ? (
+                            <SvgSortUp
+                              className='iui-icon iui-sort'
+                              aria-hidden
+                            />
+                          ) : (
+                            <SvgSortDown
+                              className='iui-icon iui-sort'
+                              aria-hidden
+                            />
+                          )}
+                        </div>
+                      )}
+                      {isResizable &&
+                        column.isResizerVisible &&
+                        index !== headerGroup.headers.length - 1 && (
+                          <div
+                            {...column.getResizerProps()}
+                            className='iui-resizer'
+                          >
+                            <div className='iui-resizer-bar' />
+                          </div>
+                        )}
+                    </div>
                   );
                 })}
-              </VirtualScroll>
-            )}
-            {!useVirtualization &&
-              rows.map((row: Row<T>) => {
+              </div>
+            );
+          })}
+        </div>
+        <div
+          {...getTableBodyProps({
+            className: cx('iui-table-body', {
+              'iui-zebra-striping': styleType === 'zebra-rows',
+            }),
+          })}
+        >
+          {data.length !== 0 && useVirtualization && (
+            <VirtualScroll>
+              {page.map((row: Row<T>) => {
                 prepareRow(row);
                 return (
                   <TableRowMemoized
@@ -487,34 +670,63 @@ export const Table = <
                   />
                 );
               })}
-          </>
-        )}
-        {isLoading && data.length === 0 && (
-          <div className='iui-table-empty'>
-            <ProgressRadial indeterminate={true} />
-          </div>
-        )}
-        {isLoading && data.length !== 0 && (
-          <div className='iui-row'>
-            <div className='iui-cell' style={{ justifyContent: 'center' }}>
-              <ProgressRadial
-                indeterminate={true}
-                size='small'
-                style={{ float: 'none', marginLeft: 0 }}
-              />
-            </div>
-          </div>
-        )}
-        {!isLoading && data.length === 0 && !areFiltersSet && (
-          <div className='iui-table-empty'>{emptyTableContent}</div>
-        )}
-        {!isLoading &&
-          (data.length === 0 || filteredFlatRows.length === 0) &&
-          areFiltersSet && (
-            <div className='iui-table-empty'>{emptyFilteredTableContent}</div>
+            </VirtualScroll>
           )}
+          {data.length !== 0 &&
+            !useVirtualization &&
+            page.map((row: Row<T>) => {
+              prepareRow(row);
+              return (
+                <TableRowMemoized
+                  row={row}
+                  rowProps={rowProps}
+                  isLast={row.index === data.length - 1}
+                  onRowInViewport={onRowInViewportRef}
+                  onBottomReached={onBottomReachedRef}
+                  intersectionMargin={intersectionMargin}
+                  state={state}
+                  key={row.getRowProps().key}
+                  onClick={onRowClickHandler}
+                  subComponent={subComponent}
+                  isDisabled={!!isRowDisabled?.(row.original)}
+                  tableHasSubRows={hasAnySubRows}
+                  tableInstance={instance}
+                  expanderCell={expanderCell}
+                />
+              );
+            })}
+          {isLoading && data.length === 0 && (
+            <div className={'iui-table-empty'}>
+              <ProgressRadial indeterminate={true} />
+            </div>
+          )}
+          {isLoading && data.length !== 0 && (
+            <div className='iui-row'>
+              <div className='iui-cell' style={{ justifyContent: 'center' }}>
+                <ProgressRadial
+                  indeterminate={true}
+                  size='small'
+                  style={{ float: 'none', marginLeft: 0 }}
+                />
+              </div>
+            </div>
+          )}
+          {!isLoading && data.length === 0 && !areFiltersSet && (
+            <div className={'iui-table-empty'}>
+              <div>{emptyTableContent}</div>
+            </div>
+          )}
+          {!isLoading &&
+            (data.length === 0 || filteredFlatRows.length === 0) &&
+            areFiltersSet && (
+              <div className={'iui-table-empty'}>
+                <div>{emptyFilteredTableContent}</div>
+              </div>
+            )}
+        </div>
+        {paginatorRenderer?.(paginatorRendererProps)}
       </div>
-    </div>
+    </>
   );
 };
 

@@ -5,8 +5,7 @@
 import cx from 'classnames';
 import React from 'react';
 
-import { useMergedRefs } from '../utils/hooks/useMergedRefs';
-import { useTheme } from '../utils/hooks/useTheme';
+import { useMergedRefs, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/inputs.css';
 
 export type RadioProps = {
@@ -84,7 +83,7 @@ export const Radio = React.forwardRef<HTMLInputElement, RadioProps>(
             <circle cx='8' cy='8' r='6' />
           </svg>
         </span>
-        {label && <div className='iui-label'>{label}</div>}
+        {label && <span className='iui-label'>{label}</span>}
       </label>
     );
   },

@@ -7,3 +7,9 @@ export type { MenuProps } from './Menu';
 
 export { MenuItem } from './MenuItem';
 export type { MenuItemProps } from './MenuItem';
+
+export { MenuDivider } from './MenuDivider';
+export type { MenuDividerProps } from './MenuDivider';
+
+export { MenuExtraContent } from './MenuExtraContent';
+export type { MenuExtraContentProps } from './MenuExtraContent';

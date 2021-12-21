@@ -1,6 +1,6 @@
 {
   "name": "@itwin/itwinui-react",
-  "version": "1.18.0",
+  "version": "1.27.0",
   "author": "Bentley Systems",
   "license": "MIT",
   "main": "cjs/index.js",
@@ -40,7 +40,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "@itwin/itwinui-css": "^0.29.1",
+    "@itwin/itwinui-css": "^0.42.0",
     "@itwin/itwinui-icons-react": "^1.1.1",
     "@itwin/itwinui-illustrations-react": "^1.0.1",
     "@tippyjs/react": "^4.2.5",
@@ -63,6 +63,7 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
     "@testing-library/react-hooks": "^7.0.1",
+    "@testing-library/user-event": "^13.5.0",
     "@types/classnames": "^2.2.7",
     "@types/jest": "^27.0.0",
     "@types/node": "^10.12.2",
@@ -81,14 +82,15 @@
     "eslint-plugin-react": "^7.25.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "fast-glob": "^3.2.5",
-    "husky": "^3.0.0",
+    "husky": "^4.0.0",
     "inquirer": "^6.2.2",
     "jest": "^27.0.6",
     "jest-cli": "^27.0.6",
     "jest-junit": "^12.0.0",
+    "lint-staged": "^12.1.2",
     "markdown-to-jsx": "6.11.4",
     "mkdirp": "^1.0.4",
-    "prettier": "^2.2.1",
+    "prettier": "2.2.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "rimraf": "^2.6.2",
@@ -113,12 +115,22 @@
     "css-what": "^5.0.1",
     "immer": "^9.0.6",
     "set-value": "^4.1.0",
-    "prismjs": "^1.25.0"
+    "prismjs": "^1.25.0",
+    "nth-check": "^2.0.1",
+    "ansi-regex": "^5.0.1",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.1"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn pretty && yarn lint:fix"
+      "pre-commit": "lint-staged"
     }
+  },
+  "lint-staged": {
+    "*.{tsx,ts,jsx,js}": [
+      "prettier --write",
+      "eslint --fix",
+      "yarn lint:copyright --fix"
+    ]
   },
   "sideEffects": [
     "**/*.scss",

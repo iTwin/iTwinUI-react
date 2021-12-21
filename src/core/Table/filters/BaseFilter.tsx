@@ -5,8 +5,8 @@
 import React from 'react';
 import cx from 'classnames';
 import '@itwin/itwinui-css/css/table.css';
-import { useTheme } from '../../utils/hooks/useTheme';
-import { CommonProps } from '../../utils/props';
+import { useTheme } from '../../utils';
+import { CommonProps } from '../../utils';
 
 export type BaseFilterProps = {
   /**
@@ -38,7 +38,8 @@ export const BaseFilter = (props: BaseFilterProps) => {
     <div
       className={cx('iui-column-filter', className)}
       style={style}
-      onClick={(e: React.MouseEvent) => {
+      // Prevents from triggering sort
+      onMouseDown={(e: React.MouseEvent) => {
         e.stopPropagation();
       }}
       id={id}

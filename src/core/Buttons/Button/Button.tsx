@@ -5,7 +5,7 @@
 import cx from 'classnames';
 import React from 'react';
 
-import { useTheme } from '../../utils/hooks/useTheme';
+import { useTheme } from '../../utils';
 import '@itwin/itwinui-css/css/button.css';
 
 export type ButtonProps = {
@@ -63,9 +63,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         className={cx(
           'iui-button',
+          `iui-${styleType}`,
           {
             [`iui-${size}`]: !!size,
-            [`iui-${styleType}`]: styleType !== 'default',
           },
           className,
         )}
@@ -75,14 +75,14 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {startIcon &&
           React.cloneElement(startIcon, {
-            className: cx('iui-icon', startIcon.props.className),
+            className: cx('iui-button-icon', startIcon.props.className),
           })}
 
-        {children && <span className='iui-label'>{children}</span>}
+        {children && <span className='iui-button-label'>{children}</span>}
 
         {endIcon &&
           React.cloneElement(endIcon, {
-            className: cx('iui-icon', endIcon.props.className),
+            className: cx('iui-button-icon', endIcon.props.className),
           })}
       </button>
     );

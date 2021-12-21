@@ -5,9 +5,7 @@
 import React from 'react';
 import cx from 'classnames';
 import { CellProps, Row, TableInstance, TableState } from 'react-table';
-import { useIntersection } from '../utils/hooks/useIntersection';
-import { CSSTransition } from 'react-transition-group';
-import { useMergedRefs } from '../utils/hooks/useMergedRefs';
+import { useIntersection, useMergedRefs, WithCSSTransition } from '../utils';
 import { TableCell } from './TableCell';
 
 /**
@@ -16,7 +14,7 @@ import { TableCell } from './TableCell';
  * Although state is not used it is needed for `React.memo` to check state that changes row state e.g. selection.
  * When adding new features check whether it changes state that affects row. If it does then add equality check to `React.memo`.
  */
-const TableRow = <T extends Record<string, unknown>>(props: {
+export const TableRow = <T extends Record<string, unknown>>(props: {
   row: Row<T>;
   rowProps?: (row: Row<T>) => React.ComponentPropsWithRef<'div'>;
   isLast: boolean;
@@ -55,11 +53,9 @@ const TableRow = <T extends Record<string, unknown>>(props: {
     rootMargin: `${intersectionMargin}px`,
   });
 
-  const expandedHeight = React.useRef(0);
-
   const userRowProps = rowProps?.(row);
   const mergedProps = {
-    ...row.getRowProps(),
+    ...row.getRowProps({ style: { flex: `0 0 auto` } }),
     ...userRowProps,
     ...{
       className: cx(
@@ -101,32 +97,11 @@ const TableRow = <T extends Record<string, unknown>>(props: {
         })}
       </div>
       {subComponent && (
-        <CSSTransition
-          in={row.isExpanded}
-          timeout={200}
-          unmountOnExit={true}
-          onEnter={(node) => (node.style.height = `0px`)}
-          onEntering={(node) =>
-            (node.style.height = `${expandedHeight.current}px`)
-          }
-          onEntered={(node) => (node.style.height = 'auto')}
-          onExit={(node) => (node.style.height = `${expandedHeight.current}px`)}
-          onExiting={(node) => (node.style.height = `0px`)}
-          classNames='iui'
-        >
-          {
-            <div
-              className='iui-row iui-expanded-content'
-              ref={(ref) => {
-                if (ref) {
-                  expandedHeight.current = ref.offsetHeight;
-                }
-              }}
-            >
-              {subComponent(row)}
-            </div>
-          }
-        </CSSTransition>
+        <WithCSSTransition in={row.isExpanded}>
+          <div className='iui-row iui-expanded-content'>
+            {subComponent(row)}
+          </div>
+        </WithCSSTransition>
       )}
     </>
   );
@@ -170,5 +145,7 @@ export const TableRowMemoized = React.memo(
     prevProp.isDisabled === nextProp.isDisabled &&
     prevProp.rowProps === nextProp.rowProps &&
     prevProp.expanderCell === nextProp.expanderCell &&
-    prevProp.tableHasSubRows === nextProp.tableHasSubRows,
+    prevProp.tableHasSubRows === nextProp.tableHasSubRows &&
+    !nextProp.state.columnResizing.isResizingColumn &&
+    !nextProp.state.isTableResizing,
 ) as typeof TableRow;

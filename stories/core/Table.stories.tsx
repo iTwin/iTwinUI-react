@@ -25,6 +25,8 @@ import {
   Tooltip,
   DefaultCell,
   EditableCell,
+  TablePaginator,
+  TablePaginatorRendererProps,
 } from '../../src/core';
 import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
@@ -84,12 +86,12 @@ export default {
   },
 } as Meta<TableProps> & CreeveyMeta;
 
-export const Basic: Story<TableProps> = (args) => {
-  const { columns, data, ...rest } = args;
+export const Basic: Story<Partial<TableProps>> = (args) => {
   const onClickHandler = (
     props: CellProps<{ name: string; description: string }>,
   ) => action(props.row.original.name)();
-  const tableColumns = useMemo(
+
+  const columns = useMemo(
     () => [
       {
         Header: 'Table',
@@ -124,7 +126,7 @@ export const Basic: Story<TableProps> = (args) => {
     [],
   );
 
-  const tableData = useMemo(
+  const data = useMemo(
     () => [
       { name: 'Name1', description: 'Description1' },
       { name: 'Name2', description: 'Description2' },
@@ -135,17 +137,15 @@ export const Basic: Story<TableProps> = (args) => {
 
   return (
     <Table
-      columns={columns || tableColumns}
-      data={data || tableData}
+      columns={columns}
+      data={data}
       emptyTableContent='No data.'
-      {...rest}
+      {...args}
     />
   );
 };
 
-export const Selectable: Story<TableProps> = (args) => {
-  const { columns, data, ...rest } = args;
-
+export const Selectable: Story<Partial<TableProps>> = (args) => {
   const onSelect = useCallback(
     (rows, state) =>
       action(
@@ -162,7 +162,7 @@ export const Selectable: Story<TableProps> = (args) => {
     [],
   );
 
-  const tableColumns = useMemo(
+  const columns = useMemo(
     () => [
       {
         Header: 'Table',
@@ -202,7 +202,7 @@ export const Selectable: Story<TableProps> = (args) => {
     [],
   );
 
-  const tableData = useMemo(
+  const data = useMemo(
     () => [
       { name: 'Name1', description: 'Description1' },
       { name: 'Name2', description: 'Description2' },
@@ -213,21 +213,20 @@ export const Selectable: Story<TableProps> = (args) => {
 
   return (
     <Table
-      columns={columns || tableColumns}
-      data={data || tableData}
+      columns={columns}
+      data={data}
       emptyTableContent='No data.'
       isSelectable={true}
       onSelect={onSelect}
       onRowClick={onRowClick}
-      {...rest}
+      {...args}
     />
   );
 };
 
 Selectable.args = { isSelectable: true };
 
-export const Sortable: Story<TableProps> = (args) => {
-  const { columns, data, isSortable, ...rest } = args;
+export const Sortable: Story<Partial<TableProps>> = (args) => {
   const onClickHandler = (
     props: CellProps<{ name: string; description: string }>,
   ) => action(props.row.original.name)();
@@ -237,7 +236,7 @@ export const Sortable: Story<TableProps> = (args) => {
     [],
   );
 
-  const tableColumns = useMemo(
+  const columns = useMemo(
     () => [
       {
         Header: 'Table',
@@ -273,7 +272,7 @@ export const Sortable: Story<TableProps> = (args) => {
     [],
   );
 
-  const tableData = useMemo(
+  const data = useMemo(
     () => [
       { name: 'Name1', description: 'Description1' },
       { name: 'Name3', description: 'Description3' },
@@ -284,12 +283,12 @@ export const Sortable: Story<TableProps> = (args) => {
 
   return (
     <Table
-      columns={columns || tableColumns}
-      data={data || tableData}
+      columns={columns}
+      data={data}
       emptyTableContent='No data.'
-      isSortable={isSortable}
+      isSortable
       onSort={onSort}
-      {...rest}
+      {...args}
     />
   );
 };
@@ -303,8 +302,7 @@ Sortable.args = {
   isSortable: true,
 };
 
-export const Filters: Story<TableProps> = (args) => {
-  const { columns, data, ...rest } = args;
+export const Filters: Story<Partial<TableProps>> = (args) => {
   type TableStoryDataType = {
     index: number;
     name: string;
@@ -341,7 +339,7 @@ export const Filters: Story<TableProps> = (args) => {
     [formatter],
   );
 
-  const tableColumns = useMemo(
+  const columns = useMemo(
     (): Column<TableStoryDataType>[] => [
       {
         Header: 'Table',
@@ -411,7 +409,7 @@ export const Filters: Story<TableProps> = (args) => {
     [formatDate, translatedLabels],
   );
 
-  const tableData = useMemo(
+  const data = useMemo(
     () => [
       {
         index: 1,
@@ -454,11 +452,11 @@ export const Filters: Story<TableProps> = (args) => {
 
   return (
     <Table
-      columns={columns || tableColumns}
-      data={data || tableData}
+      columns={columns}
+      data={data}
       emptyTableContent='No data.'
       onFilter={onFilter}
-      {...rest}
+      {...args}
     />
   );
 };
@@ -511,9 +509,7 @@ Filters.parameters = {
   } as CreeveyStoryParams,
 };
 
-export const Expandable: Story<TableProps> = (args) => {
-  const { columns, data, ...rest } = args;
-
+export const Expandable: Story<Partial<TableProps>> = (args) => {
   const onExpand = useCallback(
     (rows, state) =>
       action(
@@ -524,7 +520,7 @@ export const Expandable: Story<TableProps> = (args) => {
     [],
   );
 
-  const tableColumns = useMemo(
+  const columns = useMemo(
     () => [
       {
         Header: 'Table',
@@ -546,7 +542,7 @@ export const Expandable: Story<TableProps> = (args) => {
     [],
   );
 
-  const tableData = useMemo(
+  const data = useMemo(
     () => [
       { name: 'Name1', description: 'Description1' },
       { name: 'Name2', description: 'Description2' },
@@ -569,22 +565,17 @@ export const Expandable: Story<TableProps> = (args) => {
 
   return (
     <Table
-      columns={columns || tableColumns}
-      data={data || tableData}
+      columns={columns}
+      data={data}
       emptyTableContent='No data.'
       subComponent={expandedSubComponent}
       onExpand={onExpand}
-      {...rest}
+      {...args}
     />
   );
 };
 
 Expandable.args = {
-  data: [
-    { name: 'Name1', description: 'Description1' },
-    { name: 'Name2', description: 'Description2' },
-    { name: 'Name3', description: 'Description3' },
-  ],
   isSelectable: true,
 };
 
@@ -610,9 +601,7 @@ Expandable.parameters = {
   } as CreeveyStoryParams,
 };
 
-export const ExpandableSubrows: Story<TableProps> = (args) => {
-  const { data, ...rest } = args;
-
+export const ExpandableSubrows: Story<Partial<TableProps>> = (args) => {
   const onExpand = useCallback(
     (rows, state) =>
       action(
@@ -623,7 +612,7 @@ export const ExpandableSubrows: Story<TableProps> = (args) => {
     [],
   );
 
-  const tableColumns = useMemo(
+  const columns = useMemo(
     () => [
       {
         Header: 'Table',
@@ -645,16 +634,72 @@ export const ExpandableSubrows: Story<TableProps> = (args) => {
     [],
   );
 
+  const data = [
+    {
+      name: 'Row 1',
+      description: 'Description 1',
+      subRows: [
+        { name: 'Row 1.1', description: 'Description 1.1', subRows: [] },
+        {
+          name: 'Row 1.2',
+          description: 'Description 1.2',
+          subRows: [
+            {
+              name: 'Row 1.2.1',
+              description: 'Description 1.2.1',
+              subRows: [],
+            },
+            {
+              name: 'Row 1.2.2',
+              description: 'Description 1.2.2',
+              subRows: [],
+            },
+            {
+              name: 'Row 1.2.3',
+              description: 'Description 1.2.3',
+              subRows: [],
+            },
+            {
+              name: 'Row 1.2.4',
+              description: 'Description 1.2.4',
+              subRows: [],
+            },
+          ],
+        },
+        { name: 'Row 1.3', description: 'Description 1.3', subRows: [] },
+        { name: 'Row 1.4', description: 'Description 1.4', subRows: [] },
+      ],
+    },
+    {
+      name: 'Row 2',
+      description: 'Description 2',
+      subRows: [
+        { name: 'Row 2.1', description: 'Description 2.1', subRows: [] },
+        { name: 'Row 2.2', description: 'Description 2.2', subRows: [] },
+        { name: 'Row 2.3', description: 'Description 2.3', subRows: [] },
+      ],
+    },
+    { name: 'Row 3', description: 'Description 3', subRows: [] },
+  ];
+
   return (
-    <Table
-      emptyTableContent='No data.'
-      isSelectable
-      isSortable
-      {...rest}
-      data={data}
-      columns={tableColumns}
-      onExpand={onExpand}
-    />
+    <>
+      <div>
+        Each data entry should have <Code>subRows</Code> property. If{' '}
+        <Code>subRows</Code> has any items, then expander will be shown for that
+        row.
+      </div>
+      <br />
+      <Table
+        emptyTableContent='No data.'
+        isSelectable
+        isSortable
+        data={data}
+        columns={columns}
+        {...args}
+        onExpand={onExpand}
+      />
+    </>
   );
 };
 
@@ -707,15 +752,14 @@ ExpandableSubrows.args = {
     { name: 'Row 3', description: 'Description 3', subRows: [] },
   ],
 };
-ExpandableSubrows.argTypes = {
-  data: { control: { disable: true } },
-};
 
 ExpandableSubrows.parameters = {
   creevey: {
     tests: {
       async expand() {
-        const closed = await this.takeScreenshot();
+        const closed = await this.browser
+          .findElement({ css: '.iui-table' })
+          .takeScreenshot();
 
         let expanders = await this.browser.findElements({
           css: '.iui-row-expander',
@@ -728,7 +772,9 @@ ExpandableSubrows.parameters = {
         // Expand Row 1.2
         await expanders[1].click();
 
-        const expanded = await this.takeScreenshot();
+        const expanded = await this.browser
+          .findElement({ css: '.iui-table' })
+          .takeScreenshot();
 
         await this.expect({ closed, expanded }).to.matchImages();
       },
@@ -736,14 +782,12 @@ ExpandableSubrows.parameters = {
   } as CreeveyStoryParams,
 };
 
-export const LazyLoading: Story<TableProps> = (args) => {
-  const { columns, ...rest } = args;
-
+export const LazyLoading: Story<Partial<TableProps>> = (args) => {
   const onClickHandler = (
     props: CellProps<{ name: string; description: string }>,
   ) => action(props.row.original.name)();
 
-  const tableColumns = useMemo(
+  const columns = useMemo(
     () => [
       {
         Header: 'Table',
@@ -799,7 +843,7 @@ export const LazyLoading: Story<TableProps> = (args) => {
       }));
   };
 
-  const [tableData, setTableData] = useState(() => generateData(0, 100));
+  const [data, setData] = useState(() => generateData(0, 100));
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -808,24 +852,21 @@ export const LazyLoading: Story<TableProps> = (args) => {
     setIsLoading(true);
     // Simulating request
     setTimeout(() => {
-      setTableData(() => [
-        ...tableData,
-        ...generateData(tableData.length, tableData.length + 100),
-      ]);
+      setData(() => [...data, ...generateData(data.length, data.length + 100)]);
       setIsLoading(false);
     }, 1000);
-  }, [tableData]);
+  }, [data]);
 
   return (
     <Table
       useVirtualization
-      columns={columns || tableColumns}
+      columns={columns}
       emptyTableContent='No data.'
       onBottomReached={onBottomReached}
       isLoading={isLoading}
-      {...rest}
+      {...args}
       style={{ height: 440 }}
-      data={tableData}
+      data={data}
     />
   );
 };
@@ -834,14 +875,12 @@ LazyLoading.argTypes = {
   isLoading: { control: { disable: true } },
 };
 
-export const RowInViewport: Story<TableProps> = (args) => {
-  const { columns, ...rest } = args;
-
+export const RowInViewport: Story<Partial<TableProps>> = (args) => {
   const onClickHandler = (
     props: CellProps<{ name: string; description: string }>,
   ) => action(props.row.original.name)();
 
-  const tableColumns = useMemo(
+  const columns = useMemo(
     () => [
       {
         Header: 'Table',
@@ -876,7 +915,7 @@ export const RowInViewport: Story<TableProps> = (args) => {
     [],
   );
 
-  const tableData = useMemo(
+  const data = useMemo(
     () =>
       Array(100)
         .fill(null)
@@ -913,11 +952,11 @@ export const RowInViewport: Story<TableProps> = (args) => {
       </div>
       <br />
       <Table
-        columns={columns || tableColumns}
+        columns={columns}
         emptyTableContent='No data.'
         onRowInViewport={onRowInViewport}
-        {...rest}
-        data={tableData}
+        {...args}
+        data={data}
       />
     </>
   );
@@ -927,9 +966,7 @@ RowInViewport.argTypes = {
   data: { control: { disable: true } },
 };
 
-export const DisabledRows: Story<TableProps> = (args) => {
-  const { columns, data, ...rest } = args;
-
+export const DisabledRows: Story<Partial<TableProps>> = (args) => {
   const onRowClick = useCallback(
     (event: React.MouseEvent, row: Row) =>
       action(`Row clicked: ${JSON.stringify(row.original)}`)(),
@@ -943,7 +980,7 @@ export const DisabledRows: Story<TableProps> = (args) => {
     [],
   );
 
-  const tableColumns = useMemo(
+  const columns = useMemo(
     () => [
       {
         Header: 'Table',
@@ -985,7 +1022,7 @@ export const DisabledRows: Story<TableProps> = (args) => {
     [isRowDisabled],
   );
 
-  const tableData = useMemo(
+  const data = useMemo(
     () => [
       { name: 'Name1', description: 'Description1' },
       { name: 'Name2', description: 'Description2' },
@@ -1008,13 +1045,13 @@ export const DisabledRows: Story<TableProps> = (args) => {
 
   return (
     <Table
-      columns={columns || tableColumns}
-      data={data || tableData}
+      columns={columns}
+      data={data}
       emptyTableContent='No data.'
       onRowClick={onRowClick}
       subComponent={expandedSubComponent}
       isRowDisabled={isRowDisabled}
-      {...rest}
+      {...args}
     />
   );
 };
@@ -1028,9 +1065,8 @@ DisabledRows.args = {
   isSelectable: true,
 };
 
-export const Loading: Story<TableProps> = (args) => {
-  const { columns, data, ...rest } = args;
-  const tableColumns = useMemo(
+export const Loading: Story<Partial<TableProps>> = (args) => {
+  const columns = useMemo(
     () => [
       {
         Header: 'Table',
@@ -1054,11 +1090,11 @@ export const Loading: Story<TableProps> = (args) => {
 
   return (
     <Table
-      columns={columns || tableColumns}
-      data={data || []}
+      columns={columns}
+      data={[]}
       isLoading={true}
       emptyTableContent='No data.'
-      {...rest}
+      {...args}
     />
   );
 };
@@ -1068,8 +1104,8 @@ Loading.args = {
   isLoading: true,
 };
 
-export const NoData: Story<TableProps> = ({ columns, data, ...rest }) => {
-  const tableColumns = useMemo(
+export const NoData: Story<Partial<TableProps>> = (args) => {
+  const columns = useMemo(
     () => [
       {
         Header: 'Table',
@@ -1093,11 +1129,11 @@ export const NoData: Story<TableProps> = ({ columns, data, ...rest }) => {
 
   return (
     <Table
-      columns={columns || tableColumns}
-      data={data || []}
+      columns={columns}
+      data={[]}
       isLoading={false}
       emptyTableContent='No data.'
-      {...rest}
+      {...args}
     />
   );
 };
@@ -1106,12 +1142,10 @@ NoData.args = {
   data: [],
 };
 
-export const ControlledState: Story<TableProps> = (args) => {
-  const { columns, data, ...rest } = args;
-
+export const ControlledState: Story<Partial<TableProps>> = (args) => {
   const [selectedRows, setSelectedRows] = useState<Record<string, boolean>>({});
 
-  const tableColumns = useMemo(
+  const columns = useMemo(
     () => [
       {
         Header: 'Table',
@@ -1132,7 +1166,7 @@ export const ControlledState: Story<TableProps> = (args) => {
     [],
   );
 
-  const tableData = useMemo(
+  const data = useMemo(
     () => [
       { name: 'Name1', description: 'Description1' },
       { name: 'Name2', description: 'Description2' },
@@ -1196,7 +1230,7 @@ export const ControlledState: Story<TableProps> = (args) => {
   return (
     <>
       <InputGroup label='Control selected rows' style={{ marginBottom: 11 }}>
-        {tableData.map((data, index) => (
+        {data.map((data, index) => (
           <Checkbox
             key={index}
             label={data.name}
@@ -1216,13 +1250,13 @@ export const ControlledState: Story<TableProps> = (args) => {
         ))}
       </InputGroup>
       <Table
-        columns={columns || tableColumns}
-        data={data || tableData}
+        columns={columns}
+        data={data}
         emptyTableContent='No data.'
         useControlledState={controlledState}
         stateReducer={tableStateReducer}
         isSelectable
-        {...rest}
+        {...args}
       />
     </>
   );
@@ -1230,9 +1264,7 @@ export const ControlledState: Story<TableProps> = (args) => {
 
 ControlledState.args = { isSelectable: true };
 
-export const Full: Story<TableProps> = (args) => {
-  const { columns, data, ...rest } = args;
-
+export const Full: Story<Partial<TableProps>> = (args) => {
   const [hoveredRowIndex, setHoveredRowIndex] = useState(0);
 
   const rowRefMap = React.useRef<Record<number, HTMLDivElement>>({});
@@ -1244,7 +1276,7 @@ export const Full: Story<TableProps> = (args) => {
     [],
   );
 
-  const tableColumns = useMemo(
+  const columns = useMemo(
     () => [
       {
         Header: 'Table',
@@ -1268,7 +1300,7 @@ export const Full: Story<TableProps> = (args) => {
     [],
   );
 
-  const tableData = useMemo(
+  const data = useMemo(
     () => [
       { name: 'Name1', description: 'Description1' },
       { name: 'Name2', description: 'Description2' },
@@ -1309,15 +1341,16 @@ export const Full: Story<TableProps> = (args) => {
   return (
     <>
       <Table
-        columns={columns || tableColumns}
-        data={data || tableData}
+        columns={columns}
+        data={data}
         emptyTableContent='No data.'
         subComponent={expandedSubComponent}
         isRowDisabled={isRowDisabled}
         rowProps={rowProps}
         isSelectable
         isSortable
-        {...rest}
+        isResizable
+        {...args}
       />
       <Tooltip
         reference={rowRefMap.current[hoveredRowIndex]}
@@ -1336,15 +1369,13 @@ Full.args = {
   ],
   isSelectable: true,
   isSortable: true,
-  emptyFilteredTableContent: 'No results found. Clear or try another filter.',
+  isResizable: true,
 };
 
-export const Condensed: Story<TableProps> = Basic.bind({});
+export const Condensed: Story<Partial<TableProps>> = Basic.bind({});
 Condensed.args = { density: 'condensed' };
 
-export const Editable: Story<TableProps> = (args) => {
-  const { ...rest } = args;
-
+export const Editable: Story<Partial<TableProps>> = (args) => {
   type TableStoryDataType = {
     name: string;
     description: string;
@@ -1417,11 +1448,12 @@ export const Editable: Story<TableProps> = (args) => {
   return (
     <Table
       emptyTableContent='No data.'
-      {...rest}
+      {...args}
       columns={columns}
       data={data}
       isRowDisabled={isRowDisabled}
       isSortable
+      isSelectable
       // These flags prevent filters and sorting from resetting
       autoResetFilters={false}
       autoResetSortBy={false}
@@ -1457,4 +1489,421 @@ Editable.parameters = {
       },
     },
   } as CreeveyStoryParams,
+};
+
+export const WithPaginator: Story<Partial<TableProps>> = (args) => {
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+            Filter: tableFilters.TextFilter(),
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+            Filter: tableFilters.TextFilter(),
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  type TableStoryDataType = {
+    name: string;
+    description: string;
+    subRows: TableStoryDataType[];
+  };
+
+  const generateItem = useCallback(
+    (index: number, parentRow = '', depth = 0): TableStoryDataType => {
+      const keyValue = parentRow ? `${parentRow}.${index}` : `${index}`;
+      return {
+        name: `Name ${keyValue}`,
+        description: `Description ${keyValue}`,
+        subRows:
+          depth < 2
+            ? Array(Math.round(index % 5))
+                .fill(null)
+                .map((_, index) => generateItem(index, keyValue, depth + 1))
+            : [],
+      };
+    },
+    [],
+  );
+
+  const data = useMemo(
+    () =>
+      Array(5005)
+        .fill(null)
+        .map((_, index) => generateItem(index)),
+    [generateItem],
+  );
+
+  const pageSizeList = useMemo(() => [10, 25, 50], []);
+  const paginator = useCallback(
+    (props: TablePaginatorRendererProps) => (
+      <TablePaginator {...props} pageSizeList={pageSizeList} />
+    ),
+    [pageSizeList],
+  );
+
+  return (
+    <>
+      <Table
+        emptyTableContent='No data.'
+        isSelectable
+        isSortable
+        {...args}
+        columns={columns}
+        data={data}
+        pageSize={25}
+        paginatorRenderer={paginator}
+        style={{ height: '100%' }}
+      />
+    </>
+  );
+};
+
+WithPaginator.args = {
+  isSelectable: true,
+  isSortable: true,
+};
+
+WithPaginator.decorators = [
+  (Story) => (
+    <div style={{ height: '90vh' }}>
+      <Story />
+    </div>
+  ),
+];
+
+WithPaginator.argTypes = {
+  data: { control: { disable: true } },
+  parameters: {
+    docs: { source: { excludeDecorators: true } },
+  },
+};
+
+export const WithManualPaginator: Story<Partial<TableProps>> = (args) => {
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+            Filter: tableFilters.TextFilter(),
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+            Filter: tableFilters.TextFilter(),
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const generateData = (start: number, end: number) => {
+    return Array(end - start)
+      .fill(null)
+      .map((_, index) => ({
+        name: `Name${start + index}`,
+        description: `Description${start + index}`,
+      }));
+  };
+
+  const [data, setData] = useState(() => generateData(0, 25));
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const pageSizeList = useMemo(() => [10, 25, 50], []);
+  const paginator = useCallback(
+    (props: TablePaginatorRendererProps) => (
+      <TablePaginator
+        {...props}
+        onPageChange={(page) => {
+          setIsLoading(true);
+          setData([]);
+          setCurrentPage(page);
+          // Simulating a request
+          setTimeout(() => {
+            setIsLoading(false);
+            setData(
+              generateData(page * props.pageSize, (page + 1) * props.pageSize),
+            );
+          }, 500);
+        }}
+        onPageSizeChange={(size) => {
+          setData(generateData(currentPage * size, (currentPage + 1) * size));
+          props.onPageSizeChange(size);
+        }}
+        pageSizeList={pageSizeList}
+        currentPage={currentPage}
+        isLoading={false}
+        // Imagining we know the total count of data items
+        totalRowsCount={60000}
+      />
+    ),
+    [currentPage, pageSizeList],
+  );
+
+  return (
+    <>
+      <Table
+        emptyTableContent='No data.'
+        {...args}
+        isLoading={isLoading}
+        columns={columns}
+        data={data}
+        pageSize={25}
+        paginatorRenderer={paginator}
+        style={{ height: '100%' }}
+        manualPagination
+      />
+    </>
+  );
+};
+
+WithManualPaginator.decorators = [
+  (Story) => (
+    <div style={{ height: '90vh' }}>
+      <Story />
+    </div>
+  ),
+];
+
+WithManualPaginator.argTypes = {
+  data: { control: { disable: true } },
+  parameters: {
+    docs: { source: { excludeDecorators: true } },
+  },
+};
+
+export const ResizableColumns: Story<Partial<TableProps>> = (args) => {
+  type TableStoryDataType = {
+    index: number;
+    name: string;
+    description: string;
+    id: string;
+    startDate: Date;
+    endDate: Date;
+  };
+
+  const columns = useMemo(
+    (): Column<TableStoryDataType>[] => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'index',
+            Header: '#',
+            accessor: 'index',
+            width: 80,
+            disableResizing: true,
+          },
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            fieldType: 'text',
+            minWidth: 100,
+          },
+          {
+            id: 'id',
+            Header: 'ID',
+            accessor: 'id',
+            width: 100,
+            disableResizing: true,
+          },
+          {
+            id: 'startDate',
+            Header: 'Start date',
+            accessor: 'startDate',
+            Cell: (props: CellProps<TableStoryDataType>) => {
+              return props.row.original.startDate.toLocaleDateString('en-US');
+            },
+            width: 100,
+            disableResizing: true,
+          },
+          {
+            id: 'endDate',
+            Header: 'End date',
+            Cell: (props: CellProps<TableStoryDataType>) => {
+              return props.row.original.endDate.toLocaleDateString('en-US');
+            },
+            maxWidth: 200,
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const data = useMemo(
+    () => [
+      {
+        index: 1,
+        name: 'Name1',
+        description: 'Description1',
+        id: '111',
+        startDate: new Date('May 1, 2021'),
+        endDate: new Date('Jun 1, 2021'),
+      },
+      {
+        index: 2,
+        name: 'Name2',
+        description: 'Description2',
+        id: '222',
+        startDate: new Date('May 2, 2021'),
+        endDate: new Date('Jun 2, 2021'),
+      },
+      {
+        index: 3,
+        name: 'Name3',
+        description: 'Description3',
+        id: '333',
+        startDate: new Date('May 3, 2021'),
+        endDate: new Date('Jun 3, 2021'),
+      },
+    ],
+    [],
+  );
+
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      emptyTableContent='No data.'
+      isResizable
+      isSortable
+      {...args}
+    />
+  );
+};
+
+ResizableColumns.args = {
+  isResizable: true,
+  data: [
+    {
+      index: 1,
+      name: 'Name1',
+      description: 'Description1',
+      id: '111',
+      startDate: new Date('May 1, 2021'),
+      endDate: new Date('Jun 1, 2021'),
+    },
+    {
+      index: 2,
+      name: 'Name2',
+      description: 'Description2',
+      id: '222',
+      startDate: new Date('May 2, 2021'),
+      endDate: new Date('Jun 2, 2021'),
+    },
+    {
+      index: 3,
+      name: 'Name3',
+      description: 'Description3',
+      id: '333',
+      startDate: new Date('May 3, 2021'),
+      endDate: new Date('Jun 3, 2021'),
+    },
+  ],
+};
+
+export const ZebraStripedRows: Story<Partial<TableProps>> = (args) => {
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+            Filter: tableFilters.TextFilter(),
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+            Filter: tableFilters.TextFilter(),
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  type TableStoryDataType = {
+    name: string;
+    description: string;
+    subRows: TableStoryDataType[];
+  };
+
+  const generateItem = useCallback(
+    (index: number, parentRow = '', depth = 0): TableStoryDataType => {
+      const keyValue = parentRow ? `${parentRow}.${index}` : `${index}`;
+      return {
+        name: `Name ${keyValue}`,
+        description: `Description ${keyValue}`,
+        subRows:
+          depth < 2
+            ? Array(Math.round(index % 5))
+                .fill(null)
+                .map((_, index) => generateItem(index, keyValue, depth + 1))
+            : [],
+      };
+    },
+    [],
+  );
+
+  const data = useMemo(
+    () =>
+      Array(20)
+        .fill(null)
+        .map((_, index) => generateItem(index)),
+    [generateItem],
+  );
+
+  return (
+    <>
+      <Table
+        emptyTableContent='No data.'
+        isSelectable
+        isSortable
+        styleType='zebra-rows'
+        {...args}
+        columns={columns}
+        data={data}
+        style={{ height: '100%' }}
+      />
+    </>
+  );
+};
+
+ZebraStripedRows.args = {
+  isSelectable: true,
+  isSortable: true,
+  styleType: 'zebra-rows',
 };

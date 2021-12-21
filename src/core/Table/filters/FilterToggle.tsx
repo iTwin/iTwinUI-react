@@ -8,11 +8,8 @@ import React from 'react';
 import cx from 'classnames';
 import { HeaderGroup } from 'react-table';
 import '@itwin/itwinui-css/css/table.css';
-import { useTheme } from '../../utils/hooks/useTheme';
-import { Popover } from '../../utils/Popover';
-import { getDocument } from '../../utils/common';
+import { useTheme, Popover, getDocument, StylingProps } from '../../utils';
 import { IconButton } from '../../Buttons';
-import { StylingProps } from '../../utils/props';
 
 export type FilterToggleProps<T extends Record<string, unknown>> = {
   column: HeaderGroup<T>;
@@ -59,10 +56,11 @@ export const FilterToggle = <T extends Record<string, unknown>>(
             styleType='borderless'
             isActive={isVisible || column.filterValue}
             className={cx('iui-filter-button', className)}
-            onClick={(e: React.MouseEvent) => {
-              e.stopPropagation();
+            onClick={() => {
               setIsVisible((v) => !v);
             }}
+            // Prevents from triggering sort
+            onMouseDown={(e) => e.stopPropagation()}
             {...rest}
           >
             {column.filterValue ? <SvgFilter /> : <SvgFilterHollow />}

@@ -3,12 +3,12 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import { SideNavigation, SideNavigationProps } from './SideNavigation';
 import { SidenavButton } from './SidenavButton';
-import SvgPlaceholder from '@itwin/itwinui-icons-react/cjs/icons/Placeholder';
-import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
+import { SidenavSubmenu } from './SidenavSubmenu';
+import { SvgPlaceholder, SvgChevronRight } from '@itwin/itwinui-icons-react/';
 
 function renderComponent(props?: Partial<SideNavigationProps>) {
   return render(
@@ -31,20 +31,21 @@ function renderComponent(props?: Partial<SideNavigationProps>) {
 
 it('should render in its most basic state', () => {
   const { container } = renderComponent();
+  expect(container.querySelector('.iui-side-navigation-wrapper')).toBeTruthy();
   expect(container.querySelector('.iui-side-navigation')).toBeTruthy();
   expect(container.querySelector('.iui-sidenav-content')).toBeTruthy();
   expect(container.querySelector('.iui-expand')).toBeTruthy();
 
   const {
     container: { firstChild: placeholderIcon },
-  } = render(<SvgPlaceholder className='iui-icon' />);
+  } = render(<SvgPlaceholder className='iui-button-icon' />);
 
   const mainItems = container.querySelectorAll('.iui-top .iui-sidenav-button');
   expect(mainItems).toHaveLength(3);
   mainItems.forEach((item, index) => {
     expect(item).toBeTruthy();
-    expect(item.querySelector('.iui-icon')).toEqual(placeholderIcon);
-    expect(item.querySelector('.iui-label')?.textContent).toBe(
+    expect(item.querySelector('.iui-button-icon')).toEqual(placeholderIcon);
+    expect(item.querySelector('.iui-button-label')?.textContent).toBe(
       `mockbutton ${index}`,
     );
   });
@@ -67,7 +68,7 @@ it('should render secondary items', () => {
 
   const {
     container: { firstChild: placeholderIcon },
-  } = render(<SvgPlaceholder className='iui-icon' />);
+  } = render(<SvgPlaceholder className='iui-button-icon' />);
 
   const secondaryItems = container.querySelectorAll(
     '.iui-bottom .iui-sidenav-button',
@@ -76,8 +77,8 @@ it('should render secondary items', () => {
 
   secondaryItems.forEach((item, index) => {
     expect(item).toBeTruthy();
-    expect(item.querySelector('.iui-icon')).toEqual(placeholderIcon);
-    expect(item.querySelector('.iui-label')?.textContent).toBe(
+    expect(item.querySelector('.iui-button-icon')).toEqual(placeholderIcon);
+    expect(item.querySelector('.iui-button-label')?.textContent).toBe(
       `mock secondary ${index}`,
     );
   });
@@ -116,8 +117,10 @@ it('should render expand button svg correctly', () => {
 
   const {
     container: { firstChild: expandIcon },
-  } = render(<SvgChevronRight className='iui-icon' aria-hidden />);
-  expect(container.querySelector('.iui-expand .iui-icon')).toEqual(expandIcon);
+  } = render(<SvgChevronRight className='iui-button-icon' aria-hidden />);
+  expect(container.querySelector('.iui-expand .iui-button-icon')).toEqual(
+    expandIcon,
+  );
 });
 
 it('should handle clicking on expand button', () => {
@@ -183,15 +186,19 @@ it('should render active and disabled sidebar buttons', () => {
       <SidenavButton startIcon={<SvgPlaceholder />} key={1} disabled>
         mockbutton 1
       </SidenavButton>,
+      <SidenavButton startIcon={<SvgPlaceholder />} key={2} isSubmenuOpen>
+        mockbutton 2
+      </SidenavButton>,
     ],
   });
   expect(container.querySelector('.iui-side-navigation')).toBeTruthy();
 
   const mainItems = container.querySelectorAll('.iui-top .iui-sidenav-button');
-  expect(mainItems).toHaveLength(2);
+  expect(mainItems).toHaveLength(3);
 
-  expect(mainItems[0].classList).toContain('iui-active');
-  expect((mainItems[1] as HTMLButtonElement).disabled).toBeTruthy();
+  expect(mainItems[0]).toHaveClass('iui-active');
+  expect(mainItems[1]).toBeDisabled();
+  expect(mainItems[2]).toHaveClass('iui-submenu-open');
 });
 
 it('should handle custom class and style', () => {
@@ -201,9 +208,48 @@ it('should handle custom class and style', () => {
   });
 
   const sidebar = container.querySelector(
-    '.iui-side-navigation.test-class',
+    '.iui-side-navigation-wrapper',
   ) as HTMLElement;
 
-  expect(sidebar).toBeTruthy();
-  expect(sidebar.style.height).toEqual('200px');
+  expect(sidebar).toHaveClass('test-class');
+  expect(sidebar).toHaveStyle('height: 200px');
+});
+
+it('should render with submenu', () => {
+  const { container } = renderComponent({
+    submenu: <SidenavSubmenu>submenu content</SidenavSubmenu>,
+    isSubmenuOpen: true,
+  });
+
+  const wrapper = container.querySelector(
+    '.iui-side-navigation-wrapper',
+  ) as HTMLElement;
+
+  expect(wrapper.querySelector('.iui-side-navigation')).toBeTruthy();
+  expect(wrapper.querySelector('.iui-sidenav-content')).toBeTruthy();
+
+  expect(
+    wrapper.querySelector('.iui-side-navigation-submenu'),
+  ).toHaveTextContent('submenu content');
+
+  expect(screen.getByText('submenu content')).toHaveClass(
+    'iui-side-navigation-submenu-content',
+  );
+});
+
+it('should not show submenu if isSubmenuOpen is false', () => {
+  const { container } = renderComponent({
+    submenu: <SidenavSubmenu>submenu content</SidenavSubmenu>,
+    isSubmenuOpen: false,
+  });
+
+  const wrapper = container.querySelector(
+    '.iui-side-navigation-wrapper',
+  ) as HTMLElement;
+
+  expect(wrapper.querySelector('.iui-side-navigation')).toBeTruthy();
+  expect(wrapper.querySelector('.iui-sidenav-content')).toBeTruthy();
+
+  expect(wrapper.querySelector('.iui-side-navigation-submenu')).toBeFalsy();
+  expect(screen.queryByText('submenu content')).toBeFalsy();
 });

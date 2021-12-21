@@ -4,13 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { CommonProps } from '../utils/props';
-import { useTheme } from '../utils/hooks/useTheme';
+import { CommonProps, useTheme, Popover, useMergedRefs } from '../utils';
 import '@itwin/itwinui-css/css/menu.css';
 import SvgCaretRightSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretRightSmall';
-import { Popover } from '../utils/Popover';
 import { Menu } from './Menu';
-import { useMergedRefs } from '../utils/hooks/useMergedRefs';
 
 /**
  * Context used to provide menu item ref to sub-menu items.
@@ -150,9 +147,10 @@ export const MenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
         ref={refs}
         style={style}
         role={role}
-        tabIndex={disabled ? undefined : -1}
+        tabIndex={disabled || role === 'presentation' ? undefined : -1}
         aria-selected={isSelected}
         aria-haspopup={subMenuItems.length > 0}
+        aria-disabled={disabled}
         onKeyDown={onKeyDown}
         onMouseEnter={() => setIsSubmenuVisible(true)}
         onMouseLeave={(e) => {

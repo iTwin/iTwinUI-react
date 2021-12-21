@@ -32,6 +32,24 @@ export type { ButtonGroupProps } from './ButtonGroup';
 export { Checkbox } from './Checkbox';
 export type { CheckboxProps } from './Checkbox';
 
+export {
+  ColorPicker,
+  ColorSwatch,
+  ColorBuilder,
+  ColorInputPanel,
+  ColorPalette,
+} from './ColorPicker';
+export type {
+  ColorPickerProps,
+  ColorSwatchProps,
+  ColorBuilderProps,
+  ColorInputPanelProps,
+  ColorPaletteProps,
+} from './ColorPicker';
+
+export { ComboBox } from './ComboBox';
+export type { ComboBoxProps } from './ComboBox';
+
 export { DatePicker, generateLocalizedStrings } from './DatePicker';
 export type { DatePickerProps } from './DatePicker';
 
@@ -73,8 +91,26 @@ export type {
   HorizontalTabProps,
 } from './Tabs';
 
+export {
+  InformationPanel,
+  InformationPanelWrapper,
+  InformationPanelHeader,
+  InformationPanelBody,
+  InformationPanelContent,
+} from './InformationPanel';
+export type {
+  InformationPanelProps,
+  InformationPanelWrapperProps,
+  InformationPanelHeaderProps,
+  InformationPanelBodyProps,
+  InformationPanelContentProps,
+} from './InformationPanel';
+
 export { Input } from './Input';
 export type { InputProps } from './Input';
+
+export { Label } from './Label';
+export type { LabelProps } from './Label';
 
 export { LabeledInput } from './LabeledInput';
 export type { LabeledInputProps } from './LabeledInput';
@@ -88,8 +124,13 @@ export type { LabeledSelectProps } from './LabeledSelect';
 export { LabeledTextarea } from './LabeledTextarea';
 export type { LabeledTextareaProps } from './LabeledTextarea';
 
-export { Menu, MenuItem } from './Menu';
-export type { MenuProps, MenuItemProps } from './Menu';
+export { Menu, MenuItem, MenuDivider, MenuExtraContent } from './Menu';
+export type {
+  MenuProps,
+  MenuItemProps,
+  MenuDividerProps,
+  MenuExtraContentProps,
+} from './Menu';
 
 export { Modal, ModalButtonBar } from './Modal';
 export type { ModalProps, ModalButtonBarProps } from './Modal';
@@ -109,8 +150,18 @@ export type { RadioTileGroupProps, RadioTileProps } from './RadioTiles';
 export { Select } from './Select';
 export type { SelectProps, SelectOption, ItemRendererProps } from './Select';
 
-export { SideNavigation, SidenavButton } from './SideNavigation';
-export type { SideNavigationProps, SidenavButtonProps } from './SideNavigation';
+export {
+  SideNavigation,
+  SidenavButton,
+  SidenavSubmenu,
+  SidenavSubmenuHeader,
+} from './SideNavigation';
+export type {
+  SideNavigationProps,
+  SidenavButtonProps,
+  SidenavSubmenuProps,
+  SidenavSubmenuHeaderProps,
+} from './SideNavigation';
 
 export { Slider } from './Slider';
 export type { SliderProps } from './Slider';
@@ -121,6 +172,7 @@ export {
   FilterButtonBar,
   DefaultCell,
   EditableCell,
+  TablePaginator,
 } from './Table';
 export type {
   TableProps,
@@ -130,6 +182,8 @@ export type {
   FilterButtonBarProps,
   DefaultCellProps,
   EditableCellProps,
+  TablePaginatorProps,
+  TablePaginatorRendererProps,
 } from './Table';
 
 export { Tag, TagContainer } from './Tag';
@@ -196,7 +250,10 @@ export type {
   WizardLocalization,
 } from './Wizard';
 
-export { getUserColor } from './utils/common';
-
-export { useTheme } from './utils/hooks/useTheme';
-export type { ThemeType } from './utils/hooks/useTheme';
+export {
+  getUserColor,
+  useTheme,
+  ColorValue,
+  MiddleTextTruncation,
+} from './utils';
+export type { ThemeType, MiddleTextTruncationProps } from './utils';
