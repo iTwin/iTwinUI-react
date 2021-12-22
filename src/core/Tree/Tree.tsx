@@ -19,9 +19,26 @@ export const TreeContext = React.createContext<
       ) => void;
       nodeDepth?: number;
       selectionType?: 'single' | 'multi' | 'none';
+      parentNode?: FlatNode;
     }
   | undefined
 >(undefined);
+
+export type TreeData = {
+  subnodes: Array<TreeData>;
+  label?: string;
+  subLabel?: string;
+  isExpanded?: boolean;
+  isDisabled?: boolean;
+};
+
+type FlatNode = {
+  data: TreeData;
+  id: string;
+  depth: number;
+  subNodeIds: string[];
+  parent?: FlatNode;
+};
 
 export type TreeProps = {
   /**
@@ -40,10 +57,13 @@ export type TreeProps = {
    */
   selectionType?: 'single' | 'multi' | 'none';
   /**
-   * Items inside tree.
-   * Recommended to use TreeNode component.
+   * Node renderer
    */
-  children?: React.ReactNode;
+  nodeRenderer?: (props: TreeData) => JSX.Element;
+  /**
+   * Items inside tree.
+   */
+  data?: Array<TreeData>;
 } & CommonProps;
 
 /**
@@ -55,8 +75,9 @@ export const Tree = (props: TreeProps) => {
   const {
     onNodeSelected,
     selectionType = 'single',
-    children,
+    data,
     className,
+    nodeRenderer,
     ...rest
   } = props;
   useTheme();
@@ -128,52 +149,38 @@ export const Tree = (props: TreeProps) => {
     }
   };
 
-  const getNodeDepth = (nodeId: string) => {
-    let depth = 0;
-    let parentFound = getParentId(nodeId);
-
-    while (parentFound != '') {
-      depth++;
-      parentFound = getParentId(parentFound);
-    }
-
-    return depth;
-  };
-
-  const getParentId = (nodeId: string) => {
-    let parentId = '';
-    React.Children.map(children, (node) => {
-      if (React.isValidElement(node)) {
-        const subNodes = (node.props['subNodeIds'] as Array<string>) || [];
-        const isAChild = subNodes.find((id) => {
-          return id === nodeId;
-        });
-        if (isAChild) {
-          parentId = node.props['nodeId'];
-        }
-      }
-    });
-    return parentId;
-  };
-
-  const getParentNode = (nodeId: string) => {
-    const parentId = getParentId(nodeId);
-    let parent = undefined;
-
-    React.Children.map(children, (node) => {
-      if (React.isValidElement(node)) {
-        if (node.props['nodeId'] === parentId) {
-          parent = React.cloneElement(node, {
-            parentNode: getParentNode(node.props['nodeId']),
-          });
-        }
-      }
-    });
-
-    return parent;
-  };
-
   const [selectedNodes, setSelectedNode] = React.useState<Array<string>>();
+
+  const flatNodesList = React.useMemo(() => {
+    const flatList: FlatNode[] = [];
+    const flatNodes = (
+      nodes: TreeData[] = [],
+      parent?: FlatNode,
+      depth = 0,
+    ) => {
+      const parentId = parent?.id ?? null;
+      const nodeIdList = Array<string>();
+      nodes.forEach((node: TreeData, index) => {
+        const id = parentId ? `${parentId}-${index}` : `${index}`;
+        const nodeWrapper: FlatNode = {
+          id,
+          data: node,
+          depth,
+          subNodeIds: [],
+          parent: parent ?? undefined,
+        };
+        flatList.push(nodeWrapper);
+        nodeIdList.push(id);
+        if (node.subnodes && node.subnodes.length) {
+          const subNodeIds = flatNodes(node.subnodes, nodeWrapper, depth + 1);
+          nodeWrapper.subNodeIds = subNodeIds;
+        }
+      });
+      return nodeIdList;
+    };
+    flatNodes(data);
+    return flatList;
+  }, [data]);
 
   return (
     <ul
@@ -183,27 +190,22 @@ export const Tree = (props: TreeProps) => {
       ref={treeRef}
       {...rest}
     >
-      {React.Children.map(children, (child) => {
-        if (React.isValidElement(child)) {
-          return (
-            <TreeContext.Provider
-              value={{
-                selectedNodes,
-                setSelectedNode,
-                onNodeSelected,
-                selectionType,
-                nodeDepth: getNodeDepth(child.props['nodeId']),
-              }}
-            >
-              {React.cloneElement(child, {
-                parentNode: getParentNode(child.props['nodeId']),
-              })}
-            </TreeContext.Provider>
-          );
-        } else {
-          return child;
-        }
-      })}
+      {flatNodesList.map((flatNode) => (
+        <React.Fragment key={flatNode.id}>
+          <TreeContext.Provider
+            value={{
+              selectedNodes,
+              setSelectedNode,
+              onNodeSelected,
+              selectionType,
+              nodeDepth: flatNode.depth,
+              parentNode: flatNode.parent,
+            }}
+          >
+            {nodeRenderer?.(flatNode.data)}
+          </TreeContext.Provider>
+        </React.Fragment>
+      ))}
     </ul>
   );
 };

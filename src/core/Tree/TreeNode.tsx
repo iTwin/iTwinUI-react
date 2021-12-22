@@ -8,13 +8,9 @@ import '@itwin/itwinui-css/css/tree.css';
 import { SvgChevronRight } from '@itwin/itwinui-icons-react';
 import { IconButton } from '../Buttons/IconButton';
 import cx from 'classnames';
-import { TreeContext } from './Tree';
+import { TreeContext, TreeData } from './Tree';
 
 export type TreeNodeProps = {
-  /**
-   * Unique id for TreeNode.
-   */
-  nodeId: string;
   /**
    * The main text displayed on the node.
    */
@@ -44,11 +40,7 @@ export type TreeNodeProps = {
   /**
    * Ids of subNodes. If undefined expander button is not shown.
    */
-  subNodeIds?: Array<string>;
-  /**
-   * Parent TreeNode.
-   */
-  parentNode?: React.ReactNode;
+  subNodes?: Array<TreeData>;
   /**
    * Checkbox to be shown before TreeNode, if undefined checkbox will not be shown.
    * Recommended to use Checkbox component.
@@ -71,7 +63,6 @@ export type TreeNodeProps = {
  */
 export const TreeNode = (props: TreeNodeProps) => {
   const {
-    nodeId,
     label,
     sublabel,
     children,
@@ -81,8 +72,7 @@ export const TreeNode = (props: TreeNodeProps) => {
     isDisabled = false,
     isExpanded = false,
     onNodeExpanded,
-    subNodeIds,
-    parentNode,
+    subNodes,
     nodeCheckbox,
     onNodeCheckboxSelected,
     ...rest
@@ -91,6 +81,7 @@ export const TreeNode = (props: TreeNodeProps) => {
 
   const context = React.useContext(TreeContext);
   const nodeDepth = context?.nodeDepth ?? 0;
+  const parentNode = context?.parentNode;
 
   const styleLevel = React.useMemo(
     () =>
@@ -106,20 +97,18 @@ export const TreeNode = (props: TreeNodeProps) => {
   }, [isExpanded]);
 
   const [visible, setVisible] = React.useState(
-    React.isValidElement(parentNode) ? parentNode.props['isExpanded'] : true,
+    React.isValidElement(parentNode) ? parentNode.data.isExpanded : true,
   );
   React.useEffect(() => {
-    if (React.isValidElement(parentNode)) {
-      let currentParent = parentNode;
-      let isParentExpanded = parentNode.props['isExpanded'];
-      while (currentParent) {
-        if (currentParent.props['isExpanded'] === false) {
-          isParentExpanded = false;
-        }
-        currentParent = currentParent.props['parentNode'];
+    let currentParent = parentNode;
+    let isParentExpanded = parentNode?.data.isExpanded ?? true;
+    while (currentParent) {
+      if (currentParent.data.isExpanded === false) {
+        isParentExpanded = false;
       }
-      setVisible(isParentExpanded);
+      currentParent = currentParent.parent;
     }
+    setVisible(isParentExpanded);
   }, [parentNode]);
 
   const [isChecked, setIsChecked] = React.useState(
@@ -139,12 +128,12 @@ export const TreeNode = (props: TreeNodeProps) => {
   const isSelected = React.useMemo(() => {
     let selected = false;
     selectedNodes?.forEach((node) => {
-      if (node === nodeId) {
+      if (node === label) {
         selected = true;
       }
     });
     return selected;
-  }, [selectedNodes, nodeId]);
+  }, [selectedNodes, label]);
 
   const onNodeClick = (e: React.SyntheticEvent<Element, Event>) => {
     if (context?.selectionType === 'none' || isDisabled) {
@@ -154,17 +143,17 @@ export const TreeNode = (props: TreeNodeProps) => {
         context?.setSelectedNode?.([]);
         return;
       }
-      context?.setSelectedNode?.([nodeId]);
-      context?.onNodeSelected?.(e, [nodeId]);
+      context?.setSelectedNode?.([label?.toString() ?? '']);
+      context?.onNodeSelected?.(e, [label?.toString() ?? '']);
     } else if (context?.selectionType === 'multi') {
       const nodes = Array<string>();
       selectedNodes?.forEach((node) => {
-        if (node != nodeId) {
+        if (node != label) {
           nodes.push(node);
         }
       });
       if (!isSelected) {
-        nodes.push(nodeId);
+        nodes.push(label?.toString() ?? '');
         context?.onNodeSelected?.(e, nodes);
       }
       context?.setSelectedNode?.(nodes);
@@ -173,70 +162,77 @@ export const TreeNode = (props: TreeNodeProps) => {
 
   return (
     <>
-      {visible && (
-        <li
-          role='treeitem'
-          aria-expanded={expanded}
-          aria-owns={subNodeIds?.toString().replace(',', ' ')}
-          {...rest}
-        >
-          <div
-            className={cx('iui-tree-node', {
-              'iui-active': isSelected,
-              'iui-disabled': isDisabled,
-              className,
-            })}
-            style={styleLevel}
-            onClick={(e) => onNodeClick(e)}
-            tabIndex={isSelected ? 0 : -1}
-          >
-            {nodeCheckbox && React.isValidElement(nodeCheckbox)
-              ? React.cloneElement(nodeCheckbox, {
-                  className: 'iui-tree-node-checkbox',
-                  disabled: isDisabled,
-                  checked: isChecked,
-                  onClick: () => {
-                    setIsChecked(!isChecked);
-                    onNodeCheckboxSelected?.(nodeId, !isChecked);
-                  },
-                })
-              : nodeCheckbox}
-            <div className='iui-tree-node-content'>
-              {subNodeIds && subNodeIds.length > 0 && (
-                <IconButton
-                  styleType='borderless'
-                  size='small'
-                  onClick={(e) => {
-                    setExpanded(!expanded);
-                    onNodeExpanded?.(nodeId);
-                    e.stopPropagation();
-                  }}
-                  disabled={isDisabled}
-                  tabIndex={-1}
-                >
-                  <SvgChevronRight
-                    className={cx('iui-tree-node-content-expander-icon', {
-                      'iui-tree-node-content-expander-icon-expanded': expanded,
-                    })}
-                  />
-                </IconButton>
-              )}
-              {icon &&
-                React.cloneElement(icon, {
-                  className: cx(
-                    'iui-tree-node-content-icon',
-                    icon.props.className,
-                  ),
-                })}
-              <span className='iui-tree-node-content-label'>
-                <div className='iui-tree-node-content-title'>{label}</div>
-                <div className='iui-tree-node-content-caption'>{sublabel}</div>
-              </span>
+      <li role='treeitem' id={label?.toString() ?? ''}>
+        {visible && (
+          <li role='treeitem' aria-expanded={expanded} {...rest}>
+            <div
+              className={cx('iui-tree-node', {
+                'iui-active': isSelected,
+                'iui-disabled': isDisabled,
+                className,
+              })}
+              style={styleLevel}
+              onClick={(e) => onNodeClick(e)}
+              tabIndex={isSelected ? 0 : -1}
+            >
+              {nodeCheckbox && React.isValidElement(nodeCheckbox)
+                ? React.cloneElement(nodeCheckbox, {
+                    className: 'iui-tree-node-checkbox',
+                    disabled: isDisabled,
+                    checked: isChecked,
+                    onClick: () => {
+                      setIsChecked(!isChecked);
+                      onNodeCheckboxSelected?.(
+                        label?.toString() ?? '',
+                        !isChecked,
+                      );
+                    },
+                  })
+                : nodeCheckbox}
+              <div className='iui-tree-node-content'>
+                {subNodes && subNodes.length > 0 && (
+                  <IconButton
+                    styleType='borderless'
+                    size='small'
+                    onClick={(e) => {
+                      setExpanded(!expanded);
+                      onNodeExpanded?.(label?.toString() ?? '');
+                      e.stopPropagation();
+                    }}
+                    disabled={isDisabled}
+                    tabIndex={-1}
+                  >
+                    <SvgChevronRight
+                      className={cx('iui-tree-node-content-expander-icon', {
+                        'iui-tree-node-content-expander-icon-expanded': expanded,
+                      })}
+                    />
+                  </IconButton>
+                )}
+                {icon &&
+                  React.cloneElement(icon, {
+                    className: cx(
+                      'iui-tree-node-content-icon',
+                      icon.props.className,
+                    ),
+                  })}
+                <span className='iui-tree-node-content-label'>
+                  <div className='iui-tree-node-content-title'>{label}</div>
+                  <div className='iui-tree-node-content-caption'>
+                    {sublabel}
+                  </div>
+                </span>
+              </div>
+              {children}
             </div>
-            {children}
-          </div>
-        </li>
-      )}
+          </li>
+        )}
+        <ul
+          className='iui-sub-tree'
+          role='group'
+          aria-owns={subNodes ? subNodes.join(' ') : undefined}
+        />
+      </li>
     </>
   );
 };

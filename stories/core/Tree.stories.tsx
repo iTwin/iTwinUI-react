@@ -7,6 +7,7 @@ import React from 'react';
 import { Tree, TreeProps, TreeNode, Checkbox } from '../../src/core';
 import { action } from '@storybook/addon-actions';
 import { SvgPlaceholder } from '@itwin/itwinui-icons-react';
+import { TreeData } from '../../src/core/Tree/Tree';
 
 export default {
   component: Tree,
@@ -16,40 +17,6 @@ export default {
   },
   title: 'Core/Tree',
 } as Meta<TreeProps>;
-
-const treeNodes = [
-  {
-    nodeId: '1',
-    label: 'Facility 1',
-    subNodeIds: ['1.1', '1.2'],
-  },
-  { nodeId: '1.1', label: 'Unit 1' },
-  { nodeId: '1.2', label: 'Unit 2' },
-  { nodeId: '2', label: 'Facility 2', subNodeIds: ['2.1', '2.2'] },
-  { nodeId: '2.1', label: 'Unit 1', subNodeIds: ['2.1.1'] },
-  {
-    nodeId: '2.1.1',
-    label: 'System A',
-    subNodeIds: ['2.1.1.1'],
-  },
-  { nodeId: '2.1.1.1', label: 'Subsystem' },
-  { nodeId: '2.2', label: 'Unit 2', subNodeIds: ['2.2.1'] },
-  {
-    nodeId: '2.2.1',
-    label: 'System A',
-    subNodeIds: ['2.2.1.1'],
-  },
-  {
-    nodeId: '2.2.1.1',
-    label: 'Subsystem',
-  },
-  {
-    nodeId: '3',
-    label: 'Facility 3',
-    subNodeIds: ['3.1'],
-  },
-  { nodeId: '3.1', label: 'Node 3.1' },
-];
 
 export const Basic: Story<TreeProps> = (args) => {
   const onSelectedNodeChange = (
@@ -70,50 +37,12 @@ export const Basic: Story<TreeProps> = (args) => {
     }
   };
 
-  const disabledNodes = ['1.1', '2.1.1.1', '3'];
-
-  return (
-    <Tree onNodeSelected={onSelectedNodeChange} {...args}>
-      {treeNodes.map((node, index) => {
-        return (
-          <TreeNode
-            key={index + node.nodeId}
-            nodeId={node.nodeId}
-            label={node.label}
-            sublabel={'Node ' + node.nodeId}
-            subNodeIds={node.subNodeIds}
-            onNodeExpanded={onNodeExpanded}
-            isExpanded={
-              expandedNodes.findIndex((id) => id === node.nodeId) != -1
-            }
-            isDisabled={
-              disabledNodes.findIndex((id) => id === node.nodeId) != -1
-            }
-          />
-        );
-      })}
-    </Tree>
-  );
-};
-
-export const WithCheckbox: Story<TreeProps> = (args) => {
-  const onSelectedNodeChange = (
-    event: React.SyntheticEvent,
-    nodeIds: React.ReactNode[],
-  ) => {
-    action(`Selected node ${nodeIds[0]}`)();
-  };
-
-  const [expandedNodes, setExpandedNodes] = React.useState(['']);
-  const onNodeExpanded = (nodeId: string) => {
-    action(`Expanded node ${nodeId}`)();
-
-    if (expandedNodes.findIndex((id) => id === nodeId) != -1) {
-      setExpandedNodes(expandedNodes.filter((item) => item != nodeId));
-    } else {
-      setExpandedNodes([...expandedNodes, nodeId]);
-    }
-  };
+  const [disabledNodes] = React.useState([
+    'Node 4',
+    'Node 3.0',
+    'Node 6',
+    'Node 10',
+  ]);
 
   const onCheckboxSelected = (nodeId: string, checked: boolean) => {
     if (checked) {
@@ -123,65 +52,53 @@ export const WithCheckbox: Story<TreeProps> = (args) => {
     }
   };
 
-  return (
-    <Tree onNodeSelected={onSelectedNodeChange} {...args}>
-      {treeNodes.map((node, index) => {
-        return (
-          <TreeNode
-            key={index + node.nodeId}
-            nodeId={node.nodeId}
-            label={node.label}
-            subNodeIds={node.subNodeIds}
-            onNodeExpanded={onNodeExpanded}
-            icon={<SvgPlaceholder />}
-            isExpanded={
-              expandedNodes.findIndex((id) => id === node.nodeId) != -1
-            }
-            nodeCheckbox={<Checkbox variant='eyeball' checked={true} />}
-            onNodeCheckboxSelected={onCheckboxSelected}
-          />
-        );
-      })}
-    </Tree>
+  const generateItem = React.useCallback(
+    (index: number, parentRow = '', depth = 0): TreeData => {
+      const keyValue = parentRow ? `${parentRow}.${index}` : `${index}`;
+      return {
+        label: `Node ${keyValue}`,
+        subLabel: `Sublabel for Node ${keyValue}`,
+        isExpanded:
+          expandedNodes.findIndex((id) => id === `Node ${keyValue}`) != -1,
+        isDisabled:
+          disabledNodes.findIndex((id) => id === `Node ${keyValue}`) != -1,
+        subnodes:
+          depth < 10
+            ? Array(Math.round(index % 5))
+                .fill(null)
+                .map((_, index) => generateItem(index, keyValue, depth + 1))
+            : [],
+      };
+    },
+    [disabledNodes, expandedNodes],
   );
-};
 
-export const Multiselection: Story<TreeProps> = (args) => {
-  const onSelectedNodeChange = (
-    event: React.SyntheticEvent,
-    nodeIds: React.ReactNode[],
-  ) => {
-    action(`Selected ${nodeIds[nodeIds.length - 1]}`)();
-  };
-
-  const [expandedNodes, setExpandedNodes] = React.useState(['']);
-  const onNodeExpanded = (nodeId: string) => {
-    action(`Expanded node ` + nodeId)();
-
-    if (expandedNodes.findIndex((id) => id === nodeId) != -1) {
-      setExpandedNodes(expandedNodes.filter((item) => item != nodeId));
-    } else {
-      setExpandedNodes([...expandedNodes, nodeId]);
-    }
-  };
+  const data = React.useMemo(
+    () =>
+      Array(5000)
+        .fill(null)
+        .map((_, index) => generateItem(index)),
+    [generateItem],
+  );
 
   return (
-    <Tree onNodeSelected={onSelectedNodeChange} selectionType='multi' {...args}>
-      {treeNodes.map((node, index) => {
-        return (
-          <TreeNode
-            key={index + node.nodeId}
-            nodeId={node.nodeId}
-            label={node.label}
-            subNodeIds={node.subNodeIds}
-            onNodeExpanded={onNodeExpanded}
-            icon={<SvgPlaceholder />}
-            isExpanded={
-              expandedNodes.findIndex((id) => id === node.nodeId) != -1
-            }
-          />
-        );
-      })}
-    </Tree>
+    <Tree
+      data={data}
+      nodeRenderer={(props) => (
+        <TreeNode
+          label={props.label}
+          sublabel={props.subLabel}
+          subNodes={props.subnodes}
+          onNodeExpanded={onNodeExpanded}
+          isExpanded={props.isExpanded}
+          isDisabled={props.isDisabled}
+          nodeCheckbox={<Checkbox variant='eyeball' checked={true} />}
+          onNodeCheckboxSelected={onCheckboxSelected}
+          icon={<SvgPlaceholder />}
+        />
+      )}
+      onNodeSelected={onSelectedNodeChange}
+      {...args}
+    />
   );
 };
