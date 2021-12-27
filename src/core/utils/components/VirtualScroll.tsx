@@ -88,6 +88,8 @@ type VirtualScrollProps = {
  * Good use in expected big number of data either in some of the components (e.g. Table) or just simple list of DOM elements.
  * It has 2 wrapper elements, so expect DOM tree change. One is used for setting full expected height in the scrollable container
  * and other is for transformation (translateY) to show the correct part of the list.
+ * Currently, it supports only static (same) height rows virtualization. So use it with caution.
+ * Expect some issues, if list consists of different height elements.
  * @example
  * <VirtualScroll>
  *  {childrenArray}
