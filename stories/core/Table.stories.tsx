@@ -697,6 +697,7 @@ export const ExpandableSubrows: Story<Partial<TableProps>> = (args) => {
         data={data}
         columns={columns}
         {...args}
+        useVirtualization
         onExpand={onExpand}
       />
     </>
@@ -833,12 +834,7 @@ export const LazyLoading: Story<Partial<TableProps>> = (args) => {
     return Array(end - start)
       .fill(null)
       .map((_, index) => ({
-        name:
-          // index % 10
-          new Array(((index % 10) + 1) * 23).join('o'),
-        // : `Name${
-        //     start + index
-        //   } veeeeeeeeeeeeeerrrrryyyyyyyyyyyyyyyyyyyyyyyyy looooooooooooooooooooooooooooonnnnnnnnnnngggggggggggggggg naaaaaaameeeeeeeeeeeee, wwwwwwwwwwwooooooooooooooooooooooooooooooooooooooooooooooooooooow`,
+        name: `Name${start + index}`,
         description: `Description${start + index}`,
       }));
   };
@@ -1906,4 +1902,78 @@ ZebraStripedRows.args = {
   isSelectable: true,
   isSortable: true,
   styleType: 'zebra-rows',
+};
+
+export const Virtualized: Story<Partial<TableProps>> = (args) => {
+  const onClickHandler = (
+    props: CellProps<{ name: string; description: string }>,
+  ) => action(props.row.original.name)();
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            maxWidth: 200,
+
+            Cell: (props: CellProps<{ name: string }>) => {
+              return (
+                <div style={{ wordBreak: 'break-word' }}>
+                  {props.row.original.name}
+                </div>
+              );
+            },
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+          },
+          {
+            id: 'click-me',
+            Header: 'Click',
+            width: 100,
+            Cell: (props: CellProps<{ name: string; description: string }>) => {
+              const onClick = () => onClickHandler(props);
+              return (
+                <a className='iui-anchor' onClick={onClick}>
+                  Click me!
+                </a>
+              );
+            },
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const generateData = useCallback((start: number, end: number) => {
+    const arr = new Array(end - start);
+    for (let i = 0; i < end - start; ++i) {
+      arr[i] = {
+        name: `Name${start + i}`,
+        description: `Description${start + i}`,
+      };
+    }
+    return arr;
+  }, []);
+
+  return (
+    <Table
+      useVirtualization
+      columns={columns}
+      emptyTableContent='No data.'
+      {...args}
+      style={{ height: 440 }}
+      data={generateData(0, 100000)}
+    />
+  );
+};
+
+Virtualized.argTypes = {
+  isLoading: { control: { disable: true } },
 };

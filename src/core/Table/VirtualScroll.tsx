@@ -25,34 +25,91 @@ const getElementStyle = (element: HTMLElement, prop: string) => {
   return getComputedStyle(element, null).getPropertyValue(prop);
 };
 
-type VirtualScrollProps = {
-  children: React.ReactNodeArray;
+const getElementHeight = (element: HTMLElement | undefined) => {
+  return !!element ? element.getBoundingClientRect().height : 0;
 };
 
-export const VirtualScroll = ({ children }: VirtualScrollProps) => {
-  const renderAdditional = 20;
+const getCountOfNodesInHeight = (
+  childHeight: number,
+  totalHeight: number,
+  startIndex = 0,
+) => {
+  let i = startIndex;
+  let sum = 0;
+  while (sum < totalHeight) {
+    sum += childHeight;
+    ++i;
+  }
+  i = sum > totalHeight ? i - 1 : i;
+  return i - startIndex;
+};
+
+const getTranslateValue = (childHeight: number, startIndex: number) => {
+  let sum = 0;
+  let i = 0;
+  while (i < startIndex) {
+    sum += childHeight;
+    ++i;
+  }
+  return sum;
+};
+
+const getVisibleNodeCount = (
+  childHeight: number,
+  startIndex: number,
+  childrenLength: number,
+  scrollContainer: HTMLElement,
+) => {
+  return Math.min(
+    childrenLength - startIndex,
+    getCountOfNodesInHeight(
+      childHeight,
+      getElementHeight(scrollContainer),
+      startIndex,
+    ),
+  );
+};
+
+type VirtualScrollProps = {
+  /**
+   * A list of children to be virtualized.
+   */
+  children: React.ReactNodeArray;
+  /**
+   * Number of items to be rendered at the end.
+   * Not recommended to go lower than the visible items in viewport.
+   * @default 20
+   */
+  renderAdditional?: number;
+};
+
+/**
+ * `VirtualScroll` component to wrap a list of children and show only the ones, which are visible + some additional.
+ * Good use in expected big number of data either in some of the components (e.g. Table) or just simple list of DOM elements.
+ * It has 2 wrapper elements, so expect DOM tree change. One is used for setting full expected height in the scrollable container
+ * and other is for transformation (translateY) to show the correct part of the list.
+ * @example
+ * <VirtualScroll>
+ *  {childrenArray}
+ * </VirtualScroll>
+ */
+export const VirtualScroll = ({
+  children,
+  renderAdditional = 20,
+}: VirtualScrollProps) => {
   const [startNode, setStartNode] = React.useState(0);
   const [visibleNodeCount, setVisibleNodeCount] = React.useState(0);
-  const [scrollContainer, setScrollContainer] = React.useState<HTMLElement>();
+  const scrollContainer = React.useRef<HTMLElement>();
   const childrenParentRef = React.useRef<HTMLDivElement>(null);
-  const [childHeight, setChildHeight] = React.useState(0);
+  const childHeight = React.useRef(0);
   const [translateY, setTranslateY] = React.useState(0);
-  const heightMap: React.MutableRefObject<{
-    [key: string]: number;
-  }> = React.useRef({});
-  const firstLoad = React.useRef(true);
-  const [viewportHeight, setViewportHeight] = React.useState(0);
-  const recalculatedHeight: React.MutableRefObject<{
-    [key: string]: boolean;
-  }> = React.useRef({});
-  const [containerHeight, setContainerHeight] = React.useState(0);
+  const onScrollRef = React.useRef<() => void>();
 
-  // Find scrollable parent and viewport height
+  // Find scrollable parent
   // Needed only on init
   React.useLayoutEffect(() => {
     const scrollableParent = getScrollableParent(childrenParentRef.current);
-    setScrollContainer(scrollableParent);
-    setViewportHeight(scrollableParent.getBoundingClientRect().height);
+    scrollContainer.current = scrollableParent;
   }, []);
 
   const visibleChildren = React.useMemo(() => {
@@ -60,184 +117,103 @@ export const VirtualScroll = ({ children }: VirtualScrollProps) => {
       startNode,
       startNode + visibleNodeCount + renderAdditional,
     );
-  }, [children, startNode, visibleNodeCount]);
+  }, [children, renderAdditional, startNode, visibleNodeCount]);
 
-  // Update heights map with visible children height
+  // Get child height on init
   React.useLayoutEffect(() => {
     if (!childrenParentRef.current) {
       return;
     }
-
     let heightSum = 0;
     for (let i = startNode; i < visibleChildren.length + startNode; i++) {
       const htmlElement = childrenParentRef.current.children.item(
         Math.max(0, i - startNode),
       ) as HTMLElement;
-      const elementHeight = htmlElement.getBoundingClientRect().height;
-      heightMap.current[i] = Number(elementHeight.toFixed(2));
+      const elementHeight = getElementHeight(htmlElement);
       heightSum += Number(elementHeight.toFixed(2));
     }
-
-    // On the first load, set container and child heights
-    // Later on they will be updated on scroll or children change
-    if (firstLoad.current) {
-      setContainerHeight(
-        Math.ceil(heightSum / visibleChildren.length) * children.length,
-      );
-      setChildHeight(Math.ceil(heightSum / visibleChildren.length));
-    }
-  }, [
-    visibleChildren,
-    startNode,
-    scrollContainer,
-    childHeight,
-    children.length,
-  ]);
-
-  // When children change, recalculate container height
-  React.useLayoutEffect(() => {
-    console.log('calculate', firstLoad.current, childHeight, children.length);
-    if (childHeight === 0) {
-      return;
-    }
-
-    if (firstLoad.current) {
-      firstLoad.current = false;
-      return;
-    }
-    let maxCount = 0;
-    Object.keys(recalculatedHeight.current).forEach((count) => {
-      if (Number(count) > maxCount) {
-        maxCount = Number(count);
-      }
-    });
-    const addedElementsCount = children.length - maxCount;
-    console.log(children.length, recalculatedHeight.current);
-    setContainerHeight((height) => height + addedElementsCount * childHeight);
-  }, [childHeight, children.length]);
-
-  const getCountOfChildrenInHeight = React.useCallback(
-    (height: number, startIndex = 0) => {
-      let i = startIndex;
-      let sum = 0;
-      while (sum < height) {
-        sum += heightMap.current[i] ?? childHeight;
-        ++i;
-      }
-      i = sum > height ? i - 1 : i;
-      return i - startIndex;
-    },
-    [childHeight],
-  );
-
-  const getTranslateValue = React.useCallback(
-    (startIndex: number) => {
-      let sum = 0;
-      let i = 0;
-      while (i < startIndex) {
-        sum += heightMap.current[i] ?? childHeight;
-        ++i;
-      }
-      return sum;
-    },
-    [childHeight],
-  );
-
-  const getVisibleNodeCount = React.useCallback(
-    (startIndex: number) => {
-      return Math.min(
-        children.length - startIndex,
-        getCountOfChildrenInHeight(viewportHeight, startIndex),
-      );
-    },
-    [children.length, getCountOfChildrenInHeight, viewportHeight],
-  );
+    const elementHeight = heightSum / visibleChildren.length;
+    childHeight.current = Math.ceil(elementHeight);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onScroll = React.useCallback(() => {
-    if (!scrollContainer) {
+    if (!scrollContainer.current) {
       return;
     }
-    const start = getCountOfChildrenInHeight(scrollContainer.scrollTop);
+    const start = getCountOfNodesInHeight(
+      childHeight.current,
+      scrollContainer.current.scrollTop,
+    );
     setStartNode(start);
-    setVisibleNodeCount(getVisibleNodeCount(start));
-    setTranslateY(getTranslateValue(start));
-    // When getting closer to the end,
-    // recalculate container and child height
-    if (
-      viewportHeight +
-        scrollContainer.scrollTop +
-        renderAdditional * childHeight >=
-      scrollContainer.scrollHeight
-    ) {
-      if (
-        Object.keys(heightMap.current).length === children.length &&
-        !recalculatedHeight.current[children.length]
-      ) {
-        recalculatedHeight.current[children.length] = true;
-        let sum = 0;
-        for (let i = 0; i < Object.keys(heightMap.current).length; ++i) {
-          sum += heightMap.current[i];
-        }
-        console.log('SCROLL RECALCULATE', sum, childHeight * children.length);
-        setChildHeight(sum / Object.keys(heightMap.current).length);
-        setContainerHeight(sum);
-      }
-    }
-  }, [
-    childHeight,
-    children.length,
-    getCountOfChildrenInHeight,
-    getTranslateValue,
-    getVisibleNodeCount,
-    scrollContainer,
-    viewportHeight,
-  ]);
+    setVisibleNodeCount(
+      getVisibleNodeCount(
+        childHeight.current,
+        start,
+        children.length,
+        scrollContainer.current,
+      ),
+    );
+    setTranslateY(getTranslateValue(childHeight.current, start));
+  }, [children.length]);
 
-  // Add scroll listener and set initial values
-  React.useLayoutEffect(() => {
-    let top = 0;
-    if (!scrollContainer || scrollContainer === document.body) {
-      document.addEventListener('scroll', onScroll);
-      top = document.body.scrollTop;
-    } else {
-      scrollContainer?.addEventListener('scroll', onScroll);
-      top = scrollContainer.scrollTop;
+  const removeScrollListener = React.useCallback(() => {
+    if (!onScrollRef.current) {
+      return;
     }
-    const start = getCountOfChildrenInHeight(top);
+    scrollContainer.current
+      ? scrollContainer.current.removeEventListener(
+          'scroll',
+          onScrollRef.current,
+        )
+      : document.removeEventListener('scroll', onScrollRef.current);
+  }, []);
+
+  // Add event listener to the scrollable container.
+  React.useLayoutEffect(() => {
+    removeScrollListener();
+    onScrollRef.current = onScroll;
+    if (!scrollContainer.current || scrollContainer.current === document.body) {
+      document.addEventListener('scroll', onScroll);
+    } else {
+      scrollContainer.current.addEventListener('scroll', onScroll);
+    }
+    return removeScrollListener;
+  }, [onScroll, removeScrollListener]);
+
+  React.useLayoutEffect(() => {
+    const scrollableContainer = scrollContainer.current ?? document.body;
+    const top = scrollableContainer.scrollTop;
+    const start = getCountOfNodesInHeight(childHeight.current, top);
     setStartNode(start);
-    setVisibleNodeCount(getVisibleNodeCount(start));
-    setTranslateY(getTranslateValue(start));
-    return () =>
-      scrollContainer
-        ? scrollContainer.removeEventListener('scroll', onScroll)
-        : document.removeEventListener('scroll', onScroll);
-  }, [
-    getCountOfChildrenInHeight,
-    getTranslateValue,
-    getVisibleNodeCount,
-    onScroll,
-    scrollContainer,
-  ]);
+    setVisibleNodeCount(
+      getVisibleNodeCount(
+        childHeight.current,
+        start,
+        children.length,
+        scrollableContainer,
+      ),
+    );
+    setTranslateY(getTranslateValue(childHeight.current, start));
+  }, [children.length]);
 
   return (
-    <>
+    <div
+      style={{
+        overflow: 'hidden',
+        height: children.length * childHeight.current,
+      }}
+    >
       <div
         style={{
-          overflow: 'hidden',
-          height: containerHeight || children.length * childHeight,
+          willChange: 'transform',
+          transform: `translateY(${translateY}px)`,
         }}
+        ref={childrenParentRef}
       >
-        <div
-          style={{
-            willChange: 'transform',
-            transform: `translateY(${translateY}px)`,
-          }}
-          ref={childrenParentRef}
-        >
-          {visibleChildren}
-        </div>
+        {visibleChildren}
       </div>
-    </>
+    </div>
   );
 };
 

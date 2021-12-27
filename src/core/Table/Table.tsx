@@ -47,7 +47,7 @@ import {
   onTableResizeEnd,
   onTableResizeStart,
 } from './actionHandlers/resizeHandler';
-import VirtualScroll from './VirtualScroll';
+import VirtualScroll from '../utils/components/VirtualScroll';
 
 const singleRowSelectedAction = 'singleRowSelected';
 const tableResizeStartAction = 'tableResizeStart';
@@ -646,57 +646,61 @@ export const Table = <
               'iui-zebra-striping': styleType === 'zebra-rows',
             }),
           })}
+          style={{ display: 'block' }}
         >
-          {data.length !== 0 && useVirtualization && (
-            <VirtualScroll>
-              {page.map((row: Row<T>) => {
-                prepareRow(row);
-                return (
-                  <TableRowMemoized
-                    row={row}
-                    rowProps={rowProps}
-                    isLast={row.index === data.length - 1}
-                    onRowInViewport={onRowInViewportRef}
-                    onBottomReached={onBottomReachedRef}
-                    intersectionMargin={intersectionMargin}
-                    state={state}
-                    key={row.getRowProps().key}
-                    onClick={onRowClickHandler}
-                    subComponent={subComponent}
-                    isDisabled={!!isRowDisabled?.(row.original)}
-                    tableHasSubRows={hasAnySubRows}
-                    tableInstance={instance}
-                    expanderCell={expanderCell}
-                  />
-                );
-              })}
-            </VirtualScroll>
+          {data.length !== 0 && (
+            <>
+              {useVirtualization && (
+                <VirtualScroll>
+                  {page.map((row: Row<T>) => {
+                    prepareRow(row);
+                    return (
+                      <TableRowMemoized
+                        row={row}
+                        rowProps={rowProps}
+                        isLast={row.index === data.length - 1}
+                        onRowInViewport={onRowInViewportRef}
+                        onBottomReached={onBottomReachedRef}
+                        intersectionMargin={intersectionMargin}
+                        state={state}
+                        key={row.getRowProps().key}
+                        onClick={onRowClickHandler}
+                        subComponent={subComponent}
+                        isDisabled={!!isRowDisabled?.(row.original)}
+                        tableHasSubRows={hasAnySubRows}
+                        tableInstance={instance}
+                        expanderCell={expanderCell}
+                      />
+                    );
+                  })}
+                </VirtualScroll>
+              )}
+              {!useVirtualization &&
+                page.map((row: Row<T>) => {
+                  prepareRow(row);
+                  return (
+                    <TableRowMemoized
+                      row={row}
+                      rowProps={rowProps}
+                      isLast={row.index === data.length - 1}
+                      onRowInViewport={onRowInViewportRef}
+                      onBottomReached={onBottomReachedRef}
+                      intersectionMargin={intersectionMargin}
+                      state={state}
+                      key={row.getRowProps().key}
+                      onClick={onRowClickHandler}
+                      subComponent={subComponent}
+                      isDisabled={!!isRowDisabled?.(row.original)}
+                      tableHasSubRows={hasAnySubRows}
+                      tableInstance={instance}
+                      expanderCell={expanderCell}
+                    />
+                  );
+                })}
+            </>
           )}
-          {data.length !== 0 &&
-            !useVirtualization &&
-            page.map((row: Row<T>) => {
-              prepareRow(row);
-              return (
-                <TableRowMemoized
-                  row={row}
-                  rowProps={rowProps}
-                  isLast={row.index === data.length - 1}
-                  onRowInViewport={onRowInViewportRef}
-                  onBottomReached={onBottomReachedRef}
-                  intersectionMargin={intersectionMargin}
-                  state={state}
-                  key={row.getRowProps().key}
-                  onClick={onRowClickHandler}
-                  subComponent={subComponent}
-                  isDisabled={!!isRowDisabled?.(row.original)}
-                  tableHasSubRows={hasAnySubRows}
-                  tableInstance={instance}
-                  expanderCell={expanderCell}
-                />
-              );
-            })}
           {isLoading && data.length === 0 && (
-            <div className={'iui-table-empty'}>
+            <div className='iui-table-empty'>
               <ProgressRadial indeterminate={true} />
             </div>
           )}
@@ -712,14 +716,14 @@ export const Table = <
             </div>
           )}
           {!isLoading && data.length === 0 && !areFiltersSet && (
-            <div className={'iui-table-empty'}>
+            <div className='iui-table-empty'>
               <div>{emptyTableContent}</div>
             </div>
           )}
           {!isLoading &&
             (data.length === 0 || filteredFlatRows.length === 0) &&
             areFiltersSet && (
-              <div className={'iui-table-empty'}>
+              <div className='iui-table-empty'>
                 <div>{emptyFilteredTableContent}</div>
               </div>
             )}
