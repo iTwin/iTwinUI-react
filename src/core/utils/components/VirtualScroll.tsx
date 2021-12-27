@@ -203,7 +203,7 @@ export const VirtualScroll = ({
     <div
       style={{
         overflow: 'hidden',
-        height: children.length * childHeight.current,
+        minHeight: children.length * childHeight.current,
       }}
     >
       <div

@@ -655,7 +655,6 @@ export const Table = <
               headerRef.current.scrollLeft = bodyRef.current.scrollLeft;
             }
           }}
-          style={useVirtualization ? { display: 'block' } : undefined}
         >
           {data.length !== 0 && (
             <>
