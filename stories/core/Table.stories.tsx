@@ -796,20 +796,13 @@ export const LazyLoading: Story<Partial<TableProps>> = (args) => {
           {
             id: 'name',
             Header: 'Name',
-            maxWidth: 200,
-
-            Cell: (props: CellProps<{ name: string }>) => {
-              return (
-                <div style={{ wordBreak: 'break-word' }}>
-                  {props.row.original.name}
-                </div>
-              );
-            },
+            accessor: 'name',
           },
           {
             id: 'description',
             Header: 'Description',
             accessor: 'description',
+            maxWidth: 200,
           },
           {
             id: 'click-me',
