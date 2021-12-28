@@ -82,7 +82,9 @@ export default {
     manualExpandedKey: { table: { disable: true } },
   },
   parameters: {
-    creevey: { skip: { stories: ['Lazy Loading', 'Row In Viewport'] } },
+    creevey: {
+      skip: { stories: ['Lazy Loading', 'Row In Viewport', 'Virtualized'] },
+    },
   },
 } as Meta<TableProps> & CreeveyMeta;
 
