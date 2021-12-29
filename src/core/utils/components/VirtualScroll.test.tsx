@@ -27,6 +27,7 @@ const renderComponent = () => {
 
 beforeAll(() => {
   // return correct values for container 'scroller' and children
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function getBoundingClientRectMock(this: Record<string, any>) {
     if (Object.values(this)[0].memoizedProps.id === 'scroller') {
       return { height: 400 } as DOMRect;
