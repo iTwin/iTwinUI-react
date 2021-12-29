@@ -429,6 +429,15 @@
         "__id": "buttons-buttongroup--overflow"
       }
     },
+    "buttons-buttongroup--input-button-combo": {
+      "id": "buttons-buttongroup--input-button-combo",
+      "name": "Input Button Combo",
+      "kind": "Buttons/ButtonGroup",
+      "story": "Input Button Combo",
+      "parameters": {
+        "__id": "buttons-buttongroup--input-button-combo"
+      }
+    },
     "buttons-dropdownbutton--basic": {
       "id": "buttons-dropdownbutton--basic",
       "name": "Basic",
@@ -1786,6 +1795,24 @@
       "story": "Resizable Columns",
       "parameters": {
         "__id": "core-table--resizable-columns"
+      }
+    },
+    "core-table--zebra-striped-rows": {
+      "id": "core-table--zebra-striped-rows",
+      "name": "Zebra Striped Rows",
+      "kind": "Core/Table",
+      "story": "Zebra Striped Rows",
+      "parameters": {
+        "__id": "core-table--zebra-striped-rows"
+      }
+    },
+    "core-table--horizontal-scroll": {
+      "id": "core-table--horizontal-scroll",
+      "name": "Horizontal Scroll",
+      "kind": "Core/Table",
+      "story": "Horizontal Scroll",
+      "parameters": {
+        "__id": "core-table--horizontal-scroll"
       }
     },
     "core-tabs--default-tabs": {
