@@ -70,7 +70,7 @@ const getVisibleNodeCount = (
   );
 };
 
-type VirtualScrollProps = {
+export type VirtualScrollProps = {
   /**
    * A list of children to be virtualized.
    */
@@ -105,7 +105,7 @@ export const VirtualScroll = ({
   const childrenParentRef = React.useRef<HTMLDivElement>(null);
   const childHeight = React.useRef(0);
   const [translateY, setTranslateY] = React.useState(0);
-  const onScrollRef = React.useRef<() => void>();
+  const onScrollRef = React.useRef<(e: Event) => void>();
 
   // Find scrollable parent
   // Needed only on init
@@ -139,36 +139,40 @@ export const VirtualScroll = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onScroll = React.useCallback(() => {
-    if (!scrollContainer.current) {
-      return;
-    }
-    const start = getCountOfNodesInHeight(
-      childHeight.current,
-      scrollContainer.current.scrollTop,
-    );
-    setStartNode(start);
-    setVisibleNodeCount(
-      getVisibleNodeCount(
+  const onScroll = React.useCallback(
+    (e: Event) => {
+      const target = e.target as HTMLElement;
+      if (!target) {
+        return;
+      }
+      const start = getCountOfNodesInHeight(
         childHeight.current,
-        start,
-        children.length,
-        scrollContainer.current,
-      ),
-    );
-    setTranslateY(getTranslateValue(childHeight.current, start));
-  }, [children.length]);
+        target.scrollTop,
+      );
+      setStartNode(start);
+      setVisibleNodeCount(
+        getVisibleNodeCount(
+          childHeight.current,
+          start,
+          children.length,
+          target,
+        ),
+      );
+      setTranslateY(getTranslateValue(childHeight.current, start));
+    },
+    [children.length],
+  );
 
   const removeScrollListener = React.useCallback(() => {
     if (!onScrollRef.current) {
       return;
     }
-    scrollContainer.current
-      ? scrollContainer.current.removeEventListener(
+    !scrollContainer.current || scrollContainer.current === document.body
+      ? document.removeEventListener('scroll', onScrollRef.current)
+      : scrollContainer.current.removeEventListener(
           'scroll',
           onScrollRef.current,
-        )
-      : document.removeEventListener('scroll', onScrollRef.current);
+        );
   }, []);
 
   // Add event listener to the scrollable container.
