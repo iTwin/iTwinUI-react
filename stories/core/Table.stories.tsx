@@ -1898,6 +1898,7 @@ ZebraStripedRows.args = {
   isSortable: true,
   styleType: 'zebra-rows',
 };
+
 export const HorizontalScroll: Story<Partial<TableProps>> = (args) => {
   const data = useMemo(
     () => [
