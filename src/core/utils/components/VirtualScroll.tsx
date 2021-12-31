@@ -141,7 +141,10 @@ export const VirtualScroll = ({
 
   const onScroll = React.useCallback(
     (e: Event) => {
-      const target = e.target as HTMLElement;
+      const target =
+        scrollContainer.current !== document.body
+          ? (e.target as HTMLElement)
+          : (document.scrollingElement as HTMLElement);
       if (!target) {
         return;
       }
