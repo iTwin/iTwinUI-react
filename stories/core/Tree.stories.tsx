@@ -75,7 +75,7 @@ export const Basic: Story<TreeProps> = (args) => {
 
   const data = React.useMemo(
     () =>
-      Array(5000)
+      Array(500)
         .fill(null)
         .map((_, index) => generateItem(index)),
     [generateItem],

@@ -141,6 +141,7 @@ export const Tree = (props: TreeProps) => {
       case ' ':
       case 'Spacebar':
         nodes[currentIndex].click();
+        event.preventDefault();
         return;
     }
 
