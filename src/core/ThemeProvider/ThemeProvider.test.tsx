@@ -38,6 +38,56 @@ it('should respect os theme (dark)', () => {
   expectDarkTheme();
 });
 
+it('should observe changes to os theme', () => {
+  const originalMatchMedia = window.matchMedia;
+  const listeners: Array<(e: { matches: boolean }) => void> = [];
+  let matches = false;
+
+  const mockDispatch = jest
+    .fn()
+    .mockImplementation((event: { matches: boolean }) => {
+      listeners.forEach((listener) => {
+        matches = event.matches;
+        listener(event);
+      });
+      return true;
+    });
+
+  window.matchMedia = jest.fn().mockReturnValueOnce({
+    matches: matches,
+    addEventListener: (
+      _: 'change',
+      listener: (e: { matches: boolean }) => void,
+    ) => {
+      listeners.push(listener);
+    },
+    removeEventListener: (
+      _: 'change',
+      listener: (e: { matches: boolean }) => void,
+    ) => {
+      const i = listeners.indexOf(listener);
+      if (i > -1) {
+        listeners.splice(i);
+      }
+    },
+    dispatchEvent: mockDispatch,
+  });
+
+  render(<ThemeProvider theme='os' />);
+  expectLightTheme();
+
+  mockDispatch({ matches: true });
+  expectDarkTheme();
+
+  mockDispatch({ matches: false });
+  expectLightTheme();
+
+  mockDispatch({ matches: true });
+  expectDarkTheme();
+
+  window.matchMedia = originalMatchMedia;
+});
+
 it('should set light theme', () => {
   render(<ThemeProvider theme='light' />);
   expectLightTheme();
