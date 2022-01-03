@@ -6,6 +6,7 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { TablePaginator, TablePaginatorProps } from './TablePaginator';
 import * as UseOverflow from '../utils/hooks/useOverflow';
+import * as UseContainerWidth from '../utils/hooks/useContainerWidth';
 
 const renderComponent = (props?: Partial<TablePaginatorProps>) => {
   return render(
@@ -19,6 +20,16 @@ const renderComponent = (props?: Partial<TablePaginatorProps>) => {
     />,
   );
 };
+
+beforeEach(() => {
+  jest
+    .spyOn(UseOverflow, 'useOverflow')
+    .mockImplementation((items) => [jest.fn(), items.length]);
+});
+
+afterEach(() => {
+  jest.restoreAllMocks();
+});
 
 it('should render in its most basic form', () => {
   const { container } = renderComponent();
@@ -70,6 +81,29 @@ it('should render currently visible rows info and page size selector', () => {
   expect(onPageSizeChange).toHaveBeenCalledWith(25);
 });
 
+it('should render without page list', () => {
+  const { container } = renderComponent({
+    totalRowsCount: 10,
+    pageSizeList: [10, 25, 50],
+  });
+  const pageSizeSelector = container.querySelector(
+    '.iui-dropdown',
+  ) as HTMLButtonElement;
+
+  expect(pageSizeSelector).toBeTruthy();
+  expect(pageSizeSelector.textContent).toEqual('1-10 of 10');
+
+  const paginator = container.querySelector('.iui-center') as HTMLElement;
+  expect(paginator).not.toBeTruthy();
+});
+
+it('should render without page list and page size list', () => {
+  const { container } = renderComponent({ totalRowsCount: 10 });
+
+  const paginator = container.querySelector('.iui-paginator') as HTMLElement;
+  expect(paginator).not.toBeTruthy();
+});
+
 it('should render loading state when there is data', () => {
   const { container } = renderComponent({
     currentPage: 19,
@@ -112,31 +146,6 @@ it('should render loading state when there is no data', () => {
   expect(
     container.querySelector('.iui-progress-indicator-radial'),
   ).toBeTruthy();
-
-  const previousPageButton = screen.getByLabelText(
-    'Previous page',
-  ) as HTMLButtonElement;
-  expect(previousPageButton.disabled).toBe(true);
-  const nextPageButton = screen.getByLabelText(
-    'Next page',
-  ) as HTMLButtonElement;
-  expect(nextPageButton.disabled).toBe(true);
-
-  expect(container.querySelector('.iui-dropdown')).toBeFalsy();
-});
-
-it('should render disabled state when there is no data', () => {
-  const { container } = renderComponent({
-    totalRowsCount: 0,
-    pageSizeList: [10, 25, 50],
-    onPageSizeChange: jest.fn(),
-  });
-
-  const pages = container.querySelectorAll<HTMLButtonElement>(
-    '.iui-button-group .iui-button',
-  );
-  expect(pages).toHaveLength(1);
-  expect(pages[0].disabled).toBe(true);
 
   const previousPageButton = screen.getByLabelText(
     'Previous page',
@@ -278,18 +287,18 @@ it('should render elements in small size', () => {
 });
 
 it('should render with custom localization', () => {
+  jest
+    .spyOn(UseContainerWidth, 'useContainerWidth')
+    .mockImplementation(() => [jest.fn(), 2000]);
+
   const pageSizeList = [10, 25, 50];
   const { container } = renderComponent({
     pageSizeList,
     onPageSizeChange: jest.fn(),
     localization: {
       pageSizeLabel: (size: number) => `${size} per test page`,
-      rangeLabel: (
-        startIndex: number,
-        endIndex: number,
-        totalRows: number,
-        isLoading: boolean,
-      ) =>
+      rowsPerPageLabel: 'Items per test page',
+      rangeLabel: (startIndex, endIndex, totalRows, isLoading) =>
         isLoading
           ? `${startIndex}-${endIndex} test`
           : `${startIndex}-${endIndex} of test ${totalRows}`,
@@ -302,6 +311,10 @@ it('should render with custom localization', () => {
   expect(pageSizeSelector).toBeTruthy();
   expect(pageSizeSelector.textContent).toEqual('1-10 of test 195');
 
+  expect(
+    container.querySelector('.iui-paginator-page-size-label'),
+  ).toHaveTextContent('Items per test page');
+
   pageSizeSelector.click();
   const pageSizeSelections = container.querySelectorAll('.iui-menu-item');
   expect(pageSizeSelections).toHaveLength(3);
@@ -309,6 +322,26 @@ it('should render with custom localization', () => {
     expect(el.textContent).toEqual(`${pageSizeList[index]} per test page`);
     expect(el.classList.contains('iui-active')).toBe(index === 0);
   });
+});
+
+it('should not show rowsPerPageLabel on narrow widths', () => {
+  jest
+    .spyOn(UseContainerWidth, 'useContainerWidth')
+    .mockReturnValue([jest.fn(), 600]);
+
+  const { container } = renderComponent();
+  expect(container.querySelector('.iui-paginator-page-size-label')).toBeFalsy();
+});
+
+it('should hide rowsPerPageLabel if null is passed', () => {
+  jest
+    .spyOn(UseContainerWidth, 'useContainerWidth')
+    .mockReturnValue([jest.fn(), 1200]);
+
+  const { container } = renderComponent({
+    localization: { rowsPerPageLabel: null },
+  });
+  expect(container.querySelector('.iui-paginator-page-size-label')).toBeFalsy();
 });
 
 it('should render with custom className and style', () => {

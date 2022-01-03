@@ -1335,6 +1335,7 @@ export const Full: Story<Partial<TableProps>> = (args) => {
         rowProps={rowProps}
         isSelectable
         isSortable
+        isResizable
         {...args}
       />
       <Tooltip
@@ -1354,6 +1355,7 @@ Full.args = {
   ],
   isSelectable: true,
   isSortable: true,
+  isResizable: true,
 };
 
 export const Condensed: Story<Partial<TableProps>> = Basic.bind({});
@@ -1525,7 +1527,7 @@ export const WithPaginator: Story<Partial<TableProps>> = (args) => {
 
   const data = useMemo(
     () =>
-      Array(495)
+      Array(5005)
         .fill(null)
         .map((_, index) => generateItem(index)),
     [generateItem],
@@ -1639,7 +1641,7 @@ export const WithManualPaginator: Story<Partial<TableProps>> = (args) => {
         currentPage={currentPage}
         isLoading={false}
         // Imagining we know the total count of data items
-        totalRowsCount={500}
+        totalRowsCount={60000}
       />
     ),
     [currentPage, pageSizeList],
@@ -1676,3 +1678,442 @@ WithManualPaginator.argTypes = {
     docs: { source: { excludeDecorators: true } },
   },
 };
+
+export const ResizableColumns: Story<Partial<TableProps>> = (args) => {
+  type TableStoryDataType = {
+    index: number;
+    name: string;
+    description: string;
+    id: string;
+    startDate: Date;
+    endDate: Date;
+  };
+
+  const columns = useMemo(
+    (): Column<TableStoryDataType>[] => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'index',
+            Header: '#',
+            accessor: 'index',
+            width: 80,
+            disableResizing: true,
+          },
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            fieldType: 'text',
+            minWidth: 100,
+          },
+          {
+            id: 'id',
+            Header: 'ID',
+            accessor: 'id',
+            width: 100,
+            disableResizing: true,
+          },
+          {
+            id: 'startDate',
+            Header: 'Start date',
+            accessor: 'startDate',
+            Cell: (props: CellProps<TableStoryDataType>) => {
+              return props.row.original.startDate.toLocaleDateString('en-US');
+            },
+            width: 100,
+            disableResizing: true,
+          },
+          {
+            id: 'endDate',
+            Header: 'End date',
+            Cell: (props: CellProps<TableStoryDataType>) => {
+              return props.row.original.endDate.toLocaleDateString('en-US');
+            },
+            maxWidth: 200,
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const data = useMemo(
+    () => [
+      {
+        index: 1,
+        name: 'Name1',
+        description: 'Description1',
+        id: '111',
+        startDate: new Date('May 1, 2021'),
+        endDate: new Date('Jun 1, 2021'),
+      },
+      {
+        index: 2,
+        name: 'Name2',
+        description: 'Description2',
+        id: '222',
+        startDate: new Date('May 2, 2021'),
+        endDate: new Date('Jun 2, 2021'),
+      },
+      {
+        index: 3,
+        name: 'Name3',
+        description: 'Description3',
+        id: '333',
+        startDate: new Date('May 3, 2021'),
+        endDate: new Date('Jun 3, 2021'),
+      },
+    ],
+    [],
+  );
+
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      emptyTableContent='No data.'
+      isResizable
+      isSortable
+      {...args}
+    />
+  );
+};
+
+ResizableColumns.args = {
+  isResizable: true,
+  data: [
+    {
+      index: 1,
+      name: 'Name1',
+      description: 'Description1',
+      id: '111',
+      startDate: new Date('May 1, 2021'),
+      endDate: new Date('Jun 1, 2021'),
+    },
+    {
+      index: 2,
+      name: 'Name2',
+      description: 'Description2',
+      id: '222',
+      startDate: new Date('May 2, 2021'),
+      endDate: new Date('Jun 2, 2021'),
+    },
+    {
+      index: 3,
+      name: 'Name3',
+      description: 'Description3',
+      id: '333',
+      startDate: new Date('May 3, 2021'),
+      endDate: new Date('Jun 3, 2021'),
+    },
+  ],
+};
+
+export const ZebraStripedRows: Story<Partial<TableProps>> = (args) => {
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+            Filter: tableFilters.TextFilter(),
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+            Filter: tableFilters.TextFilter(),
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  type TableStoryDataType = {
+    name: string;
+    description: string;
+    subRows: TableStoryDataType[];
+  };
+
+  const generateItem = useCallback(
+    (index: number, parentRow = '', depth = 0): TableStoryDataType => {
+      const keyValue = parentRow ? `${parentRow}.${index}` : `${index}`;
+      return {
+        name: `Name ${keyValue}`,
+        description: `Description ${keyValue}`,
+        subRows:
+          depth < 2
+            ? Array(Math.round(index % 5))
+                .fill(null)
+                .map((_, index) => generateItem(index, keyValue, depth + 1))
+            : [],
+      };
+    },
+    [],
+  );
+
+  const data = useMemo(
+    () =>
+      Array(20)
+        .fill(null)
+        .map((_, index) => generateItem(index)),
+    [generateItem],
+  );
+
+  return (
+    <>
+      <Table
+        emptyTableContent='No data.'
+        isSelectable
+        isSortable
+        styleType='zebra-rows'
+        {...args}
+        columns={columns}
+        data={data}
+        style={{ height: '100%' }}
+      />
+    </>
+  );
+};
+
+ZebraStripedRows.args = {
+  isSelectable: true,
+  isSortable: true,
+  styleType: 'zebra-rows',
+};
+
+export const HorizontalScroll: Story<Partial<TableProps>> = (args) => {
+  const data = useMemo(
+    () => [
+      {
+        product: 'Product 1',
+        price: 5,
+        quantity: 500,
+        rating: '4/5',
+        deliveryTime: 5,
+      },
+      {
+        product: 'Product 2',
+        price: 12,
+        quantity: 1200,
+        rating: '1/5',
+        deliveryTime: 25,
+      },
+      {
+        product: 'Product 3',
+        price: 2.99,
+        quantity: 1500,
+        rating: '3/5',
+        deliveryTime: 7,
+      },
+      {
+        product: 'Product 4',
+        price: 20,
+        quantity: 50,
+        rating: '4/5',
+        deliveryTime: 2,
+      },
+      {
+        product: 'Product 5',
+        price: 1.99,
+        quantity: 700,
+        rating: '5/5',
+        deliveryTime: 1,
+      },
+      {
+        product: 'Product 6',
+        price: 499,
+        quantity: 30,
+        rating: '5/5',
+        deliveryTime: 20,
+      },
+      {
+        product: 'Product 7',
+        price: 13.99,
+        quantity: 130,
+        rating: '1/5',
+        deliveryTime: 30,
+      },
+      {
+        product: 'Product 8',
+        price: 5.99,
+        quantity: 500,
+        rating: '4/5',
+        deliveryTime: 5,
+      },
+      {
+        product: 'Product 9',
+        price: 12,
+        quantity: 1200,
+        rating: '1/5',
+        deliveryTime: 25,
+      },
+      {
+        product: 'Product 10',
+        price: 2.99,
+        quantity: 200,
+        rating: '3/5',
+        deliveryTime: 17,
+      },
+    ],
+    [],
+  );
+
+  const columns = useMemo(
+    (): Column[] => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'product',
+            Header: 'Product',
+            accessor: 'product',
+            minWidth: 400,
+          },
+          {
+            id: 'price',
+            Header: 'Price',
+            accessor: 'price',
+            width: 400,
+            Cell: (props: CellProps<typeof data[0]>) => {
+              return `$${props.value}`;
+            },
+          },
+          {
+            id: 'quantity',
+            Header: 'Quantity',
+            accessor: 'quantity',
+            width: 400,
+          },
+          {
+            id: 'rating',
+            Header: 'Rating',
+            accessor: 'rating',
+            width: 400,
+          },
+          {
+            id: 'deliveryTime',
+            Header: 'Delivery Time',
+            accessor: 'deliveryTime',
+            width: 400,
+            Cell: (props: CellProps<typeof data[0]>) => {
+              return `${props.value} day(s)`;
+            },
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      emptyTableContent='No data.'
+      style={{ height: '100%' }}
+      {...args}
+    />
+  );
+};
+
+HorizontalScroll.args = {
+  data: [
+    {
+      product: 'Product 1',
+      price: 5,
+      quantity: 500,
+      rating: '4/5',
+      deliveryTime: 5,
+    },
+    {
+      product: 'Product 2',
+      price: 12,
+      quantity: 1200,
+      rating: '1/5',
+      deliveryTime: 25,
+    },
+    {
+      product: 'Product 3',
+      price: 2.99,
+      quantity: 1500,
+      rating: '3/5',
+      deliveryTime: 7,
+    },
+    {
+      product: 'Product 4',
+      price: 20,
+      quantity: 50,
+      rating: '4/5',
+      deliveryTime: 2,
+    },
+    {
+      product: 'Product 5',
+      price: 1.99,
+      quantity: 700,
+      rating: '5/5',
+      deliveryTime: 1,
+    },
+    {
+      product: 'Product 6',
+      price: 499,
+      quantity: 30,
+      rating: '5/5',
+      deliveryTime: 20,
+    },
+    {
+      product: 'Product 7',
+      price: 13.99,
+      quantity: 130,
+      rating: '1/5',
+      deliveryTime: 30,
+    },
+    {
+      product: 'Product 8',
+      price: 5.99,
+      quantity: 500,
+      rating: '4/5',
+      deliveryTime: 5,
+    },
+    {
+      product: 'Product 9',
+      price: 12,
+      quantity: 1200,
+      rating: '1/5',
+      deliveryTime: 25,
+    },
+    {
+      product: 'Product 10',
+      price: 2.99,
+      quantity: 200,
+      rating: '3/5',
+      deliveryTime: 17,
+    },
+  ],
+};
+
+HorizontalScroll.decorators = [
+  (Story) => (
+    <div
+      style={{
+        height: '375px',
+        maxHeight: '90vh',
+        maxWidth: '1000px',
+      }}
+    >
+      <Story />
+    </div>
+  ),
+];

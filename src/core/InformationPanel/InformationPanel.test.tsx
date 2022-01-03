@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, act } from '@testing-library/react';
 
 import { InformationPanel } from './InformationPanel';
 import { InformationPanelWrapper } from './InformationPanelWrapper';
@@ -11,7 +11,6 @@ import { InformationPanelHeader } from './InformationPanelHeader';
 import { InformationPanelBody } from './InformationPanelBody';
 import { SvgCloseSmall, SvgEdit } from '@itwin/itwinui-icons-react';
 import { IconButton } from '../Buttons';
-import { act } from 'react-dom/test-utils';
 
 const getBoundingClientRect = HTMLElement.prototype.getBoundingClientRect;
 HTMLElement.prototype.getBoundingClientRect = () => {
@@ -95,7 +94,7 @@ it('should render close icon correctly', () => {
 
   const {
     container: { firstChild: closeSvg },
-  } = render(<SvgCloseSmall className='iui-icon' aria-hidden />);
+  } = render(<SvgCloseSmall className='iui-button-icon' aria-hidden />);
 
   const closeButton = infoPanel.querySelector(
     '.iui-information-header > .iui-information-header-actions > .iui-button.iui-borderless',
