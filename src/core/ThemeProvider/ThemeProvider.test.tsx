@@ -38,54 +38,75 @@ it('should respect os theme (dark)', () => {
   expectDarkTheme();
 });
 
-it('should observe changes to os theme', () => {
+describe('media query', () => {
   const originalMatchMedia = window.matchMedia;
-  const listeners: Array<(e: { matches: boolean }) => void> = [];
+  let listeners: Array<(e: { matches: boolean }) => void> = [];
   let matches = false;
 
-  const mockDispatch = jest
+  const changeOSTheme = jest
     .fn()
-    .mockImplementation((event: { matches: boolean }) => {
+    .mockImplementation((theme: 'dark' | 'light') => {
       listeners.forEach((listener) => {
-        matches = event.matches;
-        listener(event);
+        matches = theme === 'dark';
+        listener({ matches: matches });
       });
       return true;
     });
 
-  window.matchMedia = jest.fn().mockReturnValueOnce({
-    matches: matches,
-    addEventListener: (
-      _: 'change',
-      listener: (e: { matches: boolean }) => void,
-    ) => {
-      listeners.push(listener);
-    },
-    removeEventListener: (
-      _: 'change',
-      listener: (e: { matches: boolean }) => void,
-    ) => {
-      const i = listeners.indexOf(listener);
-      if (i > -1) {
-        listeners.splice(i);
-      }
-    },
-    dispatchEvent: mockDispatch,
+  beforeEach(() => {
+    window.matchMedia = jest.fn().mockReturnValueOnce({
+      matches: matches,
+      addEventListener: (
+        _: 'change',
+        listener: (e: { matches: boolean }) => void,
+      ) => {
+        listeners.push(listener);
+      },
+      removeEventListener: (
+        _: 'change',
+        listener: (e: { matches: boolean }) => void,
+      ) => {
+        const i = listeners.indexOf(listener);
+        if (i > -1) {
+          listeners.splice(i);
+        }
+      },
+    });
   });
 
-  render(<ThemeProvider theme='os' />);
-  expectLightTheme();
+  afterEach(() => {
+    window.matchMedia = originalMatchMedia;
+    listeners = [];
+    matches = false;
+  });
 
-  mockDispatch({ matches: true });
-  expectDarkTheme();
+  it('should observe changes to os theme', () => {
+    render(<ThemeProvider theme='os' />);
+    expectLightTheme();
 
-  mockDispatch({ matches: false });
-  expectLightTheme();
+    changeOSTheme('dark');
+    expectDarkTheme();
 
-  mockDispatch({ matches: true });
-  expectDarkTheme();
+    changeOSTheme('light');
+    expectLightTheme();
 
-  window.matchMedia = originalMatchMedia;
+    changeOSTheme('dark');
+    expectDarkTheme();
+  });
+
+  it('should stop observing when theme is not os anymore', () => {
+    const { rerender } = render(<ThemeProvider theme='os' />);
+    expectLightTheme();
+
+    changeOSTheme('dark');
+    expectDarkTheme();
+
+    rerender(<ThemeProvider theme='dark' />);
+    expectDarkTheme();
+
+    changeOSTheme('light');
+    expectDarkTheme();
+  });
 });
 
 it('should set light theme', () => {
