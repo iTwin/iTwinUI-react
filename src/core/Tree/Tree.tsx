@@ -57,7 +57,7 @@ export type TreeProps = {
    */
   selectionType?: 'single' | 'multi' | 'none';
   /**
-   * Node renderer
+   * Node renderer.
    */
   nodeRenderer?: (props: TreeData) => JSX.Element;
   /**
@@ -67,9 +67,24 @@ export type TreeProps = {
 } & CommonProps;
 
 /**
- * Describe me here!
- * @example
- * Example usages go here!
+  <Tree
+    data={data}
+    nodeRenderer={(props) => (
+      <TreeNode
+        label={props.label}
+        sublabel={props.subLabel}
+        subNodes={props.subnodes}
+        onNodeExpanded={onNodeExpanded}
+        isExpanded={props.isExpanded}
+        isDisabled={props.isDisabled}
+        nodeCheckbox={<Checkbox variant='eyeball' checked={true} />}
+        onNodeCheckboxSelected={onCheckboxSelected}
+        icon={<SvgPlaceholder />}
+      />
+    )}
+    onNodeSelected={onSelectedNodeChange}
+    {...args}
+  />
  */
 export const Tree = (props: TreeProps) => {
   const {

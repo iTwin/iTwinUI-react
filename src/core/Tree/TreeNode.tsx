@@ -20,7 +20,7 @@ export type TreeNodeProps = {
    */
   sublabel?: React.ReactNode;
   /**
-   * Icon shown before title and caption content.
+   * Icon shown before label and sublabel content.
    */
   icon?: JSX.Element;
   /**
@@ -29,7 +29,8 @@ export type TreeNodeProps = {
    */
   isDisabled?: boolean;
   /**
-   * Is TreeNode expanded, if true subNodes will be visible.
+   * Is TreeNode expanded.
+   * If true, subNodes will be visible.
    * @default false
    */
   isExpanded?: boolean;
@@ -38,11 +39,13 @@ export type TreeNodeProps = {
    */
   onNodeExpanded?: (nodeId: string) => void;
   /**
-   * Ids of subNodes. If undefined expander button is not shown.
+   * The TreeNode's child nodes.
+   * If undefined or empty, expander button is not shown.
    */
   subNodes?: Array<TreeData>;
   /**
-   * Checkbox to be shown before TreeNode, if undefined checkbox will not be shown.
+   * Checkbox to be shown before TreeNode.
+   * If undefined checkbox will not be shown.
    * Recommended to use Checkbox component.
    */
   nodeCheckbox?: React.ReactNode;
@@ -57,9 +60,17 @@ export type TreeNodeProps = {
 } & CommonProps;
 
 /**
- * Describe me here!
- * @example
- * Example usages go here!
+  <TreeNode
+    label={label}
+    sublabel={subLabel}
+    subNodes={subnodes}
+    onNodeExpanded={onNodeExpanded}
+    isExpanded={isExpanded}
+    isDisabled={isDisabled}
+    nodeCheckbox={<Checkbox variant='eyeball' checked={true} />}
+    onNodeCheckboxSelected={onCheckboxSelected}
+    icon={<SvgPlaceholder />}
+  />
  */
 export const TreeNode = (props: TreeNodeProps) => {
   const {
@@ -107,7 +118,7 @@ export const TreeNode = (props: TreeNodeProps) => {
   }, [isExpanded]);
 
   const [visible, setVisible] = React.useState(
-    React.isValidElement(parentNode) ? parentNode.data.isExpanded : true,
+    parentNode ? parentNode.data.isExpanded : true,
   );
   React.useEffect(() => {
     let currentParent = parentNode;
@@ -180,11 +191,14 @@ export const TreeNode = (props: TreeNodeProps) => {
       >
         {visible && (
           <div
-            className={cx('iui-tree-node', {
-              'iui-active': isSelected,
-              'iui-disabled': isDisabled,
+            className={cx(
+              'iui-tree-node',
+              {
+                'iui-active': isSelected,
+                'iui-disabled': isDisabled,
+              },
               className,
-            })}
+            )}
             style={styleLevel}
             onClick={(e) => onNodeClick(e)}
             tabIndex={isSelected ? 0 : -1}
