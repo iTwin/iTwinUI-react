@@ -6,14 +6,10 @@ import cx from 'classnames';
 import React from 'react';
 
 import { ButtonProps } from '../Button';
-import {
-  AsProp,
-  PolymorphicComponentPropsWithRef,
-  useTheme,
-} from '../../utils';
+import { PolymorphicForwardRefComponent, useTheme } from '../../utils';
 import '@itwin/itwinui-css/css/button.css';
 
-type IconButtonOwnProps = {
+export type IconButtonProps = {
   /**
    * Button gets active style.
    * @default false
@@ -21,13 +17,10 @@ type IconButtonOwnProps = {
   isActive?: boolean;
 } & Omit<ButtonProps, 'startIcon' | 'endIcon'>;
 
-export type IconButtonProps<
-  T extends React.ElementType = 'button'
-> = PolymorphicComponentPropsWithRef<T, IconButtonOwnProps>;
-
-type IconButtonComponent = <T extends React.ElementType = 'button'>(
-  props: IconButtonProps<T> & AsProp<T>,
-) => React.ReactElement | null;
+type IconButtonComponent = PolymorphicForwardRefComponent<
+  'button',
+  IconButtonProps
+>;
 
 /**
  * Icon button
@@ -36,10 +29,7 @@ type IconButtonComponent = <T extends React.ElementType = 'button'>(
  * <IconButton styleType='borderless'><SvgAdd /></IconButton>
  */
 export const IconButton: IconButtonComponent = React.forwardRef(
-  <T extends React.ElementType = 'button'>(
-    props: IconButtonProps<T> & AsProp<T>,
-    ref: React.ComponentPropsWithRef<T>['ref'],
-  ) => {
+  (props, ref) => {
     const {
       isActive,
       children,

@@ -18,6 +18,10 @@ export default {
     style: { control: { disable: true } },
     className: { control: { disable: true } },
     type: { control: { disable: true } },
+    as: { type: { name: 'string', required: false } },
+  },
+  args: {
+    as: 'button',
   },
 } as Meta<ButtonProps>;
 

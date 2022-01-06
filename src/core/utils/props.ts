@@ -37,21 +37,31 @@ export type CommonProps = {
 export type PolymorphicComponentProps<
   T extends React.ElementType,
   Props = Record<string, unknown>
-> = Props & Omit<React.ComponentPropsWithoutRef<T>, keyof Props>;
+> = Merge<React.ComponentPropsWithoutRef<T>, Props>;
 
 /**
- * Adds correct ref type to {@link PolymorphicComponentProps}.
+ * Merges original OwnProps and the inferred props from `as` element.
+ *
+ * T should be the default element that is used for the `as`  prop.
  */
-export type PolymorphicComponentPropsWithRef<
-  T extends React.ElementType,
-  Props = Record<string, unknown>
-> = PolymorphicComponentProps<T, Props> & {
-  ref?: React.ComponentPropsWithRef<T>['ref'];
-};
+export interface PolymorphicForwardRefComponent<
+  T,
+  OwnProps = Record<string, unknown>
+> extends React.ForwardRefExoticComponent<
+    Merge<
+      T extends React.ElementType ? React.ComponentPropsWithRef<T> : never,
+      OwnProps & { as?: T }
+    >
+  > {
+  <As = T>(
+    props: As extends ''
+      ? { as: keyof JSX.IntrinsicElements }
+      : As extends React.ComponentType<infer P>
+      ? Merge<P, OwnProps & { as: As }>
+      : As extends keyof JSX.IntrinsicElements
+      ? Merge<JSX.IntrinsicElements[As], OwnProps & { as: As }>
+      : never,
+  ): React.ReactElement | null;
+}
 
-export type AsProp<T> = {
-  /**
-   * What element should this component be rendered as?
-   */
-  as?: T;
-};
+type Merge<P1, P2> = Omit<P1, keyof P2> & P2;
