@@ -160,7 +160,7 @@ it('should render without label correctly', () => {
   });
 });
 
-it('should render as anchor element', () => {
+it('should support polymorphic `as` prop', () => {
   const { container } = render(
     <Button as='a' href='https://example.com/'>
       label
