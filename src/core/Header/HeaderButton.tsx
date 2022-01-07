@@ -35,13 +35,13 @@ export type HeaderButtonProps = {
   Pick<ButtonProps, 'startIcon' | 'endIcon'>;
 
 const isSplitButton = (
-  props: Partial<HeaderButtonProps> & { [k: string]: unknown },
+  props: Omit<Partial<SplitButtonProps>, 'name'>,
 ): props is SplitButtonProps => {
   return !!props.menuItems && !!props.onClick;
 };
 
 const isDropdownButton = (
-  props: Partial<HeaderButtonProps> & { [k: string]: unknown },
+  props: Partial<DropdownButtonProps>,
 ): props is DropdownButtonProps => {
   return !!props.menuItems;
 };
