@@ -167,7 +167,7 @@ it('should render as anchor element', () => {
     </Button>,
   );
 
-  const button = container.querySelector('a.iui-button') as HTMLButtonElement;
+  const button = container.querySelector('a.iui-button') as HTMLAnchorElement;
   expect(button).toHaveTextContent('label');
-  expect(button).toHaveAttribute('href', 'https://example.com/');
+  expect(button.href).toEqual('https://example.com/');
 });
