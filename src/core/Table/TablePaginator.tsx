@@ -145,7 +145,8 @@ export const TablePaginator = (props: TablePaginatorProps) => {
     // Checking `needFocus.current` prevents from focusing page when clicked on previous/next page.
     if (isMounted.current && needFocus.current) {
       const buttonToFocus = Array.from(
-        pageListRef.current?.querySelectorAll('.iui-button') ?? [],
+        pageListRef.current?.querySelectorAll('.iui-paginator-page-button') ??
+          [],
       ).find((el) => el.textContent?.trim() === (focusedIndex + 1).toString());
       (buttonToFocus as HTMLButtonElement | undefined)?.focus();
       needFocus.current = false;
