@@ -13,12 +13,11 @@ export const TreeContext = React.createContext<
       setSelectedNode?: (
         node: Array<string> | ((prev: Array<string>) => Array<string>),
       ) => void;
-      onNodeSelected?: (
-        event: React.SyntheticEvent,
-        nodeIds: Array<string>,
+      expandedNodes?: Array<string>;
+      setExpandedNodes?: (
+        node: Array<string> | ((prev: Array<string>) => Array<string>),
       ) => void;
       nodeDepth?: number;
-      selectionType?: 'single' | 'multi' | 'none';
       parentNode?: FlatNode;
     }
   | undefined
@@ -26,6 +25,7 @@ export const TreeContext = React.createContext<
 
 export type TreeData = {
   subnodes: Array<TreeData>;
+  nodeId: string;
   label?: string;
   subLabel?: string;
   isExpanded?: boolean;
@@ -42,21 +42,6 @@ type FlatNode = {
 
 export type TreeProps = {
   /**
-   * Callback fired when selecting a TreeNode.
-   */
-  onNodeSelected?: (
-    event: React.SyntheticEvent,
-    nodeIds: Array<string>,
-  ) => void;
-  /**
-   * Type of selection for Tree.
-   * Single allows only 1 TreeNode to be selected at a time.
-   * Multi allows multiple TreeNodes to be selected.
-   * None does not allow selection of TreeNodes.
-   * @default single
-   */
-  selectionType?: 'single' | 'multi' | 'none';
-  /**
    * Node renderer.
    */
   nodeRenderer?: (props: TreeData) => JSX.Element;
@@ -64,35 +49,48 @@ export type TreeProps = {
    * Items inside tree.
    */
   data?: Array<TreeData>;
+  /**
+   * Node ids of expanded nodes.
+   * If undefined, expanding and collapsing nodes will be handled automatically.
+   */
+  expandedNodes?: Array<string>;
+  /**
+   * Node ids of selected nodes.
+   * If undefined, selecting nodes will be handled automatically.
+   */
+  selectedNodes?: Array<string>;
 } & CommonProps;
 
 /**
+ * @example
   <Tree
     data={data}
     nodeRenderer={(props) => (
       <TreeNode
+        nodeId={props.nodeId}
         label={props.label}
         sublabel={props.subLabel}
         subNodes={props.subnodes}
         onNodeExpanded={onNodeExpanded}
-        isExpanded={props.isExpanded}
+        onNodeSelected={onSelectedNodeChange}
         isDisabled={props.isDisabled}
         nodeCheckbox={<Checkbox variant='eyeball' checked={true} />}
         onNodeCheckboxSelected={onCheckboxSelected}
         icon={<SvgPlaceholder />}
       />
     )}
-    onNodeSelected={onSelectedNodeChange}
+    expandedNodes={expandedNodes}
+    selectedNodes={selectedNodes}
     {...args}
   />
  */
 export const Tree = (props: TreeProps) => {
   const {
-    onNodeSelected,
-    selectionType = 'single',
     data,
     className,
     nodeRenderer,
+    expandedNodes,
+    selectedNodes,
     ...rest
   } = props;
   useTheme();
@@ -165,7 +163,8 @@ export const Tree = (props: TreeProps) => {
     }
   };
 
-  const [selectedNodes, setSelectedNode] = React.useState<Array<string>>();
+  const [selected, setSelected] = React.useState<Array<string>>([]);
+  const [expanded, setExpanded] = React.useState<Array<string>>([]);
 
   const flatNodesList = React.useMemo(() => {
     const flatList: FlatNode[] = [];
@@ -210,10 +209,10 @@ export const Tree = (props: TreeProps) => {
         <React.Fragment key={flatNode.id}>
           <TreeContext.Provider
             value={{
-              selectedNodes,
-              setSelectedNode,
-              onNodeSelected,
-              selectionType,
+              selectedNodes: selectedNodes ?? selected,
+              setSelectedNode: selectedNodes ? undefined : setSelected,
+              expandedNodes: expandedNodes ?? expanded,
+              setExpandedNodes: expandedNodes ? undefined : setExpanded,
               nodeDepth: flatNode.depth,
               parentNode: flatNode.parent,
             }}

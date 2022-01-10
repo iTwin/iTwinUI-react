@@ -12,9 +12,13 @@ import { TreeContext, TreeData } from './Tree';
 
 export type TreeNodeProps = {
   /**
+   * Unique id of the node.
+   */
+  nodeId: string;
+  /**
    * The main text displayed on the node.
    */
-  label: React.ReactNode;
+  label?: React.ReactNode;
   /**
    * Small note displayed below main label.
    */
@@ -29,15 +33,13 @@ export type TreeNodeProps = {
    */
   isDisabled?: boolean;
   /**
-   * Is TreeNode expanded.
-   * If true, subNodes will be visible.
-   * @default false
-   */
-  isExpanded?: boolean;
-  /**
    * Callback fired when expanding or closing a TreeNode.
    */
-  onNodeExpanded?: (nodeId: string) => void;
+  onNodeExpanded?: (nodeId: string, expanded: boolean) => void;
+  /**
+   * Callback fired when selecting a TreeNode.
+   */
+  onNodeSelected?: (nodeId: string, selected: boolean) => void;
   /**
    * The TreeNode's child nodes.
    * If undefined or empty, expander button is not shown.
@@ -60,12 +62,14 @@ export type TreeNodeProps = {
 } & CommonProps;
 
 /**
+ * @example
   <TreeNode
+    nodeId={nodeId}
     label={label}
     sublabel={subLabel}
     subNodes={subnodes}
     onNodeExpanded={onNodeExpanded}
-    isExpanded={isExpanded}
+    onNodeSelected={onSelectedNodeChange}
     isDisabled={isDisabled}
     nodeCheckbox={<Checkbox variant='eyeball' checked={true} />}
     onNodeCheckboxSelected={onCheckboxSelected}
@@ -74,6 +78,7 @@ export type TreeNodeProps = {
  */
 export const TreeNode = (props: TreeNodeProps) => {
   const {
+    nodeId,
     label,
     sublabel,
     children,
@@ -81,7 +86,7 @@ export const TreeNode = (props: TreeNodeProps) => {
     className,
     icon,
     isDisabled = false,
-    isExpanded = false,
+    onNodeSelected,
     onNodeExpanded,
     subNodes,
     nodeCheckbox,
@@ -97,8 +102,8 @@ export const TreeNode = (props: TreeNodeProps) => {
   const subNodeIds = React.useMemo(() => {
     const nodes = Array<string>();
     subNodes?.forEach((subNode) => {
-      if (subNode.label) {
-        nodes.push(subNode?.label);
+      if (subNode.nodeId) {
+        nodes.push(subNode?.nodeId);
       }
     });
     return nodes;
@@ -112,83 +117,75 @@ export const TreeNode = (props: TreeNodeProps) => {
     [nodeDepth, style],
   );
 
-  const [expanded, setExpanded] = React.useState(isExpanded);
-  React.useEffect(() => {
-    setExpanded(isExpanded);
-  }, [isExpanded]);
+  const expandedNodes = React.useMemo(() => {
+    return context?.expandedNodes ?? [];
+  }, [context?.expandedNodes]);
 
-  const [visible, setVisible] = React.useState(
-    parentNode ? parentNode.data.isExpanded : true,
-  );
-  React.useEffect(() => {
-    let currentParent = parentNode;
-    let isParentExpanded = parentNode?.data.isExpanded ?? true;
-    while (currentParent) {
-      if (currentParent.data.isExpanded === false) {
-        isParentExpanded = false;
-      }
-      currentParent = currentParent.parent;
+  const isExpanded = React.useMemo(() => {
+    return expandedNodes.findIndex((id) => id === nodeId) != -1;
+  }, [expandedNodes, nodeId]);
+
+  const onExpandChanged = (e: React.SyntheticEvent<Element, Event>) => {
+    if (isExpanded) {
+      context?.setExpandedNodes?.(
+        expandedNodes.filter((item) => item != nodeId),
+      );
+    } else {
+      context?.setExpandedNodes?.([...expandedNodes, nodeId]);
     }
-    setVisible(isParentExpanded);
-  }, [parentNode]);
+
+    onNodeExpanded?.(nodeId, !isExpanded);
+    e.stopPropagation();
+  };
+
+  const visible = React.useMemo(() => {
+    let isParentExpanded = parentNode
+      ? expandedNodes.findIndex((id) => id === parentNode.data.nodeId) != -1
+      : true;
+    if (parentNode) {
+      let currentParent = parentNode.parent;
+      while (currentParent) {
+        if (
+          expandedNodes.findIndex((id) => id === currentParent?.data.nodeId) ===
+          -1
+        ) {
+          isParentExpanded = false;
+        }
+        currentParent = currentParent.parent;
+      }
+    }
+    return isParentExpanded;
+  }, [expandedNodes, parentNode]);
 
   const [isChecked, setIsChecked] = React.useState(
     React.isValidElement(nodeCheckbox) ? nodeCheckbox.props['checked'] : false,
   );
 
   const selectedNodes = React.useMemo(() => {
-    let nodes = Array<string>();
-    if (context?.selectionType === 'single' && context?.selectedNodes?.[0]) {
-      nodes = [context?.selectedNodes?.[0]];
-    } else if (context?.selectionType === 'multi') {
-      nodes = context?.selectedNodes ?? [];
-    }
-    return nodes;
-  }, [context?.selectedNodes, context?.selectionType]);
+    return context?.selectedNodes ?? [];
+  }, [context?.selectedNodes]);
 
   const isSelected = React.useMemo(() => {
-    let selected = false;
-    selectedNodes?.forEach((node) => {
-      if (node === label) {
-        selected = true;
-      }
-    });
-    return selected;
-  }, [selectedNodes, label]);
+    return selectedNodes.findIndex((id) => id === nodeId) != -1;
+  }, [selectedNodes, nodeId]);
 
-  const onNodeClick = (e: React.SyntheticEvent<Element, Event>) => {
-    if (context?.selectionType === 'none' || isDisabled) {
+  const onNodeClick = () => {
+    if (isDisabled) {
       return;
-    } else if (context?.selectionType === 'single') {
-      if (isSelected) {
-        context?.setSelectedNode?.([]);
-        return;
-      }
-      context?.setSelectedNode?.([label?.toString() ?? '']);
-      context?.onNodeSelected?.(e, [label?.toString() ?? '']);
-    } else if (context?.selectionType === 'multi') {
-      const nodes = Array<string>();
-      selectedNodes?.forEach((node) => {
-        if (node != label) {
-          nodes.push(node);
-        }
-      });
-      if (!isSelected) {
-        nodes.push(label?.toString() ?? '');
-        context?.onNodeSelected?.(e, nodes);
-      }
-      context?.setSelectedNode?.(nodes);
     }
+    if (isSelected) {
+      context?.setSelectedNode?.(
+        selectedNodes.filter((item) => item != nodeId),
+      );
+    } else {
+      context?.setSelectedNode?.([nodeId]);
+    }
+    onNodeSelected?.(nodeId, !isSelected);
   };
 
   return (
     <>
-      <li
-        role='treeitem'
-        id={label?.toString() ?? ''}
-        aria-expanded={expanded}
-        {...rest}
-      >
+      <li role='treeitem' id={nodeId} aria-expanded={isExpanded} {...rest}>
         {visible && (
           <div
             className={cx(
@@ -200,7 +197,7 @@ export const TreeNode = (props: TreeNodeProps) => {
               className,
             )}
             style={styleLevel}
-            onClick={(e) => onNodeClick(e)}
+            onClick={() => onNodeClick()}
             tabIndex={isSelected ? 0 : -1}
           >
             {nodeCheckbox && React.isValidElement(nodeCheckbox)
@@ -210,10 +207,7 @@ export const TreeNode = (props: TreeNodeProps) => {
                   checked: isChecked,
                   onClick: () => {
                     setIsChecked(!isChecked);
-                    onNodeCheckboxSelected?.(
-                      label?.toString() ?? '',
-                      !isChecked,
-                    );
+                    onNodeCheckboxSelected?.(nodeId, !isChecked);
                   },
                 })
               : nodeCheckbox}
@@ -222,17 +216,13 @@ export const TreeNode = (props: TreeNodeProps) => {
                 <IconButton
                   styleType='borderless'
                   size='small'
-                  onClick={(e) => {
-                    setExpanded(!expanded);
-                    onNodeExpanded?.(label?.toString() ?? '');
-                    e.stopPropagation();
-                  }}
+                  onClick={(e) => onExpandChanged(e)}
                   disabled={isDisabled}
                   tabIndex={-1}
                 >
                   <SvgChevronRight
                     className={cx('iui-tree-node-content-expander-icon', {
-                      'iui-tree-node-content-expander-icon-expanded': expanded,
+                      'iui-tree-node-content-expander-icon-expanded': isExpanded,
                     })}
                   />
                 </IconButton>

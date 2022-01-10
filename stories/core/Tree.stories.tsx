@@ -19,21 +19,19 @@ export default {
 } as Meta<TreeProps>;
 
 export const Basic: Story<TreeProps> = (args) => {
-  const onSelectedNodeChange = (
-    event: React.SyntheticEvent,
-    nodeIds: React.ReactNode[],
-  ) => {
-    action(`Selected node ${nodeIds[0]}`)();
+  const onSelectedNodeChange = (nodeId: string, selected: boolean) => {
+    if (selected) {
+      action(`Selected node ${nodeId}`)();
+    } else {
+      action(`Unselected node ${nodeId}`)();
+    }
   };
 
-  const [expandedNodes, setExpandedNodes] = React.useState(['']);
-  const onNodeExpanded = (nodeId: string) => {
-    if (expandedNodes.findIndex((id) => id === nodeId) != -1) {
-      setExpandedNodes(expandedNodes.filter((item) => item != nodeId));
-      action(`Closed node ${nodeId}`)();
-    } else {
-      setExpandedNodes([...expandedNodes, nodeId]);
+  const onNodeExpanded = (nodeId: string, expanded: boolean) => {
+    if (expanded) {
       action(`Expanded node ${nodeId}`)();
+    } else {
+      action(`Closed node ${nodeId}`)();
     }
   };
 
@@ -56,10 +54,9 @@ export const Basic: Story<TreeProps> = (args) => {
     (index: number, parentRow = '', depth = 0): TreeData => {
       const keyValue = parentRow ? `${parentRow}.${index}` : `${index}`;
       return {
+        nodeId: `Node ${keyValue}`,
         label: `Node ${keyValue}`,
         subLabel: `Sublabel for Node ${keyValue}`,
-        isExpanded:
-          expandedNodes.findIndex((id) => id === `Node ${keyValue}`) != -1,
         isDisabled:
           disabledNodes.findIndex((id) => id === `Node ${keyValue}`) != -1,
         subnodes:
@@ -70,12 +67,12 @@ export const Basic: Story<TreeProps> = (args) => {
             : [],
       };
     },
-    [disabledNodes, expandedNodes],
+    [disabledNodes],
   );
 
   const data = React.useMemo(
     () =>
-      Array(500)
+      Array(50)
         .fill(null)
         .map((_, index) => generateItem(index)),
     [generateItem],
@@ -86,18 +83,116 @@ export const Basic: Story<TreeProps> = (args) => {
       data={data}
       nodeRenderer={(props) => (
         <TreeNode
+          nodeId={props.nodeId}
           label={props.label}
           sublabel={props.subLabel}
           subNodes={props.subnodes}
           onNodeExpanded={onNodeExpanded}
-          isExpanded={props.isExpanded}
+          onNodeSelected={onSelectedNodeChange}
           isDisabled={props.isDisabled}
           nodeCheckbox={<Checkbox variant='eyeball' checked={true} />}
           onNodeCheckboxSelected={onCheckboxSelected}
           icon={<SvgPlaceholder />}
         />
       )}
-      onNodeSelected={onSelectedNodeChange}
+      {...args}
+    />
+  );
+};
+
+export const UserControlled: Story<TreeProps> = (args) => {
+  const [selectedNodes, setSelectedNodes] = React.useState([
+    'Node 0',
+    'Node 3.2',
+    'Node 22',
+  ]);
+  const onSelectedNodeChange = (nodeId: string, selected: boolean) => {
+    if (selected) {
+      setSelectedNodes([...selectedNodes, nodeId]);
+      action(`Selected node ${nodeId}`)();
+    } else {
+      setSelectedNodes(selectedNodes.filter((item) => item != nodeId));
+      action(`Unselected node ${nodeId}`)();
+    }
+  };
+
+  const [expandedNodes, setExpandedNodes] = React.useState([
+    'Node 2',
+    'Node 2.1',
+    'Node 3',
+  ]);
+  const onNodeExpanded = (nodeId: string, expanded: boolean) => {
+    if (expanded) {
+      setExpandedNodes([...expandedNodes, nodeId]);
+      action(`Expanded node ${nodeId}`)();
+    } else {
+      setExpandedNodes(expandedNodes.filter((item) => item != nodeId));
+      action(`Closed node ${nodeId}`)();
+    }
+  };
+
+  const [disabledNodes] = React.useState([
+    'Node 4',
+    'Node 3.0',
+    'Node 6',
+    'Node 10',
+  ]);
+
+  const onCheckboxSelected = (nodeId: string, checked: boolean) => {
+    if (checked) {
+      action(`Checked node: ${nodeId}`)();
+    } else {
+      action(`Unchecked node: ${nodeId}`)();
+    }
+  };
+
+  const generateItem = React.useCallback(
+    (index: number, parentRow = '', depth = 0): TreeData => {
+      const keyValue = parentRow ? `${parentRow}.${index}` : `${index}`;
+      return {
+        nodeId: `Node ${keyValue}`,
+        label: `Node ${keyValue}`,
+        subLabel: `Sublabel for Node ${keyValue}`,
+        isDisabled:
+          disabledNodes.findIndex((id) => id === `Node ${keyValue}`) != -1,
+        subnodes:
+          depth < 10
+            ? Array(Math.round(index % 5))
+                .fill(null)
+                .map((_, index) => generateItem(index, keyValue, depth + 1))
+            : [],
+      };
+    },
+    [disabledNodes],
+  );
+
+  const data = React.useMemo(
+    () =>
+      Array(50)
+        .fill(null)
+        .map((_, index) => generateItem(index)),
+    [generateItem],
+  );
+
+  return (
+    <Tree
+      data={data}
+      nodeRenderer={(props) => (
+        <TreeNode
+          nodeId={props.nodeId}
+          label={props.label}
+          sublabel={props.subLabel}
+          subNodes={props.subnodes}
+          onNodeExpanded={onNodeExpanded}
+          onNodeSelected={onSelectedNodeChange}
+          isDisabled={props.isDisabled}
+          nodeCheckbox={<Checkbox variant='eyeball' checked={true} />}
+          onNodeCheckboxSelected={onCheckboxSelected}
+          icon={<SvgPlaceholder />}
+        />
+      )}
+      expandedNodes={expandedNodes}
+      selectedNodes={selectedNodes}
       {...args}
     />
   );
