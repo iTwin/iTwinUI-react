@@ -40,9 +40,15 @@ export type PolymorphicComponentProps<
 > = Merge<React.ComponentPropsWithoutRef<T>, Props>;
 
 /**
- * Merges original OwnProps and the inferred props from `as` element.
+ * Makes `as` prop available and merges original OwnProps and the inferred props from `as` element.
+ * Extends ForwardRefExoticComponent so ref gets the correct type.
  *
  * T should be the default element that is used for the `as`  prop.
+ *
+ * @example
+ * type ButtonComponent = PolymorphicForwardRefComponent<'button', ButtonOwnProps>;
+ * ...
+ * const Button: ButtonComponent = React.forwardRef((props, ref) => {});
  */
 export interface PolymorphicForwardRefComponent<
   T,
