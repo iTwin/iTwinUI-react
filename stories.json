@@ -182,6 +182,10 @@
       "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tooltip.stories.tsx",
       "framework": "react"
     },
+    "Typography/Anchor": {
+      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Anchor.stories.tsx",
+      "framework": "react"
+    },
     "Typography/Blockquote": {
       "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Blockquote.stories.tsx",
       "framework": "react"
@@ -409,6 +413,15 @@
       "story": "With Icon",
       "parameters": {
         "__id": "buttons-button--with-icon"
+      }
+    },
+    "buttons-button--as-link": {
+      "id": "buttons-button--as-link",
+      "name": "As Link",
+      "kind": "Buttons/Button",
+      "story": "As Link",
+      "parameters": {
+        "__id": "buttons-button--as-link"
       }
     },
     "buttons-buttongroup--with-icons": {
@@ -2146,6 +2159,15 @@
       "story": "Controlled",
       "parameters": {
         "__id": "core-tooltip--controlled"
+      }
+    },
+    "typography-anchor--basic": {
+      "id": "typography-anchor--basic",
+      "name": "Basic",
+      "kind": "Typography/Anchor",
+      "story": "Basic",
+      "parameters": {
+        "__id": "typography-anchor--basic"
       }
     },
     "typography-blockquote--basic": {
