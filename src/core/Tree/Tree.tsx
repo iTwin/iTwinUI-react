@@ -23,8 +23,8 @@ export const TreeContext = React.createContext<
   | undefined
 >(undefined);
 
-export type TreeData = {
-  subnodes: Array<TreeData>;
+export type NodeData = {
+  subnodes: Array<NodeData>;
   nodeId: string;
   label?: string;
   subLabel?: string;
@@ -33,7 +33,7 @@ export type TreeData = {
 };
 
 type FlatNode = {
-  data: TreeData;
+  data: NodeData;
   id: string;
   depth: number;
   subNodeIds: string[];
@@ -44,11 +44,11 @@ export type TreeProps = {
   /**
    * Node renderer.
    */
-  nodeRenderer?: (props: TreeData) => JSX.Element;
+  nodeRenderer?: (props: NodeData) => JSX.Element;
   /**
    * Items inside tree.
    */
-  data?: Array<TreeData>;
+  data?: Array<NodeData>;
   /**
    * Node ids of expanded nodes.
    * If undefined, expanding and collapsing nodes will be handled automatically.
@@ -75,7 +75,6 @@ export type TreeProps = {
         onNodeSelected={onSelectedNodeChange}
         isDisabled={props.isDisabled}
         nodeCheckbox={<Checkbox variant='eyeball' checked={true} />}
-        onNodeCheckboxSelected={onCheckboxSelected}
         icon={<SvgPlaceholder />}
       />
     )}
@@ -169,13 +168,13 @@ export const Tree = (props: TreeProps) => {
   const flatNodesList = React.useMemo(() => {
     const flatList: FlatNode[] = [];
     const flatNodes = (
-      nodes: TreeData[] = [],
+      nodes: NodeData[] = [],
       parent?: FlatNode,
       depth = 0,
     ) => {
       const parentId = parent?.id ?? null;
       const nodeIdList = Array<string>();
-      nodes.forEach((node: TreeData, index) => {
+      nodes.forEach((node: NodeData, index) => {
         const id = parentId ? `${parentId}-${index}` : `${index}`;
         const nodeWrapper: FlatNode = {
           id,
@@ -187,11 +186,9 @@ export const Tree = (props: TreeProps) => {
         flatList.push(nodeWrapper);
         nodeIdList.push(id);
         if (node.subnodes && node.subnodes.length) {
-          const subNodeIds = flatNodes(node.subnodes, nodeWrapper, depth + 1);
-          nodeWrapper.subNodeIds = subNodeIds;
+          flatNodes(node.subnodes, nodeWrapper, depth + 1);
         }
       });
-      return nodeIdList;
     };
     flatNodes(data);
     return flatList;

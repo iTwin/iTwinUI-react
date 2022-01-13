@@ -8,7 +8,7 @@ import '@itwin/itwinui-css/css/tree.css';
 import { SvgChevronRight } from '@itwin/itwinui-icons-react';
 import { IconButton } from '../Buttons/IconButton';
 import cx from 'classnames';
-import { TreeContext, TreeData } from './Tree';
+import { TreeContext, NodeData } from './Tree';
 
 export type TreeNodeProps = {
   /**
@@ -18,7 +18,7 @@ export type TreeNodeProps = {
   /**
    * The main text displayed on the node.
    */
-  label?: React.ReactNode;
+  label: React.ReactNode;
   /**
    * Small note displayed below main label.
    */
@@ -44,17 +44,13 @@ export type TreeNodeProps = {
    * The TreeNode's child nodes.
    * If undefined or empty, expander button is not shown.
    */
-  subNodes?: Array<TreeData>;
+  subNodes?: Array<NodeData>;
   /**
    * Checkbox to be shown before TreeNode.
    * If undefined checkbox will not be shown.
    * Recommended to use Checkbox component.
    */
   nodeCheckbox?: React.ReactNode;
-  /**
-   * Callback fired when checking a TreeNode's checkbox.
-   */
-  onNodeCheckboxSelected?: (nodeId: string, checked: boolean) => void;
   /**
    * Content shown after TreeNode.
    */
@@ -71,8 +67,7 @@ export type TreeNodeProps = {
     onNodeExpanded={onNodeExpanded}
     onNodeSelected={onSelectedNodeChange}
     isDisabled={isDisabled}
-    nodeCheckbox={<Checkbox variant='eyeball' checked={true} />}
-    onNodeCheckboxSelected={onCheckboxSelected}
+    nodeCheckbox={<Checkbox variant='eyeball'/>}
     icon={<SvgPlaceholder />}
   />
  */
@@ -90,7 +85,6 @@ export const TreeNode = (props: TreeNodeProps) => {
     onNodeExpanded,
     subNodes,
     nodeCheckbox,
-    onNodeCheckboxSelected,
     ...rest
   } = props;
   useTheme();
@@ -157,10 +151,6 @@ export const TreeNode = (props: TreeNodeProps) => {
     return isParentExpanded;
   }, [expandedNodes, parentNode]);
 
-  const [isChecked, setIsChecked] = React.useState(
-    React.isValidElement(nodeCheckbox) ? nodeCheckbox.props['checked'] : false,
-  );
-
   const selectedNodes = React.useMemo(() => {
     return context?.selectedNodes ?? [];
   }, [context?.selectedNodes]);
@@ -202,13 +192,10 @@ export const TreeNode = (props: TreeNodeProps) => {
           >
             {nodeCheckbox && React.isValidElement(nodeCheckbox)
               ? React.cloneElement(nodeCheckbox, {
-                  className: 'iui-tree-node-checkbox',
-                  disabled: isDisabled,
-                  checked: isChecked,
-                  onClick: () => {
-                    setIsChecked(!isChecked);
-                    onNodeCheckboxSelected?.(nodeId, !isChecked);
-                  },
+                  className: cx(
+                    'iui-tree-node-checkbox',
+                    nodeCheckbox.props.className,
+                  ),
                 })
               : nodeCheckbox}
             <div className='iui-tree-node-content'>
@@ -238,8 +225,8 @@ export const TreeNode = (props: TreeNodeProps) => {
                 <div className='iui-tree-node-content-title'>{label}</div>
                 <div className='iui-tree-node-content-caption'>{sublabel}</div>
               </span>
+              {children}
             </div>
-            {children}
           </div>
         )}
         {subNodes && subNodes.length > 0 && (

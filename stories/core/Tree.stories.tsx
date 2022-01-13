@@ -7,7 +7,7 @@ import React from 'react';
 import { Tree, TreeProps, TreeNode, Checkbox } from '../../src/core';
 import { action } from '@storybook/addon-actions';
 import { SvgPlaceholder } from '@itwin/itwinui-icons-react';
-import { TreeData } from '../../src/core/Tree/Tree';
+import { NodeData } from '../../src/core/Tree/Tree';
 
 export default {
   component: Tree,
@@ -19,21 +19,27 @@ export default {
 } as Meta<TreeProps>;
 
 export const Basic: Story<TreeProps> = (args) => {
-  const onSelectedNodeChange = (nodeId: string, selected: boolean) => {
-    if (selected) {
-      action(`Selected node ${nodeId}`)();
-    } else {
-      action(`Unselected node ${nodeId}`)();
-    }
-  };
+  const onSelectedNodeChange = React.useCallback(
+    (nodeId: string, selected: boolean) => {
+      if (selected) {
+        action(`Selected node ${nodeId}`)();
+      } else {
+        action(`Unselected node ${nodeId}`)();
+      }
+    },
+    [],
+  );
 
-  const onNodeExpanded = (nodeId: string, expanded: boolean) => {
-    if (expanded) {
-      action(`Expanded node ${nodeId}`)();
-    } else {
-      action(`Closed node ${nodeId}`)();
-    }
-  };
+  const onNodeExpanded = React.useCallback(
+    (nodeId: string, expanded: boolean) => {
+      if (expanded) {
+        action(`Expanded node ${nodeId}`)();
+      } else {
+        action(`Closed node ${nodeId}`)();
+      }
+    },
+    [],
+  );
 
   const [disabledNodes] = React.useState([
     'Node 4',
@@ -42,16 +48,8 @@ export const Basic: Story<TreeProps> = (args) => {
     'Node 10',
   ]);
 
-  const onCheckboxSelected = (nodeId: string, checked: boolean) => {
-    if (checked) {
-      action(`Checked node: ${nodeId}`)();
-    } else {
-      action(`Unchecked node: ${nodeId}`)();
-    }
-  };
-
   const generateItem = React.useCallback(
-    (index: number, parentRow = '', depth = 0): TreeData => {
+    (index: number, parentRow = '', depth = 0): NodeData => {
       const keyValue = parentRow ? `${parentRow}.${index}` : `${index}`;
       return {
         nodeId: `Node ${keyValue}`,
@@ -90,8 +88,9 @@ export const Basic: Story<TreeProps> = (args) => {
           onNodeExpanded={onNodeExpanded}
           onNodeSelected={onSelectedNodeChange}
           isDisabled={props.isDisabled}
-          nodeCheckbox={<Checkbox variant='eyeball' checked={true} />}
-          onNodeCheckboxSelected={onCheckboxSelected}
+          nodeCheckbox={
+            <Checkbox variant='eyeball' disabled={props.isDisabled} />
+          }
           icon={<SvgPlaceholder />}
         />
       )}
@@ -106,30 +105,36 @@ export const UserControlled: Story<TreeProps> = (args) => {
     'Node 3.2',
     'Node 22',
   ]);
-  const onSelectedNodeChange = (nodeId: string, selected: boolean) => {
-    if (selected) {
-      setSelectedNodes([...selectedNodes, nodeId]);
-      action(`Selected node ${nodeId}`)();
-    } else {
-      setSelectedNodes(selectedNodes.filter((item) => item != nodeId));
-      action(`Unselected node ${nodeId}`)();
-    }
-  };
+  const onSelectedNodeChange = React.useCallback(
+    (nodeId: string, selected: boolean) => {
+      if (selected) {
+        setSelectedNodes([...selectedNodes, nodeId]);
+        action(`Selected node ${nodeId}`)();
+      } else {
+        setSelectedNodes(selectedNodes.filter((item) => item != nodeId));
+        action(`Unselected node ${nodeId}`)();
+      }
+    },
+    [selectedNodes],
+  );
 
   const [expandedNodes, setExpandedNodes] = React.useState([
     'Node 2',
     'Node 2.1',
     'Node 3',
   ]);
-  const onNodeExpanded = (nodeId: string, expanded: boolean) => {
-    if (expanded) {
-      setExpandedNodes([...expandedNodes, nodeId]);
-      action(`Expanded node ${nodeId}`)();
-    } else {
-      setExpandedNodes(expandedNodes.filter((item) => item != nodeId));
-      action(`Closed node ${nodeId}`)();
-    }
-  };
+  const onNodeExpanded = React.useCallback(
+    (nodeId: string, expanded: boolean) => {
+      if (expanded) {
+        setExpandedNodes([...expandedNodes, nodeId]);
+        action(`Expanded node ${nodeId}`)();
+      } else {
+        setExpandedNodes(expandedNodes.filter((item) => item != nodeId));
+        action(`Closed node ${nodeId}`)();
+      }
+    },
+    [expandedNodes],
+  );
 
   const [disabledNodes] = React.useState([
     'Node 4',
@@ -138,16 +143,8 @@ export const UserControlled: Story<TreeProps> = (args) => {
     'Node 10',
   ]);
 
-  const onCheckboxSelected = (nodeId: string, checked: boolean) => {
-    if (checked) {
-      action(`Checked node: ${nodeId}`)();
-    } else {
-      action(`Unchecked node: ${nodeId}`)();
-    }
-  };
-
   const generateItem = React.useCallback(
-    (index: number, parentRow = '', depth = 0): TreeData => {
+    (index: number, parentRow = '', depth = 0): NodeData => {
       const keyValue = parentRow ? `${parentRow}.${index}` : `${index}`;
       return {
         nodeId: `Node ${keyValue}`,
@@ -186,8 +183,9 @@ export const UserControlled: Story<TreeProps> = (args) => {
           onNodeExpanded={onNodeExpanded}
           onNodeSelected={onSelectedNodeChange}
           isDisabled={props.isDisabled}
-          nodeCheckbox={<Checkbox variant='eyeball' checked={true} />}
-          onNodeCheckboxSelected={onCheckboxSelected}
+          nodeCheckbox={
+            <Checkbox variant='eyeball' disabled={props.isDisabled} />
+          }
           icon={<SvgPlaceholder />}
         />
       )}
