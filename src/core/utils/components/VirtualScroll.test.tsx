@@ -9,15 +9,14 @@ import VirtualScroll from './VirtualScroll';
 
 const component = (
   <div style={{ overflow: 'auto', height: 400 }} id='scroller'>
-    <VirtualScroll>
-      {new Array(1000).fill(null).map((_, i) => {
-        return (
-          <div key={i} className='element' style={{ height: 40 }}>{`Element${
-            i + 1
-          }`}</div>
-        );
-      })}
-    </VirtualScroll>
+    <VirtualScroll
+      itemsLength={1000}
+      itemRenderer={(index) => (
+        <div key={index} className='element' style={{ height: 40 }}>{`Element${
+          index + 1
+        }`}</div>
+      )}
+    />
   </div>
 );
 

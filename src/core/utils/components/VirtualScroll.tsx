@@ -72,9 +72,15 @@ const getVisibleNodeCount = (
 
 export type VirtualScrollProps = {
   /**
-   * A list of children to be virtualized.
+   * Length of the items to virtualize.
    */
-  children: React.ReactNodeArray;
+  itemsLength: number;
+  /**
+   * Single item render function, which gives index of the item (0 based) in the data array
+   * and expects to get the JSX of that element to render.
+   * Recommended to memoize the reference of the function.
+   */
+  itemRenderer: (index: number) => JSX.Element;
   /**
    * Number of items to be rendered at the end.
    * Not recommended to go lower than the visible items in viewport.
@@ -84,19 +90,26 @@ export type VirtualScrollProps = {
 };
 
 /**
- * `VirtualScroll` component to wrap a list of children and show only the ones, which are visible + some additional.
+ * `VirtualScroll` component to render only visible items + some additional out of a big list.
  * Good use in expected big number of data either in some of the components (e.g. Table) or just simple list of DOM elements.
  * It has 2 wrapper elements, so expect DOM tree change. One is used for setting full expected height in the scrollable container
  * and other is for transformation (translateY) to show the correct part of the list.
- * Currently, it supports only static (same) height rows virtualization. So use it with caution.
- * Expect some issues, if list consists of different height elements.
+ * Currently it works only when items direct parent is a scrollable container (body scroll is not supported yet).
+ * It supports only static (same) height rows virtualization. Expect some issues, if list consists of different height elements.
  * @example
- * <VirtualScroll>
- *  {childrenArray}
- * </VirtualScroll>
+ * const itemRenderer = React.useCallback(() => (
+ *  <div key={index}>
+ *    This is my item #{index}
+ *  </div>
+ * ), [])
+ * <VirtualScroll
+ *  itemsLength={1000}
+ *  itemRenderer={itemRenderer}
+ * />
  */
 export const VirtualScroll = ({
-  children,
+  itemsLength: childrenLength,
+  itemRenderer,
   renderAdditional = 20,
 }: VirtualScrollProps) => {
   const [startNode, setStartNode] = React.useState(0);
@@ -115,11 +128,22 @@ export const VirtualScroll = ({
   }, []);
 
   const visibleChildren = React.useMemo(() => {
-    return children.slice(
-      startNode,
+    const arr = [];
+    const endIndex = Math.min(
+      childrenLength,
       startNode + visibleNodeCount + renderAdditional,
     );
-  }, [children, renderAdditional, startNode, visibleNodeCount]);
+    for (let i = startNode; i < endIndex; i++) {
+      arr.push(itemRenderer(i));
+    }
+    return arr;
+  }, [
+    childrenLength,
+    itemRenderer,
+    renderAdditional,
+    startNode,
+    visibleNodeCount,
+  ]);
 
   // Get child height on init
   React.useLayoutEffect(() => {
@@ -154,16 +178,11 @@ export const VirtualScroll = ({
       );
       setStartNode(start);
       setVisibleNodeCount(
-        getVisibleNodeCount(
-          childHeight.current,
-          start,
-          children.length,
-          target,
-        ),
+        getVisibleNodeCount(childHeight.current, start, childrenLength, target),
       );
       setTranslateY(getTranslateValue(childHeight.current, start));
     },
-    [children.length],
+    [childrenLength],
   );
 
   const removeScrollListener = React.useCallback(() => {
@@ -199,18 +218,18 @@ export const VirtualScroll = ({
       getVisibleNodeCount(
         childHeight.current,
         start,
-        children.length,
+        childrenLength,
         scrollableContainer,
       ),
     );
     setTranslateY(getTranslateValue(childHeight.current, start));
-  }, [children.length]);
+  }, [childrenLength]);
 
   return (
     <div
       style={{
         overflow: 'hidden',
-        minHeight: children.length * childHeight.current,
+        minHeight: childrenLength * childHeight.current,
         width: '100%',
       }}
     >

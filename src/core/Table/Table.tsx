@@ -220,8 +220,10 @@ export type TableProps<
    */
   styleType?: 'default' | 'zebra-rows';
   /**
-   * Virtualization is used for the scrollable container.
-   * Recommended to use with scroll on table body.
+   * Virtualization is used for the scrollable table body.
+   * Height on the table is required for virtualization to work.
+   * @example
+   * <Table useVirtualization style={{height: 400}} {...} />
    * @default false
    */
   useVirtualization?: boolean;
@@ -543,6 +545,48 @@ export const Table = <
   const headerRef = React.useRef<HTMLDivElement>(null);
   const bodyRef = React.useRef<HTMLDivElement>(null);
 
+  const getPreparedRow = React.useCallback(
+    (row: Row<T>) => {
+      prepareRow(row);
+      return (
+        <TableRowMemoized
+          row={row}
+          rowProps={rowProps}
+          isLast={row.index === data.length - 1}
+          onRowInViewport={onRowInViewportRef}
+          onBottomReached={onBottomReachedRef}
+          intersectionMargin={intersectionMargin}
+          state={state}
+          key={row.getRowProps().key}
+          onClick={onRowClickHandler}
+          subComponent={subComponent}
+          isDisabled={!!isRowDisabled?.(row.original)}
+          tableHasSubRows={hasAnySubRows}
+          tableInstance={instance}
+          expanderCell={expanderCell}
+        />
+      );
+    },
+    [
+      data.length,
+      expanderCell,
+      hasAnySubRows,
+      instance,
+      intersectionMargin,
+      isRowDisabled,
+      onRowClickHandler,
+      prepareRow,
+      rowProps,
+      state,
+      subComponent,
+    ],
+  );
+
+  const virtualizedItemRenderer = React.useCallback(
+    (index: number) => getPreparedRow(page[index]),
+    [getPreparedRow, page],
+  );
+
   return (
     <>
       <div
@@ -659,52 +703,13 @@ export const Table = <
           {data.length !== 0 && (
             <>
               {useVirtualization && (
-                <VirtualScroll>
-                  {page.map((row: Row<T>) => {
-                    prepareRow(row);
-                    return (
-                      <TableRowMemoized
-                        row={row}
-                        rowProps={rowProps}
-                        isLast={row.index === data.length - 1}
-                        onRowInViewport={onRowInViewportRef}
-                        onBottomReached={onBottomReachedRef}
-                        intersectionMargin={intersectionMargin}
-                        state={state}
-                        key={row.getRowProps().key}
-                        onClick={onRowClickHandler}
-                        subComponent={subComponent}
-                        isDisabled={!!isRowDisabled?.(row.original)}
-                        tableHasSubRows={hasAnySubRows}
-                        tableInstance={instance}
-                        expanderCell={expanderCell}
-                      />
-                    );
-                  })}
-                </VirtualScroll>
+                <VirtualScroll
+                  itemsLength={page.length}
+                  itemRenderer={virtualizedItemRenderer}
+                />
               )}
               {!useVirtualization &&
-                page.map((row: Row<T>) => {
-                  prepareRow(row);
-                  return (
-                    <TableRowMemoized
-                      row={row}
-                      rowProps={rowProps}
-                      isLast={row.index === data.length - 1}
-                      onRowInViewport={onRowInViewportRef}
-                      onBottomReached={onBottomReachedRef}
-                      intersectionMargin={intersectionMargin}
-                      state={state}
-                      key={row.getRowProps().key}
-                      onClick={onRowClickHandler}
-                      subComponent={subComponent}
-                      isDisabled={!!isRowDisabled?.(row.original)}
-                      tableHasSubRows={hasAnySubRows}
-                      tableInstance={instance}
-                      expanderCell={expanderCell}
-                    />
-                  );
-                })}
+                page.map((row: Row<T>) => getPreparedRow(row))}
             </>
           )}
           {isLoading && data.length === 0 && (
