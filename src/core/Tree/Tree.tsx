@@ -131,7 +131,27 @@ export const Tree = (props: TreeProps) => {
             'iui-tree-node-content-expander-icon-expanded',
           )
         ) {
-          newIndex = currentIndex - 1;
+          let parentIndex = -1;
+          for (let n = 0; n < nodes.length; n++) {
+            const parentOwns = (nodes[n].parentElement
+              ?.lastChild as HTMLElement)
+              .getAttribute('aria-owns')
+              ?.split(', ');
+            if (
+              parentOwns &&
+              parentOwns?.findIndex(
+                (id) => id === nodes[currentIndex].parentElement?.id,
+              ) != -1
+            ) {
+              parentIndex = n;
+              break;
+            }
+          }
+          if (parentIndex != -1) {
+            newIndex = parentIndex;
+          } else {
+            newIndex = currentIndex - 1;
+          }
         } else {
           expander.parentElement?.click();
         }
@@ -159,6 +179,7 @@ export const Tree = (props: TreeProps) => {
 
     if (newIndex >= 0 && newIndex < nodes.length) {
       nodes[newIndex].focus();
+      event.preventDefault();
     }
   };
 
