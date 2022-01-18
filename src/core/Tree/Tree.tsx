@@ -6,6 +6,7 @@ import React from 'react';
 import { CommonProps, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/tree.css';
 import cx from 'classnames';
+import TreeNode from './TreeNode';
 
 export const TreeContext = React.createContext<
   | {
@@ -75,7 +76,18 @@ export const Tree = (props: TreeProps) => {
   const {
     data,
     className,
-    nodeRenderer,
+    nodeRenderer = (props) => {
+      return (
+        <TreeNode
+          nodeId={props.nodeId}
+          label={props.label}
+          sublabel={props.subLabel}
+          subNodes={props.subnodes}
+          isDisabled={props.isDisabled}
+          isExpanded={props.isExpanded}
+        />
+      );
+    },
     getNode,
     selectedNodes,
     ...rest
@@ -199,7 +211,7 @@ export const Tree = (props: TreeProps) => {
               nodeDepth: flatNode.depth,
             }}
           >
-            {nodeRenderer?.(flatNode)}
+            {nodeRenderer(flatNode)}
           </TreeContext.Provider>
         </React.Fragment>
       ))}
