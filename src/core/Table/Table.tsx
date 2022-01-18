@@ -692,6 +692,7 @@ export const Table = <
             className: cx('iui-table-body', {
               'iui-zebra-striping': styleType === 'zebra-rows',
             }),
+            style: { outline: 0 },
           })}
           ref={bodyRef}
           onScroll={() => {
@@ -699,6 +700,7 @@ export const Table = <
               headerRef.current.scrollLeft = bodyRef.current.scrollLeft;
             }
           }}
+          tabIndex={-1}
         >
           {data.length !== 0 && (
             <>
