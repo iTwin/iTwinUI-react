@@ -2162,12 +2162,13 @@ export const Virtualized: Story<Partial<TableProps>> = (args) => {
     [],
   );
 
-  const generateData = useMemo((start: number, end: number) => {
-    const arr = new Array(end - start);
-    for (let i = 0; i < end - start; ++i) {
+  const data = useMemo(() => {
+    const size = 100000;
+    const arr = new Array(size);
+    for (let i = 0; i < size; ++i) {
       arr[i] = {
-        name: `Name${start + i}`,
-        description: `Description${start + i}`,
+        name: `Name${i}`,
+        description: `Description${i}`,
       };
     }
     return arr;
@@ -2180,7 +2181,7 @@ export const Virtualized: Story<Partial<TableProps>> = (args) => {
       emptyTableContent='No data.'
       {...args}
       style={{ height: 440 }}
-      data={generateData(0, 100000)}
+      data={data}
     />
   );
 };
