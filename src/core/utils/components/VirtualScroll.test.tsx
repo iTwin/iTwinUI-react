@@ -24,6 +24,17 @@ const renderComponent = () => {
   return render(component);
 };
 
+const renderEmptyComponent = () => {
+  return render(
+    <div style={{ overflow: 'auto', height: 400 }} id='scroller'>
+      <VirtualScroll
+        itemsLength={1000}
+        itemRenderer={(index) => <div key={index} className='element' />}
+      />
+    </div>,
+  );
+};
+
 beforeAll(() => {
   // return correct values for container 'scroller' and children
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -73,4 +84,9 @@ it('should render only few elements out of big list', () => {
   expect(container.querySelectorAll('.element').length).toBe(10);
   // first visible element is number 991
   expect(container.querySelector('.element')?.textContent).toBe('Element991');
+});
+
+it('should not crash with empty list items', () => {
+  const { container } = renderEmptyComponent();
+  expect(container.querySelectorAll('.element').length).toBe(30);
 });

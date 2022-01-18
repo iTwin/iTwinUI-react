@@ -29,29 +29,16 @@ const getElementHeight = (element: HTMLElement | undefined) => {
   return !!element ? element.getBoundingClientRect().height : 0;
 };
 
-const getCountOfNodesInHeight = (
-  childHeight: number,
-  totalHeight: number,
-  startIndex = 0,
-) => {
-  let i = startIndex;
-  let sum = 0;
-  while (sum < totalHeight) {
-    sum += childHeight;
-    ++i;
+const getCountOfNodesInHeight = (childHeight: number, totalHeight: number) => {
+  if (!childHeight) {
+    return 0;
   }
-  i = sum > totalHeight ? i - 1 : i;
-  return i - startIndex;
+
+  return Math.floor(totalHeight / childHeight);
 };
 
 const getTranslateValue = (childHeight: number, startIndex: number) => {
-  let sum = 0;
-  let i = 0;
-  while (i < startIndex) {
-    sum += childHeight;
-    ++i;
-  }
-  return sum;
+  return childHeight * startIndex;
 };
 
 const getVisibleNodeCount = (
@@ -62,11 +49,7 @@ const getVisibleNodeCount = (
 ) => {
   return Math.min(
     childrenLength - startIndex,
-    getCountOfNodesInHeight(
-      childHeight,
-      getElementHeight(scrollContainer),
-      startIndex,
-    ),
+    getCountOfNodesInHeight(childHeight, getElementHeight(scrollContainer)),
   );
 };
 
@@ -145,9 +128,9 @@ export const VirtualScroll = ({
     visibleNodeCount,
   ]);
 
-  // Get child height on init
+  // Get child height when children available
   React.useLayoutEffect(() => {
-    if (!childrenParentRef.current) {
+    if (!childrenParentRef.current || !visibleChildren.length) {
       return;
     }
     let heightSum = 0;
@@ -161,7 +144,7 @@ export const VirtualScroll = ({
     const elementHeight = heightSum / visibleChildren.length;
     childHeight.current = Math.ceil(elementHeight);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [visibleChildren.length]);
 
   const onScroll = React.useCallback(
     (e: Event) => {
