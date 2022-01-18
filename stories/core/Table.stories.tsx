@@ -2162,7 +2162,7 @@ export const Virtualized: Story<Partial<TableProps>> = (args) => {
     [],
   );
 
-  const generateData = useCallback((start: number, end: number) => {
+  const generateData = useMemo((start: number, end: number) => {
     const arr = new Array(end - start);
     for (let i = 0; i < end - start; ++i) {
       arr[i] = {
