@@ -33,6 +33,11 @@ export type TreeNodeProps = {
    */
   isDisabled?: boolean;
   /**
+   * Is TreeNode expanded.
+   * @default false
+   */
+  isExpanded?: boolean;
+  /**
    * Callback fired when expanding or closing a TreeNode.
    */
   onNodeExpanded?: (nodeId: string, expanded: boolean) => void;
@@ -67,6 +72,7 @@ export type TreeNodeProps = {
     onNodeExpanded={onNodeExpanded}
     onNodeSelected={onSelectedNodeChange}
     isDisabled={isDisabled}
+    isExpanded={isExpanded}
     nodeCheckbox={<Checkbox variant='eyeball'/>}
     icon={<SvgPlaceholder />}
   />
@@ -81,6 +87,7 @@ export const TreeNode = (props: TreeNodeProps) => {
     className,
     icon,
     isDisabled = false,
+    isExpanded = false,
     onNodeSelected,
     onNodeExpanded,
     subNodes,
@@ -91,7 +98,6 @@ export const TreeNode = (props: TreeNodeProps) => {
 
   const context = React.useContext(TreeContext);
   const nodeDepth = context?.nodeDepth ?? 0;
-  const parentNode = context?.parentNode;
 
   const subNodeIds = React.useMemo(() => {
     const nodes = Array<string>();
@@ -110,46 +116,6 @@ export const TreeNode = (props: TreeNodeProps) => {
         : { marginLeft: nodeDepth ? nodeDepth * 28 : 0, ...style },
     [nodeDepth, style],
   );
-
-  const expandedNodes = React.useMemo(() => {
-    return context?.expandedNodes ?? [];
-  }, [context?.expandedNodes]);
-
-  const isExpanded = React.useMemo(() => {
-    return expandedNodes.findIndex((id) => id === nodeId) != -1;
-  }, [expandedNodes, nodeId]);
-
-  const onExpandChanged = (e: React.SyntheticEvent<Element, Event>) => {
-    if (isExpanded) {
-      context?.setExpandedNodes?.(
-        expandedNodes.filter((item) => item != nodeId),
-      );
-    } else {
-      context?.setExpandedNodes?.([...expandedNodes, nodeId]);
-    }
-
-    onNodeExpanded?.(nodeId, !isExpanded);
-    e.stopPropagation();
-  };
-
-  const visible = React.useMemo(() => {
-    let isParentExpanded = parentNode
-      ? expandedNodes.findIndex((id) => id === parentNode.data.nodeId) != -1
-      : true;
-    if (parentNode) {
-      let currentParent = parentNode.parent;
-      while (currentParent) {
-        if (
-          expandedNodes.findIndex((id) => id === currentParent?.data.nodeId) ===
-          -1
-        ) {
-          isParentExpanded = false;
-        }
-        currentParent = currentParent.parent;
-      }
-    }
-    return isParentExpanded;
-  }, [expandedNodes, parentNode]);
 
   const selectedNodes = React.useMemo(() => {
     return context?.selectedNodes ?? [];
@@ -176,7 +142,7 @@ export const TreeNode = (props: TreeNodeProps) => {
   return (
     <>
       <li role='treeitem' id={nodeId} aria-expanded={isExpanded} {...rest}>
-        {visible && (
+        {
           <div
             className={cx(
               'iui-tree-node',
@@ -203,7 +169,10 @@ export const TreeNode = (props: TreeNodeProps) => {
                 <IconButton
                   styleType='borderless'
                   size='small'
-                  onClick={(e) => onExpandChanged(e)}
+                  onClick={(e) => {
+                    onNodeExpanded?.(nodeId, !isExpanded);
+                    e.stopPropagation();
+                  }}
                   disabled={isDisabled}
                   tabIndex={-1}
                 >
@@ -228,7 +197,7 @@ export const TreeNode = (props: TreeNodeProps) => {
               {children}
             </div>
           </div>
-        )}
+        }
         {subNodes && subNodes.length > 0 && (
           <ul
             className='iui-sub-tree'

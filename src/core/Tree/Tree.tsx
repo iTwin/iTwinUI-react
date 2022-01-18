@@ -13,31 +13,19 @@ export const TreeContext = React.createContext<
       setSelectedNode?: (
         node: Array<string> | ((prev: Array<string>) => Array<string>),
       ) => void;
-      expandedNodes?: Array<string>;
-      setExpandedNodes?: (
-        node: Array<string> | ((prev: Array<string>) => Array<string>),
-      ) => void;
       nodeDepth?: number;
-      parentNode?: FlatNode;
     }
   | undefined
 >(undefined);
 
 export type NodeData = {
-  subnodes: Array<NodeData>;
+  subnodes?: Array<NodeData>;
   nodeId: string;
   label?: string;
   subLabel?: string;
   isExpanded?: boolean;
   isDisabled?: boolean;
-};
-
-type FlatNode = {
-  data: NodeData;
-  id: string;
-  depth: number;
-  subNodeIds: string[];
-  parent?: FlatNode;
+  depth?: number;
 };
 
 export type TreeProps = {
@@ -50,21 +38,21 @@ export type TreeProps = {
    */
   data?: Array<NodeData>;
   /**
-   * Node ids of expanded nodes.
-   * If undefined, expanding and collapsing nodes will be handled automatically.
-   */
-  expandedNodes?: Array<string>;
-  /**
    * Node ids of selected nodes.
    * If undefined, selecting nodes will be handled automatically.
    */
   selectedNodes?: Array<string>;
+  /**
+   * Get the NodeData.
+   */
+  getNode?: (node?: NodeData | number) => NodeData | undefined;
 } & CommonProps;
 
 /**
  * @example
   <Tree
     data={data}
+    getNode={getNode}
     nodeRenderer={(props) => (
       <TreeNode
         nodeId={props.nodeId}
@@ -74,11 +62,11 @@ export type TreeProps = {
         onNodeExpanded={onNodeExpanded}
         onNodeSelected={onSelectedNodeChange}
         isDisabled={props.isDisabled}
+        isExpanded={props.isExpanded}
         nodeCheckbox={<Checkbox variant='eyeball' checked={true} />}
         icon={<SvgPlaceholder />}
       />
     )}
-    expandedNodes={expandedNodes}
     selectedNodes={selectedNodes}
     {...args}
   />
@@ -88,7 +76,7 @@ export const Tree = (props: TreeProps) => {
     data,
     className,
     nodeRenderer,
-    expandedNodes,
+    getNode,
     selectedNodes,
     ...rest
   } = props;
@@ -163,36 +151,36 @@ export const Tree = (props: TreeProps) => {
   };
 
   const [selected, setSelected] = React.useState<Array<string>>([]);
-  const [expanded, setExpanded] = React.useState<Array<string>>([]);
+
+  const getSubNodes = React.useCallback((node: NodeData, depth: number) => {
+    let flatNodes: NodeData[] = [];
+
+    if (node.isExpanded) {
+      if (node?.subnodes?.length) {
+        node.subnodes.forEach((sub) => {
+          sub.depth = depth;
+          flatNodes.push(sub);
+          flatNodes = [...flatNodes, ...getSubNodes(sub, depth + 1)];
+        });
+      }
+    }
+    return flatNodes;
+  }, []);
 
   const flatNodesList = React.useMemo(() => {
-    const flatList: FlatNode[] = [];
-    const flatNodes = (
-      nodes: NodeData[] = [],
-      parent?: FlatNode,
-      depth = 0,
-    ) => {
-      const parentId = parent?.id ?? null;
-      const nodeIdList = Array<string>();
-      nodes.forEach((node: NodeData, index) => {
-        const id = parentId ? `${parentId}-${index}` : `${index}`;
-        const nodeWrapper: FlatNode = {
-          id,
-          data: node,
-          depth,
-          subNodeIds: [],
-          parent: parent ?? undefined,
-        };
-        flatList.push(nodeWrapper);
-        nodeIdList.push(id);
-        if (node.subnodes && node.subnodes.length) {
-          flatNodes(node.subnodes, nodeWrapper, depth + 1);
+    let flatList: NodeData[] = [];
+    data?.forEach((_, index) => {
+      const flatNode = getNode?.(index);
+      if (flatNode) {
+        flatList = [...flatList, flatNode];
+        if (flatNode.isExpanded) {
+          flatList = [...flatList, ...getSubNodes(flatNode, 1)];
         }
-      });
-    };
-    flatNodes(data);
+      }
+    });
+
     return flatList;
-  }, [data]);
+  }, [data, getNode, getSubNodes]);
 
   return (
     <ul
@@ -203,18 +191,15 @@ export const Tree = (props: TreeProps) => {
       {...rest}
     >
       {flatNodesList.map((flatNode) => (
-        <React.Fragment key={flatNode.id}>
+        <React.Fragment key={flatNode.nodeId}>
           <TreeContext.Provider
             value={{
               selectedNodes: selectedNodes ?? selected,
               setSelectedNode: selectedNodes ? undefined : setSelected,
-              expandedNodes: expandedNodes ?? expanded,
-              setExpandedNodes: expandedNodes ? undefined : setExpanded,
               nodeDepth: flatNode.depth,
-              parentNode: flatNode.parent,
             }}
           >
-            {nodeRenderer?.(flatNode.data)}
+            {nodeRenderer?.(flatNode)}
           </TreeContext.Provider>
         </React.Fragment>
       ))}

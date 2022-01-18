@@ -19,87 +19,6 @@ export default {
 } as Meta<TreeProps>;
 
 export const Basic: Story<TreeProps> = (args) => {
-  const onSelectedNodeChange = React.useCallback(
-    (nodeId: string, selected: boolean) => {
-      if (selected) {
-        action(`Selected node ${nodeId}`)();
-      } else {
-        action(`Unselected node ${nodeId}`)();
-      }
-    },
-    [],
-  );
-
-  const onNodeExpanded = React.useCallback(
-    (nodeId: string, expanded: boolean) => {
-      if (expanded) {
-        action(`Expanded node ${nodeId}`)();
-      } else {
-        action(`Closed node ${nodeId}`)();
-      }
-    },
-    [],
-  );
-
-  const [disabledNodes] = React.useState([
-    'Node 4',
-    'Node 3.0',
-    'Node 6',
-    'Node 10',
-  ]);
-
-  const generateItem = React.useCallback(
-    (index: number, parentRow = '', depth = 0): NodeData => {
-      const keyValue = parentRow ? `${parentRow}.${index}` : `${index}`;
-      return {
-        nodeId: `Node ${keyValue}`,
-        label: `Node ${keyValue}`,
-        subLabel: `Sublabel for Node ${keyValue}`,
-        isDisabled:
-          disabledNodes.findIndex((id) => id === `Node ${keyValue}`) != -1,
-        subnodes:
-          depth < 10
-            ? Array(Math.round(index % 5))
-                .fill(null)
-                .map((_, index) => generateItem(index, keyValue, depth + 1))
-            : [],
-      };
-    },
-    [disabledNodes],
-  );
-
-  const data = React.useMemo(
-    () =>
-      Array(50)
-        .fill(null)
-        .map((_, index) => generateItem(index)),
-    [generateItem],
-  );
-
-  return (
-    <Tree
-      data={data}
-      nodeRenderer={(props) => (
-        <TreeNode
-          nodeId={props.nodeId}
-          label={props.label}
-          sublabel={props.subLabel}
-          subNodes={props.subnodes}
-          onNodeExpanded={onNodeExpanded}
-          onNodeSelected={onSelectedNodeChange}
-          isDisabled={props.isDisabled}
-          nodeCheckbox={
-            <Checkbox variant='eyeball' disabled={props.isDisabled} />
-          }
-          icon={<SvgPlaceholder />}
-        />
-      )}
-      {...args}
-    />
-  );
-};
-
-export const UserControlled: Story<TreeProps> = (args) => {
   const [selectedNodes, setSelectedNodes] = React.useState([
     'Node 0',
     'Node 3.2',
@@ -150,6 +69,8 @@ export const UserControlled: Story<TreeProps> = (args) => {
         nodeId: `Node ${keyValue}`,
         label: `Node ${keyValue}`,
         subLabel: `Sublabel for Node ${keyValue}`,
+        isExpanded:
+          expandedNodes.findIndex((id) => id === `Node ${keyValue}`) != -1,
         isDisabled:
           disabledNodes.findIndex((id) => id === `Node ${keyValue}`) != -1,
         subnodes:
@@ -160,7 +81,7 @@ export const UserControlled: Story<TreeProps> = (args) => {
             : [],
       };
     },
-    [disabledNodes],
+    [disabledNodes, expandedNodes],
   );
 
   const data = React.useMemo(
@@ -171,9 +92,18 @@ export const UserControlled: Story<TreeProps> = (args) => {
     [generateItem],
   );
 
+  const getNode = (node: NodeData | number) => {
+    if (typeof node === 'number') {
+      return data[node];
+    } else {
+      return data.find((item) => item?.nodeId === node?.nodeId);
+    }
+  };
+
   return (
     <Tree
-      data={data}
+      data={Array.from(Array(50))} // data={data}
+      getNode={getNode}
       nodeRenderer={(props) => (
         <TreeNode
           nodeId={props.nodeId}
@@ -183,13 +113,13 @@ export const UserControlled: Story<TreeProps> = (args) => {
           onNodeExpanded={onNodeExpanded}
           onNodeSelected={onSelectedNodeChange}
           isDisabled={props.isDisabled}
+          isExpanded={props.isExpanded}
           nodeCheckbox={
             <Checkbox variant='eyeball' disabled={props.isDisabled} />
           }
           icon={<SvgPlaceholder />}
         />
       )}
-      expandedNodes={expandedNodes}
       selectedNodes={selectedNodes}
       {...args}
     />
