@@ -73,11 +73,13 @@ export type VirtualScrollProps = {
 };
 
 /**
- * `VirtualScroll` component to render only visible items + some additional out of a big list.
- * Good use in expected big number of data either in some of the components (e.g. Table) or just simple list of DOM elements.
- * It has 2 wrapper elements, so expect DOM tree change. One is used for setting full expected height in the scrollable container
+ * `VirtualScroll` component used to render a huge amount of items in the DOM. It renders only the ones which are visible
+ * and the amount provided through `buffer` prop. Can be used inside other components like `Table`.
+ *
+ * It has two wrapper elements, so DOM will be changed. One is used for setting full expected height in the scrollable container
  * and other is for transformation (translateY) to show the correct part of the list.
- * Currently it works only when items direct parent is a scrollable container (body scroll is not supported yet).
+ *
+ * Currently it works only with the direct scrollable parent element. It does not work with body scroll.
  * It supports only static (same) height rows virtualization. Expect some issues, if list consists of different height elements.
  * @example
  * const itemRenderer = React.useCallback(() => (
