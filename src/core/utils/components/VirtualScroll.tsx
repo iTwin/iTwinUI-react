@@ -26,10 +26,10 @@ const getElementStyle = (element: HTMLElement, prop: string) => {
 };
 
 const getElementHeight = (element: HTMLElement | undefined) => {
-  return !!element ? element.getBoundingClientRect().height : 0;
+  return element?.getBoundingClientRect().height ?? 0;
 };
 
-const getCountOfNodesInHeight = (childHeight: number, totalHeight: number) => {
+const getNumberOfNodesInHeight = (childHeight: number, totalHeight: number) => {
   if (!childHeight) {
     return 0;
   }
@@ -49,7 +49,7 @@ const getVisibleNodeCount = (
 ) => {
   return Math.min(
     childrenLength - startIndex,
-    getCountOfNodesInHeight(childHeight, getElementHeight(scrollContainer)),
+    getNumberOfNodesInHeight(childHeight, getElementHeight(scrollContainer)),
   );
 };
 
@@ -155,7 +155,7 @@ export const VirtualScroll = ({
       if (!target) {
         return;
       }
-      const start = getCountOfNodesInHeight(
+      const start = getNumberOfNodesInHeight(
         childHeight.current,
         target.scrollTop,
       );
@@ -195,7 +195,7 @@ export const VirtualScroll = ({
   React.useLayoutEffect(() => {
     const scrollableContainer = scrollContainer.current ?? document.body;
     const top = scrollableContainer.scrollTop;
-    const start = getCountOfNodesInHeight(childHeight.current, top);
+    const start = getNumberOfNodesInHeight(childHeight.current, top);
     setStartNode(start);
     setVisibleNodeCount(
       getVisibleNodeCount(
