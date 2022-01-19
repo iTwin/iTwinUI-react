@@ -2180,7 +2180,7 @@ export const Virtualized: Story<Partial<TableProps>> = (args) => {
       columns={columns}
       emptyTableContent='No data.'
       {...args}
-      style={{ height: 440 }}
+      style={{ height: 440, maxHeight: '90vh' }}
       data={data}
     />
   );
