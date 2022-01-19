@@ -7,52 +7,38 @@ import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import VirtualScroll from './VirtualScroll';
 
-const component = (
-  <div style={{ overflow: 'auto', height: 400 }} id='scroller'>
-    <VirtualScroll
-      itemsLength={1000}
-      itemRenderer={(index) => (
-        <div key={index} className='element' style={{ height: 40 }}>{`Element${
-          index + 1
-        }`}</div>
-      )}
-    />
-  </div>
-);
-
-const renderComponent = () => {
-  return render(component);
-};
-
-const renderEmptyComponent = () => {
-  return render(
-    <div style={{ overflow: 'auto', height: 400 }} id='scroller'>
-      <VirtualScroll
-        itemsLength={1000}
-        itemRenderer={(index) => <div key={index} className='element' />}
-      />
-    </div>,
-  );
-};
-
 beforeAll(() => {
   // return correct values for container 'scroller' and children
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function getBoundingClientRectMock(this: Record<string, any>) {
-    if (Object.values(this)[0].memoizedProps.id === 'scroller') {
-      return { height: 400 } as DOMRect;
-    }
-    return { height: 40 } as DOMRect;
-  }
   jest
     .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
-    .mockImplementation(getBoundingClientRectMock);
+    .mockImplementation(function (this: Record<string, any>) {
+      if (Object.values(this)[0].memoizedProps.id === 'scroller') {
+        return { height: 400 } as DOMRect;
+      }
+      return { height: 40 } as DOMRect;
+    });
 });
 
 it('should render only few elements out of big list', () => {
-  const { container } = renderComponent();
-  expect(container.querySelectorAll('.element').length).toBe(30);
-  expect(container.querySelector('.element')?.textContent).toBe('Element1');
+  const { container } = render(
+    <div style={{ overflow: 'auto', height: 400 }} id='scroller'>
+      <VirtualScroll
+        itemsLength={1000}
+        itemRenderer={(index) => (
+          <div
+            key={index}
+            className='element'
+            style={{ height: 40 }}
+          >{`Element${index + 1}`}</div>
+        )}
+      />
+    </div>,
+  );
+  const allVisibleElements = container.querySelectorAll('.element');
+  expect(allVisibleElements.length).toBe(30);
+  expect(allVisibleElements[0].textContent).toBe('Element1');
+  expect(allVisibleElements[29].textContent).toBe('Element30');
 
   const scrollable = container.querySelector('#scroller') as HTMLElement;
   fireEvent.scroll(scrollable, {
@@ -87,6 +73,13 @@ it('should render only few elements out of big list', () => {
 });
 
 it('should not crash with empty list items', () => {
-  const { container } = renderEmptyComponent();
+  const { container } = render(
+    <div style={{ overflow: 'auto', height: 400 }} id='scroller'>
+      <VirtualScroll
+        itemsLength={1000}
+        itemRenderer={(index) => <div key={index} className='element' />}
+      />
+    </div>,
+  );
   expect(container.querySelectorAll('.element').length).toBe(30);
 });
