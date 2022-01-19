@@ -92,17 +92,13 @@ export const Basic: Story<TreeProps> = (args) => {
     [generateItem],
   );
 
-  const getNode = (node: NodeData | number) => {
-    if (typeof node === 'number') {
-      return data[node];
-    } else {
-      return data.find((item) => item?.nodeId === node?.nodeId);
-    }
+  const getNode = (node: number) => {
+    return data[node];
   };
 
   return (
     <Tree
-      data={Array.from(Array(50))} // data={data}
+      nodeCount={50}
       getNode={getNode}
       nodeRenderer={(props) => (
         <TreeNode

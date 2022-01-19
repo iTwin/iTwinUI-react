@@ -37,7 +37,7 @@ export type TreeProps = {
   /**
    * Items inside tree.
    */
-  data?: Array<NodeData>;
+  nodeCount?: number;
   /**
    * Node ids of selected nodes.
    * If undefined, selecting nodes will be handled automatically.
@@ -46,13 +46,13 @@ export type TreeProps = {
   /**
    * Get the NodeData.
    */
-  getNode?: (node?: NodeData | number) => NodeData | undefined;
+  getNode?: (node?: number) => NodeData | undefined;
 } & CommonProps;
 
 /**
  * @example
   <Tree
-    data={data}
+    nodeCount={50}
     getNode={getNode}
     nodeRenderer={(props) => (
       <TreeNode
@@ -74,7 +74,7 @@ export type TreeProps = {
  */
 export const Tree = (props: TreeProps) => {
   const {
-    data,
+    nodeCount,
     className,
     nodeRenderer = (props) => {
       return (
@@ -202,7 +202,7 @@ export const Tree = (props: TreeProps) => {
 
   const flatNodesList = React.useMemo(() => {
     let flatList: NodeData[] = [];
-    data?.forEach((_, index) => {
+    Array.from(Array(nodeCount))?.forEach((_, index) => {
       const flatNode = getNode?.(index);
       if (flatNode) {
         flatList = [...flatList, flatNode];
@@ -213,7 +213,7 @@ export const Tree = (props: TreeProps) => {
     });
 
     return flatList;
-  }, [data, getNode, getSubNodes]);
+  }, [nodeCount, getNode, getSubNodes]);
 
   return (
     <ul
