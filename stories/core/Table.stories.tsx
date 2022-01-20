@@ -2189,3 +2189,75 @@ export const Virtualized: Story<Partial<TableProps>> = (args) => {
 Virtualized.argTypes = {
   isLoading: { control: { disable: true } },
 };
+
+export const VirtualizedSubRows: Story<Partial<TableProps>> = (args) => {
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+            Filter: tableFilters.TextFilter(),
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+            Filter: tableFilters.TextFilter(),
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  type TableStoryDataType = {
+    name: string;
+    description: string;
+    subRows: TableStoryDataType[];
+  };
+
+  const generateItem = useCallback(
+    (index: number, parentRow = '', depth = 0): TableStoryDataType => {
+      const keyValue = parentRow ? `${parentRow}.${index}` : `${index}`;
+      return {
+        name: `Name ${keyValue}`,
+        description: `Description ${keyValue}`,
+        subRows:
+          depth < 2
+            ? Array(Math.round(index % 5))
+                .fill(null)
+                .map((_, index) => generateItem(index, keyValue, depth + 1))
+            : [],
+      };
+    },
+    [],
+  );
+
+  const data = useMemo(
+    () =>
+      Array(10000)
+        .fill(null)
+        .map((_, index) => generateItem(index)),
+    [generateItem],
+  );
+
+  return (
+    <Table
+      useVirtualization
+      columns={columns}
+      emptyTableContent='No data.'
+      {...args}
+      style={{ height: 440, maxHeight: '90vh' }}
+      data={data}
+    />
+  );
+};
+
+VirtualizedSubRows.argTypes = {
+  isLoading: { control: { disable: true } },
+};
