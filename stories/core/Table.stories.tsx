@@ -706,7 +706,6 @@ export const ExpandableSubrows: Story<Partial<TableProps>> = (args) => {
         data={data}
         columns={columns}
         {...args}
-        useVirtualization
         onExpand={onExpand}
       />
     </>
