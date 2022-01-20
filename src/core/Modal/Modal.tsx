@@ -183,7 +183,11 @@ export const Modal = (props: ModalProps) => {
               style={style}
               role='dialog'
               aria-modal='true'
-              onMouseDown={(event) => event.stopPropagation()}
+              onMouseDown={(event) => {
+                if (closeOnExternalClick) {
+                  event.stopPropagation();
+                }
+              }}
             >
               <div className='iui-title-bar'>
                 <div className='iui-title'>{title}</div>
