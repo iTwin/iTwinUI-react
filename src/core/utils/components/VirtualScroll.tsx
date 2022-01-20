@@ -131,7 +131,6 @@ export const VirtualScroll = ({
 
     const firstChild = parentRef.current.children.item(0) as HTMLElement;
     childHeight.current = Number(getElementHeight(firstChild).toFixed(2));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visibleChildren.length]);
 
   const updateVirtualScroll = React.useCallback(
