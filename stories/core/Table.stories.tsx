@@ -862,7 +862,7 @@ export const LazyLoading: Story<Partial<TableProps>> = (args) => {
       onBottomReached={onBottomReached}
       isLoading={isLoading}
       {...args}
-      style={{ height: 440 }}
+      style={{ height: 440, maxHeight: '90vh' }}
       data={data}
     />
   );
