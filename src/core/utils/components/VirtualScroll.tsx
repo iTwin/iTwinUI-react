@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
+import { CommonProps } from '../props';
 
 const getScrollableParent = (element: HTMLElement | null): HTMLElement => {
   if (!element || element === document.body) {
@@ -70,7 +71,7 @@ export type VirtualScrollProps = {
    * @default 20
    */
   buffer?: number;
-};
+} & Omit<CommonProps, 'title'>;
 
 /**
  * `VirtualScroll` component used to render a huge amount of items in the DOM. It renders only the ones which are visible
@@ -96,6 +97,8 @@ export const VirtualScroll = ({
   itemsLength,
   itemRenderer,
   buffer = 20,
+  style,
+  ...rest
 }: VirtualScrollProps) => {
   const [startNode, setStartNode] = React.useState(0);
   const [visibleNodeCount, setVisibleNodeCount] = React.useState(0);
@@ -208,7 +211,9 @@ export const VirtualScroll = ({
         overflow: 'hidden',
         minHeight: itemsLength * childHeight.current,
         width: '100%',
+        ...style,
       }}
+      {...rest}
     >
       <div
         style={{
