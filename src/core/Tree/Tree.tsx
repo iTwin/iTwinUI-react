@@ -6,92 +6,69 @@ import React from 'react';
 import { CommonProps, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/tree.css';
 import cx from 'classnames';
-import TreeNode from './TreeNode';
 
 export const TreeContext = React.createContext<
   | {
-      selectedNodes?: Array<string>;
-      setSelectedNode?: (
-        node: Array<string> | ((prev: Array<string>) => Array<string>),
-      ) => void;
-      nodeDepth?: number;
+      nodeDepth: number;
+      subNodeIds?: string[];
     }
   | undefined
 >(undefined);
 
-export type NodeData = {
-  subnodes?: Array<NodeData>;
+export type NodeData<T> = {
+  subNodes?: Array<T>;
   nodeId: string;
-  label?: string;
-  subLabel?: string;
+  node: T;
   isExpanded?: boolean;
   isDisabled?: boolean;
+  isSelected?: boolean;
   depth?: number;
+  subNodeIds?: Array<string>;
 };
 
-export type TreeProps = {
+export type TreeProps<T> = {
   /**
-   * Node renderer.
+   * Custom renderer for tree nodes, recommended to use TreeNode component.
    */
-  nodeRenderer?: (props: NodeData) => JSX.Element;
+  nodeRenderer: (props: NodeData<T>) => JSX.Element;
   /**
    * Items inside tree.
    */
-  nodeCount?: number;
-  /**
-   * Node ids of selected nodes.
-   * If undefined, selecting nodes will be handled automatically.
-   */
-  selectedNodes?: Array<string>;
+  data: T[];
   /**
    * Get the NodeData.
    */
-  getNode?: (node?: number) => NodeData | undefined;
+  getNode: (node: T) => NodeData<T>;
 } & CommonProps;
 
 /**
+ * Tree
  * @example
-  <Tree
-    nodeCount={50}
+  <Tree<TreeData>
+    data={data}
     getNode={getNode}
     nodeRenderer={(props) => (
       <TreeNode
         nodeId={props.nodeId}
-        label={props.label}
-        sublabel={props.subLabel}
-        subNodes={props.subnodes}
+        label={props.node.label}
+        sublabel={props.node.subLabel}
+        subNodes={props.node.subItems}
         onNodeExpanded={onNodeExpanded}
         onNodeSelected={onSelectedNodeChange}
         isDisabled={props.isDisabled}
         isExpanded={props.isExpanded}
-        nodeCheckbox={<Checkbox variant='eyeball' checked={true} />}
+        isSelected={props.isSelected}
+        nodeCheckbox={
+          <Checkbox variant='eyeball' disabled={props.isDisabled} />
+        }
         icon={<SvgPlaceholder />}
       />
     )}
-    selectedNodes={selectedNodes}
-    {...args}
   />
  */
-export const Tree = (props: TreeProps) => {
-  const {
-    nodeCount,
-    className,
-    nodeRenderer = (props) => {
-      return (
-        <TreeNode
-          nodeId={props.nodeId}
-          label={props.label}
-          sublabel={props.subLabel}
-          subNodes={props.subnodes}
-          isDisabled={props.isDisabled}
-          isExpanded={props.isExpanded}
-        />
-      );
-    },
-    getNode,
-    selectedNodes,
-    ...rest
-  } = props;
+
+export const Tree = <T,>(props: TreeProps<T>) => {
+  const { data, className, nodeRenderer, getNode, ...rest } = props;
   useTheme();
 
   const treeRef = React.useRef<HTMLUListElement>(null);
@@ -183,37 +160,32 @@ export const Tree = (props: TreeProps) => {
     }
   };
 
-  const [selected, setSelected] = React.useState<Array<string>>([]);
-
-  const getSubNodes = React.useCallback((node: NodeData, depth: number) => {
-    let flatNodes: NodeData[] = [];
-
-    if (node.isExpanded) {
-      if (node?.subnodes?.length) {
-        node.subnodes.forEach((sub) => {
-          sub.depth = depth;
-          flatNodes.push(sub);
-          flatNodes = [...flatNodes, ...getSubNodes(sub, depth + 1)];
-        });
-      }
-    }
-    return flatNodes;
-  }, []);
-
   const flatNodesList = React.useMemo(() => {
-    let flatList: NodeData[] = [];
-    Array.from(Array(nodeCount))?.forEach((_, index) => {
-      const flatNode = getNode?.(index);
-      if (flatNode) {
-        flatList = [...flatList, flatNode];
-        if (flatNode.isExpanded) {
-          flatList = [...flatList, ...getSubNodes(flatNode, 1)];
-        }
-      }
-    });
+    const flatList: NodeData<T>[] = [];
 
+    const flatNodes = (nodes: T[] = [], depth = 0) => {
+      const nodeIdList = Array<string>();
+      nodes.forEach((element) => {
+        const flatNode = getNode(element);
+        nodeIdList.push(flatNode.nodeId);
+        flatList.push(flatNode);
+        flatNode.depth = depth;
+        if (flatNode.isExpanded) {
+          const subNodeIds = flatNodes(flatNode.subNodes, depth + 1);
+          flatNode.subNodeIds = subNodeIds;
+        } else {
+          const subNodeIds = Array<string>();
+          flatNode.subNodes?.forEach((subNode) => {
+            subNodeIds.push(subNode.id);
+          });
+          flatNode.subNodeIds = subNodeIds;
+        }
+      });
+      return nodeIdList;
+    };
+    flatNodes(data);
     return flatList;
-  }, [nodeCount, getNode, getSubNodes]);
+  }, [data, getNode]);
 
   return (
     <ul
@@ -227,9 +199,8 @@ export const Tree = (props: TreeProps) => {
         <React.Fragment key={flatNode.nodeId}>
           <TreeContext.Provider
             value={{
-              selectedNodes: selectedNodes ?? selected,
-              setSelectedNode: selectedNodes ? undefined : setSelected,
-              nodeDepth: flatNode.depth,
+              nodeDepth: flatNode.depth ?? 0,
+              subNodeIds: flatNode.subNodeIds,
             }}
           >
             {nodeRenderer(flatNode)}

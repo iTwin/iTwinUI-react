@@ -8,9 +8,9 @@ import '@itwin/itwinui-css/css/tree.css';
 import { SvgChevronRight } from '@itwin/itwinui-icons-react';
 import { IconButton } from '../Buttons/IconButton';
 import cx from 'classnames';
-import { TreeContext, NodeData } from './Tree';
+import { TreeContext } from './Tree';
 
-export type TreeNodeProps = {
+export type TreeNodeProps<T> = {
   /**
    * Unique id of the node.
    */
@@ -38,6 +38,11 @@ export type TreeNodeProps = {
    */
   isExpanded?: boolean;
   /**
+   * Is TreeNode selected.
+   * @default false
+   */
+  isSelected?: boolean;
+  /**
    * Callback fired when expanding or closing a TreeNode.
    */
   onNodeExpanded?: (nodeId: string, expanded: boolean) => void;
@@ -49,7 +54,7 @@ export type TreeNodeProps = {
    * The TreeNode's child nodes.
    * If undefined or empty, expander button is not shown.
    */
-  subNodes?: Array<NodeData>;
+  subNodes?: Array<T>;
   /**
    * Checkbox to be shown before TreeNode.
    * If undefined checkbox will not be shown.
@@ -63,21 +68,25 @@ export type TreeNodeProps = {
 } & CommonProps;
 
 /**
+ * TreeNode component to display within a Tree.
  * @example
   <TreeNode
-    nodeId={nodeId}
-    label={label}
-    sublabel={subLabel}
-    subNodes={subnodes}
+    nodeId={props.nodeId}
+    label={props.node.label}
+    sublabel={props.node.subLabel}
+    subNodes={props.node.subItems}
     onNodeExpanded={onNodeExpanded}
     onNodeSelected={onSelectedNodeChange}
-    isDisabled={isDisabled}
-    isExpanded={isExpanded}
-    nodeCheckbox={<Checkbox variant='eyeball'/>}
+    isDisabled={props.isDisabled}
+    isExpanded={props.isExpanded}
+    isSelected={props.isSelected}
+    nodeCheckbox={
+      <Checkbox variant='eyeball' disabled={props.isDisabled} />
+    }
     icon={<SvgPlaceholder />}
   />
  */
-export const TreeNode = (props: TreeNodeProps) => {
+export const TreeNode = <T,>(props: TreeNodeProps<T>) => {
   const {
     nodeId,
     label,
@@ -88,6 +97,7 @@ export const TreeNode = (props: TreeNodeProps) => {
     icon,
     isDisabled = false,
     isExpanded = false,
+    isSelected = false,
     onNodeSelected,
     onNodeExpanded,
     subNodes,
@@ -98,16 +108,7 @@ export const TreeNode = (props: TreeNodeProps) => {
 
   const context = React.useContext(TreeContext);
   const nodeDepth = context?.nodeDepth ?? 0;
-
-  const subNodeIds = React.useMemo(() => {
-    const nodes = Array<string>();
-    subNodes?.forEach((subNode) => {
-      if (subNode.nodeId) {
-        nodes.push(subNode?.nodeId);
-      }
-    });
-    return nodes;
-  }, [subNodes]);
+  const subNodeIds = context?.subNodeIds ?? [];
 
   const styleLevel = React.useMemo(
     () =>
@@ -117,24 +118,9 @@ export const TreeNode = (props: TreeNodeProps) => {
     [nodeDepth, style],
   );
 
-  const selectedNodes = React.useMemo(() => {
-    return context?.selectedNodes ?? [];
-  }, [context?.selectedNodes]);
-
-  const isSelected = React.useMemo(() => {
-    return selectedNodes.findIndex((id) => id === nodeId) != -1;
-  }, [selectedNodes, nodeId]);
-
   const onNodeClick = () => {
     if (isDisabled) {
       return;
-    }
-    if (isSelected) {
-      context?.setSelectedNode?.(
-        selectedNodes.filter((item) => item != nodeId),
-      );
-    } else {
-      context?.setSelectedNode?.([nodeId]);
     }
     onNodeSelected?.(nodeId, !isSelected);
   };
