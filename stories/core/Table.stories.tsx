@@ -83,7 +83,14 @@ export default {
   },
   parameters: {
     creevey: {
-      skip: { stories: ['Lazy Loading', 'Row In Viewport', 'Virtualized'] },
+      skip: {
+        stories: [
+          'Lazy Loading',
+          'Row In Viewport',
+          'Virtualized',
+          'VirtualizedSubRows',
+        ],
+      },
     },
   },
 } as Meta<TableProps> & CreeveyMeta;
