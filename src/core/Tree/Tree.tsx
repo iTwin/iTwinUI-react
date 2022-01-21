@@ -23,9 +23,13 @@ export type NodeData<T> = {
   isExpanded?: boolean;
   isDisabled?: boolean;
   isSelected?: boolean;
-  depth?: number;
-  subNodeIds?: Array<string>;
   hasSubNodes: boolean;
+};
+
+type FlatNode<T> = {
+  nodeData: NodeData<T>;
+  depth: number;
+  subNodeIds?: Array<string>;
 };
 
 export type TreeProps<T> = {
@@ -162,17 +166,20 @@ export const Tree = <T,>(props: TreeProps<T>) => {
   };
 
   const flatNodesList = React.useMemo(() => {
-    const flatList: NodeData<T>[] = [];
+    const flatList: FlatNode<T>[] = [];
 
     const flatNodes = (nodes: T[] = [], depth = 0) => {
       const nodeIdList = Array<string>();
       nodes.forEach((element) => {
-        const flatNode = getNode(element);
-        nodeIdList.push(flatNode.nodeId);
+        const flatNode: FlatNode<T> = {
+          nodeData: getNode(element),
+          depth: depth,
+        };
+        nodeIdList.push(flatNode.nodeData.nodeId);
         flatList.push(flatNode);
         flatNode.depth = depth;
-        if (flatNode.isExpanded) {
-          const subNodeIds = flatNodes(flatNode.subNodes, depth + 1);
+        if (flatNode.nodeData.isExpanded) {
+          const subNodeIds = flatNodes(flatNode.nodeData.subNodes, depth + 1);
           flatNode.subNodeIds = subNodeIds;
         }
       });
@@ -192,14 +199,14 @@ export const Tree = <T,>(props: TreeProps<T>) => {
     >
       {flatNodesList.map((flatNode) => (
         <TreeContext.Provider
-          key={flatNode.nodeId}
+          key={flatNode.nodeData.nodeId}
           value={{
             nodeDepth: flatNode.depth ?? 0,
             subNodeIds: flatNode.subNodeIds,
-            hasSubNodes: flatNode.hasSubNodes,
+            hasSubNodes: flatNode.nodeData.hasSubNodes,
           }}
         >
-          {nodeRenderer(flatNode)}
+          {nodeRenderer(flatNode.nodeData)}
         </TreeContext.Provider>
       ))}
     </ul>

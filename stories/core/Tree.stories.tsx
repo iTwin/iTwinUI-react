@@ -16,16 +16,16 @@ export default {
     style: { control: { disable: true } },
   },
   title: 'Core/Tree',
-} as Meta<TreeProps<TreeData>>;
+} as Meta<TreeProps<unknown>>;
 
-type TreeData = {
-  id: string;
-  label: string;
-  subLabel: string;
-  subItems: TreeData[];
-};
+export const Basic: Story<TreeProps<unknown>> = () => {
+  type StoryData = {
+    id: string;
+    label: string;
+    subLabel: string;
+    subItems: StoryData[];
+  };
 
-export const Basic: Story<TreeProps<TreeData>> = () => {
   const [selectedNodes, setSelectedNodes] = React.useState([
     'Node 0',
     'Node 3.2',
@@ -74,7 +74,7 @@ export const Basic: Story<TreeProps<TreeData>> = () => {
   ]);
 
   const generateItem = React.useCallback(
-    (index: number, parentNode = '', depth = 0): TreeData => {
+    (index: number, parentNode = '', depth = 0): StoryData => {
       const keyValue = parentNode ? `${parentNode}.${index}` : `${index}`;
       return {
         id: `Node ${keyValue}`,
@@ -100,7 +100,7 @@ export const Basic: Story<TreeProps<TreeData>> = () => {
   );
 
   const getNode = React.useCallback(
-    (node: TreeData): NodeData<TreeData> => {
+    (node: StoryData): NodeData<StoryData> => {
       return {
         subNodes: node.subItems,
         nodeId: node.id,
@@ -115,7 +115,7 @@ export const Basic: Story<TreeProps<TreeData>> = () => {
   );
 
   return (
-    <Tree<TreeData>
+    <Tree<StoryData>
       data={data}
       getNode={getNode}
       nodeRenderer={React.useCallback(
