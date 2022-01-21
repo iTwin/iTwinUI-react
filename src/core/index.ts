@@ -256,10 +256,5 @@ export {
   useTheme,
   ColorValue,
   MiddleTextTruncation,
-  VirtualScroll,
 } from './utils';
-export type {
-  ThemeType,
-  MiddleTextTruncationProps,
-  VirtualScrollProps,
-} from './utils';
+export type { ThemeType, MiddleTextTruncationProps } from './utils';

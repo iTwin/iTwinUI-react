@@ -2194,6 +2194,7 @@ export const Virtualized: Story<Partial<TableProps>> = (args) => {
 
 Virtualized.argTypes = {
   isLoading: { control: { disable: true } },
+  data: { control: { disable: true } },
 };
 
 export const VirtualizedSubRows: Story<Partial<TableProps>> = (args) => {
@@ -2266,4 +2267,5 @@ export const VirtualizedSubRows: Story<Partial<TableProps>> = (args) => {
 
 VirtualizedSubRows.argTypes = {
   isLoading: { control: { disable: true } },
+  data: { control: { disable: true } },
 };
