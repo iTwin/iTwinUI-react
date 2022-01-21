@@ -136,32 +136,31 @@ export const VirtualScroll = ({
     childHeight.current = Number(getElementHeight(firstChild).toFixed(2));
   }, [visibleChildren.length]);
 
-  const updateVirtualScroll = React.useCallback(
-    (scrollableContainer: HTMLElement) => {
-      const start = getNumberOfNodesInHeight(
-        childHeight.current,
-        scrollableContainer.scrollTop,
-      );
-      setStartNode(start);
-      setVisibleNodeCount(
-        getVisibleNodeCount(
-          childHeight.current,
-          start,
-          itemsLength,
-          scrollableContainer,
-        ),
-      );
-
-      if (!parentRef.current) {
-        return;
-      }
-      parentRef.current.style.transform = `translateY(${getTranslateValue(
+  const updateVirtualScroll = React.useCallback(() => {
+    const scrollableContainer =
+      scrollContainer.current ?? (document.scrollingElement as HTMLElement);
+    const start = getNumberOfNodesInHeight(
+      childHeight.current,
+      scrollableContainer.scrollTop,
+    );
+    setStartNode(start);
+    setVisibleNodeCount(
+      getVisibleNodeCount(
         childHeight.current,
         start,
-      )}px)`;
-    },
-    [itemsLength],
-  );
+        itemsLength,
+        scrollableContainer,
+      ),
+    );
+
+    if (!parentRef.current) {
+      return;
+    }
+    parentRef.current.style.transform = `translateY(${getTranslateValue(
+      childHeight.current,
+      start,
+    )}px)`;
+  }, [itemsLength]);
 
   const onScroll = React.useCallback(
     (e: Event) => {
@@ -172,7 +171,7 @@ export const VirtualScroll = ({
       if (!target) {
         return;
       }
-      updateVirtualScroll(target);
+      updateVirtualScroll();
     },
     [updateVirtualScroll],
   );
@@ -202,7 +201,7 @@ export const VirtualScroll = ({
   }, [onScroll, removeScrollListener]);
 
   React.useLayoutEffect(() => {
-    updateVirtualScroll(scrollContainer.current ?? document.body);
+    updateVirtualScroll();
   }, [itemsLength, updateVirtualScroll]);
 
   return (
