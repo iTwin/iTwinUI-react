@@ -88,7 +88,7 @@ export default {
           'Lazy Loading',
           'Row In Viewport',
           'Virtualized',
-          'VirtualizedSubRows',
+          'Virtualized Sub Rows',
         ],
       },
     },
