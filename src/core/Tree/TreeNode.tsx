@@ -45,11 +45,11 @@ export type TreeNodeProps = {
   /**
    * Callback fired when expanding or closing a TreeNode.
    */
-  onNodeExpanded?: (nodeId: string, expanded: boolean) => void;
+  onNodeExpanded: (nodeId: string, isExpanded: boolean) => void;
   /**
    * Callback fired when selecting a TreeNode.
    */
-  onNodeSelected?: (nodeId: string, selected: boolean) => void;
+  onNodeSelected?: (nodeId: string, isSelected: boolean) => void;
   /**
    * Checkbox to be shown before TreeNode.
    * If undefined checkbox will not be shown.
@@ -68,7 +68,7 @@ export type TreeNodeProps = {
   <TreeNode
     nodeId={props.nodeId}
     label={props.node.label}
-    sublabel={props.node.subLabel}
+    sublabel={props.node.sublabel}
     onNodeExpanded={onNodeExpanded}
     onNodeSelected={onSelectedNodeChange}
     isDisabled={props.isDisabled}
@@ -103,7 +103,7 @@ export const TreeNode = (props: TreeNodeProps) => {
   const nodeDepth = context?.nodeDepth ?? 0;
   const subNodeIds = context?.subNodeIds ?? [];
 
-  const styleLevel = React.useMemo(
+  const styleDepth = React.useMemo(
     () =>
       getWindow()?.CSS?.supports?.(`--level: ${nodeDepth}`)
         ? { '--level': nodeDepth, ...style }
@@ -131,8 +131,8 @@ export const TreeNode = (props: TreeNodeProps) => {
               },
               className,
             )}
-            style={styleLevel}
-            onClick={() => onNodeClick()}
+            style={styleDepth}
+            onClick={onNodeClick}
             tabIndex={isSelected ? 0 : -1}
           >
             {nodeCheckbox && React.isValidElement(nodeCheckbox)
@@ -142,14 +142,14 @@ export const TreeNode = (props: TreeNodeProps) => {
                     nodeCheckbox.props.className,
                   ),
                 })
-              : nodeCheckbox}
+              : undefined}
             <div className='iui-tree-node-content'>
               {context?.hasSubNodes && (
                 <IconButton
                   styleType='borderless'
                   size='small'
                   onClick={(e) => {
-                    onNodeExpanded?.(nodeId, !isExpanded);
+                    onNodeExpanded(nodeId, !isExpanded);
                     e.stopPropagation();
                   }}
                   disabled={isDisabled}
@@ -171,7 +171,11 @@ export const TreeNode = (props: TreeNodeProps) => {
                 })}
               <span className='iui-tree-node-content-label'>
                 <div className='iui-tree-node-content-title'>{label}</div>
-                <div className='iui-tree-node-content-caption'>{sublabel}</div>
+                {sublabel && (
+                  <div className='iui-tree-node-content-caption'>
+                    {sublabel}
+                  </div>
+                )}
               </span>
               {children}
             </div>

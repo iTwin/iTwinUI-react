@@ -22,7 +22,7 @@ export const Basic: Story<TreeProps<unknown>> = () => {
   type StoryData = {
     id: string;
     label: string;
-    subLabel: string;
+    sublabel: string;
     subItems: StoryData[];
   };
 
@@ -32,8 +32,8 @@ export const Basic: Story<TreeProps<unknown>> = () => {
     'Node 22',
   ]);
   const onSelectedNodeChange = React.useCallback(
-    (nodeId: string, selected: boolean) => {
-      if (selected) {
+    (nodeId: string, isSelected: boolean) => {
+      if (isSelected) {
         setSelectedNodes((oldSelected) => [...oldSelected, nodeId]);
         action(`Selected node ${nodeId}`)();
       } else {
@@ -52,8 +52,8 @@ export const Basic: Story<TreeProps<unknown>> = () => {
     'Node 3',
   ]);
   const onNodeExpanded = React.useCallback(
-    (nodeId: string, expanded: boolean) => {
-      if (expanded) {
+    (nodeId: string, isExpanded: boolean) => {
+      if (isExpanded) {
         setExpandedNodes((oldExpanded) => [...oldExpanded, nodeId]);
         action(`Expanded node ${nodeId}`)();
       } else {
@@ -79,7 +79,7 @@ export const Basic: Story<TreeProps<unknown>> = () => {
       return {
         id: `Node ${keyValue}`,
         label: `Node ${keyValue}`,
-        subLabel: `Sublabel for Node ${keyValue}`,
+        sublabel: `Sublabel for Node ${keyValue}`,
         subItems:
           depth < 10
             ? Array(Math.round(index % 5))
@@ -105,9 +105,9 @@ export const Basic: Story<TreeProps<unknown>> = () => {
         subNodes: node.subItems,
         nodeId: node.id,
         node: node,
-        isExpanded: expandedNodes.findIndex((id) => id === node.id) != -1,
-        isDisabled: disabledNodes.findIndex((id) => id === node.id) != -1,
-        isSelected: selectedNodes.findIndex((id) => id === node.id) != -1,
+        isExpanded: expandedNodes.some((id) => id === node.id),
+        isDisabled: disabledNodes.some((id) => id === node.id),
+        isSelected: selectedNodes.some((id) => id === node.id),
         hasSubNodes: node.subItems.length > 0,
       };
     },
@@ -122,7 +122,7 @@ export const Basic: Story<TreeProps<unknown>> = () => {
         ({ node, ...rest }) => (
           <TreeNode
             label={node.label}
-            sublabel={node.subLabel}
+            sublabel={node.sublabel}
             onNodeExpanded={onNodeExpanded}
             onNodeSelected={onSelectedNodeChange}
             nodeCheckbox={

@@ -45,7 +45,7 @@ export type TreeProps<T> = {
    * Get the NodeData.
    */
   getNode: (node: T) => NodeData<T>;
-} & CommonProps;
+} & Omit<CommonProps, 'title'>;
 
 /**
  * Tree
@@ -57,7 +57,7 @@ export type TreeProps<T> = {
       <TreeNode
         nodeId={props.nodeId}
         label={props.node.label}
-        sublabel={props.node.subLabel}
+        sublabel={props.node.sublabel}
         onNodeExpanded={onNodeExpanded}
         onNodeSelected={onSelectedNodeChange}
         isDisabled={props.isDisabled}
@@ -177,7 +177,6 @@ export const Tree = <T,>(props: TreeProps<T>) => {
         };
         nodeIdList.push(flatNode.nodeData.nodeId);
         flatList.push(flatNode);
-        flatNode.depth = depth;
         if (flatNode.nodeData.isExpanded) {
           const subNodeIds = flatNodes(flatNode.nodeData.subNodes, depth + 1);
           flatNode.subNodeIds = subNodeIds;
