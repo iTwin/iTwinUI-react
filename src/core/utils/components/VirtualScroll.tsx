@@ -70,12 +70,12 @@ export type VirtualScrollProps = {
    * Not recommended to go lower than the visible items in viewport.
    * @default 20
    */
-  buffer?: number;
+  bufferSize?: number;
 } & Omit<CommonProps, 'title'>;
 
 /**
  * `VirtualScroll` component used to render a huge amount of items in the DOM. It renders only the ones which are visible
- * and the amount provided through `buffer` prop. Can be used inside other components like `Table`.
+ * and the amount provided through `bufferSize` prop. Can be used inside other components like `Table`.
  *
  * It has two wrapper elements, so DOM will be changed. One is used for setting full expected height in the scrollable container
  * and other is for transformation (translateY) to show the correct part of the list.
@@ -96,7 +96,7 @@ export type VirtualScrollProps = {
 export const VirtualScroll = ({
   itemsLength,
   itemRenderer,
-  buffer = 20,
+  bufferSize = 20,
   style,
   ...rest
 }: VirtualScrollProps) => {
@@ -118,13 +118,13 @@ export const VirtualScroll = ({
     const arr = [];
     const endIndex = Math.min(
       itemsLength,
-      startNode + visibleNodeCount + buffer,
+      startNode + visibleNodeCount + bufferSize,
     );
     for (let i = startNode; i < endIndex; i++) {
       arr.push(itemRenderer(i));
     }
     return arr;
-  }, [itemsLength, itemRenderer, buffer, startNode, visibleNodeCount]);
+  }, [itemsLength, itemRenderer, bufferSize, startNode, visibleNodeCount]);
 
   // Get child height when children available
   React.useLayoutEffect(() => {
