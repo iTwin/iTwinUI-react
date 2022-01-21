@@ -11,6 +11,7 @@ export const TreeContext = React.createContext<
   | {
       nodeDepth: number;
       subNodeIds?: string[];
+      hasSubNodes: boolean;
     }
   | undefined
 >(undefined);
@@ -24,6 +25,7 @@ export type NodeData<T> = {
   isSelected?: boolean;
   depth?: number;
   subNodeIds?: Array<string>;
+  hasSubNodes: boolean;
 };
 
 export type TreeProps<T> = {
@@ -52,7 +54,6 @@ export type TreeProps<T> = {
         nodeId={props.nodeId}
         label={props.node.label}
         sublabel={props.node.subLabel}
-        subNodes={props.node.subItems}
         onNodeExpanded={onNodeExpanded}
         onNodeSelected={onSelectedNodeChange}
         isDisabled={props.isDisabled}
@@ -173,12 +174,6 @@ export const Tree = <T,>(props: TreeProps<T>) => {
         if (flatNode.isExpanded) {
           const subNodeIds = flatNodes(flatNode.subNodes, depth + 1);
           flatNode.subNodeIds = subNodeIds;
-        } else {
-          const subNodeIds = Array<string>();
-          flatNode.subNodes?.forEach((subNode) => {
-            subNodeIds.push(subNode.id);
-          });
-          flatNode.subNodeIds = subNodeIds;
         }
       });
       return nodeIdList;
@@ -196,16 +191,16 @@ export const Tree = <T,>(props: TreeProps<T>) => {
       {...rest}
     >
       {flatNodesList.map((flatNode) => (
-        <React.Fragment key={flatNode.nodeId}>
-          <TreeContext.Provider
-            value={{
-              nodeDepth: flatNode.depth ?? 0,
-              subNodeIds: flatNode.subNodeIds,
-            }}
-          >
-            {nodeRenderer(flatNode)}
-          </TreeContext.Provider>
-        </React.Fragment>
+        <TreeContext.Provider
+          key={flatNode.nodeId}
+          value={{
+            nodeDepth: flatNode.depth ?? 0,
+            subNodeIds: flatNode.subNodeIds,
+            hasSubNodes: flatNode.hasSubNodes,
+          }}
+        >
+          {nodeRenderer(flatNode)}
+        </TreeContext.Provider>
       ))}
     </ul>
   );

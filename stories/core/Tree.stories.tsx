@@ -108,6 +108,7 @@ export const Basic: Story<TreeProps<TreeData>> = () => {
         isExpanded: expandedNodes.findIndex((id) => id === node.id) != -1,
         isDisabled: disabledNodes.findIndex((id) => id === node.id) != -1,
         isSelected: selectedNodes.findIndex((id) => id === node.id) != -1,
+        hasSubNodes: node.subItems.length > 0,
       };
     },
     [disabledNodes, expandedNodes, selectedNodes],
@@ -122,7 +123,6 @@ export const Basic: Story<TreeProps<TreeData>> = () => {
           <TreeNode
             label={node.label}
             sublabel={node.subLabel}
-            subNodes={node.subItems}
             onNodeExpanded={onNodeExpanded}
             onNodeSelected={onSelectedNodeChange}
             nodeCheckbox={

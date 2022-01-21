@@ -10,7 +10,7 @@ import { IconButton } from '../Buttons/IconButton';
 import cx from 'classnames';
 import { TreeContext } from './Tree';
 
-export type TreeNodeProps<T> = {
+export type TreeNodeProps = {
   /**
    * Unique id of the node.
    */
@@ -51,11 +51,6 @@ export type TreeNodeProps<T> = {
    */
   onNodeSelected?: (nodeId: string, selected: boolean) => void;
   /**
-   * The TreeNode's child nodes.
-   * If undefined or empty, expander button is not shown.
-   */
-  subNodes?: Array<T>;
-  /**
    * Checkbox to be shown before TreeNode.
    * If undefined checkbox will not be shown.
    * Recommended to use Checkbox component.
@@ -74,7 +69,6 @@ export type TreeNodeProps<T> = {
     nodeId={props.nodeId}
     label={props.node.label}
     sublabel={props.node.subLabel}
-    subNodes={props.node.subItems}
     onNodeExpanded={onNodeExpanded}
     onNodeSelected={onSelectedNodeChange}
     isDisabled={props.isDisabled}
@@ -86,7 +80,7 @@ export type TreeNodeProps<T> = {
     icon={<SvgPlaceholder />}
   />
  */
-export const TreeNode = <T,>(props: TreeNodeProps<T>) => {
+export const TreeNode = (props: TreeNodeProps) => {
   const {
     nodeId,
     label,
@@ -100,7 +94,6 @@ export const TreeNode = <T,>(props: TreeNodeProps<T>) => {
     isSelected = false,
     onNodeSelected,
     onNodeExpanded,
-    subNodes,
     nodeCheckbox,
     ...rest
   } = props;
@@ -151,7 +144,7 @@ export const TreeNode = <T,>(props: TreeNodeProps<T>) => {
                 })
               : nodeCheckbox}
             <div className='iui-tree-node-content'>
-              {subNodes && subNodes.length > 0 && (
+              {context?.hasSubNodes && (
                 <IconButton
                   styleType='borderless'
                   size='small'
@@ -184,7 +177,7 @@ export const TreeNode = <T,>(props: TreeNodeProps<T>) => {
             </div>
           </div>
         }
-        {subNodes && subNodes.length > 0 && (
+        {context?.hasSubNodes && (
           <ul
             className='iui-sub-tree'
             role='group'
