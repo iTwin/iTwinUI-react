@@ -44,10 +44,12 @@ export type TreeNodeProps = {
   isSelected?: boolean;
   /**
    * Callback fired when expanding or closing a TreeNode.
+   * Gives nodeId and new isExpanded value of specified node.
    */
   onNodeExpanded: (nodeId: string, isExpanded: boolean) => void;
   /**
    * Callback fired when selecting a TreeNode.
+   * Gives nodeId and new isSelected value of specified node.
    */
   onNodeSelected?: (nodeId: string, isSelected: boolean) => void;
   /**
@@ -63,7 +65,8 @@ export type TreeNodeProps = {
 } & CommonProps;
 
 /**
- * TreeNode component to display within a Tree.
+ * TreeNode component to display node content within a Tree.
+ * Must be used inside `Tree` component to correctly set node depth and subNodes.
  * @example
   <TreeNode
     nodeId={props.nodeId}

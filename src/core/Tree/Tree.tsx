@@ -17,12 +17,34 @@ export const TreeContext = React.createContext<
 >(undefined);
 
 export type NodeData<T> = {
+  /**
+   * Array of the child nodes contained in the node.
+   */
   subNodes?: Array<T>;
+  /**
+   * Unique id of the node.
+   */
   nodeId: string;
+  /**
+   * Custom type used to map type `T` to `NodeData`
+   */
   node: T;
+  /**
+   * Is the node expanded.
+   */
   isExpanded?: boolean;
+  /**
+   * Is the node disabled.
+   */
   isDisabled?: boolean;
+  /**
+   * Is the node selected.
+   */
   isSelected?: boolean;
+  /**
+   * Does the node have subNodes.
+   * Used to determine if node should be expandable.
+   */
   hasSubNodes: boolean;
 };
 
@@ -34,39 +56,71 @@ type FlatNode<T> = {
 
 export type TreeProps<T> = {
   /**
-   * Custom renderer for tree nodes, recommended to use TreeNode component.
+   * Custom renderer for items inside tree, recommended to use `TreeNode` component.
    */
   nodeRenderer: (props: NodeData<T>) => JSX.Element;
   /**
-   * Items inside tree.
+   * Array of custom data used for `TreeNodes` inside `Tree`.
    */
   data: T[];
   /**
-   * Get the NodeData.
+   * Function to map custom type `T` to `NodeData`, which will be used to render a tree node in `nodeRenderer`.
    */
   getNode: (node: T) => NodeData<T>;
 } & Omit<CommonProps, 'title'>;
 
 /**
- * Tree
+ * Component used to display a hierarchical structure of `TreeNodes`. 
+ * User should control state of expanded, selected, and disabled nodes using `getNode` prop.
  * @example
-  <Tree<TreeData>
+  type StoryData = {
+    id: string;
+    label: string;
+    subItems: StoryData[];
+  };
+
+  const data: Array<StoryData> = [
+    {
+      id: '1',
+      label: 'Facility 1',
+      subItems: [{ id: '1.1', label: 'Unit 1', subItems: [] }],
+    },
+    {
+      id: '2',
+      label: 'Facility 2',
+      subItems: [{ id: '2.1', label: 'Unit 2', subItems: [] }],
+    },
+  ];
+
+  const [expandedNodes, setExpandedNodes] = React.useState<Array<string>>([]);
+  const onNodeExpanded = (nodeId: string, isExpanded: boolean) => {
+    if (isExpanded) {
+      setExpandedNodes((oldExpanded) => [...oldExpanded, nodeId]);
+    } else {
+      setExpandedNodes((oldExpanded) =>
+        oldExpanded.filter((item) => item != nodeId),
+      );
+    }
+  };
+
+  const getNode = (node: StoryData): NodeData<StoryData> => {
+    return {
+      subNodes: node.subItems,
+      nodeId: node.id,
+      node: node,
+      isExpanded: expandedNodes.some((id) => id === node.id),
+      hasSubNodes: node.subItems.length > 0,
+    };
+  };
+
+  <Tree<StoryData>
     data={data}
     getNode={getNode}
-    nodeRenderer={(props) => (
+    nodeRenderer={({ node, ...rest }) => (
       <TreeNode
-        nodeId={props.nodeId}
-        label={props.node.label}
-        sublabel={props.node.sublabel}
+        label={node.label}
         onNodeExpanded={onNodeExpanded}
-        onNodeSelected={onSelectedNodeChange}
-        isDisabled={props.isDisabled}
-        isExpanded={props.isExpanded}
-        isSelected={props.isSelected}
-        nodeCheckbox={
-          <Checkbox variant='eyeball' disabled={props.isDisabled} />
-        }
-        icon={<SvgPlaceholder />}
+        {...rest}
       />
     )}
   />
