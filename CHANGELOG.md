@@ -2,7 +2,6 @@
 
 ### [1.29.2](https://www.github.com/iTwin/iTwinUI-react/compare/v1.29.1...v1.29.2) (2022-01-24)
 
-
 ### Fixes
 
 * **Button:** Fix event typings for inline handlers ([#519](https://www.github.com/iTwin/iTwinUI-react/issues/519)) ([c72f5fd](https://www.github.com/iTwin/iTwinUI-react/commit/c72f5fdae00f61d38295f30111f36c403590ebfe))
