@@ -11,7 +11,6 @@ export const TreeContext = React.createContext<
   | {
       nodeDepth: number;
       subNodeIds?: string[];
-      hasSubNodes: boolean;
     }
   | undefined
 >(undefined);
@@ -256,7 +255,6 @@ export const Tree = <T,>(props: TreeProps<T>) => {
           value={{
             nodeDepth: flatNode.depth ?? 0,
             subNodeIds: flatNode.subNodeIds,
-            hasSubNodes: flatNode.nodeData.hasSubNodes,
           }}
         >
           {nodeRenderer(flatNode.nodeData)}

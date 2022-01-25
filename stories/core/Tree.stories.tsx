@@ -15,6 +15,7 @@ export default {
     className: { control: { disable: true } },
     style: { control: { disable: true } },
   },
+  parameters: { controls: { hideNoControlsWarning: true } },
   title: 'Core/Tree',
 } as Meta<TreeProps<unknown>>;
 

@@ -27,6 +27,7 @@ it('should render in its most basic state', () => {
   expect(treeItem).toHaveAttribute('role', 'treeitem');
   expect(treeItem).toHaveAttribute('id', 'testId');
   expect(treeItem).toHaveAttribute('aria-expanded', 'false');
+  expect(treeItem).toHaveAttribute('aria-disabled', 'false');
 
   const treeNode = container.querySelector('.iui-tree-node');
   expect(treeNode).toBeTruthy();
@@ -88,7 +89,6 @@ it('should render node with correct depth', () => {
     <TreeContext.Provider
       value={{
         nodeDepth: 2,
-        hasSubNodes: false,
       }}
     >
       <TreeNode nodeId='testId' label='label' onNodeExpanded={onNodeExpanded} />
@@ -134,17 +134,13 @@ it('should render node with icon', () => {
 
 it('should render node with collapsed expander button', () => {
   const { container } = render(
-    <TreeContext.Provider
-      value={{
-        nodeDepth: 0,
-        hasSubNodes: true,
-      }}
-    >
+    <TreeContext.Provider value={{ nodeDepth: 0 }}>
       <TreeNode
         nodeId='testId'
         label='label'
         onNodeExpanded={onNodeExpanded}
         isExpanded={false}
+        hasSubNodes={true}
       />
     </TreeContext.Provider>,
   );
@@ -177,17 +173,13 @@ it('should render node with expanded expander button', () => {
   const onNodeExpanded = jest.fn();
 
   const { container } = render(
-    <TreeContext.Provider
-      value={{
-        nodeDepth: 0,
-        hasSubNodes: true,
-      }}
-    >
+    <TreeContext.Provider value={{ nodeDepth: 0 }}>
       <TreeNode
         nodeId='testId'
         label='label'
         onNodeExpanded={onNodeExpanded}
         isExpanded={true}
+        hasSubNodes={true}
       />
     </TreeContext.Provider>,
   );
@@ -221,7 +213,6 @@ it('should render disabled node', () => {
     <TreeContext.Provider
       value={{
         nodeDepth: 0,
-        hasSubNodes: true,
       }}
     >
       <TreeNode
@@ -229,10 +220,17 @@ it('should render disabled node', () => {
         label='label'
         onNodeExpanded={onNodeExpanded}
         isDisabled={true}
+        hasSubNodes={true}
         nodeCheckbox={<Checkbox variant='eyeball' disabled={true} />}
       />
     </TreeContext.Provider>,
   );
+
+  expect(container.querySelector('li')).toHaveAttribute(
+    'aria-disabled',
+    'true',
+  );
+
   const treeNode = container.querySelector('.iui-tree-node');
   expect(treeNode).toBeTruthy();
   expect(treeNode?.classList.contains('iui-disabled')).toBe(true);
@@ -271,18 +269,14 @@ it('should not click a disabled node', () => {
   const onNodeSelected = jest.fn();
 
   const { container } = render(
-    <TreeContext.Provider
-      value={{
-        nodeDepth: 0,
-        hasSubNodes: true,
-      }}
-    >
+    <TreeContext.Provider value={{ nodeDepth: 0 }}>
       <TreeNode
         nodeId='testId'
         label='label'
         onNodeExpanded={onNodeExpanded}
         onNodeSelected={onNodeSelected}
         isDisabled={true}
+        hasSubNodes={true}
       />
     </TreeContext.Provider>,
   );
@@ -299,18 +293,14 @@ it('should not select node when clicking expander button', () => {
   const onNodeSelected = jest.fn();
 
   const { container } = render(
-    <TreeContext.Provider
-      value={{
-        nodeDepth: 0,
-        hasSubNodes: true,
-      }}
-    >
+    <TreeContext.Provider value={{ nodeDepth: 0 }}>
       <TreeNode
         nodeId='testId'
         label='label'
         onNodeExpanded={onNodeExpanded}
         onNodeSelected={onNodeSelected}
         isExpanded={true}
+        hasSubNodes={true}
       />
     </TreeContext.Provider>,
   );
@@ -336,7 +326,6 @@ it('should set subnodes', () => {
       <TreeContext.Provider
         value={{
           nodeDepth: 0,
-          hasSubNodes: true,
           subNodeIds: ['subNode1', 'subNode2'],
         }}
       >
@@ -345,10 +334,11 @@ it('should set subnodes', () => {
           label='parent'
           onNodeExpanded={onNodeExpanded}
           isExpanded={true}
+          hasSubNodes={true}
         />
       </TreeContext.Provider>
       ,
-      <TreeContext.Provider value={{ nodeDepth: 1, hasSubNodes: false }}>
+      <TreeContext.Provider value={{ nodeDepth: 1 }}>
         <TreeNode
           nodeId='subNode1'
           label='subNode1'
@@ -358,7 +348,6 @@ it('should set subnodes', () => {
       <TreeContext.Provider
         value={{
           nodeDepth: 1,
-          hasSubNodes: false,
         }}
       >
         <TreeNode
@@ -367,12 +356,13 @@ it('should set subnodes', () => {
           onNodeExpanded={onNodeExpanded}
         />
       </TreeContext.Provider>
-      <TreeContext.Provider value={{ nodeDepth: 0, hasSubNodes: true }}>
+      <TreeContext.Provider value={{ nodeDepth: 0 }}>
         <TreeNode
           nodeId='parent2'
           label='parent2'
           onNodeExpanded={onNodeExpanded}
           isExpanded={false}
+          hasSubNodes={true}
         />
       </TreeContext.Provider>
     </>,

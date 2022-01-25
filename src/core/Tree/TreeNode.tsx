@@ -28,6 +28,11 @@ export type TreeNodeProps = {
    */
   icon?: JSX.Element;
   /**
+   * Does node have child subNodes.
+   * @default false
+   */
+  hasSubNodes?: boolean;
+  /**
    * Is TreeNode disabled.
    * @default false
    */
@@ -65,7 +70,7 @@ export type TreeNodeProps = {
 } & CommonProps;
 
 /**
- * TreeNode component to display node content within a Tree.
+ * `TreeNode` component to display node content within a `Tree`.
  * Must be used inside `Tree` component to correctly set node depth and subNodes.
  * @example
   <TreeNode
@@ -92,6 +97,7 @@ export const TreeNode = (props: TreeNodeProps) => {
     style,
     className,
     icon,
+    hasSubNodes = false,
     isDisabled = false,
     isExpanded = false,
     isSelected = false,
@@ -123,7 +129,13 @@ export const TreeNode = (props: TreeNodeProps) => {
 
   return (
     <>
-      <li role='treeitem' id={nodeId} aria-expanded={isExpanded} {...rest}>
+      <li
+        role='treeitem'
+        id={nodeId}
+        aria-expanded={isExpanded}
+        aria-disabled={isDisabled}
+        {...rest}
+      >
         {
           <div
             className={cx(
@@ -147,7 +159,7 @@ export const TreeNode = (props: TreeNodeProps) => {
                 })
               : undefined}
             <div className='iui-tree-node-content'>
-              {context?.hasSubNodes && (
+              {hasSubNodes && (
                 <IconButton
                   styleType='borderless'
                   size='small'
@@ -184,7 +196,7 @@ export const TreeNode = (props: TreeNodeProps) => {
             </div>
           </div>
         }
-        {context?.hasSubNodes && (
+        {hasSubNodes && (
           <ul
             className='iui-sub-tree'
             role='group'
