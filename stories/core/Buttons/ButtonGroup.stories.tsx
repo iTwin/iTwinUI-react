@@ -47,7 +47,7 @@ export const WithIcons: Story<ButtonGroupProps> = (args) => {
       <IconButton onClick={action('Clicked edit!')} isActive>
         <SvgEdit />
       </IconButton>
-      <Tooltip content='Hi'>
+      <Tooltip content='Hi' appendTo={() => document.body}>
         <ButtonGroupItem>
           <IconButton disabled onClick={action('Clicked delete!')}>
             <SvgDelete />
@@ -88,6 +88,7 @@ export const Overflow: Story<ButtonGroupProps> = (args) => {
         <ButtonGroup
           overflowButton={(overflowStart) => (
             <DropdownMenu
+              appendTo={() => document.body}
               menuItems={(close) =>
                 Array(buttons.length - overflowStart + 1)
                   .fill(null)

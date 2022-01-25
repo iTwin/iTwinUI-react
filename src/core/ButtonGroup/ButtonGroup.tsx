@@ -7,6 +7,7 @@ import cx from 'classnames';
 import { useTheme, useOverflow, useMergedRefs } from '../utils';
 import '@itwin/itwinui-css/css/button.css';
 import { Tooltip } from '../Tooltip';
+import { DropdownMenu } from '../DropdownMenu';
 
 export type ButtonGroupProps = {
   /**
@@ -61,7 +62,7 @@ export const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
           return React.isValidElement(child) ? (
             child.type === ButtonGroupItem ? (
               child
-            ) : child.type === Tooltip ? (
+            ) : child.type === Tooltip || child.type === DropdownMenu ? (
               <div>{child}</div>
             ) : (
               <ButtonGroupItem>{child}</ButtonGroupItem>
