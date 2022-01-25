@@ -10,13 +10,22 @@ import { TreeContext } from './Tree';
 import { Checkbox } from '../Checkbox';
 import { SvgPlaceholder } from '@itwin/itwinui-icons-react/cjs/icons';
 
+const onNodeExpanded = jest.fn();
+
 it('should render in its most basic state', () => {
-  const { container } = render(<TreeNode label='label' sublabel='sublabel' />);
+  const { container } = render(
+    <TreeNode
+      nodeId='testId'
+      label='label'
+      sublabel='sublabel'
+      onNodeExpanded={onNodeExpanded}
+    />,
+  );
 
   const treeItem = container.querySelector('li');
   expect(treeItem).toBeTruthy();
   expect(treeItem).toHaveAttribute('role', 'treeitem');
-  expect(treeItem).toHaveAttribute('id', 'label');
+  expect(treeItem).toHaveAttribute('id', 'testId');
   expect(treeItem).toHaveAttribute('aria-expanded', 'false');
 
   const treeNode = container.querySelector('.iui-tree-node');
@@ -45,6 +54,8 @@ it('should render in its most basic state', () => {
 it('should add className and style correctly', () => {
   const { container } = render(
     <TreeNode
+      nodeId='testId'
+      onNodeExpanded={onNodeExpanded}
       className='test-class'
       style={{ width: '100px' }}
       label='label'
@@ -61,7 +72,9 @@ it('should add className and style correctly', () => {
 it('should render node with level variable', () => {
   window.CSS = { supports: () => true, escape: (i) => i };
 
-  const { container } = render(<TreeNode label={'label'} />);
+  const { container } = render(
+    <TreeNode nodeId='testId' label='label' onNodeExpanded={onNodeExpanded} />,
+  );
 
   const treeNode = container.querySelector('.iui-tree-node');
   expect(treeNode).toBeTruthy();
@@ -75,9 +88,10 @@ it('should render node with correct depth', () => {
     <TreeContext.Provider
       value={{
         nodeDepth: 2,
+        hasSubNodes: false,
       }}
     >
-      <TreeNode label={'label'} />
+      <TreeNode nodeId='testId' label='label' onNodeExpanded={onNodeExpanded} />
     </TreeContext.Provider>,
   );
 
@@ -87,49 +101,52 @@ it('should render node with correct depth', () => {
 });
 
 it('should render node with checkbox', () => {
-  const onCheckboxSelected = jest.fn();
-
   const { container } = render(
     <TreeNode
-      label={'label'}
-      nodeCheckbox={<Checkbox variant='eyeball' checked={true} />}
-      onNodeCheckboxSelected={onCheckboxSelected}
+      nodeId='testId'
+      label='label'
+      onNodeExpanded={onNodeExpanded}
+      nodeCheckbox={<Checkbox variant='eyeball' className='testClass' />}
     />,
   );
 
   const checkbox = container.querySelector(
-    '.iui-tree-node-checkbox',
+    '.iui-tree-node-checkbox.testClass',
   ) as HTMLElement;
   expect(checkbox).toBeTruthy();
   expect(checkbox.classList.contains('iui-disabled')).toBe(false);
-
-  expect(onCheckboxSelected).not.toHaveBeenCalled();
-  fireEvent.click(checkbox);
-  expect(onCheckboxSelected).toHaveBeenCalled();
 });
 
 it('should render node with icon', () => {
   const { container } = render(
-    <TreeNode label={'label'} icon={<SvgPlaceholder />} />,
+    <TreeNode
+      nodeId='testId'
+      label='label'
+      onNodeExpanded={onNodeExpanded}
+      icon={<SvgPlaceholder className='testClass' />}
+    />,
   );
 
-  expect(container.querySelector('.iui-tree-node-content-icon')).toBeTruthy();
+  expect(
+    container.querySelector('.iui-tree-node-content-icon.testClass'),
+  ).toBeTruthy();
 });
 
-it('should render node with expander button', () => {
-  const onNodeExpanded = jest.fn();
-
+it('should render node with collapsed expander button', () => {
   const { container } = render(
-    <TreeNode
-      label={'parent'}
-      subNodes={[
-        {
-          label: 'Subnode 1',
-          subnodes: [],
-        },
-      ]}
-      onNodeExpanded={onNodeExpanded}
-    />,
+    <TreeContext.Provider
+      value={{
+        nodeDepth: 0,
+        hasSubNodes: true,
+      }}
+    >
+      <TreeNode
+        nodeId='testId'
+        label='label'
+        onNodeExpanded={onNodeExpanded}
+        isExpanded={false}
+      />
+    </TreeContext.Provider>,
   );
 
   const treeItem = container.querySelector('li');
@@ -154,97 +171,67 @@ it('should render node with expander button', () => {
   expect(onNodeExpanded).not.toHaveBeenCalled();
   fireEvent.click(expanderButton);
   expect(onNodeExpanded).toHaveBeenCalled();
+});
 
+it('should render node with expanded expander button', () => {
+  const onNodeExpanded = jest.fn();
+
+  const { container } = render(
+    <TreeContext.Provider
+      value={{
+        nodeDepth: 0,
+        hasSubNodes: true,
+      }}
+    >
+      <TreeNode
+        nodeId='testId'
+        label='label'
+        onNodeExpanded={onNodeExpanded}
+        isExpanded={true}
+      />
+    </TreeContext.Provider>,
+  );
+
+  const treeItem = container.querySelector('li');
+  expect(treeItem).toBeTruthy();
   expect(treeItem).toHaveAttribute('aria-expanded', 'true');
+
+  const expanderButton = container.querySelector(
+    '.iui-button.iui-borderless.iui-small',
+  ) as HTMLButtonElement;
+  expect(expanderButton).toBeTruthy();
+  expect(expanderButton.disabled).toBe(false);
+
+  expect(
+    container.querySelector('.iui-tree-node-content-expander-icon'),
+  ).toBeTruthy();
   expect(
     container.querySelector(
       '.iui-tree-node-content-expander-icon.iui-tree-node-content-expander-icon-expanded',
     ),
   ).toBeTruthy();
-});
 
-it('should set subnodes', () => {
-  const { container } = render(
-    <>
-      <TreeContext.Provider value={{ nodeDepth: 0 }}>
-        <TreeNode
-          label={'parent'}
-          subNodes={[
-            { label: 'subNode1', subnodes: [] },
-            { label: 'subNode2', subnodes: [] },
-          ]}
-        />
-      </TreeContext.Provider>
-      ,
-      <TreeContext.Provider
-        value={{
-          parentNode: {
-            data: {
-              label: 'parent1',
-              subnodes: [{ label: 'subNode', subnodes: [] }],
-            },
-            id: 'parent',
-            depth: 0,
-            subNodeIds: [],
-          },
-          nodeDepth: 1,
-        }}
-      >
-        <TreeNode label={'subNode1'} />
-      </TreeContext.Provider>
-      <TreeContext.Provider
-        value={{
-          parentNode: {
-            data: {
-              label: 'parent1',
-              subnodes: [{ label: 'subNode', subnodes: [] }],
-            },
-            id: 'parent1',
-            depth: 0,
-            subNodeIds: [],
-          },
-          nodeDepth: 1,
-        }}
-      >
-        <TreeNode label={'subNode2'} />
-      </TreeContext.Provider>
-      <TreeContext.Provider value={{ nodeDepth: 0 }}>
-        <TreeNode label={'parent2'} subNodes={[]} />
-      </TreeContext.Provider>
-    </>,
-  );
-
-  const treeItem = container.querySelectorAll('li');
-  expect(treeItem.length).toBe(4);
-  treeItem.forEach((item) => {
-    expect(item).toHaveAttribute('aria-expanded', 'false');
-  });
-
-  //Only parent1 should have subtree and expander button
-  const subTree = container.querySelectorAll('.iui-sub-tree');
-  expect(subTree.length).toBe(1);
-  expect(subTree[0]).toHaveAttribute('role', 'group');
-  expect(subTree[0]).toHaveAttribute('aria-owns', 'subNode1 subNode2');
-  const expanderButton = container.querySelectorAll(
-    '.iui-button.iui-borderless.iui-small',
-  );
-  expect(expanderButton.length).toBe(1);
-  expect((expanderButton[0] as HTMLButtonElement).disabled).toBe(false);
+  expect(onNodeExpanded).not.toHaveBeenCalled();
+  fireEvent.click(expanderButton);
+  expect(onNodeExpanded).toHaveBeenCalled();
 });
 
 it('should render disabled node', () => {
   const { container } = render(
-    <TreeNode
-      label={'label'}
-      isDisabled={true}
-      nodeCheckbox={<Checkbox variant='eyeball' checked={true} />}
-      subNodes={[
-        {
-          label: 'Subnode 1',
-          subnodes: [],
-        },
-      ]}
-    />,
+    <TreeContext.Provider
+      value={{
+        nodeDepth: 0,
+        hasSubNodes: true,
+      }}
+    >
+      <TreeNode
+        nodeId='testId'
+        label='label'
+        onNodeExpanded={onNodeExpanded}
+        isDisabled={true}
+        nodeCheckbox={<Checkbox variant='eyeball' disabled={true} />}
+      />
+    </TreeContext.Provider>,
   );
   const treeNode = container.querySelector('.iui-tree-node');
   expect(treeNode).toBeTruthy();
@@ -261,17 +248,160 @@ it('should render disabled node', () => {
 });
 
 it('should set active class', () => {
+  const onNodeSelected = jest.fn();
+  const { container } = render(
+    <TreeNode
+      nodeId='testId'
+      label='label'
+      onNodeExpanded={onNodeExpanded}
+      isSelected={true}
+      onNodeSelected={onNodeSelected}
+    />,
+  );
+  const treeNode = container.querySelector('.iui-tree-node') as HTMLElement;
+  expect(treeNode).toBeTruthy();
+  expect(treeNode?.classList.contains('iui-active')).toBe(true);
+
+  expect(onNodeSelected).not.toHaveBeenCalled();
+  fireEvent.click(treeNode);
+  expect(onNodeSelected).toHaveBeenCalled();
+});
+
+it('should not click a disabled node', () => {
+  const onNodeSelected = jest.fn();
+
   const { container } = render(
     <TreeContext.Provider
       value={{
-        selectedNodes: ['label'],
-        selectionType: 'single',
+        nodeDepth: 0,
+        hasSubNodes: true,
       }}
     >
-      <TreeNode label={'label'} />
+      <TreeNode
+        nodeId='testId'
+        label='label'
+        onNodeExpanded={onNodeExpanded}
+        onNodeSelected={onNodeSelected}
+        isDisabled={true}
+      />
     </TreeContext.Provider>,
   );
-  const treeNode = container.querySelector('.iui-tree-node');
+  const treeNode = container.querySelector('.iui-tree-node') as HTMLElement;
   expect(treeNode).toBeTruthy();
-  expect(treeNode?.classList.contains('iui-active')).toBe(true);
+  expect(treeNode?.classList.contains('iui-disabled')).toBe(true);
+
+  expect(onNodeSelected).not.toHaveBeenCalled();
+  fireEvent.click(treeNode);
+  expect(onNodeSelected).not.toHaveBeenCalled();
+});
+
+it('should not select node when clicking expander button', () => {
+  const onNodeSelected = jest.fn();
+
+  const { container } = render(
+    <TreeContext.Provider
+      value={{
+        nodeDepth: 0,
+        hasSubNodes: true,
+      }}
+    >
+      <TreeNode
+        nodeId='testId'
+        label='label'
+        onNodeExpanded={onNodeExpanded}
+        onNodeSelected={onNodeSelected}
+        isExpanded={true}
+      />
+    </TreeContext.Provider>,
+  );
+
+  const treeItem = container.querySelector('li');
+  expect(treeItem).toBeTruthy();
+  expect(treeItem).toHaveAttribute('aria-expanded', 'true');
+
+  const expanderButton = container.querySelector(
+    '.iui-button.iui-borderless.iui-small',
+  ) as HTMLButtonElement;
+  expect(expanderButton).toBeTruthy();
+  expect(expanderButton.disabled).toBe(false);
+
+  fireEvent.click(expanderButton);
+  expect(onNodeExpanded).toHaveBeenCalled();
+  expect(onNodeSelected).not.toHaveBeenCalled();
+});
+
+it('should set subnodes', () => {
+  const { container } = render(
+    <>
+      <TreeContext.Provider
+        value={{
+          nodeDepth: 0,
+          hasSubNodes: true,
+          subNodeIds: ['subNode1', 'subNode2'],
+        }}
+      >
+        <TreeNode
+          nodeId='parent'
+          label='parent'
+          onNodeExpanded={onNodeExpanded}
+          isExpanded={true}
+        />
+      </TreeContext.Provider>
+      ,
+      <TreeContext.Provider value={{ nodeDepth: 1, hasSubNodes: false }}>
+        <TreeNode
+          nodeId='subNode1'
+          label='subNode1'
+          onNodeExpanded={onNodeExpanded}
+        />
+      </TreeContext.Provider>
+      <TreeContext.Provider
+        value={{
+          nodeDepth: 1,
+          hasSubNodes: false,
+        }}
+      >
+        <TreeNode
+          nodeId='subNode2'
+          label='subNode2'
+          onNodeExpanded={onNodeExpanded}
+        />
+      </TreeContext.Provider>
+      <TreeContext.Provider value={{ nodeDepth: 0, hasSubNodes: true }}>
+        <TreeNode
+          nodeId='parent2'
+          label='parent2'
+          onNodeExpanded={onNodeExpanded}
+          isExpanded={false}
+        />
+      </TreeContext.Provider>
+    </>,
+  );
+
+  const treeItem = container.querySelectorAll('li');
+  expect(treeItem.length).toBe(4);
+
+  //Parents should have subtree
+  const subTree = container.querySelectorAll('.iui-sub-tree');
+  expect(subTree.length).toBe(2);
+  subTree.forEach((item) => {
+    expect(item).toHaveAttribute('role', 'group');
+  });
+  //Parents should have aria owns label
+  expect(subTree[0]).toHaveAttribute('aria-owns', 'subNode1, subNode2');
+  expect(subTree[1]).toHaveAttribute('aria-owns', '');
+
+  //Parents should have expander button
+  const expanderButton = container.querySelectorAll(
+    '.iui-button.iui-borderless.iui-small',
+  );
+  expect(expanderButton.length).toBe(2);
+  expanderButton.forEach((item) => {
+    expect((item as HTMLButtonElement).disabled).toBe(false);
+  });
+  expect(
+    container.querySelectorAll(
+      '.iui-tree-node-content-expander-icon.iui-tree-node-content-expander-icon-expanded',
+    ),
+  ).toHaveLength(1);
 });
