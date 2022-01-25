@@ -25,6 +25,7 @@ import {
 import { Meta, Story } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { CreeveyMeta, CreeveyStoryParams } from 'creevey';
+import { ButtonGroupItem } from '../../../src/core/ButtonGroup/ButtonGroup';
 
 export default {
   title: 'Buttons/ButtonGroup',
@@ -46,12 +47,12 @@ export const WithIcons: Story<ButtonGroupProps> = (args) => {
       <IconButton onClick={action('Clicked edit!')} isActive>
         <SvgEdit />
       </IconButton>
-      <Tooltip content='Hi' visible>
-        <ButtonGroup.Item>
+      <Tooltip content='Hi'>
+        <ButtonGroupItem>
           <IconButton disabled onClick={action('Clicked delete!')}>
             <SvgDelete />
           </IconButton>
-        </ButtonGroup.Item>
+        </ButtonGroupItem>
       </Tooltip>
       <IconButton onClick={action('Clicked undo!')}>
         <SvgUndo />

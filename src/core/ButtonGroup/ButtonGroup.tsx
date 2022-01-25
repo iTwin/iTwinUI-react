@@ -59,8 +59,10 @@ export const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
       () =>
         React.Children.map(children, (child) => {
           return React.isValidElement(child) ? (
-            child.type === ButtonGroupItem || child.type === Tooltip ? (
+            child.type === ButtonGroupItem ? (
               child
+            ) : child.type === Tooltip ? (
+              <div>{child}</div>
             ) : (
               <ButtonGroupItem>{child}</ButtonGroupItem>
             )
@@ -92,11 +94,9 @@ export const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
       </div>
     );
   },
-) as React.ForwardRefExoticComponent<ButtonGroupProps> & {
-  Item: typeof ButtonGroupItem;
-};
+);
 
-const ButtonGroupItem = React.forwardRef(
+export const ButtonGroupItem = React.forwardRef(
   (
     { className, children, ...rest }: React.ComponentPropsWithoutRef<'div'>,
     ref: React.Ref<HTMLDivElement>,
