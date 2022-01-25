@@ -6,6 +6,7 @@ import React from 'react';
 import cx from 'classnames';
 import { useTheme, useOverflow, useMergedRefs } from '../utils';
 import '@itwin/itwinui-css/css/button.css';
+import { Tooltip } from '../Tooltip';
 
 export type ButtonGroupProps = {
   /**
@@ -55,7 +56,16 @@ export const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
     const { children, className, style, overflowButton, ...rest } = props;
 
     const items = React.useMemo(
-      () => React.Children.map(children, (child) => <div>{child}</div>) ?? [],
+      () =>
+        React.Children.map(children, (child) => {
+          return React.isValidElement(child) ? (
+            child.type === ButtonGroupItem || child.type === Tooltip ? (
+              child
+            ) : (
+              <ButtonGroupItem>{child}</ButtonGroupItem>
+            )
+          ) : null;
+        }) ?? [],
       [children],
     );
 
@@ -79,6 +89,25 @@ export const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
         ) : (
           items
         )}
+      </div>
+    );
+  },
+) as React.ForwardRefExoticComponent<ButtonGroupProps> & {
+  Item: typeof ButtonGroupItem;
+};
+
+const ButtonGroupItem = React.forwardRef(
+  (
+    { className, children, ...rest }: React.ComponentPropsWithoutRef<'div'>,
+    ref: React.Ref<HTMLDivElement>,
+  ) => {
+    return (
+      <div
+        className={cx('iui-button-group-item', className)}
+        ref={ref}
+        {...rest}
+      >
+        {children}
       </div>
     );
   },

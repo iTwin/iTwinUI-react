@@ -12,6 +12,7 @@ import {
   Input,
   MenuItem,
   Text,
+  Tooltip,
 } from '../../../src/core';
 import {
   SvgAdd,
@@ -45,9 +46,13 @@ export const WithIcons: Story<ButtonGroupProps> = (args) => {
       <IconButton onClick={action('Clicked edit!')} isActive>
         <SvgEdit />
       </IconButton>
-      <IconButton disabled onClick={action('Clicked delete!')}>
-        <SvgDelete />
-      </IconButton>
+      <Tooltip content='Hi' visible>
+        <ButtonGroup.Item>
+          <IconButton disabled onClick={action('Clicked delete!')}>
+            <SvgDelete />
+          </IconButton>
+        </ButtonGroup.Item>
+      </Tooltip>
       <IconButton onClick={action('Clicked undo!')}>
         <SvgUndo />
       </IconButton>
