@@ -120,9 +120,12 @@ export const TreeNode = (props: TreeNodeProps) => {
     [nodeDepth, style],
   );
 
-  const onNodeClick = () => {
+  const onNodeClick = (numClicks: number) => {
     if (isDisabled) {
       return;
+    }
+    if (numClicks === 2 && hasSubNodes === true) {
+      onNodeExpanded(nodeId, !isExpanded);
     }
     onNodeSelected?.(nodeId, !isSelected);
   };
@@ -147,7 +150,9 @@ export const TreeNode = (props: TreeNodeProps) => {
               className,
             )}
             style={styleDepth}
-            onClick={onNodeClick}
+            onClick={(e) => {
+              onNodeClick(e.detail);
+            }}
             tabIndex={isSelected ? 0 : -1}
           >
             {nodeCheckbox && React.isValidElement(nodeCheckbox)
@@ -157,7 +162,7 @@ export const TreeNode = (props: TreeNodeProps) => {
                     nodeCheckbox.props.className,
                   ),
                 })
-              : undefined}
+              : nodeCheckbox}
             <div className='iui-tree-node-content'>
               {hasSubNodes && (
                 <IconButton
