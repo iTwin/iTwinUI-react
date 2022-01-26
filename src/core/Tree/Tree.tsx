@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { CommonProps, useTheme } from '../utils';
+import { CommonProps, useTheme, getFocusableElements } from '../utils';
 import '@itwin/itwinui-css/css/tree.css';
 import cx from 'classnames';
 
@@ -66,6 +66,11 @@ export type TreeProps<T> = {
    * Function to map custom type `T` to `NodeData`, which will be used to render a tree node in `nodeRenderer`.
    */
   getNode: (node: T) => NodeData<T>;
+  /**
+   * If true, the first selected or enabled TreeNode will be focused automatically.
+   * @default true
+   */
+  setFocus?: boolean;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -126,29 +131,53 @@ export type TreeProps<T> = {
  */
 
 export const Tree = <T,>(props: TreeProps<T>) => {
-  const { data, className, nodeRenderer, getNode, ...rest } = props;
+  const {
+    data,
+    className,
+    nodeRenderer,
+    getNode,
+    setFocus = true,
+    ...rest
+  } = props;
   useTheme();
 
   const treeRef = React.useRef<HTMLUListElement>(null);
+  const [focusedIndex, setFocusedIndex] = React.useState<number | null>();
+
+  React.useEffect(() => {
+    const items = getFocusableElements(treeRef.current);
+    if (focusedIndex != null) {
+      (items?.[focusedIndex] as HTMLLIElement)?.focus();
+      return;
+    }
+
+    const selectedIndex = items.findIndex((el) =>
+      el.classList.contains('iui-active'),
+    );
+    if (setFocus) {
+      setFocusedIndex(selectedIndex > -1 ? selectedIndex : 0);
+    }
+  }, [setFocus, focusedIndex]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLUListElement>) => {
-    const nodes: Array<HTMLElement> = Array.from(
-      treeRef.current?.querySelectorAll('.iui-tree-node:not(.iui-disabled)') ||
-        [],
-    );
-
-    if (!nodes.length) {
+    const items = getFocusableElements(treeRef.current);
+    if (!items?.length) {
       return;
     }
 
     let newIndex = -1;
-    const currentIndex = nodes.findIndex(
-      (node) => node === treeRef.current?.ownerDocument.activeElement,
+    const activeIndex = items.findIndex(
+      (el) => el === treeRef.current?.ownerDocument.activeElement,
     );
+    const currentIndex = activeIndex > -1 ? activeIndex : 0;
 
-    const expander = nodes[currentIndex].querySelector(
+    const expander = items[currentIndex].querySelector(
       '.iui-tree-node-content-expander-icon',
     ) as HTMLElement;
+    let isCheckbox = false;
+    if (items[currentIndex].parentElement?.classList.contains('iui-checkbox')) {
+      isCheckbox = true;
+    }
 
     switch (event.key) {
       case 'ArrowDown': {
@@ -160,35 +189,34 @@ export const Tree = <T,>(props: TreeProps<T>) => {
         break;
       }
       case 'ArrowLeft':
-        if (
+        if (isCheckbox) {
+          newIndex = currentIndex - 1;
+        } else if (
           expander === null ||
           !expander?.classList.contains(
             'iui-tree-node-content-expander-icon-expanded',
           )
         ) {
           let parentIndex = -1;
-          for (let n = 0; n < nodes.length; n++) {
-            const parentOwns = (nodes[n].parentElement
+          for (let n = 0; n < items.length; n++) {
+            const parentOwns = (items[n].parentElement
               ?.lastChild as HTMLElement)
               .getAttribute('aria-owns')
               ?.split(', ');
             if (
               parentOwns &&
               parentOwns?.findIndex(
-                (id) => id === nodes[currentIndex].parentElement?.id,
+                (id) => id === items[currentIndex].parentElement?.id,
               ) != -1
             ) {
               parentIndex = n;
               break;
             }
           }
-          if (parentIndex != -1) {
-            newIndex = parentIndex;
-          } else {
-            newIndex = currentIndex - 1;
-          }
+          newIndex = parentIndex > -1 ? parentIndex : currentIndex - 1;
         } else {
           expander.parentElement?.click();
+          return;
         }
         break;
       case 'ArrowRight':
@@ -207,13 +235,13 @@ export const Tree = <T,>(props: TreeProps<T>) => {
       case 'Enter':
       case ' ':
       case 'Spacebar':
-        nodes[currentIndex].click();
+        (items[currentIndex] as HTMLElement).click();
         event.preventDefault();
         return;
     }
 
-    if (newIndex >= 0 && newIndex < nodes.length) {
-      nodes[newIndex].focus();
+    if (newIndex >= 0 && newIndex < items.length) {
+      setFocusedIndex(newIndex);
       event.preventDefault();
     }
   };
