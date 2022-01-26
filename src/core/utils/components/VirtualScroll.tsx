@@ -66,7 +66,7 @@ export type VirtualScrollProps = {
    */
   itemRenderer: (index: number) => JSX.Element;
   /**
-   * Number of items to be rendered at the end.
+   * Number of items to be rendered at the start and the end.
    * Not recommended to go lower than the visible items in viewport.
    * @default 10
    */
@@ -75,7 +75,7 @@ export type VirtualScrollProps = {
 
 /**
  * `VirtualScroll` component used to render a huge amount of items in the DOM. It renders only the ones which are visible
- * and the amount provided through `bufferSize` prop. Can be used inside other components like `Table`.
+ * and the amount provided through `bufferSize` prop at the start and the end. Can be used inside other components like `Table`.
  *
  * It has two wrapper elements, so DOM will be changed. One is used for setting full expected height in the scrollable container
  * and other is for transformation (translateY) to show the correct part of the list.
