@@ -196,19 +196,32 @@ it('should handle arrow key navigation', () => {
   );
 
   const tree = container.querySelector('.iui-tree') as HTMLElement;
+  expect(tree).toBeTruthy();
   const treeNodes = container.querySelectorAll('.iui-tree-node');
-  (treeNodes[0] as HTMLElement).focus();
+  const buttons = container.querySelectorAll('.iui-button');
+  expect(treeNodes.length).toBe(4);
+  expect(buttons.length).toBe(2);
+
+  //Should initially focus on first node
   treeNodes.forEach((item, index) => {
     expect(document.activeElement === item).toBe(0 === index);
   });
 
   // Go Down
   fireEvent.keyDown(tree, { key: 'ArrowDown' });
+  buttons.forEach((item, index) => {
+    expect(document.activeElement === item).toBe(0 === index);
+  });
+  fireEvent.keyDown(tree, { key: 'ArrowDown' });
   treeNodes.forEach((item, index) => {
     expect(document.activeElement === item).toBe(1 === index);
   });
 
   // Go Up
+  fireEvent.keyDown(tree, { key: 'ArrowUp' });
+  buttons.forEach((item, index) => {
+    expect(document.activeElement === item).toBe(0 === index);
+  });
   fireEvent.keyDown(tree, { key: 'ArrowUp' });
   treeNodes.forEach((item, index) => {
     expect(document.activeElement === item).toBe(0 === index);
@@ -220,6 +233,7 @@ it('should handle arrow key navigation', () => {
 
   // Go left on closed node - should go up to parent
   fireEvent.keyDown(tree, { key: 'ArrowDown' });
+  fireEvent.keyDown(tree, { key: 'ArrowDown' });
   fireEvent.keyDown(tree, { key: 'ArrowLeft' });
   expect(onNodeExpanded).toHaveBeenCalledTimes(1);
   treeNodes.forEach((item, index) => {
@@ -227,6 +241,10 @@ it('should handle arrow key navigation', () => {
   });
 
   // Go right on expanded node to go down
+  fireEvent.keyDown(tree, { key: 'ArrowRight' });
+  buttons.forEach((item, index) => {
+    expect(document.activeElement === item).toBe(0 === index);
+  });
   fireEvent.keyDown(tree, { key: 'ArrowRight' });
   treeNodes.forEach((item, index) => {
     expect(document.activeElement === item).toBe(1 === index);
@@ -238,6 +256,7 @@ it('should handle arrow key navigation', () => {
   expect(onNodeExpanded).toHaveBeenCalledTimes(2);
 
   // Go down and skip over disabled node
+  fireEvent.keyDown(tree, { key: 'ArrowDown' });
   fireEvent.keyDown(tree, { key: 'ArrowDown' });
   treeNodes.forEach((item, index) => {
     expect(document.activeElement === item).toBe(3 === index);
@@ -253,15 +272,61 @@ it('should handle arrow key navigation', () => {
   //Go left on root node with no parent - should go up
   fireEvent.keyDown(tree, { key: 'ArrowLeft' });
   expect(onNodeExpanded).toHaveBeenCalledTimes(2);
-  treeNodes.forEach((item, index) => {
+  buttons.forEach((item, index) => {
     expect(document.activeElement === item).toBe(1 === index);
   });
 
+  //Click expander button with enter
+  fireEvent.keyDown(tree, { key: 'Enter' });
+  expect(onNodeExpanded).toHaveBeenCalledTimes(3);
+
   //Select with enter
+  fireEvent.keyDown(tree, { key: 'ArrowUp' });
   fireEvent.keyDown(tree, { key: 'Enter' });
   expect(onNodeSelected).toHaveBeenCalledTimes(1);
 
   //Select with space
   fireEvent.keyDown(tree, { key: ' ' });
   expect(onNodeSelected).toHaveBeenCalledTimes(2);
+});
+
+it('should set setFocus on selected node', () => {
+  const labels = ['Node 1', 'Node 2'];
+
+  const data = [
+    {
+      id: labels[0],
+      label: labels[0],
+      subItems: [],
+    },
+    {
+      id: labels[1],
+      label: labels[1],
+      subItems: [],
+    },
+  ];
+
+  const getNode = (node: TestData): NodeData<TestData> => {
+    return {
+      subNodes: node.subItems,
+      nodeId: node.id,
+      node: node,
+      isSelected: ['Node 2'].some((id) => id === node.id),
+      hasSubNodes: node.subItems.length > 0,
+    };
+  };
+
+  const { container } = render(
+    <Tree<TestData>
+      data={data}
+      getNode={getNode}
+      nodeRenderer={nodeRenderer}
+    />,
+  );
+
+  const treeNodes = container.querySelectorAll('.iui-tree-node');
+  expect(treeNodes.length).toBe(2);
+  treeNodes.forEach((item, index) => {
+    expect(document.activeElement === item).toBe(1 === index);
+  });
 });
