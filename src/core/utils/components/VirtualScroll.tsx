@@ -68,7 +68,7 @@ export type VirtualScrollProps = {
   /**
    * Number of items to be rendered at the end.
    * Not recommended to go lower than the visible items in viewport.
-   * @default 20
+   * @default 10
    */
   bufferSize?: number;
 } & Omit<CommonProps, 'title'>;
@@ -96,7 +96,7 @@ export type VirtualScrollProps = {
 export const VirtualScroll = ({
   itemsLength,
   itemRenderer,
-  bufferSize = 20,
+  bufferSize = 10,
   style,
   ...rest
 }: VirtualScrollProps) => {
@@ -118,7 +118,7 @@ export const VirtualScroll = ({
     const arr = [];
     const endIndex = Math.min(
       itemsLength,
-      startNode + visibleNodeCount + bufferSize,
+      startNode + visibleNodeCount + bufferSize * 2,
     );
     for (let i = startNode; i < endIndex; i++) {
       arr.push(itemRenderer(i));
@@ -139,11 +139,15 @@ export const VirtualScroll = ({
   const updateVirtualScroll = React.useCallback(() => {
     const scrollableContainer =
       scrollContainer.current ?? (document.scrollingElement as HTMLElement);
+    if (!scrollableContainer) {
+      return;
+    }
     const start = getNumberOfNodesInHeight(
       childHeight.current,
       scrollableContainer.scrollTop,
     );
-    setStartNode(start);
+    const startIndex = Math.max(0, start - bufferSize);
+    setStartNode(startIndex);
     setVisibleNodeCount(
       getVisibleNodeCount(
         childHeight.current,
@@ -158,23 +162,9 @@ export const VirtualScroll = ({
     }
     parentRef.current.style.transform = `translateY(${getTranslateValue(
       childHeight.current,
-      start,
+      startIndex,
     )}px)`;
-  }, [itemsLength]);
-
-  const onScroll = React.useCallback(
-    (e: Event) => {
-      const target =
-        scrollContainer.current !== document.body
-          ? (e.target as HTMLElement)
-          : (document.scrollingElement as HTMLElement);
-      if (!target) {
-        return;
-      }
-      updateVirtualScroll();
-    },
-    [updateVirtualScroll],
-  );
+  }, [bufferSize, itemsLength]);
 
   const removeScrollListener = React.useCallback(() => {
     if (!onScrollRef.current) {
@@ -191,14 +181,14 @@ export const VirtualScroll = ({
   // Add event listener to the scrollable container.
   React.useLayoutEffect(() => {
     removeScrollListener();
-    onScrollRef.current = onScroll;
+    onScrollRef.current = updateVirtualScroll;
     if (!scrollContainer.current || scrollContainer.current === document.body) {
-      document.addEventListener('scroll', onScroll);
+      document.addEventListener('scroll', updateVirtualScroll);
     } else {
-      scrollContainer.current.addEventListener('scroll', onScroll);
+      scrollContainer.current.addEventListener('scroll', updateVirtualScroll);
     }
     return removeScrollListener;
-  }, [onScroll, removeScrollListener]);
+  }, [updateVirtualScroll, removeScrollListener]);
 
   React.useLayoutEffect(() => {
     updateVirtualScroll();
