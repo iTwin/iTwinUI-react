@@ -74,7 +74,7 @@ export type VirtualScrollProps = {
    * @default 10
    */
   bufferSize?: number;
-} & Omit<CommonProps, 'title'>;
+} & React.ComponentPropsWithRef<'div'>;
 
 /**
  * `VirtualScroll` component is used to render a huge amount of items in the DOM. It renders only the ones which are visible
@@ -95,14 +95,12 @@ export type VirtualScrollProps = {
  *  itemsLength={1000}
  *  itemRenderer={itemRenderer}
  * />
+ * @private
  */
-export const VirtualScroll = ({
-  itemsLength,
-  itemRenderer,
-  bufferSize = 10,
-  style,
-  ...rest
-}: VirtualScrollProps) => {
+export const VirtualScroll = React.forwardRef<
+  HTMLDivElement,
+  VirtualScrollProps
+>(({ itemsLength, itemRenderer, bufferSize = 10, style, ...rest }, ref) => {
   const [startNode, setStartNode] = React.useState(0);
   const [visibleNodeCount, setVisibleNodeCount] = React.useState(0);
   const scrollContainer = React.useRef<HTMLElement>();
@@ -219,6 +217,7 @@ export const VirtualScroll = ({
         width: '100%',
         ...style,
       }}
+      ref={ref}
       {...rest}
     >
       <div
@@ -231,6 +230,6 @@ export const VirtualScroll = ({
       </div>
     </div>
   );
-};
+});
 
 export default VirtualScroll;
