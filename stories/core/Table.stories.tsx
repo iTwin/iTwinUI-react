@@ -2197,6 +2197,19 @@ Virtualized.argTypes = {
   data: { control: { disable: true } },
 };
 
+Virtualized.decorators = [
+  (Story) => (
+    <div
+      style={{
+        height: 440,
+        maxHeight: '90vh',
+      }}
+    >
+      <Story />
+    </div>
+  ),
+];
+
 export const VirtualizedSubRows: Story<Partial<TableProps>> = (args) => {
   const columns = useMemo(
     () => [
@@ -2259,7 +2272,6 @@ export const VirtualizedSubRows: Story<Partial<TableProps>> = (args) => {
       columns={columns}
       emptyTableContent='No data.'
       {...args}
-      style={{ height: 440, maxHeight: '90vh' }}
       data={data}
     />
   );
@@ -2269,3 +2281,16 @@ VirtualizedSubRows.argTypes = {
   isLoading: { control: { disable: true } },
   data: { control: { disable: true } },
 };
+
+VirtualizedSubRows.decorators = [
+  (Story) => (
+    <div
+      style={{
+        height: 440,
+        maxHeight: '90vh',
+      }}
+    >
+      <Story />
+    </div>
+  ),
+];
