@@ -120,12 +120,9 @@ export const TreeNode = (props: TreeNodeProps) => {
     [nodeDepth, style],
   );
 
-  const onNodeClick = (numClicks: number) => {
+  const onNodeClick = () => {
     if (isDisabled) {
       return;
-    }
-    if (numClicks === 2 && hasSubNodes === true) {
-      onNodeExpanded(nodeId, !isExpanded);
     }
     onNodeSelected?.(nodeId, !isSelected);
   };
@@ -150,8 +147,11 @@ export const TreeNode = (props: TreeNodeProps) => {
               className,
             )}
             style={styleDepth}
-            onClick={(e) => {
-              onNodeClick(e.detail);
+            onClick={onNodeClick}
+            onDoubleClick={() => {
+              if (hasSubNodes) {
+                onNodeExpanded(nodeId, !isExpanded);
+              }
             }}
             tabIndex={isSelected ? 0 : -1}
           >

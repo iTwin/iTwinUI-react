@@ -134,15 +134,13 @@ it('should render node with icon', () => {
 
 it('should render node with collapsed expander button', () => {
   const { container } = render(
-    <TreeContext.Provider value={{ nodeDepth: 0 }}>
-      <TreeNode
-        nodeId='testId'
-        label='label'
-        onNodeExpanded={onNodeExpanded}
-        isExpanded={false}
-        hasSubNodes={true}
-      />
-    </TreeContext.Provider>,
+    <TreeNode
+      nodeId='testId'
+      label='label'
+      onNodeExpanded={onNodeExpanded}
+      isExpanded={false}
+      hasSubNodes={true}
+    />,
   );
 
   const treeItem = container.querySelector('li');
@@ -173,15 +171,13 @@ it('should render node with expanded expander button', () => {
   const onNodeExpanded = jest.fn();
 
   const { container } = render(
-    <TreeContext.Provider value={{ nodeDepth: 0 }}>
-      <TreeNode
-        nodeId='testId'
-        label='label'
-        onNodeExpanded={onNodeExpanded}
-        isExpanded={true}
-        hasSubNodes={true}
-      />
-    </TreeContext.Provider>,
+    <TreeNode
+      nodeId='testId'
+      label='label'
+      onNodeExpanded={onNodeExpanded}
+      isExpanded={true}
+      hasSubNodes={true}
+    />,
   );
 
   const treeItem = container.querySelector('li');
@@ -210,20 +206,14 @@ it('should render node with expanded expander button', () => {
 
 it('should render disabled node', () => {
   const { container } = render(
-    <TreeContext.Provider
-      value={{
-        nodeDepth: 0,
-      }}
-    >
-      <TreeNode
-        nodeId='testId'
-        label='label'
-        onNodeExpanded={onNodeExpanded}
-        isDisabled={true}
-        hasSubNodes={true}
-        nodeCheckbox={<Checkbox variant='eyeball' disabled={true} />}
-      />
-    </TreeContext.Provider>,
+    <TreeNode
+      nodeId='testId'
+      label='label'
+      onNodeExpanded={onNodeExpanded}
+      isDisabled={true}
+      hasSubNodes={true}
+      nodeCheckbox={<Checkbox variant='eyeball' disabled={true} />}
+    />,
   );
 
   expect(container.querySelector('li')).toHaveAttribute(
@@ -269,16 +259,14 @@ it('should not click a disabled node', () => {
   const onNodeSelected = jest.fn();
 
   const { container } = render(
-    <TreeContext.Provider value={{ nodeDepth: 0 }}>
-      <TreeNode
-        nodeId='testId'
-        label='label'
-        onNodeExpanded={onNodeExpanded}
-        onNodeSelected={onNodeSelected}
-        isDisabled={true}
-        hasSubNodes={true}
-      />
-    </TreeContext.Provider>,
+    <TreeNode
+      nodeId='testId'
+      label='label'
+      onNodeExpanded={onNodeExpanded}
+      onNodeSelected={onNodeSelected}
+      isDisabled={true}
+      hasSubNodes={true}
+    />,
   );
   const treeNode = container.querySelector('.iui-tree-node') as HTMLElement;
   expect(treeNode).toBeTruthy();
@@ -293,16 +281,14 @@ it('should not select node when clicking expander button', () => {
   const onNodeSelected = jest.fn();
 
   const { container } = render(
-    <TreeContext.Provider value={{ nodeDepth: 0 }}>
-      <TreeNode
-        nodeId='testId'
-        label='label'
-        onNodeExpanded={onNodeExpanded}
-        onNodeSelected={onNodeSelected}
-        isExpanded={true}
-        hasSubNodes={true}
-      />
-    </TreeContext.Provider>,
+    <TreeNode
+      nodeId='testId'
+      label='label'
+      onNodeExpanded={onNodeExpanded}
+      onNodeSelected={onNodeSelected}
+      isExpanded={true}
+      hasSubNodes={true}
+    />,
   );
 
   const treeItem = container.querySelector('li');
@@ -356,15 +342,13 @@ it('should set subnodes', () => {
           onNodeExpanded={onNodeExpanded}
         />
       </TreeContext.Provider>
-      <TreeContext.Provider value={{ nodeDepth: 0 }}>
-        <TreeNode
-          nodeId='parent2'
-          label='parent2'
-          onNodeExpanded={onNodeExpanded}
-          isExpanded={false}
-          hasSubNodes={true}
-        />
-      </TreeContext.Provider>
+      <TreeNode
+        nodeId='parent2'
+        label='parent2'
+        onNodeExpanded={onNodeExpanded}
+        isExpanded={false}
+        hasSubNodes={true}
+      />
     </>,
   );
 
@@ -394,4 +378,40 @@ it('should set subnodes', () => {
       '.iui-tree-node-content-expander-icon.iui-tree-node-content-expander-icon-expanded',
     ),
   ).toHaveLength(1);
+});
+
+it('should expand node on double click', () => {
+  const onNodeExpanded = jest.fn();
+  const { container } = render(
+    <TreeNode
+      nodeId='testId'
+      label='label'
+      onNodeExpanded={onNodeExpanded}
+      hasSubNodes={true}
+    />,
+  );
+
+  const node = container.querySelector('.iui-tree-node') as HTMLElement;
+  expect(node).toBeTruthy();
+
+  fireEvent.doubleClick(node);
+  expect(onNodeExpanded).toHaveBeenCalled();
+});
+
+it('should not expand node on double click if there are no subNodes', () => {
+  const onNodeExpanded = jest.fn();
+  const { container } = render(
+    <TreeNode
+      nodeId='testId'
+      label='label'
+      onNodeExpanded={onNodeExpanded}
+      hasSubNodes={false}
+    />,
+  );
+
+  const node = container.querySelector('.iui-tree-node') as HTMLElement;
+  expect(node).toBeTruthy();
+
+  fireEvent.doubleClick(node);
+  expect(onNodeExpanded).not.toHaveBeenCalled();
 });

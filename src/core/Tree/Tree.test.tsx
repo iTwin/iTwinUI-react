@@ -19,7 +19,7 @@ const onNodeSelected = jest.fn();
 const nodeRenderer = ({ ...rest }) => (
   <TreeNode
     nodeId='testId'
-    label={'label'}
+    label='label'
     onNodeExpanded={onNodeExpanded}
     onNodeSelected={onNodeSelected}
     {...rest}
