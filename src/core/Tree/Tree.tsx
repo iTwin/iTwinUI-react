@@ -165,38 +165,80 @@ export const Tree = <T,>(props: TreeProps<T>) => {
       return;
     }
 
-    let newIndex = -1;
     const activeIndex = items.findIndex(
       (el) => el === treeRef.current?.ownerDocument.activeElement,
     );
     const currentIndex = activeIndex > -1 ? activeIndex : 0;
+    const currentItem = items[currentIndex] as HTMLElement;
 
-    const expander = items[currentIndex].querySelector(
-      '.iui-tree-node-content-expander-icon',
-    ) as HTMLElement;
-    let isCheckbox = false;
-    if (items[currentIndex].parentElement?.classList.contains('iui-checkbox')) {
-      isCheckbox = true;
+    const type = currentItem.classList.contains('iui-tree-node')
+      ? 'node'
+      : currentItem.classList.contains('iui-button')
+      ? 'expander'
+      : currentItem.parentElement?.classList.contains('iui-checkbox')
+      ? 'checkbox'
+      : '';
+
+    let nodeId = '';
+    let expander;
+    let checkbox;
+    switch (type) {
+      case 'expander':
+        nodeId =
+          currentItem.parentElement?.parentElement?.parentElement?.id ?? '';
+        expander = currentItem;
+        checkbox = currentItem.parentElement?.parentElement?.querySelector(
+          '.iui-checkbox',
+        );
+        break;
+      case 'checkbox':
+        nodeId =
+          currentItem.parentElement?.parentElement?.parentElement?.id ?? '';
+        expander = currentItem.parentElement?.parentElement?.querySelector(
+          '.iui-button',
+        ) as HTMLElement;
+        checkbox = currentItem;
+        break;
+      default:
+        nodeId = currentItem.parentElement?.id ?? '';
+        expander = currentItem.querySelector('.iui-button') as HTMLElement;
+        checkbox = currentItem.querySelector('.iui-checkbox');
+        break;
     }
+
+    const itemsInNode = [checkbox, expander].filter((el) => el != null);
+    let newIndex = -1;
+    const isExpanded = expander
+      ?.querySelector('.iui-button-icon')
+      ?.classList.contains('iui-tree-node-content-expander-icon-expanded');
 
     switch (event.key) {
       case 'ArrowDown': {
-        newIndex = currentIndex + 1;
+        //Go to next tree node
+        for (let n = currentIndex + 1; n < items.length; n++) {
+          if (items[n].classList.contains('iui-tree-node')) {
+            newIndex = n;
+            break;
+          }
+        }
         break;
       }
       case 'ArrowUp': {
-        newIndex = currentIndex - 1;
+        //Go to previous tree node
+        for (let n = currentIndex - 1; n >= 0; n--) {
+          if (items[n].classList.contains('iui-tree-node')) {
+            newIndex = n;
+            break;
+          }
+        }
         break;
       }
       case 'ArrowLeft':
-        if (isCheckbox) {
-          newIndex = currentIndex - 1;
-        } else if (
-          expander === null ||
-          !expander?.classList.contains(
-            'iui-tree-node-content-expander-icon-expanded',
-          )
-        ) {
+        if (currentItem === itemsInNode[0] && isExpanded) {
+          expander.click();
+          return;
+        } else if (currentItem === itemsInNode[0] || itemsInNode.length === 0) {
+          //Go to parent
           let parentIndex = -1;
           for (let n = 0; n < items.length; n++) {
             const parentOwns = (items[n].parentElement
@@ -205,37 +247,48 @@ export const Tree = <T,>(props: TreeProps<T>) => {
               ?.split(', ');
             if (
               parentOwns &&
-              parentOwns?.findIndex(
-                (id) => id === items[currentIndex].parentElement?.id,
-              ) != -1
+              parentOwns?.findIndex((id) => id === nodeId) != -1
             ) {
               parentIndex = n;
               break;
             }
           }
-          newIndex = parentIndex > -1 ? parentIndex : currentIndex - 1;
+          if (parentIndex === -1) {
+            //If no parent was found, go to node above
+            for (let n = currentIndex - 1; n >= 0; n--) {
+              if (items[n].classList.contains('iui-tree-node')) {
+                if (items[n].parentElement?.id != nodeId) {
+                  parentIndex = n;
+                  break;
+                }
+              }
+            }
+          }
+          newIndex = parentIndex;
+        } else if (type === 'node') {
+          const rightMostItem = items.findIndex(
+            (el) => el === itemsInNode[itemsInNode.length - 1],
+          );
+          newIndex = rightMostItem != -1 ? rightMostItem : currentIndex - 1;
         } else {
-          expander.parentElement?.click();
-          return;
+          newIndex = currentIndex - 1;
         }
         break;
       case 'ArrowRight':
         if (
-          expander === null ||
-          expander?.classList.contains(
-            'iui-tree-node-content-expander-icon-expanded',
-          )
+          currentItem === itemsInNode[itemsInNode.length - 1] &&
+          isExpanded === false
         ) {
-          newIndex = currentIndex + 1;
-        } else {
-          expander.parentElement?.click();
+          expander.click();
           return;
+        } else {
+          newIndex = currentIndex + 1;
         }
         break;
       case 'Enter':
       case ' ':
       case 'Spacebar':
-        (items[currentIndex] as HTMLElement).click();
+        currentItem.click();
         event.preventDefault();
         return;
     }
