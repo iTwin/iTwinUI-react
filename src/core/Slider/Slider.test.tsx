@@ -714,3 +714,18 @@ it('should activate thumb on pointerDown and move to closest step on move/ no up
   expect(thumbs[0].getAttribute('aria-valuenow')).toEqual('40');
   expect(thumbs[1].getAttribute('aria-valuenow')).toEqual('80');
 });
+
+it('should not break pointer events when thumb is released', () => {
+  const { container } = render(
+    <Slider min={0} max={100} values={[20, 80]} step={1} />,
+  );
+
+  assertBaseElement(container);
+  const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
+  expect(thumb).not.toHaveClass('iui-active');
+
+  act(() => {
+    // userEvent.pointer is not released yet 😕
+  });
+  // expect(thumb).toHaveClass('iui-active');
+});
