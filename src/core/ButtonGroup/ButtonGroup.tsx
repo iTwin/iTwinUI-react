@@ -20,6 +20,11 @@ export type ButtonGroupProps = {
    * and returns the `ReactNode` to render.
    */
   overflowButton?: (firstOverflowingIndex: number) => React.ReactNode;
+  /**
+   * If `overflowButton` is specified, should it placed at the start or the end?
+   * @default 'end'
+   */
+  overflowPosition?: 'start' | 'end';
 } & React.ComponentPropsWithRef<'div'>;
 
 /**
@@ -52,7 +57,14 @@ export type ButtonGroupProps = {
  */
 export const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
   (props, ref) => {
-    const { children, className, style, overflowButton, ...rest } = props;
+    const {
+      children,
+      className,
+      style,
+      overflowButton,
+      overflowPosition = 'end',
+      ...rest
+    } = props;
 
     const items = React.useMemo(
       () => React.Children.map(children, (child) => <div>{child}</div>) ?? [],
@@ -73,8 +85,13 @@ export const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
       >
         {!!overflowButton && visibleCount < items.length ? (
           <>
+            {overflowPosition === 'start' && (
+              <div>{overflowButton(visibleCount)}</div>
+            )}
             {items.slice(0, visibleCount - 1)}
-            {overflowButton(visibleCount)}
+            {overflowPosition === 'end' && (
+              <div>{overflowButton(visibleCount)}</div>
+            )}
           </>
         ) : (
           items
