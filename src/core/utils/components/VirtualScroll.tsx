@@ -5,14 +5,17 @@
 import React from 'react';
 import { CommonProps } from '../props';
 
-const getScrollableParent = (element: HTMLElement | null): HTMLElement => {
-  if (!element || element === document.body) {
-    return document.body;
+const getScrollableParent = (
+  element: HTMLElement | null,
+  ownerDocument: Document = document,
+): HTMLElement => {
+  if (!element || element === ownerDocument.body) {
+    return ownerDocument.body;
   }
 
   return isElementScrollable(element)
     ? element
-    : getScrollableParent(element.parentElement);
+    : getScrollableParent(element.parentElement, ownerDocument);
 };
 
 const isElementScrollable = (element: HTMLElement) => {
@@ -74,13 +77,13 @@ export type VirtualScrollProps = {
 } & Omit<CommonProps, 'title'>;
 
 /**
- * `VirtualScroll` component used to render a huge amount of items in the DOM. It renders only the ones which are visible
+ * `VirtualScroll` component is used to render a huge amount of items in the DOM. It renders only the ones which are visible
  * and the amount provided through `bufferSize` prop at the start and the end. Can be used inside other components like `Table`.
  *
  * It has two wrapper elements, so DOM will be changed. One is used for setting full expected height in the scrollable container
  * and other is for transformation (translateY) to show the correct part of the list.
  *
- * Currently it works only with the direct scrollable parent element. It does not work with body scroll.
+ * Currently it works only with the direct vertically scrollable parent element. It does not work with body scroll.
  * It supports only static (same) height rows virtualization. Expect some issues, if list consists of different height elements.
  * @example
  * const itemRenderer = React.useCallback(() => (
@@ -110,7 +113,10 @@ export const VirtualScroll = ({
   // Find scrollable parent
   // Needed only on init
   React.useLayoutEffect(() => {
-    const scrollableParent = getScrollableParent(parentRef.current);
+    const scrollableParent = getScrollableParent(
+      parentRef.current,
+      parentRef.current?.ownerDocument,
+    );
     scrollContainer.current = scrollableParent;
   }, []);
 
@@ -138,7 +144,8 @@ export const VirtualScroll = ({
 
   const updateVirtualScroll = React.useCallback(() => {
     const scrollableContainer =
-      scrollContainer.current ?? (document.scrollingElement as HTMLElement);
+      scrollContainer.current ??
+      (parentRef.current?.ownerDocument.scrollingElement as HTMLElement);
     if (!scrollableContainer) {
       return;
     }
@@ -170,8 +177,12 @@ export const VirtualScroll = ({
     if (!onScrollRef.current) {
       return;
     }
-    !scrollContainer.current || scrollContainer.current === document.body
-      ? document.removeEventListener('scroll', onScrollRef.current)
+    !scrollContainer.current ||
+    scrollContainer.current === parentRef.current?.ownerDocument.body
+      ? parentRef.current?.ownerDocument.removeEventListener(
+          'scroll',
+          onScrollRef.current,
+        )
       : scrollContainer.current.removeEventListener(
           'scroll',
           onScrollRef.current,
@@ -182,8 +193,14 @@ export const VirtualScroll = ({
   React.useLayoutEffect(() => {
     removeScrollListener();
     onScrollRef.current = updateVirtualScroll;
-    if (!scrollContainer.current || scrollContainer.current === document.body) {
-      document.addEventListener('scroll', updateVirtualScroll);
+    if (
+      !scrollContainer.current ||
+      scrollContainer.current === parentRef.current?.ownerDocument.body
+    ) {
+      parentRef.current?.ownerDocument.addEventListener(
+        'scroll',
+        updateVirtualScroll,
+      );
     } else {
       scrollContainer.current.addEventListener('scroll', updateVirtualScroll);
     }
