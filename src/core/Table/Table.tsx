@@ -704,14 +704,14 @@ export const Table = <
         >
           {data.length !== 0 && (
             <>
-              {useVirtualization && (
+              {useVirtualization ? (
                 <VirtualScroll
                   itemsLength={page.length}
                   itemRenderer={virtualizedItemRenderer}
                 />
+              ) : (
+                page.map((row: Row<T>) => getPreparedRow(row))
               )}
-              {!useVirtualization &&
-                page.map((row: Row<T>) => getPreparedRow(row))}
             </>
           )}
           {isLoading && data.length === 0 && (
