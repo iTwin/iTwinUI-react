@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { CommonProps } from '../props';
+import { useResizeObserver } from '../hooks/useResizeObserver';
 
 const getScrollableParent = (
   element: HTMLElement | null,
@@ -107,6 +107,13 @@ export const VirtualScroll = React.forwardRef<
   const parentRef = React.useRef<HTMLDivElement>(null);
   const childHeight = React.useRef(0);
   const onScrollRef = React.useRef<(e: Event) => void>();
+  // Used only to recalculate on resize
+  const [scrollContainerHeight, setScrollContainerHeight] = React.useState(0);
+
+  const onResize = React.useCallback(({ height }) => {
+    setScrollContainerHeight(height);
+  }, []);
+  const [resizeRef] = useResizeObserver(onResize);
 
   // Find scrollable parent
   // Needed only on init
@@ -116,7 +123,9 @@ export const VirtualScroll = React.forwardRef<
       parentRef.current?.ownerDocument,
     );
     scrollContainer.current = scrollableParent;
-  }, []);
+
+    resizeRef(scrollableParent);
+  }, [resizeRef]);
 
   const visibleChildren = React.useMemo(() => {
     const arr = [];
@@ -207,7 +216,7 @@ export const VirtualScroll = React.forwardRef<
 
   React.useLayoutEffect(() => {
     updateVirtualScroll();
-  }, [itemsLength, updateVirtualScroll]);
+  }, [scrollContainerHeight, itemsLength, updateVirtualScroll]);
 
   return (
     <div
