@@ -856,7 +856,7 @@ export const LazyLoading: Story<Partial<TableProps>> = (args) => {
 
   return (
     <Table
-      useVirtualization
+      enableVirtualization
       columns={columns}
       emptyTableContent='No data.'
       onBottomReached={onBottomReached}
@@ -2182,7 +2182,7 @@ export const Virtualized: Story<Partial<TableProps>> = (args) => {
 
   return (
     <Table
-      useVirtualization
+      enableVirtualization
       columns={columns}
       emptyTableContent='No data.'
       {...args}
@@ -2268,7 +2268,7 @@ export const VirtualizedSubRows: Story<Partial<TableProps>> = (args) => {
 
   return (
     <Table
-      useVirtualization
+      enableVirtualization
       columns={columns}
       emptyTableContent='No data.'
       {...args}

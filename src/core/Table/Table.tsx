@@ -223,10 +223,11 @@ export type TableProps<
    * Virtualization is used for the scrollable table body.
    * Height on the table is required for virtualization to work.
    * @example
-   * <Table useVirtualization style={{height: 400}} {...} />
+   * <Table enableVirtualization style={{height: 400}} {...} />
    * @default false
+   * @beta
    */
-  useVirtualization?: boolean;
+  enableVirtualization?: boolean;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -309,7 +310,7 @@ export const Table = <
     pageSize = 25,
     isResizable = false,
     styleType = 'default',
-    useVirtualization = false,
+    enableVirtualization = false,
     ...rest
   } = props;
 
@@ -704,7 +705,7 @@ export const Table = <
         >
           {data.length !== 0 && (
             <>
-              {useVirtualization ? (
+              {enableVirtualization ? (
                 <VirtualScroll
                   itemsLength={page.length}
                   itemRenderer={virtualizedItemRenderer}
