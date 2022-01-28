@@ -138,3 +138,105 @@ export const Basic: Story<TreeProps<unknown>> = () => {
     />
   );
 };
+
+export const AsyncLoading: Story<TreeProps<unknown>> = () => {
+  type StoryData = {
+    id: string;
+    label: string;
+    subItems: StoryData[];
+    hasSubNodes?: boolean;
+  };
+
+  const [selectedNodes, setSelectedNodes] = React.useState<Array<string>>([]);
+  const onSelectedNodeChange = React.useCallback(
+    (nodeId: string, isSelected: boolean) => {
+      if (isSelected) {
+        setSelectedNodes((oldSelected) => [...oldSelected, nodeId]);
+        action(`Selected node ${nodeId}`)();
+      } else {
+        setSelectedNodes((oldSelected) =>
+          oldSelected.filter((item) => item != nodeId),
+        );
+        action(`Unselected node ${nodeId}`)();
+      }
+    },
+    [],
+  );
+
+  const [expandedNodes, setExpandedNodes] = React.useState<Array<string>>([]);
+  const onNodeExpanded = React.useCallback(
+    (nodeId: string, isExpanded: boolean, node: StoryData) => {
+      if (isExpanded && !node.subItems.length && node.hasSubNodes) {
+        node.subItems = [
+          { id: `Async ${nodeId}`, label: `Async ${nodeId}`, subItems: [] },
+        ];
+      }
+      if (isExpanded) {
+        setExpandedNodes((oldExpanded) => [...oldExpanded, nodeId]);
+        action(`Expanded node ${nodeId}`)();
+      } else {
+        setExpandedNodes((oldExpanded) =>
+          oldExpanded.filter((item) => item != nodeId),
+        );
+        action(`Closed node ${nodeId}`)();
+      }
+    },
+    [],
+  );
+
+  const generateItem = React.useCallback((index: number): StoryData => {
+    return {
+      id: `Node ${index}`,
+      label: `Node ${index}`,
+      subItems: [],
+      hasSubNodes: true,
+    };
+  }, []);
+
+  const data = React.useMemo(
+    () =>
+      Array(50)
+        .fill(null)
+        .map((_, index) => generateItem(index)),
+    [generateItem],
+  );
+
+  const getNode = React.useCallback(
+    (node: StoryData): NodeData<StoryData> => {
+      return {
+        subNodes: node.subItems,
+        nodeId: node.id,
+        node: node,
+        isExpanded: expandedNodes.some((id) => id === node.id),
+        isSelected: selectedNodes.some((id) => id === node.id),
+        hasSubNodes: node.hasSubNodes ?? false,
+      };
+    },
+    [expandedNodes, selectedNodes],
+  );
+
+  return (
+    <Tree<StoryData>
+      data={data}
+      getNode={getNode}
+      setFocus={false}
+      nodeRenderer={React.useCallback(
+        ({ node, ...rest }) => (
+          <TreeNode
+            label={node.label}
+            onNodeExpanded={(nodeId, isExpanded) =>
+              onNodeExpanded(nodeId, isExpanded, node)
+            }
+            onNodeSelected={onSelectedNodeChange}
+            nodeCheckbox={
+              <Checkbox variant='eyeball' disabled={rest.isDisabled} />
+            }
+            icon={<SvgPlaceholder />}
+            {...rest}
+          />
+        ),
+        [onNodeExpanded, onSelectedNodeChange],
+      )}
+    />
+  );
+};
