@@ -48,16 +48,18 @@ export type NodeData<T> = {
 };
 
 type FlatNode<T> = {
-  nodeData: NodeData<T>;
+  nodeData: NodeRenderData<T>;
   depth: number;
   subNodeIds?: Array<string>;
 };
+
+type NodeRenderData<T> = Omit<NodeData<T>, 'subNodes'>;
 
 export type TreeProps<T> = {
   /**
    * Custom renderer for items inside tree, recommended to use `TreeNode` component.
    */
-  nodeRenderer: (props: NodeData<T>) => JSX.Element;
+  nodeRenderer: (props: NodeRenderData<T>) => JSX.Element;
   /**
    * Array of custom data used for `TreeNodes` inside `Tree`.
    */
@@ -305,14 +307,15 @@ export const Tree = <T,>(props: TreeProps<T>) => {
     const flatNodes = (nodes: T[] = [], depth = 0) => {
       const nodeIdList = Array<string>();
       nodes.forEach((element) => {
+        const { subNodes, ...nodeRenderData } = getNode(element);
         const flatNode: FlatNode<T> = {
-          nodeData: getNode(element),
+          nodeData: nodeRenderData,
           depth: depth,
         };
         nodeIdList.push(flatNode.nodeData.nodeId);
         flatList.push(flatNode);
         if (flatNode.nodeData.isExpanded) {
-          const subNodeIds = flatNodes(flatNode.nodeData.subNodes, depth + 1);
+          const subNodeIds = flatNodes(subNodes, depth + 1);
           flatNode.subNodeIds = subNodeIds;
         }
       });
