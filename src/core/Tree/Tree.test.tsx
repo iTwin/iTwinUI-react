@@ -209,31 +209,33 @@ it('should handle arrow key navigation', () => {
 
   // Go Down
   fireEvent.keyDown(tree, { key: 'ArrowDown' });
-  buttons.forEach((item, index) => {
-    expect(document.activeElement === item).toBe(0 === index);
-  });
-  fireEvent.keyDown(tree, { key: 'ArrowDown' });
   treeNodes.forEach((item, index) => {
     expect(document.activeElement === item).toBe(1 === index);
   });
 
   // Go Up
   fireEvent.keyDown(tree, { key: 'ArrowUp' });
-  buttons.forEach((item, index) => {
-    expect(document.activeElement === item).toBe(0 === index);
-  });
-  fireEvent.keyDown(tree, { key: 'ArrowUp' });
   treeNodes.forEach((item, index) => {
     expect(document.activeElement === item).toBe(0 === index);
   });
 
-  // Go left on expanded node - should click expander
+  // Go left to collapse
+  fireEvent.keyDown(tree, { key: 'ArrowLeft' });
+  buttons.forEach((item, index) => {
+    expect(document.activeElement === item).toBe(0 === index);
+  });
   fireEvent.keyDown(tree, { key: 'ArrowLeft' });
   expect(onNodeExpanded).toHaveBeenCalledTimes(1);
 
   // Go left on closed node - should go up to parent
   fireEvent.keyDown(tree, { key: 'ArrowDown' });
-  fireEvent.keyDown(tree, { key: 'ArrowDown' });
+  treeNodes.forEach((item, index) => {
+    expect(document.activeElement === item).toBe(1 === index);
+  });
+  fireEvent.keyDown(tree, { key: 'ArrowLeft' });
+  buttons.forEach((item, index) => {
+    expect(document.activeElement === item).toBe(1 === index);
+  });
   fireEvent.keyDown(tree, { key: 'ArrowLeft' });
   expect(onNodeExpanded).toHaveBeenCalledTimes(1);
   treeNodes.forEach((item, index) => {
@@ -251,25 +253,19 @@ it('should handle arrow key navigation', () => {
   });
   expect(onNodeExpanded).toHaveBeenCalledTimes(1);
 
-  // Go right on closed node - should click expander
+  // Go right to expand
+  fireEvent.keyDown(tree, { key: 'ArrowRight' });
   fireEvent.keyDown(tree, { key: 'ArrowRight' });
   expect(onNodeExpanded).toHaveBeenCalledTimes(2);
 
   // Go down and skip over disabled node
   fireEvent.keyDown(tree, { key: 'ArrowDown' });
-  fireEvent.keyDown(tree, { key: 'ArrowDown' });
-  treeNodes.forEach((item, index) => {
-    expect(document.activeElement === item).toBe(3 === index);
-  });
-
-  //Go right on bottom expanded node
-  fireEvent.keyDown(tree, { key: 'ArrowRight' });
-  expect(onNodeExpanded).toHaveBeenCalledTimes(2);
   treeNodes.forEach((item, index) => {
     expect(document.activeElement === item).toBe(3 === index);
   });
 
   //Go left on root node with no parent - should go up
+  fireEvent.keyDown(tree, { key: 'ArrowLeft' });
   fireEvent.keyDown(tree, { key: 'ArrowLeft' });
   expect(onNodeExpanded).toHaveBeenCalledTimes(2);
   buttons.forEach((item, index) => {
