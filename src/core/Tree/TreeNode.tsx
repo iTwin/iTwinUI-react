@@ -5,7 +5,7 @@
 import React from 'react';
 import { CommonProps, getWindow, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/tree.css';
-import { SvgChevronRight } from '@itwin/itwinui-icons-react';
+import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import { IconButton } from '../Buttons/IconButton';
 import cx from 'classnames';
 import { TreeContext } from './Tree';
@@ -173,7 +173,6 @@ export const TreeNode = (props: TreeNodeProps) => {
                     e.stopPropagation();
                   }}
                   disabled={isDisabled}
-                  tabIndex={-1}
                 >
                   <SvgChevronRight
                     className={cx('iui-tree-node-content-expander-icon', {
