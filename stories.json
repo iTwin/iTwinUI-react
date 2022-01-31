@@ -1828,6 +1828,24 @@
         "__id": "core-table--horizontal-scroll"
       }
     },
+    "core-table--virtualized": {
+      "id": "core-table--virtualized",
+      "name": "Virtualized",
+      "kind": "Core/Table",
+      "story": "Virtualized",
+      "parameters": {
+        "__id": "core-table--virtualized"
+      }
+    },
+    "core-table--virtualized-sub-rows": {
+      "id": "core-table--virtualized-sub-rows",
+      "name": "Virtualized Sub Rows",
+      "kind": "Core/Table",
+      "story": "Virtualized Sub Rows",
+      "parameters": {
+        "__id": "core-table--virtualized-sub-rows"
+      }
+    },
     "core-tabs--default-tabs": {
       "id": "core-tabs--default-tabs",
       "name": "Default Tabs",
