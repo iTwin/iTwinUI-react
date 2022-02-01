@@ -304,14 +304,11 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
 
     const handlePointerMove = React.useCallback(
       (event: PointerEvent): void => {
-        if (activeThumbIndex === undefined) {
-          return;
-        }
         event.preventDefault();
         event.stopPropagation();
         updateThumbValue(event, 'onUpdate');
       },
-      [activeThumbIndex, updateThumbValue],
+      [updateThumbValue],
     );
 
     // function called by Thumb keyboard processing
@@ -328,21 +325,36 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       [currentValues, onChange],
     );
 
-    const onThumbActivated = React.useCallback((index: number) => {
-      setActiveThumbIndex(index);
-    }, []);
-
     const handlePointerUp = React.useCallback(
       (event: PointerEvent) => {
-        if (activeThumbIndex === undefined) {
-          return;
-        }
         updateThumbValue(event, 'onChange');
         setActiveThumbIndex(undefined);
         event.preventDefault();
         event.stopPropagation();
       },
-      [activeThumbIndex, updateThumbValue],
+      [updateThumbValue],
+    );
+
+    const onThumbActivated = React.useCallback(
+      (index: number) => {
+        setActiveThumbIndex(index);
+        containerRef.current?.ownerDocument.addEventListener(
+          'pointermove',
+          handlePointerMove,
+        );
+        containerRef.current?.ownerDocument.addEventListener(
+          'pointerup',
+          (e) => {
+            handlePointerUp(e);
+            containerRef.current?.ownerDocument.removeEventListener(
+              'pointermove',
+              handlePointerMove,
+            );
+          },
+          { once: true },
+        );
+      },
+      [handlePointerMove, handlePointerUp],
     );
 
     const handlePointerDownOnSlider = React.useCallback(
@@ -374,17 +386,6 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         }
       },
       [min, max, step, currentValues, getAllowableThumbRange, onChange],
-    );
-
-    useEventListener(
-      'pointermove',
-      handlePointerMove,
-      containerRef.current?.ownerDocument,
-    );
-    useEventListener(
-      'pointerup',
-      handlePointerUp,
-      containerRef.current?.ownerDocument,
     );
 
     const tickMarkArea = React.useMemo(() => {
