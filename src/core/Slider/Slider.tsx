@@ -4,12 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import cx from 'classnames';
 import React from 'react';
-import {
-  useTheme,
-  CommonProps,
-  getBoundedValue,
-  useEventListener,
-} from '../utils';
+import { useTheme, CommonProps, getBoundedValue } from '../utils';
 import '@itwin/itwinui-css/css/slider.css';
 import { TooltipProps } from '../Tooltip';
 import { Track } from './Track';
