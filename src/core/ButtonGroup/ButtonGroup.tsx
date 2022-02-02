@@ -85,11 +85,13 @@ export const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
       >
         {!!overflowButton && visibleCount < items.length ? (
           <>
-            {overflowPosition === 'start' && (
+            {overflowButton && overflowPosition === 'start' && (
               <div>{overflowButton(visibleCount)}</div>
             )}
+
             {items.slice(0, visibleCount - 1)}
-            {overflowPosition === 'end' && (
+
+            {overflowButton && overflowPosition === 'end' && (
               <div>{overflowButton(visibleCount)}</div>
             )}
           </>
