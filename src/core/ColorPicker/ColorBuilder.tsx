@@ -173,45 +173,40 @@ export const ColorBuilder = React.forwardRef(
       },
       [colorDotActive, updateColorDot],
     );
-
     const handleSquarePointerUp = React.useCallback(
       (event: PointerEvent) => {
+        if (!colorDotActive) {
+          return;
+        }
         updateSquareValue(event, 'onChange');
         setColorDotActive(false);
         event.preventDefault();
         event.stopPropagation();
       },
-      [updateSquareValue],
+      [colorDotActive, updateSquareValue],
+    );
+    useEventListener(
+      'pointerup',
+      handleSquarePointerUp,
+      builderRef.current?.ownerDocument,
     );
 
     const handleSquarePointerMove = React.useCallback(
       (event: PointerEvent): void => {
+        if (!colorDotActive) {
+          return;
+        }
         event.preventDefault();
         event.stopPropagation();
         updateSquareValue(event, 'onUpdate');
       },
-      [updateSquareValue],
+      [colorDotActive, updateSquareValue],
     );
-
-    React.useEffect(() => {
-      if (colorDotActive) {
-        squareRef.current?.ownerDocument.addEventListener(
-          'pointermove',
-          handleSquarePointerMove,
-        );
-        squareRef.current?.ownerDocument.addEventListener(
-          'pointerup',
-          (e) => {
-            handleSquarePointerUp(e);
-            squareRef.current?.ownerDocument.removeEventListener(
-              'pointermove',
-              handleSquarePointerMove,
-            );
-          },
-          { once: true },
-        );
-      }
-    }, [colorDotActive, handleSquarePointerMove, handleSquarePointerUp]);
+    useEventListener(
+      'pointermove',
+      handleSquarePointerMove,
+      builderRef.current?.ownerDocument,
+    );
 
     const handleSquarePointerLeave = React.useCallback(
       (event: PointerEvent): void => {
