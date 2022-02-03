@@ -210,10 +210,13 @@ export const ColorBuilder = React.forwardRef(
 
     const handleSquarePointerLeave = React.useCallback(
       (event: PointerEvent): void => {
+        if (!colorDotActive) {
+          return;
+        }
         updateSquareValue(event, 'onChange');
         setColorDotActive(false);
       },
-      [updateSquareValue],
+      [colorDotActive, updateSquareValue],
     );
     useEventListener(
       'pointerleave',
