@@ -65,7 +65,10 @@ export const Popover = React.forwardRef((props: PopoverProps, ref) => {
     interactive: true,
     popperOptions: {
       strategy: 'fixed',
-      modifiers: [{ name: 'flip' }],
+      modifiers: [
+        { name: 'flip' },
+        { name: 'preventOverflow', options: { padding: 0 } },
+      ],
     },
     role: undefined,
     offset: [0, 0],
