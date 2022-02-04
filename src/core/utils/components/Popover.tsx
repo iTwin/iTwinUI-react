@@ -5,9 +5,10 @@
 
 import React from 'react';
 import Tippy, { TippyProps } from '@tippyjs/react';
-import { Placement, Instance } from 'tippy.js';
+import type { Placement, Instance } from 'tippy.js';
 import { useMergedRefs } from '../hooks/useMergedRefs';
 export type PopoverInstance = Instance;
+import '@itwin/itwinui-css/css/popover.css';
 
 export type PopoverProps = {
   /**
@@ -56,6 +57,15 @@ export const Popover = React.forwardRef((props: PopoverProps, ref) => {
     }),
   };
 
+  // Plugin to revert default tippy styles by applying iui-popover class to tippy-box
+  const revertTippyStyles = {
+    fn: () => ({
+      onCreate: (instance: Instance) => {
+        instance.popper.firstElementChild?.classList.add('iui-popover');
+      },
+    }),
+  };
+
   const computedProps: Partial<TippyProps> = {
     allowHTML: true,
     animation: false,
@@ -71,6 +81,7 @@ export const Popover = React.forwardRef((props: PopoverProps, ref) => {
       lazyLoad,
       removeTabIndex,
       hideOnEscOrTab,
+      revertTippyStyles,
       ...(props.plugins || []),
     ],
     popperOptions: {
