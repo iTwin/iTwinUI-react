@@ -167,12 +167,12 @@ export const Tile = (props: TileProps) => {
 
           {leftIcon &&
             React.cloneElement(leftIcon as React.ReactElement, {
-              className: 'iui-small iui-tile-thumbnail-type-indicator',
+              className: 'iui-tile-thumbnail-type-indicator',
             })}
 
           {rightIcon &&
             React.cloneElement(rightIcon as React.ReactElement, {
-              className: 'iui-small iui-tile-thumbnail-quick-action',
+              className: 'iui-tile-thumbnail-quick-action',
             })}
 
           {badge && (
@@ -238,15 +238,7 @@ export const Tile = (props: TileProps) => {
         {children}
       </div>
 
-      {buttons && (
-        <div className='iui-tile-buttons'>
-          {buttons.map((button: React.ReactElement) =>
-            React.cloneElement(button, {
-              className: cx('iui-tile-button', button.props.className),
-            }),
-          )}
-        </div>
-      )}
+      {buttons && <div className='iui-tile-buttons'>{buttons}</div>}
     </div>
   );
 };
