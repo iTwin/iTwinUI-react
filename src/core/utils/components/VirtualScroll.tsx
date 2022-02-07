@@ -41,7 +41,7 @@ const getElementHeightWithMargins = (element: HTMLElement | undefined) => {
   const margin =
     parseFloat(getElementStyle(element, 'margin-top')) +
     parseFloat(getElementStyle(element, 'margin-bottom'));
-  return getElementHeight(element) + margin;
+  return getElementHeight(element) + (isNaN(margin) ? 0 : margin);
 };
 
 const getNumberOfNodesInHeight = (childHeight: number, totalHeight: number) => {

@@ -3,14 +3,25 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-import { fireEvent, render } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import VirtualScroll from './VirtualScroll';
+import * as UseResizeObserver from '../hooks/useResizeObserver';
 
 // to return correct values for container 'scroller' and children
 const heightsMock = jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect');
 
 it('should render only few elements out of big list', () => {
+  let triggerResize: (size: DOMRectReadOnly) => void = jest.fn();
+  jest
+    .spyOn(UseResizeObserver, 'useResizeObserver')
+    .mockImplementation((onResize) => {
+      triggerResize = onResize;
+      return [
+        jest.fn(),
+        ({ disconnect: jest.fn() } as unknown) as ResizeObserver,
+      ];
+    });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   heightsMock.mockImplementation(function (this: Record<string, any>) {
     if (Object.values(this)[0].memoizedProps.id === 'scroller') {
@@ -32,6 +43,8 @@ it('should render only few elements out of big list', () => {
       />
     </div>,
   );
+  act(() => triggerResize({ height: 400 } as DOMRectReadOnly));
+
   let allVisibleElements = container.querySelectorAll('.element');
   expect(allVisibleElements.length).toBe(30);
   expect(allVisibleElements[0].textContent).toBe('Element1');
