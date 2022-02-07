@@ -117,7 +117,7 @@ export const Overflow: Story<ButtonGroupProps> = (args) => {
   );
 };
 Overflow.args = {
-  overflowPosition: 'end',
+  overflowPlacement: 'end',
 };
 Overflow.parameters = {
   creevey: {

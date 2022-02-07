@@ -35,7 +35,7 @@ it('should render with four buttons', () => {
 
 it.each(['start', 'end'] as const)(
   'should handle overflow when overflowButton is specified (%s)',
-  (overflowPosition) => {
+  (overflowPlacement) => {
     const scrollWidthSpy = jest
       .spyOn(HTMLElement.prototype, 'scrollWidth', 'get')
       .mockReturnValueOnce(250)
@@ -59,7 +59,7 @@ it.each(['start', 'end'] as const)(
               <SvgMore />
             </IconButton>
           )}
-          overflowPosition={overflowPosition}
+          overflowPlacement={overflowPlacement}
         >
           {buttons}
         </ButtonGroup>
@@ -71,7 +71,7 @@ it.each(['start', 'end'] as const)(
 
     const buttons = container.querySelectorAll('.iui-button');
     expect(buttons).toHaveLength(2);
-    fireEvent.click(overflowPosition === 'end' ? buttons[1] : buttons[0]);
+    fireEvent.click(overflowPlacement === 'end' ? buttons[1] : buttons[0]);
     expect(mockOnClick).toHaveBeenCalledWith(2);
 
     scrollWidthSpy.mockRestore();

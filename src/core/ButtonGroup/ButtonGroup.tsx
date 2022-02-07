@@ -19,14 +19,14 @@ export type ButtonGroupProps = {
    * Expects a function that takes the index of the first button that is overflowing (i.e. hidden)
    * and returns the `ReactNode` to render.
    *
-   * The placement of this button can be controlled using the `overflowPosition` prop.
+   * The placement of this button can be controlled using the `overflowPlacement` prop.
    */
   overflowButton?: (firstOverflowingIndex: number) => React.ReactNode;
   /**
    * If `overflowButton` is specified, should it placed at the start or the end?
    * @default 'end'
    */
-  overflowPosition?: 'start' | 'end';
+  overflowPlacement?: 'start' | 'end';
 } & React.ComponentPropsWithRef<'div'>;
 
 /**
@@ -64,7 +64,7 @@ export const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
       className,
       style,
       overflowButton,
-      overflowPosition = 'end',
+      overflowPlacement = 'end',
       ...rest
     } = props;
 
@@ -87,13 +87,13 @@ export const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
       >
         {!!overflowButton && visibleCount < items.length ? (
           <>
-            {overflowButton && overflowPosition === 'start' && (
+            {overflowButton && overflowPlacement === 'start' && (
               <div>{overflowButton(visibleCount)}</div>
             )}
 
             {items.slice(0, visibleCount - 1)}
 
-            {overflowButton && overflowPosition === 'end' && (
+            {overflowButton && overflowPlacement === 'end' && (
               <div>{overflowButton(visibleCount)}</div>
             )}
           </>
