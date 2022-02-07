@@ -27,7 +27,7 @@ export default {
   parameters: {
     docs: { source: { excludeDecorators: true } },
     creevey: {
-      skip: { stories: ['Disabled Items'] },
+      skip: { stories: ['Disabled Items', 'Virtualized'] },
       tests: {
         async open() {
           const closed = await this.takeScreenshot();
@@ -404,4 +404,25 @@ export const WithStatus: Story<Partial<ComboBoxProps<string>>> = (args) => {
 WithStatus.args = {
   inputProps: { placeholder: 'Select a country' },
   status: 'negative',
+};
+
+export const Virtualized: Story<Partial<ComboBoxProps<string>>> = (args) => {
+  const options = React.useMemo(() => countriesList, []);
+
+  return (
+    <ComboBox
+      options={options}
+      inputProps={{ placeholder: 'Select a country' }}
+      onChange={(value: string) => action(value ?? '')()}
+      enableVirtualization
+      {...args}
+    />
+  );
+};
+Virtualized.args = {
+  inputProps: { placeholder: 'Select a country' },
+  enableVirtualization: true,
+} as ComboBoxProps<string>;
+Virtualized.argTypes = {
+  value: { control: { disable: true } },
 };

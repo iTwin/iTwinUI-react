@@ -17,6 +17,7 @@ import {
   getFocusableElements,
   getRandomValue,
   InputContainerProps,
+  VirtualScroll,
 } from '../utils';
 import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
 import 'tippy.js/animations/shift-away.css';
@@ -54,6 +55,13 @@ export type ComboBoxProps<T> = {
    * @default 'No options found'
    */
   emptyStateMessage?: string;
+  /**
+   * Virtualization is used for the scrollable dropdown list.
+   * Use it if you expect a very long list of items.
+   * @default false
+   * @beta
+   */
+  enableVirtualization?: boolean;
 } & Pick<InputContainerProps, 'status'> &
   Omit<CommonProps, 'title'>;
 
@@ -80,6 +88,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     inputProps,
     dropdownMenuProps,
     emptyStateMessage = 'No options found',
+    enableVirtualization = false,
     ...rest
   } = props;
 
@@ -128,6 +137,14 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   const menuRef = React.useRef<HTMLUListElement>(null);
   const toggleButtonRef = React.useRef<HTMLSpanElement>(null);
   const [isOpen, setIsOpen] = React.useState(false);
+  // used to dismiss scrolling into view on first menu open
+  // if virtualization is enabled
+  const isFirstRender = React.useRef<boolean>(false);
+
+  const openMenu = () => {
+    isFirstRender.current = true;
+    setIsOpen(true);
+  };
 
   // Set min-width of menu to be same as input
   const [minWidth, setMinWidth] = React.useState(0);
@@ -225,7 +242,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
               ),
             );
           } else {
-            setIsOpen(true); // reopen menu if closed when typing
+            openMenu(); // reopen menu if closed when typing
           }
           event.preventDefault();
           event.stopPropagation();
@@ -262,7 +279,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           break;
         default:
           if (!isOpen) {
-            setIsOpen(true); // reopen menu if closed when typing
+            openMenu(); // reopen menu if closed when typing
           }
           break;
       }
@@ -272,11 +289,11 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   const menuItems = React.useMemo(() => {
     if (filteredOptions.length === 0) {
-      return (
-        <MenuExtraContent>
+      return [
+        <MenuExtraContent key={0}>
           <Text isMuted>{emptyStateMessage}</Text>
-        </MenuExtraContent>
-      );
+        </MenuExtraContent>,
+      ];
     }
     return filteredOptions.map((option) => {
       const index = options.findIndex(({ value }) => option.value === value);
@@ -288,8 +305,17 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
         return React.cloneElement(memoizedItems[index], {
           isSelected: selectedValue === option.value,
           className: cx({ 'iui-focused': focusedIndex === index }),
-          ref: (el: HTMLElement) =>
-            focusedIndex === index && el?.scrollIntoView(false),
+          ref: (el: HTMLElement) => {
+            if (
+              enableVirtualization &&
+              isFirstRender.current &&
+              focusedIndex === index
+            ) {
+              isFirstRender.current = false;
+              return;
+            }
+            focusedIndex === index && el?.scrollIntoView({ block: 'nearest' });
+          },
         });
       }
 
@@ -302,6 +328,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     focusedIndex,
     selectedValue,
     memoizedItems,
+    enableVirtualization,
   ]);
 
   return (
@@ -356,7 +383,15 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             role='listbox'
             ref={menuRef}
           >
-            {menuItems}
+            {enableVirtualization ? (
+              <VirtualScroll
+                itemsLength={menuItems.length}
+                itemRenderer={(index) => menuItems[index] ?? <></>}
+                scrollToIndex={focusedIndex}
+              />
+            ) : (
+              menuItems
+            )}
           </Menu>
         }
         onHide={(instance) => {
@@ -373,7 +408,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
         <Input
           ref={inputRef}
           onKeyDown={onKeyDown}
-          onFocus={() => setIsOpen(true)}
+          onFocus={openMenu}
           onChange={onInput}
           value={inputValue}
           aria-activedescendant={
