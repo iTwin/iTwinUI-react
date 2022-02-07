@@ -198,42 +198,37 @@ export const VirtualScroll = React.forwardRef<
       };
     }, [visibleChildren.length]);
 
-    const updateVirtualScroll = React.useCallback(
-      (scrollTop?: number) => {
-        const scrollableContainer =
-          scrollContainer.current ??
-          (parentRef.current?.ownerDocument.scrollingElement as HTMLElement);
-        if (!scrollableContainer) {
-          return;
-        }
-        const start = getNumberOfNodesInHeight(
+    const updateVirtualScroll = React.useCallback(() => {
+      const scrollableContainer =
+        scrollContainer.current ??
+        (parentRef.current?.ownerDocument.scrollingElement as HTMLElement);
+      if (!scrollableContainer) {
+        return;
+      }
+      const start = getNumberOfNodesInHeight(
+        childHeight.current.child,
+        scrollableContainer.scrollTop,
+      );
+      const startIndex = Math.max(0, start - bufferSize);
+      setStartNode(startIndex);
+      setVisibleNodeCount(
+        getVisibleNodeCount(
           childHeight.current.child,
-          scrollTop ?? scrollableContainer.scrollTop,
-        );
-        const startIndex = Math.max(0, start - bufferSize);
-        setStartNode(startIndex);
-        setVisibleNodeCount(
-          getVisibleNodeCount(
-            childHeight.current.child,
-            start,
-            itemsLength,
-            scrollableContainer,
-          ),
-        );
+          start,
+          itemsLength,
+          scrollableContainer,
+        ),
+      );
 
-        if (!parentRef.current) {
-          return;
-        }
-        parentRef.current.style.transform = `translateY(${getTranslateValue(
-          childHeight.current.child,
-          childHeight.current.firstChild,
-          startIndex,
-        )}px)`;
-
-        scrollTop && scrollContainer.current?.scrollTo({ top: scrollTop });
-      },
-      [bufferSize, itemsLength],
-    );
+      if (!parentRef.current) {
+        return;
+      }
+      parentRef.current.style.transform = `translateY(${getTranslateValue(
+        childHeight.current.child,
+        childHeight.current.firstChild,
+        startIndex,
+      )}px)`;
+    }, [bufferSize, itemsLength]);
 
     const onScroll = React.useCallback(() => {
       updateVirtualScroll();
@@ -275,12 +270,14 @@ export const VirtualScroll = React.forwardRef<
         return;
       }
 
-      updateVirtualScroll(
-        scrollToIndex > 0
-          ? (scrollToIndex - 1) * childHeight.current.child +
-              childHeight.current.firstChild
-          : undefined,
-      );
+      if (scrollToIndex > 0 && scrollContainer.current) {
+        const scrollTop =
+          (scrollToIndex - 1) * childHeight.current.child +
+          childHeight.current.firstChild;
+        scrollContainer.current.scrollTo({ top: scrollTop });
+      } else {
+        updateVirtualScroll();
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [scrollContainerHeight]);
 
