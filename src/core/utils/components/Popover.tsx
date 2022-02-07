@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React from 'react';
+import cx from 'classnames';
 import Tippy, { TippyProps } from '@tippyjs/react';
 import type { Placement, Instance } from 'tippy.js';
 import { useMergedRefs } from '../hooks/useMergedRefs';
@@ -57,15 +58,6 @@ export const Popover = React.forwardRef((props: PopoverProps, ref) => {
     }),
   };
 
-  // Plugin to revert default tippy styles by applying iui-popover class to tippy-box
-  const revertTippyStyles = {
-    fn: () => ({
-      onCreate: (instance: Instance) => {
-        instance.popper.firstElementChild?.classList.add('iui-popover');
-      },
-    }),
-  };
-
   const computedProps: Partial<TippyProps> = {
     allowHTML: true,
     animation: false,
@@ -77,11 +69,11 @@ export const Popover = React.forwardRef((props: PopoverProps, ref) => {
     offset: [0, 0],
     maxWidth: '',
     ...props,
+    className: cx('iui-popover', props.className),
     plugins: [
       lazyLoad,
       removeTabIndex,
       hideOnEscOrTab,
-      revertTippyStyles,
       ...(props.plugins || []),
     ],
     popperOptions: {
