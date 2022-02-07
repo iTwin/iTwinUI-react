@@ -13,11 +13,13 @@ export type ButtonGroupProps = {
    */
   children: React.ReactNode;
   /**
-   * If specified, this prop will be used to show a custom button as the last button
-   * when overflow happens, i.e. when there is not enough space to fit all the buttons.
+   * If specified, this prop will be used to show a custom button when overflow happens,
+   * i.e. when there is not enough space to fit all the buttons.
    *
    * Expects a function that takes the index of the first button that is overflowing (i.e. hidden)
    * and returns the `ReactNode` to render.
+   *
+   * The placement of this button can be controlled using the `overflowPosition` prop.
    */
   overflowButton?: (firstOverflowingIndex: number) => React.ReactNode;
   /**
