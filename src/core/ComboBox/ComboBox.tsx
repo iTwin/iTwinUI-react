@@ -264,6 +264,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           if (isOpen) {
             setSelectedValue(options[focusedIndex].value);
             onChange?.(options[focusedIndex].value);
+          } else {
+            isFirstRender.current = true;
           }
           setIsOpen((open) => !open);
           event.preventDefault();
