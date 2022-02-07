@@ -295,11 +295,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
     >
       <div
         ref={inputWithIconRef}
-        className={cx(
-          'iui-input-with-icon',
-          { [`iui-${size}`]: !!size },
-          className,
-        )}
+        className={cx('iui-input-with-icon', className)}
         aria-expanded={isOpen}
         aria-haspopup='listbox'
         style={style}
@@ -311,6 +307,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
             'iui-placeholder': !selectedItem && !!placeholder,
             'iui-disabled': disabled,
             'iui-active': isOpen,
+            [`iui-${size}`]: !!size,
           })}
           onClick={() => !disabled && toggle()}
           onKeyDown={(e) => !disabled && onKeyDown(e, toggle)}
