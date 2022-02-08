@@ -198,6 +198,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
 
   const selectRef = React.useRef<HTMLDivElement>(null);
   const toggleButtonRef = React.useRef<HTMLSpanElement>(null);
+  const inputWithIconRef = React.useRef<HTMLDivElement>(null);
 
   const onShowHandler = React.useCallback(
     (instance: PopoverInstance) => {
@@ -293,7 +294,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
       visible={isOpen}
     >
       <div
-        ref={selectRef}
+        ref={inputWithIconRef}
         className={cx('iui-input-with-icon', className)}
         aria-expanded={isOpen}
         aria-haspopup='listbox'
@@ -337,7 +338,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
             if (isOpen) {
               setIsOpen(false);
             } else {
-              selectRef.current?.focus();
+              inputWithIconRef.current?.focus();
             }
           }}
         >
