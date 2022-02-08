@@ -197,8 +197,6 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
   const toggle = () => setIsOpen((open) => !open);
 
   const selectRef = React.useRef<HTMLDivElement>(null);
-  const toggleButtonRef = React.useRef<HTMLSpanElement>(null);
-  const inputWithIconRef = React.useRef<HTMLDivElement>(null);
 
   const onShowHandler = React.useCallback(
     (instance: PopoverInstance) => {
@@ -276,37 +274,35 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
   }, [options, value]);
 
   return (
-    <DropdownMenu
-      menuItems={menuItems}
-      placement='bottom-start'
-      className={cx('iui-scroll', menuClassName)}
-      style={{
-        minWidth,
-        maxWidth: `min(${minWidth * 2}px, 90vw)`,
-        maxHeight: `300px`,
-        ...menuStyle,
-      }}
-      role='listbox'
-      onShow={onShowHandler}
-      onHide={onHideHandler}
-      disabled={disabled}
-      {...popoverProps}
-      visible={isOpen}
+    <div
+      className={cx('iui-input-with-icon', className)}
+      aria-expanded={isOpen}
+      aria-haspopup='listbox'
+      style={style}
+      {...rest}
     >
-      <div
-        ref={inputWithIconRef}
-        className={cx('iui-input-with-icon', className)}
-        aria-expanded={isOpen}
-        aria-haspopup='listbox'
-        style={style}
-        {...rest}
+      <DropdownMenu
+        menuItems={menuItems}
+        placement='bottom-start'
+        className={cx('iui-scroll', menuClassName)}
+        style={{
+          minWidth,
+          maxWidth: `min(${minWidth * 2}px, 90vw)`,
+          maxHeight: `300px`,
+          ...menuStyle,
+        }}
+        role='listbox'
+        onShow={onShowHandler}
+        onHide={onHideHandler}
+        disabled={disabled}
+        {...popoverProps}
+        visible={isOpen}
       >
         <div
           ref={selectRef}
           className={cx('iui-select-button', {
             'iui-placeholder': !selectedItem && !!placeholder,
             'iui-disabled': disabled,
-            'iui-active': isOpen,
             [`iui-${size}`]: !!size,
           })}
           onClick={() => !disabled && toggle()}
@@ -327,25 +323,20 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
             </>
           )}
         </div>
-        <span
-          ref={toggleButtonRef}
-          className={cx('iui-end-icon', {
-            'iui-actionable': !disabled,
-            'iui-disabled': disabled,
-            'iui-open': isOpen,
-          })}
-          onClick={() => {
-            if (isOpen) {
-              setIsOpen(false);
-            } else {
-              inputWithIconRef.current?.focus();
-            }
-          }}
-        >
-          <SvgCaretDownSmall aria-hidden />
-        </span>
-      </div>
-    </DropdownMenu>
+      </DropdownMenu>
+      <span
+        className={cx('iui-end-icon', {
+          'iui-actionable': !disabled,
+          'iui-disabled': disabled,
+          'iui-open': isOpen,
+        })}
+        onPointerDown={() => {
+          toggle();
+        }}
+      >
+        <SvgCaretDownSmall aria-hidden />
+      </span>
+    </div>
   );
 };
 
