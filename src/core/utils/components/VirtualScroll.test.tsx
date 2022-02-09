@@ -10,9 +10,9 @@ import * as UseResizeObserver from '../hooks/useResizeObserver';
 
 // to return correct values for container 'scroller' and children
 const heightsMock = jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect');
+let triggerResize: (size: DOMRectReadOnly) => void = jest.fn();
 
-it('should render only few elements out of big list', () => {
-  let triggerResize: (size: DOMRectReadOnly) => void = jest.fn();
+beforeAll(() => {
   jest
     .spyOn(UseResizeObserver, 'useResizeObserver')
     .mockImplementation((onResize) => {
@@ -22,6 +22,13 @@ it('should render only few elements out of big list', () => {
         ({ disconnect: jest.fn() } as unknown) as ResizeObserver,
       ];
     });
+});
+
+afterAll(() => {
+  jest.clearAllMocks();
+});
+
+it('should render only few elements out of big list', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   heightsMock.mockImplementation(function (this: Record<string, any>) {
     if (Object.values(this)[0].memoizedProps.id === 'scroller') {
@@ -102,5 +109,48 @@ it('should not crash with empty list items', () => {
       />
     </div>,
   );
+  act(() => triggerResize({ height: 400 } as DOMRectReadOnly));
+
   expect(container.querySelectorAll('.element').length).toBe(20);
+});
+
+it('should show provided index on first render', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  heightsMock.mockImplementation(function (this: Record<string, any>) {
+    if (Object.values(this)[0].memoizedProps.id === 'scroller') {
+      return { height: 400 } as DOMRect;
+    }
+    return { height: 40 } as DOMRect;
+  });
+
+  jest
+    .spyOn(HTMLElement.prototype, 'scrollTo')
+    .mockImplementation(function (this: HTMLElement, options) {
+      console.log('---------------', options, this.id);
+      this.scrollTop = (options as ScrollToOptions).top ?? 0;
+      fireEvent.scroll(this, {
+        target: { scrollTop: (options as ScrollToOptions).top ?? 0 },
+      });
+    });
+  const { container } = render(
+    <div style={{ overflow: 'auto', height: 400 }} id='scroller'>
+      <VirtualScroll
+        itemsLength={1000}
+        itemRenderer={(index) => (
+          <div
+            key={index}
+            className='element'
+            style={{ height: 40 }}
+          >{`Element${index + 1}`}</div>
+        )}
+        scrollToIndex={50}
+      />
+    </div>,
+  );
+  act(() => triggerResize({ height: 400 } as DOMRectReadOnly));
+
+  const allVisibleElements = container.querySelectorAll('.element');
+  expect(allVisibleElements.length).toBe(30);
+  expect(allVisibleElements[0].textContent).toBe('Element41');
+  expect(allVisibleElements[29].textContent).toBe('Element70');
 });
