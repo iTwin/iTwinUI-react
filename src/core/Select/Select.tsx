@@ -330,9 +330,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
           'iui-disabled': disabled,
           'iui-open': isOpen,
         })}
-        onPointerDown={() => {
-          toggle();
-        }}
+        onPointerDown={() => !disabled && toggle()}
       >
         <SvgCaretDownSmall aria-hidden />
       </span>
