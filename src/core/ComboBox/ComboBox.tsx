@@ -141,10 +141,10 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   // if virtualization is enabled
   const isFirstRender = React.useRef<boolean>(false);
 
-  const openMenu = () => {
+  const openMenu = React.useCallback(() => {
     isFirstRender.current = true;
     setIsOpen(true);
-  };
+  }, []);
 
   // Set min-width of menu to be same as input
   const [minWidth, setMinWidth] = React.useState(0);
@@ -286,7 +286,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           break;
       }
     },
-    [focusedIndex, isOpen, options, getOptionId, onChange],
+    [isOpen, options, getOptionId, openMenu, focusedIndex, onChange],
   );
 
   const menuItems = React.useMemo(() => {
@@ -332,6 +332,11 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     memoizedItems,
     enableVirtualization,
   ]);
+
+  const virtualizedItemRenderer = React.useCallback(
+    (index) => menuItems[index] ?? <></>,
+    [menuItems],
+  );
 
   return (
     <InputContainer
@@ -388,7 +393,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             {enableVirtualization ? (
               <VirtualScroll
                 itemsLength={menuItems.length}
-                itemRenderer={(index) => menuItems[index] ?? <></>}
+                itemRenderer={virtualizedItemRenderer}
                 scrollToIndex={focusedIndex}
               />
             ) : (

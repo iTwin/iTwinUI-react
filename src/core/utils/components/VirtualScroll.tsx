@@ -286,9 +286,11 @@ export const VirtualScroll = React.forwardRef<
         style={{
           overflow: 'hidden',
           minHeight:
-            Math.max(itemsLength - 2, 0) * childHeight.current.child +
-            childHeight.current.firstChild +
-            childHeight.current.lastChild,
+            itemsLength > 1
+              ? Math.max(itemsLength - 2, 0) * childHeight.current.child +
+                childHeight.current.firstChild +
+                childHeight.current.lastChild
+              : childHeight.current.child,
           width: '100%',
           ...style,
         }}
