@@ -126,7 +126,6 @@ it('should show provided index on first render', () => {
   jest
     .spyOn(HTMLElement.prototype, 'scrollTo')
     .mockImplementation(function (this: HTMLElement, options) {
-      console.log('---------------', options, this.id);
       this.scrollTop = (options as ScrollToOptions).top ?? 0;
       fireEvent.scroll(this, {
         target: { scrollTop: (options as ScrollToOptions).top ?? 0 },
