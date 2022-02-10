@@ -148,7 +148,7 @@ export const VirtualScroll = React.forwardRef<
     const onResize = React.useCallback(({ height }) => {
       setScrollContainerHeight(height);
     }, []);
-    const [resizeRef] = useResizeObserver(onResize);
+    const [resizeRef, resizeObserver] = useResizeObserver(onResize);
 
     // Find scrollable parent
     // Needed only on init
@@ -161,6 +161,11 @@ export const VirtualScroll = React.forwardRef<
 
       resizeRef(scrollableParent);
     }, [resizeRef]);
+
+    // Stop watching resize, when virtual scroll is unmounted
+    React.useLayoutEffect(() => {
+      return () => resizeObserver?.disconnect();
+    }, [resizeObserver]);
 
     const visibleChildren = React.useMemo(() => {
       const arr = [];
