@@ -54,6 +54,20 @@ export type ComboBoxProps<T> = {
    * @default 'No options found'
    */
   emptyStateMessage?: string;
+  /**
+   * A custom item renderer can be specified to control the rendering.
+   * This function should ideally return a customized version of `MenuItem`,
+   * otherwise you will need to make sure to provide styling for the `isFocused` state.
+   */
+  itemRenderer?: (
+    option: SelectOption<T>,
+    states: {
+      isSelected: boolean;
+      isFocused: boolean;
+      id: string;
+      index: number;
+    },
+  ) => JSX.Element;
 } & Pick<InputContainerProps, 'status'> &
   Omit<CommonProps, 'title'>;
 
@@ -80,6 +94,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     inputProps,
     dropdownMenuProps,
     emptyStateMessage = 'No options found',
+    itemRenderer,
     ...rest
   } = props;
 
@@ -272,28 +287,39 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   const menuItems = React.useMemo(() => {
     if (filteredOptions.length === 0) {
-      return (
-        <MenuExtraContent>
+      return [
+        <MenuExtraContent key={0}>
           <Text isMuted>{emptyStateMessage}</Text>
-        </MenuExtraContent>
-      );
+        </MenuExtraContent>,
+      ];
     }
     return filteredOptions.map((option) => {
       const index = options.findIndex(({ value }) => option.value === value);
       if (index < 0) {
-        return;
+        return <></>;
       }
 
-      if (selectedValue === option.value || focusedIndex === index) {
-        return React.cloneElement(memoizedItems[index], {
-          isSelected: selectedValue === option.value,
-          className: cx({ 'iui-focused': focusedIndex === index }),
-          ref: (el: HTMLElement) =>
-            focusedIndex === index && el?.scrollIntoView(false),
+      const id = getOptionId(index);
+      const isSelected = selectedValue === option.value;
+      const isFocused = focusedIndex === index;
+      const focusScrollRef = (el: HTMLElement) =>
+        isFocused && el?.scrollIntoView({ block: 'nearest' });
+
+      if (isSelected || isFocused) {
+        const item =
+          itemRenderer?.(option, { index, id, isSelected, isFocused }) ??
+          React.cloneElement(memoizedItems[index], { isSelected });
+
+        return React.cloneElement(item, {
+          className: cx({ 'iui-focused': isFocused }),
+          ref: focusScrollRef,
         });
       }
 
-      return memoizedItems[index];
+      return (
+        itemRenderer?.(option, { index, id, isSelected, isFocused }) ??
+        memoizedItems[index]
+      );
     });
   }, [
     filteredOptions,
@@ -302,6 +328,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     focusedIndex,
     selectedValue,
     memoizedItems,
+    itemRenderer,
+    getOptionId,
   ]);
 
   return (
