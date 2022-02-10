@@ -78,6 +78,35 @@ it('should show all default footer elements', () => {
   });
 });
 
+it('should not show default footer elements', () => {
+  const customUrls: FooterElement[] = [
+    {
+      title: 'Custom link',
+      url: 'https://www.bentley.com/',
+    },
+    {
+      title: 'Products link',
+    },
+  ];
+  const { container } = renderComponent({
+    customElements: customUrls,
+    showOnlyCustomElements: true,
+  });
+  const allLi = container.querySelectorAll<HTMLAnchorElement>('li > a');
+  allLi.forEach((element, i) => {
+    expect(element).toBeTruthy();
+    expect(element.textContent).toBe(customUrls[i].title);
+    expect(element.href).toBe(customUrls[i].url);
+    if (i > 0) {
+      expect((element.previousSibling as HTMLSpanElement).classList).toContain(
+        'iui-separator',
+      );
+    } else {
+      expect(element.previousSibling as HTMLSpanElement).not.toBeDefined;
+    }
+  });
+});
+
 it('should propagate classname and style props correctly', () => {
   const { container } = renderComponent({
     className: 'custom-class',

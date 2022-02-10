@@ -46,6 +46,39 @@ Custom.args = {
   ],
 } as FooterProps;
 
+export const OnlyCustomElements: Story<FooterProps> = ({
+  customElements,
+  showOnlyCustomElements,
+  ...rest
+}: FooterProps) => {
+  return (
+    <Footer
+      customElements={customElements}
+      showOnlyCustomElements={showOnlyCustomElements}
+      {...rest}
+    />
+  );
+};
+
+OnlyCustomElements.args = {
+  customElements: [
+    {
+      title: 'Custom Element 1',
+      url: 'https://www.bentley.com/',
+    },
+    {
+      title: 'Custom Element 2',
+    },
+    {
+      title: 'Custom Element 3',
+    },
+    {
+      title: 'Custom Element 4',
+    },
+  ],
+  showOnlyCustomElements: true,
+} as FooterProps;
+
 export const BottomFixed: Story<FooterProps> & CreeveyStory = ({
   ...rest
 }: FooterProps) => {

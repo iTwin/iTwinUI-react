@@ -24,6 +24,10 @@ export type FooterProps = {
    * Provide localized strings.
    */
   translatedTitles?: TitleTranslations;
+  /**
+   * If true, only custom elements will be shown.
+   */
+  showOnlyCustomElements?: boolean;
 } & StylingProps;
 
 export type FooterElement = {
@@ -53,7 +57,13 @@ const footerTranslations: TitleTranslations = {
  * <Footer customElements={[{title: 'Bentley', url: 'https://www.bentley.com/'}]} />
  */
 export const Footer = (props: FooterProps) => {
-  const { customElements, translatedTitles, className, ...rest } = props;
+  const {
+    customElements,
+    translatedTitles,
+    showOnlyCustomElements,
+    className,
+    ...rest
+  } = props;
 
   useTheme();
 
@@ -74,18 +84,27 @@ export const Footer = (props: FooterProps) => {
     { title: titles.cookies, url: 'https://www.bentley.com/en/cookie-policy' },
     { title: titles.legalNotices, url: 'https://connect.bentley.com/Legal' },
   ];
-  const elements = customElements
-    ? [...defaultElements, ...customElements]
-    : defaultElements;
+
+  let elements: FooterElement[] = [];
+  if (!showOnlyCustomElements) {
+    elements = elements.concat(defaultElements);
+  }
+  if (customElements) {
+    elements = elements.concat(customElements);
+  }
 
   return (
     <footer className={cx('iui-legal-footer', className)} {...rest}>
       <ul>
-        <li>© {today.getFullYear()} Bentley Systems, Incorporated</li>
+        {!showOnlyCustomElements && (
+          <li>© {today.getFullYear()} Bentley Systems, Incorporated</li>
+        )}
         {elements.map((element, index) => {
           return (
             <li key={`${element.title}-${index}`}>
-              <span className='iui-separator' />
+              {!(showOnlyCustomElements && index < 1) && (
+                <span className='iui-separator' />
+              )}
               {element.url ? (
                 <a href={element.url} target='_blank' rel='noreferrer'>
                   {element.title}
