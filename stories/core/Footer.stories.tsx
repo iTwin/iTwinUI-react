@@ -48,15 +48,10 @@ Custom.args = {
 
 export const OnlyCustomElements: Story<FooterProps> = ({
   customElements,
-  showOnlyCustomElements,
   ...rest
 }: FooterProps) => {
   return (
-    <Footer
-      customElements={customElements}
-      showOnlyCustomElements={showOnlyCustomElements}
-      {...rest}
-    />
+    <Footer customElements={customElements} showOnlyCustomElements {...rest} />
   );
 };
 
@@ -76,7 +71,6 @@ OnlyCustomElements.args = {
       title: 'Custom Element 4',
     },
   ],
-  showOnlyCustomElements: true,
 } as FooterProps;
 
 export const BottomFixed: Story<FooterProps> & CreeveyStory = ({

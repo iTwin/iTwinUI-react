@@ -85,13 +85,9 @@ export const Footer = (props: FooterProps) => {
     { title: titles.legalNotices, url: 'https://connect.bentley.com/Legal' },
   ];
 
-  let elements: FooterElement[] = [];
-  if (!showOnlyCustomElements) {
-    elements = elements.concat(defaultElements);
-  }
-  if (customElements) {
-    elements = elements.concat(customElements);
-  }
+  const elements = showOnlyCustomElements
+    ? [...(customElements ?? [])]
+    : [...defaultElements, ...(customElements ?? [])];
 
   return (
     <footer className={cx('iui-legal-footer', className)} {...rest}>

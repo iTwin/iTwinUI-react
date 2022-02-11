@@ -35,6 +35,16 @@ const urls: FooterElement[] = [
   },
 ];
 
+const customUrls: FooterElement[] = [
+  {
+    title: 'Custom link',
+    url: 'https://www.bentley.com/',
+  },
+  {
+    title: 'Products link',
+  },
+];
+
 it('should show all default footer elements', () => {
   const { container } = renderComponent();
   const copyright = container.querySelector<HTMLLIElement>('li:first-child');
@@ -54,15 +64,6 @@ it('should show all default footer elements', () => {
 });
 
 it('should show all default footer elements', () => {
-  const customUrls: FooterElement[] = [
-    {
-      title: 'Custom link',
-      url: 'https://www.bentley.com/',
-    },
-    {
-      title: 'Products link',
-    },
-  ];
   const { container } = renderComponent({ customElements: customUrls });
   const copyright = container.querySelector<HTMLLIElement>('li:first-child');
   const today = new Date();
@@ -79,15 +80,6 @@ it('should show all default footer elements', () => {
 });
 
 it('should not show default footer elements', () => {
-  const customUrls: FooterElement[] = [
-    {
-      title: 'Custom link',
-      url: 'https://www.bentley.com/',
-    },
-    {
-      title: 'Products link',
-    },
-  ];
   const { container } = renderComponent({
     customElements: customUrls,
     showOnlyCustomElements: true,
@@ -102,9 +94,17 @@ it('should not show default footer elements', () => {
         'iui-separator',
       );
     } else {
-      expect(element.previousSibling as HTMLSpanElement).not.toBeDefined;
+      expect(element.previousSibling as HTMLSpanElement).toBeNull();
     }
   });
+});
+
+it('should not show any footer elements', () => {
+  const { container } = renderComponent({
+    showOnlyCustomElements: true,
+  });
+  const allLi = container.querySelectorAll<HTMLAnchorElement>('li > a');
+  expect(allLi.length).toBe(0);
 });
 
 it('should propagate classname and style props correctly', () => {
