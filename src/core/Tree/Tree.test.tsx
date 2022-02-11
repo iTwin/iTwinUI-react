@@ -5,8 +5,10 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 
-import { NodeData, Tree } from './Tree';
-import TreeNode from './TreeNode';
+import { NodeData, Tree, NodeRenderProps, TreeProps } from './Tree';
+import { TreeNode } from './TreeNode';
+import userEvent from '@testing-library/user-event';
+import { Checkbox } from '../Checkbox';
 
 type TestData = {
   id: string;
@@ -16,83 +18,86 @@ type TestData = {
 const onNodeExpanded = jest.fn();
 const onNodeSelected = jest.fn();
 
-const nodeRenderer = ({ ...rest }) => (
-  <TreeNode
-    nodeId='testId'
-    label='label'
-    onNodeExpanded={onNodeExpanded}
-    onNodeSelected={onNodeSelected}
-    {...rest}
-  />
-);
-
-const getNode = (node: TestData): NodeData<TestData> => {
-  return {
-    subNodes: node.subItems,
-    nodeId: node.id,
-    node: node,
-    isExpanded: ['1', '1.1'].some((id) => id === node.id),
-    hasSubNodes: node.subItems.length > 0,
-  };
-};
-
-it('should render in its most basic state', () => {
-  const visibleNodeIds = ['1', '1.1', '2'];
-  const data = [
+const renderComponent = ({
+  props,
+  expandedIds = ['Node-1'],
+  disabledIds = [],
+  selectedIds = [],
+}: {
+  props?: Partial<TreeProps<TestData>>;
+  expandedIds?: string[];
+  disabledIds?: string[];
+  selectedIds?: string[];
+} = {}) => {
+  const data: TestData[] = [
     {
-      id: '1',
+      id: 'Node-1',
       label: 'Facility 1',
-      subItems: [{ id: '1.1', label: 'Unit 1', subItems: [] }],
+      subItems: [
+        { id: 'Node-1-1', label: 'Unit 1', subItems: [] },
+        { id: 'Node-1-2', label: 'Unit 2', subItems: [] },
+      ],
     },
     {
-      id: '2',
+      id: 'Node-2',
       label: 'Facility 2',
       subItems: [],
     },
   ];
 
-  const { container } = render(
+  return render(
     <Tree<TestData>
       data={data}
-      getNode={getNode}
-      nodeRenderer={nodeRenderer}
+      getNode={(node: TestData): NodeData<TestData> => {
+        return {
+          subNodes: node.subItems,
+          nodeId: node.id,
+          node: node,
+          isExpanded: expandedIds.some((id) => id === node.id),
+          isDisabled: disabledIds.some((id) => id === node.id),
+          isSelected: selectedIds.some((id) => id === node.id),
+          hasSubNodes: node.subItems.length > 0,
+        };
+      }}
+      nodeRenderer={({ node, ...rest }: NodeRenderProps<TestData>) => (
+        <TreeNode
+          label={node.label}
+          onExpanded={onNodeExpanded}
+          onSelected={onNodeSelected}
+          checkbox={
+            <Checkbox id={`Checkbox-${node.id}`} disabled={rest.isDisabled} />
+          }
+          {...rest}
+        />
+      )}
+      {...props}
     />,
   );
+};
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
+
+it('should render in its most basic state', () => {
+  const { container } = renderComponent();
   const tree = container.querySelector('.iui-tree');
   expect(tree).toBeTruthy();
   expect(tree).toHaveAttribute('role', 'tree');
 
   //Only render nodes with expanded parents
   const treeNodes = container.querySelectorAll('li');
-  expect(treeNodes).toHaveLength(3);
+  expect(treeNodes).toHaveLength(4);
+  const visibleNodeIds = ['Node-1', 'Node-1-1', 'Node-1-2', 'Node-2'];
   treeNodes.forEach((item, index) => {
     expect(item.id).toBe(visibleNodeIds[index]);
   });
 });
 
 it('should add className and style correctly', () => {
-  const data = [
-    {
-      id: '1',
-      label: 'Facility 1',
-      subItems: [{ id: '1.1', label: 'Unit 1', subItems: [] }],
-    },
-    {
-      id: '2',
-      label: 'Facility 2',
-      subItems: [],
-    },
-  ];
-
-  const { container } = render(
-    <Tree<TestData>
-      data={data}
-      getNode={getNode}
-      nodeRenderer={nodeRenderer}
-      className='test-class'
-      style={{ width: '100px' }}
-    />,
-  );
+  const { container } = renderComponent({
+    props: { className: 'test-class', style: { width: '100px' } },
+  });
 
   const tree = container.querySelector('.iui-tree.test-class') as HTMLElement;
   expect(tree).toBeTruthy();
@@ -100,19 +105,18 @@ it('should add className and style correctly', () => {
 });
 
 it('should not render node if any parent above is not expanded', () => {
-  const labels = ['Node 1', 'Node 1.1', 'Node 1.1.1'];
   const data = [
     {
-      id: labels[0],
-      label: labels[0],
+      id: 'Node-1',
+      label: 'Node-1',
       subItems: [
         {
-          id: labels[1],
-          label: labels[1],
+          id: 'Node-1-1',
+          label: 'Node-1-1',
           subItems: [
             {
-              id: labels[2],
-              label: labels[2],
+              id: 'Node-1-1-1',
+              label: 'Node-1-1-1',
               subItems: [],
             },
           ],
@@ -121,208 +125,192 @@ it('should not render node if any parent above is not expanded', () => {
     },
   ];
 
-  const getNode = (node: TestData): NodeData<TestData> => {
-    return {
-      subNodes: node.subItems,
-      nodeId: node.id,
-      node: node,
-      isExpanded: ['Node 1.1'].some((id) => id === node.id),
-      hasSubNodes: node.subItems.length > 0,
-    };
-  };
-  const { container } = render(
-    <Tree<TestData>
-      data={data}
-      getNode={getNode}
-      nodeRenderer={nodeRenderer}
-    />,
-  );
+  const { container } = renderComponent({
+    props: { data },
+    expandedIds: ['Node-1-1'],
+  });
 
   const treeNodes = container.querySelectorAll('li');
   expect(treeNodes.length).toBe(1);
-  expect(treeNodes[0].id).toBe(labels[0]);
+  expect(treeNodes[0].id).toBe('Node-1');
 });
 
 it('should handle arrow key navigation', () => {
-  const labels = ['Node 1', 'Node 1.1', 'Node 1.1.1', 'Node 2', 'Node 3'];
-
   const data = [
     {
-      id: labels[0],
-      label: labels[0],
+      id: 'Node-1',
+      label: 'Node-1',
+      subItems: [],
+    },
+    {
+      // Disabled
+      id: 'Node-2',
+      label: 'Node-2',
+      subItems: [],
+    },
+    {
+      // Expanded and selected
+      id: 'Node-3',
+      label: 'Node-3',
       subItems: [
         {
-          id: labels[1],
-          label: labels[1],
+          // Expanded
+          id: 'Node-3-1',
+          label: 'Node-3-1',
           subItems: [
             {
-              id: labels[2],
-              label: labels[2],
+              // Disabled
+              id: 'Node-3-1-1',
+              label: 'Node-3-1-1',
               subItems: [],
+            },
+            {
+              // Collapsed
+              id: 'Node-3-1-2',
+              label: 'Node-3-1-2',
+              subItems: [
+                {
+                  id: 'Node-3-1-2-1',
+                  label: 'Node-3-1-2-1',
+                  subItems: [],
+                },
+              ],
             },
           ],
         },
       ],
     },
-    {
-      id: labels[3],
-      label: labels[3],
-      subItems: [],
-    },
-    {
-      id: labels[4],
-      label: labels[4],
-      subItems: [],
-    },
   ];
 
-  const getNode = (node: TestData): NodeData<TestData> => {
-    return {
-      subNodes: node.subItems,
-      nodeId: node.id,
-      node: node,
-      isExpanded: ['Node 1', 'Node 3'].some((id) => id === node.id),
-      isDisabled: ['Node 2'].some((id) => id === node.id),
-      hasSubNodes: node.subItems.length > 0,
-    };
-  };
-
-  const { container } = render(
-    <Tree<TestData>
-      data={data}
-      getNode={getNode}
-      nodeRenderer={nodeRenderer}
-    />,
-  );
+  const { container } = renderComponent({
+    props: { data },
+    expandedIds: ['Node-3', 'Node-3-1'],
+    disabledIds: ['Node-2', 'Node-3-1-1'],
+    selectedIds: ['Node-3'],
+  });
 
   const tree = container.querySelector('.iui-tree') as HTMLElement;
   expect(tree).toBeTruthy();
   const treeNodes = container.querySelectorAll('.iui-tree-node');
-  const buttons = container.querySelectorAll('.iui-button');
-  expect(treeNodes.length).toBe(4);
-  expect(buttons.length).toBe(2);
+  expect(treeNodes.length).toBe(6);
 
-  //Should initially focus on first node
-  treeNodes.forEach((item, index) => {
-    expect(document.activeElement === item).toBe(0 === index);
-  });
+  fireEvent.focus(tree);
 
-  // Go Down
-  fireEvent.keyDown(tree, { key: 'ArrowDown' });
-  treeNodes.forEach((item, index) => {
-    expect(document.activeElement === item).toBe(1 === index);
-  });
+  // Stay on the first node
+  userEvent.keyboard('{ArrowUp}');
+  expect(document.activeElement?.id).toBe('Node-1');
 
-  // Go Up
-  fireEvent.keyDown(tree, { key: 'ArrowUp' });
-  treeNodes.forEach((item, index) => {
-    expect(document.activeElement === item).toBe(0 === index);
-  });
+  // Go Down: Node-1 -> Node-3 (skip disabled node)
+  userEvent.keyboard('{ArrowDown}');
+  expect(document.activeElement?.id).toBe('Node-3');
 
-  // Go left to collapse
-  fireEvent.keyDown(tree, { key: 'ArrowLeft' });
-  buttons.forEach((item, index) => {
-    expect(document.activeElement === item).toBe(0 === index);
-  });
-  fireEvent.keyDown(tree, { key: 'ArrowLeft' });
-  expect(onNodeExpanded).toHaveBeenCalledTimes(1);
+  // Go Up: Node-3 -> Node-1 (skip disabled node)
+  userEvent.keyboard('{ArrowUp}');
+  expect(document.activeElement?.id).toBe('Node-1');
 
-  // Go left on closed node - should go up to parent
-  fireEvent.keyDown(tree, { key: 'ArrowDown' });
-  treeNodes.forEach((item, index) => {
-    expect(document.activeElement === item).toBe(1 === index);
-  });
-  fireEvent.keyDown(tree, { key: 'ArrowLeft' });
-  buttons.forEach((item, index) => {
-    expect(document.activeElement === item).toBe(1 === index);
-  });
-  fireEvent.keyDown(tree, { key: 'ArrowLeft' });
-  expect(onNodeExpanded).toHaveBeenCalledTimes(1);
-  treeNodes.forEach((item, index) => {
-    expect(document.activeElement === item).toBe(0 === index);
-  });
+  // Go Down: Node-1 -> Node-3 (skip disabled node)
+  userEvent.keyboard('{ArrowDown}');
 
-  // Go right on expanded node to go down
-  fireEvent.keyDown(tree, { key: 'ArrowRight' });
-  buttons.forEach((item, index) => {
-    expect(document.activeElement === item).toBe(0 === index);
-  });
-  fireEvent.keyDown(tree, { key: 'ArrowRight' });
-  treeNodes.forEach((item, index) => {
-    expect(document.activeElement === item).toBe(1 === index);
-  });
-  expect(onNodeExpanded).toHaveBeenCalledTimes(1);
+  // Go Down: Node-3 -> Node-3-1
+  userEvent.keyboard('{ArrowDown}');
+  expect(document.activeElement?.id).toBe('Node-3-1');
 
-  // Go right to expand
-  fireEvent.keyDown(tree, { key: 'ArrowRight' });
-  fireEvent.keyDown(tree, { key: 'ArrowRight' });
-  expect(onNodeExpanded).toHaveBeenCalledTimes(2);
+  expect(
+    Array.from(container.querySelectorAll('#Node-3-1-1, #Node-3-1')).map(
+      (el) => el.id,
+    ),
+  ).toEqual(['Node-3-1', 'Node-3-1-1']);
 
-  // Go down and skip over disabled node
-  fireEvent.keyDown(tree, { key: 'ArrowDown' });
-  treeNodes.forEach((item, index) => {
-    expect(document.activeElement === item).toBe(3 === index);
-  });
+  // Go Right: Node-3-1 -> Node-3-1-2 (skip disabled sub-node)
+  userEvent.keyboard('{ArrowRight}');
+  expect(document.activeElement?.id).toBe('Node-3-1-2');
 
-  //Go left on root node with no parent - should go up
-  fireEvent.keyDown(tree, { key: 'ArrowLeft' });
-  fireEvent.keyDown(tree, { key: 'ArrowLeft' });
-  expect(onNodeExpanded).toHaveBeenCalledTimes(2);
-  buttons.forEach((item, index) => {
-    expect(document.activeElement === item).toBe(1 === index);
-  });
+  // Go Right: Expand Node-3-1-1
+  userEvent.keyboard('{ArrowRight}');
+  expect(onNodeExpanded).toHaveBeenNthCalledWith(1, 'Node-3-1-2', true);
 
-  //Click expander button with enter
-  fireEvent.keyDown(tree, { key: 'Enter' });
-  expect(onNodeExpanded).toHaveBeenCalledTimes(3);
+  // Stay on the last node
+  userEvent.keyboard('{ArrowDown}');
+  expect(document.activeElement?.id).toBe('Node-3-1-2');
 
-  //Select with enter
-  fireEvent.keyDown(tree, { key: 'ArrowUp' });
-  fireEvent.keyDown(tree, { key: 'Enter' });
-  expect(onNodeSelected).toHaveBeenCalledTimes(1);
+  // Go Left: Node-3-1-2 -> Node-3-1
+  userEvent.keyboard('{ArrowLeft}');
+  expect(document.activeElement?.id).toBe('Node-3-1');
 
-  //Select with space
-  fireEvent.keyDown(tree, { key: ' ' });
-  expect(onNodeSelected).toHaveBeenCalledTimes(2);
+  // Go Left: Collapse Node-3-1
+  userEvent.keyboard('{ArrowLeft}');
+  expect(onNodeExpanded).toHaveBeenNthCalledWith(2, 'Node-3-1', false);
+
+  // Press Space: Select Node-3-1
+  userEvent.keyboard('{Enter}');
+  expect(onNodeSelected).toHaveBeenNthCalledWith(1, 'Node-3-1', true);
+
+  // Go Up: Node-3-1 -> Node-3
+  userEvent.keyboard('{ArrowUp}');
+
+  // Press Enter: Deselect Node-3-1
+  userEvent.keyboard('{Enter}');
+  expect(onNodeSelected).toHaveBeenNthCalledWith(2, 'Node-3', false);
+
+  // Tab into checkbox
+  userEvent.tab();
+  expect((document.activeElement as HTMLInputElement)?.type).toBe('checkbox');
+
+  // Tab into expander
+  userEvent.tab();
+  expect((document.activeElement as HTMLButtonElement)?.type).toContain(
+    'button',
+  );
 });
 
-it('should set setFocus on selected node', () => {
-  const labels = ['Node 1', 'Node 2'];
-
+it('should set correct computed aria attributes to nodes', () => {
   const data = [
     {
-      id: labels[0],
-      label: labels[0],
+      id: 'Node-1',
+      label: 'Node-1',
       subItems: [],
     },
     {
-      id: labels[1],
-      label: labels[1],
+      id: 'Node-2',
+      label: 'Node-2',
+      subItems: [
+        {
+          id: 'Node-2-1',
+          label: 'Node-2-1',
+          subItems: [],
+        },
+        {
+          id: 'Node-2-2',
+          label: 'Node-2-2',
+          subItems: [],
+        },
+      ],
+    },
+    {
+      id: 'Node-3',
+      label: 'Node-3',
       subItems: [],
     },
   ];
-
-  const getNode = (node: TestData): NodeData<TestData> => {
-    return {
-      subNodes: node.subItems,
-      nodeId: node.id,
-      node: node,
-      isSelected: ['Node 2'].some((id) => id === node.id),
-      hasSubNodes: node.subItems.length > 0,
-    };
-  };
-
-  const { container } = render(
-    <Tree<TestData>
-      data={data}
-      getNode={getNode}
-      nodeRenderer={nodeRenderer}
-    />,
-  );
-
-  const treeNodes = container.querySelectorAll('.iui-tree-node');
-  expect(treeNodes.length).toBe(2);
-  treeNodes.forEach((item, index) => {
-    expect(document.activeElement === item).toBe(1 === index);
+  const { container } = renderComponent({
+    props: { data },
+    expandedIds: ['Node-2'],
   });
+
+  const tree = container.querySelector('.iui-tree') as HTMLElement;
+  expect(tree).toBeTruthy();
+  const treeNodes = container.querySelectorAll('li');
+  expect(treeNodes.length).toBe(5);
+
+  // Node-3
+  const node3 = treeNodes[4] as HTMLElement;
+  expect(node3.getAttribute('aria-level')).toBe('1');
+  expect(node3.getAttribute('aria-setsize')).toBe('3');
+  expect(node3.getAttribute('aria-posinset')).toBe('3');
+
+  // Node-2-1
+  const node3_1 = treeNodes[2] as HTMLElement;
+  expect(node3_1.getAttribute('aria-level')).toBe('2');
+  expect(node3_1.getAttribute('aria-setsize')).toBe('2');
+  expect(node3_1.getAttribute('aria-posinset')).toBe('1');
 });

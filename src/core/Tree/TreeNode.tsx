@@ -5,14 +5,14 @@
 import React from 'react';
 import { CommonProps, getWindow, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/tree.css';
-import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
-import { IconButton } from '../Buttons/IconButton';
 import cx from 'classnames';
 import { TreeContext } from './Tree';
+import { TreeNodeExpander } from './TreeNodeExpander';
 
 export type TreeNodeProps = {
   /**
    * Unique id of the node.
+   * It has to be compatible with HTML id attribute.
    */
   nodeId: string;
   /**
@@ -28,22 +28,22 @@ export type TreeNodeProps = {
    */
   icon?: JSX.Element;
   /**
-   * Does node have child subNodes.
+   * Flag whether the node has child sub-nodes. It is used to show expander icon.
    * @default false
    */
   hasSubNodes?: boolean;
   /**
-   * Is TreeNode disabled.
+   * Flag whether the node is disabled.
    * @default false
    */
   isDisabled?: boolean;
   /**
-   * Is TreeNode expanded.
+   * Flag whether the node is expanded.
    * @default false
    */
   isExpanded?: boolean;
   /**
-   * Is TreeNode selected.
+   * Flag whether the node is selected.
    * @default false
    */
   isSelected?: boolean;
@@ -51,38 +51,42 @@ export type TreeNodeProps = {
    * Callback fired when expanding or closing a TreeNode.
    * Gives nodeId and new isExpanded value of specified node.
    */
-  onNodeExpanded: (nodeId: string, isExpanded: boolean) => void;
+  onExpanded: (nodeId: string, isExpanded: boolean) => void;
   /**
    * Callback fired when selecting a TreeNode.
    * Gives nodeId and new isSelected value of specified node.
    */
-  onNodeSelected?: (nodeId: string, isSelected: boolean) => void;
+  onSelected?: (nodeId: string, isSelected: boolean) => void;
   /**
-   * Checkbox to be shown before TreeNode.
-   * If undefined checkbox will not be shown.
-   * Recommended to use Checkbox component.
+   * Checkbox to be shown at the very beginning of the node.
+   * If undefined, checkbox will not be shown.
+   * Recommended to use `Checkbox` component.
    */
-  nodeCheckbox?: React.ReactNode;
+  checkbox?: React.ReactNode;
   /**
-   * Content shown after TreeNode.
+   * Custom expander element. If `hasSubNodes` is false, it won't be shown.
+   */
+  expander?: React.ReactNode;
+  /**
+   * Content shown after `TreeNode`.
    */
   children?: React.ReactNode;
-} & CommonProps;
+} & Omit<CommonProps, 'id'>;
 
 /**
  * `TreeNode` component to display node content within a `Tree`.
- * Must be used inside `Tree` component to correctly set node depth and subNodes.
+ * Must be used inside `Tree` component to correctly set node `depth` and `subNodes`.
  * @example
   <TreeNode
     nodeId={props.nodeId}
     label={props.node.label}
     sublabel={props.node.sublabel}
-    onNodeExpanded={onNodeExpanded}
-    onNodeSelected={onSelectedNodeChange}
+    onExpanded={onExpanded}
+    onSelected={onSelectedNodeChange}
     isDisabled={props.isDisabled}
     isExpanded={props.isExpanded}
     isSelected={props.isSelected}
-    nodeCheckbox={
+    checkbox={
       <Checkbox variant='eyeball' disabled={props.isDisabled} />
     }
     icon={<SvgPlaceholder />}
@@ -101,9 +105,10 @@ export const TreeNode = (props: TreeNodeProps) => {
     isDisabled = false,
     isExpanded = false,
     isSelected = false,
-    onNodeSelected,
-    onNodeExpanded,
-    nodeCheckbox,
+    onSelected,
+    onExpanded,
+    checkbox,
+    expander,
     ...rest
   } = props;
   useTheme();
@@ -111,6 +116,12 @@ export const TreeNode = (props: TreeNodeProps) => {
   const context = React.useContext(TreeContext);
   const nodeDepth = context?.nodeDepth ?? 0;
   const subNodeIds = context?.subNodeIds ?? [];
+  const parentNodeId = context?.parentNodeId;
+  const groupSize = context?.groupSize ?? 0;
+  const indexInGroup = context?.indexInGroup ?? 0;
+
+  const [isFocused, setIsFocused] = React.useState(false);
+  const nodeRef = React.useRef<HTMLLIElement>(null);
 
   const styleDepth = React.useMemo(
     () =>
@@ -120,95 +131,137 @@ export const TreeNode = (props: TreeNodeProps) => {
     [nodeDepth, style],
   );
 
-  const onNodeClick = () => {
-    if (isDisabled) {
-      return;
+  const onKeyDown = (event: React.KeyboardEvent<HTMLLIElement>) => {
+    switch (event.key) {
+      case 'ArrowLeft':
+        event.preventDefault();
+        if (isExpanded) {
+          onExpanded(nodeId, false);
+        } else if (parentNodeId) {
+          const parentNode = nodeRef.current?.ownerDocument.querySelector(
+            `#${parentNodeId}`,
+          ) as HTMLElement;
+          parentNode?.focus();
+        }
+        break;
+      case 'ArrowRight':
+        event.preventDefault();
+        if (!isExpanded && hasSubNodes) {
+          onExpanded(nodeId, true);
+        } else if (subNodeIds.length > 0) {
+          const subNodes = Array.from(
+            nodeRef.current?.ownerDocument.querySelectorAll(
+              `${subNodeIds.map((id) => `#${id}`).join(',')}`,
+            ) || [],
+          ).filter(
+            (el) => el.getAttribute('aria-disabled') !== 'true',
+          ) as HTMLElement[];
+          subNodes[0]?.focus();
+        }
+        break;
+      case ' ':
+      case 'Spacebar':
+      case 'Enter':
+        // Ignore if it is called on the element inside, e.g. checkbox or expander
+        if (event.target !== nodeRef.current) {
+          break;
+        }
+        event.preventDefault();
+        if (!isDisabled) {
+          onSelected?.(nodeId, !isSelected);
+        }
+        break;
+      default:
+        break;
     }
-    onNodeSelected?.(nodeId, !isSelected);
   };
 
   return (
-    <>
-      <li
-        role='treeitem'
-        id={nodeId}
-        aria-expanded={isExpanded}
-        aria-disabled={isDisabled}
-        {...rest}
-      >
-        {
-          <div
-            className={cx(
-              'iui-tree-node',
-              {
-                'iui-active': isSelected,
-                'iui-disabled': isDisabled,
-              },
-              className,
+    <li
+      role='treeitem'
+      id={nodeId}
+      aria-expanded={hasSubNodes ? isExpanded : undefined}
+      aria-disabled={isDisabled}
+      aria-selected={isSelected}
+      aria-level={nodeDepth + 1}
+      aria-setsize={groupSize}
+      aria-posinset={indexInGroup + 1}
+      tabIndex={-1}
+      onFocus={(e) => {
+        setIsFocused(true);
+        // Prevents from triggering onFocus on parent Tree
+        e.stopPropagation();
+      }}
+      onBlur={() => {
+        setIsFocused(false);
+      }}
+      ref={nodeRef}
+      onKeyDown={onKeyDown}
+      {...rest}
+    >
+      {
+        <div
+          className={cx(
+            'iui-tree-node',
+            {
+              'iui-active': isSelected,
+              'iui-disabled': isDisabled,
+            },
+            className,
+          )}
+          style={styleDepth}
+          onClick={() => !isDisabled && onSelected?.(nodeId, !isSelected)}
+          onDoubleClick={() =>
+            !isDisabled && hasSubNodes && onExpanded(nodeId, !isExpanded)
+          }
+        >
+          {checkbox && React.isValidElement(checkbox)
+            ? React.cloneElement(checkbox, {
+                className: cx(
+                  'iui-tree-node-checkbox',
+                  checkbox.props.className,
+                ),
+                tabIndex: isFocused ? 0 : -1,
+              })
+            : checkbox}
+          <div className='iui-tree-node-content'>
+            {hasSubNodes && expander}
+            {hasSubNodes && !expander && (
+              <TreeNodeExpander
+                isExpanded={isExpanded}
+                disabled={isDisabled}
+                onClick={(e) => {
+                  onExpanded(nodeId, !isExpanded);
+                  e.stopPropagation();
+                }}
+                tabIndex={isFocused ? 0 : -1}
+              />
             )}
-            style={styleDepth}
-            onClick={onNodeClick}
-            onDoubleClick={() => {
-              if (hasSubNodes) {
-                onNodeExpanded(nodeId, !isExpanded);
-              }
-            }}
-            tabIndex={isSelected ? 0 : -1}
-          >
-            {nodeCheckbox && React.isValidElement(nodeCheckbox)
-              ? React.cloneElement(nodeCheckbox, {
-                  className: cx(
-                    'iui-tree-node-checkbox',
-                    nodeCheckbox.props.className,
-                  ),
-                })
-              : nodeCheckbox}
-            <div className='iui-tree-node-content'>
-              {hasSubNodes && (
-                <IconButton
-                  styleType='borderless'
-                  size='small'
-                  onClick={(e) => {
-                    onNodeExpanded(nodeId, !isExpanded);
-                    e.stopPropagation();
-                  }}
-                  disabled={isDisabled}
-                >
-                  <SvgChevronRight
-                    className={cx('iui-tree-node-content-expander-icon', {
-                      'iui-tree-node-content-expander-icon-expanded': isExpanded,
-                    })}
-                  />
-                </IconButton>
+            {icon &&
+              React.cloneElement(icon, {
+                className: cx(
+                  'iui-tree-node-content-icon',
+                  icon.props.className,
+                ),
+              })}
+            <span className='iui-tree-node-content-label'>
+              <div className='iui-tree-node-content-title'>{label}</div>
+              {sublabel && (
+                <div className='iui-tree-node-content-caption'>{sublabel}</div>
               )}
-              {icon &&
-                React.cloneElement(icon, {
-                  className: cx(
-                    'iui-tree-node-content-icon',
-                    icon.props.className,
-                  ),
-                })}
-              <span className='iui-tree-node-content-label'>
-                <div className='iui-tree-node-content-title'>{label}</div>
-                {sublabel && (
-                  <div className='iui-tree-node-content-caption'>
-                    {sublabel}
-                  </div>
-                )}
-              </span>
-              {children}
-            </div>
+            </span>
+            {children}
           </div>
-        }
-        {hasSubNodes && (
-          <ul
-            className='iui-sub-tree'
-            role='group'
-            aria-owns={subNodeIds.join(', ')}
-          />
-        )}
-      </li>
-    </>
+        </div>
+      }
+      {hasSubNodes && (
+        <ul
+          className='iui-sub-tree'
+          role='group'
+          aria-owns={subNodeIds.join(',')}
+        />
+      )}
+    </li>
   );
 };
 
