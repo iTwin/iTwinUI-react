@@ -417,7 +417,7 @@ export const CustomRenderer: Story<Partial<ComboBoxProps<string>>> = (args) => {
 
   const itemRenderer = React.useCallback(
     ({ value, label }, { isSelected, id }) => (
-      <MenuItem key={value} id={id} isSelected={isSelected}>
+      <MenuItem key={value} id={id} isSelected={isSelected} value={value}>
         <em>{label}</em>
       </MenuItem>
     ),
@@ -428,7 +428,7 @@ export const CustomRenderer: Story<Partial<ComboBoxProps<string>>> = (args) => {
     <ComboBox
       options={options}
       inputProps={{ placeholder: 'Select a country' }}
-      onChange={(value: string) => action(value ?? '')()}
+      onChange={React.useCallback((value: string) => action(value ?? '')(), [])}
       itemRenderer={itemRenderer}
       {...args}
     />
