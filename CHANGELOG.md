@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.31.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.30.0...v1.31.0) (2022-02-15)
+
+
+### What's new
+
+* **Select:** End icon is svg ([#540](https://www.github.com/iTwin/iTwinUI-react/issues/540)) ([c0ad092](https://www.github.com/iTwin/iTwinUI-react/commit/c0ad0921f859130f4cc866999ba2d31187b192ac))
+
 ## [1.30.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.29.3...v1.30.0) (2022-02-08)
 
 ### What's new
