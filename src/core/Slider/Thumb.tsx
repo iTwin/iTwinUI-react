@@ -125,7 +125,6 @@ export const Thumb = (props: ThumbProps) => {
     <Tooltip
       visible={isActive || hasFocus || isHovered}
       placement='top'
-      appendTo='parent'
       {...tooltipProps}
     >
       <div
