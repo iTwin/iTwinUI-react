@@ -105,7 +105,9 @@ export const Step = (props: StepProps) => {
   );
 
   return description ? (
-    <Tooltip content={description}>{stepShape}</Tooltip>
+    <Tooltip content={description} appendTo='parent'>
+      {stepShape}
+    </Tooltip>
   ) : (
     stepShape
   );

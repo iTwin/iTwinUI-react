@@ -11,6 +11,14 @@ import SvgCaretUpSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretUpSmall';
 import HeaderButton from './HeaderButton';
 import { MenuItem } from '../Menu';
 
+afterEach(() => {
+  // cleanup tippy after every test, so it does not stay in the dom
+  const tippy = document.querySelector('[data-tippy-root]') as HTMLElement;
+  if (!!tippy) {
+    tippy.remove();
+  }
+});
+
 it('should render in its most basic state', () => {
   const { container } = render(<HeaderButton name='MockName' />);
   expect(

@@ -123,6 +123,7 @@ export const SideNavigation = (props: SideNavigationProps) => {
                   content={sidenavButton.props.children}
                   placement='right'
                   key={index}
+                  appendTo='parent'
                 >
                   {sidenavButton}
                 </Tooltip>
@@ -138,6 +139,7 @@ export const SideNavigation = (props: SideNavigationProps) => {
                   content={sidenavButton.props.children}
                   placement='right'
                   key={index}
+                  appendTo='parent'
                 >
                   {sidenavButton}
                 </Tooltip>
