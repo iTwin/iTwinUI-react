@@ -428,9 +428,6 @@ it('should preserve hue when color dot is black/at bottom of square', () => {
   expect(colorDot.style.getPropertyValue('--iui-color-dot-inset')).toEqual(
     '98.4% auto auto 75%',
   );
-  expect(colorDot.style.getPropertyValue('--iui-color-dot-inset')).toEqual(
-    '98.4% auto auto 75%',
-  );
 
   // Go to bottom of square and hue should be preserved
   fireEvent.keyDown(colorDot, { key: 'ArrowDown' });
