@@ -27,7 +27,7 @@ describe('getTabbableElements', () => {
     container.append(disabledDiv);
 
     const focusableDisabledDiv = document.createElement('div');
-    focusableDisabledDiv.setAttribute('tabindex', '-1');
+    focusableDisabledDiv.setAttribute('tabindex', '0');
     focusableDisabledDiv.setAttribute('aria-disabled', 'true');
     container.append(focusableDisabledDiv);
 

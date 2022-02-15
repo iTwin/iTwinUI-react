@@ -176,6 +176,14 @@ export const TreeNode = (props: TreeNodeProps) => {
     }
   };
 
+  const onExpanderClick = React.useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      onExpanded(nodeId, !isExpanded);
+      event.stopPropagation();
+    },
+    [isExpanded, nodeId, onExpanded],
+  );
+
   return (
     <li
       role='treeitem'
@@ -211,9 +219,6 @@ export const TreeNode = (props: TreeNodeProps) => {
           )}
           style={styleDepth}
           onClick={() => !isDisabled && onSelected?.(nodeId, !isSelected)}
-          onDoubleClick={() =>
-            !isDisabled && hasSubNodes && onExpanded(nodeId, !isExpanded)
-          }
         >
           {checkbox && React.isValidElement(checkbox)
             ? React.cloneElement(checkbox, {
@@ -230,10 +235,7 @@ export const TreeNode = (props: TreeNodeProps) => {
               <TreeNodeExpander
                 isExpanded={isExpanded}
                 disabled={isDisabled}
-                onClick={(e) => {
-                  onExpanded(nodeId, !isExpanded);
-                  e.stopPropagation();
-                }}
+                onClick={onExpanderClick}
                 tabIndex={isFocused ? 0 : -1}
               />
             )}

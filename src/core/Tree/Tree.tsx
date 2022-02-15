@@ -99,26 +99,20 @@ export type TreeProps<T> = {
     },
   ];
 
-  const [expandedNodes, setExpandedNodes] = React.useState<Array<string>>([]);
-  const onNodeExpanded = (nodeId: string, isExpanded: boolean) => {
-    if (isExpanded) {
-      setExpandedNodes((oldExpanded) => [...oldExpanded, nodeId]);
-    } else {
-      setExpandedNodes((oldExpanded) =>
-        oldExpanded.filter((item) => item != nodeId),
-      );
-    }
-  };
+  const [expandedNodes, setExpandedNodes] = React.useState<Record<string, boolean>>({});
+  const onNodeExpanded = React.useCallback((nodeId: string, isExpanded: boolean) => {
+    setExpandedNodes((oldExpanded) => ({ ...oldExpanded, [nodeId]: isExpanded }));
+  }, []);
 
-  const getNode = (node: DemoData): NodeData<DemoData> => {
+  const getNode = React.useCallback((node: DemoData): NodeData<DemoData> => {
     return {
       subNodes: node.subItems,
       nodeId: node.id,
       node: node,
-      isExpanded: expandedNodes.some((id) => id === node.id),
+      isExpanded: expandedNodes[node.id],
       hasSubNodes: node.subItems.length > 0,
     };
-  };
+  }, [expandedNodes]);
 
   <Tree<DemoData>
     data={data}

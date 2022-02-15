@@ -223,29 +223,3 @@ it('should render selected node', () => {
   fireEvent.click(treeNode);
   expect(onSelected).toHaveBeenCalledWith('testId', false);
 });
-
-it('should expand node on double click', () => {
-  const onExpanded = jest.fn();
-  const { container } = renderComponent({
-    props: { hasSubNodes: true, onExpanded },
-  });
-
-  const node = container.querySelector('.iui-tree-node') as HTMLElement;
-  expect(node).toBeTruthy();
-
-  fireEvent.doubleClick(node);
-  expect(onExpanded).toHaveBeenCalled();
-});
-
-it('should not expand node on double click if there are no subNodes', () => {
-  const onExpanded = jest.fn();
-  const { container } = renderComponent({
-    props: { hasSubNodes: false, onExpanded },
-  });
-
-  const node = container.querySelector('.iui-tree-node') as HTMLElement;
-  expect(node).toBeTruthy();
-
-  fireEvent.doubleClick(node);
-  expect(onExpanded).not.toHaveBeenCalled();
-});
