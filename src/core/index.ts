@@ -216,6 +216,7 @@ export type {
   TreeNodeProps,
   TreeNodeExpanderProps,
   NodeData,
+  NodeRenderProps,
 } from './Tree';
 
 export {

@@ -56,6 +56,7 @@ type FlatNode<T> = {
   depth: number;
   subNodeIds?: Array<string>;
   parentNode?: FlatNode<T>;
+  indexInGroup: number;
 };
 
 export type NodeRenderProps<T> = Omit<NodeData<T>, 'subNodes'>;
@@ -182,8 +183,9 @@ export const Tree = <T,>(props: TreeProps<T>) => {
     }
   };
 
-  const flatNodesList = React.useMemo(() => {
+  const [flatNodesList, firstLevelNodesList] = React.useMemo(() => {
     const flatList: FlatNode<T>[] = [];
+    const firstLevelNodes: FlatNode<T>[] = [];
 
     const flattenNodes = (
       nodes: T[] = [],
@@ -191,15 +193,19 @@ export const Tree = <T,>(props: TreeProps<T>) => {
       parentNode?: FlatNode<T>,
     ) => {
       const nodeIdList = Array<string>();
-      nodes.forEach((element) => {
+      nodes.forEach((element, index) => {
         const { subNodes, ...nodeProps } = getNode(element);
         const flatNode: FlatNode<T> = {
           nodeProps,
           depth,
           parentNode,
+          indexInGroup: index,
         };
         nodeIdList.push(flatNode.nodeProps.nodeId);
         flatList.push(flatNode);
+        if (depth === 0) {
+          firstLevelNodes.push(flatNode);
+        }
         if (flatNode.nodeProps.isExpanded) {
           const subNodeIds = flattenNodes(subNodes, depth + 1, flatNode);
           flatNode.subNodeIds = subNodeIds;
@@ -210,13 +216,8 @@ export const Tree = <T,>(props: TreeProps<T>) => {
 
     flattenNodes(data);
 
-    return flatList;
+    return [flatList, firstLevelNodes];
   }, [data, getNode]);
-
-  const firstLevelNodes = React.useMemo(
-    () => flatNodesList.filter((n) => n.depth === 0),
-    [flatNodesList],
-  );
 
   return (
     <ul
@@ -242,16 +243,9 @@ export const Tree = <T,>(props: TreeProps<T>) => {
             subNodeIds: flatNode.subNodeIds,
             groupSize:
               flatNode.depth === 0
-                ? firstLevelNodes.length
+                ? firstLevelNodesList.length
                 : flatNode.parentNode?.subNodeIds?.length ?? 0,
-            indexInGroup:
-              flatNode.depth === 0
-                ? firstLevelNodes.findIndex(
-                    (n) => n.nodeProps.nodeId === flatNode.nodeProps.nodeId,
-                  )
-                : flatNode.parentNode?.subNodeIds?.indexOf(
-                    flatNode.nodeProps.nodeId,
-                  ) ?? 0,
+            indexInGroup: flatNode.indexInGroup,
             parentNodeId: flatNode.parentNode?.nodeProps.nodeId,
           }}
         >

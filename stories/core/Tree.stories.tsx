@@ -34,52 +34,58 @@ export const Basic: Story<TreeProps<unknown>> = () => {
     subItems: StoryData[];
   };
 
-  const [selectedNodes, setSelectedNodes] = React.useState([
-    'Node-0',
-    'Node-3-2',
-    'Node-22',
-  ]);
+  const [selectedNodes, setSelectedNodes] = React.useState<
+    Record<string, boolean>
+  >({
+    'Node-0': true,
+    'Node-3-2': true,
+    'Node-22': true,
+  });
   const onSelectedNodeChange = React.useCallback(
     (nodeId: string, isSelected: boolean) => {
       if (isSelected) {
-        setSelectedNodes((oldSelected) => [...oldSelected, nodeId]);
+        setSelectedNodes((oldSelected) => ({ ...oldSelected, [nodeId]: true }));
         action(`Selected node ${nodeId}`)();
       } else {
-        setSelectedNodes((oldSelected) =>
-          oldSelected.filter((item) => item != nodeId),
-        );
+        setSelectedNodes((oldSelected) => ({
+          ...oldSelected,
+          [nodeId]: false,
+        }));
         action(`Unselected node ${nodeId}`)();
       }
     },
     [],
   );
 
-  const [expandedNodes, setExpandedNodes] = React.useState([
-    'Node-2',
-    'Node-2-1',
-    'Node-3',
-  ]);
+  const [expandedNodes, setExpandedNodes] = React.useState<
+    Record<string, boolean>
+  >({
+    'Node-2': true,
+    'Node-2-1': true,
+    'Node-3': true,
+  });
   const onNodeExpanded = React.useCallback(
     (nodeId: string, isExpanded: boolean) => {
       if (isExpanded) {
-        setExpandedNodes((oldExpanded) => [...oldExpanded, nodeId]);
+        setExpandedNodes((oldExpanded) => ({ ...oldExpanded, [nodeId]: true }));
         action(`Expanded node ${nodeId}`)();
       } else {
-        setExpandedNodes((oldExpanded) =>
-          oldExpanded.filter((item) => item != nodeId),
-        );
+        setExpandedNodes((oldExpanded) => ({
+          ...oldExpanded,
+          [nodeId]: false,
+        }));
         action(`Closed node ${nodeId}`)();
       }
     },
     [],
   );
 
-  const [disabledNodes] = React.useState([
-    'Node-4',
-    'Node-3-0',
-    'Node-6',
-    'Node-10',
-  ]);
+  const [disabledNodes] = React.useState<Record<string, boolean>>({
+    'Node-4': true,
+    'Node-3-0': true,
+    'Node-6': true,
+    'Node-10': true,
+  });
 
   const generateItem = React.useCallback(
     (index: number, parentNode = '', depth = 0): StoryData => {
@@ -113,9 +119,9 @@ export const Basic: Story<TreeProps<unknown>> = () => {
         subNodes: node.subItems,
         nodeId: node.id,
         node: node,
-        isExpanded: expandedNodes.some((id) => id === node.id),
-        isDisabled: disabledNodes.some((id) => id === node.id),
-        isSelected: selectedNodes.some((id) => id === node.id),
+        isExpanded: expandedNodes[node.id],
+        isDisabled: disabledNodes[node.id],
+        isSelected: selectedNodes[node.id],
         hasSubNodes: node.subItems.length > 0,
       };
     },
@@ -168,23 +174,28 @@ export const AsyncLoading: Story<TreeProps<unknown>> = () => {
       .map((_, index) => generateItem(index)),
   );
 
-  const [selectedNodes, setSelectedNodes] = React.useState<Array<string>>([]);
+  const [selectedNodes, setSelectedNodes] = React.useState<
+    Record<string, boolean>
+  >({});
   const onSelectedNodeChange = React.useCallback(
     (nodeId: string, isSelected: boolean) => {
       if (isSelected) {
-        setSelectedNodes((oldSelected) => [...oldSelected, nodeId]);
+        setSelectedNodes((oldSelected) => ({ ...oldSelected, [nodeId]: true }));
         action(`Selected node ${nodeId}`)();
       } else {
-        setSelectedNodes((oldSelected) =>
-          oldSelected.filter((item) => item != nodeId),
-        );
+        setSelectedNodes((oldSelected) => ({
+          ...oldSelected,
+          [nodeId]: false,
+        }));
         action(`Unselected node ${nodeId}`)();
       }
     },
     [],
   );
 
-  const [expandedNodes, setExpandedNodes] = React.useState<Array<string>>([]);
+  const [expandedNodes, setExpandedNodes] = React.useState<
+    Record<string, boolean>
+  >({});
   const onNodeExpanded = React.useCallback(
     (nodeId: string, isExpanded: boolean, node: StoryData) => {
       if (isExpanded && !node.subItems.length && node.hasSubNodes) {
@@ -204,12 +215,13 @@ export const AsyncLoading: Story<TreeProps<unknown>> = () => {
         }, 1000);
       }
       if (isExpanded) {
-        setExpandedNodes((oldExpanded) => [...oldExpanded, nodeId]);
+        setExpandedNodes((oldExpanded) => ({ ...oldExpanded, [nodeId]: true }));
         action(`Expanded node ${nodeId}`)();
       } else {
-        setExpandedNodes((oldExpanded) =>
-          oldExpanded.filter((item) => item != nodeId),
-        );
+        setExpandedNodes((oldExpanded) => ({
+          ...oldExpanded,
+          [nodeId]: false,
+        }));
         action(`Closed node ${nodeId}`)();
       }
     },
@@ -232,8 +244,8 @@ export const AsyncLoading: Story<TreeProps<unknown>> = () => {
             : node.subItems,
         nodeId: node.id,
         node: node,
-        isExpanded: expandedNodes.some((id) => id === node.id),
-        isSelected: selectedNodes.some((id) => id === node.id),
+        isExpanded: expandedNodes[node.id],
+        isSelected: selectedNodes[node.id],
         hasSubNodes: !!node.hasSubNodes,
       };
     },
@@ -277,49 +289,71 @@ export const CustomizedExpander: Story<TreeProps<unknown>> = () => {
     subItems: StoryData[];
   };
 
-  const [selectedNodes, setSelectedNodes] = React.useState([
-    'Node-0',
-    'Node-3-2',
-    'Node-22',
-  ]);
+  const [selectedNodes, setSelectedNodes] = React.useState<
+    Record<string, boolean>
+  >({
+    'Node-0': true,
+    'Node-3-2': true,
+    'Node-22': true,
+  });
   const onSelectedNodeChange = React.useCallback(
     (nodeId: string, isSelected: boolean) => {
       if (isSelected) {
-        setSelectedNodes((oldSelected) => [...oldSelected, nodeId]);
+        setSelectedNodes((oldSelected) => ({ ...oldSelected, [nodeId]: true }));
         action(`Selected node ${nodeId}`)();
       } else {
-        setSelectedNodes((oldSelected) =>
-          oldSelected.filter((item) => item != nodeId),
-        );
+        setSelectedNodes((oldSelected) => ({
+          ...oldSelected,
+          [nodeId]: false,
+        }));
         action(`Unselected node ${nodeId}`)();
       }
     },
     [],
   );
 
-  const [expandedNodes, setExpandedNodes] = React.useState([
-    'Node-2',
-    'Node-2-1',
-    'Node-3',
-  ]);
+  const [expandedNodes, setExpandedNodes] = React.useState<
+    Record<string, boolean>
+  >({
+    'Node-2': true,
+    'Node-2-1': true,
+    'Node-3': true,
+  });
   const onNodeExpanded = React.useCallback(
     (nodeId: string, isExpanded: boolean) => {
       if (isExpanded) {
-        setExpandedNodes((oldExpanded) => [...oldExpanded, nodeId]);
+        setExpandedNodes((oldExpanded) => ({ ...oldExpanded, [nodeId]: true }));
         action(`Expanded node ${nodeId}`)();
       } else {
-        setExpandedNodes((oldExpanded) =>
-          oldExpanded.filter((item) => item != nodeId),
-        );
+        setExpandedNodes((oldExpanded) => ({
+          ...oldExpanded,
+          [nodeId]: false,
+        }));
         action(`Closed node ${nodeId}`)();
       }
     },
     [],
   );
 
+  const [disabledNodes] = React.useState({
+    'Node-4': true,
+    'Node-3': true,
+    'Node-6': true,
+    'Node-10': true,
+  });
+
+  const isNodeDisabled = React.useCallback(
+    (nodeId: string) => {
+      return Object.keys(disabledNodes).some(
+        (id) => nodeId === id || nodeId.startsWith(`${id}-`),
+      );
+    },
+    [disabledNodes],
+  );
+
   const generateItem = React.useCallback(
     (index: number, parentNode = '', depth = 0): StoryData => {
-      const keyValue = parentNode ? `${parentNode}.${index}` : `${index}`;
+      const keyValue = parentNode ? `${parentNode}-${index}` : `${index}`;
       return {
         id: `Node-${keyValue}`,
         label: `Node ${keyValue}`,
@@ -343,28 +377,15 @@ export const CustomizedExpander: Story<TreeProps<unknown>> = () => {
     [generateItem],
   );
 
-  const [disabledNodes] = React.useState([
-    'Node-4',
-    'Node-3',
-    'Node-6',
-    'Node-10',
-  ]);
-  const isNodeDisabled = React.useCallback(
-    (nodeId: string) => {
-      return disabledNodes.some((id) => nodeId.startsWith(id));
-    },
-    [disabledNodes],
-  );
-
   const getNode = React.useCallback(
     (node: StoryData): NodeData<StoryData> => {
       return {
         subNodes: node.subItems,
         nodeId: node.id,
         node: node,
-        isExpanded: expandedNodes.some((id) => id === node.id),
+        isExpanded: expandedNodes[node.id],
         isDisabled: isNodeDisabled(node.id),
-        isSelected: selectedNodes.some((id) => id === node.id),
+        isSelected: selectedNodes[node.id],
         hasSubNodes: node.subItems.length > 0,
       };
     },
