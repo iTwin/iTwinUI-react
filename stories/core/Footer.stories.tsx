@@ -5,7 +5,7 @@
 import { Story, Meta } from '@storybook/react';
 import { CreeveyStory } from 'creevey';
 import React from 'react';
-import { Footer, FooterProps } from '../../src/core';
+import { Footer, FooterElement, FooterProps } from '../../src/core';
 
 export default {
   title: 'Core/Footer',
@@ -30,48 +30,91 @@ Basic.args = {
   },
 } as FooterProps;
 
-export const Custom: Story<FooterProps> = ({
-  customElements,
+export const AppendedCustomElements: Story<FooterProps> = ({
   ...rest
 }: FooterProps) => {
-  return <Footer customElements={customElements} {...rest} />;
-};
-
-Custom.args = {
-  customElements: [
+  const customElements = [
     {
       title: 'Custom',
       url: 'https://www.bentley.com/',
     },
-  ],
-} as FooterProps;
-
-export const OnlyCustomElements: Story<FooterProps> = ({
-  customElements,
-  ...rest
-}: FooterProps) => {
-  return (
-    <Footer customElements={customElements} showOnlyCustomElements {...rest} />
-  );
+  ];
+  return <Footer customElements={customElements} {...rest} />;
 };
 
-OnlyCustomElements.args = {
-  customElements: [
-    {
-      title: 'Custom Element 1',
-      url: 'https://www.bentley.com/',
-    },
-    {
-      title: 'Custom Element 2',
-    },
-    {
-      title: 'Custom Element 3',
-    },
-    {
-      title: 'Custom Element 4',
-    },
-  ],
-} as FooterProps;
+export const OnlyCustomElements: Story<FooterProps> = ({
+  ...rest
+}: FooterProps) => {
+  const customElements = (defaultElements: FooterElement[]) => {
+    return [
+      {
+        title: 'Custom Element 1',
+        url: 'https://www.bentley.com/',
+      },
+      {
+        title: 'Custom Element 2',
+      },
+      {
+        title: 'Custom Element 3',
+      },
+      {
+        title: 'Custom Element 4',
+      },
+    ];
+  };
+
+  return <Footer customElements={customElements} {...rest} />;
+};
+
+export const CustomDefaultElements: Story<FooterProps> = ({
+  ...rest
+}: FooterProps) => {
+  const customElements = (defaultElements: FooterElement[]) => {
+    const termsOfUse = defaultElements.find(
+      (element) => element.title === 'termsOfUse',
+    );
+    const termsOfService = defaultElements.find(
+      (element) => element.title === 'termsOfService',
+    );
+
+    if (termsOfUse && termsOfService) {
+    }
+    return [
+      {
+        title: defaultElements[2].title,
+        url: 'https://www.bentley.com/',
+      },
+      {
+        title: 'Custom Element 1',
+        url: 'https://www.bentley.com/',
+      },
+      {
+        title: defaultElements[2].title,
+        url: defaultElements[2].url,
+      },
+      {
+        title: 'Custom Element 2',
+      },
+      {
+        title: 'Custom Element 3',
+      },
+      {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        title: termsOfUse!.title,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        url: termsOfUse!.url,
+      },
+      {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        title: termsOfService!.title,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        url: termsOfService!.url,
+      },
+    ];
+  };
+
+  return <Footer customElements={customElements} {...rest} />;
+};
 
 export const BottomFixed: Story<FooterProps> & CreeveyStory = ({
   ...rest

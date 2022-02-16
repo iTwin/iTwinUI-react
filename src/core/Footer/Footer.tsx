@@ -8,6 +8,7 @@ import { useTheme, StylingProps } from '../utils';
 import '@itwin/itwinui-css/css/footer.css';
 
 export type TitleTranslations = {
+  copyright: string;
   termsOfService: string;
   privacy: string;
   termsOfUse: string;
@@ -19,15 +20,13 @@ export type FooterProps = {
   /**
    * Customize footer elements.
    */
-  customElements?: FooterElement[];
+  customElements?:
+    | FooterElement[]
+    | ((defaultElements: FooterElement[]) => FooterElement[]);
   /**
    * Provide localized strings.
    */
   translatedTitles?: TitleTranslations;
-  /**
-   * If true, only custom elements will be shown.
-   */
-  showOnlyCustomElements?: boolean;
 } & StylingProps;
 
 export type FooterElement = {
@@ -42,6 +41,7 @@ export type FooterElement = {
 };
 
 const footerTranslations: TitleTranslations = {
+  copyright: `© ${new Date().getFullYear()} Bentley Systems, Incorporated`,
   cookies: 'Cookies',
   legalNotices: 'Legal notices',
   privacy: 'Privacy',
@@ -57,19 +57,15 @@ const footerTranslations: TitleTranslations = {
  * <Footer customElements={[{title: 'Bentley', url: 'https://www.bentley.com/'}]} />
  */
 export const Footer = (props: FooterProps) => {
-  const {
-    customElements,
-    translatedTitles,
-    showOnlyCustomElements,
-    className,
-    ...rest
-  } = props;
+  const { customElements, translatedTitles, className, ...rest } = props;
 
   useTheme();
 
-  const today = new Date();
   const titles = { ...footerTranslations, ...translatedTitles };
   const defaultElements = [
+    {
+      title: titles.copyright,
+    },
     {
       title: titles.termsOfService,
       url:
@@ -85,22 +81,21 @@ export const Footer = (props: FooterProps) => {
     { title: titles.legalNotices, url: 'https://connect.bentley.com/Legal' },
   ];
 
-  const elements = showOnlyCustomElements
-    ? [...(customElements ?? [])]
-    : [...defaultElements, ...(customElements ?? [])];
+  let elements: FooterElement[] = defaultElements;
+  if (customElements) {
+    elements =
+      typeof customElements === 'function'
+        ? customElements(defaultElements)
+        : [...defaultElements, ...customElements];
+  }
 
   return (
     <footer className={cx('iui-legal-footer', className)} {...rest}>
       <ul>
-        {!showOnlyCustomElements && (
-          <li>© {today.getFullYear()} Bentley Systems, Incorporated</li>
-        )}
         {elements.map((element, index) => {
           return (
             <li key={`${element.title}-${index}`}>
-              {!(showOnlyCustomElements && index < 1) && (
-                <span className='iui-separator' />
-              )}
+              {index > 0 && <span className='iui-separator' />}
               {element.url ? (
                 <a href={element.url} target='_blank' rel='noreferrer'>
                   {element.title}
