@@ -33,7 +33,7 @@ export default {
   parameters: {
     docs: { source: { excludeDecorators: true } },
     creevey: {
-      skip: { stories: ['Disabled Items', 'Custom Renderer'] },
+      skip: { stories: ['Disabled Items'] },
       tests: {
         async open() {
           const closed = await this.takeScreenshot();
@@ -414,11 +414,24 @@ WithStatus.args = {
 
 export const CustomRenderer: Story<Partial<ComboBoxProps<string>>> = (args) => {
   const options = React.useMemo(() => countriesList, []);
+  const [selectedValue, setSelectedValue] = React.useState('AF');
+
+  const onChange = React.useCallback((value: string) => {
+    action(value ?? '')();
+    setSelectedValue(value);
+  }, []);
 
   const itemRenderer = React.useCallback(
     ({ value, label }, { isSelected, id }) => (
       <MenuItem key={value} id={id} isSelected={isSelected} value={value}>
-        <em>{label}</em>
+        <em
+          style={{
+            textTransform: 'uppercase',
+            fontWeight: isSelected ? 'bold' : undefined,
+          }}
+        >
+          {label}
+        </em>
       </MenuItem>
     ),
     [],
@@ -428,7 +441,8 @@ export const CustomRenderer: Story<Partial<ComboBoxProps<string>>> = (args) => {
     <ComboBox
       options={options}
       inputProps={{ placeholder: 'Select a country' }}
-      onChange={React.useCallback((value: string) => action(value ?? '')(), [])}
+      value={selectedValue}
+      onChange={onChange}
       itemRenderer={itemRenderer}
       {...args}
     />
