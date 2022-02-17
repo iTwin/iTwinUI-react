@@ -1,0 +1,24 @@
+jobs:
+
+  publish:
+    name: Publish npm package
+    runs-on: ubuntu-latest
+    needs: release-please
+    if: needs.release-please.outputs.release-created
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node 12.X
+        uses: actions/setup-node@v2
+        with:
+          node-version: 12.x
+          registry-url: https://registry.npmjs.org/
+
+      - run: yarn install
+      - run: yarn build
+
+      - run: npm publish --access public --tag=dev
+        working-directory: './lib'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPMJS_PUBLISH_ITWIN }}
