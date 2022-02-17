@@ -36,6 +36,7 @@ import {
   useSubRowFiltering,
   useSubRowSelection,
   useResizeColumns,
+  useColumnVisibility,
 } from './hooks';
 import {
   onExpandHandler,
@@ -229,6 +230,11 @@ export type TableProps<
    * @beta
    */
   enableVirtualization?: boolean;
+  /**
+   * Flag whether table has a column manager.
+   * @default false
+   */
+  isManageable?: boolean;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -312,6 +318,7 @@ export const Table = <
     isResizable = false,
     styleType = 'default',
     enableVirtualization = false,
+    isManageable = false,
     ...rest
   } = props;
 
@@ -425,6 +432,7 @@ export const Table = <
     useSubRowSelection,
     useExpanderCell(subComponent, expanderCell, isRowDisabled),
     useSelectionCell(isSelectable, isRowDisabled),
+    useColumnVisibility(isManageable),
   );
 
   const {

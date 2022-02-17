@@ -2269,3 +2269,66 @@ VirtualizedSubRows.argTypes = {
   isLoading: { control: { disable: true } },
   data: { control: { disable: true } },
 };
+
+export const ColumnManager: Story<Partial<TableProps>> = (args) => {
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+          },
+          {
+            id: 'click-me',
+            Header: 'Click',
+            width: 100,
+            Cell: (props: CellProps<{ name: string; description: string }>) => {
+              return (
+                <a
+                  className='iui-anchor'
+                  onClick={(e) => {
+                    e.stopPropagation(); // prevent row selection when clicking on link
+                    action(props.row.original.name)();
+                  }}
+                >
+                  Click me!
+                </a>
+              );
+            },
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const data = useMemo(
+    () => [
+      { name: 'Name1', description: 'Description1' },
+      { name: 'Name2', description: 'Description2' },
+      { name: 'Name3', description: 'Description3' },
+    ],
+    [],
+  );
+
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      emptyTableContent='No data.'
+      isManageable={true}
+      {...args}
+    />
+  );
+};
+
+ColumnManager.args = { isManageable: true };
