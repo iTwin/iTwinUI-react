@@ -1,5 +1,9 @@
-jobs:
+name: Publish dev version
 
+on:
+  workflow_dispatch:
+  
+jobs:
   publish:
     name: Publish npm package
     runs-on: ubuntu-latest
