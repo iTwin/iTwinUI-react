@@ -9,10 +9,7 @@ import { Wizard } from './Wizard';
 describe('<Wizard />', () => {
   afterEach(() => {
     // cleanup tippy after every test, so it does not stay in the dom
-    const tippy = document.querySelector('[data-tippy-root]') as HTMLElement;
-    if (!!tippy) {
-      tippy.remove();
-    }
+    document.querySelector('[data-tippy-root]')?.remove();
   });
 
   it('should render all step names and numbers in default wizard', () => {

@@ -61,7 +61,7 @@ export const Popover = React.forwardRef((props: PopoverProps, ref) => {
   const computedProps: Partial<TippyProps> = {
     allowHTML: true,
     animation: false,
-    appendTo: (ref) => ref.ownerDocument.body,
+    appendTo: (el) => el.ownerDocument.body,
     arrow: false,
     duration: 0,
     interactive: true,
