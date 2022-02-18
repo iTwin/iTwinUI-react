@@ -258,3 +258,6 @@ export {
   MiddleTextTruncation,
 } from './utils';
 export type { ThemeType, MiddleTextTruncationProps } from './utils';
+
+export { Carousel } from './Carousel';
+export type { CarouselProps } from './Carousel';
