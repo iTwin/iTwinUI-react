@@ -7,6 +7,7 @@ import { action } from '@storybook/addon-actions';
 import React from 'react';
 import { ComboBox, ComboBoxProps, Label, SelectOption } from '../../src/core';
 import { CreeveyStoryParams } from 'creevey';
+import { SvgCamera } from '@itwin/itwinui-icons-react';
 
 export default {
   component: ComboBox,
@@ -404,4 +405,25 @@ export const WithStatus: Story<Partial<ComboBoxProps<string>>> = (args) => {
 WithStatus.args = {
   inputProps: { placeholder: 'Select a country' },
   status: 'negative',
+};
+
+export const WithMessage: Story<Partial<ComboBoxProps<string>>> = (args) => {
+  const options = React.useMemo(() => countriesList, []);
+
+  return (
+    <ComboBox
+      options={options}
+      message='This is a message'
+      icon={<SvgCamera />}
+      inputProps={{ placeholder: 'Select a country' }}
+      onChange={(value: string) => action(value ?? '')()}
+      status='negative'
+      {...args}
+    />
+  );
+};
+WithMessage.args = {
+  inputProps: { placeholder: 'Select a country' },
+  status: 'negative',
+  message: 'This is a message',
 };

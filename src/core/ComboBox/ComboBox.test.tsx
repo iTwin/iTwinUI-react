@@ -25,7 +25,6 @@ const assertBaseElement = (container: HTMLElement) => {
   const rootElement = container.querySelector(
     '.iui-input-container',
   ) as HTMLDivElement;
-  expect(rootElement).toHaveClass('iui-inline-icon');
 
   const input = rootElement.querySelector('.iui-input') as HTMLInputElement;
   expect(input).toHaveAttribute('role', 'combobox');
@@ -305,4 +304,30 @@ it('should accept status prop', () => {
   expect(container.querySelector('.iui-input-container')).toHaveClass(
     'iui-negative',
   );
+});
+
+it('should render with message', () => {
+  const { container } = renderComponent({
+    message: <div className='my-message'>Message</div>,
+  });
+  assertBaseElement(container);
+  const message = container.querySelector(
+    '.iui-message > .my-message',
+  ) as HTMLElement;
+  expect(message).toBeTruthy();
+  expect(message.textContent).toBe('Message');
+});
+
+it('should render with custom icon', () => {
+  const { container } = renderComponent({
+    icon: <svg className='my-icon' />,
+    status: 'negative',
+    message: 'This is test mesage',
+  });
+
+  const inputContainer = container.querySelector(
+    '.iui-input-container',
+  ) as HTMLElement;
+  assertBaseElement(container);
+  expect(inputContainer.querySelector('.iui-input-icon.my-icon')).toBeTruthy();
 });

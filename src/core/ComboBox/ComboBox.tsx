@@ -17,6 +17,7 @@ import {
   getFocusableElements,
   getRandomValue,
   InputContainerProps,
+  StatusIconMap,
 } from '../utils';
 import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
 import 'tippy.js/animations/shift-away.css';
@@ -55,6 +56,8 @@ export type ComboBoxProps<T> = {
    */
   emptyStateMessage?: string;
 } & Pick<InputContainerProps, 'status'> &
+  Pick<InputContainerProps, 'icon'> &
+  Pick<InputContainerProps, 'message'> &
   Omit<CommonProps, 'title'>;
 
 /**
@@ -79,6 +82,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     className,
     inputProps,
     dropdownMenuProps,
+    message,
+    status,
     emptyStateMessage = 'No options found',
     ...rest
   } = props;
@@ -304,8 +309,22 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     memoizedItems,
   ]);
 
+  const statusIcon =
+    props.icon ?? (status && message && StatusIconMap[status]());
+
   return (
-    <InputContainer className={className} isIconInline={true} {...rest} id={id}>
+    <InputContainer
+      className={className}
+      message={message}
+      status={status}
+      icon={
+        statusIcon
+          ? React.cloneElement(statusIcon, { 'aria-hidden': true })
+          : undefined
+      }
+      {...rest}
+      id={id}
+    >
       <div className='iui-input-with-icon'>
         <Popover
           placement='bottom-start'
