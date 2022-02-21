@@ -147,7 +147,7 @@ export const Tree = <T,>(props: TreeProps<T>) => {
   const focusedIndex = React.useRef<number>(0);
   React.useEffect(() => {
     focusedIndex.current = 0;
-  }, [data, getNode]);
+  }, [data]);
 
   const getFocusableNodes = React.useCallback(() => {
     const focusableItems = getFocusableElements(treeRef.current);
