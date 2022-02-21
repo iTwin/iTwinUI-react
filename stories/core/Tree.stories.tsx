@@ -245,7 +245,7 @@ export const AsyncLoading: Story<TreeProps<unknown>> = () => {
     label: string;
     subItems: StoryData[];
     hasSubNodes?: boolean;
-    isSkeleton?: boolean;
+    isLoading?: boolean;
   };
 
   const generateItem = React.useCallback((index: number): StoryData => {
@@ -327,7 +327,7 @@ export const AsyncLoading: Story<TreeProps<unknown>> = () => {
                   id: `Async-${node.id}`,
                   label: '',
                   subItems: [],
-                  isSkeleton: true,
+                  isLoading: true,
                 },
               ]
             : node.subItems,
@@ -348,19 +348,19 @@ export const AsyncLoading: Story<TreeProps<unknown>> = () => {
       nodeRenderer={React.useCallback(
         ({ node, ...rest }) => (
           <TreeNode
-            label={
-              node.isSkeleton ? (
-                <ProgressRadial size='x-small' indeterminate />
-              ) : (
-                node.label
-              )
-            }
+            label={node.isLoading ? 'Loading...' : node.label}
             onExpanded={(nodeId, isExpanded) =>
               onNodeExpanded(nodeId, isExpanded, node)
             }
             onSelected={onSelectedNodeChange}
             checkbox={<Checkbox variant='eyeball' disabled={rest.isDisabled} />}
-            icon={<SvgPlaceholder />}
+            icon={
+              node.isLoading ? (
+                <ProgressRadial size='x-small' indeterminate />
+              ) : (
+                <SvgPlaceholder />
+              )
+            }
             {...rest}
           />
         ),
