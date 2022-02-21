@@ -6,7 +6,7 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 
 import { TreeNode, TreeNodeProps } from './TreeNode';
-import { TreeContext, TreeContextProps } from './Tree';
+import { TreeContextProps, TreeContext } from './TreeContext';
 import { Checkbox } from '../Checkbox';
 import { SvgPlaceholder } from '@itwin/itwinui-icons-react/cjs/icons';
 

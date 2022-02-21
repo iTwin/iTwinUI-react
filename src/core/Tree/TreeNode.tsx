@@ -6,8 +6,8 @@ import React from 'react';
 import { CommonProps, getWindow, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/tree.css';
 import cx from 'classnames';
-import { TreeContext } from './Tree';
 import { TreeNodeExpander } from './TreeNodeExpander';
+import { useTreeContext } from './TreeContext';
 
 export type TreeNodeProps = {
   /**
@@ -113,12 +113,13 @@ export const TreeNode = (props: TreeNodeProps) => {
   } = props;
   useTheme();
 
-  const context = React.useContext(TreeContext);
-  const nodeDepth = context?.nodeDepth ?? 0;
-  const subNodeIds = context?.subNodeIds ?? [];
-  const parentNodeId = context?.parentNodeId;
-  const groupSize = context?.groupSize ?? 0;
-  const indexInGroup = context?.indexInGroup ?? 0;
+  const {
+    nodeDepth,
+    subNodeIds = [],
+    parentNodeId,
+    groupSize,
+    indexInGroup,
+  } = useTreeContext();
 
   const [isFocused, setIsFocused] = React.useState(false);
   const nodeRef = React.useRef<HTMLLIElement>(null);
@@ -187,6 +188,7 @@ export const TreeNode = (props: TreeNodeProps) => {
   return (
     <li
       role='treeitem'
+      className='iui-tree-item'
       id={nodeId}
       aria-expanded={hasSubNodes ? isExpanded : undefined}
       aria-disabled={isDisabled}

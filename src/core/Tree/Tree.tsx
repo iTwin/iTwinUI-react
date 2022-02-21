@@ -6,18 +6,7 @@ import React from 'react';
 import { CommonProps, useTheme, getFocusableElements } from '../utils';
 import '@itwin/itwinui-css/css/tree.css';
 import cx from 'classnames';
-
-export type TreeContextProps = {
-  nodeDepth: number;
-  subNodeIds?: string[];
-  parentNodeId?: string;
-  groupSize: number;
-  indexInGroup: number;
-};
-
-export const TreeContext = React.createContext<TreeContextProps | undefined>(
-  undefined,
-);
+import { TreeContext } from './TreeContext';
 
 export type NodeData<T> = {
   /**
@@ -63,7 +52,17 @@ export type NodeRenderProps<T> = Omit<NodeData<T>, 'subNodes'>;
 
 export type TreeProps<T> = {
   /**
-   * Custom renderer for items inside tree, recommended to use `TreeNode` component.
+   * Render function that should return the node element.
+   * Recommended to use `TreeNode` component.
+   * Must be memoized.
+   * @example
+   * const nodeRenderer = React.useCallback(({ node, ...rest }: NodeRenderProps<DataType>) => (
+   *   <TreeNode
+   *     label={node.label}
+   *     onNodeExpanded={onNodeExpanded}
+   *     {...rest}
+   *   />
+   * ), [onNodeExpanded])
    */
   nodeRenderer: (props: NodeRenderProps<T>) => JSX.Element;
   /**
@@ -71,7 +70,19 @@ export type TreeProps<T> = {
    */
   data: T[];
   /**
-   * Function to map custom type `T` to `NodeData`, which will be used to render a tree node in `nodeRenderer`.
+   * Function that maps your `data` entry to `NodeData` that has all info about the node state.
+   * It will be used to render a tree node in `nodeRenderer`.
+   * Must be memoized.
+   * @example
+   * const getNode = React.useCallback((node: DemoData): NodeData<DemoData> => {
+   *   return {
+   *     subNodes: node.subItems,
+   *     nodeId: node.id,
+   *     node,
+   *     isExpanded: expandedNodes[node.id],
+   *     hasSubNodes: node.subItems.length > 0,
+   *   };
+   * }, [expandedNodes]);
    */
   getNode: (node: T) => NodeData<T>;
 } & Omit<CommonProps, 'title'>;
@@ -108,7 +119,7 @@ export type TreeProps<T> = {
     return {
       subNodes: node.subItems,
       nodeId: node.id,
-      node: node,
+      node,
       isExpanded: expandedNodes[node.id],
       hasSubNodes: node.subItems.length > 0,
     };
@@ -117,13 +128,13 @@ export type TreeProps<T> = {
   <Tree<DemoData>
     data={data}
     getNode={getNode}
-    nodeRenderer={({ node, ...rest }) => (
+    nodeRenderer={React.useCallback(({ node, ...rest }) => (
       <TreeNode
         label={node.label}
         onNodeExpanded={onNodeExpanded}
         {...rest}
       />
-    )}
+    ), [onNodeExpanded])}
   />
  */
 
@@ -220,7 +231,6 @@ export const Tree = <T,>(props: TreeProps<T>) => {
       onKeyDown={handleKeyDown}
       ref={treeRef}
       tabIndex={0}
-      style={{ outline: 0 }}
       onFocus={() => {
         const items = getFocusableNodes();
         if (items.length > 0) {
