@@ -55,9 +55,7 @@ export type ComboBoxProps<T> = {
    * @default 'No options found'
    */
   emptyStateMessage?: string;
-} & Pick<InputContainerProps, 'status'> &
-  Pick<InputContainerProps, 'icon'> &
-  Pick<InputContainerProps, 'message'> &
+} & Pick<InputContainerProps, 'status' | 'icon' | 'message'> &
   Omit<CommonProps, 'title'>;
 
 /**
