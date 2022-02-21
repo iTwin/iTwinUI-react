@@ -103,7 +103,6 @@ export const TreeNode = (props: TreeNodeProps) => {
     label,
     sublabel,
     children,
-    style,
     className,
     icon,
     hasSubNodes = false,
@@ -132,9 +131,9 @@ export const TreeNode = (props: TreeNodeProps) => {
   const styleDepth = React.useMemo(
     () =>
       getWindow()?.CSS?.supports?.(`--level: ${nodeDepth}`)
-        ? { '--level': nodeDepth, ...style }
-        : { marginLeft: nodeDepth ? nodeDepth * 28 : 0, ...style },
-    [nodeDepth, style],
+        ? { '--level': nodeDepth }
+        : { marginLeft: nodeDepth ? nodeDepth * 28 : 0 },
+    [nodeDepth],
   );
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLLIElement>) => {
@@ -227,7 +226,7 @@ export const TreeNode = (props: TreeNodeProps) => {
   return (
     <li
       role='treeitem'
-      className='iui-tree-item'
+      className={cx('iui-tree-item', className)}
       id={nodeId}
       aria-expanded={hasSubNodes ? isExpanded : undefined}
       aria-disabled={isDisabled}
@@ -250,14 +249,10 @@ export const TreeNode = (props: TreeNodeProps) => {
     >
       {
         <div
-          className={cx(
-            'iui-tree-node',
-            {
-              'iui-active': isSelected,
-              'iui-disabled': isDisabled,
-            },
-            className,
-          )}
+          className={cx('iui-tree-node', {
+            'iui-active': isSelected,
+            'iui-disabled': isDisabled,
+          })}
           style={styleDepth}
           onClick={() => !isDisabled && onSelected?.(nodeId, !isSelected)}
         >

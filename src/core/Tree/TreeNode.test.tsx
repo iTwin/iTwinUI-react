@@ -65,11 +65,11 @@ it('should add className and style correctly', () => {
     props: { className: 'test-class', style: { width: '100px' } },
   });
 
-  const treeNode = container.querySelector(
-    '.iui-tree-node.test-class',
+  const treeItem = container.querySelector(
+    '.iui-tree-item.test-class',
   ) as HTMLElement;
-  expect(treeNode).toBeTruthy();
-  expect(treeNode.style.width).toBe('100px');
+  expect(treeItem).toBeTruthy();
+  expect(treeItem.style.width).toBe('100px');
 });
 
 it('should render node with correct depth', () => {
