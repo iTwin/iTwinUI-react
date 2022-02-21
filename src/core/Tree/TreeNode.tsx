@@ -3,7 +3,12 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { CommonProps, getWindow, useTheme } from '../utils';
+import {
+  CommonProps,
+  getFocusableElements,
+  getWindow,
+  useTheme,
+} from '../utils';
 import '@itwin/itwinui-css/css/tree.css';
 import cx from 'classnames';
 import { TreeNodeExpander } from './TreeNodeExpander';
@@ -133,20 +138,52 @@ export const TreeNode = (props: TreeNodeProps) => {
   );
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLLIElement>) => {
+    const isNodeFocused =
+      nodeRef.current === nodeRef.current?.ownerDocument.activeElement;
     switch (event.key) {
-      case 'ArrowLeft':
+      case 'ArrowLeft': {
         event.preventDefault();
-        if (isExpanded) {
+        if (isExpanded && isNodeFocused) {
           onExpanded(nodeId, false);
-        } else if (parentNodeId) {
+          break;
+        }
+
+        if (parentNodeId && isNodeFocused) {
           const parentNode = nodeRef.current?.ownerDocument.querySelector(
             `#${parentNodeId}`,
           ) as HTMLElement;
           parentNode?.focus();
+          break;
+        }
+
+        const focusableElements = getFocusableElements(nodeRef.current);
+        const currentIndex = focusableElements.indexOf(
+          nodeRef.current?.ownerDocument.activeElement as HTMLElement,
+        );
+        if (currentIndex === 0) {
+          nodeRef.current?.focus();
+          break;
+        } else {
+          (focusableElements[currentIndex - 1] as HTMLElement).focus();
         }
         break;
-      case 'ArrowRight':
+      }
+      case 'ArrowRight': {
         event.preventDefault();
+        const focusableElements = getFocusableElements(nodeRef.current);
+        if (isNodeFocused) {
+          (focusableElements[0] as HTMLElement).focus();
+          break;
+        }
+
+        const currentIndex = focusableElements.indexOf(
+          nodeRef.current?.ownerDocument.activeElement as HTMLElement,
+        );
+        if (currentIndex < focusableElements.length - 1) {
+          (focusableElements[currentIndex + 1] as HTMLElement).focus();
+          break;
+        }
+
         if (!isExpanded && hasSubNodes) {
           onExpanded(nodeId, true);
         } else if (subNodeIds.length > 0) {
@@ -160,9 +197,10 @@ export const TreeNode = (props: TreeNodeProps) => {
           subNodes[0]?.focus();
         }
         break;
+      }
       case ' ':
       case 'Spacebar':
-      case 'Enter':
+      case 'Enter': {
         // Ignore if it is called on the element inside, e.g. checkbox or expander
         if (event.target !== nodeRef.current) {
           break;
@@ -172,6 +210,7 @@ export const TreeNode = (props: TreeNodeProps) => {
           onSelected?.(nodeId, !isSelected);
         }
         break;
+      }
       default:
         break;
     }

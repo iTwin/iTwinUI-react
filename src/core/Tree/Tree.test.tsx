@@ -221,9 +221,23 @@ it('should handle arrow key navigation', () => {
     ),
   ).toEqual(['Node-3-1', 'Node-3-1-1']);
 
+  // Go Right: Focus checkbox
+  userEvent.keyboard('{ArrowRight}');
+  expect((document.activeElement as HTMLInputElement)?.type).toBe('checkbox');
+
+  // Go Right: Focus expander button
+  userEvent.keyboard('{ArrowRight}');
+  expect((document.activeElement as HTMLButtonElement)?.type).toContain(
+    'button',
+  );
+
   // Go Right: Node-3-1 -> Node-3-1-2 (skip disabled sub-node)
   userEvent.keyboard('{ArrowRight}');
   expect(document.activeElement?.id).toBe('Node-3-1-2');
+
+  // Go to last focusable element
+  userEvent.keyboard('{ArrowRight}');
+  userEvent.keyboard('{ArrowRight}');
 
   // Go Right: Expand Node-3-1-1
   userEvent.keyboard('{ArrowRight}');
@@ -248,19 +262,24 @@ it('should handle arrow key navigation', () => {
   // Go Up: Node-3-1 -> Node-3
   userEvent.keyboard('{ArrowUp}');
 
-  // Press Enter: Deselect Node-3-1
+  // Press Enter: Deselect Node-3
   userEvent.keyboard('{Enter}');
   expect(onNodeSelected).toHaveBeenNthCalledWith(2, 'Node-3', false);
 
-  // Tab into checkbox
-  userEvent.tab();
-  expect((document.activeElement as HTMLInputElement)?.type).toBe('checkbox');
-
-  // Tab into expander
-  userEvent.tab();
+  // Go to last focusable element - expander button
+  userEvent.keyboard('{ArrowRight}');
+  userEvent.keyboard('{ArrowRight}');
   expect((document.activeElement as HTMLButtonElement)?.type).toContain(
     'button',
   );
+
+  // Go Left: Focus checkbox
+  userEvent.keyboard('{ArrowLeft}');
+  expect((document.activeElement as HTMLInputElement)?.type).toBe('checkbox');
+
+  // Go Left: Focus Node-3
+  userEvent.keyboard('{ArrowLeft}');
+  expect(document.activeElement?.id).toBe('Node-3');
 });
 
 it('should set correct computed aria attributes to nodes', () => {
