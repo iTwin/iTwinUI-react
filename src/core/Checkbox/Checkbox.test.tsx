@@ -2,7 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { Checkbox } from './Checkbox';
@@ -219,7 +220,7 @@ it.each(['', 'not'] as const)(
     const checkboxComponent = container.querySelector(
       '.my-checkbox',
     ) as HTMLElement;
-    fireEvent.click(checkboxComponent);
+    userEvent.click(checkboxComponent);
 
     expect(checkboxOnChange).toBeCalled();
     if (labelPresent) {
