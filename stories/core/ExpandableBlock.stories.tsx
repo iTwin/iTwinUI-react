@@ -143,13 +143,13 @@ Small.args = {
 
 export const Borderless: Story<Partial<ExpandableBlockProps>> = (args) => {
   return (
-    <ExpandableBlock title='Borderless Block' isBorderless={true} {...args}>
+    <ExpandableBlock title='Basic Block' isBorderless={true} {...args}>
       {args.children}
     </ExpandableBlock>
   );
 };
 
 Borderless.args = {
-  title: 'Borderless Block',
-  isBorderless: 'true',
+  title: 'Basic Block',
+  isBorderless: true,
 };
