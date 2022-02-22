@@ -140,16 +140,3 @@ Small.args = {
   title: 'Basic Block',
   size: 'small',
 };
-
-export const Borderless: Story<Partial<ExpandableBlockProps>> = (args) => {
-  return (
-    <ExpandableBlock title='Basic Block' isBorderless={true} {...args}>
-      {args.children}
-    </ExpandableBlock>
-  );
-};
-
-Borderless.args = {
-  title: 'Basic Block',
-  isBorderless: true,
-};
