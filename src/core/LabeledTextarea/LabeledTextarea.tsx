@@ -76,7 +76,17 @@ export const LabeledTextarea = React.forwardRef<
 
   useTheme();
 
-  const icon = svgIcon ?? (status && StatusIconMap[status]());
+  const icon = () => {
+    if (svgIcon) {
+      return React.cloneElement(svgIcon, { 'aria-hidden': true });
+    }
+    if (status && message) {
+      return React.cloneElement(StatusIconMap[status](), {
+        'aria-hidden': true,
+      });
+    }
+    return undefined;
+  };
 
   return (
     <InputContainer
@@ -86,7 +96,7 @@ export const LabeledTextarea = React.forwardRef<
       required={required}
       status={status}
       message={message}
-      icon={icon}
+      icon={icon()}
       isLabelInline={displayStyle === 'inline'}
       isIconInline={iconDisplayStyle === 'inline'}
       className={className}
