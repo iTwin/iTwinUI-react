@@ -325,7 +325,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       className={className}
       message={message}
       status={status}
-      icon={statusIcon() ?? undefined}
+      icon={statusIcon()}
       {...rest}
       id={id}
     >

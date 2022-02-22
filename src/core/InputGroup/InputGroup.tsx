@@ -94,7 +94,7 @@ export const InputGroup = (props: InputGroupProps) => {
       required={required}
       status={status}
       message={message}
-      icon={icon() ?? undefined}
+      icon={icon()}
       isLabelInline={displayStyle === 'inline'}
       className={className}
       style={style}
