@@ -81,17 +81,7 @@ export const LabeledInput = React.forwardRef<
 
   useTheme();
 
-  const icon = () => {
-    if (svgIcon) {
-      return React.cloneElement(svgIcon, { 'aria-hidden': true });
-    }
-    if (status && message) {
-      return React.cloneElement(StatusIconMap[status](), {
-        'aria-hidden': true,
-      });
-    }
-    return undefined;
-  };
+  const icon = svgIcon ?? (status && StatusIconMap[status]());
 
   return (
     <InputContainer
@@ -101,7 +91,7 @@ export const LabeledInput = React.forwardRef<
       required={required}
       status={status}
       message={message}
-      icon={icon()}
+      icon={icon}
       isLabelInline={displayStyle === 'inline'}
       isIconInline={iconDisplayStyle === 'inline'}
       className={className}
