@@ -433,6 +433,7 @@ export const WithCustomMessageIcon: Story<Partial<ComboBoxProps<string>>> = (
   return (
     <ComboBox
       options={options}
+      message='This is a message'
       icon={<SvgCamera />}
       inputProps={{ placeholder: 'Select a country' }}
       onChange={(value: string) => action(value ?? '')()}
@@ -442,5 +443,6 @@ export const WithCustomMessageIcon: Story<Partial<ComboBoxProps<string>>> = (
 };
 WithCustomMessageIcon.args = {
   inputProps: { placeholder: 'Select a country' },
+  message: 'This is a message',
   icon: <SvgCamera />,
 };
