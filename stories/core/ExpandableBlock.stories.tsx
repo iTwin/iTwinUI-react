@@ -111,6 +111,7 @@ export const Accordion: Story<Partial<ExpandableBlockProps>> = (args) => {
 Accordion.argTypes = {
   title: { control: { disable: true } },
   isExpanded: { control: { disable: true } },
+  isBorderless: { control: { disable: true } },
   onToggle: { control: { disable: true } },
 };
 
