@@ -435,7 +435,7 @@ export const CustomRenderer: Story<Partial<ComboBoxProps<string>>> = (args) => {
       </MenuItem>
     ),
     [],
-  );
+  ) as NonNullable<ComboBoxProps<string>['itemRenderer']>;
 
   return (
     <ComboBox
