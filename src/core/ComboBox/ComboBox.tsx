@@ -82,6 +82,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     dropdownMenuProps,
     message,
     status,
+    icon,
     emptyStateMessage = 'No options found',
     ...rest
   } = props;
@@ -307,8 +308,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     memoizedItems,
   ]);
 
-  const statusIcon =
-    props.icon ?? (status && message && StatusIconMap[status]());
+  const statusIcon = icon ?? (status && message && StatusIconMap[status]());
 
   return (
     <InputContainer

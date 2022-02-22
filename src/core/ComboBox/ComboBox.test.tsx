@@ -321,8 +321,6 @@ it('should render with message', () => {
 it('should render with custom icon', () => {
   const { container } = renderComponent({
     icon: <svg className='my-icon' />,
-    status: 'negative',
-    message: 'This is test mesage',
   });
 
   const inputContainer = container.querySelector(
