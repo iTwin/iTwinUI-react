@@ -100,6 +100,7 @@ export const Accordion: Story<Partial<ExpandableBlockProps>> = (args) => {
           isExpanded={openedBlock === index}
           onToggle={(isExpanding) => toggleHandler(isExpanding, index)}
           caption={args.caption}
+          {...args}
         >
           {args.children}
         </ExpandableBlock>
@@ -111,7 +112,6 @@ export const Accordion: Story<Partial<ExpandableBlockProps>> = (args) => {
 Accordion.argTypes = {
   title: { control: { disable: true } },
   isExpanded: { control: { disable: true } },
-  isBorderless: { control: { disable: true } },
   onToggle: { control: { disable: true } },
 };
 
@@ -144,7 +144,7 @@ Small.args = {
 
 export const Borderless: Story<Partial<ExpandableBlockProps>> = (args) => {
   return (
-    <ExpandableBlock title='Basic Block' isBorderless={true} {...args}>
+    <ExpandableBlock title='Basic Block' styleType='borderless' {...args}>
       {args.children}
     </ExpandableBlock>
   );
@@ -152,5 +152,5 @@ export const Borderless: Story<Partial<ExpandableBlockProps>> = (args) => {
 
 Borderless.args = {
   title: 'Basic Block',
-  isBorderless: true,
+  styleType: 'borderless',
 };

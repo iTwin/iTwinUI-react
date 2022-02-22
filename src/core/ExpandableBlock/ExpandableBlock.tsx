@@ -52,10 +52,11 @@ export type ExpandableBlockProps = {
    */
   size?: 'default' | 'small';
   /**
-   * Whether or not the block is borderless.
-   * @default false
+   * Style of the ExpandableBlock.
+   * Use 'borderless' to hide outline.
+   * @default 'default'
    */
-  isBorderless?: boolean;
+  styleType?: 'default' | 'borderless';
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -79,7 +80,7 @@ export const ExpandableBlock = (props: ExpandableBlockProps) => {
     endIcon,
     status,
     size = 'default',
-    isBorderless = false,
+    styleType = 'default',
     ...rest
   } = props;
 
@@ -115,7 +116,7 @@ export const ExpandableBlock = (props: ExpandableBlockProps) => {
           'iui-with-caption': !!caption,
           'iui-expanded': expanded,
           'iui-small': size === 'small',
-          'iui-borderless': isBorderless,
+          'iui-borderless': styleType === 'borderless',
         },
         className,
       )}
