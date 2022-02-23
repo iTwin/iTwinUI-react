@@ -32,6 +32,14 @@ export type ComboBoxProps<T> = {
    */
   value?: T;
   /**
+   * Message below the select.
+   */
+  message?: React.ReactNode;
+  /**
+   * Custom svg icon. Will override status icon if specified.
+   */
+  icon?: JSX.Element;
+  /**
    * Callback fired when selected value changes.
    */
   onChange?: (value: T) => void;
@@ -55,7 +63,7 @@ export type ComboBoxProps<T> = {
    * @default 'No options found'
    */
   emptyStateMessage?: string;
-} & Pick<InputContainerProps, 'status' | 'icon' | 'message'> &
+} & Pick<InputContainerProps, 'status'> &
   Omit<CommonProps, 'title'>;
 
 /**
