@@ -196,9 +196,15 @@ it('should handle arrow key navigation', () => {
 
   fireEvent.focus(tree);
 
-  // Stay on the first node
+  // Go Up: Stay on the first node
   userEvent.keyboard('{ArrowUp}');
   expect(document.activeElement?.id).toBe('Node-1');
+
+  // Go Left: Do nothing
+  userEvent.keyboard('{ArrowUp}');
+  expect(document.activeElement?.id).toBe('Node-1');
+  expect(onNodeExpanded).not.toHaveBeenCalled();
+  expect(onNodeSelected).not.toHaveBeenCalled();
 
   // Go Down: Node-1 -> Node-3 (skip disabled node)
   userEvent.keyboard('{ArrowDown}');
@@ -235,15 +241,11 @@ it('should handle arrow key navigation', () => {
   userEvent.keyboard('{ArrowRight}');
   expect(document.activeElement?.id).toBe('Node-3-1-2');
 
-  // Go to last focusable element
-  userEvent.keyboard('{ArrowRight}');
-  userEvent.keyboard('{ArrowRight}');
-
   // Go Right: Expand Node-3-1-1
   userEvent.keyboard('{ArrowRight}');
   expect(onNodeExpanded).toHaveBeenNthCalledWith(1, 'Node-3-1-2', true);
 
-  // Stay on the last node
+  // Go Down: Stay on the last node
   userEvent.keyboard('{ArrowDown}');
   expect(document.activeElement?.id).toBe('Node-3-1-2');
 
@@ -266,7 +268,7 @@ it('should handle arrow key navigation', () => {
   userEvent.keyboard('{Enter}');
   expect(onNodeSelected).toHaveBeenNthCalledWith(2, 'Node-3', false);
 
-  // Go to last focusable element - expander button
+  // Go to last focusable element inside node - expander button
   userEvent.keyboard('{ArrowRight}');
   userEvent.keyboard('{ArrowRight}');
   expect((document.activeElement as HTMLButtonElement)?.type).toContain(

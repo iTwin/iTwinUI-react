@@ -10,7 +10,7 @@ export type TreeContextProps = {
    */
   nodeDepth: number;
   /**
-   * List of sub-node IDsy. Used for an accessibility attribute and keyboard navigation.
+   * List of sub-node IDs. Used for an accessibility attribute and keyboard navigation.
    */
   subNodeIds?: string[];
   /**

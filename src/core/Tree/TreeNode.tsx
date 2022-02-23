@@ -142,16 +142,19 @@ export const TreeNode = (props: TreeNodeProps) => {
     switch (event.key) {
       case 'ArrowLeft': {
         event.preventDefault();
-        if (isExpanded && isNodeFocused) {
-          onExpanded(nodeId, false);
-          break;
-        }
-
-        if (parentNodeId && isNodeFocused) {
-          const parentNode = nodeRef.current?.ownerDocument.querySelector(
-            `#${parentNodeId}`,
-          ) as HTMLElement;
-          parentNode?.focus();
+        if (isNodeFocused) {
+          if (isExpanded) {
+            onExpanded(nodeId, false);
+            break;
+          }
+          if (parentNodeId) {
+            const parentNode = nodeRef.current?.ownerDocument.querySelector(
+              `#${parentNodeId}`,
+            ) as HTMLElement;
+            parentNode?.focus();
+            break;
+          }
+          // If it is top level node (doesn't have parent node), then do nothing.
           break;
         }
 
@@ -161,9 +164,8 @@ export const TreeNode = (props: TreeNodeProps) => {
         );
         if (currentIndex === 0) {
           nodeRef.current?.focus();
-          break;
         } else {
-          (focusableElements[currentIndex - 1] as HTMLElement).focus();
+          (focusableElements[currentIndex - 1] as HTMLElement)?.focus();
         }
         break;
       }
@@ -171,7 +173,11 @@ export const TreeNode = (props: TreeNodeProps) => {
         event.preventDefault();
         const focusableElements = getFocusableElements(nodeRef.current);
         if (isNodeFocused) {
-          (focusableElements[0] as HTMLElement).focus();
+          if (!isExpanded && hasSubNodes) {
+            onExpanded(nodeId, true);
+            break;
+          }
+          (focusableElements[0] as HTMLElement)?.focus();
           break;
         }
 
@@ -183,9 +189,7 @@ export const TreeNode = (props: TreeNodeProps) => {
           break;
         }
 
-        if (!isExpanded && hasSubNodes) {
-          onExpanded(nodeId, true);
-        } else if (subNodeIds.length > 0) {
+        if (subNodeIds.length > 0) {
           const subNodes = Array.from(
             nodeRef.current?.ownerDocument.querySelectorAll(
               `${subNodeIds.map((id) => `#${id}`).join(',')}`,
