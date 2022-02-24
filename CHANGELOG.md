@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.31.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.30.0...v1.31.0) (2022-02-15)
+
+### What's new
+
+* **Select:** Now uses an svg for the arrow to match ComboBox ([#540](https://www.github.com/iTwin/iTwinUI-react/issues/540)) ([c0ad092](https://www.github.com/iTwin/iTwinUI-react/commit/c0ad0921f859130f4cc866999ba2d31187b192ac))
+
+### Fixes
+
+* **ButtonGroup:** Fixed z-index handling through base CSS package.
+* **Popover:** Fixed popover not hiding when target is scrolled off screen.
+
+## [1.30.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.29.3...v1.30.0) (2022-02-08)
+
+### What's new
+
+* **ButtonGroup:** Add new `overflowPlacement` prop to allow placing `overflowButton` at start ([#527](https://www.github.com/iTwin/iTwinUI-react/issues/527)) ([442ba87](https://www.github.com/iTwin/iTwinUI-react/commit/442ba87f8ba45240f07e8cacd9463cd95e5ec1e7))
+* **Table:** Added new `enableVirtualization` prop for row virtualization ([#236](https://www.github.com/iTwin/iTwinUI-react/issues/236)) ([178bb75](https://www.github.com/iTwin/iTwinUI-react/commit/178bb756bf14fd0f780433ca33ea2a151d4c1436))
+
+### Fixes
+
+* **Popover:** Prevent from adding 5px padding ([#534](https://www.github.com/iTwin/iTwinUI-react/issues/534)) ([fea4782](https://www.github.com/iTwin/iTwinUI-react/commit/fea47823ae730b3e9b2bab2e2ec75b1ba8101b27))
+* **Slider:** Handle pointermove events only when thumb is active ([#528](https://www.github.com/iTwin/iTwinUI-react/issues/528)) ([e41b53b](https://www.github.com/iTwin/iTwinUI-react/commit/e41b53b7ccda245f298bb33c6984f2431d917932))
+
 ### [1.29.3](https://www.github.com/iTwin/iTwinUI-react/compare/v1.29.2...v1.29.3) (2022-01-26)
 
 ### Fixes

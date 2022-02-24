@@ -4,10 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React from 'react';
+import cx from 'classnames';
 import Tippy, { TippyProps } from '@tippyjs/react';
-import { Placement, Instance } from 'tippy.js';
+import type { Placement, Instance } from 'tippy.js';
 import { useMergedRefs } from '../hooks/useMergedRefs';
 export type PopoverInstance = Instance;
+import '@itwin/itwinui-css/css/popover.css';
 
 export type PopoverProps = {
   /**
@@ -36,7 +38,7 @@ export type PopoverProps = {
 export const Popover = React.forwardRef((props: PopoverProps, ref) => {
   const [mounted, setMounted] = React.useState(false);
 
-  const tippyRef = React.useRef(null);
+  const tippyRef = React.useRef<Element>(null);
   const refs = useMergedRefs(tippyRef, ref);
 
   // Plugin to allow lazy mounting. See https://github.com/atomiks/tippyjs-react#lazy-mounting
@@ -59,24 +61,31 @@ export const Popover = React.forwardRef((props: PopoverProps, ref) => {
   const computedProps: Partial<TippyProps> = {
     allowHTML: true,
     animation: false,
-    appendTo: 'parent',
+    appendTo: (el) => el.ownerDocument.body,
     arrow: false,
     duration: 0,
     interactive: true,
-    popperOptions: {
-      strategy: 'fixed',
-      modifiers: [{ name: 'flip' }],
-    },
     role: undefined,
     offset: [0, 0],
     maxWidth: '',
+    zIndex: 99999,
     ...props,
+    className: cx('iui-popover', props.className),
     plugins: [
       lazyLoad,
       removeTabIndex,
       hideOnEscOrTab,
       ...(props.plugins || []),
     ],
+    popperOptions: {
+      strategy: 'fixed',
+      ...props.popperOptions,
+      modifiers: [
+        { name: 'flip' },
+        { name: 'preventOverflow', options: { padding: 0 } },
+        ...(props.popperOptions?.modifiers || []),
+      ],
+    },
   };
 
   if (props.render) {
