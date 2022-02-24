@@ -19,20 +19,8 @@ export type TitleTranslations = {
 export type FooterProps = {
   /**
    * Customize footer elements.
-   * Providing an array of FooterElements will append the custom elements to the end of the default elements.
-   * Providing a function that returns an array of FooterElements allows further customization - whatever is returned from the function is displayed in the footer with no amendments.
-   * @example Returning only custom elements
-   * ```
-   * <Footer customElements={() => newFooterElements)} />
-   * ```
-   * @example Filtering out a specific element
-   * ```
-   * <Footer customElements={(defaultElements: FooterElement[]) => defaultElements.filter(({ key }) => key !== 'privacy' )} />
-   * ```
-   * @example Changing a url
-   * ```
-   * <Footer customElements={(defaultElements: FooterElement[]) => defaultElements.map(element => ({ ...element, url: element.key === 'privacy' ? customPrivacyUrl : element.url }))} />
-   * ```
+   * Providing a `FooterElement[]` will append the custom elements to the end of the default elements.
+   * Providing a function that returns a `FooterElement[]` allows further customization - whatever is returned from the function is displayed in the footer with no amendments.
    */
   customElements?:
     | FooterElement[]
@@ -71,8 +59,22 @@ const footerTranslations: TitleTranslations = {
  * Footer element with all needed legal and info links.
  * Be sure to place it manually at the bottom of your page.
  * You can use position 'absolute' with relative body or set the height of the content and place footer at the end.
- * @example
+ * @example Appending custom element after default elements
+ * ```
  * <Footer customElements={[{title: 'Bentley', url: 'https://www.bentley.com/'}]} />
+ * ```
+ * @example Returning only custom elements
+ * ```
+ * <Footer customElements={() => newFooterElements)} />
+ * ```
+ * @example Filtering out a specific element
+ * ```
+ * <Footer customElements={(defaultElements: FooterElement[]) => defaultElements.filter(({ key }) => key !== 'privacy' )} />
+ * ```
+ * @example Changing a url
+ * ```
+ * <Footer customElements={(defaultElements: FooterElement[]) => defaultElements.map(element => ({ ...element, url: element.key === 'privacy' ? customPrivacyUrl : element.url }))} />
+ * ```
  */
 export const Footer = (props: FooterProps) => {
   const { customElements, translatedTitles, className, ...rest } = props;
