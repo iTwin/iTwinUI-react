@@ -188,17 +188,6 @@ export const TreeNode = (props: TreeNodeProps) => {
           (focusableElements[currentIndex + 1] as HTMLElement).focus();
           break;
         }
-
-        if (subNodeIds.length > 0) {
-          const subNodes = Array.from(
-            nodeRef.current?.ownerDocument.querySelectorAll(
-              `${subNodeIds.map((id) => `#${id}`).join(',')}`,
-            ) || [],
-          ).filter(
-            (el) => el.getAttribute('aria-disabled') !== 'true',
-          ) as HTMLElement[];
-          subNodes[0]?.focus();
-        }
         break;
       }
       case ' ':

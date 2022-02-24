@@ -237,8 +237,16 @@ it('should handle arrow key navigation', () => {
     'button',
   );
 
-  // Go Right: Node-3-1 -> Node-3-1-2 (skip disabled sub-node)
+  // Go Right: Do nothing
   userEvent.keyboard('{ArrowRight}');
+  expect(
+    container.querySelector('#Node-3-1')?.contains(document.activeElement),
+  ).toBe(true);
+  expect(onNodeExpanded).not.toHaveBeenCalled();
+  expect(onNodeSelected).not.toHaveBeenCalled();
+
+  // Go Down: Node-3-1 -> Node-3-1-2 (skip disabled sub-node)
+  userEvent.keyboard('{ArrowDown}');
   expect(document.activeElement?.id).toBe('Node-3-1-2');
 
   // Go Right: Expand Node-3-1-1
