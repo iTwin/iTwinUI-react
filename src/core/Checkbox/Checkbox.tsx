@@ -39,13 +39,15 @@ export type CheckboxProps = {
   /**
    * Custom CSS class name for the checkmark element.
    *
-   * @deprecated As of 1.32.0, this is now applied on the actual checkbox element.
+   * @deprecated As of 1.32.0, this is applied on the actual checkbox `<input>` element.
+   * The checkmark has been moved into a pseudo-element.
    */
   checkmarkClassName?: string;
   /**
    * Custom CSS Style for the checkmark element.
    *
-   * @deprecated As of 1.32.0, this is now applied on the actual checkbox element.
+   * @deprecated As of 1.32.0, this is applied on the actual checkbox `<input>` element.
+   * The checkmark has been moved into a pseudo-element.
    */
   checkmarkStyle?: React.CSSProperties;
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'>;
