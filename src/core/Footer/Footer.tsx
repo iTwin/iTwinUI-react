@@ -19,6 +19,20 @@ export type TitleTranslations = {
 export type FooterProps = {
   /**
    * Customize footer elements.
+   * Providing an array of FooterElements will append the custom elements to the end of the default elements.
+   * Providing a function that returns an array of FooterElements allows further customization - whatever is returned from the function is displayed in the footer with no amendments.
+   * @example Returning only custom elements
+   * ```
+   * <Footer customElements={() => newFooterElements)} />
+   * ```
+   * @example Filtering out a specific element
+   * ```
+   * <Footer customElements={(defaultElements: FooterElement[]) => defaultElements.filter(({ key }) => key !== 'privacy' )} />
+   * ```
+   * @example Changing a url
+   * ```
+   * <Footer customElements={(defaultElements: FooterElement[]) => defaultElements.map(element => ({ ...element, url: element.key === 'privacy' ? customPrivacyUrl : element.url }))} />
+   * ```
    */
   customElements?:
     | FooterElement[]
@@ -38,6 +52,10 @@ export type FooterElement = {
    * URL of the footer element.
    */
   url?: string;
+  /**
+   * Key of the footer element.
+   */
+  key?: keyof TitleTranslations;
 };
 
 const footerTranslations: TitleTranslations = {
@@ -62,23 +80,38 @@ export const Footer = (props: FooterProps) => {
   useTheme();
 
   const titles = { ...footerTranslations, ...translatedTitles };
-  const defaultElements = [
+  const defaultElements: FooterElement[] = [
     {
+      key: 'copyright',
       title: titles.copyright,
     },
     {
+      key: 'termsOfService',
       title: titles.termsOfService,
       url:
         'https://connect-agreementportal.bentley.com/AgreementApp/Home/Eula/view/readonly/BentleyConnect',
     },
-    { title: titles.privacy, url: 'https://www.bentley.com/en/privacy-policy' },
     {
+      key: 'privacy',
+      title: titles.privacy,
+      url: 'https://www.bentley.com/en/privacy-policy',
+    },
+    {
+      key: 'termsOfUse',
       title: titles.termsOfUse,
       url:
         'https://www.bentley.com/en/terms-of-use-and-select-online-agreement',
     },
-    { title: titles.cookies, url: 'https://www.bentley.com/en/cookie-policy' },
-    { title: titles.legalNotices, url: 'https://connect.bentley.com/Legal' },
+    {
+      key: 'cookies',
+      title: titles.cookies,
+      url: 'https://www.bentley.com/en/cookie-policy',
+    },
+    {
+      key: 'legalNotices',
+      title: titles.legalNotices,
+      url: 'https://connect.bentley.com/Legal',
+    },
   ];
 
   let elements: FooterElement[] = defaultElements;

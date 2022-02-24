@@ -45,7 +45,7 @@ const customUrls: FooterElement[] = [
   },
 ];
 
-const customUrlsFunction = (defaultElements: FooterElement[]) => {
+const customUrlsFunction = () => {
   return customUrls;
 };
 
@@ -67,7 +67,7 @@ it('should show all default footer elements', () => {
   });
 });
 
-it('should show all default footer elements', () => {
+it('should show all default and custom footer elements', () => {
   const { container } = renderComponent({ customElements: customUrls });
   const copyright = container.querySelector<HTMLLIElement>('li:first-child');
   const today = new Date();
