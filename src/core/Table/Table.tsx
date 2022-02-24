@@ -20,6 +20,8 @@ import {
   TableInstance,
   useExpanded,
   usePagination,
+  useColumnOrder,
+  IdType,
 } from 'react-table';
 import { ProgressRadial } from '../ProgressIndicators';
 import { useTheme, CommonProps, useResizeObserver } from '../utils';
@@ -229,6 +231,11 @@ export type TableProps<
    * @beta
    */
   enableVirtualization?: boolean;
+  /**
+   * Flag whether columns are draggable.
+   * @default false
+   */
+  enableDraggableColumns?: boolean;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -312,6 +319,7 @@ export const Table = <
     isResizable = false,
     styleType = 'default',
     enableVirtualization = false,
+    enableDraggableColumns = false,
     ...rest
   } = props;
 
@@ -425,6 +433,7 @@ export const Table = <
     useSubRowSelection,
     useExpanderCell(subComponent, expanderCell, isRowDisabled),
     useSelectionCell(isSelectable, isRowDisabled),
+    useColumnOrder,
   );
 
   const {
@@ -441,6 +450,7 @@ export const Table = <
     gotoPage,
     setPageSize,
     flatHeaders,
+    setColumnOrder,
   } = instance;
 
   const ariaDataAttributes = Object.entries(rest).reduce(
@@ -589,6 +599,48 @@ export const Table = <
     [getPreparedRow, page],
   );
 
+  const reorderColumns = (
+    tableColumns: IdType<T>[],
+    srcIndex: number,
+    dstIndex: number,
+  ) => {
+    const [removed] = tableColumns.splice(srcIndex, 1);
+    tableColumns.splice(dstIndex, 0, removed);
+    return tableColumns;
+  };
+
+  const setOnDragColumnStyle = (
+    event: React.DragEvent<HTMLDivElement>,
+    hover: boolean,
+  ) => (event.currentTarget.style.borderRight = hover ? '3px dashed' : '');
+
+  const dragStartHandler = (
+    event: React.DragEvent<HTMLDivElement>,
+    id: IdType<T>,
+  ) => event.dataTransfer.setData('text', id);
+
+  const dropHandler = (
+    event: React.DragEvent<HTMLDivElement>,
+    dstColumnId: IdType<T>,
+  ) => {
+    event.preventDefault();
+    setOnDragColumnStyle(event, false);
+
+    const srcColumnId = event.dataTransfer.getData('text');
+    const columnIds = flatHeaders.map((x) => x.id);
+    const srcIndex = columnIds.findIndex((x) => x === srcColumnId);
+    const dstIndex = columnIds.findIndex((x) => x === dstColumnId);
+    if (srcIndex === dstIndex) {
+      return;
+    }
+    setColumnOrder(reorderColumns(columnIds, srcIndex, dstIndex));
+  };
+
+  const allowDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setOnDragColumnStyle(event, true);
+  };
+
   return (
     <>
       <div
@@ -642,6 +694,21 @@ export const Table = <
                       {...columnProps}
                       key={columnProps.key}
                       title={undefined}
+                      draggable={props.enableDraggableColumns}
+                      onDragStart={(event) =>
+                        enableDraggableColumns &&
+                        dragStartHandler(event, column.id)
+                      }
+                      onDragOver={
+                        enableDraggableColumns ? allowDrop : undefined
+                      }
+                      onDragLeave={(event) =>
+                        enableDraggableColumns &&
+                        setOnDragColumnStyle(event, false)
+                      }
+                      onDrop={(event) =>
+                        enableDraggableColumns && dropHandler(event, column.id)
+                      }
                       ref={(el) => {
                         if (el && isResizable) {
                           columnRefs.current[column.id] = el;
