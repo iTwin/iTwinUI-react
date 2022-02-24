@@ -32,7 +32,7 @@ export type ComboBoxProps<T> = {
    */
   value?: T;
   /**
-   * Message below the select.
+   * Message shown below the combobox.
    */
   message?: React.ReactNode;
   /**
