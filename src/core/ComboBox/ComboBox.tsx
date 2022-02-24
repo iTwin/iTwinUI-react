@@ -316,16 +316,14 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     memoizedItems,
   ]);
 
-  const statusIcon = () => {
+  const StatusIcon = () => {
     if (icon) {
       return React.cloneElement(icon, { 'aria-hidden': true });
     }
-    if (status && message) {
-      return React.cloneElement(StatusIconMap[status](), {
-        'aria-hidden': true,
-      });
+    if (status) {
+      return StatusIconMap[status]();
     }
-    return undefined;
+    return null;
   };
 
   return (
