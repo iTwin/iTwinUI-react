@@ -29,12 +29,12 @@ export const useColumnVisibility = <T extends Record<string, unknown>>(
       maxWidth: 48,
       columnClassName: 'iui-slot',
       cellClassName: 'iui-slot',
-      Header: ({ allColumns, column, headers }: HeaderProps<T>) => {
-        const headerCheckBoxes = (close: () => void) =>
+      Header: ({ allColumns }: HeaderProps<T>) => {
+        const headerCheckBoxes = () =>
           allColumns.map((column) =>
             isString(column.Header) ? (
               <Checkbox
-                {...column.getToggleHiddenProps}
+                {...column.getToggleHiddenProps()}
                 label={column.Header}
                 key={column.id}
               />
