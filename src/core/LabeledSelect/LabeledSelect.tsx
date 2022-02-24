@@ -97,16 +97,14 @@ export const LabeledSelect = <T,>(
 
   useTheme();
 
-  const icon = () => {
+  const StatusIcon = () => {
     if (svgIcon) {
       return React.cloneElement(svgIcon, { 'aria-hidden': true });
     }
-    if (status && message) {
-      return React.cloneElement(StatusIconMap[status](), {
-        'aria-hidden': true,
-      });
+    if (status) {
+      return StatusIconMap[status]();
     }
-    return undefined;
+    return null;
   };
 
   return (
@@ -116,7 +114,7 @@ export const LabeledSelect = <T,>(
       required={required}
       status={status}
       message={message}
-      icon={displayStyle === 'default' ? icon() : undefined}
+      icon={displayStyle === 'default' ? <StatusIcon /> : undefined}
       isLabelInline={displayStyle === 'inline'}
       className={className}
       style={style}
