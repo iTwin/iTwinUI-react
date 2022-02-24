@@ -36,7 +36,7 @@ export type ComboBoxProps<T> = {
    */
   message?: React.ReactNode;
   /**
-   * Custom svg icon. Will override status icon if specified.
+   * Custom svg icon shown below the combobox. Will override status icon if specified.
    */
   icon?: JSX.Element;
   /**
