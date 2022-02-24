@@ -104,7 +104,7 @@ export const LabeledSelect = <T,>(
     if (status) {
       return StatusIconMap[status]();
     }
-    return null;
+    return undefined;
   };
 
   return (
@@ -114,7 +114,7 @@ export const LabeledSelect = <T,>(
       required={required}
       status={status}
       message={message}
-      icon={displayStyle === 'default' ? <StatusIcon /> : undefined}
+      icon={displayStyle === 'default' ? StatusIcon() : undefined}
       isLabelInline={displayStyle === 'inline'}
       className={className}
       style={style}

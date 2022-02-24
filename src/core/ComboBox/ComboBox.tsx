@@ -323,7 +323,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     if (status) {
       return StatusIconMap[status]();
     }
-    return null;
+    return undefined;
   };
 
   return (
@@ -331,7 +331,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       className={className}
       message={message}
       status={status}
-      icon={<StatusIcon />}
+      icon={StatusIcon()}
       {...rest}
       id={id}
     >
