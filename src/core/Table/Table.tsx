@@ -644,7 +644,6 @@ export const Table = <
                         column.id === SELECTION_CELL_ID) && {
                         backgroundColor: '#EEF0F3',
                       }),
-                      ...{ border: '' },
                     },
                   });
                   return (
