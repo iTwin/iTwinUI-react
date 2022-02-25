@@ -69,29 +69,28 @@ export const ColorBuilder = React.forwardRef(
     const [colorDotActive, setColorDotActive] = React.useState(false);
     const hueColorString = hueSliderColor.toHexString();
     const colorSquareStyle = getWindow()?.CSS?.supports?.(
-      `--hue: ${hueColorString}`,
+      `--iui-color-field-hue: ${hueColorString}`,
     )
       ? {
-          '--hue': hueColorString,
-          '--selected-color': dotColorString,
+          '--iui-color-field-hue': hueColorString,
+          '--iui-color-picker-selected-color': dotColorString,
         }
       : { backgroundColor: hueColorString };
 
     const opacitySliderStyle = getWindow()?.CSS?.supports?.(
-      `--selected-color: ${hueColorString}`,
+      `--iui-color-picker-selected-color: ${hueColorString}`,
     )
-      ? { '--selected-color': hueColorString }
+      ? { '--iui-color-picker-selected-color': hueColorString }
       : { backgroundColor: hueColorString };
 
     const squareTop = 100 - hsvColor.v;
     const squareLeft = hsvColor.s;
 
     const colorDotStyle = getWindow()?.CSS?.supports?.(
-      `--top: ${squareTop.toString()}%`,
+      `--iui-color-dot-inset: 0`,
     )
       ? {
-          '--top': squareTop.toString() + '%',
-          '--left': squareLeft.toString() + '%',
+          '--iui-color-dot-inset': `${squareTop.toString()}% auto auto ${squareLeft.toString()}%`,
         }
       : {
           backgroundColor: dotColorString,
@@ -175,12 +174,15 @@ export const ColorBuilder = React.forwardRef(
     );
     const handleSquarePointerUp = React.useCallback(
       (event: PointerEvent) => {
+        if (!colorDotActive) {
+          return;
+        }
         updateSquareValue(event, 'onChange');
         setColorDotActive(false);
         event.preventDefault();
         event.stopPropagation();
       },
-      [updateSquareValue],
+      [colorDotActive, updateSquareValue],
     );
     useEventListener(
       'pointerup',
@@ -190,11 +192,14 @@ export const ColorBuilder = React.forwardRef(
 
     const handleSquarePointerMove = React.useCallback(
       (event: PointerEvent): void => {
+        if (!colorDotActive) {
+          return;
+        }
         event.preventDefault();
         event.stopPropagation();
         updateSquareValue(event, 'onUpdate');
       },
-      [updateSquareValue],
+      [colorDotActive, updateSquareValue],
     );
     useEventListener(
       'pointermove',
@@ -204,10 +209,13 @@ export const ColorBuilder = React.forwardRef(
 
     const handleSquarePointerLeave = React.useCallback(
       (event: PointerEvent): void => {
+        if (!colorDotActive) {
+          return;
+        }
         updateSquareValue(event, 'onChange');
         setColorDotActive(false);
       },
-      [updateSquareValue],
+      [colorDotActive, updateSquareValue],
     );
     useEventListener(
       'pointerleave',
