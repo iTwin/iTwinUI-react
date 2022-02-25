@@ -321,20 +321,20 @@ it('should work with custom itemRenderer', () => {
   input.focus();
   getByText('CUSTOM Item 1').click();
   expect(mockOnChange).toHaveBeenCalledWith(1);
-  expect(container.querySelector('.iui-menu')).not.toBeVisible();
+  expect(document.querySelector('.iui-menu')).not.toBeVisible();
   expect(input).toHaveValue('Item 1'); // the actual value of input doesn't change
 
   input.blur();
   input.focus();
   expect(
-    container.querySelector(
+    document.querySelector(
       '.iui-menu-item.iui-active.iui-focused.my-custom-item',
     ),
   ).toHaveTextContent('CUSTOM Item 1');
 
   fireEvent.keyDown(input, { key: 'ArrowDown' });
   expect(
-    container.querySelector('.iui-menu-item.iui-focused.my-custom-item'),
+    document.querySelector('.iui-menu-item.iui-focused.my-custom-item'),
   ).toHaveTextContent('CUSTOM Item 2');
 
   fireEvent.keyDown(input, { key: 'Enter' });
