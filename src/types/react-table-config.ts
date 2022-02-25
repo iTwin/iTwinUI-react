@@ -150,6 +150,10 @@ declare module 'react-table' {
      */
     fieldType?: FieldType;
     /**
+     * Type of the sticky in cell.
+     */
+    sticky?: 'left' | 'right';
+    /**
      * Filter component used as a column filter. Should use filters from `tableFilters`.
      */
     Filter?: Renderer<FilterProps<D>>;

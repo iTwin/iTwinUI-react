@@ -26,7 +26,7 @@ import { useTheme, CommonProps, useResizeObserver } from '../utils';
 import '@itwin/itwinui-css/css/table.css';
 import SvgSortDown from '@itwin/itwinui-icons-react/cjs/icons/SortDown';
 import SvgSortUp from '@itwin/itwinui-icons-react/cjs/icons/SortUp';
-import { getCellStyle } from './utils';
+import { getCellStyle, getStickyCellStyle } from './utils';
 import { TableRowMemoized } from './TableRowMemoized';
 import { FilterToggle, TableFilterValue } from './filters';
 import { customFilterFunctions } from './filters/customFilterFunctions';
@@ -36,6 +36,7 @@ import {
   useSubRowFiltering,
   useSubRowSelection,
   useResizeColumns,
+  SELECTION_CELL_ID,
 } from './hooks';
 import {
   onExpandHandler,
@@ -564,6 +565,7 @@ export const Table = <
           subComponent={subComponent}
           isDisabled={!!isRowDisabled?.(row.original)}
           tableHasSubRows={hasAnySubRows}
+          tableIsSelectable={isSelectable}
           tableInstance={instance}
           expanderCell={expanderCell}
         />
@@ -635,7 +637,15 @@ export const Table = <
                       { 'iui-sorted': column.isSorted },
                       column.columnClassName,
                     ),
-                    style: { ...getCellStyle(column, !!state.isTableResizing) },
+                    style: {
+                      ...getCellStyle(column, !!state.isTableResizing),
+                      ...getStickyCellStyle(instance, column, isSelectable),
+                      ...((column.sticky ||
+                        column.id === SELECTION_CELL_ID) && {
+                        backgroundColor: '#EEF0F3',
+                      }),
+                      ...{ border: '' },
+                    },
                   });
                   return (
                     <div

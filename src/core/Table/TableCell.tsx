@@ -5,7 +5,7 @@
 import React from 'react';
 import { Cell, CellProps, CellRendererProps, TableInstance } from 'react-table';
 import cx from 'classnames';
-import { getCellStyle } from './utils';
+import { getCellStyle, getStickyCellStyle } from './utils';
 import { SubRowExpander } from './SubRowExpander';
 import { SELECTION_CELL_ID } from './hooks';
 import { DefaultCell } from './cells';
@@ -15,6 +15,7 @@ export type TableCellProps<T extends Record<string, unknown>> = {
   cellIndex: number;
   isDisabled: boolean;
   tableHasSubRows: boolean;
+  tableIsSelectable: boolean;
   tableInstance: TableInstance<T>;
   expanderCell?: (cellProps: CellProps<T>) => React.ReactNode;
 };
@@ -27,6 +28,7 @@ export const TableCell = <T extends Record<string, unknown>>(
     cellIndex,
     isDisabled,
     tableHasSubRows,
+    tableIsSelectable,
     tableInstance,
     expanderCell,
   } = props;
@@ -51,6 +53,7 @@ export const TableCell = <T extends Record<string, unknown>>(
     style: {
       ...getCellStyle(cell.column, !!tableInstance.state.isTableResizing),
       ...getSubRowStyle(),
+      ...getStickyCellStyle(tableInstance, cell.column, tableIsSelectable),
     },
   });
 

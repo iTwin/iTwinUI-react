@@ -26,6 +26,7 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
   subComponent?: (row: Row<T>) => React.ReactNode;
   isDisabled: boolean;
   tableHasSubRows: boolean;
+  tableIsSelectable: boolean;
   tableInstance: TableInstance<T>;
   expanderCell?: (cellProps: CellProps<T>) => React.ReactNode;
 }) => {
@@ -40,6 +41,7 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
     subComponent,
     isDisabled,
     tableHasSubRows,
+    tableIsSelectable,
     tableInstance,
     expanderCell,
   } = props;
@@ -90,6 +92,7 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
               cellIndex={index}
               isDisabled={isDisabled}
               tableHasSubRows={tableHasSubRows}
+              tableIsSelectable={tableIsSelectable}
               tableInstance={tableInstance}
               expanderCell={expanderCell}
             />
@@ -146,6 +149,7 @@ export const TableRowMemoized = React.memo(
     prevProp.rowProps === nextProp.rowProps &&
     prevProp.expanderCell === nextProp.expanderCell &&
     prevProp.tableHasSubRows === nextProp.tableHasSubRows &&
+    prevProp.tableIsSelectable === nextProp.tableIsSelectable &&
     !nextProp.state.columnResizing.isResizingColumn &&
     !nextProp.state.isTableResizing,
 ) as typeof TableRow;
