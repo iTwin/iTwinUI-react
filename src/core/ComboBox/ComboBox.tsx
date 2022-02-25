@@ -316,7 +316,9 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
               isFirstRender.current = false;
               return;
             }
-            focusedIndex === index && el?.scrollIntoView({ block: 'nearest' });
+            !enableVirtualization &&
+              focusedIndex === index &&
+              el?.scrollIntoView({ block: 'nearest' });
           },
         });
       }
@@ -359,7 +361,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
               style={{
                 minWidth,
                 maxWidth: `min(${minWidth * 2}px, 90vw)`,
-                maxHeight: 300,
+                maxHeight: 297,
               }}
               setFocus={false}
               role='listbox'

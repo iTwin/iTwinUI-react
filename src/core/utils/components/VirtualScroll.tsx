@@ -144,6 +144,7 @@ export const VirtualScroll = React.forwardRef<
     const onScrollRef = React.useRef<(e: Event) => void>();
     // Used only to recalculate on resize
     const [scrollContainerHeight, setScrollContainerHeight] = React.useState(0);
+    const visibleIndex = React.useRef({ start: 0, end: 0 });
 
     const onResize = React.useCallback(({ height }) => {
       setScrollContainerHeight(height);
@@ -215,15 +216,15 @@ export const VirtualScroll = React.forwardRef<
         scrollableContainer.scrollTop,
       );
       const startIndex = Math.max(0, start - bufferSize);
-      setStartNode(startIndex);
-      setVisibleNodeCount(
-        getVisibleNodeCount(
-          childHeight.current.child,
-          start,
-          itemsLength,
-          scrollableContainer,
-        ),
+      const visibleNodes = getVisibleNodeCount(
+        childHeight.current.child,
+        start,
+        itemsLength,
+        scrollableContainer,
       );
+      visibleIndex.current = { start: start, end: start + visibleNodes - 1 };
+      setStartNode(startIndex);
+      setVisibleNodeCount(visibleNodes);
 
       if (!parentRef.current) {
         return;
@@ -275,16 +276,34 @@ export const VirtualScroll = React.forwardRef<
         return;
       }
 
-      if (scrollToIndex > 0 && scrollContainer.current) {
+      const scrollableContainer =
+        scrollContainer.current ??
+        (parentRef.current?.ownerDocument.scrollingElement as HTMLElement);
+      if (
+        scrollableContainer &&
+        (scrollToIndex > visibleIndex.current.end ||
+          scrollToIndex < visibleIndex.current.start)
+      ) {
+        const diff =
+          scrollToIndex > visibleIndex.current.end
+            ? scrollToIndex - visibleIndex.current.end
+            : scrollToIndex - visibleIndex.current.start;
+
         const scrollTop =
-          (scrollToIndex - 1) * childHeight.current.child +
-          childHeight.current.firstChild;
-        scrollContainer.current.scrollTo({ top: scrollTop });
-      } else {
-        updateVirtualScroll();
+          scrollableContainer.scrollTop + diff * childHeight.current.child;
+        scrollableContainer.scrollTo({
+          top: scrollTop,
+        });
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [scrollContainerHeight]);
+    }, [scrollToIndex, scrollContainerHeight]);
+
+    React.useLayoutEffect(() => {
+      if (!scrollContainerHeight) {
+        return;
+      }
+
+      updateVirtualScroll();
+    }, [scrollContainerHeight, updateVirtualScroll]);
 
     return (
       <div
