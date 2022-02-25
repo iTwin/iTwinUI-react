@@ -182,6 +182,10 @@
       "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tooltip.stories.tsx",
       "framework": "react"
     },
+    "Core/Tree": {
+      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tree.stories.tsx",
+      "framework": "react"
+    },
     "Typography/Anchor": {
       "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Anchor.stories.tsx",
       "framework": "react"
@@ -667,6 +671,15 @@
         "__id": "core-combobox--with-status"
       }
     },
+    "core-combobox--custom-renderer": {
+      "id": "core-combobox--custom-renderer",
+      "name": "Custom Renderer",
+      "kind": "Core/ComboBox",
+      "story": "Custom Renderer",
+      "parameters": {
+        "__id": "core-combobox--custom-renderer"
+      }
+    },
     "core-datepicker--basic": {
       "id": "core-datepicker--basic",
       "name": "Basic",
@@ -890,6 +903,15 @@
       "story": "Small",
       "parameters": {
         "__id": "core-expandableblock--small"
+      }
+    },
+    "core-expandableblock--borderless": {
+      "id": "core-expandableblock--borderless",
+      "name": "Borderless",
+      "kind": "Core/ExpandableBlock",
+      "story": "Borderless",
+      "parameters": {
+        "__id": "core-expandableblock--borderless"
       }
     },
     "input-fieldset--basic": {
@@ -2177,6 +2199,42 @@
       "story": "Controlled",
       "parameters": {
         "__id": "core-tooltip--controlled"
+      }
+    },
+    "core-tree--basic": {
+      "id": "core-tree--basic",
+      "name": "Basic",
+      "kind": "Core/Tree",
+      "story": "Basic",
+      "parameters": {
+        "__id": "core-tree--basic"
+      }
+    },
+    "core-tree--full": {
+      "id": "core-tree--full",
+      "name": "Full",
+      "kind": "Core/Tree",
+      "story": "Full",
+      "parameters": {
+        "__id": "core-tree--full"
+      }
+    },
+    "core-tree--async-loading": {
+      "id": "core-tree--async-loading",
+      "name": "Async Loading",
+      "kind": "Core/Tree",
+      "story": "Async Loading",
+      "parameters": {
+        "__id": "core-tree--async-loading"
+      }
+    },
+    "core-tree--customized-expander": {
+      "id": "core-tree--customized-expander",
+      "name": "Customized Expander",
+      "kind": "Core/Tree",
+      "story": "Customized Expander",
+      "parameters": {
+        "__id": "core-tree--customized-expander"
       }
     },
     "typography-anchor--basic": {
