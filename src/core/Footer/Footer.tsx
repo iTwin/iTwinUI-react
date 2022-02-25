@@ -8,7 +8,6 @@ import { useTheme, StylingProps } from '../utils';
 import '@itwin/itwinui-css/css/footer.css';
 
 export type TitleTranslations = {
-  copyright: string;
   termsOfService: string;
   privacy: string;
   termsOfUse: string;
@@ -43,12 +42,11 @@ export type FooterElement = {
   /**
    * Key of the footer element.
    */
-  // eslint-disable-next-line @typescript-eslint/ban-types -- This allows custom strings and keeps intellisense. See https://github.com/Microsoft/TypeScript/issues/29729
-  key?: keyof TitleTranslations | (string & {});
+  // This allows custom strings and keeps intellisense. See https://github.com/Microsoft/TypeScript/issues/29729
+  key?: keyof TitleTranslations | 'copyright' | (string & Record<never, never>);
 };
 
 const footerTranslations: TitleTranslations = {
-  copyright: `© ${new Date().getFullYear()} Bentley Systems, Incorporated`,
   cookies: 'Cookies',
   legalNotices: 'Legal notices',
   privacy: 'Privacy',
@@ -65,9 +63,9 @@ const footerTranslations: TitleTranslations = {
  * @example <caption>Returning only custom elements</caption>
  * <Footer customElements={() => newFooterElements)} />
  * @example <caption>Filtering out a specific element</caption>
- * <Footer customElements={(defaultElements: FooterElement[]) => defaultElements.filter(({ key }) => key !== 'privacy' )} />
+ * <Footer customElements={(defaultElements) => defaultElements.filter(({ key }) => key !== 'privacy' )} />
  * @example <caption>Changing a url</caption>
- * <Footer customElements={(defaultElements: FooterElement[]) => defaultElements.map(element => ({ ...element, url: element.key === 'privacy' ? customPrivacyUrl : element.url }))} />
+ * <Footer customElements={(defaultElements) => defaultElements.map(element => ({ ...element, url: element.key === 'privacy' ? customPrivacyUrl : element.url }))} />
  */
 export const Footer = (props: FooterProps) => {
   const { customElements, translatedTitles, className, ...rest } = props;
@@ -78,7 +76,7 @@ export const Footer = (props: FooterProps) => {
   const defaultElements: FooterElement[] = [
     {
       key: 'copyright',
-      title: titles.copyright,
+      title: `© ${new Date().getFullYear()} Bentley Systems, Incorporated`,
     },
     {
       key: 'termsOfService',
@@ -122,7 +120,7 @@ export const Footer = (props: FooterProps) => {
       <ul>
         {elements.map((element, index) => {
           return (
-            <li key={`${element.title}-${index}`}>
+            <li key={element.key || `${element.title}-${index}`}>
               {index > 0 && <span className='iui-separator' />}
               {element.url ? (
                 <a href={element.url} target='_blank' rel='noreferrer'>

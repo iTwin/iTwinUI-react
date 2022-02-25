@@ -45,10 +45,6 @@ const customUrls: FooterElement[] = [
   },
 ];
 
-const customUrlsFunction = () => {
-  return customUrls;
-};
-
 it('should show all default footer elements', () => {
   const { container } = renderComponent();
   const copyright = container.querySelector<HTMLLIElement>('li:first-child');
@@ -85,7 +81,7 @@ it('should show all default and custom footer elements', () => {
 
 it('should not show default footer elements', () => {
   const { container } = renderComponent({
-    customElements: customUrlsFunction,
+    customElements: () => customUrls,
   });
   const allLi = container.querySelectorAll<HTMLAnchorElement>('li > a');
   allLi.forEach((element, i) => {
