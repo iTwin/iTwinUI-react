@@ -5,12 +5,7 @@
 import { Story, Meta } from '@storybook/react';
 import { CreeveyStory } from 'creevey';
 import React from 'react';
-import {
-  Footer,
-  FooterElement,
-  FooterProps,
-  TitleTranslations,
-} from '../../src/core';
+import { Footer, FooterElement, FooterProps } from '../../src/core';
 
 export default {
   title: 'Core/Footer',
@@ -38,86 +33,68 @@ Basic.args = {
 export const AppendedCustomElements: Story<FooterProps> = ({
   ...rest
 }: FooterProps) => {
-  const customElements = [
-    {
-      title: 'Custom',
-      url: 'https://www.bentley.com/',
-    },
-  ];
-  return <Footer customElements={customElements} {...rest} />;
+  return (
+    <Footer
+      customElements={[
+        {
+          title: 'Custom',
+          url: 'https://www.bentley.com/',
+        },
+      ]}
+      {...rest}
+    />
+  );
 };
 
 export const OnlyCustomElements: Story<FooterProps> = ({
   ...rest
 }: FooterProps) => {
-  const customElements = () => {
-    return [
-      {
-        title: 'Custom Element 1',
-        url: 'https://www.bentley.com/',
-      },
-      {
-        title: 'Custom Element 2',
-      },
-      {
-        title: 'Custom Element 3',
-      },
-      {
-        title: 'Custom Element 4',
-      },
-    ];
-  };
-
-  return <Footer customElements={customElements} {...rest} />;
+  return (
+    <Footer
+      customElements={() => [
+        { title: 'Custom Element 1', url: 'https://www.bentley.com/' },
+        { title: 'Custom Element 2' },
+        { title: 'Custom Element 3' },
+        { title: 'Custom Element 4' },
+      ]}
+      {...rest}
+    />
+  );
 };
 
 export const CustomizedDefaultAndCustomElements: Story<FooterProps> = ({
   ...rest
 }: FooterProps) => {
-  const translatedTitles: TitleTranslations = {
-    copyright: 'Copyright translated',
-    termsOfService: 'Terms of service translated',
-    privacy: 'Privacy translated',
-    termsOfUse: 'Terms of use translated',
-    cookies: 'Cookies translated',
-    legalNotices: 'Legal notices translated',
-  };
   const customElements = (defaultElements: FooterElement[]) => {
-    const customUrls = {
+    const customUrls: Record<string, string> = {
       privacy: 'https://www.bentley.com/',
       cookies: 'https://www.bentley.com/',
       legalNotices: 'https://www.bentley.com/',
-      copyright: null,
-      termsOfUse: null,
-      termsOfService: null,
     };
-    const allElements: FooterElement[] = [
-      {
-        title: 'Custom Element 1',
-        url: 'https://www.bentley.com/',
-      },
-      {
-        title: 'Custom Element 2',
-      },
-      ...defaultElements,
+    const translatedTitles: Record<string, string> = {
+      termsOfService: 'Terms of service translated',
+      privacy: 'Privacy translated',
+      termsOfUse: 'Terms of use translated',
+      cookies: 'Cookies translated',
+      legalNotices: 'Legal notices translated',
+    };
+    const customElements: FooterElement[] = [
+      { title: 'Custom Element 1', url: 'https://www.bentley.com/' },
+      { title: 'Custom Element 2' },
     ];
 
-    return allElements.map(({ key }, index) => ({
-      title: key ? translatedTitles[key] : allElements[index].title,
-      url: key
-        ? customUrls[key] ?? allElements[index].url
-        : allElements[index].url,
-      key: key,
-    }));
+    const customizedDefaultElements = defaultElements.map(
+      ({ key, title, url }) => ({
+        key: key,
+        title: key ? translatedTitles[key] ?? title : title,
+        url: key ? customUrls[key] ?? url : url,
+      }),
+    );
+
+    return [...customizedDefaultElements, ...customElements];
   };
 
-  return (
-    <Footer
-      translatedTitles={translatedTitles}
-      customElements={customElements}
-      {...rest}
-    />
-  );
+  return <Footer customElements={customElements} {...rest} />;
 };
 
 export const BottomFixed: Story<FooterProps> & CreeveyStory = ({

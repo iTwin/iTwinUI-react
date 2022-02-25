@@ -43,7 +43,8 @@ export type FooterElement = {
   /**
    * Key of the footer element.
    */
-  key?: keyof TitleTranslations;
+  // eslint-disable-next-line @typescript-eslint/ban-types -- This allows custom strings and keeps intellisense. See https://github.com/Microsoft/TypeScript/issues/29729
+  key?: keyof TitleTranslations | (string & {});
 };
 
 const footerTranslations: TitleTranslations = {
@@ -59,22 +60,14 @@ const footerTranslations: TitleTranslations = {
  * Footer element with all needed legal and info links.
  * Be sure to place it manually at the bottom of your page.
  * You can use position 'absolute' with relative body or set the height of the content and place footer at the end.
- * @example Appending custom element after default elements
- * ```
+ * @example <caption>Appending custom element after default elements</caption>
  * <Footer customElements={[{title: 'Bentley', url: 'https://www.bentley.com/'}]} />
- * ```
- * @example Returning only custom elements
- * ```
+ * @example <caption>Returning only custom elements</caption>
  * <Footer customElements={() => newFooterElements)} />
- * ```
- * @example Filtering out a specific element
- * ```
+ * @example <caption>Filtering out a specific element</caption>
  * <Footer customElements={(defaultElements: FooterElement[]) => defaultElements.filter(({ key }) => key !== 'privacy' )} />
- * ```
- * @example Changing a url
- * ```
+ * @example <caption>Changing a url</caption>
  * <Footer customElements={(defaultElements: FooterElement[]) => defaultElements.map(element => ({ ...element, url: element.key === 'privacy' ? customPrivacyUrl : element.url }))} />
- * ```
  */
 export const Footer = (props: FooterProps) => {
   const { customElements, translatedTitles, className, ...rest } = props;
