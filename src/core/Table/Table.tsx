@@ -611,8 +611,17 @@ export const Table = <
 
   const setOnDragColumnStyle = (
     event: React.DragEvent<HTMLDivElement>,
-    hover: boolean,
-  ) => (event.currentTarget.style.borderRight = hover ? '3px dashed' : '');
+    position?: 'left' | 'right',
+  ) => {
+    event.currentTarget.style.borderLeft = '';
+    event.currentTarget.style.borderRight = '';
+    if (position) {
+      const borderStyle = '3px dashed';
+      position === 'left'
+        ? (event.currentTarget.style.borderLeft = borderStyle)
+        : (event.currentTarget.style.borderRight = borderStyle);
+    }
+  };
 
   const dragStartHandler = (
     event: React.DragEvent<HTMLDivElement>,
@@ -624,7 +633,7 @@ export const Table = <
     dstColumnId: IdType<T>,
   ) => {
     event.preventDefault();
-    setOnDragColumnStyle(event, false);
+    setOnDragColumnStyle(event);
 
     const srcColumnId = event.dataTransfer.getData('text');
     const columnIds = flatHeaders.map((x) => x.id);
@@ -638,7 +647,10 @@ export const Table = <
 
   const allowDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    setOnDragColumnStyle(event, true);
+    const columnElement = event.target as HTMLElement;
+    const middlePoint =
+      columnElement.offsetLeft + columnElement.offsetWidth / 2;
+    setOnDragColumnStyle(event, event.clientX > middlePoint ? 'right' : 'left');
   };
 
   return (
@@ -703,8 +715,7 @@ export const Table = <
                         enableDraggableColumns ? allowDrop : undefined
                       }
                       onDragLeave={(event) =>
-                        enableDraggableColumns &&
-                        setOnDragColumnStyle(event, false)
+                        enableDraggableColumns && setOnDragColumnStyle(event)
                       }
                       onDrop={(event) =>
                         enableDraggableColumns && dropHandler(event, column.id)
