@@ -101,7 +101,7 @@ export const LabeledSelect = <T,>(
     if (svgIcon) {
       return React.cloneElement(svgIcon, { 'aria-hidden': true });
     }
-    if (status) {
+    if (status && message) {
       return StatusIconMap[status]();
     }
     return undefined;
