@@ -372,7 +372,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     if (icon) {
       return React.cloneElement(icon, { 'aria-hidden': true });
     }
-    if (status) {
+    if (status && message) {
       return StatusIconMap[status]();
     }
     return undefined;
