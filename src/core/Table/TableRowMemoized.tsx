@@ -123,6 +123,11 @@ export const TableRowMemoized = React.memo(
   TableRow,
   (prevProp, nextProp) =>
     prevProp.isLast === nextProp.isLast &&
+    prevProp.state.hiddenColumns?.length ===
+      nextProp.state.hiddenColumns?.length &&
+    !!prevProp.state.hiddenColumns?.every(
+      (column, index) => nextProp.state.hiddenColumns?.[index] === column,
+    ) &&
     prevProp.onRowInViewport === nextProp.onRowInViewport &&
     prevProp.onBottomReached === nextProp.onBottomReached &&
     prevProp.onClick === nextProp.onClick &&
