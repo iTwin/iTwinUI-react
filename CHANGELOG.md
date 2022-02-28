@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.32.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.32.0...v1.32.1) (2022-02-28)
+
+
+### Fixes
+
+* **Footer:** Override default elements ([#544](https://www.github.com/iTwin/iTwinUI-react/issues/544)) ([76396a4](https://www.github.com/iTwin/iTwinUI-react/commit/76396a4cc0a88bb7680316cf4642b732729abd7a))
+
 ## [1.32.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.31.0...v1.32.0) (2022-02-25)
 
 ### What's new
