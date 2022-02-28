@@ -52,13 +52,9 @@ const getNumberOfNodesInHeight = (childHeight: number, totalHeight: number) => {
   return Math.floor(totalHeight / childHeight);
 };
 
-const getTranslateValue = (
-  childHeight: number,
-  firstChildHeight: number,
-  startIndex: number,
-) => {
+const getTranslateValue = (childHeight: number, startIndex: number) => {
   if (startIndex > 0) {
-    return childHeight * (startIndex - 1) + firstChildHeight;
+    return childHeight * startIndex;
   }
 
   return 0;
@@ -231,7 +227,6 @@ export const VirtualScroll = React.forwardRef<
       }
       parentRef.current.style.transform = `translateY(${getTranslateValue(
         childHeight.current.child,
-        childHeight.current.firstChild,
         startIndex,
       )}px)`;
     }, [bufferSize, itemsLength]);
