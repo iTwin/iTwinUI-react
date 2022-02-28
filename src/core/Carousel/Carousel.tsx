@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { getWindow, useTheme } from '../utils';
+import { useTheme } from '../utils';
 import { IconButton } from '../Buttons';
 import SvgChevronLeft from '@itwin/itwinui-icons-react/cjs/icons/ChevronLeft';
 import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
@@ -17,34 +17,71 @@ export type CarouselProps = {
 
 const CarouselContext = React.createContext<
   | {
-      autoPlay: boolean;
       currentIndex: number;
       setCurrentIndex: (index: number | ((old: number) => void)) => void;
+      slideCount: number;
+      setSlideCount: (length: number | ((old: number) => void)) => void;
+      keysPressed: Record<string, boolean>;
     }
   | undefined
 >(undefined);
 
 export const Carousel = (props: CarouselProps) => {
-  const {
-    autoPlay = true,
-    currentIndex: userCurrentIndex = 0,
-    children,
-    ...rest
-  } = props;
+  const { currentIndex: userCurrentIndex = 0, children, ...rest } = props;
 
   useTheme();
 
   const [currentIndex, setCurrentIndex] = React.useState(userCurrentIndex);
+  const [slideCount, setSlideCount] = React.useState(0);
+
+  const [keysPressed, setKeysPressed] = React.useState<Record<string, boolean>>(
+    {},
+  );
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.altKey || event.ctrlKey || event.metaKey) {
+      return;
+    }
+
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+      setKeysPressed((old) => ({ ...old, [event.key]: true }));
+    }
+
+    switch (event.key) {
+      case 'ArrowLeft': {
+        setCurrentIndex((old) => (slideCount + old - 1) % slideCount);
+        break;
+      }
+      case 'ArrowRight': {
+        setCurrentIndex((old) => (slideCount + old + 1) % slideCount);
+        break;
+      }
+    }
+  };
+
+  const handleKeyUp = (event: React.KeyboardEvent) => {
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+      setKeysPressed((old) => ({ ...old, [event.key]: false }));
+    }
+  };
 
   return (
     <div
       className='iui-carousel'
       aria-roledescription='carousel'
       tabIndex={0}
+      onKeyDown={handleKeyDown}
+      onKeyUp={handleKeyUp}
       {...rest}
     >
       <CarouselContext.Provider
-        value={{ autoPlay, currentIndex, setCurrentIndex }}
+        value={{
+          currentIndex,
+          setCurrentIndex,
+          slideCount,
+          setSlideCount,
+          keysPressed,
+        }}
       >
         {children}
       </CarouselContext.Provider>
@@ -59,7 +96,11 @@ const CarouselSlider = (props: React.ComponentPropsWithoutRef<'ol'>) => {
     throw new Error('CarouselSlider must be used within Carousel');
   }
 
-  const { autoPlay, currentIndex, setCurrentIndex } = context;
+  const { currentIndex, setSlideCount } = context;
+
+  React.useLayoutEffect(() => {
+    setSlideCount(React.Children.count(props.children));
+  }, [props.children, setSlideCount]);
 
   const items = React.useMemo(
     () =>
@@ -71,25 +112,12 @@ const CarouselSlider = (props: React.ComponentPropsWithoutRef<'ol'>) => {
     [props.children, currentIndex],
   );
 
-  const autoPlayTimer = React.useRef<number>();
-  React.useEffect(() => {
-    if (autoPlayTimer.current) {
-      getWindow()?.clearInterval(autoPlayTimer.current);
-    }
-    if (autoPlay) {
-      autoPlayTimer.current = getWindow()?.setInterval(() => {
-        setCurrentIndex((old) => (items.length + old + 1) % items.length);
-      }, 5000);
-    }
-    return () => getWindow()?.clearInterval(autoPlayTimer.current);
-  }, [autoPlay, items, setCurrentIndex]);
-
   return (
     <ol
       {...props}
       className={cx('iui-carousel-slider', props.className)}
       style={{
-        height: '100%',
+        // height: '100%',
         transform: `translateX(-${currentIndex * 100}%)`,
         ...props.style,
       }}
@@ -117,16 +145,39 @@ const CarouselSlide = (props: React.ComponentPropsWithoutRef<'li'>) => {
 const CarouselNavigation = (props: React.ComponentPropsWithoutRef<'nav'>) => {
   const { className, children, ...rest } = props;
 
+  const context = React.useContext(CarouselContext);
+  if (!context) {
+    throw new Error('TODO');
+  }
+
+  const { slideCount, setCurrentIndex, keysPressed } = context;
+
   return (
     <nav className={cx('iui-carousel-navigation', className)} {...rest}>
       <div className='iui-carousel-navigation-left'>
-        <IconButton styleType='borderless' size='small'>
+        <IconButton
+          styleType='borderless'
+          size='small'
+          tabIndex={-1}
+          onClick={() =>
+            setCurrentIndex((old) => (slideCount + old - 1) % slideCount)
+          }
+          data-pressed={keysPressed['ArrowLeft'] || undefined}
+        >
           <SvgChevronLeft />
         </IconButton>
       </div>
       {children}
       <div className='iui-carousel-navigation-right'>
-        <IconButton styleType='borderless' size='small'>
+        <IconButton
+          styleType='borderless'
+          size='small'
+          tabIndex={-1}
+          onClick={() =>
+            setCurrentIndex((old) => (slideCount + old + 1) % slideCount)
+          }
+          data-pressed={keysPressed['ArrowRight'] || undefined}
+        >
           <SvgChevronRight />
         </IconButton>
       </div>
@@ -135,22 +186,59 @@ const CarouselNavigation = (props: React.ComponentPropsWithoutRef<'nav'>) => {
 };
 
 const CarouselDots = (
-  props: { length: number } & React.ComponentPropsWithoutRef<'ol'>,
+  props: {
+    length?: number;
+    maxCount?: number;
+  } & React.ComponentPropsWithoutRef<'ol'>,
 ) => {
-  const { className, length, children, ...rest } = props;
+  const { maxCount = 5, className, children, ...rest } = props;
+  const context = React.useContext(CarouselContext);
+  if (!context) {
+    throw new Error('TODO: this needs to be usable without context');
+  }
+
+  const { slideCount, currentIndex, setCurrentIndex } = context;
 
   useTheme();
 
   const dots = React.useMemo(
     () =>
-      Array(length)
+      Array(slideCount)
         .fill(null)
-        .map((_, index) => (
-          <li key={index}>
-            <CarouselDot aria-label={`Slide ${index}`} />
-          </li>
-        )),
-    [length],
+        .map((_, index) => {
+          const firstDotIndex = Math.max(
+            0,
+            Math.min(
+              currentIndex - Math.ceil(maxCount / 2) + 1,
+              slideCount - maxCount,
+            ),
+          );
+          const lastDotIndex = Math.min(
+            slideCount - 1,
+            Math.max(currentIndex + Math.floor(maxCount / 2), maxCount - 1),
+          );
+
+          const isFirstSmallDot =
+            (index === firstDotIndex && index !== 0) ||
+            (index === lastDotIndex && index !== slideCount - 1);
+          const isSecondSmallDot =
+            (index === firstDotIndex + 1 && index !== 1) ||
+            (index === lastDotIndex - 1 && index !== slideCount - 2);
+
+          return (
+            <li key={index}>
+              <CarouselDot
+                aria-label={`Slide ${index}`}
+                isActive={index === currentIndex}
+                onClick={() => setCurrentIndex(index)}
+                isFirst={isFirstSmallDot}
+                isSecond={isSecondSmallDot}
+                isInvisible={index < firstDotIndex || index > lastDotIndex}
+              />
+            </li>
+          );
+        }),
+    [slideCount, maxCount, currentIndex, setCurrentIndex],
   );
 
   return (
@@ -164,14 +252,39 @@ const CarouselDots = (
   );
 };
 
-const CarouselDot = (props: React.ComponentPropsWithoutRef<'button'>) => {
+const CarouselDot = (
+  props: {
+    isActive?: boolean;
+    isFirst?: boolean;
+    isSecond?: boolean;
+    isInvisible?: boolean;
+  } & React.ComponentPropsWithoutRef<'button'>,
+) => {
+  const {
+    isActive,
+    isFirst,
+    isSecond,
+    isInvisible,
+    className,
+    ...rest
+  } = props;
+
   return (
     <button
       type='button'
       role='tab'
       tabIndex={-1}
-      {...props}
-      className={cx('iui-carousel-navigation-dot', props.className)}
+      className={cx(
+        'iui-carousel-navigation-dot',
+        {
+          'iui-active': isActive,
+          'iui-first': isFirst,
+          'iui-second': isSecond,
+          'iui-invisible': isInvisible,
+        },
+        className,
+      )}
+      {...rest}
     />
   );
 };

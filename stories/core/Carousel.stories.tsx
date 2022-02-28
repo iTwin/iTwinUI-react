@@ -20,23 +20,40 @@ export const Basic: Story<CarouselProps> = (args) => {
     { from: '#cc2b5e', to: '#753a88' },
     { from: '#00467f', to: '#a5cc82' },
     { from: '#2193b0', to: '#6dd5ed' },
-    { from: '#2193b0', to: '#6dd5ed' },
+    { from: '#ffe000', to: '#799f0c' },
+    { from: '#e65c00', to: '#f9d423' },
+    { from: '#1488cc', to: '#2b32b2' },
+    { from: '#bbd2c5', to: '#536976' },
+    { from: '#9796f0', to: '#fbc7d4' },
+    { from: '#b79891', to: '#94716b' },
+    { from: '#acb6e5', to: '#86fde8' },
   ];
 
   return (
-    <Carousel style={{ width: 800, height: 350 }} {...args}>
+    <Carousel
+      style={{ width: 800 }} // without this, carousel takes full width and translateX breaks
+      {...args}
+    >
       <Carousel.Slider>
         {gradients.map(({ from, to }, index) => (
           <Carousel.Slide key={index}>
             <div
               style={{
                 background: `linear-gradient(to right, ${from}, ${to})`,
-                height: '100%',
+                height: 350,
+                width: 800,
+                display: 'grid',
+                placeItems: 'center',
               }}
-            />
+            >
+              <div style={{ fontSize: '3rem' }}>{index + 1}</div>
+            </div>
           </Carousel.Slide>
         ))}
       </Carousel.Slider>
+      <Carousel.Navigation>
+        <Carousel.Dots />
+      </Carousel.Navigation>
     </Carousel>
   );
 };
