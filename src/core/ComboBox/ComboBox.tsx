@@ -39,7 +39,7 @@ export type ComboBoxProps<T> = {
   /**
    * Custom svg icon shown below the combobox. Will override status icon if specified.
    */
-  icon?: JSX.Element;
+  messageIcon?: JSX.Element;
   /**
    * Callback fired when selected value changes.
    */
@@ -105,7 +105,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     dropdownMenuProps,
     message,
     status,
-    icon,
+    messageIcon,
     emptyStateMessage = 'No options found',
     itemRenderer,
     ...rest
@@ -369,8 +369,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   ]);
 
   const StatusIcon = () => {
-    if (icon) {
-      return React.cloneElement(icon, { 'aria-hidden': true });
+    if (messageIcon) {
+      return React.cloneElement(messageIcon, { 'aria-hidden': true });
     }
     if (status && message) {
       return StatusIconMap[status]();
