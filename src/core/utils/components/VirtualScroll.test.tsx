@@ -153,3 +153,39 @@ it('should show provided index on first render', () => {
   expect(allVisibleElements[0].textContent).toBe('Element41');
   expect(allVisibleElements[29].textContent).toBe('Element70');
 });
+
+it('should render parent as ul', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  heightsMock.mockImplementation(function (this: Record<string, any>) {
+    if (Object.values(this)[0].memoizedProps.id === 'scroller') {
+      return { height: 400 } as DOMRect;
+    }
+    return { height: 40 } as DOMRect;
+  });
+
+  jest
+    .spyOn(HTMLElement.prototype, 'scrollTo')
+    .mockImplementation(function (this: HTMLElement, options) {
+      this.scrollTop = (options as ScrollToOptions).top ?? 0;
+      fireEvent.scroll(this, {
+        target: { scrollTop: (options as ScrollToOptions).top ?? 0 },
+      });
+    });
+  const { container } = render(
+    <div style={{ overflow: 'auto', height: 400 }} id='scroller'>
+      <VirtualScroll
+        itemsLength={1000}
+        itemRenderer={(index) => (
+          <li key={index} className='element' style={{ height: 40 }}>{`Element${
+            index + 1
+          }`}</li>
+        )}
+        as='ul'
+        parentProps={{ className: 'customClass' }}
+      />
+    </div>,
+  );
+  act(() => triggerResize({ height: 400 } as DOMRectReadOnly));
+
+  expect(container.querySelector('ul.customClass')).toBeTruthy();
+});
