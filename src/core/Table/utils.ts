@@ -44,10 +44,13 @@ const getLeftMargin = <T extends Record<string, unknown>>(
   id: IdType<T>,
   columns: ColumnInstance<T>[],
 ) => {
-  let leftMargin = 0;
+  let leftMargin = 1;
   const index = columns.findIndex((x) => x.id === id);
   for (let i = 0; i < index; i++) {
-    leftMargin += +columns[i].width! || 0;
+    const column = columns[i];
+    if (column.width) {
+      leftMargin += +column.width;
+    }
   }
   return leftMargin;
 };
@@ -56,10 +59,13 @@ const getRightMargin = <T extends Record<string, unknown>>(
   id: IdType<T>,
   columns: ColumnInstance<T>[],
 ) => {
-  let rightMargin = 0;
+  let rightMargin = 1;
   const index = columns.findIndex((x) => x.id === id);
   for (let i = index + 1; i < columns.length; i++) {
-    rightMargin += +columns[i].width!;
+    const column = columns[i];
+    if (column.width) {
+      rightMargin += +column.width;
+    }
   }
   return rightMargin;
 };
@@ -74,22 +80,22 @@ const isLastRightStickyColumn = <T extends Record<string, unknown>>(
 export const getStickyCellStyle = <T extends Record<string, unknown>>(
   tableInstance: TableInstance<T>,
   column: ColumnInstance<T>,
-  isSelectable: boolean,
+  isHeader: boolean,
 ): React.CSSProperties => {
   const style = {} as React.CSSProperties;
   if (column.id === SELECTION_CELL_ID) {
     const isStickyTable = !!tableInstance.flatHeaders.find((x) => x.sticky);
     if (isStickyTable) {
-      style.backgroundColor = '#FFF';
+      style.backgroundColor = 'var(--iui-color-background-1)';
       style.position = 'sticky';
       style.zIndex = 1;
-      style.left = 0;
+      style.left = 1;
       style.boxShadow = '-1px 0px 5px -2px gray';
     }
   }
 
   if (column.sticky) {
-    style.backgroundColor = '#FFF';
+    style.backgroundColor = 'var(--iui-color-background-1)';
     style.position = 'sticky';
     style.zIndex = 1;
     if (column.sticky === 'left') {
@@ -106,6 +112,9 @@ export const getStickyCellStyle = <T extends Record<string, unknown>>(
         style.boxShadow = '1px 0px 5px -2px gray';
       }
     }
+  }
+  if (isHeader && (column.sticky || column.id === SELECTION_CELL_ID)) {
+    style.backgroundColor = 'var(--iui-color-background-3)';
   }
   return style;
 };

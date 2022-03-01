@@ -36,7 +36,6 @@ import {
   useSubRowFiltering,
   useSubRowSelection,
   useResizeColumns,
-  SELECTION_CELL_ID,
 } from './hooks';
 import {
   onExpandHandler,
@@ -565,7 +564,6 @@ export const Table = <
           subComponent={subComponent}
           isDisabled={!!isRowDisabled?.(row.original)}
           tableHasSubRows={hasAnySubRows}
-          tableIsSelectable={isSelectable}
           tableInstance={instance}
           expanderCell={expanderCell}
         />
@@ -639,11 +637,7 @@ export const Table = <
                     ),
                     style: {
                       ...getCellStyle(column, !!state.isTableResizing),
-                      ...getStickyCellStyle(instance, column, isSelectable),
-                      ...((column.sticky ||
-                        column.id === SELECTION_CELL_ID) && {
-                        backgroundColor: '#EEF0F3',
-                      }),
+                      ...getStickyCellStyle(instance, column, true),
                     },
                   });
                   return (

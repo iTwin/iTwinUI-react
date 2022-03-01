@@ -15,7 +15,6 @@ export type TableCellProps<T extends Record<string, unknown>> = {
   cellIndex: number;
   isDisabled: boolean;
   tableHasSubRows: boolean;
-  tableIsSelectable: boolean;
   tableInstance: TableInstance<T>;
   expanderCell?: (cellProps: CellProps<T>) => React.ReactNode;
 };
@@ -28,7 +27,6 @@ export const TableCell = <T extends Record<string, unknown>>(
     cellIndex,
     isDisabled,
     tableHasSubRows,
-    tableIsSelectable,
     tableInstance,
     expanderCell,
   } = props;
@@ -53,7 +51,7 @@ export const TableCell = <T extends Record<string, unknown>>(
     style: {
       ...getCellStyle(cell.column, !!tableInstance.state.isTableResizing),
       ...getSubRowStyle(),
-      ...getStickyCellStyle(tableInstance, cell.column, tableIsSelectable),
+      ...getStickyCellStyle(tableInstance, cell.column, false),
     },
   });
 
