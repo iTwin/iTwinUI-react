@@ -168,7 +168,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   );
 
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const menuRef = React.useRef<HTMLUListElement>(null);
   const toggleButtonRef = React.useRef<HTMLSpanElement>(null);
   const [isOpen, setIsOpen] = React.useState(false);
   // used to dismiss scrolling into view on first menu open
@@ -417,28 +416,44 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           duration={200}
           {...dropdownMenuProps}
           content={
-            <Menu
-              id={`${id}-list`}
-              className='iui-scroll'
-              style={{
-                minWidth,
-                maxWidth: `min(${minWidth * 2}px, 90vw)`,
-                maxHeight: 297,
-              }}
-              setFocus={false}
-              role='listbox'
-              ref={menuRef}
-            >
+            <>
               {enableVirtualization ? (
-                <VirtualScroll
-                  itemsLength={menuItems.length}
-                  itemRenderer={virtualizedItemRenderer}
-                  scrollToIndex={focusedIndex}
-                />
+                <div
+                  style={{
+                    minWidth,
+                    maxWidth: `min(${minWidth * 2}px, 90vw)`,
+                    maxHeight: 297,
+                  }}
+                  className='iui-menu iui-scroll'
+                >
+                  <VirtualScroll
+                    itemsLength={menuItems.length}
+                    itemRenderer={virtualizedItemRenderer}
+                    scrollToIndex={focusedIndex}
+                    as='ul'
+                    parentProps={{
+                      className: 'iui-menu',
+                      id: `${id}-list`,
+                      role: 'listbox',
+                    }}
+                  />
+                </div>
               ) : (
-                menuItems
+                <Menu
+                  id={`${id}-list`}
+                  className='iui-scroll'
+                  style={{
+                    minWidth,
+                    maxWidth: `min(${minWidth * 2}px, 90vw)`,
+                    maxHeight: 297,
+                  }}
+                  setFocus={false}
+                  role='listbox'
+                >
+                  {menuItems}
+                </Menu>
               )}
-            </Menu>
+            </>
           }
           onHide={(instance) => {
             const selectedIndex = options.findIndex(

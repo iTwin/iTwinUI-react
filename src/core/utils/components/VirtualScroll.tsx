@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
+import { mergeRefs } from '../hooks/useMergedRefs';
 import { useResizeObserver } from '../hooks/useResizeObserver';
 
 const getScrollableParent = (
@@ -72,7 +73,9 @@ const getVisibleNodeCount = (
   );
 };
 
-export type VirtualScrollProps = {
+export type VirtualScrollProps<
+  T extends React.ElementType = React.ElementType
+> = {
   /**
    * Length of the items to virtualize.
    */
@@ -94,6 +97,15 @@ export type VirtualScrollProps = {
    * @default 0
    */
   scrollToIndex?: number;
+  /**
+   * Tag of the parent element. In most cases default `div` should be good enough.
+   * @default 'div'
+   */
+  as?: React.ElementType;
+  /**
+   * Props object to set on parent element.
+   */
+  parentProps?: React.ComponentPropsWithRef<T>;
 } & React.ComponentPropsWithRef<'div'>;
 
 /**
@@ -128,6 +140,8 @@ export const VirtualScroll = React.forwardRef<
       bufferSize = 10,
       scrollToIndex = 0,
       style,
+      as = 'div',
+      parentProps,
       ...rest
     },
     ref,
@@ -146,6 +160,7 @@ export const VirtualScroll = React.forwardRef<
       setScrollContainerHeight(height);
     }, []);
     const [resizeRef, resizeObserver] = useResizeObserver(onResize);
+    const Component = as;
 
     // Find scrollable parent
     // Needed only on init
@@ -322,14 +337,16 @@ export const VirtualScroll = React.forwardRef<
         ref={ref}
         {...rest}
       >
-        <div
+        <Component
+          {...parentProps}
           style={{
             willChange: 'transform',
+            ...parentProps?.style,
           }}
-          ref={parentRef}
+          ref={mergeRefs(parentRef, parentProps?.ref)}
         >
           {visibleChildren}
-        </div>
+        </Component>
       </div>
     );
   },
