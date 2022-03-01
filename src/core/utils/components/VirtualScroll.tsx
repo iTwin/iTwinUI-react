@@ -274,20 +274,26 @@ export const VirtualScroll = React.forwardRef<
       const scrollableContainer =
         scrollContainer.current ??
         (parentRef.current?.ownerDocument.scrollingElement as HTMLElement);
+
+      // if `scrollToIndex` is not visible, scroll to it
       if (
         scrollableContainer &&
         (scrollToIndex > visibleIndex.current.end ||
           scrollToIndex < visibleIndex.current.start)
       ) {
-        const diff =
+        const indexDiff =
           scrollToIndex > visibleIndex.current.end
             ? scrollToIndex - visibleIndex.current.end
             : scrollToIndex - visibleIndex.current.start;
 
+        // smallest scroll to the index
         const scrollTop =
-          scrollableContainer.scrollTop + diff * childHeight.current.child;
+          scrollableContainer.scrollTop + indexDiff * childHeight.current.child;
+
         scrollableContainer.scrollTo({
-          top: scrollTop,
+          top:
+            Math.floor(scrollTop / childHeight.current.child) *
+            childHeight.current.child,
         });
       }
     }, [scrollToIndex, scrollContainerHeight]);

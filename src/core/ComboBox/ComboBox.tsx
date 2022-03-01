@@ -14,7 +14,6 @@ import {
   Popover,
   PopoverProps,
   CommonProps,
-  getFocusableElements,
   getRandomValue,
   InputContainerProps,
   mergeRefs,
@@ -258,24 +257,25 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   const onKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
-      const focusableOptions = getFocusableElements(menuRef.current);
-      const focusedIndexInFilteredList = focusableOptions.findIndex(
-        ({ id }) =>
-          id === inputRef.current?.getAttribute('aria-activedescendant'),
-      );
       switch (event.key) {
         case 'ArrowDown':
           if (isOpen) {
-            const nextIndex = Math.min(
-              focusedIndexInFilteredList + 1,
-              focusableOptions.length - 1,
+            const filteredFocusedIndex =
+              focusedIndex === -1
+                ? -1
+                : filteredOptions.findIndex(
+                    (option) => option.value === options[focusedIndex].value,
+                  );
+            const nextFilteredOption = filteredOptions.find(
+              (option, index) =>
+                index > filteredFocusedIndex && !option.disabled,
             );
-            setFocusedIndex(
-              options.findIndex(
-                (_, index) =>
-                  getOptionId(index) === focusableOptions[nextIndex].id,
-              ),
+            const nextIndex = options.findIndex(
+              (option) => option.value === nextFilteredOption?.value,
             );
+            if (nextIndex >= 0) {
+              setFocusedIndex(nextIndex);
+            }
           } else {
             openMenu(); // reopen menu if closed when typing
           }
@@ -283,14 +283,24 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           event.stopPropagation();
           break;
         case 'ArrowUp':
-          if (isOpen) {
-            const previousIndex = Math.max(focusedIndexInFilteredList - 1, 0);
-            setFocusedIndex(
-              options.findIndex(
-                (_, index) =>
-                  getOptionId(index) === focusableOptions[previousIndex].id,
-              ),
+          if (isOpen && focusedIndex > 0) {
+            const filteredFocusedIndex = filteredOptions.findIndex(
+              (option) => option.value === options[focusedIndex].value,
             );
+            if (filteredFocusedIndex === 0) {
+              break;
+            }
+            let nextFilteredOption: SelectOption<T>;
+            for (let i = filteredFocusedIndex - 1; i >= 0; --i) {
+              if (!!filteredOptions[i] && !filteredOptions[i].disabled) {
+                nextFilteredOption = filteredOptions[i];
+                break;
+              }
+            }
+            const nextIndex = options.findIndex(
+              (option) => option.value === nextFilteredOption?.value,
+            );
+            setFocusedIndex(nextIndex);
           }
           event.preventDefault();
           event.stopPropagation();
@@ -321,7 +331,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           break;
       }
     },
-    [isOpen, options, getOptionId, openMenu, focusedIndex],
+    [isOpen, filteredOptions, focusedIndex, openMenu, options],
   );
 
   const menuItems = React.useMemo(() => {
