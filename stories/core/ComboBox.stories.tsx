@@ -10,6 +10,7 @@ import {
   ComboBoxProps,
   Label,
   MenuItem,
+  StatusMessage,
   SelectOption,
 } from '../../src/core';
 import { CreeveyStoryParams } from 'creevey';
@@ -479,8 +480,11 @@ export const WithCustomMessageIcon: Story<Partial<ComboBoxProps<string>>> = (
   return (
     <ComboBox
       options={options}
-      message='This is a message'
-      messageIcon={<SvgCamera />}
+      message={
+        <StatusMessage startIcon={<SvgCamera />}>
+          This is a message
+        </StatusMessage>
+      }
       inputProps={{ placeholder: 'Select a country' }}
       onChange={(value: string) => action(value ?? '')()}
       {...args}
@@ -489,6 +493,7 @@ export const WithCustomMessageIcon: Story<Partial<ComboBoxProps<string>>> = (
 };
 WithCustomMessageIcon.args = {
   inputProps: { placeholder: 'Select a country' },
-  message: 'This is a message',
-  messageIcon: <SvgCamera />,
+  message: (
+    <StatusMessage startIcon={<SvgCamera />}>This is a message</StatusMessage>
+  ),
 };

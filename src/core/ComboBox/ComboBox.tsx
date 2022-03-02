@@ -17,11 +17,11 @@ import {
   getFocusableElements,
   getRandomValue,
   InputContainerProps,
-  StatusIconMap,
   mergeRefs,
 } from '../utils';
 import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
 import 'tippy.js/animations/shift-away.css';
+import { StatusMessage } from '../StatusMessage';
 
 export type ComboBoxProps<T> = {
   /**
@@ -36,10 +36,6 @@ export type ComboBoxProps<T> = {
    * Message shown below the combobox.
    */
   message?: React.ReactNode;
-  /**
-   * Custom svg icon shown below the combobox. Will override status icon if specified.
-   */
-  messageIcon?: JSX.Element;
   /**
    * Callback fired when selected value changes.
    */
@@ -105,7 +101,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     dropdownMenuProps,
     message,
     status,
-    messageIcon,
     emptyStateMessage = 'No options found',
     itemRenderer,
     ...rest
@@ -368,22 +363,18 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     memoizedItems,
   ]);
 
-  const StatusIcon = () => {
-    if (messageIcon) {
-      return React.cloneElement(messageIcon, { 'aria-hidden': true });
-    }
-    if (status && message) {
-      return StatusIconMap[status]();
-    }
-    return undefined;
-  };
-
   return (
     <InputContainer
       className={className}
-      message={message}
       status={status}
-      icon={StatusIcon()}
+      statusMessage={
+        typeof message === 'string' ? (
+          <StatusMessage status={status}>{message}</StatusMessage>
+        ) : (
+          React.isValidElement(message) &&
+          React.cloneElement(message, { status })
+        )
+      }
       {...rest}
       id={id}
     >

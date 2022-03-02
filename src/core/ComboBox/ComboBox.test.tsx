@@ -8,6 +8,7 @@ import { fireEvent, render } from '@testing-library/react';
 import { ComboBox, ComboBoxProps } from './ComboBox';
 import { SvgCaretDownSmall } from '@itwin/itwinui-icons-react';
 import { MenuItem } from '../Menu';
+import { StatusMessage } from '../StatusMessage';
 
 const renderComponent = (props?: Partial<ComboBoxProps<number>>) => {
   return render(
@@ -350,7 +351,11 @@ it('should accept status prop', () => {
 
 it('should render with message', () => {
   const { container } = renderComponent({
-    message: <div className='my-message'>Message</div>,
+    message: (
+      <StatusMessage>
+        <div className='my-message'>Message</div>
+      </StatusMessage>
+    ),
   });
   assertBaseElement(container);
   const message = container.querySelector(
@@ -362,7 +367,11 @@ it('should render with message', () => {
 
 it('should render with custom icon', () => {
   const { container } = renderComponent({
-    messageIcon: <svg className='my-icon' />,
+    message: (
+      <StatusMessage startIcon={<svg className='my-icon' />}>
+        Text here
+      </StatusMessage>
+    ),
   });
 
   const inputContainer = container.querySelector(
@@ -370,4 +379,20 @@ it('should render with custom icon', () => {
   ) as HTMLElement;
   assertBaseElement(container);
   expect(inputContainer.querySelector('.iui-input-icon.my-icon')).toBeTruthy();
+});
+
+it('should render with message and status', () => {
+  const { container } = renderComponent({
+    status: 'positive',
+    message: <StatusMessage>Text here</StatusMessage>,
+  });
+
+  const inputContainer = container.querySelector(
+    '.iui-input-container',
+  ) as HTMLElement;
+  assertBaseElement(container);
+  expect(inputContainer).toHaveClass('iui-positive');
+  expect(inputContainer.querySelector('.iui-input-icon')).toBeTruthy();
+  const message = container.querySelector('.iui-message') as HTMLElement;
+  expect(message.textContent).toBe('Text here');
 });
