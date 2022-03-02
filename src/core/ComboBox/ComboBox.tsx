@@ -170,14 +170,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const toggleButtonRef = React.useRef<HTMLSpanElement>(null);
   const [isOpen, setIsOpen] = React.useState(false);
-  // used to dismiss scrolling into view on first menu open
-  // if virtualization is enabled
-  const isFirstRender = React.useRef<boolean>(false);
-
-  const openMenu = React.useCallback(() => {
-    isFirstRender.current = true;
-    setIsOpen(true);
-  }, []);
 
   // Set min-width of menu to be same as input
   const [minWidth, setMinWidth] = React.useState(0);
@@ -276,7 +268,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
               setFocusedIndex(nextIndex);
             }
           } else {
-            openMenu(); // reopen menu if closed when typing
+            setIsOpen(true); // reopen menu if closed when typing
           }
           event.preventDefault();
           event.stopPropagation();
@@ -308,8 +300,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           if (isOpen) {
             setSelectedValue(options[focusedIndex].value);
             userOnChange.current?.(options[focusedIndex].value);
-          } else {
-            isFirstRender.current = true;
           }
           setIsOpen((open) => !open);
           event.preventDefault();
@@ -325,12 +315,12 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           break;
         default:
           if (!isOpen) {
-            openMenu(); // reopen menu if closed when typing
+            setIsOpen(true); // reopen menu if closed when typing
           }
           break;
       }
     },
-    [isOpen, filteredOptions, focusedIndex, openMenu, options],
+    [isOpen, filteredOptions, focusedIndex, options],
   );
 
   const menuItems = React.useMemo(() => {
@@ -351,17 +341,9 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       const isSelected = selectedValue === option.value;
       const isFocused = focusedIndex === index;
       const focusScrollRef = (el: HTMLElement) => {
-        if (
-          enableVirtualization &&
-          isFirstRender.current &&
-          focusedIndex === index
-        ) {
-          isFirstRender.current = false;
-          return;
-        }
-        !enableVirtualization &&
-          focusedIndex === index &&
+        if (!enableVirtualization && focusedIndex === index) {
           el?.scrollIntoView({ block: 'nearest' });
+        }
       };
 
       if (isSelected || isFocused) {
@@ -397,7 +379,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   ]);
 
   const virtualizedItemRenderer = React.useCallback(
-    (index) => menuItems[index] ?? <></>,
+    (index) => menuItems[index],
     [menuItems],
   );
 
@@ -469,7 +451,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           <Input
             ref={inputRef}
             onKeyDown={onKeyDown}
-            onFocus={openMenu}
+            onFocus={() => setIsOpen(true)}
             onChange={onInput}
             value={inputValue}
             aria-activedescendant={

@@ -150,7 +150,7 @@ export const VirtualScroll = React.forwardRef<
     const [visibleNodeCount, setVisibleNodeCount] = React.useState(0);
     const scrollContainer = React.useRef<HTMLElement>();
     const parentRef = React.useRef<HTMLDivElement>(null);
-    const childHeight = React.useRef({ firstChild: 0, child: 0, lastChild: 0 });
+    const childHeight = React.useRef({ first: 0, middle: 0, last: 0 });
     const onScrollRef = React.useRef<(e: Event) => void>();
     // Used only to recalculate on resize
     const [scrollContainerHeight, setScrollContainerHeight] = React.useState(0);
@@ -207,11 +207,11 @@ export const VirtualScroll = React.forwardRef<
       );
 
       childHeight.current = {
-        firstChild: firstChildHeight,
-        child:
+        first: firstChildHeight,
+        middle:
           Number(getElementHeightWithMargins(child).toFixed(2)) ??
           firstChildHeight,
-        lastChild: Number(getElementHeightWithMargins(lastChild).toFixed(2)),
+        last: Number(getElementHeightWithMargins(lastChild).toFixed(2)),
       };
     }, [visibleChildren.length]);
 
@@ -223,12 +223,12 @@ export const VirtualScroll = React.forwardRef<
         return;
       }
       const start = getNumberOfNodesInHeight(
-        childHeight.current.child,
+        childHeight.current.middle,
         scrollableContainer.scrollTop,
       );
       const startIndex = Math.max(0, start - bufferSize);
       const visibleNodes = getVisibleNodeCount(
-        childHeight.current.child,
+        childHeight.current.middle,
         start,
         itemsLength,
         scrollableContainer,
@@ -241,7 +241,7 @@ export const VirtualScroll = React.forwardRef<
         return;
       }
       parentRef.current.style.transform = `translateY(${getTranslateValue(
-        childHeight.current.child,
+        childHeight.current.middle,
         startIndex,
       )}px)`;
     }, [bufferSize, itemsLength]);
@@ -303,12 +303,13 @@ export const VirtualScroll = React.forwardRef<
 
         // smallest scroll to the index
         const scrollTop =
-          scrollableContainer.scrollTop + indexDiff * childHeight.current.child;
+          scrollableContainer.scrollTop +
+          indexDiff * childHeight.current.middle;
 
         scrollableContainer.scrollTo({
           top:
-            Math.floor(scrollTop / childHeight.current.child) *
-            childHeight.current.child,
+            Math.floor(scrollTop / childHeight.current.middle) *
+            childHeight.current.middle,
         });
       }
     }, [scrollToIndex, scrollContainerHeight]);
@@ -327,10 +328,10 @@ export const VirtualScroll = React.forwardRef<
           overflow: 'hidden',
           minHeight:
             itemsLength > 1
-              ? Math.max(itemsLength - 2, 0) * childHeight.current.child +
-                childHeight.current.firstChild +
-                childHeight.current.lastChild
-              : childHeight.current.child,
+              ? Math.max(itemsLength - 2, 0) * childHeight.current.middle +
+                childHeight.current.first +
+                childHeight.current.last
+              : childHeight.current.middle,
           width: '100%',
           ...style,
         }}
