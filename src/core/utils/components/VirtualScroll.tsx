@@ -94,7 +94,6 @@ export type VirtualScrollProps<
   bufferSize?: number;
   /**
    * Index of the first element on initial render.
-   * @default 0
    */
   scrollToIndex?: number;
   /**
@@ -103,7 +102,7 @@ export type VirtualScrollProps<
    */
   as?: React.ElementType;
   /**
-   * Props object to set on parent element.
+   * Props object to set on parent of the virtualized list.
    */
   parentProps?: React.ComponentPropsWithRef<T>;
 } & React.ComponentPropsWithRef<'div'>;
@@ -138,7 +137,7 @@ export const VirtualScroll = React.forwardRef<
       itemsLength,
       itemRenderer,
       bufferSize = 10,
-      scrollToIndex = 0,
+      scrollToIndex,
       style,
       as = 'div',
       parentProps,
@@ -293,6 +292,7 @@ export const VirtualScroll = React.forwardRef<
       // if `scrollToIndex` is not visible, scroll to it
       if (
         scrollableContainer &&
+        scrollToIndex &&
         (scrollToIndex > visibleIndex.current.end ||
           scrollToIndex < visibleIndex.current.start)
       ) {
