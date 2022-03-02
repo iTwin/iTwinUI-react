@@ -404,7 +404,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
                   style={{
                     minWidth,
                     maxWidth: `min(${minWidth * 2}px, 90vw)`,
-                    maxHeight: 297,
+                    maxHeight: 315,
                   }}
                   className='iui-menu iui-scroll'
                 >
@@ -427,7 +427,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
                   style={{
                     minWidth,
                     maxWidth: `min(${minWidth * 2}px, 90vw)`,
-                    maxHeight: 297,
+                    maxHeight: 315,
                   }}
                   setFocus={false}
                   role='listbox'

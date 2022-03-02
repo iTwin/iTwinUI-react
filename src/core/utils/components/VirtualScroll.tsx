@@ -223,6 +223,7 @@ export const VirtualScroll = React.forwardRef<
       if (!scrollableContainer) {
         return;
       }
+
       const start = getNumberOfNodesInHeight(
         childHeight.current.middle,
         scrollableContainer.scrollTop,
@@ -292,7 +293,7 @@ export const VirtualScroll = React.forwardRef<
       // if `scrollToIndex` is not visible, scroll to it
       if (
         scrollableContainer &&
-        scrollToIndex &&
+        scrollToIndex != null &&
         (scrollToIndex > visibleIndex.current.end ||
           scrollToIndex < visibleIndex.current.start)
       ) {
