@@ -178,6 +178,10 @@ export const VirtualScroll = React.forwardRef<
       return () => resizeObserver?.disconnect();
     }, [resizeObserver]);
 
+    const getScrollableContainer = () =>
+      scrollContainer.current ??
+      (parentRef.current?.ownerDocument.scrollingElement as HTMLElement);
+
     const visibleChildren = React.useMemo(() => {
       const arr = [];
       const endIndex = Math.min(
@@ -215,9 +219,7 @@ export const VirtualScroll = React.forwardRef<
     }, [visibleChildren.length]);
 
     const updateVirtualScroll = React.useCallback(() => {
-      const scrollableContainer =
-        scrollContainer.current ??
-        (parentRef.current?.ownerDocument.scrollingElement as HTMLElement);
+      const scrollableContainer = getScrollableContainer();
       if (!scrollableContainer) {
         return;
       }
@@ -285,9 +287,7 @@ export const VirtualScroll = React.forwardRef<
         return;
       }
 
-      const scrollableContainer =
-        scrollContainer.current ??
-        (parentRef.current?.ownerDocument.scrollingElement as HTMLElement);
+      const scrollableContainer = getScrollableContainer();
 
       // if `scrollToIndex` is not visible, scroll to it
       if (
@@ -301,15 +301,14 @@ export const VirtualScroll = React.forwardRef<
             ? scrollToIndex - visibleIndex.current.end
             : scrollToIndex - visibleIndex.current.start;
 
-        // smallest scroll to the index
-        const scrollTop =
-          scrollableContainer.scrollTop +
-          indexDiff * childHeight.current.middle;
+        // scrollTop value to display full item height
+        const adjustedScrollTop =
+          scrollableContainer.scrollTop -
+          (scrollableContainer.scrollTop % childHeight.current.middle);
 
+        // smallest scroll to the index
         scrollableContainer.scrollTo({
-          top:
-            Math.floor(scrollTop / childHeight.current.middle) *
-            childHeight.current.middle,
+          top: adjustedScrollTop + indexDiff * childHeight.current.middle,
         });
       }
     }, [scrollToIndex, scrollContainerHeight]);
