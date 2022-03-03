@@ -46,7 +46,9 @@ export const Basic: Story<CarouselProps> = (args) => {
                 placeItems: 'center',
               }}
             >
-              <div style={{ fontSize: '3rem' }}>{index + 1}</div>
+              <div style={{ fontSize: 48, color: 'hsl(0deg 0% 100% / 0.7)' }}>
+                {index + 1}
+              </div>
             </div>
           </Carousel.Slide>
         ))}
