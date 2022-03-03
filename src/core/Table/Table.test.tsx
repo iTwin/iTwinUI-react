@@ -2227,3 +2227,47 @@ it('should sync body horizontal scroll with header scroll', () => {
   expect(header.scrollLeft).toBe(100);
   expect(body.scrollLeft).toBe(100);
 });
+
+it('should reorder columns', () => {
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    enableDraggableColumns: true,
+  });
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  headerCells.forEach((cell) =>
+    expect(cell.getAttribute('draggable')).toBe('true'),
+  );
+
+  const nameColumn = headerCells[0];
+  const viewColumn = headerCells[2];
+
+  fireEvent.dragStart(nameColumn);
+  fireEvent.dragEnter(viewColumn);
+  fireEvent.dragOver(viewColumn, { dataTransfer: { text: 0 } });
+  fireEvent.drop(viewColumn);
+});
