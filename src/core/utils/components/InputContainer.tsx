@@ -51,7 +51,8 @@ export const InputContainer = <T extends React.ElementType = 'div'>(
           [`iui-${status}`]: !!status,
           'iui-inline-label': isLabelInline,
           'iui-inline-icon': isIconInline,
-          'iui-with-message': (!!message || !!icon) && !isLabelInline,
+          'iui-with-message':
+            (!!message || !!icon || !!statusMessage) && !isLabelInline,
         },
         className,
       )}
