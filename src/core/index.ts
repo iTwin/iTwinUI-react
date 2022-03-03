@@ -132,9 +132,6 @@ export type {
   MenuExtraContentProps,
 } from './Menu';
 
-export { StatusMessage } from './StatusMessage';
-export type { StatusMessageProps } from './StatusMessage';
-
 export { Modal, ModalButtonBar } from './Modal';
 export type { ModalProps, ModalButtonBarProps } from './Modal';
 
@@ -168,6 +165,9 @@ export type {
 
 export { Slider } from './Slider';
 export type { SliderProps } from './Slider';
+
+export { StatusMessage } from './StatusMessage';
+export type { StatusMessageProps } from './StatusMessage';
 
 export {
   Table,
