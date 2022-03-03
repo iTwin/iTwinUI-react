@@ -34,6 +34,7 @@ export type ComboBoxProps<T> = {
   value?: T;
   /**
    * Message shown below the combobox.
+   * Use `StatusMessage` component.
    */
   message?: React.ReactNode;
   /**

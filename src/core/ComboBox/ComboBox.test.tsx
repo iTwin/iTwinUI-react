@@ -365,6 +365,33 @@ it('should render with message', () => {
   expect(message.textContent).toBe('Message');
 });
 
+it('should render with message as string', () => {
+  const { container } = renderComponent({
+    message: 'My message as string',
+  });
+  assertBaseElement(container);
+  const message = container.querySelector('.iui-message') as HTMLElement;
+  expect(message).toBeTruthy();
+  expect(message.textContent).toBe('My message as string');
+});
+
+it('should render with message as string and status', () => {
+  const { container } = renderComponent({
+    message: 'My message as string',
+    status: 'warning',
+  });
+  assertBaseElement(container);
+  const message = container.querySelector('.iui-message') as HTMLElement;
+  expect(message).toBeTruthy();
+  expect(message.textContent).toBe('My message as string');
+  const inputContainer = container.querySelector(
+    '.iui-input-container',
+  ) as HTMLElement;
+  assertBaseElement(container);
+  expect(inputContainer).toHaveClass('iui-warning');
+  expect(inputContainer.querySelector('.iui-input-icon')).toBeTruthy();
+});
+
 it('should render with custom icon', () => {
   const { container } = renderComponent({
     message: (
