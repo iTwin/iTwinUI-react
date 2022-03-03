@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { useTheme } from '../utils';
+import { getRandomValue, useTheme } from '../utils';
 import { IconButton } from '../Buttons';
 import SvgChevronLeft from '@itwin/itwinui-icons-react/cjs/icons/ChevronLeft';
 import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
@@ -12,7 +12,6 @@ import '@itwin/itwinui-css/css/carousel.css';
 
 export type CarouselProps = {
   currentIndex?: number;
-  autoPlay?: boolean;
 } & React.ComponentPropsWithoutRef<'div'>;
 
 const CarouselContext = React.createContext<
@@ -22,12 +21,18 @@ const CarouselContext = React.createContext<
       slideCount: number;
       setSlideCount: (length: number | ((old: number) => void)) => void;
       keysPressed: Record<string, boolean>;
+      idPrefix: string;
     }
   | undefined
 >(undefined);
 
 export const Carousel = (props: CarouselProps) => {
   const { currentIndex: userCurrentIndex = 0, children, ...rest } = props;
+
+  // Generate a stateful random id if not specified
+  const [id] = React.useState(
+    () => props.id ?? `iui-carousel-${getRandomValue(10)}`,
+  );
 
   useTheme();
 
@@ -66,13 +71,14 @@ export const Carousel = (props: CarouselProps) => {
   };
 
   return (
-    <div
+    <section
       className='iui-carousel'
       aria-roledescription='carousel'
       tabIndex={0}
       onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}
       {...rest}
+      id={id}
     >
       <CarouselContext.Provider
         value={{
@@ -81,11 +87,12 @@ export const Carousel = (props: CarouselProps) => {
           slideCount,
           setSlideCount,
           keysPressed,
+          idPrefix: id,
         }}
       >
         {children}
       </CarouselContext.Provider>
-    </div>
+    </section>
   );
 };
 
@@ -96,7 +103,7 @@ const CarouselSlider = (props: React.ComponentPropsWithoutRef<'ol'>) => {
     throw new Error('CarouselSlider must be used within Carousel');
   }
 
-  const { currentIndex, setSlideCount } = context;
+  const { currentIndex, setSlideCount, idPrefix } = context;
 
   React.useLayoutEffect(() => {
     setSlideCount(React.Children.count(props.children));
@@ -106,18 +113,18 @@ const CarouselSlider = (props: React.ComponentPropsWithoutRef<'ol'>) => {
     () =>
       React.Children.map(props.children, (child, index) =>
         React.isValidElement(child)
-          ? React.cloneElement(child, { 'aria-hidden': index !== currentIndex })
+          ? React.cloneElement(child, { id: `${idPrefix}--slide-${index}` })
           : child,
       ) ?? [],
-    [props.children, currentIndex],
+    [props.children, idPrefix],
   );
 
   return (
     <ol
+      aria-live='polite'
       {...props}
       className={cx('iui-carousel-slider', props.className)}
       style={{
-        // height: '100%',
         transform: `translateX(-${currentIndex * 100}%)`,
         ...props.style,
       }}
@@ -147,7 +154,7 @@ const CarouselNavigation = (props: React.ComponentPropsWithoutRef<'nav'>) => {
 
   const context = React.useContext(CarouselContext);
   if (!context) {
-    throw new Error('TODO');
+    throw new Error('CarouselNavigation should be used inside Carousel');
   }
 
   const { slideCount, setCurrentIndex, keysPressed } = context;
@@ -189,17 +196,44 @@ const CarouselDots = (
   props: {
     length?: number;
     maxCount?: number;
-  } & React.ComponentPropsWithoutRef<'ol'>,
+    currentIndex?: number;
+    onSlideChange?: (index: number) => void;
+  } & React.ComponentPropsWithoutRef<'div'>,
 ) => {
-  const { maxCount = 5, className, children, ...rest } = props;
-  const context = React.useContext(CarouselContext);
-  if (!context) {
-    throw new Error('TODO: this needs to be usable without context');
-  }
-
-  const { slideCount, currentIndex, setCurrentIndex } = context;
+  const {
+    maxCount = 5,
+    currentIndex: userCurrentIndex,
+    length,
+    className,
+    onSlideChange,
+    children,
+    ...rest
+  } = props;
 
   useTheme();
+
+  const context = React.useContext(CarouselContext);
+  const slideCount = length ?? context?.slideCount;
+  const currentIndex = userCurrentIndex ?? context?.currentIndex;
+  const idPrefix = props.id ?? context?.idPrefix;
+
+  const handleSlideChange = React.useCallback(
+    (index: number) => {
+      context?.setCurrentIndex(index);
+      onSlideChange?.(index);
+    },
+    [context, onSlideChange],
+  );
+
+  if (
+    slideCount == undefined ||
+    currentIndex == undefined ||
+    (!idPrefix && !children)
+  ) {
+    throw new Error(
+      'CarouselDots needs to be used inside Carousel, or missing props need to be specified',
+    );
+  }
 
   const dots = React.useMemo(
     () =>
@@ -226,29 +260,31 @@ const CarouselDots = (
             (index === lastDotIndex - 1 && index !== slideCount - 2);
 
           return (
-            <li key={index}>
-              <CarouselDot
-                aria-label={`Slide ${index}`}
-                isActive={index === currentIndex}
-                onClick={() => setCurrentIndex(index)}
-                isFirst={isFirstSmallDot}
-                isSecond={isSecondSmallDot}
-                isInvisible={index < firstDotIndex || index > lastDotIndex}
-              />
-            </li>
+            <CarouselDot
+              aria-label={`Slide ${index}`}
+              isActive={index === currentIndex}
+              onClick={() => handleSlideChange(index)}
+              isFirst={isFirstSmallDot}
+              isSecond={isSecondSmallDot}
+              isInvisible={index < firstDotIndex || index > lastDotIndex}
+              key={index}
+              id={`${idPrefix}--dot-${index}`}
+              aria-controls={`${idPrefix}--slide-${index}`}
+            />
           );
         }),
-    [slideCount, maxCount, currentIndex, setCurrentIndex],
+    [slideCount, currentIndex, maxCount, idPrefix, handleSlideChange],
   );
 
   return (
-    <ol
+    <div
       className={cx('iui-carousel-navigation-dots', className)}
       role='tablist'
+      aria-label='Slides'
       {...rest}
     >
       {children ?? dots}
-    </ol>
+    </div>
   );
 };
 
@@ -284,6 +320,7 @@ const CarouselDot = (
         },
         className,
       )}
+      aria-selected={isActive}
       {...rest}
     />
   );
