@@ -103,7 +103,7 @@ stories/core/**Alert.stories.tsx**
 
 ### Documentation
 
-We use [JSDoc](https://jsdoc.app/) to write documentation for our code.
+We use [JSDoc](https://jsdoc.app/) (not TSDoc) to write documentation for our code.
 
 Every component should have a multiline description and at least one example.
 
@@ -117,6 +117,8 @@ export const Alert = (props: AlertProps) => {
   ...
 ```
 
+Examples can be captioned. This is especially helpful when there are multiple examples.
+
 ```jsx
 /**
  * Footer element with all needed legal and info links.
@@ -126,13 +128,7 @@ export const Alert = (props: AlertProps) => {
  * <Footer customElements={[{title: 'Bentley', url: 'https://www.bentley.com/'}]} />
  * @example <caption>Returning only custom elements</caption>
  * <Footer customElements={() => newFooterElements)} />
- * @example <caption>Filtering out a specific element</caption>
- * <Footer customElements={(defaultElements) => defaultElements.filter(({ key }) => key !== 'privacy' )} />
- * @example <caption>Changing a url</caption>
- * <Footer customElements={(defaultElements) => defaultElements.map(element => ({ ...element, url: element.key === 'privacy' ? customPrivacyUrl : element.url }))} />
- */
-export const Footer = (props: FooterProps) => {
-  ...
+ ...
 ```
 
 Every prop should have a multiline description with relevant informational tags.
@@ -144,11 +140,6 @@ export type AlertProps = {
    * @default 'informational'
    */
   type?: 'positive' | 'warning' | 'negative' | 'informational';
-  ...
-```
-
-```jsx
-export type AlertProps = {
  /**
    * Action handler for the clickable text.
    * @deprecated `clickableTextProps` should be used instead.
