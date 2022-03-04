@@ -154,8 +154,12 @@ export const VirtualScroll = React.forwardRef<
     // Used only to recalculate on resize
     const [scrollContainerHeight, setScrollContainerHeight] = React.useState(0);
     const visibleIndex = React.useRef({ start: 0, end: 0 });
+    const [isMounted, setIsMounted] = React.useState(false);
 
     const onResize = React.useCallback(({ height }) => {
+      if (height > 0) {
+        setIsMounted(true);
+      }
       setScrollContainerHeight(height);
     }, []);
     const [resizeRef, resizeObserver] = useResizeObserver(onResize);
@@ -284,7 +288,7 @@ export const VirtualScroll = React.forwardRef<
     }, [onScroll, removeScrollListener]);
 
     React.useLayoutEffect(() => {
-      if (!scrollContainerHeight) {
+      if (!isMounted) {
         return;
       }
 
@@ -312,7 +316,7 @@ export const VirtualScroll = React.forwardRef<
           top: adjustedScrollTop + indexDiff * childHeight.current.middle,
         });
       }
-    }, [scrollToIndex, scrollContainerHeight]);
+    }, [scrollToIndex, isMounted]);
 
     React.useLayoutEffect(() => {
       if (!scrollContainerHeight) {
