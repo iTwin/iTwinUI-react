@@ -154,6 +154,8 @@ export const VirtualScroll = React.forwardRef<
     // Used only to recalculate on resize
     const [scrollContainerHeight, setScrollContainerHeight] = React.useState(0);
     const visibleIndex = React.useRef({ start: 0, end: 0 });
+    // Used to mark when scroll container has height (updated by resize observer)
+    // because before that calculations are not right
     const [isMounted, setIsMounted] = React.useState(false);
 
     const onResize = React.useCallback(({ height }) => {
