@@ -139,7 +139,7 @@ export const VirtualScroll = React.forwardRef<
       bufferSize = 10,
       scrollToIndex,
       style,
-      as = 'div',
+      as: Component = 'div',
       parentProps,
       ...rest
     },
@@ -165,7 +165,6 @@ export const VirtualScroll = React.forwardRef<
       setScrollContainerHeight(height);
     }, []);
     const [resizeRef, resizeObserver] = useResizeObserver(onResize);
-    const Component = as;
 
     // Find scrollable parent
     // Needed only on init
@@ -207,7 +206,7 @@ export const VirtualScroll = React.forwardRef<
       }
 
       const firstChild = parentRef.current.children.item(0) as HTMLElement;
-      const child = parentRef.current.children.item(1) as HTMLElement;
+      const secondChild = parentRef.current.children.item(1) as HTMLElement;
       const lastChild = parentRef.current.children.item(
         parentRef.current.children.length - 1,
       ) as HTMLElement;
@@ -218,7 +217,7 @@ export const VirtualScroll = React.forwardRef<
       childHeight.current = {
         first: firstChildHeight,
         middle:
-          Number(getElementHeightWithMargins(child).toFixed(2)) ??
+          Number(getElementHeightWithMargins(secondChild).toFixed(2)) ??
           firstChildHeight,
         last: Number(getElementHeightWithMargins(lastChild).toFixed(2)),
       };
