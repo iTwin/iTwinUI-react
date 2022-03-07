@@ -455,6 +455,15 @@
         "__id": "buttons-buttongroup--input-button-combo"
       }
     },
+    "buttons-buttongroup--vertical": {
+      "id": "buttons-buttongroup--vertical",
+      "name": "Vertical",
+      "kind": "Buttons/ButtonGroup",
+      "story": "Vertical",
+      "parameters": {
+        "__id": "buttons-buttongroup--vertical"
+      }
+    },
     "buttons-dropdownbutton--basic": {
       "id": "buttons-dropdownbutton--basic",
       "name": "Basic",
@@ -678,6 +687,24 @@
       "story": "Custom Renderer",
       "parameters": {
         "__id": "core-combobox--custom-renderer"
+      }
+    },
+    "core-combobox--with-message": {
+      "id": "core-combobox--with-message",
+      "name": "With Message",
+      "kind": "Core/ComboBox",
+      "story": "With Message",
+      "parameters": {
+        "__id": "core-combobox--with-message"
+      }
+    },
+    "core-combobox--with-custom-message-icon": {
+      "id": "core-combobox--with-custom-message-icon",
+      "name": "With Custom Message Icon",
+      "kind": "Core/ComboBox",
+      "story": "With Custom Message Icon",
+      "parameters": {
+        "__id": "core-combobox--with-custom-message-icon"
       }
     },
     "core-datepicker--basic": {
@@ -959,13 +986,31 @@
         "__id": "core-footer--basic"
       }
     },
-    "core-footer--custom": {
-      "id": "core-footer--custom",
-      "name": "Custom",
+    "core-footer--appended-custom-elements": {
+      "id": "core-footer--appended-custom-elements",
+      "name": "Appended Custom Elements",
       "kind": "Core/Footer",
-      "story": "Custom",
+      "story": "Appended Custom Elements",
       "parameters": {
-        "__id": "core-footer--custom"
+        "__id": "core-footer--appended-custom-elements"
+      }
+    },
+    "core-footer--only-custom-elements": {
+      "id": "core-footer--only-custom-elements",
+      "name": "Only Custom Elements",
+      "kind": "Core/Footer",
+      "story": "Only Custom Elements",
+      "parameters": {
+        "__id": "core-footer--only-custom-elements"
+      }
+    },
+    "core-footer--customized-default-and-custom-elements": {
+      "id": "core-footer--customized-default-and-custom-elements",
+      "name": "Customized Default And Custom Elements",
+      "kind": "Core/Footer",
+      "story": "Customized Default And Custom Elements",
+      "parameters": {
+        "__id": "core-footer--customized-default-and-custom-elements"
       }
     },
     "core-footer--bottom-fixed": {
