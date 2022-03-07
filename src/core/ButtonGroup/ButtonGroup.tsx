@@ -20,8 +20,6 @@ export type ButtonGroupProps = {
    * and returns the `ReactNode` to render.
    *
    * The placement of this button can be controlled using the `overflowPlacement` prop.
-   *
-   * *Note: this will not work with `orientation='vertical'`.*
    */
   overflowButton?: (firstOverflowingIndex: number) => React.ReactNode;
   /**
@@ -83,7 +81,11 @@ export const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
 
     useTheme();
 
-    const [overflowRef, visibleCount] = useOverflow(items, !overflowButton);
+    const [overflowRef, visibleCount] = useOverflow(
+      items,
+      !overflowButton,
+      orientation,
+    );
     const refs = useMergedRefs(overflowRef, ref);
 
     return (
@@ -96,8 +98,9 @@ export const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
           className,
         )}
         style={{
-          ...(!!overflowButton &&
-            orientation === 'horizontal' && { width: '100%' }),
+          ...(!!overflowButton && orientation === 'horizontal'
+            ? { width: '100%' }
+            : { height: '100%' }),
           ...style,
         }}
         aria-orientation={orientation}

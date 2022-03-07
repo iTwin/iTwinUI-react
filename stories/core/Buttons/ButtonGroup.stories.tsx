@@ -77,6 +77,7 @@ export const Overflow: Story<ButtonGroupProps> = (args) => {
           maxWidth: 'clamp(300px, 50%, 100%)',
           border: '1px solid hotpink',
           padding: 8,
+          height: 'max(200px, 30vh)',
         }}
       >
         <ButtonGroup
