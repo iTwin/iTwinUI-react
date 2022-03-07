@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.33.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.32.0...v1.33.0) (2022-03-07)
+
+
+### Fixes
+
+* **Footer:** Override default elements ([#544](https://www.github.com/iTwin/iTwinUI-react/issues/544)) ([76396a4](https://www.github.com/iTwin/iTwinUI-react/commit/76396a4cc0a88bb7680316cf4642b732729abd7a))
+
+
+### What's new
+
+* **ButtonGroup:** Add new `orientation` prop ([#577](https://www.github.com/iTwin/iTwinUI-react/issues/577)) ([f6cd52f](https://www.github.com/iTwin/iTwinUI-react/commit/f6cd52f39dd139439281114d3ade99e486ab6bfb))
+* **ComboBox:** Add `message` ([#554](https://www.github.com/iTwin/iTwinUI-react/issues/554)) ([8113860](https://www.github.com/iTwin/iTwinUI-react/commit/8113860499e6156d97992919204b3b8c7e46197b))
+
 ## [1.32.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.31.0...v1.32.0) (2022-02-25)
 
 ### What's new
