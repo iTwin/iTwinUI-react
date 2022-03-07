@@ -44,13 +44,13 @@ const columns = (onViewClick: () => void = jest.fn()) => [
       },
       {
         id: 'description',
-        Header: 'description',
+        Header: 'Description',
         accessor: 'description',
         maxWidth: 200,
       },
       {
         id: 'view',
-        Header: 'view',
+        Header: 'View',
         Cell: () => {
           return <span onClick={onViewClick}>View</span>;
         },
@@ -2229,34 +2229,17 @@ it('should sync body horizontal scroll with header scroll', () => {
 });
 
 it('should reorder columns', () => {
-  const columns: Column<TestDataType>[] = [
-    {
-      Header: 'Header name',
-      columns: [
-        {
-          id: 'name',
-          Header: 'Name',
-          accessor: 'name',
-        },
-        {
-          id: 'description',
-          Header: 'description',
-          accessor: 'description',
-        },
-        {
-          id: 'view',
-          Header: 'view',
-          Cell: () => 'View',
-        },
-      ],
-    },
-  ];
-  const { container } = renderComponent({
-    columns,
-    enableDraggableColumns: true,
-  });
+  const { container, rerender } = render(
+    <Table
+      columns={columns()}
+      data={mockedData()}
+      emptyTableContent='Empty table'
+      emptyFilteredTableContent='No results. Clear filter.'
+      enableDraggableColumns
+    />,
+  );
 
-  const headerCells = container.querySelectorAll<HTMLDivElement>(
+  let headerCells = container.querySelectorAll<HTMLDivElement>(
     '.iui-table-header .iui-cell',
   );
   headerCells.forEach((cell) =>
@@ -2266,8 +2249,27 @@ it('should reorder columns', () => {
   const nameColumn = headerCells[0];
   const viewColumn = headerCells[2];
 
-  fireEvent.dragStart(nameColumn);
+  const setData = jest.fn();
+  fireEvent.dragStart(nameColumn, { dataTransfer: { setData } });
+  expect(setData).toHaveBeenCalledWith('text', 'name');
   fireEvent.dragEnter(viewColumn);
-  fireEvent.dragOver(viewColumn, { dataTransfer: { text: 0 } });
-  fireEvent.drop(viewColumn);
+  fireEvent.dragOver(viewColumn);
+  fireEvent.drop(viewColumn, { dataTransfer: { getData: () => 'name' } });
+
+  rerender(
+    <Table
+      columns={columns()}
+      data={mockedData()}
+      emptyTableContent='Empty table'
+      emptyFilteredTableContent='No results. Clear filter.'
+      enableDraggableColumns
+    />,
+  );
+
+  headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  expect(headerCells[0].textContent).toBe('Description');
+  expect(headerCells[1].textContent).toBe('View');
+  expect(headerCells[2].textContent).toBe('Name');
 });
