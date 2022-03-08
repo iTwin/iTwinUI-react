@@ -17,11 +17,28 @@ import {
   getRandomValue,
   InputContainerProps,
   mergeRefs,
-  VirtualScroll,
+  useVirtualization,
+  VirtualScrollProps,
 } from '../utils';
 import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
 import 'tippy.js/animations/shift-away.css';
 import { StatusMessage } from '../StatusMessage';
+
+type VirtualComboboxMenuProps = {
+  id: string;
+} & VirtualScrollProps;
+
+const VirtualComboboxMenu = ({ id, ...props }: VirtualComboboxMenuProps) => {
+  const { outerProps, innerProps, visibleChildren } = useVirtualization(props);
+
+  return (
+    <div {...outerProps}>
+      <Menu id={`${id}-list`} role='listbox' setFocus={false} {...innerProps}>
+        {visibleChildren}
+      </Menu>
+    </div>
+  );
+};
 
 export type ComboBoxProps<T> = {
   /**
@@ -429,16 +446,11 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
                   }}
                   className='iui-menu iui-scroll'
                 >
-                  <VirtualScroll
+                  <VirtualComboboxMenu
+                    id={`${id}-list`}
                     itemsLength={menuItems.length}
                     itemRenderer={virtualizedItemRenderer}
                     scrollToIndex={focusedIndex}
-                    as='ul'
-                    parentProps={{
-                      className: 'iui-menu',
-                      id: `${id}-list`,
-                      role: 'listbox',
-                    }}
                   />
                 </div>
               ) : (
