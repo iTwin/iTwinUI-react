@@ -7,6 +7,7 @@ import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import VirtualScroll from './VirtualScroll';
 import * as UseResizeObserver from '../hooks/useResizeObserver';
+import { useVirtualization } from '.';
 
 // to return correct values for container 'scroller' and children
 const heightsMock = jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect');
@@ -171,21 +172,34 @@ it('should render parent as ul', () => {
         target: { scrollTop: (options as ScrollToOptions).top ?? 0 },
       });
     });
-  const { container } = render(
-    <div style={{ overflow: 'auto', height: 400 }} id='scroller'>
-      <VirtualScroll
-        itemsLength={1000}
-        itemRenderer={(index) => (
-          <li key={index} className='element' style={{ height: 40 }}>{`Element${
-            index + 1
-          }`}</li>
-        )}
-        as='ul'
-        parentProps={{ className: 'customClass' }}
-      />
-    </div>,
-  );
+
+  const MyComponentToRender = () => {
+    const { outerProps, innerProps, visibleChildren } = useVirtualization({
+      itemsLength: 1000,
+      itemRenderer: (index) => (
+        <li key={index} className='element' style={{ height: 40 }}>{`Element${
+          index + 1
+        }`}</li>
+      ),
+    });
+
+    return (
+      <div style={{ overflow: 'auto', height: 400 }} id='scroller'>
+        <div {...outerProps}>
+          <ul {...innerProps} className='customClass'>
+            {visibleChildren}
+          </ul>
+        </div>
+      </div>
+    );
+  };
+
+  const { container } = render(<MyComponentToRender />);
   act(() => triggerResize({ height: 400 } as DOMRectReadOnly));
 
   expect(container.querySelector('ul.customClass')).toBeTruthy();
+  const allVisibleElements = container.querySelectorAll('.element');
+  expect(allVisibleElements.length).toBe(30);
+  expect(allVisibleElements[0].textContent).toBe('Element1');
+  expect(allVisibleElements[29].textContent).toBe('Element30');
 });
