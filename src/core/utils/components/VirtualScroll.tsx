@@ -3,7 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { mergeRefs } from '../hooks/useMergedRefs';
 import { useResizeObserver } from '../hooks/useResizeObserver';
 
 const getScrollableParent = (
