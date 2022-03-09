@@ -37,6 +37,7 @@ export const useColumnVisibility = <T extends Record<string, unknown>>(
                 {...column.getToggleHiddenProps()}
                 label={column.Header}
                 key={column.id}
+                className='iui-menu-item'
               />
             ) : (
               <></>
