@@ -627,18 +627,8 @@ export const Table = <
             return (
               <div {...headerGroupProps} key={headerGroupProps.key}>
                 {headerGroup.headers.map((column, index) => {
-                  const {
-                    onClick: onSortClick,
-                    ...sortByProps
-                  } = column.getSortByToggleProps() as {
-                    onClick:
-                      | React.MouseEventHandler<HTMLDivElement>
-                      | undefined;
-                    style: React.CSSProperties;
-                    title: string;
-                  };
                   const columnProps = column.getHeaderProps({
-                    ...sortByProps,
+                    ...column.getSortByToggleProps(),
                     className: cx(
                       'iui-cell',
                       { 'iui-actionable': column.canSort },
@@ -659,7 +649,6 @@ export const Table = <
                           column.resizeWidth = el.getBoundingClientRect().width;
                         }
                       }}
-                      onMouseDown={onSortClick}
                     >
                       {column.render('Header')}
                       {!isLoading && (data.length != 0 || areFiltersSet) && (

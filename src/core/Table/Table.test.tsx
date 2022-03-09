@@ -2296,6 +2296,7 @@ it.each([
 ])(
   'should reorder columns %p',
   ({ srcIndex, srcName, dstIndex, dropPosition, resultingColumns }) => {
+    const onSort = jest.fn();
     jest.spyOn(HTMLElement.prototype, 'offsetLeft', 'get').mockReturnValue(0);
     jest
       .spyOn(HTMLElement.prototype, 'offsetWidth', 'get')
@@ -2307,6 +2308,8 @@ it.each([
         emptyTableContent='Empty table'
         emptyFilteredTableContent='No results. Clear filter.'
         enableDraggableColumns
+        isSortable
+        onSort={onSort}
       />,
     );
 
@@ -2344,6 +2347,9 @@ it.each([
       }),
     );
 
+    // Should not trigger sort
+    expect(onSort).not.toHaveBeenCalled();
+
     rerender(
       <Table
         columns={columns()}
@@ -2351,6 +2357,8 @@ it.each([
         emptyTableContent='Empty table'
         emptyFilteredTableContent='No results. Clear filter.'
         enableDraggableColumns
+        isSortable
+        onSort={onSort}
       />,
     );
 
