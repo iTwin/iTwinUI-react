@@ -180,6 +180,7 @@ declare module 'react-table' {
     originalWidth: number;
     resizeWidth?: number;
     isResizerVisible?: boolean;
+    getDragAndDropProps: () => TableKeyedProps;
   }
 
   export interface Cell<D extends object = {}>

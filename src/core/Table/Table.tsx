@@ -21,7 +21,6 @@ import {
   useExpanded,
   usePagination,
   useColumnOrder,
-  IdType,
 } from 'react-table';
 import { ProgressRadial } from '../ProgressIndicators';
 import { useTheme, CommonProps, useResizeObserver } from '../utils';
@@ -38,6 +37,7 @@ import {
   useSubRowFiltering,
   useSubRowSelection,
   useResizeColumns,
+  useColumnDragAndDrop,
 } from './hooks';
 import {
   onExpandHandler,
@@ -434,6 +434,7 @@ export const Table = <
     useExpanderCell(subComponent, expanderCell, isRowDisabled),
     useSelectionCell(isSelectable, isRowDisabled),
     useColumnOrder,
+    useColumnDragAndDrop(enableDraggableColumns),
   );
 
   const {
@@ -450,7 +451,6 @@ export const Table = <
     gotoPage,
     setPageSize,
     flatHeaders,
-    setColumnOrder,
   } = instance;
 
   const ariaDataAttributes = Object.entries(rest).reduce(
@@ -599,79 +599,6 @@ export const Table = <
     [getPreparedRow, page],
   );
 
-  const reorderColumns = (
-    tableColumns: IdType<T>[],
-    srcIndex: number,
-    dstIndex: number,
-  ) => {
-    const newTableColumns = [...tableColumns];
-    const [removed] = newTableColumns.splice(srcIndex, 1);
-    newTableColumns.splice(
-      // When dragging column to the right, we need to decrease the index
-      // because we removed column before and indexes shifted to the left.
-      dstIndex > srcIndex ? dstIndex - 1 : dstIndex,
-      0,
-      removed,
-    );
-    return newTableColumns;
-  };
-
-  const setOnDragColumnStyle = (
-    event: React.DragEvent<HTMLDivElement>,
-    position?: 'left' | 'right',
-  ) => {
-    const columnElement = event.target as HTMLElement;
-    columnElement.classList.remove('iui-reorder-column-right');
-    columnElement.classList.remove('iui-reorder-column-left');
-    if (position === 'left') {
-      columnElement.classList.add('iui-reorder-column-left');
-    } else if (position === 'right') {
-      columnElement.classList.add('iui-reorder-column-right');
-    }
-  };
-
-  const dragStartHandler = (
-    event: React.DragEvent<HTMLDivElement>,
-    id: IdType<T>,
-  ) => event.dataTransfer.setData('text', id);
-  const dropHandler = (
-    event: React.DragEvent<HTMLDivElement>,
-    dstColumnId: IdType<T>,
-  ) => {
-    event.preventDefault();
-    setOnDragColumnStyle(event);
-
-    const srcColumnId = event.dataTransfer.getData('text');
-    const columnIds = flatHeaders.map((x) => x.id);
-    const srcIndex = columnIds.findIndex((x) => x === srcColumnId);
-    const dstIndex = columnIds.findIndex((x) => x === dstColumnId);
-
-    if (srcIndex === dstIndex) {
-      return;
-    }
-
-    const columnElement = event.target as HTMLElement;
-    const middlePoint =
-      columnElement.offsetLeft + columnElement.offsetWidth / 2;
-
-    setColumnOrder(
-      reorderColumns(
-        columnIds,
-        srcIndex,
-        // When dropped on the right side of the column, need to increase the index by 1
-        event.clientX > middlePoint ? dstIndex + 1 : dstIndex,
-      ),
-    );
-  };
-
-  const allowDrop = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    const columnElement = event.target as HTMLElement;
-    const middlePoint =
-      columnElement.offsetLeft + columnElement.offsetWidth / 2;
-    setOnDragColumnStyle(event, event.clientX > middlePoint ? 'right' : 'left');
-  };
-
   return (
     <>
       <div
@@ -723,22 +650,10 @@ export const Table = <
                   return (
                     <div
                       {...columnProps}
+                      {...column.getDragAndDropProps()}
                       key={columnProps.key}
                       title={undefined}
                       draggable={props.enableDraggableColumns}
-                      onDragStart={(event) =>
-                        enableDraggableColumns &&
-                        dragStartHandler(event, column.id)
-                      }
-                      onDragOver={
-                        enableDraggableColumns ? allowDrop : undefined
-                      }
-                      onDragLeave={(event) =>
-                        enableDraggableColumns && setOnDragColumnStyle(event)
-                      }
-                      onDrop={(event) =>
-                        enableDraggableColumns && dropHandler(event, column.id)
-                      }
                       ref={(el) => {
                         if (el && isResizable) {
                           columnRefs.current[column.id] = el;
