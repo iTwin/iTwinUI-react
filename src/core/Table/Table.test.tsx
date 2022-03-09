@@ -2228,48 +2228,136 @@ it('should sync body horizontal scroll with header scroll', () => {
   expect(body.scrollLeft).toBe(100);
 });
 
-it('should reorder columns', () => {
-  const { container, rerender } = render(
-    <Table
-      columns={columns()}
-      data={mockedData()}
-      emptyTableContent='Empty table'
-      emptyFilteredTableContent='No results. Clear filter.'
-      enableDraggableColumns
-    />,
-  );
+it.each([
+  // Dragging Name to the left of View
+  {
+    srcIndex: 0,
+    srcName: 'name',
+    dstIndex: 2,
+    dropPosition: 'left',
+    resultingColumns: ['Description', 'Name', 'View'],
+  },
+  // Dragging Name to the right of View
+  {
+    srcIndex: 0,
+    srcName: 'name',
+    dstIndex: 2,
+    dropPosition: 'right',
+    resultingColumns: ['Description', 'View', 'Name'],
+  },
+  // Dragging View to the left of Name
+  {
+    srcIndex: 2,
+    srcName: 'view',
+    dstIndex: 0,
+    dropPosition: 'left',
+    resultingColumns: ['View', 'Name', 'Description'],
+  },
+  // Dragging View to the right of Name
+  {
+    srcIndex: 2,
+    srcName: 'view',
+    dstIndex: 0,
+    dropPosition: 'right',
+    resultingColumns: ['Name', 'View', 'Description'],
+  },
+  // Dragging Name to the left of itself -> should not change
+  {
+    srcIndex: 0,
+    srcName: 'name',
+    dstIndex: 0,
+    dropPosition: 'left',
+    resultingColumns: ['Name', 'Description', 'View'],
+  },
+  // Dragging Name to the right of itself -> should not change
+  {
+    srcIndex: 0,
+    srcName: 'name',
+    dstIndex: 0,
+    dropPosition: 'right',
+    resultingColumns: ['Name', 'Description', 'View'],
+  },
+  // Dragging Name to the left of Description -> should not change
+  {
+    srcIndex: 0,
+    srcName: 'name',
+    dstIndex: 1,
+    dropPosition: 'left',
+    resultingColumns: ['Name', 'Description', 'View'],
+  },
+  // Dragging View to the right of Description -> should not change
+  {
+    srcIndex: 2,
+    srcName: 'view',
+    dstIndex: 1,
+    dropPosition: 'right',
+    resultingColumns: ['Name', 'Description', 'View'],
+  },
+])(
+  'should reorder columns %p',
+  ({ srcIndex, srcName, dstIndex, dropPosition, resultingColumns }) => {
+    jest.spyOn(HTMLElement.prototype, 'offsetLeft', 'get').mockReturnValue(0);
+    jest
+      .spyOn(HTMLElement.prototype, 'offsetWidth', 'get')
+      .mockReturnValue(100);
+    const { container, rerender } = render(
+      <Table
+        columns={columns()}
+        data={mockedData()}
+        emptyTableContent='Empty table'
+        emptyFilteredTableContent='No results. Clear filter.'
+        enableDraggableColumns
+      />,
+    );
 
-  let headerCells = container.querySelectorAll<HTMLDivElement>(
-    '.iui-table-header .iui-cell',
-  );
-  headerCells.forEach((cell) =>
-    expect(cell.getAttribute('draggable')).toBe('true'),
-  );
+    const headerCells = container.querySelectorAll<HTMLDivElement>(
+      '.iui-table-header .iui-cell',
+    );
+    headerCells.forEach((cell) =>
+      expect(cell.getAttribute('draggable')).toBe('true'),
+    );
 
-  const nameColumn = headerCells[0];
-  const viewColumn = headerCells[2];
+    const srcColumn = headerCells[srcIndex];
+    const dstColumn = headerCells[dstIndex];
 
-  const setData = jest.fn();
-  fireEvent.dragStart(nameColumn, { dataTransfer: { setData } });
-  expect(setData).toHaveBeenCalledWith('text', 'name');
-  fireEvent.dragEnter(viewColumn);
-  fireEvent.dragOver(viewColumn);
-  fireEvent.drop(viewColumn, { dataTransfer: { getData: () => 'name' } });
+    // Helper function to create a drag event because regular ones does not pass `clientX`
+    const createBubbledEvent = (type: string, props = {}) => {
+      const event = new Event(type, { bubbles: true });
+      Object.assign(event, props);
+      return event;
+    };
 
-  rerender(
-    <Table
-      columns={columns()}
-      data={mockedData()}
-      emptyTableContent='Empty table'
-      emptyFilteredTableContent='No results. Clear filter.'
-      enableDraggableColumns
-    />,
-  );
+    const setData = jest.fn();
+    const clientX = dropPosition === 'right' ? 75 : 25;
 
-  headerCells = container.querySelectorAll<HTMLDivElement>(
-    '.iui-table-header .iui-cell',
-  );
-  expect(headerCells[0].textContent).toBe('Description');
-  expect(headerCells[1].textContent).toBe('View');
-  expect(headerCells[2].textContent).toBe('Name');
-});
+    srcColumn.dispatchEvent(
+      createBubbledEvent('dragstart', { dataTransfer: { setData } }),
+    );
+    expect(setData).toHaveBeenCalledWith('text', srcName);
+    dstColumn.dispatchEvent(createBubbledEvent('dragenter', { clientX }));
+    dstColumn.dispatchEvent(createBubbledEvent('dragover', { clientX }));
+    expect(dstColumn).toHaveClass('iui-reorder-column-' + dropPosition);
+    dstColumn.dispatchEvent(
+      createBubbledEvent('drop', {
+        clientX,
+        dataTransfer: { getData: () => srcName },
+      }),
+    );
+
+    rerender(
+      <Table
+        columns={columns()}
+        data={mockedData()}
+        emptyTableContent='Empty table'
+        emptyFilteredTableContent='No results. Clear filter.'
+        enableDraggableColumns
+      />,
+    );
+
+    container
+      .querySelectorAll<HTMLDivElement>('.iui-table-header .iui-cell')
+      .forEach((cell, index) =>
+        expect(cell.textContent).toBe(resultingColumns[index]),
+      );
+  },
+);

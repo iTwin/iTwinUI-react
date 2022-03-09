@@ -604,22 +604,29 @@ export const Table = <
     srcIndex: number,
     dstIndex: number,
   ) => {
-    const [removed] = tableColumns.splice(srcIndex, 1);
-    tableColumns.splice(dstIndex, 0, removed);
-    return tableColumns;
+    const newTableColumns = [...tableColumns];
+    const [removed] = newTableColumns.splice(srcIndex, 1);
+    newTableColumns.splice(
+      // When dragging column to the right, we need to decrease the index
+      // because we removed column before and indexes shifted to the left.
+      dstIndex > srcIndex ? dstIndex - 1 : dstIndex,
+      0,
+      removed,
+    );
+    return newTableColumns;
   };
 
   const setOnDragColumnStyle = (
     event: React.DragEvent<HTMLDivElement>,
     position?: 'left' | 'right',
   ) => {
-    event.currentTarget.style.borderLeft = '';
-    event.currentTarget.style.borderRight = '';
-    if (position) {
-      const borderStyle = '3px dashed';
-      position === 'left'
-        ? (event.currentTarget.style.borderLeft = borderStyle)
-        : (event.currentTarget.style.borderRight = borderStyle);
+    const columnElement = event.target as HTMLElement;
+    columnElement.classList.remove('iui-reorder-column-right');
+    columnElement.classList.remove('iui-reorder-column-left');
+    if (position === 'left') {
+      columnElement.classList.add('iui-reorder-column-left');
+    } else if (position === 'right') {
+      columnElement.classList.add('iui-reorder-column-right');
     }
   };
 
@@ -627,7 +634,6 @@ export const Table = <
     event: React.DragEvent<HTMLDivElement>,
     id: IdType<T>,
   ) => event.dataTransfer.setData('text', id);
-
   const dropHandler = (
     event: React.DragEvent<HTMLDivElement>,
     dstColumnId: IdType<T>,
@@ -639,10 +645,23 @@ export const Table = <
     const columnIds = flatHeaders.map((x) => x.id);
     const srcIndex = columnIds.findIndex((x) => x === srcColumnId);
     const dstIndex = columnIds.findIndex((x) => x === dstColumnId);
+
     if (srcIndex === dstIndex) {
       return;
     }
-    setColumnOrder(reorderColumns(columnIds, srcIndex, dstIndex));
+
+    const columnElement = event.target as HTMLElement;
+    const middlePoint =
+      columnElement.offsetLeft + columnElement.offsetWidth / 2;
+
+    setColumnOrder(
+      reorderColumns(
+        columnIds,
+        srcIndex,
+        // When dropped on the right side of the column, need to increase the index by 1
+        event.clientX > middlePoint ? dstIndex + 1 : dstIndex,
+      ),
+    );
   };
 
   const allowDrop = (event: React.DragEvent<HTMLDivElement>) => {
