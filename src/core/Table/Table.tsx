@@ -653,7 +653,6 @@ export const Table = <
                       {...column.getDragAndDropProps()}
                       key={columnProps.key}
                       title={undefined}
-                      draggable={props.enableDraggableColumns}
                       ref={(el) => {
                         if (el && isResizable) {
                           columnRefs.current[column.id] = el;

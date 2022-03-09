@@ -112,6 +112,7 @@ const defaultGetDragAndDropProps = <T extends Record<string, unknown>>(
   return [
     props,
     {
+      draggable: true,
       onDragStart,
       onDragOver,
       onDragLeave,
