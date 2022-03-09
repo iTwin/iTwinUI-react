@@ -129,6 +129,7 @@ Examples can be captioned. This is especially helpful when there are multiple ex
  * @example <caption>Returning only custom elements</caption>
  * <Footer customElements={() => newFooterElements)} />
  ...
+ */
 ```
 
 Every prop should have a multiline description with relevant informational tags.
