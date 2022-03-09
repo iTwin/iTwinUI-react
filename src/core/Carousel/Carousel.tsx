@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { getRandomValue, useTheme } from '../utils';
+import { getRandomValue, useIntersection, useTheme } from '../utils';
 import { IconButton } from '../Buttons';
 import SvgChevronLeft from '@itwin/itwinui-icons-react/cjs/icons/ChevronLeft';
 import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
@@ -104,6 +104,7 @@ const CarouselSlider = (props: React.ComponentPropsWithoutRef<'ol'>) => {
   }
 
   const { currentIndex, setSlideCount, idPrefix } = context;
+  const sliderRef = React.useRef<HTMLOListElement>(null);
 
   React.useLayoutEffect(() => {
     setSlideCount(React.Children.count(props.children));
@@ -113,35 +114,64 @@ const CarouselSlider = (props: React.ComponentPropsWithoutRef<'ol'>) => {
     () =>
       React.Children.map(props.children, (child, index) =>
         React.isValidElement(child)
-          ? React.cloneElement(child, { id: `${idPrefix}--slide-${index}` })
+          ? React.cloneElement(child, {
+              id: `${idPrefix}--slide-${index}`,
+              index,
+            })
           : child,
       ) ?? [],
     [props.children, idPrefix],
-  );
+  ) as React.ReactNode[];
+
+  React.useEffect(() => {
+    if (!sliderRef.current) {
+      return;
+    }
+
+    sliderRef.current.children.item(currentIndex)?.scrollIntoView();
+  }, [currentIndex]);
 
   return (
     <ol
       aria-live='polite'
       {...props}
+      ref={sliderRef}
       className={cx('iui-carousel-slider', props.className)}
-      style={{
-        transform: `translateX(-${currentIndex * 100}%)`,
-        ...props.style,
-      }}
     >
       {items}
     </ol>
   );
 };
 
-const CarouselSlide = (props: React.ComponentPropsWithoutRef<'li'>) => {
+const CarouselSlide = ({
+  index,
+  ...props
+}: { index?: number } & React.ComponentPropsWithoutRef<'li'>) => {
   const { className, children, ...rest } = props;
+
+  const context = React.useContext(CarouselContext);
+  if (!context) {
+    throw new Error('CarouselSlider must be used within Carousel');
+  }
+
+  const { setCurrentIndex } = context;
+
+  const updateActiveIndex = React.useCallback(() => {
+    setCurrentIndex((prev) => (prev !== index ? index : prev));
+  }, [index, setCurrentIndex]);
+
+  const intersectionRef = useIntersection(
+    updateActiveIndex,
+    { threshold: 0.5 },
+    false,
+  );
 
   return (
     <li
       className={cx('iui-carousel-slider-item', className)}
       role='tabpanel'
       aria-roledescription='slide'
+      ref={intersectionRef}
       {...rest}
     >
       {children}

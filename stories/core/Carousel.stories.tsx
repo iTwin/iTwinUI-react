@@ -30,10 +30,7 @@ export const Basic: Story<CarouselProps> = (args) => {
   ];
 
   return (
-    <Carousel
-      style={{ width: 800 }} // without this, carousel takes full width and translateX breaks
-      {...args}
-    >
+    <Carousel style={{ width: 'min(800px, 90vw)' }} {...args}>
       <Carousel.Slider>
         {gradients.map(({ from, to }, index) => (
           <Carousel.Slide key={index}>
@@ -41,7 +38,7 @@ export const Basic: Story<CarouselProps> = (args) => {
               style={{
                 background: `linear-gradient(to right, ${from}, ${to})`,
                 height: 350,
-                width: 800,
+                width: '100%',
                 display: 'grid',
                 placeItems: 'center',
               }}
