@@ -130,6 +130,8 @@ Examples can be captioned. This is especially helpful when there are multiple ex
  * <Footer customElements={() => newFooterElements)} />
  ...
  */
+export const Footer = (props: FooterProps) => {
+  ...
 ```
 
 Every prop should have a multiline description with relevant informational tags.
