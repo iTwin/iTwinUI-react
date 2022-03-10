@@ -43,7 +43,7 @@ const defaultGetDragAndDropProps = <T extends Record<string, unknown>>(
     event: React.DragEvent<HTMLDivElement>,
     position?: 'left' | 'right',
   ) => {
-    const columnElement = event.target as HTMLElement;
+    const columnElement = event.currentTarget as HTMLElement;
     columnElement.classList.remove('iui-reorder-column-right');
     columnElement.classList.remove('iui-reorder-column-left');
     if (position === 'left') {
