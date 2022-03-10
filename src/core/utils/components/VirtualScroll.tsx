@@ -246,12 +246,17 @@ export const useVirtualization = (props: VirtualScrollProps) => {
       childHeight.current.middle,
       scrollableContainer.scrollTop,
     );
-    const startIndex = Math.max(0, start - bufferSize);
     const visibleNodes = getVisibleNodeCount(
       childHeight.current.middle,
       start,
       itemsLength,
       scrollableContainer,
+    );
+    // If there are less items at the end than buffer size
+    // show more items at the start
+    const startIndex = Math.min(
+      Math.max(0, start - bufferSize),
+      itemsLength - bufferSize * 2 - visibleNodes,
     );
     visibleIndex.current = { start: start, end: start + visibleNodes - 1 };
     setStartNode(startIndex);
@@ -319,15 +324,15 @@ export const useVirtualization = (props: VirtualScrollProps) => {
         scrollToIndex > visibleIndex.current.end
           ? scrollToIndex - visibleIndex.current.end
           : scrollToIndex - visibleIndex.current.start;
-
-      // scrollTop value to display full item height
-      const adjustedScrollTop =
-        scrollableContainer.scrollTop -
-        (scrollableContainer.scrollTop % childHeight.current.middle);
-
-      // smallest scroll to the index
+      // If go down: add to the existing scrollTop needed height
+      // If go up: calculate the exact scroll top
       scrollableContainer.scrollTo({
-        top: adjustedScrollTop + indexDiff * childHeight.current.middle,
+        top:
+          indexDiff > 0
+            ? Math.round(scrollableContainer.scrollTop) +
+              indexDiff * childHeight.current.middle
+            : (scrollToIndex - 1) * childHeight.current.middle +
+              childHeight.current.first,
       });
     }
   }, [scrollToIndex, isMounted]);

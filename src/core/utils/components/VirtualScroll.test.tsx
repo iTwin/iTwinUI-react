@@ -89,9 +89,9 @@ it('should render only few elements out of big list', () => {
     target: { scrollTop: 39600 },
   });
   allVisibleElements = container.querySelectorAll('.element');
-  expect(allVisibleElements.length).toBe(20);
-  expect(allVisibleElements[0].textContent).toBe('Element981');
-  expect(allVisibleElements[19].textContent).toBe('Element1000');
+  expect(allVisibleElements.length).toBe(30);
+  expect(allVisibleElements[0].textContent).toBe('Element971');
+  expect(allVisibleElements[29].textContent).toBe('Element1000');
 });
 
 it('should not crash with empty list items', () => {
