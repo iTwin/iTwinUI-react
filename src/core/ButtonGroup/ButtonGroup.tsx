@@ -67,7 +67,6 @@ export const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
     const {
       children,
       className,
-      style,
       overflowButton,
       overflowPlacement = 'end',
       orientation = 'horizontal',
@@ -97,12 +96,6 @@ export const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
           },
           className,
         )}
-        style={{
-          ...(!!overflowButton && orientation === 'horizontal'
-            ? { width: '100%' }
-            : { height: '100%' }),
-          ...style,
-        }}
         aria-orientation={orientation}
         ref={refs}
         {...rest}
