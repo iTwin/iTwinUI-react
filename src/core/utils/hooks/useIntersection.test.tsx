@@ -154,8 +154,6 @@ it.each([
     mockIntersection(mockedElement);
     mockIntersection(mockedElement);
     mockIntersection(mockedElement);
-    mockIntersection(mockedElement);
-    mockIntersection(mockedElement);
-    expect(onIntersect).toHaveBeenCalledTimes(once ? 1 : 5);
+    expect(onIntersect).toHaveBeenCalledTimes(once ? 1 : 3);
   },
 );
