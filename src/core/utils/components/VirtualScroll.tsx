@@ -313,12 +313,14 @@ export const useVirtualization = (props: VirtualScrollProps) => {
 
     const scrollableContainer = getScrollableContainer();
 
+    if (!scrollableContainer || scrollToIndex == null) {
+      return;
+    }
+
     // if `scrollToIndex` is not visible, scroll to it
     if (
-      scrollableContainer &&
-      scrollToIndex != null &&
-      (scrollToIndex > visibleIndex.current.end ||
-        scrollToIndex < visibleIndex.current.start)
+      scrollToIndex > visibleIndex.current.end ||
+      scrollToIndex < visibleIndex.current.start
     ) {
       const indexDiff =
         scrollToIndex > visibleIndex.current.end
@@ -334,6 +336,16 @@ export const useVirtualization = (props: VirtualScrollProps) => {
             : (scrollToIndex - 1) * childHeight.current.middle +
               childHeight.current.first,
       });
+    }
+
+    // if `scrollToIndex` is the first visible node
+    // ensure it is fully visible
+    if (scrollToIndex === visibleIndex.current.start) {
+      const diff = scrollableContainer.scrollTop % childHeight.current.middle;
+      diff > 0 &&
+        scrollableContainer.scrollTo({
+          top: scrollableContainer.scrollTop - diff,
+        });
     }
   }, [scrollToIndex, isMounted]);
 
