@@ -1291,10 +1291,30 @@ export const Full: Story<Partial<TableProps>> = (args) => {
             maxWidth: 200,
             Filter: tableFilters.TextFilter(),
           },
+          {
+            id: 'click-me',
+            Header: 'Click',
+            width: 100,
+            // Manually handling disabled state in custom cells
+            Cell: (props: CellProps<{ name: string; description: string }>) => (
+              <>
+                {isRowDisabled(props.row.original) ? (
+                  <>Click me!</>
+                ) : (
+                  <a
+                    className='iui-anchor'
+                    onClick={action(props.row.original.name)}
+                  >
+                    Click me!
+                  </a>
+                )}
+              </>
+            ),
+          },
         ],
       },
     ],
-    [],
+    [isRowDisabled],
   );
 
   const data = useMemo(
@@ -1347,6 +1367,7 @@ export const Full: Story<Partial<TableProps>> = (args) => {
         isSelectable
         isSortable
         isResizable
+        enableDraggableColumns
         {...args}
       />
       <Tooltip
@@ -1367,6 +1388,7 @@ Full.args = {
   isSelectable: true,
   isSortable: true,
   isResizable: true,
+  enableDraggableColumns: true,
 };
 
 export const Condensed: Story<Partial<TableProps>> = Basic.bind({});
@@ -2356,6 +2378,7 @@ export const DraggableColumns: Story<Partial<TableProps>> = (args) => {
             id: 'product',
             Header: 'Product',
             accessor: 'product',
+            disableDragging: true,
           },
           {
             id: 'price',
@@ -2395,6 +2418,7 @@ export const DraggableColumns: Story<Partial<TableProps>> = (args) => {
       columns={columns}
       data={data}
       emptyTableContent='No data.'
+      isSelectable
       {...args}
     />
   );
@@ -2473,4 +2497,6 @@ DraggableColumns.args = {
       deliveryTime: 17,
     },
   ],
+  enableDraggableColumns: true,
+  isSelectable: true,
 };

@@ -2369,3 +2369,51 @@ it.each([
       );
   },
 );
+
+it('should not have `draggable` attribute on columns with `disableDragging` enabled', () => {
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+          disableDragging: true,
+        },
+      ],
+    },
+  ];
+  const { container } = render(
+    <Table
+      columns={columns}
+      data={mockedData()}
+      emptyTableContent='Empty table'
+      emptyFilteredTableContent='No results. Clear filter.'
+      enableDraggableColumns
+      isSelectable
+      subComponent={(row) => (
+        <div>{`Expanded component, name: ${row.original.name}`}</div>
+      )}
+    />,
+  );
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  expect(headerCells[0].getAttribute('draggable')).toBeFalsy(); // Selection column
+  expect(headerCells[1].getAttribute('draggable')).toBeFalsy(); // Expander column
+  expect(headerCells[2].getAttribute('draggable')).toBe('true'); // Name column
+  expect(headerCells[3].getAttribute('draggable')).toBe('true'); // Description column
+  expect(headerCells[4].getAttribute('draggable')).toBeFalsy(); // View column
+});

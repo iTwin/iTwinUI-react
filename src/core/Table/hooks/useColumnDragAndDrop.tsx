@@ -32,7 +32,7 @@ const defaultGetDragAndDropProps = <T extends Record<string, unknown>>(
     header: HeaderGroup;
   },
 ) => {
-  if (!isEnabled) {
+  if (!isEnabled || header.disableDragging) {
     return props;
   }
 
