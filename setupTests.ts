@@ -13,7 +13,7 @@ if (window.PointerEvent) {
   window.PointerEvent = window.MouseEvent;
 }
 
-beforeEach(() => {
+afterEach(() => {
   // Cleanup tippy so it does not stay in the DOM
   document
     .querySelectorAll('[data-tippy-root]')
