@@ -55,5 +55,7 @@ export const useIntersection = (
     [onIntersect, once, root, rootMargin, threshold],
   );
 
+  React.useEffect(() => () => observer.current?.disconnect(), []);
+
   return setRef;
 };
