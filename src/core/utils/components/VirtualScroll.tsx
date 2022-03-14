@@ -258,7 +258,7 @@ export const useVirtualization = (props: VirtualScrollProps) => {
       Math.max(0, start - bufferSize),
       itemsLength - bufferSize * 2 - visibleNodes,
     );
-    visibleIndex.current = { start: start, end: start + visibleNodes - 1 };
+    visibleIndex.current = { start: start, end: start + visibleNodes };
     setStartNode(startIndex);
     setVisibleNodeCount(visibleNodes);
 
@@ -326,13 +326,22 @@ export const useVirtualization = (props: VirtualScrollProps) => {
         scrollToIndex > visibleIndex.current.end
           ? scrollToIndex - visibleIndex.current.end
           : scrollToIndex - visibleIndex.current.start;
+      const addToTop = (scrollTop: number, count: number) => {
+        if (scrollTop < childHeight.current.first) {
+          return (
+            scrollTop +
+            childHeight.current.first +
+            (count - 1) * childHeight.current.middle
+          );
+        }
+        return scrollTop + count * childHeight.current.middle;
+      };
       // If go down: add to the existing scrollTop needed height
       // If go up: calculate the exact scroll top
       scrollableContainer.scrollTo({
         top:
           indexDiff > 0
-            ? Math.round(scrollableContainer.scrollTop) +
-              indexDiff * childHeight.current.middle
+            ? addToTop(Math.ceil(scrollableContainer.scrollTop), indexDiff)
             : (scrollToIndex - 1) * childHeight.current.middle +
               childHeight.current.first,
       });
@@ -341,11 +350,41 @@ export const useVirtualization = (props: VirtualScrollProps) => {
     // if `scrollToIndex` is the first visible node
     // ensure it is fully visible
     if (scrollToIndex === visibleIndex.current.start) {
-      const diff = scrollableContainer.scrollTop % childHeight.current.middle;
+      const scrollTop =
+        scrollableContainer.scrollTop > childHeight.current.first
+          ? Math.round(scrollableContainer.scrollTop) -
+            childHeight.current.first
+          : Math.round(scrollableContainer.scrollTop);
+      const diff = scrollTop % childHeight.current.middle;
+
       diff > 0 &&
         scrollableContainer.scrollTo({
           top: scrollableContainer.scrollTop - diff,
         });
+      return;
+    }
+
+    // if `scrollToIndex` is the last visible node
+    // ensure it is fully visible
+    if (scrollToIndex === visibleIndex.current.end) {
+      const diff =
+        scrollableContainer.offsetHeight % childHeight.current.middle;
+      const scrollTop =
+        scrollableContainer.scrollTop > childHeight.current.first
+          ? (Math.ceil(scrollableContainer.scrollTop) -
+              childHeight.current.first) %
+            childHeight.current.middle
+          : Math.ceil(scrollableContainer.scrollTop) %
+            childHeight.current.first;
+
+      if (diff > 0 && scrollTop === 0) {
+        scrollableContainer.scrollTo({
+          top:
+            Math.ceil(scrollableContainer.scrollTop) +
+            childHeight.current.middle -
+            diff,
+        });
+      }
     }
   }, [scrollToIndex, isMounted]);
 
