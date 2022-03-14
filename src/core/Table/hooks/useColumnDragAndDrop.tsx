@@ -39,6 +39,13 @@ const defaultGetDragAndDropProps = <T extends Record<string, unknown>>(
   const onDragStart = (event: React.DragEvent<HTMLDivElement>) =>
     event.dataTransfer.setData('text', header.id);
 
+  const getPlacement = (event: React.DragEvent<HTMLDivElement>) => {
+    const columnElement = event.currentTarget as HTMLElement;
+    const middlePoint =
+      columnElement.offsetLeft + columnElement.offsetWidth / 2;
+    return event.clientX > middlePoint ? 'right' : 'left';
+  };
+
   const setOnDragColumnStyle = (
     event: React.DragEvent<HTMLDivElement>,
     position?: 'left' | 'right',
@@ -72,10 +79,7 @@ const defaultGetDragAndDropProps = <T extends Record<string, unknown>>(
 
   const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    const columnElement = event.target as HTMLElement;
-    const middlePoint =
-      columnElement.offsetLeft + columnElement.offsetWidth / 2;
-    setOnDragColumnStyle(event, event.clientX > middlePoint ? 'right' : 'left');
+    setOnDragColumnStyle(event, getPlacement(event));
   };
 
   const onDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
@@ -95,16 +99,12 @@ const defaultGetDragAndDropProps = <T extends Record<string, unknown>>(
       return;
     }
 
-    const columnElement = event.target as HTMLElement;
-    const middlePoint =
-      columnElement.offsetLeft + columnElement.offsetWidth / 2;
-
     instance.setColumnOrder(
       reorderColumns(
         columnIds,
         srcIndex,
         // When dropped on the right side of the column, need to increase the index by 1
-        event.clientX > middlePoint ? dstIndex + 1 : dstIndex,
+        getPlacement(event) === 'right' ? dstIndex + 1 : dstIndex,
       ),
     );
   };

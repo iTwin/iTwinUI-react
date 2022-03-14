@@ -2229,64 +2229,66 @@ it('should sync body horizontal scroll with header scroll', () => {
 });
 
 it.each([
-  // Dragging Name to the left of View
   {
+    testCase: 'dragging Name to the left of View',
     srcIndex: 0,
     srcName: 'name',
     dstIndex: 2,
     dropPosition: 'left',
     resultingColumns: ['Description', 'Name', 'View'],
   },
-  // Dragging Name to the right of View
   {
+    testCase: 'dragging Name to the right of View',
     srcIndex: 0,
     srcName: 'name',
     dstIndex: 2,
     dropPosition: 'right',
     resultingColumns: ['Description', 'View', 'Name'],
   },
-  // Dragging View to the left of Name
   {
+    testCase: 'dragging View to the left of Name',
     srcIndex: 2,
     srcName: 'view',
     dstIndex: 0,
     dropPosition: 'left',
     resultingColumns: ['View', 'Name', 'Description'],
   },
-  // Dragging View to the right of Name
   {
+    testCase: 'dragging View to the right of Name',
     srcIndex: 2,
     srcName: 'view',
     dstIndex: 0,
     dropPosition: 'right',
     resultingColumns: ['Name', 'View', 'Description'],
   },
-  // Dragging Name to the left of itself -> should not change
   {
+    testCase: 'dragging Name to the left of itself and it should not change',
     srcIndex: 0,
     srcName: 'name',
     dstIndex: 0,
     dropPosition: 'left',
     resultingColumns: ['Name', 'Description', 'View'],
   },
-  // Dragging Name to the right of itself -> should not change
   {
+    testCase: 'dragging Name to the right of itself and it should not change',
     srcIndex: 0,
     srcName: 'name',
     dstIndex: 0,
     dropPosition: 'right',
     resultingColumns: ['Name', 'Description', 'View'],
   },
-  // Dragging Name to the left of Description -> should not change
   {
+    testCase:
+      'dragging Name to the left of Description and it should not change',
     srcIndex: 0,
     srcName: 'name',
     dstIndex: 1,
     dropPosition: 'left',
     resultingColumns: ['Name', 'Description', 'View'],
   },
-  // Dragging View to the right of Description -> should not change
   {
+    testCase:
+      'dragging View to the right of Description and it should not change',
     srcIndex: 2,
     srcName: 'view',
     dstIndex: 1,
@@ -2294,7 +2296,7 @@ it.each([
     resultingColumns: ['Name', 'Description', 'View'],
   },
 ])(
-  'should reorder columns %p',
+  'should handle column reorder by $testCase',
   ({ srcIndex, srcName, dstIndex, dropPosition, resultingColumns }) => {
     const onSort = jest.fn();
     jest.spyOn(HTMLElement.prototype, 'offsetLeft', 'get').mockReturnValue(0);
