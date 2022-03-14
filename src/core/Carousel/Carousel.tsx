@@ -11,7 +11,7 @@ import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import '@itwin/itwinui-css/css/carousel.css';
 
 export type CarouselProps = {
-  currentIndex?: number;
+  defaultActiveIndex?: number;
 } & React.ComponentPropsWithoutRef<'div'>;
 
 const CarouselContext = React.createContext<
@@ -22,12 +22,13 @@ const CarouselContext = React.createContext<
       setSlideCount: (length: number | ((old: number) => void)) => void;
       keysPressed: Record<string, boolean>;
       idPrefix: string;
+      isManuallyUpdating: React.MutableRefObject<boolean>;
     }
   | undefined
 >(undefined);
 
 export const Carousel = (props: CarouselProps) => {
-  const { currentIndex: userCurrentIndex = 0, children, ...rest } = props;
+  const { defaultActiveIndex = 0, children, ...rest } = props;
 
   // Generate a stateful random id if not specified
   const [id] = React.useState(
@@ -36,12 +37,14 @@ export const Carousel = (props: CarouselProps) => {
 
   useTheme();
 
-  const [currentIndex, setCurrentIndex] = React.useState(userCurrentIndex);
+  const [currentIndex, setCurrentIndex] = React.useState(defaultActiveIndex);
   const [slideCount, setSlideCount] = React.useState(0);
 
   const [keysPressed, setKeysPressed] = React.useState<Record<string, boolean>>(
     {},
   );
+
+  const isManuallyUpdating = React.useRef(false);
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.altKey || event.ctrlKey || event.metaKey) {
@@ -88,6 +91,7 @@ export const Carousel = (props: CarouselProps) => {
           setSlideCount,
           keysPressed,
           idPrefix: id,
+          isManuallyUpdating,
         }}
       >
         {children}
@@ -154,11 +158,16 @@ const CarouselSlide = ({
     throw new Error('CarouselSlider must be used within Carousel');
   }
 
-  const { setCurrentIndex } = context;
+  const { currentIndex, isManuallyUpdating, setCurrentIndex } = context;
 
   const updateActiveIndex = React.useCallback(() => {
-    setCurrentIndex((prev) => (prev !== index ? index : prev));
-  }, [index, setCurrentIndex]);
+    if (!isManuallyUpdating.current) {
+      setCurrentIndex((prev) => (prev !== index ? index : prev));
+    }
+    if (currentIndex === index) {
+      isManuallyUpdating.current = false;
+    }
+  }, [currentIndex, index, isManuallyUpdating, setCurrentIndex]);
 
   const intersectionRef = useIntersection(
     updateActiveIndex,
@@ -187,7 +196,12 @@ const CarouselNavigation = (props: React.ComponentPropsWithoutRef<'nav'>) => {
     throw new Error('CarouselNavigation should be used inside Carousel');
   }
 
-  const { slideCount, setCurrentIndex, keysPressed } = context;
+  const {
+    slideCount,
+    setCurrentIndex,
+    keysPressed,
+    isManuallyUpdating,
+  } = context;
 
   return (
     <nav className={cx('iui-carousel-navigation', className)} {...rest}>
@@ -196,9 +210,10 @@ const CarouselNavigation = (props: React.ComponentPropsWithoutRef<'nav'>) => {
           styleType='borderless'
           size='small'
           tabIndex={-1}
-          onClick={() =>
-            setCurrentIndex((old) => (slideCount + old - 1) % slideCount)
-          }
+          onClick={() => {
+            setCurrentIndex((old) => (slideCount + old - 1) % slideCount);
+            isManuallyUpdating.current = true;
+          }}
           data-pressed={keysPressed['ArrowLeft'] || undefined}
         >
           <SvgChevronLeft />
@@ -210,9 +225,10 @@ const CarouselNavigation = (props: React.ComponentPropsWithoutRef<'nav'>) => {
           styleType='borderless'
           size='small'
           tabIndex={-1}
-          onClick={() =>
-            setCurrentIndex((old) => (slideCount + old + 1) % slideCount)
-          }
+          onClick={() => {
+            setCurrentIndex((old) => (slideCount + old + 1) % slideCount);
+            isManuallyUpdating.current = true;
+          }}
           data-pressed={keysPressed['ArrowRight'] || undefined}
         >
           <SvgChevronRight />
@@ -249,7 +265,10 @@ const CarouselDots = (
 
   const handleSlideChange = React.useCallback(
     (index: number) => {
-      context?.setCurrentIndex(index);
+      if (context) {
+        context.setCurrentIndex(index);
+        context.isManuallyUpdating.current = true;
+      }
       onSlideChange?.(index);
     },
     [context, onSlideChange],
