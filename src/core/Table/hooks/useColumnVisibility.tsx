@@ -6,8 +6,9 @@ import React from 'react';
 import { ColumnInstance, HeaderProps, Hooks } from 'react-table';
 import { Checkbox } from '../..';
 import SvgColumnManager from '@itwin/itwinui-icons-react/cjs/icons/ColumnManager';
-import { DropdownButton } from '../../Buttons';
-import { isString } from 'creevey';
+import { DropdownMenu } from '../../DropdownMenu';
+import { IconButton } from '../../Buttons/IconButton';
+import { MenuItem } from '../../Menu';
 
 export const COLUMN_MANAGER_ID = 'iui-table-column-manager';
 
@@ -31,22 +32,19 @@ export const useColumnVisibility = <T extends Record<string, unknown>>(
       cellClassName: 'iui-slot',
       Header: ({ allColumns }: HeaderProps<T>) => {
         const headerCheckBoxes = () =>
-          allColumns.map((column) =>
-            isString(column.Header) ? (
-              <Checkbox
-                {...column.getToggleHiddenProps()}
-                label={column.Header}
-                key={column.id}
-                className='iui-menu-item'
-              />
-            ) : (
-              <></>
-            ),
-          );
+          allColumns
+            .filter(({ id }) => !id.includes('iui-table'))
+            .map((column) => (
+              <MenuItem key={column.id} {...column.getToggleHiddenProps()}>
+                <Checkbox label={column.Header} />
+              </MenuItem>
+            ));
         return (
-          <DropdownButton menuItems={headerCheckBoxes} styleType='borderless'>
-            <SvgColumnManager className='iui-button-icon' aria-hidden />
-          </DropdownButton>
+          <DropdownMenu menuItems={headerCheckBoxes}>
+            <IconButton styleType='borderless'>
+              <SvgColumnManager />
+            </IconButton>
+          </DropdownMenu>
         );
       },
     },

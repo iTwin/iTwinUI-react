@@ -1347,6 +1347,7 @@ export const Full: Story<Partial<TableProps>> = (args) => {
         isSelectable
         isSortable
         isResizable
+        isManageable
         {...args}
       />
       <Tooltip
@@ -1367,6 +1368,7 @@ Full.args = {
   isSelectable: true,
   isSortable: true,
   isResizable: true,
+  isManageable: true,
 };
 
 export const Condensed: Story<Partial<TableProps>> = Basic.bind({});
