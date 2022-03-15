@@ -90,7 +90,7 @@ export const Basic: Story<ModalProps> = ({
         onKeyDown={action('onKeyDown', { depth: 1 })}
         {...rest}
       >
-        <div>
+        <div className='iui-modal-content'>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
           minim veniam, quis nostrud exercitation ullamco laboris nisi ut
@@ -121,4 +121,10 @@ export const OutsideClickAndEscDoesNotClose: Story<ModalProps> = Basic.bind({});
 OutsideClickAndEscDoesNotClose.args = {
   closeOnEsc: false,
   closeOnExternalClick: false,
+};
+
+export const FullPageModal: Story<ModalProps> = Basic.bind({});
+
+FullPageModal.args = {
+  modalSize: 'fullPage',
 };

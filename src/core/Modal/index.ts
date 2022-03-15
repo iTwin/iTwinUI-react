@@ -4,8 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 export { Modal } from './Modal';
 export type { ModalProps } from './Modal';
-export { FullPageModal } from './FullPageModal';
-export type { FullPageModalProps } from './FullPageModal';
 export { ModalButtonBar } from './ModalButtonBar';
 export type { ModalButtonBarProps } from './ModalButtonBar';
 export default './Modal';

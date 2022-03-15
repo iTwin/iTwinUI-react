@@ -15,6 +15,7 @@ import {
 } from '../utils';
 import '@itwin/itwinui-css/css/modal.css';
 import { IconButton } from '../Buttons/IconButton';
+import { CSSTransition } from 'react-transition-group';
 
 export type ModalProps = {
   /**
@@ -61,6 +62,10 @@ export type ModalProps = {
    */
   ownerDocument?: Document;
   /**
+   * Size of the modal.
+   */
+  modalSize?: 'small' | 'fullPage'; //later add size container?
+  /**
    * Content of the modal.
    */
   children: React.ReactNode;
@@ -100,6 +105,7 @@ export const Modal = (props: ModalProps) => {
     className,
     style,
     children,
+    modalSize,
     modalRootId = 'iui-react-portal-container',
     ownerDocument = getDocument(),
     ...rest
@@ -170,10 +176,20 @@ export const Modal = (props: ModalProps) => {
 
   return !!container ? (
     ReactDOM.createPortal(
-      isOpen && (
-        <FocusTrap>
+      <FocusTrap>
+        <CSSTransition
+          in={isOpen}
+          classNames='iui-modal-animation'
+          timeout={4000}
+          unmountOnExit={true}
+        >
           <div
-            className={cx('iui-modal', 'iui-modal-visible', className)}
+            className={cx(
+              'iui-modal',
+              { 'iui-modal-full-page': modalSize === 'fullPage' },
+              { 'iui-modal-visible': isOpen },
+              className,
+            )}
             tabIndex={-1}
             onKeyDown={handleKeyDown}
             ref={overlayRef}
@@ -203,8 +219,8 @@ export const Modal = (props: ModalProps) => {
               {children}
             </div>
           </div>
-        </FocusTrap>
-      ),
+        </CSSTransition>
+      </FocusTrap>,
       container,
     )
   ) : (
