@@ -50,9 +50,7 @@ export const Basic: Story<CarouselProps> = (args) => {
           </Carousel.Slide>
         ))}
       </Carousel.Slider>
-      <Carousel.Navigation>
-        <Carousel.Dots />
-      </Carousel.Navigation>
+      <Carousel.Navigation />
     </Carousel>
   );
 };

@@ -4,31 +4,66 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { getRandomValue, useIntersection, useTheme } from '../utils';
+import {
+  getRandomValue,
+  useIntersection,
+  useMergedRefs,
+  useTheme,
+} from '../utils';
 import { IconButton } from '../Buttons';
 import SvgChevronLeft from '@itwin/itwinui-icons-react/cjs/icons/ChevronLeft';
 import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import '@itwin/itwinui-css/css/carousel.css';
 
 export type CarouselProps = {
-  defaultActiveIndex?: number;
+  /**
+   * Index of the currently shown slide.
+   * Can be used to set the default index or control the active slide programmatically.
+   * @default 0
+   */
+  activeSlideIndex?: number;
 } & React.ComponentPropsWithoutRef<'div'>;
 
-const CarouselContext = React.createContext<
+export const CarouselContext = React.createContext<
   | {
+      /** Stateful index of currently active slide. */
       currentIndex: number;
+      /** State updater for currentIndex. */
       setCurrentIndex: (index: number | ((old: number) => void)) => void;
+      /** Number of slides in the carousel. Gets set in CarouselSlider for reading in CarouselDots.  */
       slideCount: number;
+      /** State updater for slideCount. */
       setSlideCount: (length: number | ((old: number) => void)) => void;
+      /** Stateful value of the left/right arrow keys currently pressed. */
       keysPressed: Record<string, boolean>;
+      /** Prefix used for setting id for internal carousel components. */
       idPrefix: string;
+      /** Ref object used for preventing intersection observer from breaking manual slide updates. */
       isManuallyUpdating: React.MutableRefObject<boolean>;
     }
   | undefined
 >(undefined);
 
+/**
+ * The Carousel component consists of a set of slides, normally displayed one at a time. A navigation section is
+ * located below the slides, consisting of "dots" and "previous"/"next" buttons, used for changing slides.
+ *
+ * The currently shown slide can also be changed using the left/right arrow keys or by dragging on a touch device.
+ *
+ * This component uses a composition approach so it should be used with the provided subcomponents.
+ *
+ * @example
+ * <Carousel>
+ *   <Carousel.Slider>
+ *     <Carousel.Slide>...</Carousel.Slide>
+ *     <Carousel.Slide>...</Carousel.Slide>
+ *     <Carousel.Slide>...</Carousel.Slide>
+ *   </Carousel.Slider>
+ *   <Carousel.Navigation />
+ * </Carousel>
+ */
 export const Carousel = (props: CarouselProps) => {
-  const { defaultActiveIndex = 0, children, ...rest } = props;
+  const { activeSlideIndex: userActiveIndex = 0, children, ...rest } = props;
 
   // Generate a stateful random id if not specified
   const [id] = React.useState(
@@ -37,7 +72,11 @@ export const Carousel = (props: CarouselProps) => {
 
   useTheme();
 
-  const [currentIndex, setCurrentIndex] = React.useState(defaultActiveIndex);
+  const [currentIndex, setCurrentIndex] = React.useState(userActiveIndex);
+  React.useEffect(() => {
+    setCurrentIndex(userActiveIndex);
+  }, [userActiveIndex]);
+
   const [slideCount, setSlideCount] = React.useState(0);
 
   const [keysPressed, setKeysPressed] = React.useState<Record<string, boolean>>(
@@ -47,7 +86,7 @@ export const Carousel = (props: CarouselProps) => {
   const isManuallyUpdating = React.useRef(false);
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.altKey || event.ctrlKey || event.metaKey) {
+    if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
       return;
     }
 
@@ -57,10 +96,12 @@ export const Carousel = (props: CarouselProps) => {
 
     switch (event.key) {
       case 'ArrowLeft': {
+        isManuallyUpdating.current = true;
         setCurrentIndex((old) => (slideCount + old - 1) % slideCount);
         break;
       }
       case 'ArrowRight': {
+        isManuallyUpdating.current = true;
         setCurrentIndex((old) => (slideCount + old + 1) % slideCount);
         break;
       }
@@ -100,7 +141,13 @@ export const Carousel = (props: CarouselProps) => {
   );
 };
 
-const CarouselSlider = (props: React.ComponentPropsWithoutRef<'ol'>) => {
+/**
+ * CarouselSlider is the scrollable list that should consist of CarouselSlide components.
+ */
+const CarouselSlider = React.forwardRef<
+  HTMLOListElement,
+  React.ComponentPropsWithoutRef<'ol'>
+>((props, ref) => {
   const context = React.useContext(CarouselContext);
 
   if (!context) {
@@ -109,6 +156,7 @@ const CarouselSlider = (props: React.ComponentPropsWithoutRef<'ol'>) => {
 
   const { currentIndex, setSlideCount, idPrefix } = context;
   const sliderRef = React.useRef<HTMLOListElement>(null);
+  const refs = useMergedRefs(sliderRef, ref);
 
   React.useLayoutEffect(() => {
     setSlideCount(React.Children.count(props.children));
@@ -139,18 +187,24 @@ const CarouselSlider = (props: React.ComponentPropsWithoutRef<'ol'>) => {
     <ol
       aria-live='polite'
       {...props}
-      ref={sliderRef}
+      ref={refs}
       className={cx('iui-carousel-slider', props.className)}
     >
       {items}
     </ol>
   );
-};
+});
 
-const CarouselSlide = ({
-  index,
-  ...props
-}: { index?: number } & React.ComponentPropsWithoutRef<'li'>) => {
+/**
+ * CarouselSlide is used for the actual slide content. The content can be specified through `children`.
+ *
+ * It is recommended that the slide content bring its own dimensions (esp. height) and that
+ * the dimensions should be the same for all slides.
+ */
+const CarouselSlide = React.forwardRef<
+  HTMLLIElement,
+  { index?: number } & React.ComponentPropsWithoutRef<'li'>
+>(({ index, ...props }, ref) => {
   const { className, children, ...rest } = props;
 
   const context = React.useContext(CarouselContext);
@@ -175,20 +229,31 @@ const CarouselSlide = ({
     false,
   );
 
+  const refs = useMergedRefs(intersectionRef, ref);
+
   return (
     <li
       className={cx('iui-carousel-slider-item', className)}
       role='tabpanel'
       aria-roledescription='slide'
-      ref={intersectionRef}
+      ref={refs}
       {...rest}
     >
       {children}
     </li>
   );
-};
+});
 
-const CarouselNavigation = (props: React.ComponentPropsWithoutRef<'nav'>) => {
+/**
+ * The CarouselNavigation component by default consists of the previous/next slide buttons
+ * shown on the left and right, and the CarouselDots component shown in the middle.
+ *
+ * `children` can be specified to override what is shown in this section.
+ */
+const CarouselNavigation = React.forwardRef<
+  HTMLElement,
+  React.ComponentPropsWithoutRef<'nav'>
+>((props, ref) => {
   const { className, children, ...rest } = props;
 
   const context = React.useContext(CarouselContext);
@@ -204,48 +269,85 @@ const CarouselNavigation = (props: React.ComponentPropsWithoutRef<'nav'>) => {
   } = context;
 
   return (
-    <nav className={cx('iui-carousel-navigation', className)} {...rest}>
-      <div className='iui-carousel-navigation-left'>
-        <IconButton
-          styleType='borderless'
-          size='small'
-          tabIndex={-1}
-          onClick={() => {
-            setCurrentIndex((old) => (slideCount + old - 1) % slideCount);
-            isManuallyUpdating.current = true;
-          }}
-          data-pressed={keysPressed['ArrowLeft'] || undefined}
-        >
-          <SvgChevronLeft />
-        </IconButton>
-      </div>
-      {children}
-      <div className='iui-carousel-navigation-right'>
-        <IconButton
-          styleType='borderless'
-          size='small'
-          tabIndex={-1}
-          onClick={() => {
-            setCurrentIndex((old) => (slideCount + old + 1) % slideCount);
-            isManuallyUpdating.current = true;
-          }}
-          data-pressed={keysPressed['ArrowRight'] || undefined}
-        >
-          <SvgChevronRight />
-        </IconButton>
-      </div>
+    <nav
+      className={cx('iui-carousel-navigation', className)}
+      ref={ref}
+      {...rest}
+    >
+      {children ?? (
+        <>
+          <div className='iui-carousel-navigation-left'>
+            <IconButton
+              styleType='borderless'
+              size='small'
+              tabIndex={-1}
+              onClick={() => {
+                setCurrentIndex((old) => (slideCount + old - 1) % slideCount);
+                isManuallyUpdating.current = true;
+              }}
+              data-pressed={keysPressed['ArrowLeft'] || undefined}
+            >
+              <SvgChevronLeft />
+            </IconButton>
+          </div>
+
+          <CarouselDots />
+
+          <div className='iui-carousel-navigation-right'>
+            <IconButton
+              styleType='borderless'
+              size='small'
+              tabIndex={-1}
+              onClick={() => {
+                setCurrentIndex((old) => (slideCount + old + 1) % slideCount);
+                isManuallyUpdating.current = true;
+              }}
+              data-pressed={keysPressed['ArrowRight'] || undefined}
+            >
+              <SvgChevronRight />
+            </IconButton>
+          </div>
+        </>
+      )}
     </nav>
   );
-};
+});
 
-const CarouselDots = (
-  props: {
+/**
+ * The CarouselDots component shows a list of CarouselDot components which can be used to
+ * choose a specific slide. If used as a descandant of Carousel, then this component does not need
+ * any props or `children`.
+ *
+ * The props can be specified if this component is being used outside Carousel. `children` can be specified
+ * to override the individual dots that are shown.
+ *
+ * @example
+ * <Carousel>
+ *   // ...
+ *   <Carousel.Dots />
+ * </Carousel>
+ *
+ * @example
+ * <Carousel.Dots
+ *   length={10}
+ *   maxCount={3}
+ *   currentIndex={current}
+ *   onSlideChange={(i) => setCurrent(i)}
+ * />
+ */
+const CarouselDots = React.forwardRef<
+  HTMLDivElement,
+  {
+    /** Number of total dots/slides in the carousel. Will be inferred from Carousel context. */
     length?: number;
+    /** Maximum number of dots to show in the viewport. @default 5 */
     maxCount?: number;
+    /** Index of currently acitve dot. Will be inferred from Carousel context. */
     currentIndex?: number;
+    /** Callback fired when any of the dots are clicked. */
     onSlideChange?: (index: number) => void;
-  } & React.ComponentPropsWithoutRef<'div'>,
-) => {
+  } & React.ComponentPropsWithoutRef<'div'>
+>((props, ref) => {
   const {
     maxCount = 5,
     currentIndex: userCurrentIndex,
@@ -330,21 +432,30 @@ const CarouselDots = (
       className={cx('iui-carousel-navigation-dots', className)}
       role='tablist'
       aria-label='Slides'
+      ref={ref}
       {...rest}
     >
       {children ?? dots}
     </div>
   );
-};
+});
 
-const CarouselDot = (
-  props: {
+/**
+ * CarouselDot is the actual "dot" component. It should be used as a child of `CarouselDots`.
+ */
+const CarouselDot = React.forwardRef<
+  HTMLButtonElement,
+  {
+    /** Is this dot currently active? */
     isActive?: boolean;
-    isFirst?: boolean;
-    isSecond?: boolean;
+    /** Should be set to true for dots that are not visible, i.e. truncated. */
     isInvisible?: boolean;
-  } & React.ComponentPropsWithoutRef<'button'>,
-) => {
+    /** Should be set to true for dots that are one spot from the edge of truncation. The dot size becomes small.  */
+    isSecond?: boolean;
+    /** Should be set to true for dots that are at the edge of truncation. The dot size becomes even smaller.  */
+    isFirst?: boolean;
+  } & React.ComponentPropsWithoutRef<'button'>
+>((props, ref) => {
   const {
     isActive,
     isFirst,
@@ -370,10 +481,11 @@ const CarouselDot = (
         className,
       )}
       aria-selected={isActive}
+      ref={ref}
       {...rest}
     />
   );
-};
+});
 
 Carousel.Slider = CarouselSlider;
 Carousel.Slide = CarouselSlide;

@@ -15,9 +15,7 @@ it('should render in its most basic state', () => {
         <Carousel.Slide>2</Carousel.Slide>
         <Carousel.Slide>3</Carousel.Slide>
       </Carousel.Slider>
-      <Carousel.Navigation>
-        <Carousel.Dots />
-      </Carousel.Navigation>
+      <Carousel.Navigation />
     </Carousel>,
   );
 
