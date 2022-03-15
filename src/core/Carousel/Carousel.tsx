@@ -93,24 +93,22 @@ export const Carousel = (props: CarouselProps) => {
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
       setKeysPressed((old) => ({ ...old, [event.key]: true }));
     }
+  };
 
+  const handleKeyUp = (event: React.KeyboardEvent) => {
     switch (event.key) {
       case 'ArrowLeft': {
         isManuallyUpdating.current = true;
+        setKeysPressed((old) => ({ ...old, ArrowLeft: false }));
         setCurrentIndex((old) => (slideCount + old - 1) % slideCount);
         break;
       }
       case 'ArrowRight': {
         isManuallyUpdating.current = true;
+        setKeysPressed((old) => ({ ...old, ArrowRight: false }));
         setCurrentIndex((old) => (slideCount + old + 1) % slideCount);
         break;
       }
-    }
-  };
-
-  const handleKeyUp = (event: React.KeyboardEvent) => {
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-      setKeysPressed((old) => ({ ...old, [event.key]: false }));
     }
   };
 
