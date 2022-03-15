@@ -2230,74 +2230,38 @@ it('should sync body horizontal scroll with header scroll', () => {
 
 it.each([
   {
-    testCase: 'dragging Name to the left of View',
+    testCase: 'dragging Name to View',
     srcIndex: 0,
-    srcName: 'name',
     dstIndex: 2,
-    dropPosition: 'left',
-    resultingColumns: ['Description', 'Name', 'View'],
-  },
-  {
-    testCase: 'dragging Name to the right of View',
-    srcIndex: 0,
-    srcName: 'name',
-    dstIndex: 2,
-    dropPosition: 'right',
     resultingColumns: ['Description', 'View', 'Name'],
   },
   {
-    testCase: 'dragging View to the left of Name',
+    testCase: 'dragging View to Name',
     srcIndex: 2,
-    srcName: 'view',
     dstIndex: 0,
-    dropPosition: 'left',
     resultingColumns: ['View', 'Name', 'Description'],
   },
   {
-    testCase: 'dragging View to the right of Name',
-    srcIndex: 2,
-    srcName: 'view',
+    testCase: 'dragging Name to itself and it should not change',
+    srcIndex: 0,
     dstIndex: 0,
-    dropPosition: 'right',
+    resultingColumns: ['Name', 'Description', 'View'],
+  },
+  {
+    testCase: 'dragging Name to Description',
+    srcIndex: 0,
+    dstIndex: 1,
+    resultingColumns: ['Description', 'Name', 'View'],
+  },
+  {
+    testCase: 'dragging View to Description',
+    srcIndex: 2,
+    dstIndex: 1,
     resultingColumns: ['Name', 'View', 'Description'],
-  },
-  {
-    testCase: 'dragging Name to the left of itself and it should not change',
-    srcIndex: 0,
-    srcName: 'name',
-    dstIndex: 0,
-    dropPosition: 'left',
-    resultingColumns: ['Name', 'Description', 'View'],
-  },
-  {
-    testCase: 'dragging Name to the right of itself and it should not change',
-    srcIndex: 0,
-    srcName: 'name',
-    dstIndex: 0,
-    dropPosition: 'right',
-    resultingColumns: ['Name', 'Description', 'View'],
-  },
-  {
-    testCase:
-      'dragging Name to the left of Description and it should not change',
-    srcIndex: 0,
-    srcName: 'name',
-    dstIndex: 1,
-    dropPosition: 'left',
-    resultingColumns: ['Name', 'Description', 'View'],
-  },
-  {
-    testCase:
-      'dragging View to the right of Description and it should not change',
-    srcIndex: 2,
-    srcName: 'view',
-    dstIndex: 1,
-    dropPosition: 'right',
-    resultingColumns: ['Name', 'Description', 'View'],
   },
 ])(
   'should handle column reorder by $testCase',
-  ({ srcIndex, srcName, dstIndex, dropPosition, resultingColumns }) => {
+  ({ srcIndex, dstIndex, resultingColumns }) => {
     const onSort = jest.fn();
     jest.spyOn(HTMLElement.prototype, 'offsetLeft', 'get').mockReturnValue(0);
     jest
@@ -2325,29 +2289,19 @@ it.each([
     const srcColumn = headerCells[srcIndex];
     const dstColumn = headerCells[dstIndex];
 
-    // Helper function to create a drag event because regular ones does not pass `clientX`
-    const createBubbledEvent = (type: string, props = {}) => {
-      const event = new Event(type, { bubbles: true });
-      Object.assign(event, props);
-      return event;
-    };
-
-    const setData = jest.fn();
-    const clientX = dropPosition === 'right' ? 75 : 25;
-
-    srcColumn.dispatchEvent(
-      createBubbledEvent('dragstart', { dataTransfer: { setData } }),
-    );
-    expect(setData).toHaveBeenCalledWith('text', srcName);
-    dstColumn.dispatchEvent(createBubbledEvent('dragenter', { clientX }));
-    dstColumn.dispatchEvent(createBubbledEvent('dragover', { clientX }));
-    expect(dstColumn).toHaveClass('iui-reorder-column-' + dropPosition);
-    dstColumn.dispatchEvent(
-      createBubbledEvent('drop', {
-        clientX,
-        dataTransfer: { getData: () => srcName },
-      }),
-    );
+    fireEvent.dragStart(srcColumn);
+    fireEvent.dragEnter(dstColumn);
+    fireEvent.dragOver(dstColumn);
+    // If dragging over itself
+    if (srcIndex === dstIndex) {
+      expect(dstColumn).not.toHaveClass('iui-reorder-column-left');
+      expect(dstColumn).not.toHaveClass('iui-reorder-column-right');
+    } else {
+      expect(dstColumn).toHaveClass(
+        'iui-reorder-column-' + (srcIndex < dstIndex ? 'right' : 'left'),
+      );
+    }
+    fireEvent.drop(dstColumn);
 
     // Should not trigger sort
     expect(onSort).not.toHaveBeenCalled();

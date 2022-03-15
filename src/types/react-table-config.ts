@@ -129,6 +129,7 @@ declare module 'react-table' {
       isResizingColumn?: string;
     };
     isTableResizing?: boolean;
+    columnReorderStartIndex: number;
   }
 
   export interface ColumnInterface<D extends object = {}>

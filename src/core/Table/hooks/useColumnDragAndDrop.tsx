@@ -4,19 +4,28 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import {
+  actions,
+  ActionType,
   HeaderGroup,
   Hooks,
   IdType,
   makePropGetter,
   TableInstance,
   TableKeyedProps,
+  TableState,
   useGetLatest,
 } from 'react-table';
+
+const REORDER_ACTIONS = {
+  columnDragStart: 'columnDragStart',
+  columnDragEnd: 'columnDragEnd',
+};
 
 export const useColumnDragAndDrop = <T extends Record<string, unknown>>(
   isEnabled: boolean,
 ) => (hooks: Hooks<T>) => {
   hooks.getDragAndDropProps = [defaultGetDragAndDropProps(isEnabled)];
+  hooks.stateReducers.push(reducer);
   hooks.useInstance.push(useInstance);
 };
 
@@ -28,22 +37,19 @@ const defaultGetDragAndDropProps = <T extends Record<string, unknown>>(
     instance,
     header,
   }: {
-    instance: TableInstance;
-    header: HeaderGroup;
+    instance: TableInstance<T>;
+    header: HeaderGroup<T>;
   },
 ) => {
   if (!isEnabled || header.disableDragging) {
     return props;
   }
 
-  const onDragStart = (event: React.DragEvent<HTMLDivElement>) =>
-    event.dataTransfer.setData('text', header.id);
-
-  const getPlacement = (event: React.DragEvent<HTMLDivElement>) => {
-    const columnElement = event.currentTarget as HTMLElement;
-    const middlePoint =
-      columnElement.offsetLeft + columnElement.offsetWidth / 2;
-    return event.clientX > middlePoint ? 'right' : 'left';
+  const onDragStart = () => {
+    instance.dispatch({
+      type: REORDER_ACTIONS.columnDragStart,
+      columnIndex: instance.flatHeaders.indexOf(header),
+    });
   };
 
   const setOnDragColumnStyle = (
@@ -67,19 +73,19 @@ const defaultGetDragAndDropProps = <T extends Record<string, unknown>>(
   ) => {
     const newTableColumns = [...tableColumns];
     const [removed] = newTableColumns.splice(srcIndex, 1);
-    newTableColumns.splice(
-      // When dragging column to the right, we need to decrease the index
-      // because we removed column before and indexes shifted to the left.
-      dstIndex > srcIndex ? dstIndex - 1 : dstIndex,
-      0,
-      removed,
-    );
+    newTableColumns.splice(dstIndex, 0, removed);
     return newTableColumns;
   };
 
   const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    setOnDragColumnStyle(event, getPlacement(event));
+    const headerIndex = instance.flatHeaders.indexOf(header);
+    if (instance.state.columnReorderStartIndex !== headerIndex) {
+      setOnDragColumnStyle(
+        event,
+        instance.state.columnReorderStartIndex > headerIndex ? 'left' : 'right',
+      );
+    }
   };
 
   const onDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
@@ -90,23 +96,19 @@ const defaultGetDragAndDropProps = <T extends Record<string, unknown>>(
     event.preventDefault();
     setOnDragColumnStyle(event);
 
-    const srcColumnId = event.dataTransfer.getData('text');
     const columnIds = instance.flatHeaders.map((x) => x.id);
-    const srcIndex = columnIds.findIndex((x) => x === srcColumnId);
+    const srcIndex = instance.state.columnReorderStartIndex;
     const dstIndex = columnIds.findIndex((x) => x === header.id);
 
     if (srcIndex === dstIndex || srcIndex === -1 || dstIndex === -1) {
       return;
     }
 
-    instance.setColumnOrder(
-      reorderColumns(
-        columnIds,
-        srcIndex,
-        // When dropped on the right side of the column, need to increase the index by 1
-        getPlacement(event) === 'right' ? dstIndex + 1 : dstIndex,
-      ),
-    );
+    instance.setColumnOrder(reorderColumns(columnIds, srcIndex, dstIndex));
+    instance.dispatch({
+      type: REORDER_ACTIONS.columnDragEnd,
+      columnIndex: -1,
+    });
   };
 
   return [
@@ -119,6 +121,32 @@ const defaultGetDragAndDropProps = <T extends Record<string, unknown>>(
       onDrop,
     },
   ];
+};
+
+const reducer = <T extends Record<string, unknown>>(
+  newState: TableState<T>,
+  action: ActionType,
+) => {
+  switch (action.type) {
+    case actions.init:
+      return {
+        ...newState,
+        columnReorderStartIndex: -1,
+      };
+    case REORDER_ACTIONS.columnDragStart:
+      return {
+        ...newState,
+        columnReorderStartIndex: action.columnIndex,
+      };
+    case REORDER_ACTIONS.columnDragEnd:
+      return {
+        ...newState,
+        columnReorderStartIndex: -1,
+      };
+
+    default:
+      return newState;
+  }
 };
 
 const useInstance = <T extends Record<string, unknown>>(
