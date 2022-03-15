@@ -95,7 +95,7 @@ const defaultGetDragAndDropProps = <T extends Record<string, unknown>>(
     const srcIndex = columnIds.findIndex((x) => x === srcColumnId);
     const dstIndex = columnIds.findIndex((x) => x === header.id);
 
-    if (srcIndex === dstIndex) {
+    if (srcIndex === dstIndex || srcIndex === -1 || dstIndex === -1) {
       return;
     }
 
