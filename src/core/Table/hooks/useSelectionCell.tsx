@@ -50,12 +50,11 @@ export const useSelectionCell = <T extends Record<string, unknown>>(
         );
       },
       Cell: ({ row }: CellProps<T>) => (
-        <span onClick={(e) => e.stopPropagation()}>
-          <Checkbox
-            {...row.getToggleRowSelectedProps()}
-            disabled={isRowDisabled?.(row.original)}
-          />
-        </span>
+        <Checkbox
+          {...row.getToggleRowSelectedProps()}
+          disabled={isRowDisabled?.(row.original)}
+          onClick={(e) => e.stopPropagation()} // Prevents triggering on row click
+        />
       ),
     },
     ...columns,
