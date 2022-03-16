@@ -20,6 +20,10 @@ export type CarouselProps = {
    * @default 0
    */
   activeSlideIndex?: number;
+  /**
+   * Callback fired when the current slide changes.
+   */
+  onSlideChange?: (index: number) => void;
 } & React.ComponentPropsWithoutRef<'div'>;
 
 /**
@@ -42,7 +46,12 @@ export type CarouselProps = {
  */
 export const Carousel = Object.assign(
   React.forwardRef<HTMLElement, CarouselProps>((props, ref) => {
-    const { activeSlideIndex: userActiveIndex = 0, children, ...rest } = props;
+    const {
+      activeSlideIndex: userActiveIndex = 0,
+      onSlideChange,
+      children,
+      ...rest
+    } = props;
 
     // Generate a stateful random id if not specified
     const [id] = React.useState(
@@ -90,6 +99,11 @@ export const Carousel = Object.assign(
         }
       }
     };
+
+    const userOnSlideChange = React.useRef(onSlideChange);
+    React.useEffect(() => {
+      userOnSlideChange.current?.(currentIndex);
+    }, [currentIndex]);
 
     return (
       <section
