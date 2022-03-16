@@ -232,10 +232,10 @@ export type TableProps<
    */
   enableVirtualization?: boolean;
   /**
-   * Flag whether columns are draggable.
+   * Flag whether columns can be reordered.
    * @default false
    */
-  enableDraggableColumns?: boolean;
+  enableColumnReordering?: boolean;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -319,7 +319,7 @@ export const Table = <
     isResizable = false,
     styleType = 'default',
     enableVirtualization = false,
-    enableDraggableColumns = false,
+    enableColumnReordering = false,
     ...rest
   } = props;
 
@@ -434,7 +434,7 @@ export const Table = <
     useExpanderCell(subComponent, expanderCell, isRowDisabled),
     useSelectionCell(isSelectable, isRowDisabled),
     useColumnOrder,
-    useColumnDragAndDrop(enableDraggableColumns),
+    useColumnDragAndDrop(enableColumnReordering),
   );
 
   const {

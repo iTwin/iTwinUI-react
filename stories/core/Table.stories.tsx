@@ -1367,7 +1367,7 @@ export const Full: Story<Partial<TableProps>> = (args) => {
         isSelectable
         isSortable
         isResizable
-        enableDraggableColumns
+        enableColumnReordering
         {...args}
       />
       <Tooltip
@@ -1388,7 +1388,7 @@ Full.args = {
   isSelectable: true,
   isSortable: true,
   isResizable: true,
-  enableDraggableColumns: true,
+  enableColumnReordering: true,
 };
 
 export const Condensed: Story<Partial<TableProps>> = Basic.bind({});
@@ -2378,7 +2378,7 @@ export const DraggableColumns: Story<Partial<TableProps>> = (args) => {
             id: 'product',
             Header: 'Product',
             accessor: 'product',
-            disableDragging: true,
+            disableReordering: true,
           },
           {
             id: 'price',
@@ -2414,7 +2414,7 @@ export const DraggableColumns: Story<Partial<TableProps>> = (args) => {
 
   return (
     <Table
-      enableDraggableColumns
+      enableColumnReordering
       columns={columns}
       data={data}
       emptyTableContent='No data.'
@@ -2497,6 +2497,6 @@ DraggableColumns.args = {
       deliveryTime: 17,
     },
   ],
-  enableDraggableColumns: true,
+  enableColumnReordering: true,
   isSelectable: true,
 };

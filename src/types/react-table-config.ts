@@ -172,10 +172,10 @@ declare module 'react-table' {
      */
     cellRenderer?: (props: CellRendererProps<D>) => React.ReactNode;
     /**
-     * If true, column will not be draggable and can't be reordered.
+     * If true, column can't be reordered.
      * @default false
      */
-    disableDragging?: boolean;
+    disableReordering?: boolean;
   }
 
   export interface ColumnInstance<D extends object = {}>

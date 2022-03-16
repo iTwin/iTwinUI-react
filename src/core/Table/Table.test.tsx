@@ -2273,7 +2273,7 @@ it.each([
         data={mockedData()}
         emptyTableContent='Empty table'
         emptyFilteredTableContent='No results. Clear filter.'
-        enableDraggableColumns
+        enableColumnReordering
         isSortable
         onSort={onSort}
       />,
@@ -2312,7 +2312,7 @@ it.each([
         data={mockedData()}
         emptyTableContent='Empty table'
         emptyFilteredTableContent='No results. Clear filter.'
-        enableDraggableColumns
+        enableColumnReordering
         isSortable
         onSort={onSort}
       />,
@@ -2326,7 +2326,7 @@ it.each([
   },
 );
 
-it('should not have `draggable` attribute on columns with `disableDragging` enabled', () => {
+it('should not have `draggable` attribute on columns with `disableReordering` enabled', () => {
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Header name',
@@ -2345,7 +2345,7 @@ it('should not have `draggable` attribute on columns with `disableDragging` enab
           id: 'view',
           Header: 'view',
           Cell: () => 'View',
-          disableDragging: true,
+          disableReordering: true,
         },
       ],
     },
@@ -2356,7 +2356,7 @@ it('should not have `draggable` attribute on columns with `disableDragging` enab
       data={mockedData()}
       emptyTableContent='Empty table'
       emptyFilteredTableContent='No results. Clear filter.'
-      enableDraggableColumns
+      enableColumnReordering
       isSelectable
       subComponent={(row) => (
         <div>{`Expanded component, name: ${row.original.name}`}</div>
