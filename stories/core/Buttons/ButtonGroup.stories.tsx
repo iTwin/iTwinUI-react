@@ -77,10 +77,10 @@ export const Overflow: Story<ButtonGroupProps> = (args) => {
           maxWidth: 'clamp(300px, 50%, 100%)',
           border: '1px solid hotpink',
           padding: 8,
-          height: 'max(200px, 30vh)',
         }}
       >
         <ButtonGroup
+          orientation='horizontal'
           overflowButton={(overflowStart) => (
             <DropdownMenu
               menuItems={(close) =>
@@ -119,6 +119,7 @@ export const Overflow: Story<ButtonGroupProps> = (args) => {
 };
 Overflow.args = {
   overflowPlacement: 'end',
+  orientation: 'horizontal',
 };
 Overflow.parameters = {
   creevey: {
@@ -148,6 +149,9 @@ export const InputButtonCombo: Story<ButtonGroupProps> = (args) => {
     </ButtonGroup>
   );
 };
+InputButtonCombo.args = {
+  orientation: 'horizontal',
+};
 InputButtonCombo.parameters = {};
 
 export const Vertical: Story<ButtonGroupProps> = (args) => {
@@ -171,3 +175,75 @@ export const Vertical: Story<ButtonGroupProps> = (args) => {
 Vertical.args = {
   orientation: 'vertical',
 };
+
+export const VerticalOverflow: Story<ButtonGroupProps> = (args) => {
+  const buttons = Array(10)
+    .fill(null)
+    .map((_, index) => (
+      <IconButton
+        key={index}
+        onClick={() => action(`Clicked on button ${index + 1}`)()}
+      >
+        <SvgPlaceholder />
+      </IconButton>
+    ));
+
+  return (
+    <ButtonGroup
+      orientation='vertical'
+      style={{ height: 'clamp(100px, 40vmax, 80vh)' }}
+      overflowButton={(overflowStart) => (
+        <DropdownMenu
+          menuItems={(close) =>
+            Array(buttons.length - overflowStart + 1)
+              .fill(null)
+              .map((_, _index) => {
+                const index = overflowStart + _index;
+                const onClick = () => {
+                  action(`Clicked button ${index} (overflow)`)();
+                  close();
+                };
+                return (
+                  <MenuItem
+                    key={index}
+                    onClick={onClick}
+                    icon={<SvgPlaceholder />}
+                  >
+                    Button #{index}
+                  </MenuItem>
+                );
+              })
+          }
+        >
+          <IconButton onClick={() => action('Clicked on overflow icon')()}>
+            <SvgMore />
+          </IconButton>
+        </DropdownMenu>
+      )}
+      {...args}
+    >
+      {buttons}
+    </ButtonGroup>
+  );
+};
+VerticalOverflow.args = {
+  overflowPlacement: 'end',
+  orientation: 'vertical',
+};
+VerticalOverflow.parameters = {
+  creevey: {
+    ignoreElements: ['small'],
+  } as CreeveyStoryParams,
+};
+VerticalOverflow.decorators = [
+  (Story) => (
+    <>
+      <Text variant='small' as='small' isMuted>
+        Resize the viewport to see overflow behavior.
+      </Text>
+      <div style={{ border: '1px solid hotpink', padding: 8 }}>
+        <Story />
+      </div>
+    </>
+  ),
+];
