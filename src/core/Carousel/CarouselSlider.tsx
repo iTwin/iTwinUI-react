@@ -25,10 +25,6 @@ export const CarouselSlider = React.forwardRef<
   const sliderRef = React.useRef<HTMLOListElement>(null);
   const refs = useMergedRefs(sliderRef, ref);
 
-  React.useLayoutEffect(() => {
-    setSlideCount(React.Children.count(children));
-  }, [children, setSlideCount]);
-
   const items = React.useMemo(
     () =>
       React.Children.map(children, (child, index) =>
@@ -41,6 +37,10 @@ export const CarouselSlider = React.forwardRef<
       ) ?? [],
     [children, idPrefix],
   ) as React.ReactNode[];
+
+  React.useLayoutEffect(() => {
+    setSlideCount(items.length);
+  }, [items, setSlideCount]);
 
   React.useEffect(() => {
     if (!sliderRef.current) {
