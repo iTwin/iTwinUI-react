@@ -60,8 +60,11 @@ export const Carousel = Object.assign(
 
     useTheme();
 
+    const isManuallyUpdating = React.useRef(false);
+
     const [currentIndex, setCurrentIndex] = React.useState(userActiveIndex);
     React.useEffect(() => {
+      isManuallyUpdating.current = true;
       setCurrentIndex(userActiveIndex);
     }, [userActiveIndex]);
 
@@ -70,8 +73,6 @@ export const Carousel = Object.assign(
     const [keysPressed, setKeysPressed] = React.useState<
       Record<string, boolean>
     >({});
-
-    const isManuallyUpdating = React.useRef(false);
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
       if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {

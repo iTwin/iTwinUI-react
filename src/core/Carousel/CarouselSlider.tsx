@@ -14,16 +14,14 @@ export const CarouselSlider = React.forwardRef<
   HTMLOListElement,
   React.ComponentPropsWithoutRef<'ol'>
 >((props, ref) => {
+  const { children, className, ...rest } = props;
   const context = React.useContext(CarouselContext);
 
   if (!context) {
     throw new Error('CarouselSlider must be used within Carousel');
   }
 
-  const { children, className, ...rest } = props;
   const { currentIndex, setSlideCount, idPrefix } = context;
-  const sliderRef = React.useRef<HTMLOListElement>(null);
-  const refs = useMergedRefs(sliderRef, ref);
 
   const items = React.useMemo(
     () =>
@@ -42,7 +40,22 @@ export const CarouselSlider = React.forwardRef<
     setSlideCount(items.length);
   }, [items, setSlideCount]);
 
-  React.useEffect(() => {
+  const [mountState, setMountState] = React.useState<
+    'not-mounted' | 'just-mounted' | 'post-mount'
+  >('not-mounted');
+
+  React.useLayoutEffect(() => {
+    if (mountState === 'not-mounted') {
+      setMountState('just-mounted');
+    } else if (mountState === 'just-mounted') {
+      setMountState('post-mount');
+    }
+  }, [mountState]);
+
+  const sliderRef = React.useRef<HTMLOListElement>(null);
+  const refs = useMergedRefs(sliderRef, ref);
+
+  React.useLayoutEffect(() => {
     if (!sliderRef.current) {
       return;
     }
@@ -51,13 +64,22 @@ export const CarouselSlider = React.forwardRef<
       | HTMLElement
       | undefined;
 
+    // instant scroll on first mount
+    if (mountState === 'just-mounted') {
+      sliderRef.current.scrollTo({
+        left: slideToShow?.offsetLeft,
+        behavior: 'instant' as ScrollBehavior, // scrollTo accepts 'instant' but ScrollBehavior type is wrong
+      });
+      return;
+    }
+
     try {
       slideToShow?.scrollIntoView({ block: 'nearest' });
     } catch (_) {
       // Safari fallback
       sliderRef.current.scrollTo({ left: slideToShow?.offsetLeft });
     }
-  }, [currentIndex]);
+  }, [mountState, currentIndex]);
 
   return (
     <ol
