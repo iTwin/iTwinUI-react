@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import Toaster from './Toaster';
 export type { ToastOptions } from './Toaster';
+export { ToastPresentation } from './Toast';
 
 const toaster = new Toaster();
 

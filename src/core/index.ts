@@ -201,7 +201,7 @@ export type { TileProps } from './Tile';
 export { TimePicker } from './TimePicker';
 export type { MeridiemType, TimePickerProps } from './TimePicker';
 
-export { default as toaster } from './Toast';
+export { default as toaster, ToastPresentation } from './Toast';
 export type { ToastOptions } from './Toast';
 
 export { ThemeProvider } from './ThemeProvider';
