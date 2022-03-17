@@ -46,7 +46,16 @@ export const CarouselSlider = React.forwardRef<
       return;
     }
 
-    sliderRef.current.children.item(currentIndex)?.scrollIntoView();
+    const slideToShow = sliderRef.current.children.item(currentIndex) as
+      | HTMLElement
+      | undefined;
+
+    try {
+      slideToShow?.scrollIntoView({ block: 'nearest' });
+    } catch (_) {
+      // Safari fallback
+      sliderRef.current.scrollTo({ left: slideToShow?.offsetLeft });
+    }
   }, [currentIndex]);
 
   return (

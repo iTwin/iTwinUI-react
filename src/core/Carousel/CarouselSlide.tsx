@@ -28,16 +28,16 @@ export const CarouselSlide = React.forwardRef<
   const { index, className, children, ...rest } = props;
 
   const context = React.useContext(CarouselContext);
-  if (!context) {
-    throw new Error('CarouselSlider must be used within Carousel');
+  if (!context || index == null) {
+    throw new Error('CarouselSlide must be used within Carousel');
   }
 
   const { currentIndex, isManuallyUpdating, setCurrentIndex } = context;
 
   const updateActiveIndexOnScroll = React.useCallback(() => {
     // only update index if scroll was triggered by browser
-    if (!isManuallyUpdating.current) {
-      setCurrentIndex((prev) => (prev !== index ? index : prev));
+    if (!isManuallyUpdating.current && currentIndex !== index) {
+      setCurrentIndex(index);
     }
     // when manual scroll completes, reset the state of `isManuallyUpdating` so that it's ready for future actions
     if (currentIndex === index) {

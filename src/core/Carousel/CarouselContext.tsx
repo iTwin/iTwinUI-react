@@ -31,7 +31,7 @@ export const CarouselContext = React.createContext<
        */
       idPrefix: string;
       /**
-       * Ref object used for prevent intersection observer callback from interfering with manual slide updates.
+       * Ref object used for preventing intersection observer callback from interfering with manual slide updates.
        *
        * Should be set to true when updating slides using any of the buttons, and should be set to false when the manual slide update completes.
        */
