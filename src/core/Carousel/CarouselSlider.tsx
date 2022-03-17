@@ -20,17 +20,18 @@ export const CarouselSlider = React.forwardRef<
     throw new Error('CarouselSlider must be used within Carousel');
   }
 
+  const { children, className, ...rest } = props;
   const { currentIndex, setSlideCount, idPrefix } = context;
   const sliderRef = React.useRef<HTMLOListElement>(null);
   const refs = useMergedRefs(sliderRef, ref);
 
   React.useLayoutEffect(() => {
-    setSlideCount(React.Children.count(props.children));
-  }, [props.children, setSlideCount]);
+    setSlideCount(React.Children.count(children));
+  }, [children, setSlideCount]);
 
   const items = React.useMemo(
     () =>
-      React.Children.map(props.children, (child, index) =>
+      React.Children.map(children, (child, index) =>
         React.isValidElement(child)
           ? React.cloneElement(child, {
               id: `${idPrefix}--slide-${index}`,
@@ -38,7 +39,7 @@ export const CarouselSlider = React.forwardRef<
             })
           : child,
       ) ?? [],
-    [props.children, idPrefix],
+    [children, idPrefix],
   ) as React.ReactNode[];
 
   React.useEffect(() => {
@@ -61,9 +62,9 @@ export const CarouselSlider = React.forwardRef<
   return (
     <ol
       aria-live='polite'
-      {...props}
+      className={cx('iui-carousel-slider', className)}
       ref={refs}
-      className={cx('iui-carousel-slider', props.className)}
+      {...rest}
     >
       {items}
     </ol>
