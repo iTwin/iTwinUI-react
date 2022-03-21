@@ -107,3 +107,6 @@ export const Controlled: Story<CarouselProps> = ({
 Controlled.args = {
   activeSlideIndex: 2,
 };
+Controlled.argTypes = {
+  activeSlideIndex: { control: { disable: true } },
+};
