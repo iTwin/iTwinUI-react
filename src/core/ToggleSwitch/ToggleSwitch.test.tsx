@@ -9,16 +9,15 @@ import { ToggleSwitch } from './ToggleSwitch';
 
 const assertBaseElements = (
   container: HTMLElement,
-  position?: 'left' | 'right',
+  labelPosition?: 'left' | 'right',
 ) => {
-  expect(
-    container.querySelector(
-      `.iui-toggle-switch-wrapper${
-        position ? `.iui-label-on-${position}` : ''
-      }`,
-    ),
-  ).toBeTruthy();
-  expect(container.tagName).toBe(position ? 'label' : 'div');
+  const wrapper = container.querySelector(
+    `.iui-toggle-switch-wrapper${
+      labelPosition ? `.iui-label-on-${labelPosition}` : ''
+    }`,
+  ) as HTMLElement;
+  expect(wrapper).toBeTruthy();
+  expect(wrapper.tagName).toBe(!!labelPosition ? 'LABEL' : 'DIV');
   expect(container.querySelector('.iui-toggle-switch')).toBeTruthy();
   expect(
     container.querySelector('input[type="checkbox"][role="switch"]'),
@@ -91,7 +90,7 @@ it('should set focus', () => {
     <ToggleSwitch label='my label' ref={onRef} setFocus />,
   );
 
-  assertBaseElements(container);
+  assertBaseElements(container, 'right');
 
   getByText('my label');
   expect(element).toBeTruthy();
