@@ -74,7 +74,7 @@ export const Carousel = Object.assign(
 
     React.useEffect(() => {
       setCurrentIndex(userActiveIndex);
-    }, [userActiveIndex]);
+    }, [setCurrentIndex, userActiveIndex]);
 
     const [slideCount, setSlideCount] = React.useState(0);
 
