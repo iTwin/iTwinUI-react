@@ -5,7 +5,7 @@
 import React from 'react';
 import cx from 'classnames';
 import { CarouselContext } from './CarouselContext';
-import { useMergedRefs } from '../utils';
+import { useMergedRefs, useResizeObserver } from '../utils';
 
 /**
  * `CarouselSlider` is the scrollable list that should consist of `CarouselSlide` components.
@@ -40,8 +40,11 @@ export const CarouselSlider = React.forwardRef<
     setSlideCount(items.length);
   }, [items.length, setSlideCount]);
 
+  const [width, setWidth] = React.useState<number>();
+  const [resizeRef] = useResizeObserver(({ width }) => setWidth(width));
+
   const sliderRef = React.useRef<HTMLOListElement>(null);
-  const refs = useMergedRefs(sliderRef, ref);
+  const refs = useMergedRefs(sliderRef, resizeRef, ref);
   const justMounted = React.useRef(true);
 
   React.useLayoutEffect(() => {
@@ -66,7 +69,7 @@ export const CarouselSlider = React.forwardRef<
         : 'auto') as ScrollBehavior, // scrollTo accepts 'instant' but ScrollBehavior type is wrong
     });
     scrollInstantly.current = false;
-  }, [currentIndex, scrollInstantly]);
+  }, [currentIndex, scrollInstantly, width]);
 
   return (
     <ol
