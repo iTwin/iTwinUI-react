@@ -6,7 +6,7 @@ import React from 'react';
 import cx from 'classnames';
 import { CarouselContext } from './CarouselContext';
 import { IconButton, IconButtonProps } from '../Buttons';
-import { CarouselDots } from './CarouselDots';
+import { CarouselDotsList } from './CarouselDotsList';
 import SvgChevronLeft from '@itwin/itwinui-icons-react/cjs/icons/ChevronLeft';
 import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 
@@ -86,7 +86,7 @@ const NextButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
 
 /**
  * The `CarouselNavigation` component by default consists of the `PreviousButton` and `NextButton`
- * shown on the left and right, and the `CarouselDots` component shown in the middle.
+ * shown on the left and right, and the `CarouselDotsList` component shown in the middle.
  *
  * `children` can be specified to override what is shown in this navigation section.
  */
@@ -107,7 +107,7 @@ export const CarouselNavigation = Object.assign(
                 <PreviousButton />
               </div>
 
-              <CarouselDots />
+              <CarouselDotsList />
 
               <div className='iui-carousel-navigation-right'>
                 <NextButton />

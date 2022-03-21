@@ -15,7 +15,7 @@ export const CarouselContext = React.createContext<
        */
       setCurrentIndex: (index: number | ((old: number) => void)) => void;
       /**
-       * Number of slides in the carousel. Gets set in CarouselSlider for reading in CarouselDots.
+       * Number of slides in the carousel. Gets set in `CarouselSlider` for reading in `CarouselDotsList`.
        */
       slideCount: number;
       /**

@@ -66,7 +66,7 @@ export const CarouselSlider = React.forwardRef<
         : 'auto') as ScrollBehavior, // scrollTo accepts 'instant' but ScrollBehavior type is wrong
     });
     scrollInstantly.current = false;
-  }, [currentIndex]);
+  }, [currentIndex, scrollInstantly]);
 
   return (
     <ol

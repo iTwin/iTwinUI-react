@@ -9,7 +9,7 @@ import '@itwin/itwinui-css/css/carousel.css';
 import { CarouselContext } from './CarouselContext';
 import { CarouselSlider } from './CarouselSlider';
 import { CarouselSlide } from './CarouselSlide';
-import { CarouselDots } from './CarouselDots';
+import { CarouselDotsList } from './CarouselDotsList';
 import { CarouselDot } from './CarouselDot';
 import { CarouselNavigation } from './CarouselNavigation';
 
@@ -144,7 +144,7 @@ export const Carousel = Object.assign(
     Slider: CarouselSlider,
     Slide: CarouselSlide,
     Navigation: CarouselNavigation,
-    Dots: CarouselDots,
+    DotsList: CarouselDotsList,
     Dot: CarouselDot,
   },
 );

@@ -130,7 +130,7 @@ it('should handle keyboard navigation', () => {
         <Carousel.Slide>2</Carousel.Slide>
         <Carousel.Slide>3</Carousel.Slide>
       </Carousel.Slider>
-      <Carousel.Dots />
+      <Carousel.DotsList />
     </Carousel>,
   );
 
