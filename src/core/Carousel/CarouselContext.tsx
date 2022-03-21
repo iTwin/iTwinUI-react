@@ -33,7 +33,7 @@ export const CarouselContext = React.createContext<
       /**
        * Ref object used for preventing intersection observer callback from interfering with manual slide updates.
        *
-       * Should be set to true when updating slides using any of the buttons, and should be set to false when the manual slide update completes.
+       * Should be set to true when updating slides using any manual actions (e.g. clicking buttons), and should be set to false when the slide update completes.
        */
       isManuallyUpdating: React.MutableRefObject<boolean>;
     }

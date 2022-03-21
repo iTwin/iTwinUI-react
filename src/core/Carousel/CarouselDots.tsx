@@ -65,7 +65,6 @@ export const CarouselDots = React.forwardRef<HTMLDivElement, CarouselDotsProps>(
       (index: number) => {
         if (context) {
           context.setCurrentIndex(index);
-          context.isManuallyUpdating.current = true;
         }
         onSlideChange?.(index);
       },

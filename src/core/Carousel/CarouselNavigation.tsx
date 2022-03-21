@@ -18,12 +18,7 @@ const PreviousButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       throw new Error('CarouselNavigation should be used inside Carousel');
     }
 
-    const {
-      slideCount,
-      setCurrentIndex,
-      keysPressed,
-      isManuallyUpdating,
-    } = context;
+    const { slideCount, setCurrentIndex, keysPressed } = context;
 
     return (
       <IconButton
@@ -35,7 +30,6 @@ const PreviousButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
         {...props}
         onClick={(e) => {
           setCurrentIndex((old) => (slideCount + old - 1) % slideCount);
-          isManuallyUpdating.current = true;
           props?.onClick?.(e);
         }}
       >
@@ -53,12 +47,7 @@ const NextButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       throw new Error('CarouselNavigation should be used inside Carousel');
     }
 
-    const {
-      slideCount,
-      setCurrentIndex,
-      keysPressed,
-      isManuallyUpdating,
-    } = context;
+    const { slideCount, setCurrentIndex, keysPressed } = context;
 
     return (
       <IconButton
@@ -70,7 +59,6 @@ const NextButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
         {...props}
         onClick={(e) => {
           setCurrentIndex((old) => (slideCount + old + 1) % slideCount);
-          isManuallyUpdating.current = true;
           props?.onClick?.(e);
         }}
       >

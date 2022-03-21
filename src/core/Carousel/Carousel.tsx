@@ -62,9 +62,16 @@ export const Carousel = Object.assign(
 
     const isManuallyUpdating = React.useRef(false);
 
-    const [currentIndex, setCurrentIndex] = React.useState(userActiveIndex);
+    const [currentIndex, _setCurrentIndex] = React.useState(userActiveIndex);
+    const setCurrentIndex = React.useCallback(
+      (index: number | ((old: number) => number)) => {
+        _setCurrentIndex(index);
+        isManuallyUpdating.current = true;
+      },
+      [],
+    );
+
     React.useEffect(() => {
-      isManuallyUpdating.current = true;
       setCurrentIndex(userActiveIndex);
     }, [userActiveIndex]);
 
@@ -87,13 +94,11 @@ export const Carousel = Object.assign(
     const handleKeyUp = (event: React.KeyboardEvent) => {
       switch (event.key) {
         case 'ArrowLeft': {
-          isManuallyUpdating.current = true;
           setKeysPressed((old) => ({ ...old, ArrowLeft: false }));
           setCurrentIndex((old) => (slideCount + old - 1) % slideCount);
           break;
         }
         case 'ArrowRight': {
-          isManuallyUpdating.current = true;
           setKeysPressed((old) => ({ ...old, ArrowRight: false }));
           setCurrentIndex((old) => (slideCount + old + 1) % slideCount);
           break;
