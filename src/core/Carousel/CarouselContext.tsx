@@ -36,6 +36,10 @@ export const CarouselContext = React.createContext<
        * Should be set to true when updating slides using any manual actions (e.g. clicking buttons), and should be set to false when the slide update completes.
        */
       isManuallyUpdating: React.MutableRefObject<boolean>;
+      /**
+       * Ref object used to skip smooth scrolling when button is clicked too many times.
+       */
+      scrollInstantly: React.MutableRefObject<boolean>;
     }
   | undefined
 >(undefined);

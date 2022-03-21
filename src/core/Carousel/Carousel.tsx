@@ -61,6 +61,7 @@ export const Carousel = Object.assign(
     useTheme();
 
     const isManuallyUpdating = React.useRef(false);
+    const scrollInstantly = React.useRef(false);
 
     const [currentIndex, _setCurrentIndex] = React.useState(userActiveIndex);
     const setCurrentIndex = React.useCallback(
@@ -131,6 +132,7 @@ export const Carousel = Object.assign(
             keysPressed,
             idPrefix: id,
             isManuallyUpdating,
+            scrollInstantly,
           }}
         >
           {children}

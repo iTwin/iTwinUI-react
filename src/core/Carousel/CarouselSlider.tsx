@@ -21,7 +21,7 @@ export const CarouselSlider = React.forwardRef<
     throw new Error('CarouselSlider must be used within Carousel');
   }
 
-  const { currentIndex, setSlideCount, idPrefix } = context;
+  const { currentIndex, setSlideCount, idPrefix, scrollInstantly } = context;
 
   const items = React.useMemo(
     () =>
@@ -55,20 +55,17 @@ export const CarouselSlider = React.forwardRef<
 
     // instant scroll on first mount
     if (justMounted.current) {
-      sliderRef.current.scrollTo({
-        left: slideToShow?.offsetLeft,
-        behavior: 'instant' as ScrollBehavior, // scrollTo accepts 'instant' but ScrollBehavior type is wrong
-      });
+      scrollInstantly.current = true;
       justMounted.current = false;
-      return;
     }
 
-    try {
-      slideToShow?.scrollIntoView({ block: 'nearest' });
-    } catch (_) {
-      // Safari fallback
-      sliderRef.current.scrollTo({ left: slideToShow?.offsetLeft });
-    }
+    sliderRef.current.scrollTo({
+      left: slideToShow?.offsetLeft,
+      behavior: (scrollInstantly.current
+        ? 'instant'
+        : 'auto') as ScrollBehavior, // scrollTo accepts 'instant' but ScrollBehavior type is wrong
+    });
+    scrollInstantly.current = false;
   }, [currentIndex]);
 
   return (
