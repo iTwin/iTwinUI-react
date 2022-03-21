@@ -1,5 +1,22 @@
 # Changelog
 
+### [1.33.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.33.0...v1.33.1) (2022-03-18)
+
+### Fixes
+
+* **ButtonGroup:** Add vertical support to `overflowButton` ([#579](https://www.github.com/iTwin/iTwinUI-react/issues/579)) ([aad619b](https://www.github.com/iTwin/iTwinUI-react/commit/aad619b6dc7d65ffd79c8d33111489b1b8d27680))
+* **Slider:** Fixed to call onUpdate on rail click ([#587](https://www.github.com/iTwin/iTwinUI-react/issues/587)) ([e7cc679](https://www.github.com/iTwin/iTwinUI-react/commit/e7cc6796308928230f2d2c7c79b6ee35286595a7))
+* **Table:** Removed wrapper span from checkbox ([#583](https://www.github.com/iTwin/iTwinUI-react/issues/583)) ([996377b](https://www.github.com/iTwin/iTwinUI-react/commit/996377bf44cdacd9f42361f2199c2a83420ca15b))
+
+## [1.33.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.32.0...v1.33.0) (2022-03-07)
+
+### What's new
+
+* **ButtonGroup:** Add new `orientation` prop to allow showing vertical group ([#577](https://www.github.com/iTwin/iTwinUI-react/issues/577)) ([f6cd52f](https://www.github.com/iTwin/iTwinUI-react/commit/f6cd52f39dd139439281114d3ade99e486ab6bfb))
+* **ComboBox:** Add new `message` prop ([#554](https://www.github.com/iTwin/iTwinUI-react/issues/554)) ([8113860](https://www.github.com/iTwin/iTwinUI-react/commit/8113860499e6156d97992919204b3b8c7e46197b))
+  * This new prop can accept a string or the new `StatusMessage` component for customizing icon.
+* **Footer:** Allow overriding and removing default footer elements ([#544](https://www.github.com/iTwin/iTwinUI-react/issues/544)) ([76396a4](https://www.github.com/iTwin/iTwinUI-react/commit/76396a4cc0a88bb7680316cf4642b732729abd7a))
+
 ## [1.32.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.31.0...v1.32.0) (2022-02-25)
 
 ### What's new

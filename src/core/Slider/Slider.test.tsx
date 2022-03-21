@@ -30,11 +30,6 @@ const getBoundingClientRect = Element.prototype.getBoundingClientRect;
 const sliderContainerSize = createBoundingClientRect(10, 0, 1010, 60);
 Element.prototype.getBoundingClientRect = () => sliderContainerSize;
 
-afterEach(() => {
-  // cleanup tippy after every test, so it does not stay in the dom
-  document.querySelector('[data-tippy-root]')?.remove();
-});
-
 afterAll(() => {
   Element.prototype.getBoundingClientRect = getBoundingClientRect;
 });
@@ -473,42 +468,15 @@ it('should apply thumb props', () => {
 });
 
 it('should move thumb when pointer down on rail', () => {
-  const { container } = render(
-    <Slider
-      values={defaultSingleValue}
-      tickLabels={<span className='custom-tick-mark'>Custom</span>}
-    />,
-  );
-
-  assertBaseElement(container);
-  const sliderContainer = container.querySelector(
-    '.iui-slider-container',
-  ) as HTMLDivElement;
-  expect(sliderContainer.getBoundingClientRect().left).toBe(10);
-  expect(sliderContainer.getBoundingClientRect().right).toBe(1010);
-  expect(sliderContainer.getBoundingClientRect().width).toBe(1000);
-
-  /* fire a pointer down event 30% down the slider */
-  act(() => {
-    fireEvent.pointerDown(sliderContainer, {
-      pointerId: 5,
-      buttons: 1,
-      clientX: 310,
-    });
-  });
-
-  const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
-  expect(thumb.getAttribute('aria-valuenow')).toEqual('30');
-});
-
-it('should move thumb when pointer down on rail with change handler', () => {
   const handleOnChange = jest.fn();
+  const handleOnUpdate = jest.fn();
 
   const { container } = render(
     <Slider
       values={defaultSingleValue}
       tickLabels={<span className='custom-tick-mark'>Custom</span>}
       onChange={handleOnChange}
+      onUpdate={handleOnUpdate}
     />,
   );
 
@@ -532,7 +500,8 @@ it('should move thumb when pointer down on rail with change handler', () => {
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
   expect(thumb.getAttribute('aria-valuenow')).toEqual('30');
 
-  expect(handleOnChange).toBeCalled();
+  expect(handleOnChange).toHaveBeenCalledWith([30]);
+  expect(handleOnUpdate).toHaveBeenCalledWith([30]);
 });
 
 it('should move to closest step when pointer down on rail', () => {
