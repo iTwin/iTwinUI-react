@@ -38,22 +38,11 @@ export const CarouselSlider = React.forwardRef<
 
   React.useLayoutEffect(() => {
     setSlideCount(items.length);
-  }, [items, setSlideCount]);
-
-  const [mountState, setMountState] = React.useState<
-    'not-mounted' | 'just-mounted' | 'post-mount'
-  >('not-mounted');
-
-  React.useLayoutEffect(() => {
-    if (mountState === 'not-mounted') {
-      setMountState('just-mounted');
-    } else if (mountState === 'just-mounted') {
-      setMountState('post-mount');
-    }
-  }, [mountState]);
+  }, [items.length, setSlideCount]);
 
   const sliderRef = React.useRef<HTMLOListElement>(null);
   const refs = useMergedRefs(sliderRef, ref);
+  const justMounted = React.useRef(true);
 
   React.useLayoutEffect(() => {
     if (!sliderRef.current) {
@@ -65,11 +54,12 @@ export const CarouselSlider = React.forwardRef<
       | undefined;
 
     // instant scroll on first mount
-    if (mountState === 'just-mounted') {
+    if (justMounted.current) {
       sliderRef.current.scrollTo({
         left: slideToShow?.offsetLeft,
         behavior: 'instant' as ScrollBehavior, // scrollTo accepts 'instant' but ScrollBehavior type is wrong
       });
+      justMounted.current = false;
       return;
     }
 
@@ -79,7 +69,7 @@ export const CarouselSlider = React.forwardRef<
       // Safari fallback
       sliderRef.current.scrollTo({ left: slideToShow?.offsetLeft });
     }
-  }, [mountState, currentIndex]);
+  }, [currentIndex]);
 
   return (
     <ol

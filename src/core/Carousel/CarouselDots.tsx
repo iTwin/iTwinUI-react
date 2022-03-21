@@ -14,7 +14,7 @@ type CarouselDotsProps = {
   length?: number;
   /** Maximum number of dots to show in the viewport. @default 5 */
   maxCount?: number;
-  /** Index of currently acitve dot. Will be inferred from Carousel context. */
+  /** Index of currently active dot. Will be inferred from Carousel context. */
   currentIndex?: number;
   /** Callback fired when any of the dots are clicked. */
   onSlideChange?: (index: number) => void;
