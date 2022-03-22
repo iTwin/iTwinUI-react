@@ -23,8 +23,6 @@ export const useColumnVisibility = <T extends Record<string, unknown>>(
     ...columns,
     {
       id: COLUMN_MANAGER_ID,
-      disableResizing: true,
-      disableGroupBy: true,
       minWidth: 48,
       width: 48,
       maxWidth: 48,
@@ -34,11 +32,30 @@ export const useColumnVisibility = <T extends Record<string, unknown>>(
         const headerCheckBoxes = () =>
           allColumns
             .filter(({ id }) => !id.includes('iui-table'))
-            .map((column) => (
-              <MenuItem key={column.id} {...column.getToggleHiddenProps()}>
-                <Checkbox label={column.Header} />
-              </MenuItem>
-            ));
+            .map((column) => {
+              const { onChange, checked } = column.getToggleHiddenProps();
+
+              console.log(column.getResizerProps());
+              return (
+                <MenuItem
+                  key={column.id}
+                  {...column.getToggleHiddenProps()}
+                  icon={
+                    <Checkbox
+                      id={`iui-column-${column.id}`}
+                      checked={checked}
+                      disabled={column.disableToggleVisibility}
+                    />
+                  }
+                  onClick={() => onChange({ target: { checked: !checked } })}
+                  disabled={column.disableToggleVisibility}
+                >
+                  <label htmlFor={`iui-column-${column.id}`}>
+                    {column.Header}
+                  </label>
+                </MenuItem>
+              );
+            });
         return (
           <DropdownMenu menuItems={headerCheckBoxes}>
             <IconButton styleType='borderless'>

@@ -2295,11 +2295,26 @@ VirtualizedSubRows.argTypes = {
 };
 
 export const ColumnManager: Story<Partial<TableProps>> = (args) => {
+  type TableStoryDataType = {
+    index: number;
+    name: string;
+    description: string;
+    id: string;
+    startDate: Date;
+    endDate: Date;
+  };
+
   const columns = useMemo(
-    () => [
+    (): Column<TableStoryDataType>[] => [
       {
         Header: 'Table',
         columns: [
+          {
+            id: 'index',
+            Header: '#',
+            accessor: 'index',
+            disableToggleVisibility: true,
+          },
           {
             id: 'name',
             Header: 'Name',
@@ -2309,24 +2324,27 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
             id: 'description',
             Header: 'Description',
             accessor: 'description',
-            maxWidth: 200,
+            fieldType: 'text',
           },
           {
-            id: 'click-me',
-            Header: 'Click',
-            width: 100,
-            Cell: (props: CellProps<{ name: string; description: string }>) => {
-              return (
-                <a
-                  className='iui-anchor'
-                  onClick={(e) => {
-                    e.stopPropagation(); // prevent row selection when clicking on link
-                    action(props.row.original.name)();
-                  }}
-                >
-                  Click me!
-                </a>
-              );
+            id: 'id',
+            Header: 'ID',
+            accessor: 'id',
+          },
+          {
+            id: 'startDate',
+            Header: 'Start date',
+            accessor: 'startDate',
+            Cell: (props: CellProps<TableStoryDataType>) => {
+              return props.row.original.startDate.toLocaleDateString('en-US');
+            },
+          },
+          {
+            id: 'endDate',
+            Header: 'End date',
+            accessor: 'endDate',
+            Cell: (props: CellProps<TableStoryDataType>) => {
+              return props.row.original.endDate.toLocaleDateString('en-US');
             },
           },
         ],
@@ -2336,20 +2354,41 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
   );
   const data = useMemo(
     () => [
-      { name: 'Name1', description: 'Description1' },
-      { name: 'Name2', description: 'Description2' },
-      { name: 'Name3', description: 'Description3' },
+      {
+        index: 1,
+        name: 'Name1',
+        description: 'Description1',
+        id: '111',
+        startDate: new Date('May 1, 2021'),
+        endDate: new Date('Jun 1, 2021'),
+      },
+      {
+        index: 2,
+        name: 'Name2',
+        description: 'Description2',
+        id: '222',
+        startDate: new Date('May 2, 2021'),
+        endDate: new Date('Jun 2, 2021'),
+      },
+      {
+        index: 3,
+        name: 'Name3',
+        description: 'Description3',
+        id: '333',
+        startDate: new Date('May 3, 2021'),
+        endDate: new Date('Jun 3, 2021'),
+      },
     ],
     [],
   );
 
   return (
     <Table
+      {...args}
       columns={columns}
       data={data}
       emptyTableContent='No data.'
       isManageable={true}
-      {...args}
     />
   );
 };
