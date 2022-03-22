@@ -12,7 +12,7 @@ import '@itwin/itwinui-css/css/carousel.css';
 type CarouselDotsListProps = {
   /** Number of total dots/slides in the carousel. Will be inferred from Carousel context. */
   length?: number;
-  /** Maximum number of dots to show in the viewport. @default 5 */
+  /** Maximum number of dots to show in the viewport. */
   maxCount?: number;
   /** Index of currently active dot. Will be inferred from Carousel context. */
   currentIndex?: number;
@@ -47,7 +47,7 @@ export const CarouselDotsList = React.forwardRef<
   CarouselDotsListProps
 >((props, ref) => {
   const {
-    // maxCount,
+    maxCount,
     currentIndex: userCurrentIndex,
     length,
     className,
@@ -85,7 +85,7 @@ export const CarouselDotsList = React.forwardRef<
 
   const [visibleCount, setVisibleCount] = React.useState(slideCount);
   const listRef = React.useRef<HTMLDivElement>(null);
-  const [resizeRef] = useResizeObserver(({ width }) => {
+  const [resizeRef, resizeObserver] = useResizeObserver(({ width }) => {
     if (!listRef.current) {
       return;
     }
@@ -93,6 +93,13 @@ export const CarouselDotsList = React.forwardRef<
     const dotWidth = (listRef.current.children[0] as HTMLElement).offsetWidth;
     setVisibleCount(Math.floor(width / dotWidth));
   });
+
+  React.useEffect(() => {
+    if (maxCount != undefined) {
+      setVisibleCount(maxCount);
+      resizeObserver?.disconnect();
+    }
+  }, [resizeObserver, maxCount]);
 
   const refs = useMergedRefs(ref, resizeRef, listRef);
 
