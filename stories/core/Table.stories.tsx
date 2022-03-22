@@ -1291,10 +1291,30 @@ export const Full: Story<Partial<TableProps>> = (args) => {
             maxWidth: 200,
             Filter: tableFilters.TextFilter(),
           },
+          {
+            id: 'click-me',
+            Header: 'Click',
+            width: 100,
+            // Manually handling disabled state in custom cells
+            Cell: (props: CellProps<{ name: string; description: string }>) => (
+              <>
+                {isRowDisabled(props.row.original) ? (
+                  <>Click me!</>
+                ) : (
+                  <a
+                    className='iui-anchor'
+                    onClick={action(props.row.original.name)}
+                  >
+                    Click me!
+                  </a>
+                )}
+              </>
+            ),
+          },
         ],
       },
     ],
-    [],
+    [isRowDisabled],
   );
 
   const data = useMemo(
@@ -1348,6 +1368,7 @@ export const Full: Story<Partial<TableProps>> = (args) => {
         isSortable
         isResizable
         isManageable
+        enableColumnReordering
         {...args}
       />
       <Tooltip
@@ -1369,6 +1390,7 @@ Full.args = {
   isSortable: true,
   isResizable: true,
   isManageable: true,
+  enableColumnReordering: true,
 };
 
 export const Condensed: Story<Partial<TableProps>> = Basic.bind({});
@@ -2312,7 +2334,6 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
     ],
     [],
   );
-
   const data = useMemo(
     () => [
       { name: 'Name1', description: 'Description1' },
@@ -2334,3 +2355,211 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
 };
 
 ColumnManager.args = { isManageable: true };
+
+export const DraggableColumns: Story<Partial<TableProps>> = (args) => {
+  const columns = useMemo(
+    (): Column[] => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'product',
+            Header: 'Product',
+            accessor: 'product',
+            disableReordering: true,
+          },
+          {
+            id: 'price',
+            Header: 'Price',
+            accessor: 'price',
+            Cell: (props: CellProps<typeof data[0]>) => {
+              return `$${props.value}`;
+            },
+          },
+          {
+            id: 'quantity',
+            Header: 'Quantity',
+            accessor: 'quantity',
+          },
+          {
+            id: 'rating',
+            Header: 'Rating',
+            accessor: 'rating',
+          },
+          {
+            id: 'deliveryTime',
+            Header: 'Delivery Time',
+            accessor: 'deliveryTime',
+            Cell: (props: CellProps<typeof data[0]>) => {
+              return `${props.value} day(s)`;
+            },
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const data = useMemo(
+    () => [
+      {
+        product: 'Product 1',
+        price: 5,
+        quantity: 500,
+        rating: '4/5',
+        deliveryTime: 5,
+      },
+      {
+        product: 'Product 2',
+        price: 12,
+        quantity: 1200,
+        rating: '1/5',
+        deliveryTime: 25,
+      },
+      {
+        product: 'Product 3',
+        price: 2.99,
+        quantity: 1500,
+        rating: '3/5',
+        deliveryTime: 7,
+      },
+      {
+        product: 'Product 4',
+        price: 20,
+        quantity: 50,
+        rating: '4/5',
+        deliveryTime: 2,
+      },
+      {
+        product: 'Product 5',
+        price: 1.99,
+        quantity: 700,
+        rating: '5/5',
+        deliveryTime: 1,
+      },
+      {
+        product: 'Product 6',
+        price: 499,
+        quantity: 30,
+        rating: '5/5',
+        deliveryTime: 20,
+      },
+      {
+        product: 'Product 7',
+        price: 13.99,
+        quantity: 130,
+        rating: '1/5',
+        deliveryTime: 30,
+      },
+      {
+        product: 'Product 8',
+        price: 5.99,
+        quantity: 500,
+        rating: '4/5',
+        deliveryTime: 5,
+      },
+      {
+        product: 'Product 9',
+        price: 12,
+        quantity: 1200,
+        rating: '1/5',
+        deliveryTime: 25,
+      },
+      {
+        product: 'Product 10',
+        price: 2.99,
+        quantity: 200,
+        rating: '3/5',
+        deliveryTime: 17,
+      },
+    ],
+    [],
+  );
+  return (
+    <Table
+      enableColumnReordering
+      columns={columns}
+      data={data}
+      emptyTableContent='No data.'
+      isSelectable
+      {...args}
+    />
+  );
+};
+
+DraggableColumns.args = {
+  data: [
+    {
+      product: 'Product 1',
+      price: 5,
+      quantity: 500,
+      rating: '4/5',
+      deliveryTime: 5,
+    },
+    {
+      product: 'Product 2',
+      price: 12,
+      quantity: 1200,
+      rating: '1/5',
+      deliveryTime: 25,
+    },
+    {
+      product: 'Product 3',
+      price: 2.99,
+      quantity: 1500,
+      rating: '3/5',
+      deliveryTime: 7,
+    },
+    {
+      product: 'Product 4',
+      price: 20,
+      quantity: 50,
+      rating: '4/5',
+      deliveryTime: 2,
+    },
+    {
+      product: 'Product 5',
+      price: 1.99,
+      quantity: 700,
+      rating: '5/5',
+      deliveryTime: 1,
+    },
+    {
+      product: 'Product 6',
+      price: 499,
+      quantity: 30,
+      rating: '5/5',
+      deliveryTime: 20,
+    },
+    {
+      product: 'Product 7',
+      price: 13.99,
+      quantity: 130,
+      rating: '1/5',
+      deliveryTime: 30,
+    },
+    {
+      product: 'Product 8',
+      price: 5.99,
+      quantity: 500,
+      rating: '4/5',
+      deliveryTime: 5,
+    },
+    {
+      product: 'Product 9',
+      price: 12,
+      quantity: 1200,
+      rating: '1/5',
+      deliveryTime: 25,
+    },
+    {
+      product: 'Product 10',
+      price: 2.99,
+      quantity: 200,
+      rating: '3/5',
+      deliveryTime: 17,
+    },
+  ],
+  enableColumnReordering: true,
+  isSelectable: true,
+};

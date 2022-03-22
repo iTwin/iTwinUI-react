@@ -20,6 +20,7 @@ import {
   TableInstance,
   useExpanded,
   usePagination,
+  useColumnOrder,
 } from 'react-table';
 import { ProgressRadial } from '../ProgressIndicators';
 import { useTheme, CommonProps, useResizeObserver } from '../utils';
@@ -37,6 +38,7 @@ import {
   useSubRowSelection,
   useResizeColumns,
   useColumnVisibility,
+  useColumnDragAndDrop,
 } from './hooks';
 import {
   onExpandHandler,
@@ -235,6 +237,11 @@ export type TableProps<
    * @default false
    */
   isManageable?: boolean;
+  /**
+   * Flag whether columns can be reordered.
+   * @default false
+   */
+  enableColumnReordering?: boolean;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -319,6 +326,7 @@ export const Table = <
     styleType = 'default',
     enableVirtualization = false,
     isManageable = false,
+    enableColumnReordering = false,
     ...rest
   } = props;
 
@@ -433,6 +441,8 @@ export const Table = <
     useExpanderCell(subComponent, expanderCell, isRowDisabled),
     useSelectionCell(isSelectable, isRowDisabled),
     useColumnVisibility(isManageable),
+    useColumnOrder,
+    useColumnDragAndDrop(enableColumnReordering),
   );
 
   const {
@@ -625,18 +635,8 @@ export const Table = <
             return (
               <div {...headerGroupProps} key={headerGroupProps.key}>
                 {headerGroup.headers.map((column, index) => {
-                  const {
-                    onClick: onSortClick,
-                    ...sortByProps
-                  } = column.getSortByToggleProps() as {
-                    onClick:
-                      | React.MouseEventHandler<HTMLDivElement>
-                      | undefined;
-                    style: React.CSSProperties;
-                    title: string;
-                  };
                   const columnProps = column.getHeaderProps({
-                    ...sortByProps,
+                    ...column.getSortByToggleProps(),
                     className: cx(
                       'iui-cell',
                       { 'iui-actionable': column.canSort },
@@ -648,6 +648,7 @@ export const Table = <
                   return (
                     <div
                       {...columnProps}
+                      {...column.getDragAndDropProps()}
                       key={columnProps.key}
                       title={undefined}
                       ref={(el) => {
@@ -656,7 +657,6 @@ export const Table = <
                           column.resizeWidth = el.getBoundingClientRect().width;
                         }
                       }}
-                      onMouseDown={onSortClick}
                     >
                       {column.render('Header')}
                       {!isLoading && (data.length != 0 || areFiltersSet) && (
@@ -690,6 +690,9 @@ export const Table = <
                             <div className='iui-resizer-bar' />
                           </div>
                         )}
+                      {enableColumnReordering && !column.disableReordering && (
+                        <div className='iui-reorder-bar' />
+                      )}
                     </div>
                   );
                 })}
