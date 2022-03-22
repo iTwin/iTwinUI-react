@@ -5,7 +5,7 @@
 import React from 'react';
 import cx from 'classnames';
 import { CarouselContext } from './CarouselContext';
-import { useTheme } from '../utils';
+import { useMergedRefs, useResizeObserver, useTheme } from '../utils';
 import { CarouselDot } from './CarouselDot';
 import '@itwin/itwinui-css/css/carousel.css';
 
@@ -83,31 +83,64 @@ export const CarouselDotsList = React.forwardRef<
     );
   }
 
-  const dots = React.useMemo(
-    () =>
-      Array(slideCount)
-        .fill(null)
-        .map((_, index) => {
-          return (
-            <CarouselDot
-              key={index}
-              aria-label={`Slide ${index}`}
-              isActive={index === currentIndex}
-              onClick={() => handleSlideChange(index)}
-              id={`${idPrefix}--dot-${index}`}
-              aria-controls={`${idPrefix}--slide-${index}`}
-            />
-          );
-        }),
-    [slideCount, currentIndex, , idPrefix, handleSlideChange],
-  );
+  const [visibleCount, setVisibleCount] = React.useState(slideCount);
+  const listRef = React.useRef<HTMLDivElement>(null);
+  const [resizeRef] = useResizeObserver(({ width }) => {
+    if (!listRef.current) {
+      return;
+    }
+
+    const dotWidth = (listRef.current.children[0] as HTMLElement).offsetWidth;
+    setVisibleCount(Math.floor(width / dotWidth));
+  });
+
+  const refs = useMergedRefs(ref, resizeRef, listRef);
+
+  const dots = React.useMemo(() => {
+    const firstDotIndex = Math.max(
+      0,
+      Math.min(
+        currentIndex - Math.ceil(visibleCount / 2) + 1,
+        slideCount - visibleCount,
+      ),
+    );
+    const lastDotIndex = Math.min(
+      slideCount - 1,
+      Math.max(currentIndex + Math.floor(visibleCount / 2), visibleCount - 1),
+    );
+
+    return Array(slideCount)
+      .fill(null)
+      .map((_, index) => {
+        const isFirstSmallDot =
+          (index === firstDotIndex && index !== 0) ||
+          (index === lastDotIndex && index !== slideCount - 1);
+        const isSecondSmallDot =
+          (index === firstDotIndex + 1 && index !== 1) ||
+          (index === lastDotIndex - 1 && index !== slideCount - 2);
+        const isClipped = index < firstDotIndex || index > lastDotIndex;
+
+        return (
+          <CarouselDot
+            key={index}
+            aria-label={`Slide ${index}`}
+            isActive={index === currentIndex}
+            onClick={() => handleSlideChange(index)}
+            id={`${idPrefix}--dot-${index}`}
+            aria-controls={`${idPrefix}--slide-${index}`}
+            isSmall={isSecondSmallDot}
+            isSmaller={isFirstSmallDot || isClipped}
+          />
+        );
+      });
+  }, [slideCount, currentIndex, idPrefix, visibleCount, handleSlideChange]);
 
   return (
     <div
       className={cx('iui-carousel-navigation-dots', className)}
       role='tablist'
       aria-label='Slides'
-      ref={ref}
+      ref={refs}
       {...rest}
       style={{ display: 'block' }} // TODO: don't need flex
     >

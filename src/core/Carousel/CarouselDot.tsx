@@ -9,8 +9,6 @@ import { useMergedRefs } from '../utils';
 type CarouselDotProps = {
   /** Is this dot currently active? */
   isActive?: boolean;
-  /** Should be set to true for dots that are not visible, i.e. truncated. */
-  isInvisible?: boolean;
   /** Should be set to true for dots that are one spot from the edge of truncation. The dot size becomes small.  */
   isSmall?: boolean;
   /** Should be set to true for dots that are at the edge of truncation. The dot size becomes even smaller.  */
@@ -25,14 +23,7 @@ export const CarouselDot = React.forwardRef<
   HTMLButtonElement,
   CarouselDotProps
 >((props, ref) => {
-  const {
-    isActive,
-    // isSmaller,
-    // isSmall,
-    // isInvisible,
-    className,
-    ...rest
-  } = props;
+  const { isActive, isSmaller, isSmall, className, ...rest } = props;
 
   const justMounted = React.useRef(false);
   const motionOk = React.useRef(
@@ -69,9 +60,8 @@ export const CarouselDot = React.forwardRef<
         'iui-carousel-navigation-dot',
         {
           'iui-active': isActive,
-          // 'iui-first': isSmaller,
-          // 'iui-second': isSmall,
-          // 'iui-invisible': isInvisible,
+          'iui-first': isSmaller,
+          'iui-second': isSmall,
         },
         className,
       )}
