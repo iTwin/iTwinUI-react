@@ -33,12 +33,21 @@ export const CarouselDot = React.forwardRef<
   const dotRef = React.useCallback(
     (el: HTMLButtonElement) => {
       if (el && isActive) {
-        el.scrollIntoView({
-          behavior:
-            !justMounted.current && motionOk.current ? 'smooth' : 'auto',
-          block: 'nearest',
-          inline: 'center',
-        });
+        try {
+          el.scrollIntoView({
+            behavior:
+              !justMounted.current && motionOk.current ? 'smooth' : 'auto',
+            block: 'nearest',
+            inline: 'center',
+          });
+        } catch (_) {
+          // Safari fallback
+          el.parentElement?.scrollTo({
+            behavior:
+              !justMounted.current && motionOk.current ? 'smooth' : 'auto',
+            left: el.offsetLeft - el.parentElement?.offsetLeft,
+          });
+        }
       }
     },
     [isActive],
@@ -49,7 +58,7 @@ export const CarouselDot = React.forwardRef<
     if (justMounted.current) {
       justMounted.current = false;
     }
-  });
+  }, []);
 
   return (
     <button

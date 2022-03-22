@@ -21,7 +21,13 @@ export const CarouselSlider = React.forwardRef<
     throw new Error('CarouselSlider must be used within Carousel');
   }
 
-  const { currentIndex, setSlideCount, idPrefix, scrollInstantly } = context;
+  const {
+    currentIndex,
+    setSlideCount,
+    idPrefix,
+    isManuallyUpdating,
+    scrollInstantly,
+  } = context;
 
   const items = React.useMemo(
     () =>
@@ -48,13 +54,13 @@ export const CarouselSlider = React.forwardRef<
   const justMounted = React.useRef(true);
 
   React.useLayoutEffect(() => {
-    if (!sliderRef.current) {
-      return;
-    }
-
-    const slideToShow = sliderRef.current.children.item(currentIndex) as
+    const slideToShow = sliderRef.current?.children.item(currentIndex) as
       | HTMLElement
       | undefined;
+
+    if (!sliderRef.current || !slideToShow || !isManuallyUpdating.current) {
+      return;
+    }
 
     // instant scroll on first mount
     if (justMounted.current) {
@@ -63,13 +69,13 @@ export const CarouselSlider = React.forwardRef<
     }
 
     sliderRef.current.scrollTo({
-      left: slideToShow?.offsetLeft,
+      left: slideToShow.offsetLeft - sliderRef.current.offsetLeft,
       behavior: (scrollInstantly.current
         ? 'instant'
         : 'auto') as ScrollBehavior, // scrollTo accepts 'instant' but ScrollBehavior type is wrong
     });
     scrollInstantly.current = false;
-  }, [currentIndex, scrollInstantly, width]);
+  }, [currentIndex, isManuallyUpdating, scrollInstantly, width]);
 
   return (
     <ol
