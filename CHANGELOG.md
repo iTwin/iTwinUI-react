@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.33.2](https://www.github.com/iTwin/iTwinUI-react/compare/v1.33.1...v1.33.2) (2022-03-22)
+
+
+### Fixes
+
+* **ToggleSwitch:** updated toggle switch styles through css package ([#592](https://www.github.com/iTwin/iTwinUI-react/issues/592)) ([3a0be35](https://www.github.com/iTwin/iTwinUI-react/commit/3a0be355d4363fe7d704c3fd6f975c509c65da2b))
+
 ### [1.33.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.33.0...v1.33.1) (2022-03-18)
 
 ### Fixes
