@@ -1,251 +1,69 @@
 {
   "v": 2,
+  "globals": {},
   "globalParameters": {},
   "kindParameters": {
-    "Overview": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/intro/Overview.stories.tsx",
-      "framework": "react"
-    },
-    "Core/Alert": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Alert.stories.tsx",
-      "framework": "react"
-    },
-    "Core/Badge": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Badge.stories.tsx",
-      "framework": "react"
-    },
-    "Core/Breadcrumbs": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Breadcrumbs.stories.tsx",
-      "framework": "react"
-    },
-    "Buttons/Button": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/Button.stories.tsx",
-      "framework": "react"
-    },
-    "Buttons/ButtonGroup": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/ButtonGroup.stories.tsx",
-      "framework": "react"
-    },
-    "Buttons/DropdownButton": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/DropdownButton.stories.tsx",
-      "framework": "react"
-    },
-    "Buttons/IconButton": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/IconButton.stories.tsx",
-      "framework": "react"
-    },
-    "Buttons/IdeasButton": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/IdeasButton.stories.tsx",
-      "framework": "react"
-    },
-    "Buttons/SplitButton": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/SplitButton.stories.tsx",
-      "framework": "react"
-    },
-    "Input/Checkbox": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Checkbox.stories.tsx",
-      "framework": "react"
-    },
-    "Core/ColorPicker": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ColorPicker.stories.tsx",
-      "framework": "react"
-    },
-    "Core/ComboBox": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ComboBox.stories.tsx",
-      "framework": "react"
-    },
-    "Core/DatePicker": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/DatePicker.stories.tsx",
-      "framework": "react"
-    },
-    "Core/DropdownMenu": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/DropdownMenu.stories.tsx",
-      "framework": "react"
-    },
-    "Core/ErrorPage": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ErrorPage.stories.tsx",
-      "framework": "react"
-    },
-    "Core/ExpandableBlock": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ExpandableBlock.stories.tsx",
-      "framework": "react"
-    },
-    "Input/Fieldset": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Fieldset.stories.tsx",
-      "framework": "react"
-    },
-    "Core/FileUpload": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/FileUpload.stories.tsx",
-      "framework": "react"
-    },
-    "Core/Footer": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Footer.stories.tsx",
-      "framework": "react"
-    },
-    "Core/Header": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Header.stories.tsx",
-      "framework": "react"
-    },
-    "Core/InformationPanel": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/InformationPanel.stories.tsx",
-      "framework": "react"
-    },
-    "Input/Input": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Input.stories.tsx",
-      "framework": "react"
-    },
-    "Input/InputGroup": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/InputGroup.stories.tsx",
-      "framework": "react"
-    },
-    "Input/LabeledInput": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledInput.stories.tsx",
-      "framework": "react"
-    },
-    "Input/LabeledSelect": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledSelect.stories.tsx",
-      "framework": "react"
-    },
-    "Input/LabeledTextarea": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledTextarea.stories.tsx",
-      "framework": "react"
-    },
-    "Core/Modal": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Modal.stories.tsx",
-      "framework": "react"
-    },
-    "ProgressIndicators/ProgressLinear": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ProgressLinear.stories.tsx",
-      "framework": "react"
-    },
-    "ProgressIndicators/ProgressRadial": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ProgressRadial.stories.tsx",
-      "framework": "react"
-    },
-    "Input/Radio": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Radio.stories.tsx",
-      "framework": "react"
-    },
-    "Input/RadioTileGroup": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/RadioTileGroup.stories.tsx",
-      "framework": "react"
-    },
-    "Input/Select": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Select.stories.tsx",
-      "framework": "react"
-    },
-    "Core/SideNavigation": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/SideNavigation.stories.tsx",
-      "framework": "react"
-    },
-    "Input/Slider": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Slider.stories.tsx",
-      "framework": "react"
-    },
-    "Core/Table": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
-      "framework": "react"
-    },
-    "Core/Tabs": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tabs.stories.tsx",
-      "framework": "react"
-    },
-    "Core/Tag": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tags/Tag.stories.tsx",
-      "framework": "react"
-    },
-    "Core/TagContainer": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tags/TagContainer.stories.tsx",
-      "framework": "react"
-    },
-    "Input/Textarea": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Textarea.stories.tsx",
-      "framework": "react"
-    },
-    "Core/Tile": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tile.stories.tsx",
-      "framework": "react"
-    },
-    "Core/TimePicker": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/TimePicker.stories.tsx",
-      "framework": "react"
-    },
-    "Core/Toasts": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Toasts.stories.tsx",
-      "framework": "react"
-    },
-    "Input/ToggleSwitch": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ToggleSwitch.stories.tsx",
-      "framework": "react"
-    },
-    "Core/Tooltip": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tooltip.stories.tsx",
-      "framework": "react"
-    },
-    "Core/Tree": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tree.stories.tsx",
-      "framework": "react"
-    },
-    "Typography/Anchor": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Anchor.stories.tsx",
-      "framework": "react"
-    },
-    "Typography/Blockquote": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Blockquote.stories.tsx",
-      "framework": "react"
-    },
-    "Typography/Body": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Body.stories.tsx",
-      "framework": "react"
-    },
-    "Typography/Code": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Code.stories.tsx",
-      "framework": "react"
-    },
-    "Typography/Headline": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Headline.stories.tsx",
-      "framework": "react"
-    },
-    "Typography/Keyboard Key": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Kbd.stories.tsx",
-      "framework": "react"
-    },
-    "Typography/Label": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Label.stories.tsx",
-      "framework": "react"
-    },
-    "Typography/Leading": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Leading.stories.tsx",
-      "framework": "react"
-    },
-    "Typography/Small": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Small.stories.tsx",
-      "framework": "react"
-    },
-    "Typography/Subheading": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Subheading.stories.tsx",
-      "framework": "react"
-    },
-    "Typography/Text": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Text.stories.tsx",
-      "framework": "react"
-    },
-    "Typography/Title": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Title.stories.tsx",
-      "framework": "react"
-    },
-    "Core/UserIconGroup": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/UserIconGroup.stories.tsx",
-      "framework": "react"
-    },
-    "Core/UserIcon": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/UserIcons.stories.tsx",
-      "framework": "react"
-    },
-    "Core/Wizard": {
-      "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Wizard.stories.tsx",
-      "framework": "react"
-    }
+    "Overview": {},
+    "Core/Alert": {},
+    "Core/Badge": {},
+    "Core/Breadcrumbs": {},
+    "Buttons/Button": {},
+    "Buttons/ButtonGroup": {},
+    "Buttons/DropdownButton": {},
+    "Buttons/IconButton": {},
+    "Buttons/IdeasButton": {},
+    "Buttons/SplitButton": {},
+    "Input/Checkbox": {},
+    "Core/ColorPicker": {},
+    "Core/ComboBox": {},
+    "Core/DatePicker": {},
+    "Core/DropdownMenu": {},
+    "Core/ErrorPage": {},
+    "Core/ExpandableBlock": {},
+    "Input/Fieldset": {},
+    "Core/FileUpload": {},
+    "Core/Footer": {},
+    "Core/Header": {},
+    "Core/InformationPanel": {},
+    "Input/Input": {},
+    "Input/InputGroup": {},
+    "Input/LabeledInput": {},
+    "Input/LabeledSelect": {},
+    "Input/LabeledTextarea": {},
+    "Core/Modal": {},
+    "ProgressIndicators/ProgressLinear": {},
+    "ProgressIndicators/ProgressRadial": {},
+    "Input/Radio": {},
+    "Input/RadioTileGroup": {},
+    "Input/Select": {},
+    "Core/SideNavigation": {},
+    "Input/Slider": {},
+    "Core/Table": {},
+    "Core/Tabs": {},
+    "Core/Tag": {},
+    "Core/TagContainer": {},
+    "Input/Textarea": {},
+    "Core/Tile": {},
+    "Core/TimePicker": {},
+    "Core/Toasts": {},
+    "Input/ToggleSwitch": {},
+    "Core/Tooltip": {},
+    "Core/Tree": {},
+    "Typography/Anchor": {},
+    "Typography/Blockquote": {},
+    "Typography/Body": {},
+    "Typography/Code": {},
+    "Typography/Headline": {},
+    "Typography/Keyboard Key": {},
+    "Typography/Label": {},
+    "Typography/Leading": {},
+    "Typography/Small": {},
+    "Typography/Subheading": {},
+    "Typography/Text": {},
+    "Typography/Title": {},
+    "Core/UserIconGroup": {},
+    "Core/UserIcon": {},
+    "Core/Wizard": {}
   },
   "stories": {
     "overview--overview": {
@@ -254,6 +72,8 @@
       "kind": "Overview",
       "story": "Overview",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/intro/Overview.stories.tsx",
+        "framework": "react",
         "__id": "overview--overview"
       }
     },
@@ -263,6 +83,8 @@
       "kind": "Core/Alert",
       "story": "Informational",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Alert.stories.tsx",
+        "framework": "react",
         "__id": "core-alert--informational"
       }
     },
@@ -272,6 +94,8 @@
       "kind": "Core/Alert",
       "story": "Positive",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Alert.stories.tsx",
+        "framework": "react",
         "__id": "core-alert--positive"
       }
     },
@@ -281,6 +105,8 @@
       "kind": "Core/Alert",
       "story": "Warning",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Alert.stories.tsx",
+        "framework": "react",
         "__id": "core-alert--warning"
       }
     },
@@ -290,6 +116,8 @@
       "kind": "Core/Alert",
       "story": "Negative",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Alert.stories.tsx",
+        "framework": "react",
         "__id": "core-alert--negative"
       }
     },
@@ -299,6 +127,8 @@
       "kind": "Core/Alert",
       "story": "Sticky",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Alert.stories.tsx",
+        "framework": "react",
         "__id": "core-alert--sticky"
       }
     },
@@ -308,6 +138,8 @@
       "kind": "Core/Alert",
       "story": "Empty",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Alert.stories.tsx",
+        "framework": "react",
         "__id": "core-alert--empty"
       }
     },
@@ -317,6 +149,8 @@
       "kind": "Core/Badge",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Badge.stories.tsx",
+        "framework": "react",
         "__id": "core-badge--basic"
       }
     },
@@ -326,6 +160,8 @@
       "kind": "Core/Badge",
       "story": "Long Label",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Badge.stories.tsx",
+        "framework": "react",
         "__id": "core-badge--long-label"
       }
     },
@@ -335,6 +171,8 @@
       "kind": "Core/Badge",
       "story": "Statuses",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Badge.stories.tsx",
+        "framework": "react",
         "__id": "core-badge--statuses"
       }
     },
@@ -344,6 +182,8 @@
       "kind": "Core/Breadcrumbs",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Breadcrumbs.stories.tsx",
+        "framework": "react",
         "__id": "core-breadcrumbs--basic"
       }
     },
@@ -353,6 +193,8 @@
       "kind": "Core/Breadcrumbs",
       "story": "Links",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Breadcrumbs.stories.tsx",
+        "framework": "react",
         "__id": "core-breadcrumbs--links"
       }
     },
@@ -362,6 +204,8 @@
       "kind": "Core/Breadcrumbs",
       "story": "Custom Separator",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Breadcrumbs.stories.tsx",
+        "framework": "react",
         "__id": "core-breadcrumbs--custom-separator"
       }
     },
@@ -371,6 +215,8 @@
       "kind": "Core/Breadcrumbs",
       "story": "Overflow",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Breadcrumbs.stories.tsx",
+        "framework": "react",
         "__id": "core-breadcrumbs--overflow"
       }
     },
@@ -380,6 +226,8 @@
       "kind": "Core/Breadcrumbs",
       "story": "Folder Navigation",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Breadcrumbs.stories.tsx",
+        "framework": "react",
         "__id": "core-breadcrumbs--folder-navigation"
       }
     },
@@ -389,6 +237,8 @@
       "kind": "Buttons/Button",
       "story": "Call To Action",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/Button.stories.tsx",
+        "framework": "react",
         "__id": "buttons-button--call-to-action"
       }
     },
@@ -398,6 +248,8 @@
       "kind": "Buttons/Button",
       "story": "High Visibility",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/Button.stories.tsx",
+        "framework": "react",
         "__id": "buttons-button--high-visibility"
       }
     },
@@ -407,6 +259,8 @@
       "kind": "Buttons/Button",
       "story": "Default",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/Button.stories.tsx",
+        "framework": "react",
         "__id": "buttons-button--default"
       }
     },
@@ -416,6 +270,8 @@
       "kind": "Buttons/Button",
       "story": "With Icon",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/Button.stories.tsx",
+        "framework": "react",
         "__id": "buttons-button--with-icon"
       }
     },
@@ -425,6 +281,8 @@
       "kind": "Buttons/Button",
       "story": "As Link",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/Button.stories.tsx",
+        "framework": "react",
         "__id": "buttons-button--as-link"
       }
     },
@@ -434,6 +292,8 @@
       "kind": "Buttons/ButtonGroup",
       "story": "With Icons",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/ButtonGroup.stories.tsx",
+        "framework": "react",
         "__id": "buttons-buttongroup--with-icons"
       }
     },
@@ -443,6 +303,8 @@
       "kind": "Buttons/ButtonGroup",
       "story": "Overflow",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/ButtonGroup.stories.tsx",
+        "framework": "react",
         "__id": "buttons-buttongroup--overflow"
       }
     },
@@ -452,6 +314,8 @@
       "kind": "Buttons/ButtonGroup",
       "story": "Input Button Combo",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/ButtonGroup.stories.tsx",
+        "framework": "react",
         "__id": "buttons-buttongroup--input-button-combo"
       }
     },
@@ -461,7 +325,20 @@
       "kind": "Buttons/ButtonGroup",
       "story": "Vertical",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/ButtonGroup.stories.tsx",
+        "framework": "react",
         "__id": "buttons-buttongroup--vertical"
+      }
+    },
+    "buttons-buttongroup--vertical-overflow": {
+      "id": "buttons-buttongroup--vertical-overflow",
+      "name": "Vertical Overflow",
+      "kind": "Buttons/ButtonGroup",
+      "story": "Vertical Overflow",
+      "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/ButtonGroup.stories.tsx",
+        "framework": "react",
+        "__id": "buttons-buttongroup--vertical-overflow"
       }
     },
     "buttons-dropdownbutton--basic": {
@@ -470,6 +347,8 @@
       "kind": "Buttons/DropdownButton",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/DropdownButton.stories.tsx",
+        "framework": "react",
         "__id": "buttons-dropdownbutton--basic"
       }
     },
@@ -479,6 +358,8 @@
       "kind": "Buttons/IconButton",
       "story": "Add",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/IconButton.stories.tsx",
+        "framework": "react",
         "__id": "buttons-iconbutton--add"
       }
     },
@@ -488,6 +369,8 @@
       "kind": "Buttons/IconButton",
       "story": "Small Active Add",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/IconButton.stories.tsx",
+        "framework": "react",
         "__id": "buttons-iconbutton--small-active-add"
       }
     },
@@ -497,6 +380,8 @@
       "kind": "Buttons/IconButton",
       "story": "High Visibility Add",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/IconButton.stories.tsx",
+        "framework": "react",
         "__id": "buttons-iconbutton--high-visibility-add"
       }
     },
@@ -506,6 +391,8 @@
       "kind": "Buttons/IconButton",
       "story": "Borderless",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/IconButton.stories.tsx",
+        "framework": "react",
         "__id": "buttons-iconbutton--borderless"
       }
     },
@@ -515,6 +402,8 @@
       "kind": "Buttons/IdeasButton",
       "story": "Ideas",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/IdeasButton.stories.tsx",
+        "framework": "react",
         "__id": "buttons-ideasbutton--ideas"
       }
     },
@@ -524,6 +413,8 @@
       "kind": "Buttons/IdeasButton",
       "story": "Localized Ideas",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/IdeasButton.stories.tsx",
+        "framework": "react",
         "__id": "buttons-ideasbutton--localized-ideas"
       }
     },
@@ -533,6 +424,8 @@
       "kind": "Buttons/SplitButton",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Buttons/SplitButton.stories.tsx",
+        "framework": "react",
         "__id": "buttons-splitbutton--basic"
       }
     },
@@ -542,6 +435,8 @@
       "kind": "Input/Checkbox",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Checkbox.stories.tsx",
+        "framework": "react",
         "__id": "input-checkbox--basic"
       }
     },
@@ -551,6 +446,8 @@
       "kind": "Input/Checkbox",
       "story": "Disabled",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Checkbox.stories.tsx",
+        "framework": "react",
         "__id": "input-checkbox--disabled"
       }
     },
@@ -560,6 +457,8 @@
       "kind": "Input/Checkbox",
       "story": "Indeterminate",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Checkbox.stories.tsx",
+        "framework": "react",
         "__id": "input-checkbox--indeterminate"
       }
     },
@@ -569,6 +468,8 @@
       "kind": "Input/Checkbox",
       "story": "Positive",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Checkbox.stories.tsx",
+        "framework": "react",
         "__id": "input-checkbox--positive"
       }
     },
@@ -578,6 +479,8 @@
       "kind": "Input/Checkbox",
       "story": "Warning",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Checkbox.stories.tsx",
+        "framework": "react",
         "__id": "input-checkbox--warning"
       }
     },
@@ -587,6 +490,8 @@
       "kind": "Input/Checkbox",
       "story": "Negative",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Checkbox.stories.tsx",
+        "framework": "react",
         "__id": "input-checkbox--negative"
       }
     },
@@ -596,6 +501,8 @@
       "kind": "Input/Checkbox",
       "story": "Loading",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Checkbox.stories.tsx",
+        "framework": "react",
         "__id": "input-checkbox--loading"
       }
     },
@@ -605,6 +512,8 @@
       "kind": "Input/Checkbox",
       "story": "Visibility",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Checkbox.stories.tsx",
+        "framework": "react",
         "__id": "input-checkbox--visibility"
       }
     },
@@ -614,6 +523,8 @@
       "kind": "Core/ColorPicker",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ColorPicker.stories.tsx",
+        "framework": "react",
         "__id": "core-colorpicker--basic"
       }
     },
@@ -623,6 +534,8 @@
       "kind": "Core/ColorPicker",
       "story": "Advanced",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ColorPicker.stories.tsx",
+        "framework": "react",
         "__id": "core-colorpicker--advanced"
       }
     },
@@ -632,6 +545,8 @@
       "kind": "Core/ColorPicker",
       "story": "With Alpha",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ColorPicker.stories.tsx",
+        "framework": "react",
         "__id": "core-colorpicker--with-alpha"
       }
     },
@@ -641,6 +556,8 @@
       "kind": "Core/ComboBox",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ComboBox.stories.tsx",
+        "framework": "react",
         "__id": "core-combobox--basic"
       }
     },
@@ -650,6 +567,8 @@
       "kind": "Core/ComboBox",
       "story": "Controlled",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ComboBox.stories.tsx",
+        "framework": "react",
         "__id": "core-combobox--controlled"
       }
     },
@@ -659,6 +578,8 @@
       "kind": "Core/ComboBox",
       "story": "Disabled Items",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ComboBox.stories.tsx",
+        "framework": "react",
         "__id": "core-combobox--disabled-items"
       }
     },
@@ -668,6 +589,8 @@
       "kind": "Core/ComboBox",
       "story": "With Label",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ComboBox.stories.tsx",
+        "framework": "react",
         "__id": "core-combobox--with-label"
       }
     },
@@ -677,6 +600,8 @@
       "kind": "Core/ComboBox",
       "story": "With Status",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ComboBox.stories.tsx",
+        "framework": "react",
         "__id": "core-combobox--with-status"
       }
     },
@@ -686,6 +611,8 @@
       "kind": "Core/ComboBox",
       "story": "Custom Renderer",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ComboBox.stories.tsx",
+        "framework": "react",
         "__id": "core-combobox--custom-renderer"
       }
     },
@@ -695,6 +622,8 @@
       "kind": "Core/ComboBox",
       "story": "With Message",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ComboBox.stories.tsx",
+        "framework": "react",
         "__id": "core-combobox--with-message"
       }
     },
@@ -704,6 +633,8 @@
       "kind": "Core/ComboBox",
       "story": "With Custom Message Icon",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ComboBox.stories.tsx",
+        "framework": "react",
         "__id": "core-combobox--with-custom-message-icon"
       }
     },
@@ -713,6 +644,8 @@
       "kind": "Core/DatePicker",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/DatePicker.stories.tsx",
+        "framework": "react",
         "__id": "core-datepicker--basic"
       }
     },
@@ -722,6 +655,8 @@
       "kind": "Core/DatePicker",
       "story": "With Time",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/DatePicker.stories.tsx",
+        "framework": "react",
         "__id": "core-datepicker--with-time"
       }
     },
@@ -731,6 +666,8 @@
       "kind": "Core/DatePicker",
       "story": "Localized",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/DatePicker.stories.tsx",
+        "framework": "react",
         "__id": "core-datepicker--localized"
       }
     },
@@ -740,6 +677,8 @@
       "kind": "Core/DropdownMenu",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/DropdownMenu.stories.tsx",
+        "framework": "react",
         "__id": "core-dropdownmenu--basic"
       }
     },
@@ -749,6 +688,8 @@
       "kind": "Core/DropdownMenu",
       "story": "With Icons",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/DropdownMenu.stories.tsx",
+        "framework": "react",
         "__id": "core-dropdownmenu--with-icons"
       }
     },
@@ -758,6 +699,8 @@
       "kind": "Core/DropdownMenu",
       "story": "With Badges",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/DropdownMenu.stories.tsx",
+        "framework": "react",
         "__id": "core-dropdownmenu--with-badges"
       }
     },
@@ -767,6 +710,8 @@
       "kind": "Core/DropdownMenu",
       "story": "With Sublabels",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/DropdownMenu.stories.tsx",
+        "framework": "react",
         "__id": "core-dropdownmenu--with-sublabels"
       }
     },
@@ -776,6 +721,8 @@
       "kind": "Core/DropdownMenu",
       "story": "Submenu",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/DropdownMenu.stories.tsx",
+        "framework": "react",
         "__id": "core-dropdownmenu--submenu"
       }
     },
@@ -785,6 +732,8 @@
       "kind": "Core/DropdownMenu",
       "story": "With Separator",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/DropdownMenu.stories.tsx",
+        "framework": "react",
         "__id": "core-dropdownmenu--with-separator"
       }
     },
@@ -794,6 +743,8 @@
       "kind": "Core/DropdownMenu",
       "story": "With Content",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/DropdownMenu.stories.tsx",
+        "framework": "react",
         "__id": "core-dropdownmenu--with-content"
       }
     },
@@ -803,6 +754,8 @@
       "kind": "Core/ErrorPage",
       "story": "Unauthorized",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ErrorPage.stories.tsx",
+        "framework": "react",
         "__id": "core-errorpage--unauthorized"
       }
     },
@@ -812,6 +765,8 @@
       "kind": "Core/ErrorPage",
       "story": "Forbidden",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ErrorPage.stories.tsx",
+        "framework": "react",
         "__id": "core-errorpage--forbidden"
       }
     },
@@ -821,6 +776,8 @@
       "kind": "Core/ErrorPage",
       "story": "Page Not Found",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ErrorPage.stories.tsx",
+        "framework": "react",
         "__id": "core-errorpage--page-not-found"
       }
     },
@@ -830,6 +787,8 @@
       "kind": "Core/ErrorPage",
       "story": "Internal Server Error",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ErrorPage.stories.tsx",
+        "framework": "react",
         "__id": "core-errorpage--internal-server-error"
       }
     },
@@ -839,6 +798,8 @@
       "kind": "Core/ErrorPage",
       "story": "Bad Gateway",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ErrorPage.stories.tsx",
+        "framework": "react",
         "__id": "core-errorpage--bad-gateway"
       }
     },
@@ -848,6 +809,8 @@
       "kind": "Core/ErrorPage",
       "story": "Service Unavailable",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ErrorPage.stories.tsx",
+        "framework": "react",
         "__id": "core-errorpage--service-unavailable"
       }
     },
@@ -857,6 +820,8 @@
       "kind": "Core/ErrorPage",
       "story": "Generic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ErrorPage.stories.tsx",
+        "framework": "react",
         "__id": "core-errorpage--generic"
       }
     },
@@ -866,6 +831,8 @@
       "kind": "Core/ErrorPage",
       "story": "Custom Html Message",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ErrorPage.stories.tsx",
+        "framework": "react",
         "__id": "core-errorpage--custom-html-message"
       }
     },
@@ -875,6 +842,8 @@
       "kind": "Core/ErrorPage",
       "story": "Without Message Or Buttons",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ErrorPage.stories.tsx",
+        "framework": "react",
         "__id": "core-errorpage--without-message-or-buttons"
       }
     },
@@ -884,6 +853,8 @@
       "kind": "Core/ErrorPage",
       "story": "Translated Messages",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ErrorPage.stories.tsx",
+        "framework": "react",
         "__id": "core-errorpage--translated-messages"
       }
     },
@@ -893,6 +864,8 @@
       "kind": "Core/ExpandableBlock",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ExpandableBlock.stories.tsx",
+        "framework": "react",
         "__id": "core-expandableblock--basic"
       }
     },
@@ -902,6 +875,8 @@
       "kind": "Core/ExpandableBlock",
       "story": "With Caption",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ExpandableBlock.stories.tsx",
+        "framework": "react",
         "__id": "core-expandableblock--with-caption"
       }
     },
@@ -911,6 +886,8 @@
       "kind": "Core/ExpandableBlock",
       "story": "Accordion",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ExpandableBlock.stories.tsx",
+        "framework": "react",
         "__id": "core-expandableblock--accordion"
       }
     },
@@ -920,6 +897,8 @@
       "kind": "Core/ExpandableBlock",
       "story": "Status Icon",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ExpandableBlock.stories.tsx",
+        "framework": "react",
         "__id": "core-expandableblock--status-icon"
       }
     },
@@ -929,6 +908,8 @@
       "kind": "Core/ExpandableBlock",
       "story": "Small",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ExpandableBlock.stories.tsx",
+        "framework": "react",
         "__id": "core-expandableblock--small"
       }
     },
@@ -938,6 +919,8 @@
       "kind": "Core/ExpandableBlock",
       "story": "Borderless",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ExpandableBlock.stories.tsx",
+        "framework": "react",
         "__id": "core-expandableblock--borderless"
       }
     },
@@ -947,6 +930,8 @@
       "kind": "Input/Fieldset",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Fieldset.stories.tsx",
+        "framework": "react",
         "__id": "input-fieldset--basic"
       }
     },
@@ -956,6 +941,8 @@
       "kind": "Input/Fieldset",
       "story": "Disabled",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Fieldset.stories.tsx",
+        "framework": "react",
         "__id": "input-fieldset--disabled"
       }
     },
@@ -965,6 +952,8 @@
       "kind": "Core/FileUpload",
       "story": "Default",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/FileUpload.stories.tsx",
+        "framework": "react",
         "__id": "core-fileupload--default"
       }
     },
@@ -974,6 +963,8 @@
       "kind": "Core/FileUpload",
       "story": "Wrapping Input",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/FileUpload.stories.tsx",
+        "framework": "react",
         "__id": "core-fileupload--wrapping-input"
       }
     },
@@ -983,6 +974,8 @@
       "kind": "Core/Footer",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Footer.stories.tsx",
+        "framework": "react",
         "__id": "core-footer--basic"
       }
     },
@@ -992,6 +985,8 @@
       "kind": "Core/Footer",
       "story": "Appended Custom Elements",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Footer.stories.tsx",
+        "framework": "react",
         "__id": "core-footer--appended-custom-elements"
       }
     },
@@ -1001,6 +996,8 @@
       "kind": "Core/Footer",
       "story": "Only Custom Elements",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Footer.stories.tsx",
+        "framework": "react",
         "__id": "core-footer--only-custom-elements"
       }
     },
@@ -1010,6 +1007,8 @@
       "kind": "Core/Footer",
       "story": "Customized Default And Custom Elements",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Footer.stories.tsx",
+        "framework": "react",
         "__id": "core-footer--customized-default-and-custom-elements"
       }
     },
@@ -1019,6 +1018,8 @@
       "kind": "Core/Footer",
       "story": "Bottom Fixed",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Footer.stories.tsx",
+        "framework": "react",
         "__id": "core-footer--bottom-fixed"
       }
     },
@@ -1028,6 +1029,8 @@
       "kind": "Core/Header",
       "story": "Full",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Header.stories.tsx",
+        "framework": "react",
         "__id": "core-header--full"
       }
     },
@@ -1037,6 +1040,8 @@
       "kind": "Core/Header",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Header.stories.tsx",
+        "framework": "react",
         "__id": "core-header--basic"
       }
     },
@@ -1046,6 +1051,8 @@
       "kind": "Core/Header",
       "story": "Center Content",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Header.stories.tsx",
+        "framework": "react",
         "__id": "core-header--center-content"
       }
     },
@@ -1055,6 +1062,8 @@
       "kind": "Core/InformationPanel",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/InformationPanel.stories.tsx",
+        "framework": "react",
         "__id": "core-informationpanel--basic"
       }
     },
@@ -1064,6 +1073,8 @@
       "kind": "Core/InformationPanel",
       "story": "Horizontal",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/InformationPanel.stories.tsx",
+        "framework": "react",
         "__id": "core-informationpanel--horizontal"
       }
     },
@@ -1073,6 +1084,8 @@
       "kind": "Core/InformationPanel",
       "story": "Custom Actions",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/InformationPanel.stories.tsx",
+        "framework": "react",
         "__id": "core-informationpanel--custom-actions"
       }
     },
@@ -1082,6 +1095,8 @@
       "kind": "Core/InformationPanel",
       "story": "Custom Width",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/InformationPanel.stories.tsx",
+        "framework": "react",
         "__id": "core-informationpanel--custom-width"
       }
     },
@@ -1091,6 +1106,8 @@
       "kind": "Input/Input",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Input.stories.tsx",
+        "framework": "react",
         "__id": "input-input--basic"
       }
     },
@@ -1100,6 +1117,8 @@
       "kind": "Input/Input",
       "story": "Disabled",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Input.stories.tsx",
+        "framework": "react",
         "__id": "input-input--disabled"
       }
     },
@@ -1109,6 +1128,8 @@
       "kind": "Input/Input",
       "story": "Small",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Input.stories.tsx",
+        "framework": "react",
         "__id": "input-input--small"
       }
     },
@@ -1118,6 +1139,8 @@
       "kind": "Input/InputGroup",
       "story": "Radio Group",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/InputGroup.stories.tsx",
+        "framework": "react",
         "__id": "input-inputgroup--radio-group"
       }
     },
@@ -1127,6 +1150,8 @@
       "kind": "Input/InputGroup",
       "story": "Checkbox Group",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/InputGroup.stories.tsx",
+        "framework": "react",
         "__id": "input-inputgroup--checkbox-group"
       }
     },
@@ -1136,6 +1161,8 @@
       "kind": "Input/InputGroup",
       "story": "Toggle Group",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/InputGroup.stories.tsx",
+        "framework": "react",
         "__id": "input-inputgroup--toggle-group"
       }
     },
@@ -1145,6 +1172,8 @@
       "kind": "Input/LabeledInput",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledInput.stories.tsx",
+        "framework": "react",
         "__id": "input-labeledinput--basic"
       }
     },
@@ -1154,6 +1183,8 @@
       "kind": "Input/LabeledInput",
       "story": "With Message",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledInput.stories.tsx",
+        "framework": "react",
         "__id": "input-labeledinput--with-message"
       }
     },
@@ -1163,6 +1194,8 @@
       "kind": "Input/LabeledInput",
       "story": "Disabled",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledInput.stories.tsx",
+        "framework": "react",
         "__id": "input-labeledinput--disabled"
       }
     },
@@ -1172,6 +1205,8 @@
       "kind": "Input/LabeledInput",
       "story": "Positive",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledInput.stories.tsx",
+        "framework": "react",
         "__id": "input-labeledinput--positive"
       }
     },
@@ -1181,6 +1216,8 @@
       "kind": "Input/LabeledInput",
       "story": "Warning",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledInput.stories.tsx",
+        "framework": "react",
         "__id": "input-labeledinput--warning"
       }
     },
@@ -1190,6 +1227,8 @@
       "kind": "Input/LabeledInput",
       "story": "Negative",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledInput.stories.tsx",
+        "framework": "react",
         "__id": "input-labeledinput--negative"
       }
     },
@@ -1199,6 +1238,8 @@
       "kind": "Input/LabeledInput",
       "story": "With Custom Icon",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledInput.stories.tsx",
+        "framework": "react",
         "__id": "input-labeledinput--with-custom-icon"
       }
     },
@@ -1208,6 +1249,8 @@
       "kind": "Input/LabeledInput",
       "story": "Inline",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledInput.stories.tsx",
+        "framework": "react",
         "__id": "input-labeledinput--inline"
       }
     },
@@ -1217,6 +1260,8 @@
       "kind": "Input/LabeledInput",
       "story": "Hybrid Layout",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledInput.stories.tsx",
+        "framework": "react",
         "__id": "input-labeledinput--hybrid-layout"
       }
     },
@@ -1226,6 +1271,8 @@
       "kind": "Input/LabeledInput",
       "story": "Hybrid Layout With Button",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledInput.stories.tsx",
+        "framework": "react",
         "__id": "input-labeledinput--hybrid-layout-with-button"
       }
     },
@@ -1235,6 +1282,8 @@
       "kind": "Input/LabeledSelect",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledSelect.stories.tsx",
+        "framework": "react",
         "__id": "input-labeledselect--basic"
       }
     },
@@ -1244,6 +1293,8 @@
       "kind": "Input/LabeledSelect",
       "story": "Positive",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledSelect.stories.tsx",
+        "framework": "react",
         "__id": "input-labeledselect--positive"
       }
     },
@@ -1253,6 +1304,8 @@
       "kind": "Input/LabeledSelect",
       "story": "Warning",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledSelect.stories.tsx",
+        "framework": "react",
         "__id": "input-labeledselect--warning"
       }
     },
@@ -1262,6 +1315,8 @@
       "kind": "Input/LabeledSelect",
       "story": "Negative",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledSelect.stories.tsx",
+        "framework": "react",
         "__id": "input-labeledselect--negative"
       }
     },
@@ -1271,6 +1326,8 @@
       "kind": "Input/LabeledSelect",
       "story": "With Custom Icon",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledSelect.stories.tsx",
+        "framework": "react",
         "__id": "input-labeledselect--with-custom-icon"
       }
     },
@@ -1280,6 +1337,8 @@
       "kind": "Input/LabeledTextarea",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledTextarea.stories.tsx",
+        "framework": "react",
         "__id": "input-labeledtextarea--basic"
       }
     },
@@ -1289,6 +1348,8 @@
       "kind": "Input/LabeledTextarea",
       "story": "Disabled",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledTextarea.stories.tsx",
+        "framework": "react",
         "__id": "input-labeledtextarea--disabled"
       }
     },
@@ -1298,6 +1359,8 @@
       "kind": "Input/LabeledTextarea",
       "story": "Positive",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledTextarea.stories.tsx",
+        "framework": "react",
         "__id": "input-labeledtextarea--positive"
       }
     },
@@ -1307,6 +1370,8 @@
       "kind": "Input/LabeledTextarea",
       "story": "Warning",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledTextarea.stories.tsx",
+        "framework": "react",
         "__id": "input-labeledtextarea--warning"
       }
     },
@@ -1316,6 +1381,8 @@
       "kind": "Input/LabeledTextarea",
       "story": "Negative",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledTextarea.stories.tsx",
+        "framework": "react",
         "__id": "input-labeledtextarea--negative"
       }
     },
@@ -1325,6 +1392,8 @@
       "kind": "Input/LabeledTextarea",
       "story": "With Custom Icon",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledTextarea.stories.tsx",
+        "framework": "react",
         "__id": "input-labeledtextarea--with-custom-icon"
       }
     },
@@ -1334,6 +1403,8 @@
       "kind": "Input/LabeledTextarea",
       "story": "Inline",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/LabeledTextarea.stories.tsx",
+        "framework": "react",
         "__id": "input-labeledtextarea--inline"
       }
     },
@@ -1343,6 +1414,8 @@
       "kind": "Core/Modal",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Modal.stories.tsx",
+        "framework": "react",
         "__id": "core-modal--basic"
       }
     },
@@ -1352,6 +1425,8 @@
       "kind": "Core/Modal",
       "story": "Non Dismissible Modal",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Modal.stories.tsx",
+        "framework": "react",
         "__id": "core-modal--non-dismissible-modal"
       }
     },
@@ -1361,6 +1436,8 @@
       "kind": "Core/Modal",
       "story": "Outside Click And Esc Does Not Close",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Modal.stories.tsx",
+        "framework": "react",
         "__id": "core-modal--outside-click-and-esc-does-not-close"
       }
     },
@@ -1370,6 +1447,8 @@
       "kind": "ProgressIndicators/ProgressLinear",
       "story": "Determinate",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ProgressLinear.stories.tsx",
+        "framework": "react",
         "__id": "progressindicators-progresslinear--determinate"
       }
     },
@@ -1379,6 +1458,8 @@
       "kind": "ProgressIndicators/ProgressLinear",
       "story": "Determinate Animated",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ProgressLinear.stories.tsx",
+        "framework": "react",
         "__id": "progressindicators-progresslinear--determinate-animated"
       }
     },
@@ -1388,6 +1469,8 @@
       "kind": "ProgressIndicators/ProgressLinear",
       "story": "Indeterminate",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ProgressLinear.stories.tsx",
+        "framework": "react",
         "__id": "progressindicators-progresslinear--indeterminate"
       }
     },
@@ -1397,6 +1480,8 @@
       "kind": "ProgressIndicators/ProgressLinear",
       "story": "Labeled Center",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ProgressLinear.stories.tsx",
+        "framework": "react",
         "__id": "progressindicators-progresslinear--labeled-center"
       }
     },
@@ -1406,6 +1491,8 @@
       "kind": "ProgressIndicators/ProgressLinear",
       "story": "Labeled Left Right",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ProgressLinear.stories.tsx",
+        "framework": "react",
         "__id": "progressindicators-progresslinear--labeled-left-right"
       }
     },
@@ -1415,6 +1502,8 @@
       "kind": "ProgressIndicators/ProgressLinear",
       "story": "Positive",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ProgressLinear.stories.tsx",
+        "framework": "react",
         "__id": "progressindicators-progresslinear--positive"
       }
     },
@@ -1424,6 +1513,8 @@
       "kind": "ProgressIndicators/ProgressLinear",
       "story": "Negative",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ProgressLinear.stories.tsx",
+        "framework": "react",
         "__id": "progressindicators-progresslinear--negative"
       }
     },
@@ -1433,6 +1524,8 @@
       "kind": "ProgressIndicators/ProgressRadial",
       "story": "Determinate",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ProgressRadial.stories.tsx",
+        "framework": "react",
         "__id": "progressindicators-progressradial--determinate"
       }
     },
@@ -1442,6 +1535,8 @@
       "kind": "ProgressIndicators/ProgressRadial",
       "story": "Indeterminate",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ProgressRadial.stories.tsx",
+        "framework": "react",
         "__id": "progressindicators-progressradial--indeterminate"
       }
     },
@@ -1451,6 +1546,8 @@
       "kind": "ProgressIndicators/ProgressRadial",
       "story": "Positive",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ProgressRadial.stories.tsx",
+        "framework": "react",
         "__id": "progressindicators-progressradial--positive"
       }
     },
@@ -1460,6 +1557,8 @@
       "kind": "ProgressIndicators/ProgressRadial",
       "story": "Negative",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ProgressRadial.stories.tsx",
+        "framework": "react",
         "__id": "progressindicators-progressradial--negative"
       }
     },
@@ -1469,6 +1568,8 @@
       "kind": "ProgressIndicators/ProgressRadial",
       "story": "Determinate With Content",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ProgressRadial.stories.tsx",
+        "framework": "react",
         "__id": "progressindicators-progressradial--determinate-with-content"
       }
     },
@@ -1478,6 +1579,8 @@
       "kind": "Input/Radio",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Radio.stories.tsx",
+        "framework": "react",
         "__id": "input-radio--basic"
       }
     },
@@ -1487,6 +1590,8 @@
       "kind": "Input/Radio",
       "story": "Disabled",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Radio.stories.tsx",
+        "framework": "react",
         "__id": "input-radio--disabled"
       }
     },
@@ -1496,6 +1601,8 @@
       "kind": "Input/Radio",
       "story": "Positive",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Radio.stories.tsx",
+        "framework": "react",
         "__id": "input-radio--positive"
       }
     },
@@ -1505,6 +1612,8 @@
       "kind": "Input/Radio",
       "story": "Warning",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Radio.stories.tsx",
+        "framework": "react",
         "__id": "input-radio--warning"
       }
     },
@@ -1514,6 +1623,8 @@
       "kind": "Input/Radio",
       "story": "Negative",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Radio.stories.tsx",
+        "framework": "react",
         "__id": "input-radio--negative"
       }
     },
@@ -1523,6 +1634,8 @@
       "kind": "Input/RadioTileGroup",
       "story": "Monochrome",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/RadioTileGroup.stories.tsx",
+        "framework": "react",
         "__id": "input-radiotilegroup--monochrome"
       }
     },
@@ -1532,6 +1645,8 @@
       "kind": "Input/RadioTileGroup",
       "story": "Colored",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/RadioTileGroup.stories.tsx",
+        "framework": "react",
         "__id": "input-radiotilegroup--colored"
       }
     },
@@ -1541,6 +1656,8 @@
       "kind": "Input/Select",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Select.stories.tsx",
+        "framework": "react",
         "__id": "input-select--basic"
       }
     },
@@ -1550,6 +1667,8 @@
       "kind": "Input/Select",
       "story": "With Icons",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Select.stories.tsx",
+        "framework": "react",
         "__id": "input-select--with-icons"
       }
     },
@@ -1559,6 +1678,8 @@
       "kind": "Input/Select",
       "story": "With Selected Value",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Select.stories.tsx",
+        "framework": "react",
         "__id": "input-select--with-selected-value"
       }
     },
@@ -1568,6 +1689,8 @@
       "kind": "Input/Select",
       "story": "Disabled",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Select.stories.tsx",
+        "framework": "react",
         "__id": "input-select--disabled"
       }
     },
@@ -1577,6 +1700,8 @@
       "kind": "Input/Select",
       "story": "Disabled With Selected Value",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Select.stories.tsx",
+        "framework": "react",
         "__id": "input-select--disabled-with-selected-value"
       }
     },
@@ -1586,6 +1711,8 @@
       "kind": "Input/Select",
       "story": "Many Items",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Select.stories.tsx",
+        "framework": "react",
         "__id": "input-select--many-items"
       }
     },
@@ -1595,6 +1722,8 @@
       "kind": "Input/Select",
       "story": "Sublabels",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Select.stories.tsx",
+        "framework": "react",
         "__id": "input-select--sublabels"
       }
     },
@@ -1604,6 +1733,8 @@
       "kind": "Input/Select",
       "story": "Custom",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Select.stories.tsx",
+        "framework": "react",
         "__id": "input-select--custom"
       }
     },
@@ -1613,6 +1744,8 @@
       "kind": "Input/Select",
       "story": "Truncate Middle Text",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Select.stories.tsx",
+        "framework": "react",
         "__id": "input-select--truncate-middle-text"
       }
     },
@@ -1622,6 +1755,8 @@
       "kind": "Core/SideNavigation",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/SideNavigation.stories.tsx",
+        "framework": "react",
         "__id": "core-sidenavigation--basic"
       }
     },
@@ -1631,6 +1766,8 @@
       "kind": "Core/SideNavigation",
       "story": "Active Item",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/SideNavigation.stories.tsx",
+        "framework": "react",
         "__id": "core-sidenavigation--active-item"
       }
     },
@@ -1640,6 +1777,8 @@
       "kind": "Core/SideNavigation",
       "story": "Submenu",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/SideNavigation.stories.tsx",
+        "framework": "react",
         "__id": "core-sidenavigation--submenu"
       }
     },
@@ -1649,6 +1788,8 @@
       "kind": "Input/Slider",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Slider.stories.tsx",
+        "framework": "react",
         "__id": "input-slider--basic"
       }
     },
@@ -1658,6 +1799,8 @@
       "kind": "Input/Slider",
       "story": "Range",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Slider.stories.tsx",
+        "framework": "react",
         "__id": "input-slider--range"
       }
     },
@@ -1667,6 +1810,8 @@
       "kind": "Input/Slider",
       "story": "Multi Thumbs Allow Crossing",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Slider.stories.tsx",
+        "framework": "react",
         "__id": "input-slider--multi-thumbs-allow-crossing"
       }
     },
@@ -1676,6 +1821,8 @@
       "kind": "Input/Slider",
       "story": "With Custom Thumb",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Slider.stories.tsx",
+        "framework": "react",
         "__id": "input-slider--with-custom-thumb"
       }
     },
@@ -1685,6 +1832,8 @@
       "kind": "Input/Slider",
       "story": "Disabled",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Slider.stories.tsx",
+        "framework": "react",
         "__id": "input-slider--disabled"
       }
     },
@@ -1694,6 +1843,8 @@
       "kind": "Input/Slider",
       "story": "Custom Tooltip",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Slider.stories.tsx",
+        "framework": "react",
         "__id": "input-slider--custom-tooltip"
       }
     },
@@ -1703,6 +1854,8 @@
       "kind": "Input/Slider",
       "story": "Custom Tick No Tooltip",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Slider.stories.tsx",
+        "framework": "react",
         "__id": "input-slider--custom-tick-no-tooltip"
       }
     },
@@ -1712,6 +1865,8 @@
       "kind": "Input/Slider",
       "story": "Decimal Increment",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Slider.stories.tsx",
+        "framework": "react",
         "__id": "input-slider--decimal-increment"
       }
     },
@@ -1721,6 +1876,8 @@
       "kind": "Core/Table",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
         "__id": "core-table--basic"
       }
     },
@@ -1730,6 +1887,8 @@
       "kind": "Core/Table",
       "story": "Selectable",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
         "__id": "core-table--selectable"
       }
     },
@@ -1739,6 +1898,8 @@
       "kind": "Core/Table",
       "story": "Sortable",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
         "__id": "core-table--sortable"
       }
     },
@@ -1748,6 +1909,8 @@
       "kind": "Core/Table",
       "story": "Filters",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
         "__id": "core-table--filters"
       }
     },
@@ -1757,6 +1920,8 @@
       "kind": "Core/Table",
       "story": "Expandable",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
         "__id": "core-table--expandable"
       }
     },
@@ -1766,6 +1931,8 @@
       "kind": "Core/Table",
       "story": "Expandable Subrows",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
         "__id": "core-table--expandable-subrows"
       }
     },
@@ -1775,6 +1942,8 @@
       "kind": "Core/Table",
       "story": "Lazy Loading",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
         "__id": "core-table--lazy-loading"
       }
     },
@@ -1784,6 +1953,8 @@
       "kind": "Core/Table",
       "story": "Row In Viewport",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
         "__id": "core-table--row-in-viewport"
       }
     },
@@ -1793,6 +1964,8 @@
       "kind": "Core/Table",
       "story": "Disabled Rows",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
         "__id": "core-table--disabled-rows"
       }
     },
@@ -1802,6 +1975,8 @@
       "kind": "Core/Table",
       "story": "Loading",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
         "__id": "core-table--loading"
       }
     },
@@ -1811,6 +1986,8 @@
       "kind": "Core/Table",
       "story": "No Data",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
         "__id": "core-table--no-data"
       }
     },
@@ -1820,6 +1997,8 @@
       "kind": "Core/Table",
       "story": "Controlled State",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
         "__id": "core-table--controlled-state"
       }
     },
@@ -1829,6 +2008,8 @@
       "kind": "Core/Table",
       "story": "Full",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
         "__id": "core-table--full"
       }
     },
@@ -1838,6 +2019,8 @@
       "kind": "Core/Table",
       "story": "Condensed",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
         "__id": "core-table--condensed"
       }
     },
@@ -1847,6 +2030,8 @@
       "kind": "Core/Table",
       "story": "Editable",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
         "__id": "core-table--editable"
       }
     },
@@ -1856,6 +2041,8 @@
       "kind": "Core/Table",
       "story": "With Paginator",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
         "__id": "core-table--with-paginator"
       }
     },
@@ -1865,6 +2052,8 @@
       "kind": "Core/Table",
       "story": "With Manual Paginator",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
         "__id": "core-table--with-manual-paginator"
       }
     },
@@ -1874,6 +2063,8 @@
       "kind": "Core/Table",
       "story": "Resizable Columns",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
         "__id": "core-table--resizable-columns"
       }
     },
@@ -1883,6 +2074,8 @@
       "kind": "Core/Table",
       "story": "Zebra Striped Rows",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
         "__id": "core-table--zebra-striped-rows"
       }
     },
@@ -1892,6 +2085,8 @@
       "kind": "Core/Table",
       "story": "Horizontal Scroll",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
         "__id": "core-table--horizontal-scroll"
       }
     },
@@ -1901,6 +2096,8 @@
       "kind": "Core/Table",
       "story": "Virtualized",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
         "__id": "core-table--virtualized"
       }
     },
@@ -1910,7 +2107,20 @@
       "kind": "Core/Table",
       "story": "Virtualized Sub Rows",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
         "__id": "core-table--virtualized-sub-rows"
+      }
+    },
+    "core-table--draggable-columns": {
+      "id": "core-table--draggable-columns",
+      "name": "Draggable Columns",
+      "kind": "Core/Table",
+      "story": "Draggable Columns",
+      "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
+        "__id": "core-table--draggable-columns"
       }
     },
     "core-tabs--default-tabs": {
@@ -1919,6 +2129,8 @@
       "kind": "Core/Tabs",
       "story": "Default Tabs",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tabs.stories.tsx",
+        "framework": "react",
         "__id": "core-tabs--default-tabs"
       }
     },
@@ -1928,6 +2140,8 @@
       "kind": "Core/Tabs",
       "story": "Borderless Tabs",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tabs.stories.tsx",
+        "framework": "react",
         "__id": "core-tabs--borderless-tabs"
       }
     },
@@ -1937,6 +2151,8 @@
       "kind": "Core/Tabs",
       "story": "Pill Tabs",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tabs.stories.tsx",
+        "framework": "react",
         "__id": "core-tabs--pill-tabs"
       }
     },
@@ -1946,6 +2162,8 @@
       "kind": "Core/Tabs",
       "story": "Sublabels And Icons",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tabs.stories.tsx",
+        "framework": "react",
         "__id": "core-tabs--sublabels-and-icons"
       }
     },
@@ -1955,6 +2173,8 @@
       "kind": "Core/Tabs",
       "story": "Vertical",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tabs.stories.tsx",
+        "framework": "react",
         "__id": "core-tabs--vertical"
       }
     },
@@ -1964,6 +2184,8 @@
       "kind": "Core/Tag",
       "story": "Default",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tags/Tag.stories.tsx",
+        "framework": "react",
         "__id": "core-tag--default"
       }
     },
@@ -1973,6 +2195,8 @@
       "kind": "Core/Tag",
       "story": "No Close",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tags/Tag.stories.tsx",
+        "framework": "react",
         "__id": "core-tag--no-close"
       }
     },
@@ -1982,6 +2206,8 @@
       "kind": "Core/TagContainer",
       "story": "Basic Tags Container",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tags/TagContainer.stories.tsx",
+        "framework": "react",
         "__id": "core-tagcontainer--basic-tags-container"
       }
     },
@@ -1991,6 +2217,8 @@
       "kind": "Core/TagContainer",
       "story": "Default Tags Container",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tags/TagContainer.stories.tsx",
+        "framework": "react",
         "__id": "core-tagcontainer--default-tags-container"
       }
     },
@@ -2000,6 +2228,8 @@
       "kind": "Core/TagContainer",
       "story": "Scrollable Default Tags Container",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tags/TagContainer.stories.tsx",
+        "framework": "react",
         "__id": "core-tagcontainer--scrollable-default-tags-container"
       }
     },
@@ -2009,6 +2239,8 @@
       "kind": "Core/TagContainer",
       "story": "Truncated Basic Tags Container",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tags/TagContainer.stories.tsx",
+        "framework": "react",
         "__id": "core-tagcontainer--truncated-basic-tags-container"
       }
     },
@@ -2018,6 +2250,8 @@
       "kind": "Input/Textarea",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Textarea.stories.tsx",
+        "framework": "react",
         "__id": "input-textarea--basic"
       }
     },
@@ -2027,6 +2261,8 @@
       "kind": "Input/Textarea",
       "story": "Disabled",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Textarea.stories.tsx",
+        "framework": "react",
         "__id": "input-textarea--disabled"
       }
     },
@@ -2036,6 +2272,8 @@
       "kind": "Core/Tile",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tile.stories.tsx",
+        "framework": "react",
         "__id": "core-tile--basic"
       }
     },
@@ -2045,6 +2283,8 @@
       "kind": "Core/Tile",
       "story": "All Props",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tile.stories.tsx",
+        "framework": "react",
         "__id": "core-tile--all-props"
       }
     },
@@ -2054,6 +2294,8 @@
       "kind": "Core/Tile",
       "story": "Condensed",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tile.stories.tsx",
+        "framework": "react",
         "__id": "core-tile--condensed"
       }
     },
@@ -2063,6 +2305,8 @@
       "kind": "Core/Tile",
       "story": "With User Icon",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tile.stories.tsx",
+        "framework": "react",
         "__id": "core-tile--with-user-icon"
       }
     },
@@ -2072,6 +2316,8 @@
       "kind": "Core/Tile",
       "story": "Folder",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tile.stories.tsx",
+        "framework": "react",
         "__id": "core-tile--folder"
       }
     },
@@ -2081,6 +2327,8 @@
       "kind": "Core/TimePicker",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/TimePicker.stories.tsx",
+        "framework": "react",
         "__id": "core-timepicker--basic"
       }
     },
@@ -2090,6 +2338,8 @@
       "kind": "Core/Toasts",
       "story": "Positive",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Toasts.stories.tsx",
+        "framework": "react",
         "__id": "core-toasts--positive"
       }
     },
@@ -2099,6 +2349,8 @@
       "kind": "Core/Toasts",
       "story": "Negative",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Toasts.stories.tsx",
+        "framework": "react",
         "__id": "core-toasts--negative"
       }
     },
@@ -2108,6 +2360,8 @@
       "kind": "Core/Toasts",
       "story": "Informational",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Toasts.stories.tsx",
+        "framework": "react",
         "__id": "core-toasts--informational"
       }
     },
@@ -2117,6 +2371,8 @@
       "kind": "Core/Toasts",
       "story": "Warning",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Toasts.stories.tsx",
+        "framework": "react",
         "__id": "core-toasts--warning"
       }
     },
@@ -2126,6 +2382,8 @@
       "kind": "Core/Toasts",
       "story": "Position Changed",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Toasts.stories.tsx",
+        "framework": "react",
         "__id": "core-toasts--position-changed"
       }
     },
@@ -2135,6 +2393,8 @@
       "kind": "Core/Toasts",
       "story": "Anchor To Button",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Toasts.stories.tsx",
+        "framework": "react",
         "__id": "core-toasts--anchor-to-button"
       }
     },
@@ -2144,6 +2404,8 @@
       "kind": "Core/Toasts",
       "story": "Close Individual",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Toasts.stories.tsx",
+        "framework": "react",
         "__id": "core-toasts--close-individual"
       }
     },
@@ -2153,6 +2415,8 @@
       "kind": "Input/ToggleSwitch",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ToggleSwitch.stories.tsx",
+        "framework": "react",
         "__id": "input-toggleswitch--basic"
       }
     },
@@ -2162,6 +2426,8 @@
       "kind": "Input/ToggleSwitch",
       "story": "Disabled Checked",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ToggleSwitch.stories.tsx",
+        "framework": "react",
         "__id": "input-toggleswitch--disabled-checked"
       }
     },
@@ -2171,6 +2437,8 @@
       "kind": "Input/ToggleSwitch",
       "story": "Disabled Unchecked",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ToggleSwitch.stories.tsx",
+        "framework": "react",
         "__id": "input-toggleswitch--disabled-unchecked"
       }
     },
@@ -2180,6 +2448,8 @@
       "kind": "Input/ToggleSwitch",
       "story": "Label Right",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ToggleSwitch.stories.tsx",
+        "framework": "react",
         "__id": "input-toggleswitch--label-right"
       }
     },
@@ -2189,6 +2459,8 @@
       "kind": "Input/ToggleSwitch",
       "story": "Label Left",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ToggleSwitch.stories.tsx",
+        "framework": "react",
         "__id": "input-toggleswitch--label-left"
       }
     },
@@ -2198,6 +2470,8 @@
       "kind": "Input/ToggleSwitch",
       "story": "With Icon",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/ToggleSwitch.stories.tsx",
+        "framework": "react",
         "__id": "input-toggleswitch--with-icon"
       }
     },
@@ -2207,6 +2481,8 @@
       "kind": "Core/Tooltip",
       "story": "Top",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tooltip.stories.tsx",
+        "framework": "react",
         "__id": "core-tooltip--top"
       }
     },
@@ -2216,6 +2492,8 @@
       "kind": "Core/Tooltip",
       "story": "Right",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tooltip.stories.tsx",
+        "framework": "react",
         "__id": "core-tooltip--right"
       }
     },
@@ -2225,6 +2503,8 @@
       "kind": "Core/Tooltip",
       "story": "Bottom",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tooltip.stories.tsx",
+        "framework": "react",
         "__id": "core-tooltip--bottom"
       }
     },
@@ -2234,6 +2514,8 @@
       "kind": "Core/Tooltip",
       "story": "Left",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tooltip.stories.tsx",
+        "framework": "react",
         "__id": "core-tooltip--left"
       }
     },
@@ -2243,6 +2525,8 @@
       "kind": "Core/Tooltip",
       "story": "Controlled",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tooltip.stories.tsx",
+        "framework": "react",
         "__id": "core-tooltip--controlled"
       }
     },
@@ -2252,6 +2536,8 @@
       "kind": "Core/Tree",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tree.stories.tsx",
+        "framework": "react",
         "__id": "core-tree--basic"
       }
     },
@@ -2261,6 +2547,8 @@
       "kind": "Core/Tree",
       "story": "Full",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tree.stories.tsx",
+        "framework": "react",
         "__id": "core-tree--full"
       }
     },
@@ -2270,6 +2558,8 @@
       "kind": "Core/Tree",
       "story": "Async Loading",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tree.stories.tsx",
+        "framework": "react",
         "__id": "core-tree--async-loading"
       }
     },
@@ -2279,6 +2569,8 @@
       "kind": "Core/Tree",
       "story": "Customized Expander",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Tree.stories.tsx",
+        "framework": "react",
         "__id": "core-tree--customized-expander"
       }
     },
@@ -2288,6 +2580,8 @@
       "kind": "Typography/Anchor",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Anchor.stories.tsx",
+        "framework": "react",
         "__id": "typography-anchor--basic"
       }
     },
@@ -2297,6 +2591,8 @@
       "kind": "Typography/Blockquote",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Blockquote.stories.tsx",
+        "framework": "react",
         "__id": "typography-blockquote--basic"
       }
     },
@@ -2306,6 +2602,8 @@
       "kind": "Typography/Blockquote",
       "story": "With Footer",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Blockquote.stories.tsx",
+        "framework": "react",
         "__id": "typography-blockquote--with-footer"
       }
     },
@@ -2315,6 +2613,8 @@
       "kind": "Typography/Body",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Body.stories.tsx",
+        "framework": "react",
         "__id": "typography-body--basic"
       }
     },
@@ -2324,6 +2624,8 @@
       "kind": "Typography/Body",
       "story": "Muted",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Body.stories.tsx",
+        "framework": "react",
         "__id": "typography-body--muted"
       }
     },
@@ -2333,6 +2635,8 @@
       "kind": "Typography/Body",
       "story": "Skeleton",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Body.stories.tsx",
+        "framework": "react",
         "__id": "typography-body--skeleton"
       }
     },
@@ -2342,6 +2646,8 @@
       "kind": "Typography/Code",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Code.stories.tsx",
+        "framework": "react",
         "__id": "typography-code--basic"
       }
     },
@@ -2351,6 +2657,8 @@
       "kind": "Typography/Headline",
       "story": "Base",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Headline.stories.tsx",
+        "framework": "react",
         "__id": "typography-headline--base"
       }
     },
@@ -2360,6 +2668,8 @@
       "kind": "Typography/Headline",
       "story": "Muted",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Headline.stories.tsx",
+        "framework": "react",
         "__id": "typography-headline--muted"
       }
     },
@@ -2369,6 +2679,8 @@
       "kind": "Typography/Keyboard Key",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Kbd.stories.tsx",
+        "framework": "react",
         "__id": "typography-keyboard-key--basic"
       }
     },
@@ -2378,6 +2690,8 @@
       "kind": "Typography/Keyboard Key",
       "story": "Predefined Key",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Kbd.stories.tsx",
+        "framework": "react",
         "__id": "typography-keyboard-key--predefined-key"
       }
     },
@@ -2387,6 +2701,8 @@
       "kind": "Typography/Label",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Label.stories.tsx",
+        "framework": "react",
         "__id": "typography-label--basic"
       }
     },
@@ -2396,6 +2712,8 @@
       "kind": "Typography/Label",
       "story": "Inline",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Label.stories.tsx",
+        "framework": "react",
         "__id": "typography-label--inline"
       }
     },
@@ -2405,6 +2723,8 @@
       "kind": "Typography/Label",
       "story": "Polymorphic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Label.stories.tsx",
+        "framework": "react",
         "__id": "typography-label--polymorphic"
       }
     },
@@ -2414,6 +2734,8 @@
       "kind": "Typography/Leading",
       "story": "Base",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Leading.stories.tsx",
+        "framework": "react",
         "__id": "typography-leading--base"
       }
     },
@@ -2423,6 +2745,8 @@
       "kind": "Typography/Leading",
       "story": "Muted",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Leading.stories.tsx",
+        "framework": "react",
         "__id": "typography-leading--muted"
       }
     },
@@ -2432,6 +2756,8 @@
       "kind": "Typography/Small",
       "story": "Base",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Small.stories.tsx",
+        "framework": "react",
         "__id": "typography-small--base"
       }
     },
@@ -2441,6 +2767,8 @@
       "kind": "Typography/Small",
       "story": "Muted",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Small.stories.tsx",
+        "framework": "react",
         "__id": "typography-small--muted"
       }
     },
@@ -2450,6 +2778,8 @@
       "kind": "Typography/Subheading",
       "story": "Base",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Subheading.stories.tsx",
+        "framework": "react",
         "__id": "typography-subheading--base"
       }
     },
@@ -2459,6 +2789,8 @@
       "kind": "Typography/Subheading",
       "story": "Muted",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Subheading.stories.tsx",
+        "framework": "react",
         "__id": "typography-subheading--muted"
       }
     },
@@ -2468,6 +2800,8 @@
       "kind": "Typography/Text",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Text.stories.tsx",
+        "framework": "react",
         "__id": "typography-text--basic"
       }
     },
@@ -2477,6 +2811,8 @@
       "kind": "Typography/Text",
       "story": "Polymorphic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Text.stories.tsx",
+        "framework": "react",
         "__id": "typography-text--polymorphic"
       }
     },
@@ -2486,6 +2822,8 @@
       "kind": "Typography/Text",
       "story": "Skeleton",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Text.stories.tsx",
+        "framework": "react",
         "__id": "typography-text--skeleton"
       }
     },
@@ -2495,6 +2833,8 @@
       "kind": "Typography/Title",
       "story": "Base",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Title.stories.tsx",
+        "framework": "react",
         "__id": "typography-title--base"
       }
     },
@@ -2504,6 +2844,8 @@
       "kind": "Typography/Title",
       "story": "Muted",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Typography/Title.stories.tsx",
+        "framework": "react",
         "__id": "typography-title--muted"
       }
     },
@@ -2513,6 +2855,8 @@
       "kind": "Core/UserIconGroup",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/UserIconGroup.stories.tsx",
+        "framework": "react",
         "__id": "core-usericongroup--basic"
       }
     },
@@ -2522,6 +2866,8 @@
       "kind": "Core/UserIconGroup",
       "story": "Animated",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/UserIconGroup.stories.tsx",
+        "framework": "react",
         "__id": "core-usericongroup--animated"
       }
     },
@@ -2531,6 +2877,8 @@
       "kind": "Core/UserIconGroup",
       "story": "Many Icons",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/UserIconGroup.stories.tsx",
+        "framework": "react",
         "__id": "core-usericongroup--many-icons"
       }
     },
@@ -2540,6 +2888,8 @@
       "kind": "Core/UserIconGroup",
       "story": "Non Stacked",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/UserIconGroup.stories.tsx",
+        "framework": "react",
         "__id": "core-usericongroup--non-stacked"
       }
     },
@@ -2549,6 +2899,8 @@
       "kind": "Core/UserIconGroup",
       "story": "With Tooltip",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/UserIconGroup.stories.tsx",
+        "framework": "react",
         "__id": "core-usericongroup--with-tooltip"
       }
     },
@@ -2558,6 +2910,8 @@
       "kind": "Core/UserIcon",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/UserIcons.stories.tsx",
+        "framework": "react",
         "__id": "core-usericon--basic"
       }
     },
@@ -2567,6 +2921,8 @@
       "kind": "Core/UserIcon",
       "story": "With Image",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/UserIcons.stories.tsx",
+        "framework": "react",
         "__id": "core-usericon--with-image"
       }
     },
@@ -2576,6 +2932,8 @@
       "kind": "Core/UserIcon",
       "story": "Sizes",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/UserIcons.stories.tsx",
+        "framework": "react",
         "__id": "core-usericon--sizes"
       }
     },
@@ -2585,6 +2943,8 @@
       "kind": "Core/UserIcon",
       "story": "Statuses",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/UserIcons.stories.tsx",
+        "framework": "react",
         "__id": "core-usericon--statuses"
       }
     },
@@ -2594,6 +2954,8 @@
       "kind": "Core/UserIcon",
       "story": "Custom Status Translation",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/UserIcons.stories.tsx",
+        "framework": "react",
         "__id": "core-usericon--custom-status-translation"
       }
     },
@@ -2603,6 +2965,8 @@
       "kind": "Core/Wizard",
       "story": "Basic",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Wizard.stories.tsx",
+        "framework": "react",
         "__id": "core-wizard--basic"
       }
     },
@@ -2612,6 +2976,8 @@
       "kind": "Core/Wizard",
       "story": "Long",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Wizard.stories.tsx",
+        "framework": "react",
         "__id": "core-wizard--long"
       }
     },
@@ -2621,6 +2987,8 @@
       "kind": "Core/Wizard",
       "story": "Workflow Diagram",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Wizard.stories.tsx",
+        "framework": "react",
         "__id": "core-wizard--workflow-diagram"
       }
     },
@@ -2630,6 +2998,8 @@
       "kind": "Core/Wizard",
       "story": "Localized Long",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Wizard.stories.tsx",
+        "framework": "react",
         "__id": "core-wizard--localized-long"
       }
     },
@@ -2639,6 +3009,8 @@
       "kind": "Core/Wizard",
       "story": "With Tooltips",
       "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Wizard.stories.tsx",
+        "framework": "react",
         "__id": "core-wizard--with-tooltips"
       }
     }
