@@ -682,6 +682,9 @@ export const Table = <
                             <div className='iui-resizer-bar' />
                           </div>
                         )}
+                      {enableColumnReordering && !column.disableReordering && (
+                        <div className='iui-reorder-bar' />
+                      )}
                     </div>
                   );
                 })}
