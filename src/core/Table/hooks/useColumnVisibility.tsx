@@ -29,13 +29,12 @@ export const useColumnVisibility = <T extends Record<string, unknown>>(
       columnClassName: 'iui-slot',
       cellClassName: 'iui-slot',
       Header: ({ allColumns }: HeaderProps<T>) => {
+        const [isOpen, setIsOpen] = React.useState(false);
         const headerCheckBoxes = () =>
           allColumns
             .filter(({ id }) => !id.includes('iui-table'))
             .map((column) => {
               const { onChange, checked } = column.getToggleHiddenProps();
-
-              console.log(column.getResizerProps());
               return (
                 <MenuItem
                   key={column.id}
@@ -57,8 +56,12 @@ export const useColumnVisibility = <T extends Record<string, unknown>>(
               );
             });
         return (
-          <DropdownMenu menuItems={headerCheckBoxes}>
-            <IconButton styleType='borderless'>
+          <DropdownMenu
+            menuItems={headerCheckBoxes}
+            onHide={() => setIsOpen(false)}
+            onShow={() => setIsOpen(true)}
+          >
+            <IconButton styleType='borderless' isActive={isOpen}>
               <SvgColumnManager />
             </IconButton>
           </DropdownMenu>
