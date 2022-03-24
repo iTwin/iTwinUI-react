@@ -9,13 +9,13 @@ import '@itwin/itwinui-css/css/modal.css';
 
 export type ModalContentProps = {
   /**
-   * Main content in the modal.
+   * Main content in the `Modal`.
    */
   children: React.ReactNode;
 } & Omit<CommonProps, 'title'>;
 
 /**
- * Container for content in modal.
+ * Container for content in `Modal`.
  */
 export const ModalContent = (props: ModalContentProps) => {
   const { children, className, ...rest } = props;

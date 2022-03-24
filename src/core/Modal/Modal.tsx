@@ -62,9 +62,9 @@ export type ModalProps = {
    */
   ownerDocument?: Document;
   /**
-   * Size of the modal.
+   * Type of the modal.
    */
-  modalSize?: 'small' | 'fullPage'; //later add size container?
+  styleType?: 'default' | 'fullPage';
   /**
    * Content of the modal.
    */
@@ -105,7 +105,7 @@ export const Modal = (props: ModalProps) => {
     className,
     style,
     children,
-    modalSize,
+    styleType: type,
     modalRootId = 'iui-react-portal-container',
     ownerDocument = getDocument(),
     ...rest
@@ -180,13 +180,13 @@ export const Modal = (props: ModalProps) => {
         <CSSTransition
           in={isOpen}
           classNames='iui-modal-animation'
-          timeout={4000}
+          timeout={400}
           unmountOnExit={true}
         >
           <div
             className={cx(
               'iui-modal',
-              { 'iui-modal-full-page': modalSize === 'fullPage' },
+              { 'iui-modal-full-page': type === 'fullPage' },
               { 'iui-modal-visible': isOpen },
               className,
             )}
