@@ -2,10 +2,9 @@
 
 ### [1.34.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.34.0...v1.34.1) (2022-03-24)
 
-
 ### Fixes
 
-* **ComboBox:** Combine input onChange with user's prop ([#597](https://www.github.com/iTwin/iTwinUI-react/issues/597)) ([e033753](https://www.github.com/iTwin/iTwinUI-react/commit/e033753c81f3b9298df6eb198581c75344f96c00))
+* **ComboBox:** Combine internal input onChange with `inputProps.onChange` ([#597](https://www.github.com/iTwin/iTwinUI-react/issues/597)) ([e033753](https://www.github.com/iTwin/iTwinUI-react/commit/e033753c81f3b9298df6eb198581c75344f96c00))
 
 ## [1.34.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.33.1...v1.34.0) (2022-03-22)
 
