@@ -25,7 +25,7 @@ export const CarouselDot = React.forwardRef<
 >((props, ref) => {
   const { isActive, isSmaller, isSmall, className, ...rest } = props;
 
-  const justMounted = React.useRef(false);
+  const justMounted = React.useRef(true);
   const motionOk = React.useRef(
     window.matchMedia?.('(prefers-reduced-motion: no-preference)').matches,
   );
