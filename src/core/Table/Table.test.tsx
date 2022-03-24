@@ -2373,3 +2373,159 @@ it('should not have `draggable` attribute on columns with `disableReordering` en
   expect(headerCells[3].getAttribute('draggable')).toBe('true'); // Description column
   expect(headerCells[4].getAttribute('draggable')).toBeFalsy(); // View column
 });
+
+it('should render column manager', () => {
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'View',
+          Cell: () => 'View',
+        },
+      ],
+    },
+  ];
+  const { container } = render(
+    <Table
+      columns={columns}
+      data={mockedData()}
+      emptyTableContent='Empty table'
+      emptyFilteredTableContent='No results. Clear filter.'
+      hasColumnManager
+      isSelectable
+      subComponent={(row) => (
+        <div>{`Expanded component, name: ${row.original.name}`}</div>
+      )}
+    />,
+  );
+
+  const columnManager = container.querySelector('.iui-button') as HTMLElement;
+
+  expect(columnManager).toBeTruthy();
+  userEvent.click(columnManager);
+
+  expect(document.querySelector('.iui-menu')).toBeTruthy();
+
+  const columnManagerColumns = document.querySelectorAll('.iui-menu-item');
+  expect(columnManagerColumns[0].textContent).toBe('Name');
+  expect(columnManagerColumns[1].textContent).toBe('Description');
+  expect(columnManagerColumns[2].textContent).toBe('View');
+});
+
+it('should hide column when selected in column manager', () => {
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'View',
+          Cell: () => 'View',
+        },
+      ],
+    },
+  ];
+  const { container } = render(
+    <Table
+      columns={columns}
+      data={mockedData()}
+      emptyTableContent='Empty table'
+      emptyFilteredTableContent='No results. Clear filter.'
+      hasColumnManager
+    />,
+  );
+
+  let headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+
+  expect(headerCells.length).toBe(4);
+  expect(headerCells[0].textContent).toBe('Name');
+  expect(headerCells[1].textContent).toBe('Description');
+  expect(headerCells[2].textContent).toBe('View');
+
+  const columnManager = container.querySelector('.iui-button') as HTMLElement;
+  userEvent.click(columnManager);
+  const columnManagerColumns = document.querySelectorAll<HTMLLIElement>(
+    '.iui-menu-item',
+  );
+  userEvent.click(columnManagerColumns[1]);
+
+  headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+
+  expect(headerCells.length).toBe(3);
+  expect(headerCells[0].textContent).toBe('Name');
+  expect(headerCells[1].textContent).toBe('View');
+});
+
+it('should be disabled in column manager if `disableToggleVisibility` is true', () => {
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          disableToggleVisibility: true,
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'View',
+          Cell: () => 'View',
+        },
+      ],
+    },
+  ];
+  const { container } = render(
+    <Table
+      columns={columns}
+      data={mockedData()}
+      emptyTableContent='Empty table'
+      emptyFilteredTableContent='No results. Clear filter.'
+      hasColumnManager
+    />,
+  );
+
+  const columnManager = container.querySelector('.iui-button') as HTMLElement;
+
+  userEvent.click(columnManager);
+  const columnManagerColumns = document.querySelectorAll<HTMLLIElement>(
+    '.iui-menu-item',
+  );
+  expect(columnManagerColumns[0].classList).toContain('iui-disabled');
+
+  expect(
+    (columnManagerColumns[0].querySelector('.iui-checkbox') as HTMLInputElement)
+      .disabled,
+  ).toBeTruthy();
+});

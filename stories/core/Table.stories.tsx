@@ -49,6 +49,7 @@ export default {
   argTypes: {
     columns: { control: { disable: true } },
     isSelectable: { control: { disable: true } },
+    hasColumnManager: { control: { disable: true } },
     style: { control: { disable: true } },
     className: { control: { disable: true } },
     id: { control: { disable: true } },
@@ -2385,6 +2386,7 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
   return (
     <Table
       hasColumnManager={true}
+      isSelectable={true}
       {...args}
       columns={columns}
       data={data}

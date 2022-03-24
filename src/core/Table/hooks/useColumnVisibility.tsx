@@ -26,6 +26,7 @@ export const useColumnVisibility = <T extends Record<string, unknown>>(
       minWidth: 48,
       width: 48,
       maxWidth: 48,
+      disableReordering: true,
       columnClassName: 'iui-slot',
       cellClassName: 'iui-slot',
       Header: ({ allColumns }: HeaderProps<T>) => {
