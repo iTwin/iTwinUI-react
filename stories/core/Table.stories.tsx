@@ -1367,7 +1367,7 @@ export const Full: Story<Partial<TableProps>> = (args) => {
         isSelectable
         isSortable
         isResizable
-        isManageable
+        hasColumnManager
         enableColumnReordering
         {...args}
       />
@@ -1389,7 +1389,7 @@ Full.args = {
   isSelectable: true,
   isSortable: true,
   isResizable: true,
-  isManageable: true,
+  hasColumnManager: true,
   enableColumnReordering: true,
 };
 
@@ -2384,16 +2384,16 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
 
   return (
     <Table
+      hasColumnManager={true}
       {...args}
       columns={columns}
       data={data}
       emptyTableContent='No data.'
-      isManageable={true}
     />
   );
 };
 
-ColumnManager.args = { isManageable: true };
+ColumnManager.args = { hasColumnManager: true };
 
 export const DraggableColumns: Story<Partial<TableProps>> = (args) => {
   const columns = useMemo(

@@ -236,7 +236,7 @@ export type TableProps<
    * Flag whether table has a column manager.
    * @default false
    */
-  isManageable?: boolean;
+  hasColumnManager?: boolean;
   /**
    * Flag whether columns can be reordered.
    * @default false
@@ -325,7 +325,7 @@ export const Table = <
     isResizable = false,
     styleType = 'default',
     enableVirtualization = false,
-    isManageable = false,
+    hasColumnManager = false,
     enableColumnReordering = false,
     ...rest
   } = props;
@@ -440,7 +440,7 @@ export const Table = <
     useSubRowSelection,
     useExpanderCell(subComponent, expanderCell, isRowDisabled),
     useSelectionCell(isSelectable, isRowDisabled),
-    useColumnVisibility(isManageable),
+    useColumnVisibility(hasColumnManager),
     useColumnOrder,
     useColumnDragAndDrop(enableColumnReordering),
   );

@@ -13,9 +13,9 @@ import { MenuItem } from '../../Menu';
 export const COLUMN_MANAGER_ID = 'iui-table-column-manager';
 
 export const useColumnVisibility = <T extends Record<string, unknown>>(
-  isManageable: boolean,
+  hasColumnManager: boolean,
 ) => (hooks: Hooks<T>) => {
-  if (!isManageable) {
+  if (!hasColumnManager) {
     return;
   }
 
@@ -49,9 +49,7 @@ export const useColumnVisibility = <T extends Record<string, unknown>>(
                   onClick={() => onChange({ target: { checked: !checked } })}
                   disabled={column.disableToggleVisibility}
                 >
-                  <label htmlFor={`iui-column-${column.id}`}>
-                    {column.Header}
-                  </label>
+                  {column.Header}
                 </MenuItem>
               );
             });
