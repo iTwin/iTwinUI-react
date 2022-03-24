@@ -270,3 +270,8 @@ export {
   MiddleTextTruncation,
 } from './utils';
 export type { ThemeType, MiddleTextTruncationProps } from './utils';
+
+export { SkipToContentLink } from './SkipToContent';
+export type { SkipToContentLinkProps } from './SkipToContent';
+export { SkipToContentMarker } from './SkipToContent';
+export type { SkipToContentMarkerProps } from './SkipToContent';
