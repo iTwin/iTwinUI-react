@@ -5,7 +5,13 @@
 import React from 'react';
 import cx from 'classnames';
 import { CarouselContext } from './CarouselContext';
-import { useMergedRefs, useResizeObserver, useTheme } from '../utils';
+import {
+  getBoundedValue,
+  getWindow,
+  useMergedRefs,
+  useResizeObserver,
+  useTheme,
+} from '../utils';
 import { CarouselDot } from './CarouselDot';
 import '@itwin/itwinui-css/css/carousel.css';
 
@@ -80,6 +86,7 @@ export const CarouselDotsList = React.forwardRef<
     );
   }
 
+  const justMounted = React.useRef(true);
   const [visibleCount, setVisibleCount] = React.useState(slideCount);
   const listRef = React.useRef<HTMLDivElement>(null);
   const [resizeRef, resizeObserver] = useResizeObserver(({ width }) => {
@@ -95,29 +102,37 @@ export const CarouselDotsList = React.forwardRef<
 
   const refs = useMergedRefs(ref, resizeRef, listRef);
 
-  const dots = React.useMemo(() => {
-    const firstDotIndex = Math.max(
-      0,
-      Math.min(
+  const firstVisibleDotIndex = React.useMemo(
+    () =>
+      getBoundedValue(
         currentIndex - Math.ceil(visibleCount / 2) + 1,
+        0,
         slideCount - visibleCount,
       ),
-    );
-    const lastDotIndex = Math.min(
-      slideCount - 1,
-      Math.max(currentIndex + Math.floor(visibleCount / 2), visibleCount - 1),
-    );
+    [currentIndex, slideCount, visibleCount],
+  );
+  const lastVisibleDotIndex = React.useMemo(
+    () =>
+      getBoundedValue(
+        currentIndex + Math.floor(visibleCount / 2),
+        visibleCount - 1,
+        slideCount - 1,
+      ),
+    [currentIndex, slideCount, visibleCount],
+  );
 
+  const dots = React.useMemo(() => {
     return Array(slideCount)
       .fill(null)
       .map((_, index) => {
         const isFirstSmallDot =
-          (index === firstDotIndex && index !== 0) ||
-          (index === lastDotIndex && index !== slideCount - 1);
+          (index === firstVisibleDotIndex && index !== 0) ||
+          (index === lastVisibleDotIndex && index !== slideCount - 1);
         const isSecondSmallDot =
-          (index === firstDotIndex + 1 && index !== 1) ||
-          (index === lastDotIndex - 1 && index !== slideCount - 2);
-        const isClipped = index < firstDotIndex || index > lastDotIndex;
+          (index === firstVisibleDotIndex + 1 && index !== 1) ||
+          (index === lastVisibleDotIndex - 1 && index !== slideCount - 2);
+        const isClipped =
+          index < firstVisibleDotIndex || index > lastVisibleDotIndex;
 
         return (
           <CarouselDot
@@ -132,22 +147,56 @@ export const CarouselDotsList = React.forwardRef<
           />
         );
       });
-  }, [slideCount, currentIndex, idPrefix, visibleCount, handleSlideChange]);
+  }, [
+    slideCount,
+    firstVisibleDotIndex,
+    lastVisibleDotIndex,
+    currentIndex,
+    idPrefix,
+    handleSlideChange,
+  ]);
+
+  React.useEffect(() => {
+    const firstDot = listRef.current?.children[firstVisibleDotIndex] as
+      | HTMLElement
+      | undefined;
+    if (!listRef.current || !firstDot) {
+      return;
+    }
+
+    const motionOk = getWindow()?.matchMedia(
+      '(prefers-reduced-motion: no-preference)',
+    )?.matches;
+
+    listRef.current.scrollTo({
+      left: firstDot.offsetLeft - listRef.current.offsetLeft,
+      behavior: motionOk && !justMounted.current ? 'smooth' : 'auto',
+    });
+
+    if (justMounted.current) {
+      justMounted.current = false;
+    }
+  }, [currentIndex, firstVisibleDotIndex, slideCount, visibleCount]);
 
   return (
-    <div
-      className={cx('iui-carousel-navigation-dots', className)}
-      role='tablist'
-      aria-label='Slides'
-      ref={refs}
-      {...rest}
-      style={{
-        display: 'block', // flex breaks smooth scrolling
-        overflow: 'auto', // overflow: hidden breaks scrollIntoView in Safari
-        scrollbarWidth: 'none', // TODO: hide scrollbar in Chrome/Safari using CSS
-      }}
-    >
-      {children ?? dots}
-    </div>
+    <>
+      <style>
+        {`.iui-carousel-navigation-dots::-webkit-scrollbar { display: none; }`}
+      </style>
+      <div
+        className={cx('iui-carousel-navigation-dots', className)}
+        role='tablist'
+        aria-label='Slides'
+        ref={refs}
+        {...rest}
+        style={{
+          display: 'block', // flex breaks smooth scrolling
+          overflow: 'auto', // overflow: hidden breaks scrollIntoView in Safari
+          scrollbarWidth: 'none', // TODO: hide scrollbar in Chrome/Safari using CSS
+        }}
+      >
+        {children ?? dots}
+      </div>
+    </>
   );
 });

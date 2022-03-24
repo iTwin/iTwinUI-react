@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { useMergedRefs } from '../utils';
 
 type CarouselDotProps = {
   /** Is this dot currently active? */
@@ -25,16 +24,6 @@ export const CarouselDot = React.forwardRef<
 >((props, ref) => {
   const { isActive, isSmaller, isSmall, className, ...rest } = props;
 
-  const dotRef = React.useCallback(
-    (el: HTMLButtonElement) => {
-      if (el && isActive) {
-        el.scrollIntoView({ block: 'nearest', inline: 'center' });
-      }
-    },
-    [isActive],
-  );
-  const refs = useMergedRefs(ref, dotRef);
-
   return (
     <button
       type='button'
@@ -50,7 +39,7 @@ export const CarouselDot = React.forwardRef<
         className,
       )}
       aria-selected={isActive}
-      ref={refs}
+      ref={ref}
       {...rest}
       style={{ transition: 'revert' }} // TODO: fix transition in CSS
     />

@@ -8,6 +8,14 @@ import { CarouselDotsList } from './CarouselDotsList';
 import * as UseResizeObserver from '../utils/hooks/useResizeObserver';
 import userEvent from '@testing-library/user-event';
 
+const originalMatchMedia = window.matchMedia;
+beforeAll(() => {
+  window.matchMedia = jest.fn().mockReturnValue({ matches: false });
+});
+afterAll(() => {
+  window.matchMedia = originalMatchMedia;
+});
+
 it('should render in its most basic state without Carousel', () => {
   render(
     <CarouselDotsList
