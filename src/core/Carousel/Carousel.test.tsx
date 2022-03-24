@@ -8,6 +8,14 @@ import { render } from '@testing-library/react';
 import { Carousel } from './Carousel';
 import userEvent from '@testing-library/user-event';
 
+const originalMatchMedia = window.matchMedia;
+beforeAll(() => {
+  window.matchMedia = jest.fn().mockReturnValue({ matches: false });
+});
+afterAll(() => {
+  window.matchMedia = originalMatchMedia;
+});
+
 it('should render in its most basic state', () => {
   const { container } = render(
     <Carousel id='testcarousel'>
