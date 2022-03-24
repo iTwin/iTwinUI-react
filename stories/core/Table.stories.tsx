@@ -32,6 +32,7 @@ import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
 import { action } from '@storybook/addon-actions';
 import { CreeveyMeta, CreeveyStoryParams } from 'creevey';
+import { SelectionColumn, ExpanderColumn } from '../../src/core/Table/columns';
 
 export default {
   title: 'Core/Table',
@@ -2268,4 +2269,87 @@ export const VirtualizedSubRows: Story<Partial<TableProps>> = (args) => {
 VirtualizedSubRows.argTypes = {
   isLoading: { control: { disable: true } },
   data: { control: { disable: true } },
+};
+
+export const CustomColumns: Story<Partial<TableProps>> = (args) => {
+  const onExpand = useCallback(
+    (rows, state) =>
+      action(
+        `Expanded rows: ${JSON.stringify(rows)}. Table state: ${JSON.stringify(
+          state,
+        )}`,
+      )(),
+    [],
+  );
+
+  const isRowDisabled = useCallback(
+    (rowData: { name: string; description: string }) => {
+      return rowData.name === 'Name2';
+    },
+    [],
+  );
+
+  const expandedSubComponent = useCallback(
+    (row: Row) => (
+      <div style={{ padding: 16 }}>
+        <Leading>Extra information</Leading>
+        <pre>
+          <code>{JSON.stringify({ values: row.values }, null, 2)}</code>
+        </pre>
+      </div>
+    ),
+    [],
+  );
+
+  const columns = useMemo(
+    (): Column<{ name: string; description: string }>[] => [
+      {
+        Header: 'Table',
+        columns: [
+          SelectionColumn(),
+          ExpanderColumn(expandedSubComponent, isRowDisabled),
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+            cellRenderer: (props) => (
+              <DefaultCell {...props} isDisabled={isRowDisabled} />
+            ),
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+          },
+        ],
+      },
+    ],
+    [expandedSubComponent, isRowDisabled],
+  );
+
+  const data = useMemo(
+    () => [
+      { name: 'Name1', description: 'Description1' },
+      { name: 'Name2', description: 'Description2' },
+      { name: 'Name3', description: 'Description3' },
+    ],
+    [],
+  );
+
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      emptyTableContent='No data.'
+      subComponent={expandedSubComponent}
+      onExpand={onExpand}
+      isSelectable
+      {...args}
+    />
+  );
+};
+
+CustomColumns.args = {
+  isSelectable: true,
 };
