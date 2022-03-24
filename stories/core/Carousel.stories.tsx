@@ -55,10 +55,7 @@ export const Basic: Story<CarouselProps> = (args) => {
   );
 };
 
-export const Controlled: Story<CarouselProps> = ({
-  activeSlideIndex,
-  ...args
-}) => {
+export const Controlled: Story<CarouselProps> = (args) => {
   const gradients = [
     { from: '#cc2b5e', to: '#753a88' },
     { from: '#00467f', to: '#a5cc82' },
@@ -72,14 +69,14 @@ export const Controlled: Story<CarouselProps> = ({
     { from: '#acb6e5', to: '#86fde8' },
   ];
 
-  const [currentIndex, setCurrentIndex] = React.useState(activeSlideIndex ?? 2);
+  const [currentIndex, setCurrentIndex] = React.useState(5);
 
   return (
     <Carousel
+      {...args}
       style={{ width: 'min(800px, 90vw)' }}
       activeSlideIndex={currentIndex}
       onSlideChange={(index) => setCurrentIndex(index)}
-      {...args}
     >
       <Carousel.Slider>
         {gradients.map(({ from, to }, index) => (
@@ -104,9 +101,7 @@ export const Controlled: Story<CarouselProps> = ({
     </Carousel>
   );
 };
-Controlled.args = {
-  activeSlideIndex: 2,
-};
+Controlled.args = {};
 Controlled.argTypes = {
   activeSlideIndex: { control: { disable: true } },
 };

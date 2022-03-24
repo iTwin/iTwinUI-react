@@ -53,12 +53,17 @@ export const CarouselSlider = React.forwardRef<
   const refs = useMergedRefs(sliderRef, resizeRef, ref);
   const justMounted = React.useRef(true);
 
+  const previousWidth = React.useRef<number>();
   React.useLayoutEffect(() => {
     const slideToShow = sliderRef.current?.children.item(currentIndex) as
       | HTMLElement
       | undefined;
 
-    if (!sliderRef.current || !slideToShow || !isManuallyUpdating.current) {
+    if (
+      !sliderRef.current ||
+      !slideToShow ||
+      (!isManuallyUpdating.current && previousWidth.current === width)
+    ) {
       return;
     }
 
@@ -74,7 +79,9 @@ export const CarouselSlider = React.forwardRef<
         ? 'instant'
         : 'auto') as ScrollBehavior, // scrollTo accepts 'instant' but ScrollBehavior type is wrong
     });
+
     scrollInstantly.current = false;
+    previousWidth.current = width;
   }, [currentIndex, isManuallyUpdating, scrollInstantly, width]);
 
   return (
