@@ -141,7 +141,11 @@ export const CarouselDotsList = React.forwardRef<
       aria-label='Slides'
       ref={refs}
       {...rest}
-      style={{ display: 'block' }} // TODO: don't need flex
+      style={{
+        display: 'block', // flex breaks smooth scrolling
+        overflow: 'auto', // overflow: hidden breaks scrollIntoView in Safari
+        scrollbarWidth: 'none', // TODO: hide scrollbar in Chrome/Safari using CSS
+      }}
     >
       {children ?? dots}
     </div>

@@ -25,40 +25,15 @@ export const CarouselDot = React.forwardRef<
 >((props, ref) => {
   const { isActive, isSmaller, isSmall, className, ...rest } = props;
 
-  const justMounted = React.useRef(true);
-  const motionOk = React.useRef(
-    window.matchMedia?.('(prefers-reduced-motion: no-preference)').matches,
-  );
-
   const dotRef = React.useCallback(
     (el: HTMLButtonElement) => {
       if (el && isActive) {
-        try {
-          el.scrollIntoView({
-            behavior:
-              !justMounted.current && motionOk.current ? 'smooth' : 'auto',
-            block: 'nearest',
-            inline: 'center',
-          });
-        } catch (_) {
-          // Safari fallback
-          el.parentElement?.scrollTo({
-            behavior:
-              !justMounted.current && motionOk.current ? 'smooth' : 'auto',
-            left: el.offsetLeft - el.parentElement?.offsetLeft,
-          });
-        }
+        el.scrollIntoView({ block: 'nearest', inline: 'center' });
       }
     },
     [isActive],
   );
   const refs = useMergedRefs(ref, dotRef);
-
-  React.useEffect(() => {
-    if (justMounted.current) {
-      justMounted.current = false;
-    }
-  }, []);
 
   return (
     <button
