@@ -17,12 +17,13 @@ export default {
 } as Meta<CheckboxProps>;
 
 export const Basic: Story<CheckboxProps> = (args) => {
-  const { label = 'Basic Checkbox', ...rest } = args;
-  return <Checkbox label={label} {...rest} />;
+  const { label = 'Basic Checkbox', defaultChecked = true, ...rest } = args;
+  return <Checkbox label={label} defaultChecked={defaultChecked} {...rest} />;
 };
 
 Basic.args = {
   label: 'Basic Checkbox',
+  defaultChecked: true,
 };
 
 export const Disabled: Story<CheckboxProps> = (args) => {
@@ -87,4 +88,14 @@ export const Loading: Story<CheckboxProps> = (args) => {
 Loading.args = {
   label: 'Loading Checkbox',
   isLoading: true,
+};
+
+export const Visibility: Story<CheckboxProps> = (args) => {
+  const { label = 'Visibility Checkbox', variant = 'eyeball', ...rest } = args;
+  return <Checkbox label={label} variant={variant} {...rest} />;
+};
+
+Visibility.args = {
+  label: 'Visibility Checkbox',
+  variant: 'eyeball',
 };

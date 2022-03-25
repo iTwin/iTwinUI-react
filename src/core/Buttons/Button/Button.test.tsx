@@ -10,7 +10,13 @@ import { Button } from './Button';
 it('renders default button correctly', () => {
   const onClickMock = jest.fn();
   const { container } = render(
-    <Button onClick={onClickMock}>Click me!</Button>,
+    <Button
+      onClick={(e) => {
+        onClickMock(e);
+      }}
+    >
+      Click me!
+    </Button>,
   );
 
   const button = container.querySelector('.iui-button') as HTMLButtonElement;
@@ -158,4 +164,16 @@ it('should render without label correctly', () => {
   button.querySelectorAll('.iui-button-icon').forEach((icon) => {
     expect(icon).toEqual(placeholderIcon);
   });
+});
+
+it('should support polymorphic `as` prop', () => {
+  const { container } = render(
+    <Button as='a' href='https://example.com/'>
+      label
+    </Button>,
+  );
+
+  const button = container.querySelector('a.iui-button') as HTMLAnchorElement;
+  expect(button).toHaveTextContent('label');
+  expect(button.href).toEqual('https://example.com/');
 });

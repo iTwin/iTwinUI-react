@@ -23,6 +23,11 @@ export type CheckboxProps = {
    */
   status?: 'positive' | 'warning' | 'negative';
   /**
+   * Type of checkbox, regular or eyeball checkbox that is used for visibility.
+   * @default 'default'
+   */
+  variant?: 'default' | 'eyeball';
+  /**
    * Set focus on checkbox.
    */
   setFocus?: boolean;
@@ -33,10 +38,16 @@ export type CheckboxProps = {
   isLoading?: boolean;
   /**
    * Custom CSS class name for the checkmark element.
+   *
+   * @deprecated As of 1.32.0, this is applied on the actual checkbox `<input>` element.
+   * The checkmark has been moved into a pseudo-element.
    */
   checkmarkClassName?: string;
   /**
    * Custom CSS Style for the checkmark element.
+   *
+   * @deprecated As of 1.32.0, this is applied on the actual checkbox `<input>` element.
+   * The checkmark has been moved into a pseudo-element.
    */
   checkmarkStyle?: React.CSSProperties;
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'>;
@@ -44,12 +55,14 @@ export type CheckboxProps = {
 /**
  * Simple input checkbox
  * @example
+ * <Checkbox />
  * <Checkbox label='Basic Checkbox' />
  * <Checkbox label='Disabled Checkbox' disabled />
  * <Checkbox label='Checked' checked />
  * <Checkbox label='Positive Checkbox' status='positive' />
  * <Checkbox label='Warning Checkbox' status='warning' />
  * <Checkbox label='Negative Checkbox' status='negative' />
+ * <Checkbox label='Visibility Checkbox' variant='eyeball' />
  */
 export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
   (props, ref) => {
@@ -59,6 +72,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
       indeterminate = false,
       label,
       status,
+      variant = 'default',
       setFocus,
       isLoading = false,
       style,
@@ -87,10 +101,34 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
       }
     });
 
-    return (
+    const checkbox = (
+      <>
+        <input
+          className={cx(
+            'iui-checkbox',
+            {
+              'iui-checkbox-visibility': variant === 'eyeball',
+              'iui-loading': isLoading,
+            },
+            className && { [className]: !label },
+            checkmarkClassName,
+          )}
+          style={{ ...(!label && style), ...checkmarkStyle }}
+          disabled={disabled || isLoading}
+          type='checkbox'
+          ref={refs}
+          {...rest}
+        />
+        {isLoading && <ProgressRadial size='x-small' indeterminate />}
+      </>
+    );
+
+    return !label ? (
+      checkbox
+    ) : (
       <label
         className={cx(
-          'iui-checkbox',
+          'iui-checkbox-wrapper',
           {
             'iui-disabled': disabled,
             [`iui-${status}`]: !!status,
@@ -100,25 +138,8 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         )}
         style={style}
       >
-        <input
-          disabled={disabled || isLoading}
-          type='checkbox'
-          ref={refs}
-          {...rest}
-        />
-        <span
-          className={cx('iui-checkbox-checkmark', checkmarkClassName)}
-          style={checkmarkStyle}
-        >
-          {isLoading && <ProgressRadial indeterminate />}
-          {!isLoading && (
-            <svg viewBox='0 0 16 16' aria-hidden='true' focusable='false'>
-              <path className='iui-check' d='M6,14L0,8l2-2l4,4l8-8l2,2L6,14z' />
-              <path className='iui-check-partial' d='m1 6.5h14v3h-14z' />
-            </svg>
-          )}
-        </span>
-        {label && <span className='iui-label'>{label}</span>}
+        {checkbox}
+        {label && <span className='iui-checkbox-label'>{label}</span>}
       </label>
     );
   },

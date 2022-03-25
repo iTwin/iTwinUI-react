@@ -19,6 +19,7 @@ import { EditableCell } from './cells';
 import { TablePaginator } from './TablePaginator';
 import * as UseOverflow from '../utils/hooks/useOverflow';
 import * as UseResizeObserver from '../utils/hooks/useResizeObserver';
+import userEvent from '@testing-library/user-event';
 
 const intersectionCallbacks = new Map<Element, () => void>();
 jest
@@ -43,13 +44,13 @@ const columns = (onViewClick: () => void = jest.fn()) => [
       },
       {
         id: 'description',
-        Header: 'description',
+        Header: 'Description',
         accessor: 'description',
         maxWidth: 200,
       },
       {
         id: 'view',
-        Header: 'view',
+        Header: 'View',
         Cell: () => {
           return <span onClick={onViewClick}>View</span>;
         },
@@ -148,7 +149,7 @@ function assertRowsData(rows: NodeListOf<Element>, data = mockedData()) {
     expect(cells[0].textContent).toEqual(name);
     expect(cells[1].textContent).toEqual(description);
     expect(cells[2].textContent).toEqual('View');
-    fireEvent.click(cells[2].firstElementChild as HTMLElement);
+    userEvent.click(cells[2].firstElementChild as HTMLElement);
   }
 }
 
@@ -157,15 +158,15 @@ const setFilter = (container: HTMLElement, value: string) => {
     '.iui-filter-button .iui-button-icon',
   ) as HTMLElement;
   expect(filterIcon).toBeTruthy();
-  fireEvent.click(filterIcon);
+  userEvent.click(filterIcon);
 
   const filterInput = document.querySelector(
     '.iui-column-filter input',
   ) as HTMLInputElement;
   expect(filterInput).toBeTruthy();
 
-  fireEvent.change(filterInput, { target: { value } });
-  screen.getByText('Filter').click();
+  userEvent.type(filterInput, value);
+  userEvent.click(screen.getByText('Filter'));
 };
 
 const clearFilter = (container: HTMLElement) => {
@@ -173,7 +174,7 @@ const clearFilter = (container: HTMLElement) => {
     '.iui-filter-button .iui-button-icon',
   ) as HTMLElement;
   expect(filterIcon).toBeTruthy();
-  fireEvent.click(filterIcon);
+  userEvent.click(filterIcon);
 
   screen.getByText('Clear').click();
 };
@@ -183,7 +184,7 @@ const expandAll = (container: HTMLElement, oldExpanders: Element[] = []) => {
     container.querySelectorAll('.iui-row-expander'),
   );
   const newExpanders = allExpanders.filter((e) => !oldExpanders.includes(e));
-  newExpanders.forEach((button) => fireEvent.click(button));
+  newExpanders.forEach((button) => userEvent.click(button));
   if (newExpanders.length) {
     expandAll(container, allExpanders);
   }
@@ -294,13 +295,13 @@ it('should handle checkbox clicks', () => {
 
   const checkboxCells = container.querySelectorAll('.iui-slot .iui-checkbox');
   expect(checkboxCells.length).toBe(4);
-  fireEvent.click(checkboxCells[2]);
+  userEvent.click(checkboxCells[2]);
   expect(onSelect).toHaveBeenCalledWith([mockedData()[1]], expect.any(Object));
 
-  fireEvent.click(checkboxCells[0]);
+  userEvent.click(checkboxCells[0]);
   expect(onSelect).toHaveBeenCalledWith(mockedData(), expect.any(Object));
 
-  fireEvent.click(checkboxCells[0]);
+  userEvent.click(checkboxCells[0]);
   expect(onSelect).toHaveBeenCalledWith([], expect.any(Object));
 });
 
@@ -317,18 +318,18 @@ it('should handle row clicks', () => {
   const rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
 
-  fireEvent.click(getByText(mockedData()[1].name));
+  userEvent.click(getByText(mockedData()[1].name));
   expect(rows[1].classList).toContain('iui-selected');
   expect(onSelect).toHaveBeenCalledTimes(1);
   expect(onRowClick).toHaveBeenCalledTimes(1);
 
-  fireEvent.click(getByText(mockedData()[2].name));
+  userEvent.click(getByText(mockedData()[2].name));
   expect(rows[1].classList).not.toContain('iui-selected');
   expect(rows[2].classList).toContain('iui-selected');
   expect(onSelect).toHaveBeenCalledTimes(2);
   expect(onRowClick).toHaveBeenCalledTimes(2);
 
-  fireEvent.click(getByText(mockedData()[1].name), { ctrlKey: true });
+  userEvent.click(getByText(mockedData()[1].name), { ctrlKey: true });
   expect(rows[1].classList).toContain('iui-selected');
   expect(rows[2].classList).toContain('iui-selected');
   expect(onSelect).toHaveBeenCalledTimes(3);
@@ -349,7 +350,7 @@ it('should not select when clicked on row but selectRowOnClick flag is false', (
   const rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
 
-  fireEvent.click(getByText(mockedData()[1].name));
+  userEvent.click(getByText(mockedData()[1].name));
   expect(onSelect).not.toHaveBeenCalled();
   expect(onRowClick).toHaveBeenCalled();
 });
@@ -386,7 +387,7 @@ it('should not trigger onSelect when sorting and filtering', () => {
   expect(nameHeader).toBeTruthy();
   expect(nameHeader.classList).not.toContain('iui-sorted');
 
-  fireEvent.mouseDown(nameHeader);
+  userEvent.click(nameHeader);
   expect(onSort).toHaveBeenCalled();
   expect(onSelect).not.toHaveBeenCalled();
 
@@ -450,7 +451,7 @@ it('should sort name column correctly', () => {
   expect(sortIcon).toBeTruthy();
 
   //first click
-  fireEvent.mouseDown(nameHeader);
+  userEvent.click(nameHeader);
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(nameHeader.classList).toContain('iui-sorted');
   assertRowsData(rows, sortedByName);
@@ -466,7 +467,7 @@ it('should sort name column correctly', () => {
   );
 
   //second click
-  fireEvent.mouseDown(nameHeader);
+  userEvent.click(nameHeader);
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(nameHeader.classList).toContain('iui-sorted');
   assertRowsData(rows, [...sortedByName].reverse());
@@ -482,7 +483,7 @@ it('should sort name column correctly', () => {
   );
 
   //third click resets it
-  fireEvent.mouseDown(nameHeader);
+  userEvent.click(nameHeader);
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(nameHeader.classList).not.toContain('iui-sorted');
   assertRowsData(rows, mocked);
@@ -616,7 +617,7 @@ it('should clear filter', () => {
     '.iui-filter-button .iui-button-icon',
   ) as HTMLElement;
   expect(filterIcon).toBeTruthy();
-  fireEvent.click(filterIcon);
+  userEvent.click(filterIcon);
 
   const filterInput = document.querySelector(
     '.iui-column-filter input',
@@ -806,6 +807,7 @@ it('should not trigger sorting when filter is clicked', () => {
     columns: mockedColumns,
     onFilter,
     onSort,
+    isSortable: true,
   });
 
   setFilter(container, '2');
@@ -915,7 +917,7 @@ it('should expand correctly', () => {
   ).toEqual(expanderIcon);
 
   act(() => {
-    fireEvent.click(container.querySelectorAll('.iui-button')[0]);
+    userEvent.click(container.querySelectorAll('.iui-button')[0]);
   });
 
   getByText('Expanded component, name: Name1');
@@ -945,16 +947,16 @@ it('should expand correctly with a custom expander cell', async () => {
   expect(queryByText('Expanded component, name: Name3')).toBeNull();
 
   act(() => {
-    fireEvent.click(getByText('Expand Name1'));
-    fireEvent.click(getByText('Expand Name2'));
+    userEvent.click(getByText('Expand Name1'));
+    userEvent.click(getByText('Expand Name2'));
   });
 
   getByText('Expanded component, name: Name1');
   getByText('Expanded component, name: Name2');
 
   act(() => {
-    fireEvent.click(getByText('Expand Name1'));
-    fireEvent.click(getByText('Expand Name3'));
+    userEvent.click(getByText('Expand Name1'));
+    userEvent.click(getByText('Expand Name3'));
   });
   await waitFor(() =>
     expect(queryByText('Expanded component, name: Name1')).toBeNull(),
@@ -989,10 +991,10 @@ it('should disable row and handle expansion accordingly', () => {
   expect(expansionCells[1].disabled).toBe(true);
   expect(expansionCells[2].disabled).toBe(false);
 
-  fireEvent.click(expansionCells[1]);
+  userEvent.click(expansionCells[1]);
   expect(onExpand).not.toHaveBeenCalled();
 
-  fireEvent.click(expansionCells[0]);
+  userEvent.click(expansionCells[0]);
   expect(onExpand).toHaveBeenCalled();
 });
 
@@ -1015,27 +1017,25 @@ it('should disable row and handle selection accordingly', () => {
 
   const checkboxCells = container.querySelectorAll('.iui-slot .iui-checkbox');
   expect(checkboxCells.length).toBe(4);
-  expect(checkboxCells[0].classList).not.toContain('iui-disabled');
-  expect(checkboxCells[1].classList).not.toContain('iui-disabled');
-  expect(checkboxCells[2].classList).toContain('iui-disabled');
-  expect(checkboxCells[3].classList).not.toContain('iui-disabled');
+  expect(checkboxCells[0]).not.toBeDisabled();
+  expect(checkboxCells[1]).not.toBeDisabled();
+  expect(checkboxCells[2]).toBeDisabled();
+  expect(checkboxCells[3]).not.toBeDisabled();
 
   // Select disabled row
-  fireEvent.click(checkboxCells[2]);
+  userEvent.click(checkboxCells[2]);
   expect(onSelect).not.toHaveBeenCalled();
   expect(onRowClick).not.toHaveBeenCalled();
 
   // Select first row
-  fireEvent.click(checkboxCells[1]);
+  userEvent.click(checkboxCells[1]);
   expect(onSelect).toHaveBeenCalledWith([mockedData()[0]], expect.any(Object));
-  const headerCheckbox = checkboxCells[0].querySelector(
-    'input',
-  ) as HTMLInputElement;
+  const headerCheckbox = checkboxCells[0] as HTMLInputElement;
   expect(headerCheckbox.indeterminate).toBe(true);
   expect(headerCheckbox.checked).toBe(false);
 
   // Select all
-  fireEvent.click(checkboxCells[0]);
+  userEvent.click(checkboxCells[0]);
   expect(onSelect).toHaveBeenCalledWith(
     [mockedData()[0], mockedData()[2]],
     expect.any(Object),
@@ -1044,7 +1044,7 @@ it('should disable row and handle selection accordingly', () => {
   expect(headerCheckbox.checked).toBe(true);
 
   // Deselect all
-  fireEvent.click(checkboxCells[0]);
+  userEvent.click(checkboxCells[0]);
   expect(onSelect).toHaveBeenCalledWith([], expect.any(Object));
   expect(headerCheckbox.indeterminate).toBe(false);
   expect(headerCheckbox.checked).toBe(false);
@@ -1079,11 +1079,9 @@ it('should select and filter rows', () => {
   expect(checkboxCells.length).toBe(4);
 
   // Select first row
-  fireEvent.click(checkboxCells[1]);
+  userEvent.click(checkboxCells[1]);
   expect(onSelect).toHaveBeenCalledWith([mockedData()[0]], expect.any(Object));
-  const headerCheckbox = checkboxCells[0].querySelector(
-    'input',
-  ) as HTMLInputElement;
+  const headerCheckbox = checkboxCells[0] as HTMLInputElement;
   expect(headerCheckbox.indeterminate).toBe(true);
 
   // Filter table
@@ -1094,7 +1092,7 @@ it('should select and filter rows', () => {
   expect(checkboxCells.length).toBe(2);
 
   // Select second row
-  fireEvent.click(checkboxCells[1]);
+  userEvent.click(checkboxCells[1]);
   expect(onSelect).toHaveBeenCalledWith(
     [mockedData()[0], mockedData()[1]],
     expect.any(Object),
@@ -1104,7 +1102,7 @@ it('should select and filter rows', () => {
   // Clear filter
   clearFilter(container);
   const checkboxInputs = container.querySelectorAll<HTMLInputElement>(
-    '.iui-slot .iui-checkbox input',
+    '.iui-slot .iui-checkbox',
   );
   expect(checkboxInputs.length).toBe(4);
   expect(checkboxInputs[0].indeterminate).toBe(true);
@@ -1232,7 +1230,7 @@ it('should handle sub-rows selection', () => {
   expect(rows.length).toBe(3);
 
   let checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox input',
+    '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(3);
   checkboxes[0].click();
@@ -1240,7 +1238,7 @@ it('should handle sub-rows selection', () => {
   expandAll(container);
 
   checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox input',
+    '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(10);
   Array.from(checkboxes).forEach((checkbox, index) =>
@@ -1268,14 +1266,14 @@ it('should show indeterminate checkbox when some sub-rows are selected', () => {
   expandAll(container);
 
   let checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox input',
+    '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(10);
   // Click row 1.2 checkbox
   checkboxes[2].click();
 
   checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox input',
+    '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(10);
   expect(checkboxes[0].indeterminate).toBe(true);
@@ -1304,14 +1302,14 @@ it('should show indeterminate checkbox when a sub-row of a sub-row is selected',
   expandAll(container);
 
   let checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox input',
+    '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(10);
   // Click row 1.2.1 checkbox
   checkboxes[3].click();
 
   checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox input',
+    '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(10);
   // Row 1
@@ -1370,14 +1368,14 @@ it('should show indeterminate checkbox when sub-row selected after filtering', (
   expandAll(container);
 
   let checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox input',
+    '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(7);
   // Click row 1.2 checkbox
   checkboxes[1].click();
 
   checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox input',
+    '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(7);
   expect(checkboxes[0].indeterminate).toBe(true);
@@ -1435,10 +1433,10 @@ it('should show indeterminate checkbox when clicking on a row itself after filte
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(7);
   // Click row 1
-  fireEvent.click(rows[0]);
+  userEvent.click(rows[0]);
 
   const checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox input',
+    '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(7);
   expect(checkboxes[0].indeterminate).toBe(true);
@@ -1466,7 +1464,7 @@ it('should only select one row even if it has sub-rows when selectSubRows is fal
   expect(rows.length).toBe(3);
 
   let checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox input',
+    '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(3);
   checkboxes[0].click();
@@ -1474,7 +1472,7 @@ it('should only select one row even if it has sub-rows when selectSubRows is fal
   expandAll(container);
 
   checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox input',
+    '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(10);
   Array.from(checkboxes).forEach((checkbox, index) =>
@@ -1504,9 +1502,9 @@ it('should render sub-rows with custom expander', () => {
   let rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
 
-  fireEvent.click(screen.getByText('Expand Row 1'));
-  fireEvent.click(screen.getByText('Expand Row 1.2'));
-  fireEvent.click(screen.getByText('Expand Row 2'));
+  userEvent.click(screen.getByText('Expand Row 1'));
+  userEvent.click(screen.getByText('Expand Row 1.2'));
+  userEvent.click(screen.getByText('Expand Row 2'));
 
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(10);
@@ -1620,7 +1618,7 @@ it('should handle unwanted actions on editable cell', () => {
     mockedData()[1],
   );
 
-  fireEvent.click(editableCells[1]);
+  userEvent.click(editableCells[1]);
   expect(onSelect).not.toHaveBeenCalled();
 });
 
@@ -1640,7 +1638,7 @@ it('should render data in pages', () => {
   expect(rows[9].querySelector('.iui-cell')?.textContent).toEqual('Name10');
 
   const pages = container.querySelectorAll<HTMLButtonElement>(
-    '.iui-paginator .iui-button-group .iui-button',
+    '.iui-paginator .iui-paginator-page-button',
   );
   expect(pages).toHaveLength(10);
   pages[3].click();
@@ -2203,4 +2201,175 @@ it('should not render resizer when resizer is disabled', () => {
 
   const resizer = container.querySelector('.iui-resizer') as HTMLDivElement;
   expect(resizer).toBeFalsy();
+});
+
+it('should render zebra striped table', () => {
+  const { container } = renderComponent({ styleType: 'zebra-rows' });
+
+  expect(
+    container.querySelector('.iui-table-body.iui-zebra-striping'),
+  ).toBeTruthy();
+});
+
+it('should sync body horizontal scroll with header scroll', () => {
+  const { container } = renderComponent();
+
+  const header = container.querySelector('.iui-table-header') as HTMLDivElement;
+  const body = container.querySelector('.iui-table-body') as HTMLDivElement;
+
+  expect(header.scrollLeft).toBe(0);
+  expect(body.scrollLeft).toBe(0);
+
+  fireEvent.scroll(body, {
+    target: { scrollLeft: 100 },
+  });
+
+  expect(header.scrollLeft).toBe(100);
+  expect(body.scrollLeft).toBe(100);
+});
+
+it.each([
+  {
+    testCase: 'dragging Name to View',
+    srcIndex: 0,
+    dstIndex: 2,
+    resultingColumns: ['Description', 'View', 'Name'],
+  },
+  {
+    testCase: 'dragging View to Name',
+    srcIndex: 2,
+    dstIndex: 0,
+    resultingColumns: ['View', 'Name', 'Description'],
+  },
+  {
+    testCase: 'dragging Name to itself and it should not change',
+    srcIndex: 0,
+    dstIndex: 0,
+    resultingColumns: ['Name', 'Description', 'View'],
+  },
+  {
+    testCase: 'dragging Name to Description',
+    srcIndex: 0,
+    dstIndex: 1,
+    resultingColumns: ['Description', 'Name', 'View'],
+  },
+  {
+    testCase: 'dragging View to Description',
+    srcIndex: 2,
+    dstIndex: 1,
+    resultingColumns: ['Name', 'View', 'Description'],
+  },
+])(
+  'should handle column reorder by $testCase',
+  ({ srcIndex, dstIndex, resultingColumns }) => {
+    const onSort = jest.fn();
+    jest.spyOn(HTMLElement.prototype, 'offsetLeft', 'get').mockReturnValue(0);
+    jest
+      .spyOn(HTMLElement.prototype, 'offsetWidth', 'get')
+      .mockReturnValue(100);
+    const { container, rerender } = render(
+      <Table
+        columns={columns()}
+        data={mockedData()}
+        emptyTableContent='Empty table'
+        emptyFilteredTableContent='No results. Clear filter.'
+        enableColumnReordering
+        isSortable
+        onSort={onSort}
+      />,
+    );
+
+    const headerCells = container.querySelectorAll<HTMLDivElement>(
+      '.iui-table-header .iui-cell',
+    );
+    headerCells.forEach((cell) =>
+      expect(cell.getAttribute('draggable')).toBe('true'),
+    );
+
+    const srcColumn = headerCells[srcIndex];
+    const dstColumn = headerCells[dstIndex];
+
+    fireEvent.dragStart(srcColumn);
+    fireEvent.dragEnter(dstColumn);
+    fireEvent.dragOver(dstColumn);
+    // If dragging over itself
+    if (srcIndex === dstIndex) {
+      expect(dstColumn).not.toHaveClass('iui-reorder-column-left');
+      expect(dstColumn).not.toHaveClass('iui-reorder-column-right');
+    } else {
+      expect(dstColumn).toHaveClass(
+        'iui-reorder-column-' + (srcIndex < dstIndex ? 'right' : 'left'),
+      );
+    }
+    fireEvent.drop(dstColumn);
+
+    // Should not trigger sort
+    expect(onSort).not.toHaveBeenCalled();
+
+    rerender(
+      <Table
+        columns={columns()}
+        data={mockedData()}
+        emptyTableContent='Empty table'
+        emptyFilteredTableContent='No results. Clear filter.'
+        enableColumnReordering
+        isSortable
+        onSort={onSort}
+      />,
+    );
+
+    container
+      .querySelectorAll<HTMLDivElement>('.iui-table-header .iui-cell')
+      .forEach((cell, index) =>
+        expect(cell.textContent).toBe(resultingColumns[index]),
+      );
+  },
+);
+
+it('should not have `draggable` attribute on columns with `disableReordering` enabled', () => {
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+          disableReordering: true,
+        },
+      ],
+    },
+  ];
+  const { container } = render(
+    <Table
+      columns={columns}
+      data={mockedData()}
+      emptyTableContent='Empty table'
+      emptyFilteredTableContent='No results. Clear filter.'
+      enableColumnReordering
+      isSelectable
+      subComponent={(row) => (
+        <div>{`Expanded component, name: ${row.original.name}`}</div>
+      )}
+    />,
+  );
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  expect(headerCells[0].getAttribute('draggable')).toBeFalsy(); // Selection column
+  expect(headerCells[1].getAttribute('draggable')).toBeFalsy(); // Expander column
+  expect(headerCells[2].getAttribute('draggable')).toBe('true'); // Name column
+  expect(headerCells[3].getAttribute('draggable')).toBe('true'); // Description column
+  expect(headerCells[4].getAttribute('draggable')).toBeFalsy(); // View column
 });

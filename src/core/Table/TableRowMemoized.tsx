@@ -55,7 +55,7 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
 
   const userRowProps = rowProps?.(row);
   const mergedProps = {
-    ...row.getRowProps({ style: { flex: `0 0 auto` } }),
+    ...row.getRowProps({ style: { flex: `0 0 auto`, minWidth: '100%' } }),
     ...userRowProps,
     ...{
       className: cx(
@@ -146,6 +146,7 @@ export const TableRowMemoized = React.memo(
     prevProp.rowProps === nextProp.rowProps &&
     prevProp.expanderCell === nextProp.expanderCell &&
     prevProp.tableHasSubRows === nextProp.tableHasSubRows &&
+    prevProp.state.columnOrder === nextProp.state.columnOrder &&
     !nextProp.state.columnResizing.isResizingColumn &&
     !nextProp.state.isTableResizing,
 ) as typeof TableRow;

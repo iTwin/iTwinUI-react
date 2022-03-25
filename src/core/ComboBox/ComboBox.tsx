@@ -16,9 +16,12 @@ import {
   CommonProps,
   getFocusableElements,
   getRandomValue,
+  InputContainerProps,
+  mergeRefs,
 } from '../utils';
 import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
 import 'tippy.js/animations/shift-away.css';
+import { StatusMessage } from '../StatusMessage';
 
 export type ComboBoxProps<T> = {
   /**
@@ -29,6 +32,11 @@ export type ComboBoxProps<T> = {
    * Controlled value of ComboBox.
    */
   value?: T;
+  /**
+   * Message shown below the combobox.
+   * Use `StatusMessage` component.
+   */
+  message?: React.ReactNode;
   /**
    * Callback fired when selected value changes.
    */
@@ -53,7 +61,22 @@ export type ComboBoxProps<T> = {
    * @default 'No options found'
    */
   emptyStateMessage?: string;
-} & Omit<CommonProps, 'title'>;
+  /**
+   * A custom item renderer can be specified to control the rendering.
+   * This function should ideally return a customized version of `MenuItem`,
+   * otherwise you will need to make sure to provide styling for the `isFocused` state.
+   */
+  itemRenderer?: (
+    option: SelectOption<T>,
+    states: {
+      isSelected: boolean;
+      isFocused: boolean;
+      id: string;
+      index: number;
+    },
+  ) => JSX.Element;
+} & Pick<InputContainerProps, 'status'> &
+  Omit<CommonProps, 'title'>;
 
 /**
  * ComboBox component that allows typing a value to filter the options in dropdown list.
@@ -77,7 +100,10 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     className,
     inputProps,
     dropdownMenuProps,
+    message,
+    status,
     emptyStateMessage = 'No options found',
+    itemRenderer,
     ...rest
   } = props;
 
@@ -101,25 +127,44 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     [options, id],
   );
 
+  const userOnChange = React.useRef(onChange);
+
   const memoizedItems = React.useMemo(
     () =>
-      options.map(({ label, value, ...rest }, index) => (
-        <MenuItem
-          id={getOptionId(index)}
-          key={getOptionId(index)}
-          value={value}
-          role='option'
-          onClick={(value: T) => {
+      options.map((option, index) => {
+        const { label, value, ...rest } = option;
+        const additionalProps = {
+          value: value,
+          role: 'option',
+          onClick: () => {
             setSelectedValue(value);
-            onChange?.(value);
+            userOnChange.current?.(value);
             setIsOpen(false);
-          }}
-          {...rest}
-        >
-          {label}
-        </MenuItem>
-      )),
-    [options, getOptionId, onChange],
+          },
+        };
+        if (itemRenderer) {
+          return React.cloneElement(
+            itemRenderer(option, {
+              id: getOptionId(index),
+              index,
+              isSelected: false,
+              isFocused: false,
+            }),
+            additionalProps,
+          );
+        }
+        return (
+          <MenuItem
+            id={getOptionId(index)}
+            key={getOptionId(index)}
+            {...additionalProps}
+            {...rest}
+          >
+            {label}
+          </MenuItem>
+        );
+      }),
+    [options, getOptionId, itemRenderer],
   );
 
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -244,7 +289,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
         case 'Enter':
           if (isOpen) {
             setSelectedValue(options[focusedIndex].value);
-            onChange?.(options[focusedIndex].value);
+            userOnChange.current?.(options[focusedIndex].value);
           }
           setIsOpen((open) => !open);
           event.preventDefault();
@@ -265,29 +310,44 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           break;
       }
     },
-    [focusedIndex, isOpen, options, getOptionId, onChange],
+    [focusedIndex, isOpen, options, getOptionId],
   );
 
   const menuItems = React.useMemo(() => {
     if (filteredOptions.length === 0) {
-      return (
-        <MenuExtraContent>
+      return [
+        <MenuExtraContent key={0}>
           <Text isMuted>{emptyStateMessage}</Text>
-        </MenuExtraContent>
-      );
+        </MenuExtraContent>,
+      ];
     }
     return filteredOptions.map((option) => {
       const index = options.findIndex(({ value }) => option.value === value);
       if (index < 0) {
-        return;
+        return <></>;
       }
 
-      if (selectedValue === option.value || focusedIndex === index) {
-        return React.cloneElement(memoizedItems[index], {
-          isSelected: selectedValue === option.value,
-          className: cx({ 'iui-focused': focusedIndex === index }),
-          ref: (el: HTMLElement) =>
-            focusedIndex === index && el?.scrollIntoView(false),
+      const id = getOptionId(index);
+      const isSelected = selectedValue === option.value;
+      const isFocused = focusedIndex === index;
+      const focusScrollRef = (el: HTMLElement) =>
+        isFocused && el?.scrollIntoView({ block: 'nearest' });
+
+      if (isSelected || isFocused) {
+        const item =
+          itemRenderer?.(option, { index, id, isSelected, isFocused }) ??
+          React.cloneElement(memoizedItems[index], { isSelected });
+
+        return React.cloneElement(item, {
+          className: cx({ 'iui-focused': isFocused }, item.props.className),
+          ref: mergeRefs(focusScrollRef, item.props.ref),
+          value: option.value,
+          role: 'option',
+          onClick: () => {
+            setSelectedValue(option.value);
+            userOnChange.current?.(option.value);
+            setIsOpen(false);
+          },
         });
       }
 
@@ -297,95 +357,105 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     filteredOptions,
     emptyStateMessage,
     options,
-    focusedIndex,
+    getOptionId,
     selectedValue,
+    focusedIndex,
+    itemRenderer,
     memoizedItems,
   ]);
 
   return (
     <InputContainer
       className={className}
-      isIconInline={true}
-      icon={React.useMemo(
-        () => (
-          <span
-            ref={toggleButtonRef}
-            className={cx({
-              'iui-actionable': !inputProps?.disabled,
-              'iui-open': isOpen,
-            })}
-            onClick={() => {
-              if (isOpen) {
-                setIsOpen(false);
-              } else {
-                inputRef.current?.focus();
-              }
-            }}
-          >
-            <SvgCaretDownSmall aria-hidden />
-          </span>
-        ),
-        [inputProps?.disabled, isOpen],
-      )}
+      status={status}
+      statusMessage={
+        typeof message === 'string' ? (
+          <StatusMessage status={status}>{message}</StatusMessage>
+        ) : (
+          React.isValidElement(message) &&
+          React.cloneElement(message, { status })
+        )
+      }
       {...rest}
       id={id}
     >
-      <Popover
-        placement='bottom-start'
-        visible={isOpen}
-        onClickOutside={(_, { target }) => {
-          if (!toggleButtonRef.current?.contains(target as Element)) {
-            setIsOpen(false);
+      <div className='iui-input-with-icon'>
+        <Popover
+          placement='bottom-start'
+          visible={isOpen}
+          onClickOutside={(_, { target }) => {
+            if (!toggleButtonRef.current?.contains(target as Element)) {
+              setIsOpen(false);
+            }
+          }}
+          animation='shift-away'
+          duration={200}
+          {...dropdownMenuProps}
+          content={
+            <Menu
+              id={`${id}-list`}
+              className='iui-scroll'
+              style={{
+                minWidth,
+                maxWidth: `min(${minWidth * 2}px, 90vw)`,
+                maxHeight: 300,
+              }}
+              setFocus={false}
+              role='listbox'
+              ref={menuRef}
+            >
+              {menuItems}
+            </Menu>
           }
-        }}
-        animation='shift-away'
-        duration={200}
-        {...dropdownMenuProps}
-        content={
-          <Menu
-            id={`${id}-list`}
-            className='iui-scroll'
-            style={{
-              minWidth,
-              maxWidth: `min(${minWidth * 2}px, 90vw)`,
-              maxHeight: 300,
-            }}
-            setFocus={false}
-            role='listbox'
-            ref={menuRef}
-          >
-            {menuItems}
-          </Menu>
-        }
-        onHide={(instance) => {
-          const selectedIndex = options.findIndex(
-            ({ value }) => value === selectedValue,
-          );
-          setFocusedIndex(selectedIndex);
-          if (selectedIndex > -1) {
-            setInputValue(options[selectedIndex].label); // update input value to be same as selected value
-          }
-          dropdownMenuProps?.onHide?.(instance);
-        }}
-      >
-        <Input
-          ref={inputRef}
-          onKeyDown={onKeyDown}
-          onFocus={() => setIsOpen(true)}
-          onChange={onInput}
-          value={inputValue}
-          aria-activedescendant={
-            isOpen && focusedIndex > -1 ? getOptionId(focusedIndex) : undefined
-          }
-          role='combobox'
-          aria-controls={isOpen ? `${id}-list` : undefined}
-          aria-autocomplete='list'
-          spellCheck={false}
-          autoCapitalize='none'
-          autoCorrect='off'
-          {...inputProps}
-        />
-      </Popover>
+          onHide={(instance) => {
+            const selectedIndex = options.findIndex(
+              ({ value }) => value === selectedValue,
+            );
+            setFocusedIndex(selectedIndex);
+            if (selectedIndex > -1) {
+              setInputValue(options[selectedIndex].label); // update input value to be same as selected value
+            }
+            dropdownMenuProps?.onHide?.(instance);
+          }}
+        >
+          <Input
+            ref={inputRef}
+            onKeyDown={onKeyDown}
+            onFocus={() => setIsOpen(true)}
+            value={inputValue}
+            aria-activedescendant={
+              isOpen && focusedIndex > -1
+                ? getOptionId(focusedIndex)
+                : undefined
+            }
+            role='combobox'
+            aria-controls={isOpen ? `${id}-list` : undefined}
+            aria-autocomplete='list'
+            spellCheck={false}
+            autoCapitalize='none'
+            autoCorrect='off'
+            {...inputProps}
+            onChange={onInput}
+          />
+        </Popover>
+        <span
+          ref={toggleButtonRef}
+          className={cx('iui-end-icon', {
+            'iui-actionable': !inputProps?.disabled,
+            'iui-disabled': inputProps?.disabled,
+            'iui-open': isOpen,
+          })}
+          onClick={() => {
+            if (isOpen) {
+              setIsOpen(false);
+            } else {
+              inputRef.current?.focus();
+            }
+          }}
+        >
+          <SvgCaretDownSmall aria-hidden />
+        </span>
+      </div>
     </InputContainer>
   );
 };

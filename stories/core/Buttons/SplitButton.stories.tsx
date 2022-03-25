@@ -14,14 +14,14 @@ export default {
   argTypes: {
     style: { control: { disable: true } },
     className: { control: { disable: true } },
+    as: { type: { name: 'string', required: false } },
   },
   parameters: {
     creevey: {
-      captureElement: null,
       tests: {
         async open() {
           const button = await this.browser.findElement({
-            css: '.iui-button:last-child',
+            css: '.iui-button-split-menu > *:last-child > .iui-button',
           });
           const closed = await this.takeScreenshot();
 
@@ -31,7 +31,11 @@ export default {
         },
       },
     },
+    docs: {
+      source: { excludeDecorators: true },
+    },
   },
+  decorators: [(Story) => <div style={{ minHeight: 150 }}>{Story()}</div>],
 } as Meta<SplitButtonProps> & CreeveyMeta;
 
 export const Basic: Story<SplitButtonProps> = (args) => {

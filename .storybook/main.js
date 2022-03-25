@@ -29,6 +29,9 @@ module.exports = {
     'creevey',
     '@storybook/addon-a11y',
   ],
+  core: {
+    builder: 'webpack5',
+  },
   webpackFinal: async (config, { configType }) => {
     if (configType === 'PRODUCTION') {
       config.plugins.push(new WebpackFailOnWarningsPlugin());

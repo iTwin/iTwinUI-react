@@ -11,7 +11,9 @@ const assertBaseElement = (inputContainer: HTMLElement) => {
   const label = inputContainer.querySelector('.iui-label') as HTMLElement;
   expect(label).toBeTruthy();
   expect(label.textContent).toEqual('Test label');
-  const select = inputContainer.querySelector('.iui-select') as HTMLElement;
+  const select = inputContainer.querySelector(
+    '.iui-input-with-icon',
+  ) as HTMLElement;
   expect(select).toBeTruthy();
 };
 
@@ -56,7 +58,10 @@ it('should render message', () => {
 it.each(['positive', 'warning', 'negative'] as const)(
   'should render %s status',
   (status) => {
-    const { container } = renderComponent({ status });
+    const { container } = renderComponent({
+      status,
+      message: 'This is a status message',
+    });
 
     const inputContainer = container.querySelector(
       '.iui-input-container',
@@ -66,6 +71,7 @@ it.each(['positive', 'warning', 'negative'] as const)(
       container.querySelector(`.iui-input-container.iui-${status}`),
     ).toBeTruthy();
     expect(container.querySelector('.iui-input-icon')).toBeTruthy();
+    expect(container.querySelector('.iui-message')).toBeTruthy();
   },
 );
 
@@ -120,7 +126,9 @@ it('should render with custom className on select', () => {
     '.iui-input-container',
   ) as HTMLElement;
   assertBaseElement(inputContainer);
-  const select = inputContainer.querySelector('.iui-select') as HTMLElement;
+  const select = inputContainer.querySelector(
+    '.iui-input-with-icon',
+  ) as HTMLElement;
   expect(select).toBeTruthy();
   expect(select.classList).toContain('test-className');
 });
@@ -134,7 +142,9 @@ it('should render with custom style on select', () => {
     '.iui-input-container',
   ) as HTMLElement;
   assertBaseElement(inputContainer);
-  const select = inputContainer.querySelector('.iui-select') as HTMLElement;
+  const select = inputContainer.querySelector(
+    '.iui-input-with-icon',
+  ) as HTMLElement;
   expect(select).toBeTruthy();
   expect(select.style.color).toEqual('red');
 });

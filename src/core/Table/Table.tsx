@@ -20,6 +20,7 @@ import {
   TableInstance,
   useExpanded,
   usePagination,
+  useColumnOrder,
 } from 'react-table';
 import { ProgressRadial } from '../ProgressIndicators';
 import { useTheme, CommonProps, useResizeObserver } from '../utils';
@@ -36,6 +37,7 @@ import {
   useSubRowFiltering,
   useSubRowSelection,
   useResizeColumns,
+  useColumnDragAndDrop,
 } from './hooks';
 import {
   onExpandHandler,
@@ -47,6 +49,7 @@ import {
   onTableResizeEnd,
   onTableResizeStart,
 } from './actionHandlers/resizeHandler';
+import VirtualScroll from '../utils/components/VirtualScroll';
 
 const singleRowSelectedAction = 'singleRowSelected';
 const tableResizeStartAction = 'tableResizeStart';
@@ -108,6 +111,7 @@ export type TableProps<
   isSelectable?: boolean;
   /**
    * Handler for rows selection. Must be memoized.
+   * This is triggered only by user initiated actions (i.e. data change will not call it).
    */
   onSelect?: (
     selectedData: T[] | undefined,
@@ -213,6 +217,25 @@ export type TableProps<
    * @default false
    */
   isResizable?: boolean;
+  /**
+   * Style of the table.
+   * @default 'default'
+   */
+  styleType?: 'default' | 'zebra-rows';
+  /**
+   * Virtualization is used for the scrollable table body.
+   * Height on the table is required for virtualization to work.
+   * @example
+   * <Table enableVirtualization style={{height: 400}} {...} />
+   * @default false
+   * @beta
+   */
+  enableVirtualization?: boolean;
+  /**
+   * Flag whether columns can be reordered.
+   * @default false
+   */
+  enableColumnReordering?: boolean;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -294,6 +317,9 @@ export const Table = <
     paginatorRenderer,
     pageSize = 25,
     isResizable = false,
+    styleType = 'default',
+    enableVirtualization = false,
+    enableColumnReordering = false,
     ...rest
   } = props;
 
@@ -407,6 +433,8 @@ export const Table = <
     useSubRowSelection,
     useExpanderCell(subComponent, expanderCell, isRowDisabled),
     useSelectionCell(isSelectable, isRowDisabled),
+    useColumnOrder,
+    useColumnDragAndDrop(enableColumnReordering),
   );
 
   const {
@@ -526,6 +554,51 @@ export const Table = <
     }
   });
 
+  const headerRef = React.useRef<HTMLDivElement>(null);
+  const bodyRef = React.useRef<HTMLDivElement>(null);
+
+  const getPreparedRow = React.useCallback(
+    (row: Row<T>) => {
+      prepareRow(row);
+      return (
+        <TableRowMemoized
+          row={row}
+          rowProps={rowProps}
+          isLast={row.index === data.length - 1}
+          onRowInViewport={onRowInViewportRef}
+          onBottomReached={onBottomReachedRef}
+          intersectionMargin={intersectionMargin}
+          state={state}
+          key={row.getRowProps().key}
+          onClick={onRowClickHandler}
+          subComponent={subComponent}
+          isDisabled={!!isRowDisabled?.(row.original)}
+          tableHasSubRows={hasAnySubRows}
+          tableInstance={instance}
+          expanderCell={expanderCell}
+        />
+      );
+    },
+    [
+      data.length,
+      expanderCell,
+      hasAnySubRows,
+      instance,
+      intersectionMargin,
+      isRowDisabled,
+      onRowClickHandler,
+      prepareRow,
+      rowProps,
+      state,
+      subComponent,
+    ],
+  );
+
+  const virtualizedItemRenderer = React.useCallback(
+    (index: number) => getPreparedRow(page[index]),
+    [getPreparedRow, page],
+  );
+
   return (
     <>
       <div
@@ -546,7 +619,7 @@ export const Table = <
         })}
         {...ariaDataAttributes}
       >
-        <div className='iui-table-header'>
+        <div className='iui-table-header' ref={headerRef}>
           {headerGroups.slice(1).map((headerGroup: HeaderGroup<T>) => {
             const headerGroupProps = headerGroup.getHeaderGroupProps({
               className: 'iui-row',
@@ -554,18 +627,8 @@ export const Table = <
             return (
               <div {...headerGroupProps} key={headerGroupProps.key}>
                 {headerGroup.headers.map((column, index) => {
-                  const {
-                    onClick: onSortClick,
-                    ...sortByProps
-                  } = column.getSortByToggleProps() as {
-                    onClick:
-                      | React.MouseEventHandler<HTMLDivElement>
-                      | undefined;
-                    style: React.CSSProperties;
-                    title: string;
-                  };
                   const columnProps = column.getHeaderProps({
-                    ...sortByProps,
+                    ...column.getSortByToggleProps(),
                     className: cx(
                       'iui-cell',
                       { 'iui-actionable': column.canSort },
@@ -577,6 +640,7 @@ export const Table = <
                   return (
                     <div
                       {...columnProps}
+                      {...column.getDragAndDropProps()}
                       key={columnProps.key}
                       title={undefined}
                       ref={(el) => {
@@ -585,7 +649,6 @@ export const Table = <
                           column.resizeWidth = el.getBoundingClientRect().width;
                         }
                       }}
-                      onMouseDown={onSortClick}
                     >
                       {column.render('Header')}
                       {!isLoading && (data.length != 0 || areFiltersSet) && (
@@ -619,6 +682,9 @@ export const Table = <
                             <div className='iui-resizer-bar' />
                           </div>
                         )}
+                      {enableColumnReordering && !column.disableReordering && (
+                        <div className='iui-reorder-bar' />
+                      )}
                     </div>
                   );
                 })}
@@ -628,33 +694,33 @@ export const Table = <
         </div>
         <div
           {...getTableBodyProps({
-            className: 'iui-table-body',
+            className: cx('iui-table-body', {
+              'iui-zebra-striping': styleType === 'zebra-rows',
+            }),
+            style: { outline: 0 },
           })}
+          ref={bodyRef}
+          onScroll={() => {
+            if (headerRef.current && bodyRef.current) {
+              headerRef.current.scrollLeft = bodyRef.current.scrollLeft;
+            }
+          }}
+          tabIndex={-1}
         >
-          {data.length !== 0 &&
-            page.map((row: Row<T>) => {
-              prepareRow(row);
-              return (
-                <TableRowMemoized
-                  row={row}
-                  rowProps={rowProps}
-                  isLast={row.index === data.length - 1}
-                  onRowInViewport={onRowInViewportRef}
-                  onBottomReached={onBottomReachedRef}
-                  intersectionMargin={intersectionMargin}
-                  state={state}
-                  key={row.getRowProps().key}
-                  onClick={onRowClickHandler}
-                  subComponent={subComponent}
-                  isDisabled={!!isRowDisabled?.(row.original)}
-                  tableHasSubRows={hasAnySubRows}
-                  tableInstance={instance}
-                  expanderCell={expanderCell}
+          {data.length !== 0 && (
+            <>
+              {enableVirtualization ? (
+                <VirtualScroll
+                  itemsLength={page.length}
+                  itemRenderer={virtualizedItemRenderer}
                 />
-              );
-            })}
+              ) : (
+                page.map((row: Row<T>) => getPreparedRow(row))
+              )}
+            </>
+          )}
           {isLoading && data.length === 0 && (
-            <div className={'iui-table-empty'}>
+            <div className='iui-table-empty'>
               <ProgressRadial indeterminate={true} />
             </div>
           )}
@@ -670,14 +736,14 @@ export const Table = <
             </div>
           )}
           {!isLoading && data.length === 0 && !areFiltersSet && (
-            <div className={'iui-table-empty'}>
+            <div className='iui-table-empty'>
               <div>{emptyTableContent}</div>
             </div>
           )}
           {!isLoading &&
             (data.length === 0 || filteredFlatRows.length === 0) &&
             areFiltersSet && (
-              <div className={'iui-table-empty'}>
+              <div className='iui-table-empty'>
                 <div>{emptyFilteredTableContent}</div>
               </div>
             )}

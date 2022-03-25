@@ -82,7 +82,16 @@ export default {
     manualExpandedKey: { table: { disable: true } },
   },
   parameters: {
-    creevey: { skip: { stories: ['Lazy Loading', 'Row In Viewport'] } },
+    creevey: {
+      skip: {
+        stories: [
+          'Lazy Loading',
+          'Row In Viewport',
+          'Virtualized',
+          'Virtualized Sub Rows',
+        ],
+      },
+    },
   },
 } as Meta<TableProps> & CreeveyMeta;
 
@@ -847,11 +856,13 @@ export const LazyLoading: Story<Partial<TableProps>> = (args) => {
 
   return (
     <Table
+      enableVirtualization
       columns={columns}
       emptyTableContent='No data.'
       onBottomReached={onBottomReached}
       isLoading={isLoading}
       {...args}
+      style={{ height: 440, maxHeight: '90vh' }}
       data={data}
     />
   );
@@ -1280,10 +1291,30 @@ export const Full: Story<Partial<TableProps>> = (args) => {
             maxWidth: 200,
             Filter: tableFilters.TextFilter(),
           },
+          {
+            id: 'click-me',
+            Header: 'Click',
+            width: 100,
+            // Manually handling disabled state in custom cells
+            Cell: (props: CellProps<{ name: string; description: string }>) => (
+              <>
+                {isRowDisabled(props.row.original) ? (
+                  <>Click me!</>
+                ) : (
+                  <a
+                    className='iui-anchor'
+                    onClick={action(props.row.original.name)}
+                  >
+                    Click me!
+                  </a>
+                )}
+              </>
+            ),
+          },
         ],
       },
     ],
-    [],
+    [isRowDisabled],
   );
 
   const data = useMemo(
@@ -1336,6 +1367,7 @@ export const Full: Story<Partial<TableProps>> = (args) => {
         isSelectable
         isSortable
         isResizable
+        enableColumnReordering
         {...args}
       />
       <Tooltip
@@ -1356,6 +1388,7 @@ Full.args = {
   isSelectable: true,
   isSortable: true,
   isResizable: true,
+  enableColumnReordering: true,
 };
 
 export const Condensed: Story<Partial<TableProps>> = Basic.bind({});
@@ -1814,4 +1847,656 @@ ResizableColumns.args = {
       endDate: new Date('Jun 3, 2021'),
     },
   ],
+};
+
+export const ZebraStripedRows: Story<Partial<TableProps>> = (args) => {
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+            Filter: tableFilters.TextFilter(),
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+            Filter: tableFilters.TextFilter(),
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  type TableStoryDataType = {
+    name: string;
+    description: string;
+    subRows: TableStoryDataType[];
+  };
+
+  const generateItem = useCallback(
+    (index: number, parentRow = '', depth = 0): TableStoryDataType => {
+      const keyValue = parentRow ? `${parentRow}.${index}` : `${index}`;
+      return {
+        name: `Name ${keyValue}`,
+        description: `Description ${keyValue}`,
+        subRows:
+          depth < 2
+            ? Array(Math.round(index % 5))
+                .fill(null)
+                .map((_, index) => generateItem(index, keyValue, depth + 1))
+            : [],
+      };
+    },
+    [],
+  );
+
+  const data = useMemo(
+    () =>
+      Array(20)
+        .fill(null)
+        .map((_, index) => generateItem(index)),
+    [generateItem],
+  );
+
+  return (
+    <>
+      <Table
+        emptyTableContent='No data.'
+        isSelectable
+        isSortable
+        styleType='zebra-rows'
+        {...args}
+        columns={columns}
+        data={data}
+        style={{ height: '100%' }}
+      />
+    </>
+  );
+};
+
+ZebraStripedRows.args = {
+  isSelectable: true,
+  isSortable: true,
+  styleType: 'zebra-rows',
+};
+
+export const HorizontalScroll: Story<Partial<TableProps>> = (args) => {
+  const data = useMemo(
+    () => [
+      {
+        product: 'Product 1',
+        price: 5,
+        quantity: 500,
+        rating: '4/5',
+        deliveryTime: 5,
+      },
+      {
+        product: 'Product 2',
+        price: 12,
+        quantity: 1200,
+        rating: '1/5',
+        deliveryTime: 25,
+      },
+      {
+        product: 'Product 3',
+        price: 2.99,
+        quantity: 1500,
+        rating: '3/5',
+        deliveryTime: 7,
+      },
+      {
+        product: 'Product 4',
+        price: 20,
+        quantity: 50,
+        rating: '4/5',
+        deliveryTime: 2,
+      },
+      {
+        product: 'Product 5',
+        price: 1.99,
+        quantity: 700,
+        rating: '5/5',
+        deliveryTime: 1,
+      },
+      {
+        product: 'Product 6',
+        price: 499,
+        quantity: 30,
+        rating: '5/5',
+        deliveryTime: 20,
+      },
+      {
+        product: 'Product 7',
+        price: 13.99,
+        quantity: 130,
+        rating: '1/5',
+        deliveryTime: 30,
+      },
+      {
+        product: 'Product 8',
+        price: 5.99,
+        quantity: 500,
+        rating: '4/5',
+        deliveryTime: 5,
+      },
+      {
+        product: 'Product 9',
+        price: 12,
+        quantity: 1200,
+        rating: '1/5',
+        deliveryTime: 25,
+      },
+      {
+        product: 'Product 10',
+        price: 2.99,
+        quantity: 200,
+        rating: '3/5',
+        deliveryTime: 17,
+      },
+    ],
+    [],
+  );
+
+  const columns = useMemo(
+    (): Column[] => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'product',
+            Header: 'Product',
+            accessor: 'product',
+            minWidth: 400,
+          },
+          {
+            id: 'price',
+            Header: 'Price',
+            accessor: 'price',
+            width: 400,
+            Cell: (props: CellProps<typeof data[0]>) => {
+              return `$${props.value}`;
+            },
+          },
+          {
+            id: 'quantity',
+            Header: 'Quantity',
+            accessor: 'quantity',
+            width: 400,
+          },
+          {
+            id: 'rating',
+            Header: 'Rating',
+            accessor: 'rating',
+            width: 400,
+          },
+          {
+            id: 'deliveryTime',
+            Header: 'Delivery Time',
+            accessor: 'deliveryTime',
+            width: 400,
+            Cell: (props: CellProps<typeof data[0]>) => {
+              return `${props.value} day(s)`;
+            },
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      emptyTableContent='No data.'
+      style={{ height: '100%' }}
+      {...args}
+    />
+  );
+};
+
+HorizontalScroll.args = {
+  data: [
+    {
+      product: 'Product 1',
+      price: 5,
+      quantity: 500,
+      rating: '4/5',
+      deliveryTime: 5,
+    },
+    {
+      product: 'Product 2',
+      price: 12,
+      quantity: 1200,
+      rating: '1/5',
+      deliveryTime: 25,
+    },
+    {
+      product: 'Product 3',
+      price: 2.99,
+      quantity: 1500,
+      rating: '3/5',
+      deliveryTime: 7,
+    },
+    {
+      product: 'Product 4',
+      price: 20,
+      quantity: 50,
+      rating: '4/5',
+      deliveryTime: 2,
+    },
+    {
+      product: 'Product 5',
+      price: 1.99,
+      quantity: 700,
+      rating: '5/5',
+      deliveryTime: 1,
+    },
+    {
+      product: 'Product 6',
+      price: 499,
+      quantity: 30,
+      rating: '5/5',
+      deliveryTime: 20,
+    },
+    {
+      product: 'Product 7',
+      price: 13.99,
+      quantity: 130,
+      rating: '1/5',
+      deliveryTime: 30,
+    },
+    {
+      product: 'Product 8',
+      price: 5.99,
+      quantity: 500,
+      rating: '4/5',
+      deliveryTime: 5,
+    },
+    {
+      product: 'Product 9',
+      price: 12,
+      quantity: 1200,
+      rating: '1/5',
+      deliveryTime: 25,
+    },
+    {
+      product: 'Product 10',
+      price: 2.99,
+      quantity: 200,
+      rating: '3/5',
+      deliveryTime: 17,
+    },
+  ],
+};
+
+HorizontalScroll.decorators = [
+  (Story) => (
+    <div
+      style={{
+        height: '375px',
+        maxHeight: '90vh',
+        maxWidth: '1000px',
+      }}
+    >
+      <Story />
+    </div>
+  ),
+];
+
+export const Virtualized: Story<Partial<TableProps>> = (args) => {
+  const onClickHandler = (
+    props: CellProps<{ name: string; description: string }>,
+  ) => action(props.row.original.name)();
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+          },
+          {
+            id: 'click-me',
+            Header: 'Click',
+            width: 100,
+            Cell: (props: CellProps<{ name: string; description: string }>) => {
+              const onClick = () => onClickHandler(props);
+              return (
+                <a className='iui-anchor' onClick={onClick}>
+                  Click me!
+                </a>
+              );
+            },
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const data = useMemo(() => {
+    const size = 100000;
+    const arr = new Array(size);
+    for (let i = 0; i < size; ++i) {
+      arr[i] = {
+        name: `Name${i}`,
+        description: `Description${i}`,
+      };
+    }
+    return arr;
+  }, []);
+
+  return (
+    <Table
+      enableVirtualization
+      columns={columns}
+      emptyTableContent='No data.'
+      {...args}
+      style={{ maxHeight: '90vh' }}
+      data={data}
+    />
+  );
+};
+
+Virtualized.argTypes = {
+  isLoading: { control: { disable: true } },
+  data: { control: { disable: true } },
+};
+
+export const VirtualizedSubRows: Story<Partial<TableProps>> = (args) => {
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+            Filter: tableFilters.TextFilter(),
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+            Filter: tableFilters.TextFilter(),
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  type TableStoryDataType = {
+    name: string;
+    description: string;
+    subRows: TableStoryDataType[];
+  };
+
+  const generateItem = useCallback(
+    (index: number, parentRow = '', depth = 0): TableStoryDataType => {
+      const keyValue = parentRow ? `${parentRow}.${index}` : `${index}`;
+      return {
+        name: `Name ${keyValue}`,
+        description: `Description ${keyValue}`,
+        subRows:
+          depth < 2
+            ? Array(Math.round(index % 5))
+                .fill(null)
+                .map((_, index) => generateItem(index, keyValue, depth + 1))
+            : [],
+      };
+    },
+    [],
+  );
+
+  const data = useMemo(
+    () =>
+      Array(10000)
+        .fill(null)
+        .map((_, index) => generateItem(index)),
+    [generateItem],
+  );
+
+  return (
+    <Table
+      enableVirtualization
+      columns={columns}
+      emptyTableContent='No data.'
+      {...args}
+      style={{ maxHeight: '90vh' }}
+      data={data}
+    />
+  );
+};
+
+VirtualizedSubRows.argTypes = {
+  isLoading: { control: { disable: true } },
+  data: { control: { disable: true } },
+};
+
+export const DraggableColumns: Story<Partial<TableProps>> = (args) => {
+  const data = useMemo(
+    () => [
+      {
+        product: 'Product 1',
+        price: 5,
+        quantity: 500,
+        rating: '4/5',
+        deliveryTime: 5,
+      },
+      {
+        product: 'Product 2',
+        price: 12,
+        quantity: 1200,
+        rating: '1/5',
+        deliveryTime: 25,
+      },
+      {
+        product: 'Product 3',
+        price: 2.99,
+        quantity: 1500,
+        rating: '3/5',
+        deliveryTime: 7,
+      },
+      {
+        product: 'Product 4',
+        price: 20,
+        quantity: 50,
+        rating: '4/5',
+        deliveryTime: 2,
+      },
+      {
+        product: 'Product 5',
+        price: 1.99,
+        quantity: 700,
+        rating: '5/5',
+        deliveryTime: 1,
+      },
+      {
+        product: 'Product 6',
+        price: 499,
+        quantity: 30,
+        rating: '5/5',
+        deliveryTime: 20,
+      },
+      {
+        product: 'Product 7',
+        price: 13.99,
+        quantity: 130,
+        rating: '1/5',
+        deliveryTime: 30,
+      },
+      {
+        product: 'Product 8',
+        price: 5.99,
+        quantity: 500,
+        rating: '4/5',
+        deliveryTime: 5,
+      },
+      {
+        product: 'Product 9',
+        price: 12,
+        quantity: 1200,
+        rating: '1/5',
+        deliveryTime: 25,
+      },
+      {
+        product: 'Product 10',
+        price: 2.99,
+        quantity: 200,
+        rating: '3/5',
+        deliveryTime: 17,
+      },
+    ],
+    [],
+  );
+
+  const columns = useMemo(
+    (): Column[] => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'product',
+            Header: 'Product',
+            accessor: 'product',
+            disableReordering: true,
+          },
+          {
+            id: 'price',
+            Header: 'Price',
+            accessor: 'price',
+            Cell: (props: CellProps<typeof data[0]>) => {
+              return `$${props.value}`;
+            },
+          },
+          {
+            id: 'quantity',
+            Header: 'Quantity',
+            accessor: 'quantity',
+          },
+          {
+            id: 'rating',
+            Header: 'Rating',
+            accessor: 'rating',
+          },
+          {
+            id: 'deliveryTime',
+            Header: 'Delivery Time',
+            accessor: 'deliveryTime',
+            Cell: (props: CellProps<typeof data[0]>) => {
+              return `${props.value} day(s)`;
+            },
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  return (
+    <Table
+      enableColumnReordering
+      columns={columns}
+      data={data}
+      emptyTableContent='No data.'
+      isSelectable
+      {...args}
+    />
+  );
+};
+
+DraggableColumns.args = {
+  data: [
+    {
+      product: 'Product 1',
+      price: 5,
+      quantity: 500,
+      rating: '4/5',
+      deliveryTime: 5,
+    },
+    {
+      product: 'Product 2',
+      price: 12,
+      quantity: 1200,
+      rating: '1/5',
+      deliveryTime: 25,
+    },
+    {
+      product: 'Product 3',
+      price: 2.99,
+      quantity: 1500,
+      rating: '3/5',
+      deliveryTime: 7,
+    },
+    {
+      product: 'Product 4',
+      price: 20,
+      quantity: 50,
+      rating: '4/5',
+      deliveryTime: 2,
+    },
+    {
+      product: 'Product 5',
+      price: 1.99,
+      quantity: 700,
+      rating: '5/5',
+      deliveryTime: 1,
+    },
+    {
+      product: 'Product 6',
+      price: 499,
+      quantity: 30,
+      rating: '5/5',
+      deliveryTime: 20,
+    },
+    {
+      product: 'Product 7',
+      price: 13.99,
+      quantity: 130,
+      rating: '1/5',
+      deliveryTime: 30,
+    },
+    {
+      product: 'Product 8',
+      price: 5.99,
+      quantity: 500,
+      rating: '4/5',
+      deliveryTime: 5,
+    },
+    {
+      product: 'Product 9',
+      price: 12,
+      quantity: 1200,
+      rating: '1/5',
+      deliveryTime: 25,
+    },
+    {
+      product: 'Product 10',
+      price: 2.99,
+      quantity: 200,
+      rating: '3/5',
+      deliveryTime: 17,
+    },
+  ],
+  enableColumnReordering: true,
+  isSelectable: true,
 };

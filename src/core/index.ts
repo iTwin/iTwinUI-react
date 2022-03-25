@@ -166,6 +166,9 @@ export type {
 export { Slider } from './Slider';
 export type { SliderProps } from './Slider';
 
+export { StatusMessage } from './StatusMessage';
+export type { StatusMessageProps } from './StatusMessage';
+
 export {
   Table,
   tableFilters,
@@ -210,7 +213,17 @@ export type { ToggleSwitchProps } from './ToggleSwitch';
 export { Tooltip } from './Tooltip';
 export type { TooltipProps } from './Tooltip';
 
+export { Tree, TreeNode, TreeNodeExpander } from './Tree';
+export type {
+  TreeProps,
+  TreeNodeProps,
+  TreeNodeExpanderProps,
+  NodeData,
+  NodeRenderProps,
+} from './Tree';
+
 export {
+  Anchor,
   Body,
   Headline,
   Leading,

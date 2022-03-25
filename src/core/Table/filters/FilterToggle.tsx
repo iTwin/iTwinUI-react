@@ -56,9 +56,10 @@ export const FilterToggle = <T extends Record<string, unknown>>(
             styleType='borderless'
             isActive={isVisible || column.filterValue}
             className={cx('iui-filter-button', className)}
-            onClick={(e: React.MouseEvent) => {
-              e.stopPropagation();
+            onClick={(e) => {
               setIsVisible((v) => !v);
+              // Prevents from triggering sort
+              e.stopPropagation();
             }}
             {...rest}
           >
