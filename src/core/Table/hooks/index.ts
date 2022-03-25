@@ -7,3 +7,4 @@ export { useSelectionCell } from './useSelectionCell';
 export { useSubRowFiltering } from './useSubRowFiltering';
 export { useSubRowSelection } from './useSubRowSelection';
 export { useResizeColumns } from './useResizeColumns';
+export { useColumnDragAndDrop } from './useColumnDragAndDrop';

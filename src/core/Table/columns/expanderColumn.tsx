@@ -19,6 +19,7 @@ export const ExpanderColumn = <T extends Record<string, unknown>>(
     id: EXPANDER_CELL_ID,
     disableResizing: true,
     disableGroupBy: true,
+    disableReordering: true,
     minWidth: 48,
     width: 48,
     maxWidth: 48,
