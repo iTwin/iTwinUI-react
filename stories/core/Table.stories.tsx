@@ -27,12 +27,13 @@ import {
   EditableCell,
   TablePaginator,
   TablePaginatorRendererProps,
+  SelectionColumn,
+  ExpanderColumn,
 } from '../../src/core';
 import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
 import { action } from '@storybook/addon-actions';
 import { CreeveyMeta, CreeveyStoryParams } from 'creevey';
-import { SelectionColumn, ExpanderColumn } from '../../src/core/Table/columns';
 
 export default {
   title: 'Core/Table',
@@ -1984,7 +1985,7 @@ export const HorizontalScroll: Story<Partial<TableProps>> = (args) => {
   );
 
   const columns = useMemo(
-    (): Column[] => [
+    (): Column<typeof data[number]>[] => [
       {
         Header: 'Table',
         columns: [
@@ -2271,7 +2272,7 @@ VirtualizedSubRows.argTypes = {
   data: { control: { disable: true } },
 };
 
-export const CustomColumns: Story<Partial<TableProps>> = (args) => {
+export const CustomizedColumns: Story<Partial<TableProps>> = (args) => {
   const onExpand = useCallback(
     (rows, state) =>
       action(
@@ -2282,14 +2283,26 @@ export const CustomColumns: Story<Partial<TableProps>> = (args) => {
     [],
   );
 
-  const isRowDisabled = useCallback(
-    (rowData: { name: string; description: string }) => {
-      return rowData.name === 'Name2';
-    },
+  const data = useMemo(
+    () => [
+      { name: 'Name1', description: 'Description1' },
+      { name: 'Name2', description: 'Description2' },
+      { name: 'Name3', description: 'Description3' },
+    ],
     [],
   );
 
-  const expandedSubComponent = useCallback(
+  const isCheckboxDisabled = useCallback((rowData: typeof data[number]) => {
+    return rowData.name === 'Name1';
+  }, []);
+  const isExpanderDisabled = useCallback((rowData: typeof data[number]) => {
+    return rowData.name === 'Name2';
+  }, []);
+  const isRowDisabled = useCallback((rowData: typeof data[number]) => {
+    return rowData.name === 'Name3';
+  }, []);
+
+  const subComponent = useCallback(
     (row: Row) => (
       <div style={{ padding: 16 }}>
         <Leading>Extra information</Leading>
@@ -2302,18 +2315,18 @@ export const CustomColumns: Story<Partial<TableProps>> = (args) => {
   );
 
   const columns = useMemo(
-    (): Column<{ name: string; description: string }>[] => [
+    (): Column<typeof data[number]>[] => [
       {
         Header: 'Table',
         columns: [
-          SelectionColumn(),
-          ExpanderColumn(expandedSubComponent, isRowDisabled),
+          SelectionColumn(isCheckboxDisabled),
+          ExpanderColumn(subComponent, isExpanderDisabled),
           {
             id: 'name',
             Header: 'Name',
             accessor: 'name',
             cellRenderer: (props) => (
-              <DefaultCell {...props} isDisabled={isRowDisabled} />
+              <DefaultCell {...props} disabled={isRowDisabled} />
             ),
           },
           {
@@ -2325,16 +2338,7 @@ export const CustomColumns: Story<Partial<TableProps>> = (args) => {
         ],
       },
     ],
-    [expandedSubComponent, isRowDisabled],
-  );
-
-  const data = useMemo(
-    () => [
-      { name: 'Name1', description: 'Description1' },
-      { name: 'Name2', description: 'Description2' },
-      { name: 'Name3', description: 'Description3' },
-    ],
-    [],
+    [isCheckboxDisabled, subComponent, isExpanderDisabled, isRowDisabled],
   );
 
   return (
@@ -2342,7 +2346,7 @@ export const CustomColumns: Story<Partial<TableProps>> = (args) => {
       columns={columns}
       data={data}
       emptyTableContent='No data.'
-      subComponent={expandedSubComponent}
+      subComponent={subComponent}
       onExpand={onExpand}
       isSelectable
       {...args}
@@ -2350,6 +2354,6 @@ export const CustomColumns: Story<Partial<TableProps>> = (args) => {
   );
 };
 
-CustomColumns.args = {
+CustomizedColumns.args = {
   isSelectable: true,
 };

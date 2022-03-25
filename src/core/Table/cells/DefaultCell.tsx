@@ -7,7 +7,7 @@ import { CellRendererProps } from 'react-table';
 import cx from 'classnames';
 
 export type DefaultCellProps<T extends Record<string, unknown>> = {
-  isDisabled?: (rowData: T) => boolean;
+  disabled?: (rowData: T) => boolean;
 } & CellRendererProps<T> &
   React.ComponentPropsWithoutRef<'div'>;
 
@@ -35,15 +35,15 @@ export const DefaultCell = <T extends Record<string, unknown>>(
     },
     children,
     cellProps,
-    isDisabled: isDisabledFn,
+    disabled: disabledFn,
     className,
     style,
     ...rest
   } = props;
 
-  const isDisabled = isDisabledFn?.(cellProps.row.original);
+  const disabled = disabledFn?.(cellProps.row.original);
   // Temporary until CSS is ready
-  const disabledStyle = isDisabled
+  const disabledStyle = disabled
     ? {
         fontStyle: 'italic',
         cursor: 'not-allowed',
@@ -56,7 +56,7 @@ export const DefaultCell = <T extends Record<string, unknown>>(
       {...cellElementProps}
       {...rest}
       className={cx(cellElementClassName, className, {
-        'iui-disabled': isDisabled,
+        'iui-disabled': disabled,
       })}
       style={{ ...disabledStyle, ...cellElementStyle, ...style }}
     >

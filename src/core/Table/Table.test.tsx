@@ -15,11 +15,12 @@ import * as IntersectionHooks from '../utils/hooks/useIntersection';
 import { tableFilters } from './filters';
 import { CellProps, Column, Row } from 'react-table';
 import { SvgChevronRight } from '@itwin/itwinui-icons-react';
-import { EditableCell } from './cells';
+import { DefaultCell, EditableCell } from './cells';
 import { TablePaginator } from './TablePaginator';
 import * as UseOverflow from '../utils/hooks/useOverflow';
 import * as UseResizeObserver from '../utils/hooks/useResizeObserver';
 import userEvent from '@testing-library/user-event';
+import { SelectionColumn, ExpanderColumn } from './columns';
 
 const intersectionCallbacks = new Map<Element, () => void>();
 jest
@@ -2226,4 +2227,128 @@ it('should sync body horizontal scroll with header scroll', () => {
 
   expect(header.scrollLeft).toBe(100);
   expect(body.scrollLeft).toBe(100);
+});
+
+it('should add selection column manually', () => {
+  const onSelect = jest.fn();
+  const isRowDisabled = (rowData: TestDataType) => rowData.name === 'Name2';
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Table',
+      columns: [
+        SelectionColumn(isRowDisabled),
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    onSelect,
+    isSelectable: true,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  const checkboxes = container.querySelectorAll<HTMLInputElement>(
+    '.iui-table-body .iui-checkbox',
+  );
+  expect(checkboxes.length).toBe(3);
+  expect(checkboxes[0].disabled).toBe(false);
+  expect(checkboxes[1].disabled).toBe(true);
+  expect(checkboxes[2].disabled).toBe(false);
+  fireEvent.click(checkboxes[1]);
+  expect(onSelect).toHaveBeenCalledWith(
+    [{ name: 'Name2', description: 'Description2' }],
+    expect.any(Object),
+  );
+});
+
+it('should add expander column manually', () => {
+  const onExpand = jest.fn();
+  const subComponent = (row: Row<TestDataType>) => (
+    <div>{`Expanded component, name: ${row.original.name}`}</div>
+  );
+  const isRowDisabled = (rowData: TestDataType) => rowData.name === 'Name2';
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Table',
+      columns: [
+        ExpanderColumn(subComponent, isRowDisabled),
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    subComponent,
+    onExpand,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  const expanders = container.querySelectorAll<HTMLButtonElement>(
+    '.iui-row-expander',
+  );
+  expect(expanders.length).toBe(3);
+  expect(expanders[0].disabled).toBe(false);
+  expect(expanders[1].disabled).toBe(true);
+  expect(expanders[2].disabled).toBe(false);
+  fireEvent.click(expanders[2]);
+  expect(onExpand).toHaveBeenCalledWith(
+    [{ name: 'Name3', description: 'Description3' }],
+    expect.any(Object),
+  );
+});
+
+it('should add disabled column', () => {
+  const isRowDisabled = (rowData: TestDataType) => rowData.name === 'Name2';
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Table',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          cellRenderer: (props) => (
+            <DefaultCell {...props} disabled={isRowDisabled} />
+          ),
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+  });
+
+  const disabledCell = container.querySelector(
+    '.iui-cell.iui-disabled',
+  ) as HTMLElement;
+  expect(disabledCell).toBeTruthy();
+  expect(disabledCell.textContent).toBe('Name2');
 });

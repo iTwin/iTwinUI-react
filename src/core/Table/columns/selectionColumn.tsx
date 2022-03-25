@@ -9,6 +9,7 @@ import { Checkbox } from '../../Checkbox';
 export const SELECTION_CELL_ID = 'iui-table-checkbox-selector';
 
 export const SelectionColumn = <T extends Record<string, unknown>>(
+  /** Function that returns whether row checkbox should be disabled. */
   isDisabled?: (rowData: T) => boolean,
 ) => {
   return {

@@ -176,6 +176,8 @@ export {
   DefaultCell,
   EditableCell,
   TablePaginator,
+  ExpanderColumn,
+  SelectionColumn,
 } from './Table';
 export type {
   TableProps,
