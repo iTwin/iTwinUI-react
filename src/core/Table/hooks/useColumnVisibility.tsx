@@ -39,12 +39,15 @@ export const useColumnVisibility = <T extends Record<string, unknown>>(
               return (
                 <MenuItem
                   key={column.id}
-                  {...column.getToggleHiddenProps()}
                   icon={
                     <Checkbox
                       id={`iui-column-${column.id}`}
                       checked={checked}
                       disabled={column.disableToggleVisibility}
+                      onChange={(e) => {
+                        onChange({ target: { checked: !checked } });
+                        e.stopPropagation();
+                      }}
                     />
                   }
                   onClick={() => onChange({ target: { checked: !checked } })}
