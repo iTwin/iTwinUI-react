@@ -44,10 +44,8 @@ export const useColumnVisibility = <T extends Record<string, unknown>>(
                       id={`iui-column-${column.id}`}
                       checked={checked}
                       disabled={column.disableToggleVisibility}
-                      onChange={(e) => {
-                        onChange({ target: { checked: !checked } });
-                        e.stopPropagation();
-                      }}
+                      onClick={(e) => e.stopPropagation()}
+                      onChange={onChange}
                     />
                   }
                   onClick={() => onChange({ target: { checked: !checked } })}

@@ -2587,6 +2587,22 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
         startDate: new Date('May 3, 2021'),
         endDate: new Date('Jun 3, 2021'),
       },
+      {
+        index: 4,
+        name: 'Name4',
+        description: 'Description4',
+        id: '444',
+        startDate: new Date('May 4, 2021'),
+        endDate: new Date('Jun 4, 2021'),
+      },
+      {
+        index: 5,
+        name: 'Name5',
+        description: 'Description5',
+        id: '555',
+        startDate: new Date('May 5, 2021'),
+        endDate: new Date('Jun 5, 2021'),
+      },
     ],
     [],
   );
