@@ -27,6 +27,11 @@ export type ButtonGroupProps = {
    * @default 'end'
    */
   overflowPlacement?: 'start' | 'end';
+  /**
+   * Should the buttons be placed in a horizontal or vertical layout?
+   * @default 'horizontal'
+   */
+  orientation?: 'horizontal' | 'vertical';
 } & React.ComponentPropsWithRef<'div'>;
 
 /**
@@ -62,9 +67,9 @@ export const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
     const {
       children,
       className,
-      style,
       overflowButton,
       overflowPlacement = 'end',
+      orientation = 'horizontal',
       ...rest
     } = props;
 
@@ -75,13 +80,23 @@ export const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
 
     useTheme();
 
-    const [overflowRef, visibleCount] = useOverflow(items, !overflowButton);
+    const [overflowRef, visibleCount] = useOverflow(
+      items,
+      !overflowButton,
+      orientation,
+    );
     const refs = useMergedRefs(overflowRef, ref);
 
     return (
       <div
-        className={cx('iui-button-group', className)}
-        style={{ ...(!!overflowButton && { width: '100%' }), ...style }}
+        className={cx(
+          {
+            'iui-button-group': orientation === 'horizontal',
+            'iui-button-group-vertical': orientation === 'vertical',
+          },
+          className,
+        )}
+        aria-orientation={orientation}
         ref={refs}
         {...rest}
       >

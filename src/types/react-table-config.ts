@@ -129,6 +129,7 @@ declare module 'react-table' {
       isResizingColumn?: string;
     };
     isTableResizing?: boolean;
+    columnReorderStartIndex: number;
   }
 
   export interface ColumnInterface<D extends object = {}>
@@ -174,6 +175,11 @@ declare module 'react-table' {
      * }
      */
     cellRenderer?: (props: CellRendererProps<D>) => React.ReactNode;
+    /**
+     * If true, column can't be reordered.
+     * @default false
+     */
+    disableReordering?: boolean;
   }
 
   export interface ColumnInstance<D extends object = {}>
@@ -184,6 +190,7 @@ declare module 'react-table' {
     originalWidth: number;
     resizeWidth?: number;
     isResizerVisible?: boolean;
+    getDragAndDropProps: () => TableKeyedProps;
   }
 
   export interface Cell<D extends object = {}>

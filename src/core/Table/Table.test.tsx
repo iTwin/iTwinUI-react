@@ -44,13 +44,13 @@ const columns = (onViewClick: () => void = jest.fn()) => [
       },
       {
         id: 'description',
-        Header: 'description',
+        Header: 'Description',
         accessor: 'description',
         maxWidth: 200,
       },
       {
         id: 'view',
-        Header: 'view',
+        Header: 'View',
         Cell: () => {
           return <span onClick={onViewClick}>View</span>;
         },
@@ -1017,10 +1017,10 @@ it('should disable row and handle selection accordingly', () => {
 
   const checkboxCells = container.querySelectorAll('.iui-slot .iui-checkbox');
   expect(checkboxCells.length).toBe(4);
-  expect(checkboxCells[0].classList).not.toContain('iui-disabled');
-  expect(checkboxCells[1].classList).not.toContain('iui-disabled');
-  expect(checkboxCells[2].classList).toContain('iui-disabled');
-  expect(checkboxCells[3].classList).not.toContain('iui-disabled');
+  expect(checkboxCells[0]).not.toBeDisabled();
+  expect(checkboxCells[1]).not.toBeDisabled();
+  expect(checkboxCells[2]).toBeDisabled();
+  expect(checkboxCells[3]).not.toBeDisabled();
 
   // Select disabled row
   userEvent.click(checkboxCells[2]);
@@ -1030,9 +1030,7 @@ it('should disable row and handle selection accordingly', () => {
   // Select first row
   userEvent.click(checkboxCells[1]);
   expect(onSelect).toHaveBeenCalledWith([mockedData()[0]], expect.any(Object));
-  const headerCheckbox = checkboxCells[0].querySelector(
-    'input',
-  ) as HTMLInputElement;
+  const headerCheckbox = checkboxCells[0] as HTMLInputElement;
   expect(headerCheckbox.indeterminate).toBe(true);
   expect(headerCheckbox.checked).toBe(false);
 
@@ -1083,9 +1081,7 @@ it('should select and filter rows', () => {
   // Select first row
   userEvent.click(checkboxCells[1]);
   expect(onSelect).toHaveBeenCalledWith([mockedData()[0]], expect.any(Object));
-  const headerCheckbox = checkboxCells[0].querySelector(
-    'input',
-  ) as HTMLInputElement;
+  const headerCheckbox = checkboxCells[0] as HTMLInputElement;
   expect(headerCheckbox.indeterminate).toBe(true);
 
   // Filter table
@@ -1106,7 +1102,7 @@ it('should select and filter rows', () => {
   // Clear filter
   clearFilter(container);
   const checkboxInputs = container.querySelectorAll<HTMLInputElement>(
-    '.iui-slot .iui-checkbox input',
+    '.iui-slot .iui-checkbox',
   );
   expect(checkboxInputs.length).toBe(4);
   expect(checkboxInputs[0].indeterminate).toBe(true);
@@ -1234,7 +1230,7 @@ it('should handle sub-rows selection', () => {
   expect(rows.length).toBe(3);
 
   let checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox input',
+    '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(3);
   checkboxes[0].click();
@@ -1242,7 +1238,7 @@ it('should handle sub-rows selection', () => {
   expandAll(container);
 
   checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox input',
+    '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(10);
   Array.from(checkboxes).forEach((checkbox, index) =>
@@ -1270,14 +1266,14 @@ it('should show indeterminate checkbox when some sub-rows are selected', () => {
   expandAll(container);
 
   let checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox input',
+    '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(10);
   // Click row 1.2 checkbox
   checkboxes[2].click();
 
   checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox input',
+    '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(10);
   expect(checkboxes[0].indeterminate).toBe(true);
@@ -1306,14 +1302,14 @@ it('should show indeterminate checkbox when a sub-row of a sub-row is selected',
   expandAll(container);
 
   let checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox input',
+    '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(10);
   // Click row 1.2.1 checkbox
   checkboxes[3].click();
 
   checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox input',
+    '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(10);
   // Row 1
@@ -1372,14 +1368,14 @@ it('should show indeterminate checkbox when sub-row selected after filtering', (
   expandAll(container);
 
   let checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox input',
+    '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(7);
   // Click row 1.2 checkbox
   checkboxes[1].click();
 
   checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox input',
+    '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(7);
   expect(checkboxes[0].indeterminate).toBe(true);
@@ -1440,7 +1436,7 @@ it('should show indeterminate checkbox when clicking on a row itself after filte
   userEvent.click(rows[0]);
 
   const checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox input',
+    '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(7);
   expect(checkboxes[0].indeterminate).toBe(true);
@@ -1468,7 +1464,7 @@ it('should only select one row even if it has sub-rows when selectSubRows is fal
   expect(rows.length).toBe(3);
 
   let checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox input',
+    '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(3);
   checkboxes[0].click();
@@ -1476,7 +1472,7 @@ it('should only select one row even if it has sub-rows when selectSubRows is fal
   expandAll(container);
 
   checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox input',
+    '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(10);
   Array.from(checkboxes).forEach((checkbox, index) =>
@@ -2230,4 +2226,150 @@ it('should sync body horizontal scroll with header scroll', () => {
 
   expect(header.scrollLeft).toBe(100);
   expect(body.scrollLeft).toBe(100);
+});
+
+it.each([
+  {
+    testCase: 'dragging Name to View',
+    srcIndex: 0,
+    dstIndex: 2,
+    resultingColumns: ['Description', 'View', 'Name'],
+  },
+  {
+    testCase: 'dragging View to Name',
+    srcIndex: 2,
+    dstIndex: 0,
+    resultingColumns: ['View', 'Name', 'Description'],
+  },
+  {
+    testCase: 'dragging Name to itself and it should not change',
+    srcIndex: 0,
+    dstIndex: 0,
+    resultingColumns: ['Name', 'Description', 'View'],
+  },
+  {
+    testCase: 'dragging Name to Description',
+    srcIndex: 0,
+    dstIndex: 1,
+    resultingColumns: ['Description', 'Name', 'View'],
+  },
+  {
+    testCase: 'dragging View to Description',
+    srcIndex: 2,
+    dstIndex: 1,
+    resultingColumns: ['Name', 'View', 'Description'],
+  },
+])(
+  'should handle column reorder by $testCase',
+  ({ srcIndex, dstIndex, resultingColumns }) => {
+    const onSort = jest.fn();
+    jest.spyOn(HTMLElement.prototype, 'offsetLeft', 'get').mockReturnValue(0);
+    jest
+      .spyOn(HTMLElement.prototype, 'offsetWidth', 'get')
+      .mockReturnValue(100);
+    const { container, rerender } = render(
+      <Table
+        columns={columns()}
+        data={mockedData()}
+        emptyTableContent='Empty table'
+        emptyFilteredTableContent='No results. Clear filter.'
+        enableColumnReordering
+        isSortable
+        onSort={onSort}
+      />,
+    );
+
+    const headerCells = container.querySelectorAll<HTMLDivElement>(
+      '.iui-table-header .iui-cell',
+    );
+    headerCells.forEach((cell) =>
+      expect(cell.getAttribute('draggable')).toBe('true'),
+    );
+
+    const srcColumn = headerCells[srcIndex];
+    const dstColumn = headerCells[dstIndex];
+
+    fireEvent.dragStart(srcColumn);
+    fireEvent.dragEnter(dstColumn);
+    fireEvent.dragOver(dstColumn);
+    // If dragging over itself
+    if (srcIndex === dstIndex) {
+      expect(dstColumn).not.toHaveClass('iui-reorder-column-left');
+      expect(dstColumn).not.toHaveClass('iui-reorder-column-right');
+    } else {
+      expect(dstColumn).toHaveClass(
+        'iui-reorder-column-' + (srcIndex < dstIndex ? 'right' : 'left'),
+      );
+    }
+    fireEvent.drop(dstColumn);
+
+    // Should not trigger sort
+    expect(onSort).not.toHaveBeenCalled();
+
+    rerender(
+      <Table
+        columns={columns()}
+        data={mockedData()}
+        emptyTableContent='Empty table'
+        emptyFilteredTableContent='No results. Clear filter.'
+        enableColumnReordering
+        isSortable
+        onSort={onSort}
+      />,
+    );
+
+    container
+      .querySelectorAll<HTMLDivElement>('.iui-table-header .iui-cell')
+      .forEach((cell, index) =>
+        expect(cell.textContent).toBe(resultingColumns[index]),
+      );
+  },
+);
+
+it('should not have `draggable` attribute on columns with `disableReordering` enabled', () => {
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+          disableReordering: true,
+        },
+      ],
+    },
+  ];
+  const { container } = render(
+    <Table
+      columns={columns}
+      data={mockedData()}
+      emptyTableContent='Empty table'
+      emptyFilteredTableContent='No results. Clear filter.'
+      enableColumnReordering
+      isSelectable
+      subComponent={(row) => (
+        <div>{`Expanded component, name: ${row.original.name}`}</div>
+      )}
+    />,
+  );
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  expect(headerCells[0].getAttribute('draggable')).toBeFalsy(); // Selection column
+  expect(headerCells[1].getAttribute('draggable')).toBeFalsy(); // Expander column
+  expect(headerCells[2].getAttribute('draggable')).toBe('true'); // Name column
+  expect(headerCells[3].getAttribute('draggable')).toBe('true'); // Description column
+  expect(headerCells[4].getAttribute('draggable')).toBeFalsy(); // View column
 });

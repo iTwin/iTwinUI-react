@@ -131,7 +131,7 @@ it('should show tooltip when focused', () => {
   expect(document.activeElement).toEqual(
     container.querySelector('.iui-slider-thumb'),
   );
-  expect(container.querySelector('.iui-tooltip')?.textContent).toBe('50');
+  expect(document.querySelector('.iui-tooltip')?.textContent).toBe('50');
 });
 
 it('should not show tooltip if visibility is overridden', () => {
@@ -148,7 +148,7 @@ it('should not show tooltip if visibility is overridden', () => {
   expect(document.activeElement).toEqual(
     container.querySelector('.iui-slider-thumb'),
   );
-  expect(container.querySelector('.iui-tooltip')).toBeFalsy();
+  expect(document.querySelector('.iui-tooltip')).toBeFalsy();
 });
 
 it('should show custom tooltip when focused', () => {
@@ -167,7 +167,7 @@ it('should show custom tooltip when focused', () => {
   expect(document.activeElement).toEqual(
     container.querySelector('.iui-slider-thumb'),
   );
-  expect(container.querySelector('.iui-tooltip')?.textContent).toBe('$50.00');
+  expect(document.querySelector('.iui-tooltip')?.textContent).toBe('$50.00');
 });
 
 it('should take class and style', () => {
@@ -416,17 +416,17 @@ it('should show tooltip on thumb hover', () => {
   assertBaseElement(container);
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
   expect(thumb.classList).not.toContain('iui-active');
-  expect(container.querySelector('.iui-tooltip')).toBeFalsy();
+  expect(document.querySelector('.iui-tooltip')).toBeFalsy();
 
   act(() => {
     fireEvent.mouseEnter(thumb);
   });
-  expect(container.querySelector('.iui-tooltip')?.textContent).toBe('50');
+  expect(document.querySelector('.iui-tooltip')?.textContent).toBe('50');
 
   act(() => {
     fireEvent.mouseLeave(thumb);
   });
-  const tippy = container.querySelector('[data-tippy-root]') as HTMLElement;
+  const tippy = document.querySelector('[data-tippy-root]') as HTMLElement;
   expect(tippy.style.visibility).toEqual('hidden');
 });
 
@@ -435,19 +435,19 @@ it('should show tooltip on thumb focus', () => {
   assertBaseElement(container);
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
   expect(thumb.classList).not.toContain('iui-active');
-  expect(container.querySelector('.iui-tooltip')).toBeFalsy();
+  expect(document.querySelector('.iui-tooltip')).toBeFalsy();
 
   act(() => {
     thumb.focus();
   });
   expect(
-    (container.querySelector('.iui-tooltip') as HTMLDivElement).textContent,
+    (document.querySelector('.iui-tooltip') as HTMLDivElement).textContent,
   ).toBe('50');
 
   act(() => {
     thumb.blur();
   });
-  const tippy = container.querySelector('[data-tippy-root]') as HTMLElement;
+  const tippy = document.querySelector('[data-tippy-root]') as HTMLElement;
   expect(tippy.style.visibility).toEqual('hidden');
 });
 
@@ -468,42 +468,15 @@ it('should apply thumb props', () => {
 });
 
 it('should move thumb when pointer down on rail', () => {
-  const { container } = render(
-    <Slider
-      values={defaultSingleValue}
-      tickLabels={<span className='custom-tick-mark'>Custom</span>}
-    />,
-  );
-
-  assertBaseElement(container);
-  const sliderContainer = container.querySelector(
-    '.iui-slider-container',
-  ) as HTMLDivElement;
-  expect(sliderContainer.getBoundingClientRect().left).toBe(10);
-  expect(sliderContainer.getBoundingClientRect().right).toBe(1010);
-  expect(sliderContainer.getBoundingClientRect().width).toBe(1000);
-
-  /* fire a pointer down event 30% down the slider */
-  act(() => {
-    fireEvent.pointerDown(sliderContainer, {
-      pointerId: 5,
-      buttons: 1,
-      clientX: 310,
-    });
-  });
-
-  const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
-  expect(thumb.getAttribute('aria-valuenow')).toEqual('30');
-});
-
-it('should move thumb when pointer down on rail with change handler', () => {
   const handleOnChange = jest.fn();
+  const handleOnUpdate = jest.fn();
 
   const { container } = render(
     <Slider
       values={defaultSingleValue}
       tickLabels={<span className='custom-tick-mark'>Custom</span>}
       onChange={handleOnChange}
+      onUpdate={handleOnUpdate}
     />,
   );
 
@@ -527,7 +500,8 @@ it('should move thumb when pointer down on rail with change handler', () => {
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
   expect(thumb.getAttribute('aria-valuenow')).toEqual('30');
 
-  expect(handleOnChange).toBeCalled();
+  expect(handleOnChange).toHaveBeenCalledWith([30]);
+  expect(handleOnUpdate).toHaveBeenCalledWith([30]);
 });
 
 it('should move to closest step when pointer down on rail', () => {
