@@ -558,13 +558,13 @@ export const Table = <
   const bodyRef = React.useRef<HTMLDivElement>(null);
 
   const getPreparedRow = React.useCallback(
-    (row: Row<T>) => {
+    (row: Row<T>, index: number) => {
       prepareRow(row);
       return (
         <TableRowMemoized
           row={row}
           rowProps={rowProps}
-          isLast={row.index === data.length - 1}
+          isLast={index === page.length - 1}
           onRowInViewport={onRowInViewportRef}
           onBottomReached={onBottomReachedRef}
           intersectionMargin={intersectionMargin}
@@ -580,7 +580,7 @@ export const Table = <
       );
     },
     [
-      data.length,
+      page.length,
       expanderCell,
       hasAnySubRows,
       instance,
@@ -595,7 +595,7 @@ export const Table = <
   );
 
   const virtualizedItemRenderer = React.useCallback(
-    (index: number) => getPreparedRow(page[index]),
+    (index: number) => getPreparedRow(page[index], index),
     [getPreparedRow, page],
   );
 
@@ -651,13 +651,13 @@ export const Table = <
                       }}
                     >
                       {column.render('Header')}
-                      {!isLoading && (data.length != 0 || areFiltersSet) && (
+                      {(data.length !== 0 || areFiltersSet) && (
                         <FilterToggle
                           column={column}
                           ownerDocument={ownerDocument}
                         />
                       )}
-                      {!isLoading && data.length != 0 && column.canSort && (
+                      {data.length !== 0 && column.canSort && (
                         <div className='iui-cell-end-icon'>
                           {column.isSorted && column.isSortedDesc ? (
                             <SvgSortUp
@@ -715,7 +715,7 @@ export const Table = <
                   itemRenderer={virtualizedItemRenderer}
                 />
               ) : (
-                page.map((row: Row<T>) => getPreparedRow(row))
+                page.map((row, index) => getPreparedRow(row, index))
               )}
             </>
           )}
