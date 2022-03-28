@@ -2296,49 +2296,6 @@ VirtualizedSubRows.argTypes = {
 };
 
 export const DraggableColumns: Story<Partial<TableProps>> = (args) => {
-  const columns = useMemo(
-    (): Column[] => [
-      {
-        Header: 'Table',
-        columns: [
-          {
-            id: 'product',
-            Header: 'Product',
-            accessor: 'product',
-            disableReordering: true,
-          },
-          {
-            id: 'price',
-            Header: 'Price',
-            accessor: 'price',
-            Cell: (props: CellProps<typeof data[0]>) => {
-              return `$${props.value}`;
-            },
-          },
-          {
-            id: 'quantity',
-            Header: 'Quantity',
-            accessor: 'quantity',
-          },
-          {
-            id: 'rating',
-            Header: 'Rating',
-            accessor: 'rating',
-          },
-          {
-            id: 'deliveryTime',
-            Header: 'Delivery Time',
-            accessor: 'deliveryTime',
-            Cell: (props: CellProps<typeof data[0]>) => {
-              return `${props.value} day(s)`;
-            },
-          },
-        ],
-      },
-    ],
-    [],
-  );
-
   const data = useMemo(
     () => [
       {
@@ -2414,6 +2371,50 @@ export const DraggableColumns: Story<Partial<TableProps>> = (args) => {
     ],
     [],
   );
+
+  const columns = useMemo(
+    (): Column[] => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'product',
+            Header: 'Product',
+            accessor: 'product',
+            disableReordering: true,
+          },
+          {
+            id: 'price',
+            Header: 'Price',
+            accessor: 'price',
+            Cell: (props: CellProps<typeof data[0]>) => {
+              return `$${props.value}`;
+            },
+          },
+          {
+            id: 'quantity',
+            Header: 'Quantity',
+            accessor: 'quantity',
+          },
+          {
+            id: 'rating',
+            Header: 'Rating',
+            accessor: 'rating',
+          },
+          {
+            id: 'deliveryTime',
+            Header: 'Delivery Time',
+            accessor: 'deliveryTime',
+            Cell: (props: CellProps<typeof data[0]>) => {
+              return `${props.value} day(s)`;
+            },
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
   return (
     <Table
       enableColumnReordering
