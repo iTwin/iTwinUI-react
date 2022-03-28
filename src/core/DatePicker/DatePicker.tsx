@@ -4,6 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 import SvgChevronLeft from '@itwin/itwinui-icons-react/cjs/icons/ChevronLeft';
 import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
+import SvgChevronLeftDouble from '@itwin/itwinui-icons-react/cjs/icons/ChevronLeftDouble';
+import SvgChevronRightDouble from '@itwin/itwinui-icons-react/cjs/icons/ChevronRightDouble';
 import cx from 'classnames';
 import React from 'react';
 import { useTheme } from '../utils';
@@ -129,6 +131,11 @@ export type DatePickerProps = {
    * @default false
    */
   showTime?: boolean;
+  /**
+   * Show additional buttons to select year.
+   * @default false
+   */
+  showYear?: boolean;
 } & Omit<TimePickerProps, 'date' | 'onChange' | 'setFocusHour'>;
 
 /**
@@ -150,6 +157,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
     hourStep,
     minuteStep,
     secondStep,
+    showYear = false,
     ...rest
   } = props;
 
@@ -238,6 +246,18 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
       currentDate.getSeconds(),
     );
     return newDate;
+  };
+
+  const handleMoveToPreviousYear = () => {
+    const newYear = displayedYear - 1;
+    setMonthAndYear(displayedMonthIndex, newYear);
+    setFocusedDay(getNewFocusedDate(newYear, displayedMonthIndex));
+  };
+
+  const handleMoveToNextYear = () => {
+    const newYear = displayedYear + 1;
+    setMonthAndYear(displayedMonthIndex, newYear);
+    setFocusedDay(getNewFocusedDate(newYear, displayedMonthIndex));
   };
 
   const handleMoveToPreviousMonth = () => {
@@ -331,6 +351,15 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
     <div className={cx('iui-date-picker', className)} style={style} {...rest}>
       <div>
         <div className='iui-calendar-month-year'>
+          {showYear && (
+            <IconButton
+              styleType='borderless'
+              onClick={handleMoveToPreviousYear}
+              aria-label='Previous year'
+            >
+              <SvgChevronLeftDouble />
+            </IconButton>
+          )}
           <IconButton
             styleType='borderless'
             onClick={handleMoveToPreviousMonth}
@@ -354,6 +383,15 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
           >
             <SvgChevronRight />
           </IconButton>
+          {showYear && (
+            <IconButton
+              styleType='borderless'
+              onClick={handleMoveToNextYear}
+              aria-label='Next year'
+            >
+              <SvgChevronRightDouble />
+            </IconButton>
+          )}
         </div>
         <div className='iui-calendar-weekdays'>
           {shortDays.map((day, index) => (
