@@ -180,20 +180,12 @@ export const CarouselDotsList = React.forwardRef<
 
   return (
     <>
-      <style>
-        {`.iui-carousel-navigation-dots::-webkit-scrollbar { display: none; }`}
-      </style>
       <div
         className={cx('iui-carousel-navigation-dots', className)}
         role='tablist'
         aria-label='Slides'
         ref={refs}
         {...rest}
-        style={{
-          display: 'block', // flex breaks smooth scrolling
-          overflow: 'auto', // overflow: hidden breaks scrollIntoView in Safari
-          scrollbarWidth: 'none', // TODO: hide scrollbar in Chrome/Safari using CSS
-        }}
       >
         {children ?? dots}
       </div>

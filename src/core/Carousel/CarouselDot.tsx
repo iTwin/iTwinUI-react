@@ -41,7 +41,6 @@ export const CarouselDot = React.forwardRef<
       aria-selected={isActive}
       ref={ref}
       {...rest}
-      style={{ transition: 'revert' }} // TODO: fix transition in CSS
     />
   );
 });

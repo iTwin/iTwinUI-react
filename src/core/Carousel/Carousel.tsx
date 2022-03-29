@@ -49,6 +49,7 @@ export const Carousel = Object.assign(
     const {
       activeSlideIndex: userActiveIndex = 0,
       onSlideChange,
+      className,
       children,
       ...rest
     } = props;
@@ -119,8 +120,8 @@ export const Carousel = Object.assign(
         onKeyDown={handleKeyDown}
         onKeyUp={handleKeyUp}
         ref={ref}
+        className={cx('iui-carousel', className)}
         {...rest}
-        className={cx('iui-carousel', props.className)}
         id={id}
       >
         <CarouselContext.Provider
