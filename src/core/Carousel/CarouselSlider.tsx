@@ -5,7 +5,7 @@
 import React from 'react';
 import cx from 'classnames';
 import { CarouselContext } from './CarouselContext';
-import { useMergedRefs, useResizeObserver } from '../utils';
+import { getWindow, useMergedRefs, useResizeObserver } from '../utils';
 
 /**
  * `CarouselSlider` is the scrollable list that should consist of `CarouselSlide` components.
@@ -73,11 +73,15 @@ export const CarouselSlider = React.forwardRef<
       justMounted.current = false;
     }
 
+    const motionOk = getWindow()?.matchMedia(
+      '(prefers-reduced-motion: no-preference)',
+    )?.matches;
+
     sliderRef.current.scrollTo({
       left: slideToShow.offsetLeft - sliderRef.current.offsetLeft,
-      behavior: (scrollInstantly.current
+      behavior: (scrollInstantly.current || !motionOk
         ? 'instant'
-        : 'auto') as ScrollBehavior, // scrollTo accepts 'instant' but ScrollBehavior type is wrong
+        : 'smooth') as ScrollBehavior, // scrollTo accepts 'instant' but ScrollBehavior type is wrong
     });
 
     scrollInstantly.current = false;
