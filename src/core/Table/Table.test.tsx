@@ -2397,19 +2397,15 @@ it('should render column manager', () => {
       ],
     },
   ];
-  const { container } = render(
-    <Table
-      columns={columns}
-      data={mockedData()}
-      emptyTableContent='Empty table'
-      emptyFilteredTableContent='No results. Clear filter.'
-      hasColumnManager
-      isSelectable
-      subComponent={(row) => (
-        <div>{`Expanded component, name: ${row.original.name}`}</div>
-      )}
-    />,
-  );
+  const { container } = renderComponent({
+    columns,
+    data: mockedData(),
+    hasColumnManager: true,
+    isSelectable: true,
+    subComponent: (row) => (
+      <div>{`Expanded component, name: ${row.original.name}`}</div>
+    ),
+  });
 
   const columnManager = container.querySelector('.iui-button') as HTMLElement;
 
@@ -2447,15 +2443,11 @@ it('should hide column when selected in column manager', () => {
       ],
     },
   ];
-  const { container } = render(
-    <Table
-      columns={columns}
-      data={mockedData()}
-      emptyTableContent='Empty table'
-      emptyFilteredTableContent='No results. Clear filter.'
-      hasColumnManager
-    />,
-  );
+  const { container } = renderComponent({
+    columns,
+    data: mockedData(),
+    hasColumnManager: true,
+  });
 
   let headerCells = container.querySelectorAll<HTMLDivElement>(
     '.iui-table-header .iui-cell',
@@ -2506,15 +2498,11 @@ it('should be disabled in column manager if `disableToggleVisibility` is true', 
       ],
     },
   ];
-  const { container } = render(
-    <Table
-      columns={columns}
-      data={mockedData()}
-      emptyTableContent='Empty table'
-      emptyFilteredTableContent='No results. Clear filter.'
-      hasColumnManager
-    />,
-  );
+  const { container } = renderComponent({
+    columns,
+    data: mockedData(),
+    hasColumnManager: true,
+  });
 
   const columnManager = container.querySelector('.iui-button') as HTMLElement;
 

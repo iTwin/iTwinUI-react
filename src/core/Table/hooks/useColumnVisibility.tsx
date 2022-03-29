@@ -33,6 +33,7 @@ export const useColumnVisibility = <T extends Record<string, unknown>>(
         const [isOpen, setIsOpen] = React.useState(false);
         const headerCheckBoxes = () =>
           allColumns
+            //Filters out any default columns made such as selection and expansion
             .filter(({ id }) => !id.includes('iui-table'))
             .map((column) => {
               const { onChange, checked } = column.getToggleHiddenProps();
@@ -48,7 +49,7 @@ export const useColumnVisibility = <T extends Record<string, unknown>>(
                       onChange={onChange}
                     />
                   }
-                  onClick={() => onChange({ target: { checked: !checked } })}
+                  onClick={() => column.toggleHidden(checked)}
                   disabled={column.disableToggleVisibility}
                 >
                   {column.Header}

@@ -2611,15 +2611,59 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
     <Table
       hasColumnManager={true}
       isSelectable={true}
-      {...args}
       columns={columns}
       data={data}
+      {...args}
       emptyTableContent='No data.'
     />
   );
 };
 
-ColumnManager.args = { hasColumnManager: true };
+ColumnManager.args = {
+  data: [
+    {
+      index: 1,
+      name: 'Name1',
+      description: 'Description1',
+      id: '111',
+      startDate: new Date('May 1, 2021'),
+      endDate: new Date('Jun 1, 2021'),
+    },
+    {
+      index: 2,
+      name: 'Name2',
+      description: 'Description2',
+      id: '222',
+      startDate: new Date('May 2, 2021'),
+      endDate: new Date('Jun 2, 2021'),
+    },
+    {
+      index: 3,
+      name: 'Name3',
+      description: 'Description3',
+      id: '333',
+      startDate: new Date('May 3, 2021'),
+      endDate: new Date('Jun 3, 2021'),
+    },
+    {
+      index: 4,
+      name: 'Name4',
+      description: 'Description4',
+      id: '444',
+      startDate: new Date('May 4, 2021'),
+      endDate: new Date('Jun 4, 2021'),
+    },
+    {
+      index: 5,
+      name: 'Name5',
+      description: 'Description5',
+      id: '555',
+      startDate: new Date('May 5, 2021'),
+      endDate: new Date('Jun 5, 2021'),
+    },
+  ],
+  hasColumnManager: true,
+};
 
 ColumnManager.parameters = {
   creevey: {
