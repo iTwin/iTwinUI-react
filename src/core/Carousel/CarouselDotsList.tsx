@@ -89,11 +89,14 @@ export const CarouselDotsList = React.forwardRef<
   const justMounted = React.useRef(true);
   const [visibleCount, setVisibleCount] = React.useState(slideCount);
   const listRef = React.useRef<HTMLDivElement>(null);
+
+  const [width, setWidth] = React.useState<number>();
   const [resizeRef, resizeObserver] = useResizeObserver(({ width }) => {
     if (!listRef.current) {
       return;
     }
 
+    setWidth(width);
     const dotWidth = (listRef.current.children[0] as HTMLElement).offsetWidth;
     setVisibleCount(Math.floor(width / dotWidth));
   });
@@ -176,7 +179,7 @@ export const CarouselDotsList = React.forwardRef<
     if (justMounted.current) {
       justMounted.current = false;
     }
-  }, [currentIndex, firstVisibleDotIndex, slideCount, visibleCount]);
+  }, [currentIndex, firstVisibleDotIndex, slideCount, visibleCount, width]);
 
   return (
     <>
