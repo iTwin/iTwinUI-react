@@ -2,7 +2,6 @@
 
 ### [1.34.2](https://www.github.com/iTwin/iTwinUI-react/compare/v1.34.1...v1.34.2) (2022-03-29)
 
-
 ### Fixes
 
 * **Table:** Date filter makes range from the begigging to the end of the day ([#601](https://www.github.com/iTwin/iTwinUI-react/issues/601)) ([ae978b7](https://www.github.com/iTwin/iTwinUI-react/commit/ae978b7df3a59f9cd18474346d88083d888e36e3))
