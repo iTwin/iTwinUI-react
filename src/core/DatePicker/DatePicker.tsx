@@ -135,7 +135,7 @@ export type DatePickerProps = {
    * Show additional buttons to select year.
    * @default false
    */
-  showYear?: boolean;
+  showYearSelection?: boolean;
 } & Omit<TimePickerProps, 'date' | 'onChange' | 'setFocusHour'>;
 
 /**
@@ -157,7 +157,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
     hourStep,
     minuteStep,
     secondStep,
-    showYear = false,
+    showYearSelection = false,
     ...rest
   } = props;
 
@@ -351,7 +351,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
     <div className={cx('iui-date-picker', className)} style={style} {...rest}>
       <div>
         <div className='iui-calendar-month-year'>
-          {showYear && (
+          {showYearSelection && (
             <IconButton
               styleType='borderless'
               onClick={handleMoveToPreviousYear}
@@ -383,7 +383,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
           >
             <SvgChevronRight />
           </IconButton>
-          {showYear && (
+          {showYearSelection && (
             <IconButton
               styleType='borderless'
               onClick={handleMoveToNextYear}

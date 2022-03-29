@@ -208,7 +208,7 @@ export const WithYear: Story<DatePickerProps> = (args) => {
       {opened && (
         <div style={{ marginTop: 4 }}>
           <DatePicker
-            showYear
+            showYearSelection
             {...rest}
             date={currentDate}
             onChange={onChange}
@@ -223,5 +223,5 @@ export const WithYear: Story<DatePickerProps> = (args) => {
 
 WithYear.args = {
   date: new Date(2021, 4, 11, 14, 55, 22),
-  showYear: true,
+  showYearSelection: true,
 };

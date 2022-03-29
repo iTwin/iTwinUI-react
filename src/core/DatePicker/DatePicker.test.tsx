@@ -297,7 +297,11 @@ it('should navigate between years', () => {
   const date = new Date(2020, 1, 10);
   const onClick = jest.fn();
   const { container } = render(
-    <DatePicker date={new Date(2020, 1, 10)} onChange={onClick} showYear />,
+    <DatePicker
+      date={new Date(2020, 1, 10)}
+      onChange={onClick}
+      showYearSelection
+    />,
   );
   assertMonthYear(container, 'February', '2020');
 
