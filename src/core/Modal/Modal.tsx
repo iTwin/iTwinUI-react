@@ -63,6 +63,7 @@ export type ModalProps = {
   ownerDocument?: Document;
   /**
    * Type of the modal.
+   * @default 'default'
    */
   styleType?: 'default' | 'fullPage';
   /**
@@ -105,7 +106,7 @@ export const Modal = (props: ModalProps) => {
     className,
     style,
     children,
-    styleType,
+    styleType = 'default',
     modalRootId = 'iui-react-portal-container',
     ownerDocument = getDocument(),
     ...rest
