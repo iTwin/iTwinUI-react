@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { getRandomValue, useTheme } from '../utils';
+import { getRandomValue, useMergedRefs, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/carousel.css';
 import { CarouselContext } from './CarouselContext';
 import { CarouselSlider } from './CarouselSlider';
@@ -63,12 +63,15 @@ export const Carousel = Object.assign(
 
     const isManuallyUpdating = React.useRef(false);
     const scrollInstantly = React.useRef(false);
+    const carouselRef = React.useRef<HTMLElement>(null);
+    const refs = useMergedRefs(carouselRef, ref);
 
     const [currentIndex, _setCurrentIndex] = React.useState(userActiveIndex);
     const setCurrentIndex = React.useCallback(
       (index: number | ((old: number) => number)) => {
         _setCurrentIndex(index);
         isManuallyUpdating.current = true;
+        carouselRef.current?.focus();
       },
       [],
     );
@@ -119,7 +122,7 @@ export const Carousel = Object.assign(
         tabIndex={0}
         onKeyDown={handleKeyDown}
         onKeyUp={handleKeyUp}
-        ref={ref}
+        ref={refs}
         className={cx('iui-carousel', className)}
         {...rest}
         id={id}
