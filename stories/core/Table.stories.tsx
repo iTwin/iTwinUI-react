@@ -1284,6 +1284,7 @@ export const Full: Story<Partial<TableProps>> = (args) => {
             Header: 'Name',
             accessor: 'name',
             Filter: tableFilters.TextFilter(),
+            disableToggleVisibility: true,
           },
           {
             id: 'description',

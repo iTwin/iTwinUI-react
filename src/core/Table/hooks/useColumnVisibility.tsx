@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { ColumnInstance, HeaderProps, Hooks } from 'react-table';
-import { Checkbox } from '../..';
+import { Checkbox } from '../../Checkbox';
 import SvgColumnManager from '@itwin/itwinui-icons-react/cjs/icons/ColumnManager';
 import { DropdownMenu } from '../../DropdownMenu';
 import { IconButton } from '../../Buttons/IconButton';
