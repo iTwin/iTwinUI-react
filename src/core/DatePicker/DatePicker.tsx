@@ -347,6 +347,24 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
     }
   };
 
+  const getDayClass = (day: Date) => {
+    if (day.getMonth() !== displayedMonthIndex) {
+      return 'iui-calendar-day-outside-month';
+    }
+
+    let dayClass = 'iui-calendar-day';
+
+    if (isSameDay(day, selectedDay)) {
+      dayClass += '-selected';
+    }
+
+    if (isSameDay(day, new Date())) {
+      dayClass += '-today';
+    }
+
+    return dayClass;
+  };
+
   return (
     <div className={cx('iui-date-picker', className)} style={style} {...rest}>
       <div>
@@ -364,6 +382,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
             styleType='borderless'
             onClick={handleMoveToPreviousMonth}
             aria-label='Previous month'
+            size='small'
           >
             <SvgChevronLeft />
           </IconButton>
@@ -380,6 +399,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
             styleType='borderless'
             onClick={handleMoveToNextMonth}
             aria-label='Next month'
+            size='small'
           >
             <SvgChevronRight />
           </IconButton>
@@ -412,12 +432,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
                   return (
                     <div
                       key={`day-${displayedMonthIndex}-${dayIndex}`}
-                      className={cx('iui-calendar-day', {
-                        'iui-outside-month':
-                          weekDay.getMonth() !== displayedMonthIndex,
-                        'iui-today': isSameDay(weekDay, new Date()),
-                        'iui-selected': isSameDay(weekDay, selectedDay),
-                      })}
+                      className={getDayClass(weekDay)}
                       onClick={() => onDayClick(weekDay)}
                       role='option'
                       tabIndex={isSameDay(weekDay, focusedDay) ? 0 : -1}
