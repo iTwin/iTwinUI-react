@@ -3,8 +3,9 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { Story, Meta } from '@storybook/react';
+import { CreeveyMeta } from 'creevey';
 import React from 'react';
-import { Carousel, CarouselProps } from '../../src/core';
+import { Carousel, CarouselProps, Text, Code } from '../../src/core';
 
 export default {
   component: Carousel,
@@ -13,7 +14,11 @@ export default {
     style: { control: { disable: true } },
   },
   title: 'Core/Carousel',
-} as Meta<CarouselProps>;
+  parameters: {
+    docs: { source: { excludeDecorators: true } },
+    creevey: { skip: { stories: ['Custom'] } },
+  },
+} as Meta<CarouselProps> & CreeveyMeta;
 
 export const Basic: Story<CarouselProps> = (args) => {
   const gradients = [
@@ -105,3 +110,99 @@ Controlled.args = {};
 Controlled.argTypes = {
   activeSlideIndex: { control: { disable: true } },
 };
+
+const useId = () => 'my-custom-carousel';
+export const Custom: Story<CarouselProps> = () => {
+  const gradients = [
+    { from: '#cc2b5e', to: '#753a88' },
+    { from: '#00467f', to: '#a5cc82' },
+    { from: '#2193b0', to: '#6dd5ed' },
+    { from: '#ffe000', to: '#799f0c' },
+    { from: '#e65c00', to: '#f9d423' },
+    { from: '#1488cc', to: '#2b32b2' },
+    { from: '#bbd2c5', to: '#536976' },
+    { from: '#9796f0', to: '#fbc7d4' },
+    { from: '#b79891', to: '#94716b' },
+    { from: '#acb6e5', to: '#86fde8' },
+  ];
+
+  const id = useId();
+  const [current, setCurrent] = React.useState(0);
+
+  return (
+    <section
+      aria-roledescription='carousel'
+      tabIndex={0}
+      style={{ display: 'inline-grid', width: 'min(90vw, 40vh)' }}
+    >
+      <ol
+        style={{
+          listStyle: 'none',
+          margin: 0,
+          padding: 0,
+          display: 'grid',
+          grid: `[slide] 1fr / [slide] 1fr`,
+        }}
+      >
+        {gradients.map(({ from, to }, index) => (
+          <li
+            key={index}
+            role='tabpanel'
+            id={`${id}-slide-${index}`}
+            onClick={({ currentTarget: { clientWidth }, clientX }) => {
+              const diff = clientWidth - clientX > clientWidth / 2 ? -1 : +1;
+              setCurrent(
+                (prev) => (gradients.length + prev + diff) % gradients.length,
+              );
+            }}
+            style={{
+              gridArea: 'slide',
+              opacity: current === index ? 1 : 0,
+              pointerEvents: current === index ? 'auto' : 'none',
+              transition: 'opacity 0.5s',
+              cursor: 'pointer',
+            }}
+          >
+            <div
+              style={{
+                background: `linear-gradient(to right, ${from}, ${to})`,
+                height: 'min(600px, 70vh)',
+                display: 'grid',
+                placeItems: 'center',
+                fontSize: 48,
+                color: 'hsl(0deg 0% 100% / 0.7)',
+              }}
+            >
+              {index}
+            </div>
+          </li>
+        ))}
+      </ol>
+      <Carousel.DotsList
+        id={id}
+        length={gradients.length}
+        currentIndex={current}
+        onSlideChange={(_i) => setCurrent(_i)}
+        style={{ justifySelf: 'center', maxWidth: 'min(100%, 200px)' }}
+      />
+    </section>
+  );
+};
+Custom.args = {};
+Custom.parameters = { controls: { hideNoControlsWarning: true } };
+Custom.argTypes = { activeSlideIndex: { control: { disable: true } } };
+Custom.decorators = [
+  (Story) => (
+    <div style={{ display: 'inline-grid', gap: '1rem' }}>
+      <Text isMuted style={{ fontStyle: 'italic' }}>
+        This example shows how <Code>Carousel.DotsList</Code> can be used
+        outside <Code>Carousel</Code>.
+        <br />
+        Clicking on the right half of the slide will advance the carousel to the
+        next slide, whereas clicking on the left half will go to the previous
+        slide.
+      </Text>
+      <Story />
+    </div>
+  ),
+];

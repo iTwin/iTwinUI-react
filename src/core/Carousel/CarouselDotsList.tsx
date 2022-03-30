@@ -16,9 +16,9 @@ import { CarouselDot } from './CarouselDot';
 import '@itwin/itwinui-css/css/carousel.css';
 
 type CarouselDotsListProps = {
-  /** Number of total dots/slides in the carousel. Will be inferred from Carousel context. */
+  /** Number of total dots/slides in the carousel. Will be inferred from Carousel context or children. Otherwise, it is required to be passed. */
   length?: number;
-  /** Index of currently active dot. Will be inferred from Carousel context. */
+  /** Index of currently active dot. Will be inferred from Carousel context, or else default to 0. */
   currentIndex?: number;
   /** Callback fired when any of the dots are clicked. */
   onSlideChange?: (index: number) => void;
@@ -62,8 +62,9 @@ export const CarouselDotsList = React.forwardRef<
   useTheme();
 
   const context = React.useContext(CarouselContext);
-  const slideCount = length ?? context?.slideCount;
-  const currentIndex = userCurrentIndex ?? context?.currentIndex;
+  const slideCount =
+    length ?? context?.slideCount ?? React.Children.count(children);
+  const currentIndex = userCurrentIndex ?? context?.currentIndex ?? 0;
   const idPrefix = props.id ?? context?.idPrefix;
 
   const handleSlideChange = React.useCallback(
@@ -75,16 +76,6 @@ export const CarouselDotsList = React.forwardRef<
     },
     [context, onSlideChange],
   );
-
-  if (
-    slideCount == undefined ||
-    currentIndex == undefined ||
-    (!idPrefix && !children)
-  ) {
-    throw new Error(
-      'CarouselDotsList needs to be used inside Carousel, or if used outside then the following props need to be specified: length, currentIndex, id',
-    );
-  }
 
   const justMounted = React.useRef(true);
   const [visibleCount, setVisibleCount] = React.useState(slideCount);
@@ -143,10 +134,10 @@ export const CarouselDotsList = React.forwardRef<
             aria-label={`Slide ${index}`}
             isActive={index === currentIndex}
             onClick={() => handleSlideChange(index)}
-            id={`${idPrefix}--dot-${index}`}
-            aria-controls={`${idPrefix}--slide-${index}`}
             isSmall={isSecondSmallDot}
             isSmaller={isFirstSmallDot || isClipped}
+            id={idPrefix && `${idPrefix}--dot-${index}`}
+            aria-controls={idPrefix && `${idPrefix}--slide-${index}`}
           />
         );
       });

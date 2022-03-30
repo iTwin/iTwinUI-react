@@ -52,21 +52,6 @@ it('should render in its most basic state without Carousel', () => {
   });
 });
 
-it.each(['length', 'currentIndex', 'id'])(
-  'should throw if %s prop is missing',
-  (prop) => {
-    expect(() =>
-      render(
-        <CarouselDotsList
-          length={prop === 'length' ? undefined : 5}
-          currentIndex={prop === 'currentIndex' ? undefined : 0}
-          id={prop === 'id' ? undefined : 'testid'}
-        />,
-      ),
-    ).toThrow();
-  },
-);
-
 it('should call onSlideChange correctly', () => {
   const mockOnSlideChange = jest.fn();
   const { container } = render(
