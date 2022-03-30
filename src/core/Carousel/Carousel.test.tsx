@@ -212,5 +212,3 @@ it('should add data-pressed to prev/next buttons on key down', () => {
   expect(prev).not.toHaveAttribute('data-pressed');
   expect(dots[0]).toHaveClass('iui-active');
 });
-
-// TODO: Write more tests here!
