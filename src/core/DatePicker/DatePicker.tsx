@@ -374,6 +374,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
               styleType='borderless'
               onClick={handleMoveToPreviousYear}
               aria-label='Previous year'
+              size='small'
             >
               <SvgChevronLeftDouble />
             </IconButton>
@@ -408,6 +409,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
               styleType='borderless'
               onClick={handleMoveToNextYear}
               aria-label='Next year'
+              size='small'
             >
               <SvgChevronRightDouble />
             </IconButton>
