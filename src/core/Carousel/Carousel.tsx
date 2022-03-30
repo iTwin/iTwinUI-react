@@ -67,6 +67,10 @@ export const Carousel = Object.assign(
     const refs = useMergedRefs(carouselRef, ref);
 
     const [currentIndex, _setCurrentIndex] = React.useState(userActiveIndex);
+    React.useEffect(() => {
+      _setCurrentIndex(userActiveIndex);
+    }, [userActiveIndex]);
+
     const setCurrentIndex = React.useCallback(
       (index: number | ((old: number) => number)) => {
         _setCurrentIndex(index);
@@ -75,10 +79,6 @@ export const Carousel = Object.assign(
       },
       [],
     );
-
-    React.useEffect(() => {
-      setCurrentIndex(userActiveIndex);
-    }, [setCurrentIndex, userActiveIndex]);
 
     const [slideCount, setSlideCount] = React.useState(0);
 
