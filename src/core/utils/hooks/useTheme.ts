@@ -5,6 +5,7 @@
 import React from 'react';
 import '@itwin/itwinui-css/css/global.css';
 import { getDocument, getWindow } from '../functions/dom';
+import { useMediaQuery } from './useMediaQuery';
 
 export type ThemeOptions = {
   /**
@@ -13,6 +14,11 @@ export type ThemeOptions = {
    * @default document
    */
   ownerDocument?: Document;
+  /**
+   * Whether to apply high-contrast versions of light and dark themes.
+   * Will default to user preference if browser supports it.
+   */
+  highContrast?: boolean;
 };
 
 export type ThemeType = 'light' | 'dark' | 'os';
@@ -28,6 +34,12 @@ export const useTheme = (
   themeOptions?: ThemeOptions,
 ): void => {
   const ownerDocument = themeOptions?.ownerDocument ?? getDocument();
+
+  const prefersHighContrast = useMediaQuery('(prefers-contrast: more)');
+  const highContrast = React.useMemo(
+    () => !!(themeOptions?.highContrast ?? prefersHighContrast),
+    [prefersHighContrast, themeOptions?.highContrast],
+  );
 
   React.useLayoutEffect(() => {
     if (!ownerDocument?.body.classList.contains('iui-body')) {
@@ -48,49 +60,67 @@ export const useTheme = (
       matches: isDark,
     }: MediaQueryList | MediaQueryListEvent) => {
       if (isDark) {
-        addDarkTheme(ownerDocument);
+        addDarkTheme({ ownerDocument, highContrast });
       } else {
-        addLightTheme(ownerDocument);
+        addLightTheme({ ownerDocument, highContrast });
       }
     };
 
     switch (theme) {
       case 'light':
         prefersDarkMediaQuery?.removeEventListener?.('change', addOSTheme);
-        addLightTheme(ownerDocument);
+        addLightTheme({ ownerDocument, highContrast });
         break;
       case 'dark':
         prefersDarkMediaQuery?.removeEventListener?.('change', addOSTheme);
-        addDarkTheme(ownerDocument);
+        addDarkTheme({ ownerDocument, highContrast });
         break;
       case 'os':
         if (prefersDarkMediaQuery != undefined) {
           addOSTheme(prefersDarkMediaQuery);
           prefersDarkMediaQuery.addEventListener?.('change', addOSTheme);
         } else {
-          addLightTheme(ownerDocument);
+          addLightTheme({ ownerDocument, highContrast });
         }
         break;
       default:
         if (
           ownerDocument.documentElement.className.indexOf('iui-theme') === -1
         ) {
-          addLightTheme(ownerDocument);
+          addLightTheme({ ownerDocument, highContrast });
         }
     }
 
     return () => {
       prefersDarkMediaQuery?.removeEventListener?.('change', addOSTheme);
     };
-  }, [ownerDocument, theme]);
+  }, [highContrast, ownerDocument, theme]);
 };
 
-const addLightTheme = (ownerDocument: Document) => {
-  ownerDocument.documentElement.classList.add('iui-theme-light');
-  ownerDocument.documentElement.classList.remove('iui-theme-dark');
+const addLightTheme = ({
+  ownerDocument,
+  highContrast,
+}: Required<ThemeOptions>) => {
+  const classList = ownerDocument.documentElement.classList;
+  const currentTheme = Array.from(classList).find((cls) =>
+    cls.startsWith('iui-theme'),
+  );
+  if (currentTheme) {
+    classList.remove(currentTheme);
+  }
+  classList.add(`iui-theme-light${highContrast ? '-hc' : ''}`);
 };
 
-const addDarkTheme = (ownerDocument: Document) => {
-  ownerDocument.documentElement.classList.add('iui-theme-dark');
-  ownerDocument.documentElement.classList.remove('iui-theme-light');
+const addDarkTheme = ({
+  ownerDocument,
+  highContrast,
+}: Required<ThemeOptions>) => {
+  const classList = ownerDocument.documentElement.classList;
+  const currentTheme = Array.from(classList).find((cls) =>
+    cls.startsWith('iui-theme'),
+  );
+  if (currentTheme) {
+    classList.remove(currentTheme);
+  }
+  classList.add(`iui-theme-dark${highContrast ? '-hc' : ''}`);
 };
