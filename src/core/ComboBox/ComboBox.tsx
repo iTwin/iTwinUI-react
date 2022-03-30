@@ -485,7 +485,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             ref={inputRef}
             onKeyDown={onKeyDown}
             onFocus={() => setIsOpen(true)}
-            onChange={onInput}
             value={inputValue}
             aria-activedescendant={
               isOpen && focusedIndex > -1
@@ -499,6 +498,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             autoCapitalize='none'
             autoCorrect='off'
             {...inputProps}
+            onChange={onInput}
           />
         </Popover>
         <span
