@@ -16,7 +16,7 @@ export default {
   title: 'Core/Carousel',
   parameters: {
     docs: { source: { excludeDecorators: true } },
-    creevey: { skip: { stories: ['Custom'] } },
+    creevey: { skip: { stories: ['Only Dots'] } },
   },
 } as Meta<CarouselProps> & CreeveyMeta;
 
@@ -112,7 +112,7 @@ Controlled.argTypes = {
 };
 
 const useId = () => 'my-custom-carousel';
-export const Custom: Story<CarouselProps> = () => {
+export const OnlyDots: Story<CarouselProps> = () => {
   const gradients = [
     { from: '#cc2b5e', to: '#753a88' },
     { from: '#00467f', to: '#a5cc82' },
@@ -133,6 +133,12 @@ export const Custom: Story<CarouselProps> = () => {
     <section
       aria-roledescription='carousel'
       tabIndex={0}
+      onKeyUp={({ key }) => {
+        const diff = key === 'ArrowRight' ? 1 : key === 'ArrowLeft' ? -1 : 0;
+        setCurrent(
+          (prev) => (gradients.length + prev + diff) % gradients.length,
+        );
+      }}
       style={{ display: 'inline-grid', width: 'min(90vw, 40vh)' }}
     >
       <ol
@@ -173,7 +179,7 @@ export const Custom: Story<CarouselProps> = () => {
                 color: 'hsl(0deg 0% 100% / 0.7)',
               }}
             >
-              {index}
+              {index + 1}
             </div>
           </li>
         ))}
@@ -188,10 +194,10 @@ export const Custom: Story<CarouselProps> = () => {
     </section>
   );
 };
-Custom.args = {};
-Custom.parameters = { controls: { hideNoControlsWarning: true } };
-Custom.argTypes = { activeSlideIndex: { control: { disable: true } } };
-Custom.decorators = [
+OnlyDots.args = {};
+OnlyDots.parameters = { controls: { hideNoControlsWarning: true } };
+OnlyDots.argTypes = { activeSlideIndex: { control: { disable: true } } };
+OnlyDots.decorators = [
   (Story) => (
     <div style={{ display: 'inline-grid', gap: '1rem' }}>
       <Text isMuted style={{ fontStyle: 'italic' }}>
