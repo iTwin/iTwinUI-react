@@ -105,7 +105,7 @@ export const Modal = (props: ModalProps) => {
     className,
     style,
     children,
-    styleType: type,
+    styleType,
     modalRootId = 'iui-react-portal-container',
     ownerDocument = getDocument(),
     ...rest
@@ -176,17 +176,17 @@ export const Modal = (props: ModalProps) => {
 
   return !!container ? (
     ReactDOM.createPortal(
-      <FocusTrap>
-        <CSSTransition
-          in={isOpen}
-          classNames='iui-modal-animation'
-          timeout={400}
-          unmountOnExit={true}
-        >
+      <CSSTransition
+        in={isOpen}
+        classNames='iui-modal-animation'
+        timeout={{ exit: 600 }}
+        unmountOnExit={true}
+      >
+        <FocusTrap>
           <div
             className={cx(
               'iui-modal',
-              { 'iui-modal-full-page': type === 'fullPage' },
+              { 'iui-modal-full-page': styleType === 'fullPage' },
               { 'iui-modal-visible': isOpen },
               className,
             )}
@@ -219,8 +219,8 @@ export const Modal = (props: ModalProps) => {
               {children}
             </div>
           </div>
-        </CSSTransition>
-      </FocusTrap>,
+        </FocusTrap>
+      </CSSTransition>,
       container,
     )
   ) : (

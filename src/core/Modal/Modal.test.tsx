@@ -47,7 +47,7 @@ it('should render in basic form', () => {
 });
 
 it('should render in full page form', () => {
-  renderComponent({ modalSize: 'fullPage' });
+  renderComponent({ styleType: 'fullPage' });
 
   const overlay = document.querySelector(
     '.iui-modal.iui-modal-full-page.iui-modal-visible',
