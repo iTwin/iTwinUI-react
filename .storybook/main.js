@@ -27,8 +27,8 @@ module.exports = {
       },
     },
     'creevey',
+    './hcThemeAddon/register.js',
     '@storybook/addon-a11y',
-    './themeAddon/register.js',
   ],
   core: {
     builder: 'webpack5',

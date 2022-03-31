@@ -18,6 +18,9 @@ channel.on('DARK_MODE', (isDark) => updateTheme(isDark));
 // get user's OS color scheme
 const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
 
+// set initial theme
+let theme = prefersDark ? 'dark' : 'light';
+
 addParameters({
   darkMode: {
     dark: { ...themes.dark, ...darkTheme },
@@ -41,6 +44,7 @@ addParameters({
 
 // helper for updating theme according to dark mode flag
 const updateTheme = (isDark) => {
+  theme = isDark ? 'dark' : 'light';
   const classes = document.documentElement.classList;
   const currentTheme = Array.from(classes).find((cls) =>
     cls.startsWith('iui-theme'),
@@ -75,14 +79,10 @@ export const parameters = {
 
 export const decorators = [
   (Story, context) => {
-    const { globals } = context;
-    const hc = globals['hc'];
-
-    const currentTheme = JSON.parse(localStorage.getItem('sb-addon-themes-3'))
-      .current;
-
-    useTheme(currentTheme, { highContrast: hc });
-
+    const {
+      globals: { hc: highContrast },
+    } = context;
+    useTheme(theme, { highContrast });
     return <Story />;
   },
 ];
