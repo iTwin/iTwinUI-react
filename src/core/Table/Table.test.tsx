@@ -2420,6 +2420,46 @@ it('should render column manager', () => {
   expect(columnManagerColumns[2].textContent).toBe('View');
 });
 
+it('should only render column manager header when last column is custom Cells', () => {
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          cellClassName: 'iui-slot',
+          Cell: () => 'View',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    data: mockedData(),
+    hasColumnManager: true,
+  });
+
+  const columnHeaders = container.querySelectorAll('[role="columnheader"]');
+  expect(columnHeaders.length).toBe(3);
+  expect(columnHeaders[0].textContent).toBe('Name');
+  expect(columnHeaders[1].textContent).toBe('Description');
+  expect(
+    columnHeaders[2].firstElementChild?.className.includes(
+      'iui-button iui-borderless',
+    ),
+  ).toBeTruthy();
+});
+
 it('should hide column when selected in column manager', () => {
   const columns: Column<TestDataType>[] = [
     {
