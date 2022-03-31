@@ -37,7 +37,6 @@ import {
   useSubRowFiltering,
   useSubRowSelection,
   useResizeColumns,
-  useColumnVisibility,
   useColumnDragAndDrop,
 } from './hooks';
 import {
@@ -233,11 +232,6 @@ export type TableProps<
    */
   enableVirtualization?: boolean;
   /**
-   * Flag whether table has a column manager.
-   * @default false
-   */
-  hasColumnManager?: boolean;
-  /**
    * Flag whether columns can be reordered.
    * @default false
    */
@@ -325,7 +319,6 @@ export const Table = <
     isResizable = false,
     styleType = 'default',
     enableVirtualization = false,
-    hasColumnManager = false,
     enableColumnReordering = false,
     ...rest
   } = props;
@@ -440,7 +433,6 @@ export const Table = <
     useSubRowSelection,
     useExpanderCell(subComponent, expanderCell, isRowDisabled),
     useSelectionCell(isSelectable, isRowDisabled),
-    useColumnVisibility(hasColumnManager),
     useColumnOrder,
     useColumnDragAndDrop(enableColumnReordering),
   );

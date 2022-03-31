@@ -27,6 +27,7 @@ import {
   EditableCell,
   TablePaginator,
   TablePaginatorRendererProps,
+  ActionColumn,
 } from '../../src/core';
 import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
@@ -49,7 +50,6 @@ export default {
   argTypes: {
     columns: { control: { disable: true } },
     isSelectable: { control: { disable: true } },
-    hasColumnManager: { control: { disable: true } },
     style: { control: { disable: true } },
     className: { control: { disable: true } },
     id: { control: { disable: true } },
@@ -1274,6 +1274,8 @@ export const Full: Story<Partial<TableProps>> = (args) => {
     [],
   );
 
+  const hasColumnManager = true;
+
   const columns = useMemo(
     () => [
       {
@@ -1313,10 +1315,11 @@ export const Full: Story<Partial<TableProps>> = (args) => {
               </>
             ),
           },
+          ActionColumn(hasColumnManager),
         ],
       },
     ],
-    [isRowDisabled],
+    [isRowDisabled, hasColumnManager],
   );
 
   const data = useMemo(
@@ -1369,7 +1372,6 @@ export const Full: Story<Partial<TableProps>> = (args) => {
         isSelectable
         isSortable
         isResizable
-        hasColumnManager
         enableColumnReordering
         {...args}
       />
@@ -1391,7 +1393,6 @@ Full.args = {
   isSelectable: true,
   isSortable: true,
   isResizable: true,
-  hasColumnManager: true,
   enableColumnReordering: true,
 };
 
@@ -2514,6 +2515,8 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
     startDate: Date;
     endDate: Date;
   };
+
+  const hasColumnManager = true;
   const columns = useMemo(
     (): Column<TableStoryDataType>[] => [
       {
@@ -2557,10 +2560,11 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
               return props.row.original.endDate.toLocaleDateString('en-US');
             },
           },
+          ActionColumn(hasColumnManager),
         ],
       },
     ],
-    [],
+    [hasColumnManager],
   );
   const data = useMemo(
     () => [
@@ -2610,7 +2614,6 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
 
   return (
     <Table
-      hasColumnManager={true}
       isSelectable={true}
       columns={columns}
       data={data}
@@ -2663,7 +2666,6 @@ ColumnManager.args = {
       endDate: new Date('Jun 5, 2021'),
     },
   ],
-  hasColumnManager: true,
 };
 
 ColumnManager.parameters = {

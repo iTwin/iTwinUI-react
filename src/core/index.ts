@@ -179,7 +179,7 @@ export {
   DefaultCell,
   EditableCell,
   TablePaginator,
-  ManagerColumn,
+  ActionColumn,
 } from './Table';
 export type {
   TableProps,

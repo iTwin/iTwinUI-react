@@ -20,7 +20,7 @@ import { TablePaginator } from './TablePaginator';
 import * as UseOverflow from '../utils/hooks/useOverflow';
 import * as UseResizeObserver from '../utils/hooks/useResizeObserver';
 import userEvent from '@testing-library/user-event';
-
+import { ActionColumn } from './columns';
 const intersectionCallbacks = new Map<Element, () => void>();
 jest
   .spyOn(IntersectionHooks, 'useIntersection')
@@ -2374,7 +2374,7 @@ it('should not have `draggable` attribute on columns with `disableReordering` en
   expect(headerCells[4].getAttribute('draggable')).toBeFalsy(); // View column
 });
 
-it('should render column manager', () => {
+it('should render empty action column with column manager', () => {
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Header name',
@@ -2394,13 +2394,13 @@ it('should render column manager', () => {
           Header: 'View',
           Cell: () => 'View',
         },
+        ActionColumn(true),
       ],
     },
   ];
   const { container } = renderComponent({
     columns,
     data: mockedData(),
-    hasColumnManager: true,
     isSelectable: true,
     subComponent: (row) => (
       <div>{`Expanded component, name: ${row.original.name}`}</div>
@@ -2420,7 +2420,7 @@ it('should render column manager', () => {
   expect(columnManagerColumns[2].textContent).toBe('View');
 });
 
-it('should only render column manager header when last column is custom Cells', () => {
+it('should render action column with column manager', () => {
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Header name',
@@ -2436,8 +2436,8 @@ it('should only render column manager header when last column is custom Cells', 
           accessor: 'description',
         },
         {
+          ...ActionColumn(true),
           id: 'view',
-          cellClassName: 'iui-slot',
           Cell: () => 'View',
         },
       ],
@@ -2446,13 +2446,10 @@ it('should only render column manager header when last column is custom Cells', 
   const { container } = renderComponent({
     columns,
     data: mockedData(),
-    hasColumnManager: true,
   });
 
   const columnHeaders = container.querySelectorAll('[role="columnheader"]');
   expect(columnHeaders.length).toBe(3);
-  expect(columnHeaders[0].textContent).toBe('Name');
-  expect(columnHeaders[1].textContent).toBe('Description');
   expect(
     columnHeaders[2].firstElementChild?.className.includes(
       'iui-button iui-borderless',
@@ -2480,13 +2477,13 @@ it('should hide column when selected in column manager', () => {
           Header: 'View',
           Cell: () => 'View',
         },
+        ActionColumn(true),
       ],
     },
   ];
   const { container } = renderComponent({
     columns,
     data: mockedData(),
-    hasColumnManager: true,
   });
 
   let headerCells = container.querySelectorAll<HTMLDivElement>(
@@ -2535,13 +2532,13 @@ it('should be disabled in column manager if `disableToggleVisibility` is true', 
           Header: 'View',
           Cell: () => 'View',
         },
+        ActionColumn(true),
       ],
     },
   ];
   const { container } = renderComponent({
     columns,
     data: mockedData(),
-    hasColumnManager: true,
   });
 
   const columnManager = container.querySelector('.iui-button') as HTMLElement;
