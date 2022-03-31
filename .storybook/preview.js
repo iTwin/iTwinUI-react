@@ -18,9 +18,6 @@ channel.on('DARK_MODE', (isDark) => updateTheme(isDark));
 // get user's OS color scheme
 const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
 
-// set initial theme
-let theme = prefersDark ? 'dark' : 'light';
-
 addParameters({
   darkMode: {
     dark: { ...themes.dark, ...darkTheme },
@@ -44,7 +41,6 @@ addParameters({
 
 // helper for updating theme according to dark mode flag
 const updateTheme = (isDark) => {
-  theme = isDark ? 'dark' : 'light';
   const classes = document.documentElement.classList;
   const currentTheme = Array.from(classes).find((cls) =>
     cls.startsWith('iui-theme'),
@@ -82,7 +78,28 @@ export const decorators = [
     const {
       globals: { hc: highContrast },
     } = context;
-    useTheme(theme, { highContrast });
+
+    React.useEffect(() => {
+      const classes = document.documentElement.classList;
+      const currentTheme = Array.from(classes).find((cls) =>
+        cls.startsWith('iui-theme'),
+      );
+      if (!currentTheme) {
+        return;
+      }
+
+      if (highContrast && !currentTheme.includes('-hc')) {
+        classes.remove(currentTheme);
+        classes.add(`${currentTheme}-hc`);
+        return;
+      }
+
+      if (!highContrast && currentTheme.includes('-hc')) {
+        classes.remove(currentTheme);
+        classes.add(`${currentTheme.split('-hc')[0]}`);
+      }
+    }, [highContrast]);
+
     return <Story />;
   },
 ];
