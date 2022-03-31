@@ -6,6 +6,7 @@ import addons from '@storybook/addons';
 import { addParameters } from '@storybook/react';
 import { themes } from '@storybook/theming';
 import React from 'react';
+import { useTheme } from '../src/core';
 import { lightTheme, darkTheme } from './itwinTheme';
 
 // get an instance to the communication channel for the manager and preview
@@ -77,26 +78,10 @@ export const decorators = [
     const { globals } = context;
     const hc = globals['hc'];
 
-    React.useEffect(() => {
-      const classes = document.documentElement.classList;
-      const currentTheme = Array.from(classes).find((cls) =>
-        cls.startsWith('iui-theme'),
-      );
-      if (!currentTheme) {
-        return;
-      }
+    const currentTheme = JSON.parse(localStorage.getItem('sb-addon-themes-3'))
+      .current;
 
-      if (hc && !currentTheme.includes('-hc')) {
-        classes.remove(currentTheme);
-        classes.add(`${currentTheme}-hc`);
-        return;
-      }
-
-      if (!hc && currentTheme.includes('-hc')) {
-        classes.remove(currentTheme);
-        classes.add(`${currentTheme.split('-hc')[0]}`);
-      }
-    }, [hc]);
+    useTheme(currentTheme, { highContrast: hc });
 
     return <Story />;
   },
