@@ -157,6 +157,7 @@ export const NonDismissibleModal: Story<ModalProps> = ({
         title={title}
         onClose={onClose}
         onKeyDown={action('onKeyDown', { depth: 1 })}
+        isDismissible={false}
         {...rest}
       >
         <ModalContent>
@@ -227,6 +228,8 @@ export const OutsideClickAndEscDoesNotClose: Story<ModalProps> = ({
         title={title}
         onClose={onClose}
         onKeyDown={action('onKeyDown', { depth: 1 })}
+        closeOnEsc={false}
+        closeOnExternalClick={false}
         {...rest}
       >
         <ModalContent>
@@ -298,6 +301,7 @@ export const FullPageModal: Story<ModalProps> = ({
         title={title}
         onClose={onClose}
         onKeyDown={action('onKeyDown', { depth: 1 })}
+        styleType='fullPage'
         {...rest}
       >
         <ModalContent>
