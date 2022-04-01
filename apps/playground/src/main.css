@@ -1,0 +1,9 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html {
+  font-family: system-ui, sans-serif;
+  color-scheme: dark light;
+}
