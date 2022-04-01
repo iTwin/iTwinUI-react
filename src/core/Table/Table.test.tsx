@@ -2459,6 +2459,7 @@ it('should render action column with column manager', () => {
   ).toBeTruthy();
   expect(actionColumn[1].textContent).toBe('View');
   expect(actionColumn[2].textContent).toBe('View');
+  expect(actionColumn[3].textContent).toBe('View');
 });
 
 it('should hide column when selected in column manager', () => {
