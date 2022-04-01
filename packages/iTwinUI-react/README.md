@@ -1,77 +1,99 @@
-# Turborepo starter
+<p align="center">
+  <img src="https://itwinplatformcdn.azureedge.net/iTwinUI/iTwinUI-logo.png" alt="iTwinUI logo" />
+</p>
 
-This is an official Yarn v1 starter turborepo.
+<h1 align="center">iTwinUI-react</h1>
 
-## What's inside?
+<div align="center">
+  
+  [![itwinui-react on npm](https://img.shields.io/npm/v/@itwin/itwinui-react)](https://www.npmjs.com/package/@itwin/itwinui-react)
+  [![Build status](https://github.com/iTwin/iTwinUI-react/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/iTwin/iTwinUI-react/actions/workflows/build.yml?query=branch%3Amain)
 
-This turborepo uses [Yarn](https://classic.yarnpkg.com/lang/en/) as a package manager. It includes the following packages/apps:
+</div>
 
-### Apps and Packages
+## What is iTwinUI-react?
 
-- `docs`: a [Next.js](https://nextjs.org) app
-- `web`: another [Next.js](https://nextjs.org) app
-- `ui`: a stub React component library shared by both `web` and `docs` applications
-- `config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `tsconfig`: `tsconfig.json`s used throughout the monorepo
+iTwinUI-react is a library built on top of the [iTwinUI](https://github.com/iTwin/iTwinUI) library.
+The goal of this project is to provide React components for using the styles and components from the core `iTwinUI` project. Check out the [demo website](https://itwin.github.io/iTwinUI-react/?path=/story/overview--overview) to see the components in action.
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+---
 
-### Utilities
-
-This turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-## Setup
-
-This repository is used in the `npx create-turbo` command, and selected when choosing which package manager you wish to use with your monorepo (Yarn).
-
-### Build
-
-To build all apps and packages, run the following command:
+## Installation
 
 ```
-cd my-turborepo
-yarn run build
+npm install @itwin/itwinui-react
 ```
 
-### Develop
-
-To develop all apps and packages, run the following command:
-
 ```
-cd my-turborepo
-yarn run dev
+yarn add @itwin/itwinui-react
 ```
 
-### Remote Caching
+---
 
-Turborepo can use a technique known as [Remote Caching (Beta)](https://turborepo.org/docs/features/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+## Usage
 
-By default, Turborepo will cache locally. To enable Remote Caching (Beta) you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
+Import the component you want and start using it!
 
-```
-cd my-turborepo
-npx turbo login
-```
+```jsx
+import { Button } from '@itwin/itwinui-react';
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your turborepo:
-
-```
-npx turbo link
+const App = () => <Button>Hello!</Button>;
 ```
 
-## Useful Links
+Yes, that's really all you need as you can see in this live interactive demo:
 
-Learn more about the power of Turborepo:
+[![Edit Button](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/itwinui-react-minimal-example-xq2t3)
 
-- [Pipelines](https://turborepo.org/docs/features/pipelines)
-- [Caching](https://turborepo.org/docs/features/caching)
-- [Remote Caching (Beta)](https://turborepo.org/docs/features/remote-caching)
-- [Scoped Tasks](https://turborepo.org/docs/features/scopes)
-- [Configuration Options](https://turborepo.org/docs/reference/configuration)
-- [CLI Usage](https://turborepo.org/docs/reference/command-line-reference)
+---
+
+## Theming
+
+By default, all components use the light theme but we also provide support for switching to dark theme in two different ways:
+
+- Use `ThemeProvider` in your root component where you can pass one of the following values:
+  - `light` (default)
+  - `dark`
+  - `os` (which respects the color scheme of the operating system)
+
+```jsx
+import { ThemeProvider } from '@itwin/itwinui-react';
+
+const App = () => (
+  <>
+    <ThemeProvider theme='dark' />
+    // Your code goes here.
+  </>
+);
+```
+
+- The `useTheme` hook also provides the same functionality as `ThemeProvider`.
+
+```jsx
+import { useTheme } from '@itwin/itwinui-react';
+
+const App = () => {
+  useTheme('dark');
+  return <>// Your code goes here.</>;
+};
+```
+
+_Note: You only need to use one of these methods, and it only needs to be done once._
+
+---
+
+## FAQ
+
+For a list of frequently asked questions, visit the [wiki](https://github.com/iTwin/iTwinUI-react/wiki/FAQ).
+
+---
+
+## Contributing
+
+We welcome you to contribute and make this UI design system better. You can submit feature requests or bugs by creating an [issue](https://github.com/iTwin/iTwinUI-react/issues).
+Please read our [CONTRIBUTING.md](https://github.com/iTwin/iTwinUI-react/blob/main/CONTRIBUTING.md) for more information.
+
+---
+
+## Changelog
+
+Read our [CHANGELOG.md](https://github.com/iTwin/iTwinUI-react/blob/main/CHANGELOG.md) to find recent changes.
