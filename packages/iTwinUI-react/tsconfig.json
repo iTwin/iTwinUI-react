@@ -19,6 +19,7 @@
     "skipLibCheck": true
   },
   "exclude": [
-    "lib/**/*"
+    "cjd/**/*",
+    "esm/**/*",
   ]
 }

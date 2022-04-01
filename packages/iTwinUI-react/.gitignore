@@ -27,7 +27,8 @@ debug.log*
 
 # Compiled Components
 lib/
-lib/*
+cjs
+esm
 
 # Compiled Styles
 src/**/*.css

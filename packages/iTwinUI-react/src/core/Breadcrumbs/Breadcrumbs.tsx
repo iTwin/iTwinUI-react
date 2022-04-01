@@ -59,7 +59,9 @@ export const Breadcrumbs = React.forwardRef(
 
     useTheme();
 
-    const [overflowRef, visibleCount] = useOverflow(items);
+    const [overflowRef, visibleCount] = useOverflow(
+      React.Children.toArray(items),
+    );
     const refs = useMergedRefs(overflowRef, ref);
 
     const Separator = () => (
