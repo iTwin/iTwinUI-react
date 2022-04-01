@@ -38,7 +38,7 @@ jobs:
       - run: yarn build
 
       - run: npm publish --access public
-        working-directory: './lib'
+        working-directory: './packages/iTwinUI-react'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_PUBLISH_ITWIN }}
 
