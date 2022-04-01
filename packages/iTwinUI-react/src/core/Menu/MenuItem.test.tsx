@@ -6,6 +6,7 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import MenuItem from './MenuItem';
 import SvgSmileyHappy from '@itwin/itwinui-icons-react/cjs/icons/SmileyHappy';
+import userEvent from '@testing-library/user-event';
 
 function assertBaseElement(
   menuItem: HTMLLIElement,
@@ -222,10 +223,7 @@ it('should show sub menu on hover', () => {
 
   // leave sub menu item
   fireEvent.mouseLeave(subMenu, { relatedTarget: menuItem });
-  const subSubTippyContainer = document.querySelectorAll(
-    '[data-tippy-root]',
-  )[1] as HTMLElement;
-  expect(subSubTippyContainer.style.visibility).toEqual('hidden');
+  expect(subSubMenu).not.toBeVisible();
 });
 
 it('should handle key press with sub menus', () => {
@@ -247,25 +245,26 @@ it('should handle key press with sub menus', () => {
   assertBaseElement(menuItem, { hasBadge: true });
 
   // go right to open sub menu
-  fireEvent.keyDown(menuItem, { key: 'ArrowRight' });
+  menuItem.focus();
+  userEvent.keyboard('{ArrowRight}');
   const subTippy = container.querySelector('[data-tippy-root]') as HTMLElement;
   const subMenu = subTippy.querySelector('.iui-menu-item') as HTMLLIElement;
   expect(subMenu.textContent).toBe('Test sub');
   expect(container.ownerDocument.activeElement).toEqual(subMenu);
 
   // go left to close sub menu
-  fireEvent.keyDown(subMenu, { key: 'ArrowLeft' });
-  expect(subTippy.style.visibility).toEqual('hidden');
+  userEvent.keyboard('{ArrowLeft}');
+  expect(subTippy).not.toBeVisible();
 
   // go right to open sub menu
-  fireEvent.keyDown(menuItem, { key: 'ArrowRight' });
-  expect(subTippy.style.visibility).toEqual('visible');
+  userEvent.keyboard('{ArrowRight}');
+  expect(subTippy).toBeVisible();
 
   // click
-  fireEvent.keyDown(subMenu, { key: 'Enter' });
+  userEvent.keyboard('{Enter}');
   expect(mockedSubOnClick).toHaveBeenNthCalledWith(1, 'test_value_sub');
-  fireEvent.keyDown(subMenu, { key: ' ' });
+  userEvent.keyboard(' ');
   expect(mockedSubOnClick).toHaveBeenNthCalledWith(2, 'test_value_sub');
-  fireEvent.keyDown(subMenu, { key: 'Spacebar' });
+  userEvent.keyboard('{Spacebar}');
   expect(mockedSubOnClick).toHaveBeenNthCalledWith(3, 'test_value_sub');
 });
