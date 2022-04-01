@@ -15,7 +15,8 @@
   },
   "devDependencies": {
     "prettier": "^2.6.1",
-    "turbo": "latest"
+    "turbo": "latest",
+    "webpack": "5"
   },
   "engines": {
     "npm": ">=7.0.0",

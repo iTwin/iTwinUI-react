@@ -43,5 +43,4 @@ module.exports = {
     ...options,
     plugins: [['@babel/plugin-proposal-class-properties', { loose: true }]],
   }),
-  typescript: { reactDocgen: false }, // https://github.com/storybookjs/storybook/issues/15336#issuecomment-888528747
 };
