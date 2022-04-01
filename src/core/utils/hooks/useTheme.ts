@@ -60,34 +60,34 @@ export const useTheme = (
       matches: isDark,
     }: MediaQueryList | MediaQueryListEvent) => {
       if (isDark) {
-        addDarkTheme({ ownerDocument, highContrast });
+        applyTheme('dark', { ownerDocument, highContrast });
       } else {
-        addLightTheme({ ownerDocument, highContrast });
+        applyTheme('light', { ownerDocument, highContrast });
       }
     };
 
     switch (theme) {
       case 'light':
         prefersDarkMediaQuery?.removeEventListener?.('change', addOSTheme);
-        addLightTheme({ ownerDocument, highContrast });
+        applyTheme('light', { ownerDocument, highContrast });
         break;
       case 'dark':
         prefersDarkMediaQuery?.removeEventListener?.('change', addOSTheme);
-        addDarkTheme({ ownerDocument, highContrast });
+        applyTheme('dark', { ownerDocument, highContrast });
         break;
       case 'os':
         if (prefersDarkMediaQuery != undefined) {
           addOSTheme(prefersDarkMediaQuery);
           prefersDarkMediaQuery.addEventListener?.('change', addOSTheme);
         } else {
-          addLightTheme({ ownerDocument, highContrast });
+          applyTheme('light', { ownerDocument, highContrast });
         }
         break;
       default:
         if (
           ownerDocument.documentElement.className.indexOf('iui-theme') === -1
         ) {
-          addLightTheme({ ownerDocument, highContrast });
+          applyTheme('light', { ownerDocument, highContrast });
         }
     }
 
@@ -97,10 +97,10 @@ export const useTheme = (
   }, [highContrast, ownerDocument, theme]);
 };
 
-const addLightTheme = ({
-  ownerDocument,
-  highContrast,
-}: Required<ThemeOptions>) => {
+const applyTheme = (
+  theme: 'light' | 'dark',
+  { ownerDocument, highContrast }: Required<ThemeOptions>,
+) => {
   const classList = ownerDocument.documentElement.classList;
   const currentTheme = Array.from(classList).find((cls) =>
     cls.startsWith('iui-theme'),
@@ -108,19 +108,5 @@ const addLightTheme = ({
   if (currentTheme) {
     classList.remove(currentTheme);
   }
-  classList.add(`iui-theme-light${highContrast ? '-hc' : ''}`);
-};
-
-const addDarkTheme = ({
-  ownerDocument,
-  highContrast,
-}: Required<ThemeOptions>) => {
-  const classList = ownerDocument.documentElement.classList;
-  const currentTheme = Array.from(classList).find((cls) =>
-    cls.startsWith('iui-theme'),
-  );
-  if (currentTheme) {
-    classList.remove(currentTheme);
-  }
-  classList.add(`iui-theme-dark${highContrast ? '-hc' : ''}`);
+  classList.add(`iui-theme-${theme}${highContrast ? '-hc' : ''}`);
 };

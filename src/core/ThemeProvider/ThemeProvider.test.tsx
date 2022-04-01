@@ -43,6 +43,7 @@ it('should respect os theme (light)', () => {
 
 it('should respect os theme (dark)', () => {
   window.matchMedia = jest.fn().mockReturnValueOnce({ matches: true });
+
   render(<ThemeProvider theme='os' />);
   expectDarkTheme();
 });
