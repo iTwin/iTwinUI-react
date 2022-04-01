@@ -17,7 +17,7 @@ export const useMediaQuery = (queryString: string) => {
       setMatches(mediaQueryList.matches);
       try {
         mediaQueryList.addEventListener('change', handleChange);
-      } catch (_) {
+      } catch {
         // Safari 13 fallback
         mediaQueryList.addListener?.(handleChange);
       }
@@ -26,7 +26,7 @@ export const useMediaQuery = (queryString: string) => {
     return () => {
       try {
         mediaQueryList?.removeEventListener('change', handleChange);
-      } catch (_) {
+      } catch {
         // Safari 13 fallback
         mediaQueryList?.removeListener?.(handleChange);
       }

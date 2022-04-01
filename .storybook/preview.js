@@ -6,7 +6,6 @@ import addons from '@storybook/addons';
 import { addParameters } from '@storybook/react';
 import { themes } from '@storybook/theming';
 import React from 'react';
-import { useTheme } from '../src/core';
 import { lightTheme, darkTheme } from './itwinTheme';
 
 // get an instance to the communication channel for the manager and preview
