@@ -20,13 +20,21 @@ const expectDarkTheme = () => {
   expect(document.documentElement.classList).toContain('iui-theme-dark');
 };
 
+let useMediaSpy: jest.SpyInstance;
+
+beforeEach(() => {
+  useMediaSpy = jest
+    .spyOn(UseMediaQuery, 'useMediaQuery')
+    .mockReturnValue(false);
+});
+
 afterEach(() => {
   document.documentElement.classList.remove('iui-theme-light');
   document.documentElement.classList.remove('iui-theme-dark');
+  useMediaSpy?.mockRestore();
 });
 
 it('should respect os theme (light)', () => {
-  jest.spyOn(UseMediaQuery, 'useMediaQuery').mockReturnValueOnce(false);
   window.matchMedia = jest.fn().mockReturnValueOnce({ matches: false });
 
   render(<ThemeProvider theme='os' />);
@@ -34,16 +42,12 @@ it('should respect os theme (light)', () => {
 });
 
 it('should respect os theme (dark)', () => {
-  jest.spyOn(UseMediaQuery, 'useMediaQuery').mockReturnValueOnce(false);
   window.matchMedia = jest.fn().mockReturnValueOnce({ matches: true });
   render(<ThemeProvider theme='os' />);
   expectDarkTheme();
 });
 
 describe('media query', () => {
-  const useMediaSpy = jest
-    .spyOn(UseMediaQuery, 'useMediaQuery')
-    .mockReturnValue(false);
   const originalMatchMedia = window.matchMedia;
   let listeners: Array<(e: { matches: boolean }) => void> = [];
   let matches = false;
@@ -83,10 +87,6 @@ describe('media query', () => {
     window.matchMedia = originalMatchMedia;
     listeners = [];
     matches = false;
-  });
-
-  afterAll(() => {
-    useMediaSpy.mockRestore();
   });
 
   it('should observe changes to os theme', () => {
@@ -162,7 +162,7 @@ it('should set body class', () => {
 it.each(['light', 'dark'] as const)(
   'should respect prefers-contrast query (%s)',
   (theme) => {
-    jest.spyOn(UseMediaQuery, 'useMediaQuery').mockReturnValueOnce(true);
+    useMediaSpy.mockReturnValue(true);
     render(<ThemeProvider theme={theme} />);
     expect(document.documentElement.classList).toContain(
       `iui-theme-${theme}-hc`,
@@ -173,7 +173,6 @@ it.each(['light', 'dark'] as const)(
 it.each(['light', 'dark'] as const)(
   'should support `themeOptions.highContrast` (%s)',
   (theme) => {
-    jest.spyOn(UseMediaQuery, 'useMediaQuery').mockReturnValueOnce(false);
     render(
       <ThemeProvider theme={theme} themeOptions={{ highContrast: true }} />,
     );
@@ -186,7 +185,7 @@ it.each(['light', 'dark'] as const)(
 it.each([true, false])(
   'should override prefers-contrast query when `themeOptions.highContrast` is %s',
   (highContrast) => {
-    jest.spyOn(UseMediaQuery, 'useMediaQuery').mockReturnValueOnce(true);
+    useMediaSpy.mockReturnValue(true);
     render(<ThemeProvider theme={'light'} themeOptions={{ highContrast }} />);
     expect(document.documentElement.classList).toContain(
       `iui-theme-light${highContrast ? '-hc' : ''}`,
