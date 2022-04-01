@@ -13,6 +13,7 @@
     "Buttons/IconButton": {},
     "Buttons/IdeasButton": {},
     "Buttons/SplitButton": {},
+    "Core/Carousel": {},
     "Input/Checkbox": {},
     "Core/ColorPicker": {},
     "Core/ComboBox": {},
@@ -429,6 +430,39 @@
         "__id": "buttons-splitbutton--basic"
       }
     },
+    "core-carousel--basic": {
+      "id": "core-carousel--basic",
+      "name": "Basic",
+      "kind": "Core/Carousel",
+      "story": "Basic",
+      "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Carousel.stories.tsx",
+        "framework": "react",
+        "__id": "core-carousel--basic"
+      }
+    },
+    "core-carousel--controlled": {
+      "id": "core-carousel--controlled",
+      "name": "Controlled",
+      "kind": "Core/Carousel",
+      "story": "Controlled",
+      "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Carousel.stories.tsx",
+        "framework": "react",
+        "__id": "core-carousel--controlled"
+      }
+    },
+    "core-carousel--only-dots": {
+      "id": "core-carousel--only-dots",
+      "name": "Only Dots",
+      "kind": "Core/Carousel",
+      "story": "Only Dots",
+      "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Carousel.stories.tsx",
+        "framework": "react",
+        "__id": "core-carousel--only-dots"
+      }
+    },
     "input-checkbox--basic": {
       "id": "input-checkbox--basic",
       "name": "Basic",
@@ -669,6 +703,17 @@
         "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/DatePicker.stories.tsx",
         "framework": "react",
         "__id": "core-datepicker--localized"
+      }
+    },
+    "core-datepicker--with-year": {
+      "id": "core-datepicker--with-year",
+      "name": "With Year",
+      "kind": "Core/DatePicker",
+      "story": "With Year",
+      "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/DatePicker.stories.tsx",
+        "framework": "react",
+        "__id": "core-datepicker--with-year"
       }
     },
     "core-dropdownmenu--basic": {
