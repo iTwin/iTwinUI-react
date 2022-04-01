@@ -17,7 +17,7 @@ export type BreadcrumbsProps = {
   /**
    * Breadcrumb items.
    */
-  children: React.ReactNodeArray;
+  children: React.ReactNode[];
   /**
    * Specify a custom separator element to show between breadcrumb items.
    * Defaults to the `SvgChevronRight` icon.
@@ -59,9 +59,7 @@ export const Breadcrumbs = React.forwardRef(
 
     useTheme();
 
-    const [overflowRef, visibleCount] = useOverflow(
-      React.Children.toArray(items),
-    );
+    const [overflowRef, visibleCount] = useOverflow(items);
     const refs = useMergedRefs(overflowRef, ref);
 
     const Separator = () => (

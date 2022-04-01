@@ -22,7 +22,7 @@ export type ProgressLinearProps = {
   /**
    * Labels array. One label will be centered, two will be put to the sides.
    */
-  labels?: React.ReactNodeArray;
+  labels?: React.ReactNode[];
   /**
    * Apply animation to the value change, if determinate.
    * @default false

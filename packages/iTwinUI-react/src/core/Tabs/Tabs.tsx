@@ -19,7 +19,7 @@ export type TabsProps = {
    * Elements shown for each tab.
    * Recommended to pass an array of `Tab` components.
    */
-  labels: React.ReactNodeArray;
+  labels: React.ReactNode[];
   /**
    * Handler for activating a tab.
    */
