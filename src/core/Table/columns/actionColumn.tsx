@@ -9,7 +9,8 @@ import SvgColumnManager from '@itwin/itwinui-icons-react/cjs/icons/ColumnManager
 import { DropdownMenu } from '../../DropdownMenu';
 import { IconButton } from '../../Buttons/IconButton';
 import { MenuItem } from '../../Menu';
-export const ACTION_CELL_ID = 'iui-table-action';
+
+const ACTION_CELL_ID = 'iui-table-action';
 
 export const ActionColumn = <T extends Record<string, unknown>>(
   hasColumnManager: boolean,

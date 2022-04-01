@@ -1274,8 +1274,6 @@ export const Full: Story<Partial<TableProps>> = (args) => {
     [],
   );
 
-  const hasColumnManager = true;
-
   const columns = useMemo(
     () => [
       {
@@ -1315,11 +1313,11 @@ export const Full: Story<Partial<TableProps>> = (args) => {
               </>
             ),
           },
-          ActionColumn(hasColumnManager),
+          ActionColumn(true),
         ],
       },
     ],
-    [isRowDisabled, hasColumnManager],
+    [isRowDisabled],
   );
 
   const data = useMemo(
@@ -2516,7 +2514,6 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
     endDate: Date;
   };
 
-  const hasColumnManager = true;
   const columns = useMemo(
     (): Column<TableStoryDataType>[] => [
       {
@@ -2560,11 +2557,11 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
               return props.row.original.endDate.toLocaleDateString('en-US');
             },
           },
-          ActionColumn(hasColumnManager),
+          ActionColumn(true),
         ],
       },
     ],
-    [hasColumnManager],
+    [],
   );
   const data = useMemo(
     () => [

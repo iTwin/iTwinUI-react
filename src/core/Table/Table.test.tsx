@@ -2448,13 +2448,17 @@ it('should render action column with column manager', () => {
     data: mockedData(),
   });
 
-  const columnHeaders = container.querySelectorAll('[role="columnheader"]');
-  expect(columnHeaders.length).toBe(3);
+  expect(container.querySelectorAll('[role="columnheader"]').length).toBe(3);
+  const actionColumn = container.querySelectorAll<HTMLInputElement>(
+    '.iui-slot',
+  );
   expect(
-    columnHeaders[2].firstElementChild?.className.includes(
+    actionColumn[0].firstElementChild?.className.includes(
       'iui-button iui-borderless',
     ),
   ).toBeTruthy();
+  expect(actionColumn[1].textContent).toBe('View');
+  expect(actionColumn[2].textContent).toBe('View');
 });
 
 it('should hide column when selected in column manager', () => {
