@@ -558,7 +558,8 @@ export const Table = <
   const bodyRef = React.useRef<HTMLDivElement>(null);
 
   const getPreparedRow = React.useCallback(
-    (row: Row<T>, index: number) => {
+    (index: number) => {
+      const row = page[index];
       prepareRow(row);
       return (
         <TableRowMemoized
@@ -580,7 +581,7 @@ export const Table = <
       );
     },
     [
-      page.length,
+      page,
       expanderCell,
       hasAnySubRows,
       instance,
@@ -595,8 +596,8 @@ export const Table = <
   );
 
   const virtualizedItemRenderer = React.useCallback(
-    (index: number) => getPreparedRow(page[index], index),
-    [getPreparedRow, page],
+    (index: number) => getPreparedRow(index),
+    [getPreparedRow],
   );
 
   return (
@@ -715,7 +716,7 @@ export const Table = <
                   itemRenderer={virtualizedItemRenderer}
                 />
               ) : (
-                page.map((row, index) => getPreparedRow(row, index))
+                page.map((_, index) => getPreparedRow(index))
               )}
             </>
           )}

@@ -771,7 +771,7 @@ it('should show active filter icon when more data is loading', () => {
   setFilter(container, '2');
 
   const filterIcon = container.querySelector(
-    '.iui-filter-button .iui-button-icon',
+    '.iui-filter-button.iui-active .iui-button-icon',
   ) as HTMLElement;
   expect(filterIcon).toBeTruthy();
 });
