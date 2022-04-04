@@ -29,6 +29,9 @@ export type {
 export { ButtonGroup } from './ButtonGroup';
 export type { ButtonGroupProps } from './ButtonGroup';
 
+export { Carousel } from './Carousel';
+export type { CarouselProps } from './Carousel';
+
 export { Checkbox } from './Checkbox';
 export type { CheckboxProps } from './Checkbox';
 
@@ -132,8 +135,12 @@ export type {
   MenuExtraContentProps,
 } from './Menu';
 
-export { Modal, ModalButtonBar } from './Modal';
-export type { ModalProps, ModalButtonBarProps } from './Modal';
+export { Modal, ModalButtonBar, ModalContent } from './Modal';
+export type {
+  ModalProps,
+  ModalButtonBarProps,
+  ModalContentProps,
+} from './Modal';
 
 export { ProgressLinear, ProgressRadial } from './ProgressIndicators';
 export type {
