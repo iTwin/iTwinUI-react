@@ -10,12 +10,13 @@ import { DropdownMenu } from '../../DropdownMenu';
 import { IconButton } from '../../Buttons/IconButton';
 import { MenuItem } from '../../Menu';
 import { TABLE_RESIZE_START_ACTION } from '../actionHandlers';
+import { EXPANDER_CELL_ID, SELECTION_CELL_ID } from '../hooks';
 
 const ACTION_CELL_ID = 'iui-table-action';
 
-export const ActionColumn = <T extends Record<string, unknown>>(
-  hasColumnManager: boolean,
-) => {
+export const ActionColumn = <T extends Record<string, unknown>>({
+  hasColumnManager = true,
+}) => {
   return {
     id: ACTION_CELL_ID,
     disableResizing: true,
@@ -34,7 +35,12 @@ export const ActionColumn = <T extends Record<string, unknown>>(
         const headerCheckBoxes = () =>
           allColumns
             //Filters out any default columns made such as selection and expansion
-            .filter(({ id }) => !id.includes('iui-table'))
+            .filter(
+              ({ id }) =>
+                ![SELECTION_CELL_ID, EXPANDER_CELL_ID, ACTION_CELL_ID].includes(
+                  id,
+                ),
+            )
             .map((column) => {
               const { onChange, checked } = column.getToggleHiddenProps();
               return (
@@ -50,6 +56,7 @@ export const ActionColumn = <T extends Record<string, unknown>>(
                         onChange(e);
                         dispatch({ type: TABLE_RESIZE_START_ACTION });
                       }}
+                      aria-label={column.Header?.toString()}
                     />
                   }
                   onClick={() => {

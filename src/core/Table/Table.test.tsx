@@ -2466,7 +2466,7 @@ it('should render empty action column with column manager', () => {
           Header: 'View',
           Cell: () => 'View',
         },
-        ActionColumn(true),
+        ActionColumn({ hasColumnManager: true }),
       ],
     },
   ];
@@ -2508,7 +2508,7 @@ it('should render action column with column manager', () => {
           accessor: 'description',
         },
         {
-          ...ActionColumn(true),
+          ...ActionColumn({ hasColumnManager: true }),
           id: 'view',
           Cell: () => 'View',
         },
@@ -2554,7 +2554,7 @@ it('should hide column when selected in column manager', () => {
           Header: 'View',
           Cell: () => 'View',
         },
-        ActionColumn(true),
+        ActionColumn({ hasColumnManager: true }),
       ],
     },
   ];
@@ -2609,7 +2609,7 @@ it('should be disabled in column manager if `disableToggleVisibility` is true', 
           Header: 'View',
           Cell: () => 'View',
         },
-        ActionColumn(true),
+        ActionColumn({ hasColumnManager: true }),
       ],
     },
   ];

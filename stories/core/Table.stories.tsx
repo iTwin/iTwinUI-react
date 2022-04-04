@@ -1322,7 +1322,7 @@ export const Full: Story<Partial<TableProps>> = (args) => {
               </>
             ),
           },
-          ActionColumn(true),
+          ActionColumn({ hasColumnManager: true }),
         ],
       },
     ],
@@ -2631,7 +2631,7 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
               return props.row.original.endDate.toLocaleDateString('en-US');
             },
           },
-          ActionColumn(true),
+          ActionColumn({ hasColumnManager: true }),
         ],
       },
     ],
