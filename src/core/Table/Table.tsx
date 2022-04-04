@@ -43,17 +43,15 @@ import {
   onExpandHandler,
   onFilterHandler,
   onSelectHandler,
-} from './actionHandlers';
-import { onSingleSelectHandler } from './actionHandlers/selectHandler';
-import {
+  onSingleSelectHandler,
   onTableResizeEnd,
   onTableResizeStart,
-} from './actionHandlers/resizeHandler';
+  TABLE_RESIZE_END_ACTION,
+  TABLE_RESIZE_START_ACTION,
+} from './actionHandlers';
 import VirtualScroll from '../utils/components/VirtualScroll';
 
 const singleRowSelectedAction = 'singleRowSelected';
-const tableResizeStartAction = 'tableResizeStart';
-const tableResizeEndAction = 'tableResizeEnd';
 
 export type TablePaginatorRendererProps = {
   /**
@@ -378,11 +376,11 @@ export const Table = <
           onSelectHandler(newState, instance, onSelect, isRowDisabled);
           break;
         }
-        case tableResizeStartAction: {
+        case TABLE_RESIZE_START_ACTION: {
           newState = onTableResizeStart(newState);
           break;
         }
-        case tableResizeEndAction: {
+        case TABLE_RESIZE_END_ACTION: {
           newState = onTableResizeEnd(newState, action);
           break;
         }
@@ -533,7 +531,7 @@ export const Table = <
         return;
       }
 
-      dispatch({ type: tableResizeStartAction });
+      dispatch({ type: TABLE_RESIZE_START_ACTION });
     },
     [dispatch, state.columnResizing.columnWidths, flatHeaders],
   );
@@ -550,7 +548,11 @@ export const Table = <
           ].getBoundingClientRect().width;
         }
       });
-      dispatch({ type: tableResizeEndAction, columnWidths: newColumnWidths });
+      console.log(newColumnWidths);
+      dispatch({
+        type: TABLE_RESIZE_END_ACTION,
+        columnWidths: newColumnWidths,
+      });
     }
   });
 
