@@ -17,13 +17,14 @@ export const ActionColumn = <T extends Record<string, unknown>>(
 ) => {
   return {
     id: ACTION_CELL_ID,
+    disableResizing: true,
+    disableGroupBy: true,
     minWidth: 48,
     width: 48,
     maxWidth: 48,
-    disableReordering: true,
-    disableResizing: true,
     columnClassName: 'iui-slot',
     cellClassName: 'iui-slot',
+    disableReordering: true,
     Header: ({ allColumns }: HeaderProps<T>) => {
       const [isOpen, setIsOpen] = React.useState(false);
       if (!hasColumnManager) {
