@@ -548,7 +548,6 @@ export const Table = <
           ].getBoundingClientRect().width;
         }
       });
-      console.log(newColumnWidths);
       dispatch({
         type: TABLE_RESIZE_END_ACTION,
         columnWidths: newColumnWidths,
