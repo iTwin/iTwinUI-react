@@ -4,6 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 import { ActionType, TableState } from 'react-table';
 
+export const TABLE_RESIZE_START_ACTION = 'tableResizeStart';
+export const TABLE_RESIZE_END_ACTION = 'tableResizeEnd';
+
 export const onTableResizeStart = <T extends Record<string, unknown>>(
   state: TableState<T>,
 ) => {

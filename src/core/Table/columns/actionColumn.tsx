@@ -9,6 +9,7 @@ import SvgColumnManager from '@itwin/itwinui-icons-react/cjs/icons/ColumnManager
 import { DropdownMenu } from '../../DropdownMenu';
 import { IconButton } from '../../Buttons/IconButton';
 import { MenuItem } from '../../Menu';
+import { TABLE_RESIZE_START_ACTION } from '../actionHandlers';
 
 const ACTION_CELL_ID = 'iui-table-action';
 
@@ -25,7 +26,7 @@ export const ActionColumn = <T extends Record<string, unknown>>(
     columnClassName: 'iui-slot',
     cellClassName: 'iui-slot',
     disableReordering: true,
-    Header: ({ allColumns }: HeaderProps<T>) => {
+    Header: ({ allColumns, dispatch }: HeaderProps<T>) => {
       const [isOpen, setIsOpen] = React.useState(false);
       if (!hasColumnManager) {
         return null;
@@ -45,10 +46,16 @@ export const ActionColumn = <T extends Record<string, unknown>>(
                       checked={checked}
                       disabled={column.disableToggleVisibility}
                       onClick={(e) => e.stopPropagation()}
-                      onChange={onChange}
+                      onChange={(e) => {
+                        onChange(e);
+                        dispatch({ type: TABLE_RESIZE_START_ACTION });
+                      }}
                     />
                   }
-                  onClick={() => column.toggleHidden(checked)}
+                  onClick={() => {
+                    column.toggleHidden(checked);
+                    dispatch({ type: TABLE_RESIZE_START_ACTION });
+                  }}
                   disabled={column.disableToggleVisibility}
                 >
                   {column.Header}
