@@ -49,7 +49,6 @@ export const ActionColumn = <T extends Record<string, unknown>>({
                   key={column.id}
                   icon={
                     <Checkbox
-                      id={`iui-column-${column.id}`}
                       checked={checked}
                       disabled={column.disableToggleVisibility}
                       onClick={(e) => e.stopPropagation()}
@@ -57,7 +56,7 @@ export const ActionColumn = <T extends Record<string, unknown>>({
                         onChange(e);
                         dispatch({ type: TABLE_RESIZE_START_ACTION });
                       }}
-                      aria-label={column.Header?.toString()}
+                      aria-labelledby={`iui-column-${column.id}`}
                     />
                   }
                   onClick={() => {
@@ -66,7 +65,9 @@ export const ActionColumn = <T extends Record<string, unknown>>({
                   }}
                   disabled={column.disableToggleVisibility}
                 >
-                  {column.Header}
+                  <div id={`iui-column-${column.id}`}>
+                    {column.render('Header')}
+                  </div>
                 </MenuItem>
               );
             });
