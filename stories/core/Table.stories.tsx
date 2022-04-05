@@ -17,6 +17,9 @@ import {
   Checkbox,
   Code,
   InputGroup,
+  DropdownMenu,
+  MenuItem,
+  IconButton,
   Table,
   Leading,
   tableFilters,
@@ -33,6 +36,7 @@ import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
 import { action } from '@storybook/addon-actions';
 import { CreeveyMeta, CreeveyStoryParams } from 'creevey';
+import { SvgMore } from '@itwin/itwinui-icons-react';
 
 export default {
   title: 'Core/Table',
@@ -1283,6 +1287,17 @@ export const Full: Story<Partial<TableProps>> = (args) => {
     [],
   );
 
+  const menuItems = useCallback((close: () => void) => {
+    return [
+      <MenuItem key={1} onClick={() => close()}>
+        Edit
+      </MenuItem>,
+      <MenuItem key={2} onClick={() => close()}>
+        Delete
+      </MenuItem>,
+    ];
+  }, []);
+
   const columns = useMemo(
     () => [
       {
@@ -1303,30 +1318,22 @@ export const Full: Story<Partial<TableProps>> = (args) => {
             Filter: tableFilters.TextFilter(),
           },
           {
-            id: 'click-me',
-            Header: 'Click',
-            width: 100,
-            // Manually handling disabled state in custom cells
-            Cell: (props: CellProps<{ name: string; description: string }>) => (
-              <>
-                {isRowDisabled(props.row.original) ? (
-                  <>Click me!</>
-                ) : (
-                  <a
-                    className='iui-anchor'
-                    onClick={action(props.row.original.name)}
-                  >
-                    Click me!
-                  </a>
-                )}
-              </>
+            ...ActionColumn({ hasColumnManager: true }),
+            Cell: () => (
+              <DropdownMenu menuItems={menuItems}>
+                <IconButton
+                  styleType='borderless'
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <SvgMore />
+                </IconButton>
+              </DropdownMenu>
             ),
           },
-          ActionColumn({ hasColumnManager: true }),
         ],
       },
     ],
-    [isRowDisabled],
+    [menuItems],
   );
 
   const data = useMemo(

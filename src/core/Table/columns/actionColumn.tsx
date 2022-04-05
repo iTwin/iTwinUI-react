@@ -29,18 +29,19 @@ export const ActionColumn = <T extends Record<string, unknown>>({
     disableReordering: true,
     Header: ({ allColumns, dispatch }: HeaderProps<T>) => {
       const [isOpen, setIsOpen] = React.useState(false);
+      const defaultColumnIds = [
+        SELECTION_CELL_ID,
+        EXPANDER_CELL_ID,
+        ACTION_CELL_ID,
+      ];
+
       if (!hasColumnManager) {
         return null;
       } else {
         const headerCheckBoxes = () =>
           allColumns
             //Filters out any default columns made such as selection and expansion
-            .filter(
-              ({ id }) =>
-                ![SELECTION_CELL_ID, EXPANDER_CELL_ID, ACTION_CELL_ID].includes(
-                  id,
-                ),
-            )
+            .filter(({ id }) => !defaultColumnIds.includes(id))
             .map((column) => {
               const { onChange, checked } = column.getToggleHiddenProps();
               return (

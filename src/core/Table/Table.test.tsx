@@ -2472,16 +2472,18 @@ it('should render empty action column with column manager', () => {
   ];
   const { container } = renderComponent({
     columns,
-    data: mockedData(),
-    isSelectable: true,
-    subComponent: (row) => (
-      <div>{`Expanded component, name: ${row.original.name}`}</div>
-    ),
   });
 
-  const columnManager = container.querySelector('.iui-button') as HTMLElement;
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  const columnManager = headerCells[headerCells.length - 1]
+    .firstElementChild as Element;
 
-  expect(columnManager).toBeTruthy();
+  expect(
+    columnManager.className.includes('iui-button iui-borderless'),
+  ).toBeTruthy();
+
   userEvent.click(columnManager);
 
   expect(document.querySelector('.iui-menu')).toBeTruthy();
@@ -2517,7 +2519,6 @@ it('should render action column with column manager', () => {
   ];
   const { container } = renderComponent({
     columns,
-    data: mockedData(),
   });
 
   expect(container.querySelectorAll('[role="columnheader"]').length).toBe(3);
@@ -2534,7 +2535,7 @@ it('should render action column with column manager', () => {
   expect(actionColumn[3].textContent).toBe('View');
 });
 
-it('should hide column when selected in column manager', () => {
+it('should hide column when deselected in column manager', () => {
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Header name',
