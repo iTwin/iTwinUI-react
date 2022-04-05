@@ -9,6 +9,7 @@
 * **Modal:** Add full page modal ([#588](https://www.github.com/iTwin/iTwinUI-react/issues/588)) ([711a55b](https://www.github.com/iTwin/iTwinUI-react/commit/711a55b2b4373ce4bd99d770a3edc5f9aae516bc))
   - Add `ModalContent` component for better scroll experience.
 * **Theme:** Add support for high contrast themes ([#610](https://www.github.com/iTwin/iTwinUI-react/issues/610)) ([b1b6d95](https://www.github.com/iTwin/iTwinUI-react/commit/b1b6d9519ec0290bd6759a31fc4cc4a7c8ab03e3))
+  - High contrast themes are automatically used if user's OS prefers it. It can also be specified manually using `themeOptions.highContrast`.
 
 ### Fixes
 
