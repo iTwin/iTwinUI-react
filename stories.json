@@ -1486,6 +1486,17 @@
         "__id": "core-modal--outside-click-and-esc-does-not-close"
       }
     },
+    "core-modal--full-page-modal": {
+      "id": "core-modal--full-page-modal",
+      "name": "Full Page Modal",
+      "kind": "Core/Modal",
+      "story": "Full Page Modal",
+      "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Modal.stories.tsx",
+        "framework": "react",
+        "__id": "core-modal--full-page-modal"
+      }
+    },
     "progressindicators-progresslinear--determinate": {
       "id": "progressindicators-progresslinear--determinate",
       "name": "Determinate",
