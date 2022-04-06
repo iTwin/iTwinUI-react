@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.35.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.34.2...v1.35.0) (2022-04-05)
+
+### What's new
+
+* **Carousel:** Add new Carousel Component ([#569](https://www.github.com/iTwin/iTwinUI-react/issues/569)) ([fc7040c](https://www.github.com/iTwin/iTwinUI-react/commit/fc7040c712011bdf40a6d5b3e9c4bad78a532523))
+* **DatePicker:** Add year selection ([#604](https://www.github.com/iTwin/iTwinUI-react/issues/604)) ([2f57da6](https://www.github.com/iTwin/iTwinUI-react/commit/2f57da6ef07202290e4f6d214a0581dae1528007))
+* **Modal:** Add full page modal ([#588](https://www.github.com/iTwin/iTwinUI-react/issues/588)) ([711a55b](https://www.github.com/iTwin/iTwinUI-react/commit/711a55b2b4373ce4bd99d770a3edc5f9aae516bc))
+  - Add `ModalContent` component for better scroll experience.
+* **Theme:** Add support for high contrast themes ([#610](https://www.github.com/iTwin/iTwinUI-react/issues/610)) ([b1b6d95](https://www.github.com/iTwin/iTwinUI-react/commit/b1b6d9519ec0290bd6759a31fc4cc4a7c8ab03e3))
+  - High contrast themes are automatically used if user's OS prefers it. It can also be specified manually using `themeOptions.highContrast`.
+
+### Fixes
+
+* **Table:** `onBottomReached` was triggered on filtered Table ([#607](https://www.github.com/iTwin/iTwinUI-react/issues/607)) ([2f9cf24](https://www.github.com/iTwin/iTwinUI-react/commit/2f9cf24fd0eecee1bff27cbf8d69281062e3e33d))
+
+### [1.34.2](https://www.github.com/iTwin/iTwinUI-react/compare/v1.34.1...v1.34.2) (2022-03-29)
+
+### Fixes
+
+* **Table:** Date filter makes range from the begigging to the end of the day ([#601](https://www.github.com/iTwin/iTwinUI-react/issues/601)) ([ae978b7](https://www.github.com/iTwin/iTwinUI-react/commit/ae978b7df3a59f9cd18474346d88083d888e36e3))
+
+### [1.34.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.34.0...v1.34.1) (2022-03-24)
+
+### Fixes
+
+* **ComboBox:** Combine internal input onChange with `inputProps.onChange` ([#597](https://www.github.com/iTwin/iTwinUI-react/issues/597)) ([e033753](https://www.github.com/iTwin/iTwinUI-react/commit/e033753c81f3b9298df6eb198581c75344f96c00))
+
 ## [1.34.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.33.1...v1.34.0) (2022-03-22)
 
 ### What's new

@@ -805,6 +805,7 @@ export const LazyLoading: Story<Partial<TableProps>> = (args) => {
             id: 'name',
             Header: 'Name',
             accessor: 'name',
+            Filter: tableFilters.TextFilter(),
           },
           {
             id: 'description',
@@ -861,11 +862,19 @@ export const LazyLoading: Story<Partial<TableProps>> = (args) => {
       emptyTableContent='No data.'
       onBottomReached={onBottomReached}
       isLoading={isLoading}
+      isSortable
       {...args}
       style={{ height: 440, maxHeight: '90vh' }}
       data={data}
+      // Prevents from resetting filters and sorting when more data is loaded
+      autoResetFilters={false}
+      autoResetSortBy={false}
     />
   );
+};
+
+LazyLoading.args = {
+  isSortable: true,
 };
 
 LazyLoading.argTypes = {
@@ -1391,8 +1400,73 @@ Full.args = {
   enableColumnReordering: true,
 };
 
-export const Condensed: Story<Partial<TableProps>> = Basic.bind({});
-Condensed.args = { density: 'condensed' };
+export const Condensed: Story<Partial<TableProps>> = (args) => {
+  const onClickHandler = (
+    props: CellProps<{ name: string; description: string }>,
+  ) => action(props.row.original.name)();
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+          },
+          {
+            id: 'click-me',
+            Header: 'Click',
+            width: 100,
+            Cell: (props: CellProps<{ name: string; description: string }>) => {
+              const onClick = () => onClickHandler(props);
+              return (
+                <a className='iui-anchor' onClick={onClick}>
+                  Click me!
+                </a>
+              );
+            },
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const data = useMemo(
+    () => [
+      { name: 'Name1', description: 'Description1' },
+      { name: 'Name2', description: 'Description2' },
+      { name: 'Name3', description: 'Description3' },
+    ],
+    [],
+  );
+
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      emptyTableContent='No data.'
+      density='condensed'
+      {...args}
+    />
+  );
+};
+Condensed.args = {
+  density: 'condensed',
+  data: [
+    { name: 'Name1', description: 'Description1' },
+    { name: 'Name2', description: 'Description2' },
+    { name: 'Name3', description: 'Description3' },
+  ],
+};
 
 export const Editable: Story<Partial<TableProps>> = (args) => {
   type TableStoryDataType = {
