@@ -54,6 +54,7 @@ export const ActionColumn = <T extends Record<string, unknown>>({
                       onClick={(e) => e.stopPropagation()}
                       onChange={(e) => {
                         onChange(e);
+                        //This updates the width of the visibile columns when the table resizer is enabled
                         dispatch({ type: TABLE_RESIZE_START_ACTION });
                       }}
                       aria-labelledby={`iui-column-${column.id}`}
