@@ -3,14 +3,14 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { useTheme } from '../utils';
+import { CommonProps, useTheme } from '../utils';
 
 export type SkipToContentMarkerProps = {
   /**
    * Optional main content as child.
    */
   children?: React.ReactNode;
-};
+} & Omit<CommonProps, 'id'>;
 
 /**
  * Marks the start of the main content of the page.

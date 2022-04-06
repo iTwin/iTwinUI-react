@@ -3,7 +3,9 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { useTheme } from '../utils';
+import cx from 'classnames';
+import { CommonProps, useTheme } from '../utils';
+import '@itwin/itwinui-css/css/skip-to-content.css';
 
 export type SkipToContentLinkProps = {
   /**
@@ -11,7 +13,7 @@ export type SkipToContentLinkProps = {
    * @default 'Skip to main content'
    */
   children?: React.ReactNode;
-};
+} & Omit<CommonProps, 'href'>;
 
 /**
  * Link is for screen reader and keyboard users and will not be visible unless tabbed to.
@@ -22,13 +24,13 @@ export type SkipToContentLinkProps = {
  * <body><SkipToContentLink>{localizedLabel}</SkipToContentLink> ... </body>
  */
 export const SkipToContentLink = (props: SkipToContentLinkProps) => {
-  const { children = 'Skip to main content', ...rest } = props;
+  const { children = 'Skip to main content', className, ...rest } = props;
 
   useTheme();
 
   return (
     <a
-      className='iui-skip-to-content-link'
+      className={cx('iui-skip-to-content-link', className)}
       href='#skip-to-content-marker'
       {...rest}
     >
