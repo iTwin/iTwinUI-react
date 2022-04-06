@@ -2692,11 +2692,11 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
 
   return (
     <Table
-      isSelectable={true}
+      isSelectable
       columns={columns}
       data={data}
-      {...args}
       emptyTableContent='No data.'
+      {...args}
     />
   );
 };
