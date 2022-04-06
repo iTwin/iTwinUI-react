@@ -2561,7 +2561,6 @@ it('should hide column when deselected in column manager', () => {
   ];
   const { container } = renderComponent({
     columns,
-    data: mockedData(),
   });
 
   let headerCells = container.querySelectorAll<HTMLDivElement>(
@@ -2616,7 +2615,6 @@ it('should be disabled in column manager if `disableToggleVisibility` is true', 
   ];
   const { container } = renderComponent({
     columns,
-    data: mockedData(),
   });
 
   const columnManager = container.querySelector('.iui-button') as HTMLElement;
