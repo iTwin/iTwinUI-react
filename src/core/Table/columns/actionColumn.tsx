@@ -27,7 +27,7 @@ export const ActionColumn = <T extends Record<string, unknown>>({
     columnClassName: 'iui-slot',
     cellClassName: 'iui-slot',
     disableReordering: true,
-    Header: ({ allColumns, dispatch }: HeaderProps<T>) => {
+    Header: ({ allColumns, dispatch, state }: HeaderProps<T>) => {
       const [isOpen, setIsOpen] = React.useState(false);
       const defaultColumnIds = [
         SELECTION_CELL_ID,
@@ -43,7 +43,17 @@ export const ActionColumn = <T extends Record<string, unknown>>({
             //Filters out any default columns made such as selection and expansion
             .filter(({ id }) => !defaultColumnIds.includes(id))
             .map((column) => {
-              const { onChange, checked } = column.getToggleHiddenProps();
+              const { checked } = column.getToggleHiddenProps();
+              const onClick = () => {
+                column.toggleHidden(checked);
+                // If no column was resized then leave table resize handling to the flexbox
+                if (
+                  Object.keys(state.columnResizing.columnWidths).length === 0
+                ) {
+                  return;
+                }
+                dispatch({ type: TABLE_RESIZE_START_ACTION });
+              };
               return (
                 <MenuItem
                   key={column.id}
@@ -52,17 +62,11 @@ export const ActionColumn = <T extends Record<string, unknown>>({
                       checked={checked}
                       disabled={column.disableToggleVisibility}
                       onClick={(e) => e.stopPropagation()}
-                      onChange={(e) => {
-                        onChange(e);
-                        dispatch({ type: TABLE_RESIZE_START_ACTION });
-                      }}
+                      onChange={onClick}
                       aria-labelledby={`iui-column-${column.id}`}
                     />
                   }
-                  onClick={() => {
-                    column.toggleHidden(checked);
-                    dispatch({ type: TABLE_RESIZE_START_ACTION });
-                  }}
+                  onClick={onClick}
                   disabled={column.disableToggleVisibility}
                 >
                   <div id={`iui-column-${column.id}`}>
