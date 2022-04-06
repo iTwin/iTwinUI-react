@@ -49,9 +49,9 @@ import {
 } from './actionHandlers';
 import VirtualScroll from '../utils/components/VirtualScroll';
 
-export const TABLE_RESIZE_START_ACTION = 'tableResizeStart';
-const TABLE_RESIZE_END_ACTION = 'tableResizeEnd';
-const SINGLE_ROW_SELECTED_ACTION = 'singleRowSelected';
+const singleRowSelectedAction = 'singleRowSelected';
+export const tableResizeStartAction = 'tableResizeStart';
+const tableResizeEndAction = 'tableResizeEnd';
 
 export type TablePaginatorRendererProps = {
   /**
@@ -360,7 +360,7 @@ export const Table = <
         case TableActions.toggleAllRowsExpanded:
           onExpandHandler(newState, instance, onExpand);
           break;
-        case SINGLE_ROW_SELECTED_ACTION: {
+        case singleRowSelectedAction: {
           newState = onSingleSelectHandler(
             newState,
             action,
@@ -376,11 +376,11 @@ export const Table = <
           onSelectHandler(newState, instance, onSelect, isRowDisabled);
           break;
         }
-        case TABLE_RESIZE_START_ACTION: {
+        case tableResizeStartAction: {
           newState = onTableResizeStart(newState);
           break;
         }
-        case TABLE_RESIZE_END_ACTION: {
+        case tableResizeEndAction: {
           newState = onTableResizeEnd(newState, action);
           break;
         }
@@ -469,7 +469,7 @@ export const Table = <
       if (isSelectable && !isDisabled && selectRowOnClick) {
         if (!row.isSelected && !event.ctrlKey) {
           dispatch({
-            type: SINGLE_ROW_SELECTED_ACTION,
+            type: singleRowSelectedAction,
             id: row.id,
           });
         } else {
@@ -531,7 +531,7 @@ export const Table = <
         return;
       }
 
-      dispatch({ type: TABLE_RESIZE_START_ACTION });
+      dispatch({ type: tableResizeStartAction });
     },
     [dispatch, state.columnResizing.columnWidths, flatHeaders],
   );
@@ -549,7 +549,7 @@ export const Table = <
         }
       });
       dispatch({
-        type: TABLE_RESIZE_END_ACTION,
+        type: tableResizeEndAction,
         columnWidths: newColumnWidths,
       });
     }

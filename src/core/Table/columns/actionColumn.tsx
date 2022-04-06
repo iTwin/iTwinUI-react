@@ -9,7 +9,7 @@ import SvgColumnManager from '@itwin/itwinui-icons-react/cjs/icons/ColumnManager
 import { DropdownMenu } from '../../DropdownMenu';
 import { IconButton } from '../../Buttons/IconButton';
 import { MenuItem } from '../../Menu';
-import { TABLE_RESIZE_START_ACTION } from '../Table';
+import { tableResizeStartAction } from '../Table';
 import { EXPANDER_CELL_ID, SELECTION_CELL_ID } from '../hooks';
 
 const ACTION_CELL_ID = 'iui-table-action';
@@ -52,7 +52,8 @@ export const ActionColumn = <T extends Record<string, unknown>>({
                 ) {
                   return;
                 }
-                dispatch({ type: TABLE_RESIZE_START_ACTION });
+                // Triggers an update to resize the widths of all visible columns
+                dispatch({ type: tableResizeStartAction });
               };
               return (
                 <MenuItem
