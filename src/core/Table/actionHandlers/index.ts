@@ -5,9 +5,4 @@
 export { onExpandHandler } from './expandHandler';
 export { onFilterHandler } from './filterHandler';
 export { onSelectHandler, onSingleSelectHandler } from './selectHandler';
-export {
-  onTableResizeStart,
-  onTableResizeEnd,
-  TABLE_RESIZE_START_ACTION,
-  TABLE_RESIZE_END_ACTION,
-} from './resizeHandler';
+export { onTableResizeStart, onTableResizeEnd } from './resizeHandler';

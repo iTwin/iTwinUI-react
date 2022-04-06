@@ -46,12 +46,12 @@ import {
   onSingleSelectHandler,
   onTableResizeEnd,
   onTableResizeStart,
-  TABLE_RESIZE_END_ACTION,
-  TABLE_RESIZE_START_ACTION,
 } from './actionHandlers';
 import VirtualScroll from '../utils/components/VirtualScroll';
 
-const singleRowSelectedAction = 'singleRowSelected';
+export const TABLE_RESIZE_START_ACTION = 'tableResizeStart';
+const TABLE_RESIZE_END_ACTION = 'tableResizeEnd';
+const SINGLE_ROW_SELECTED_ACTION = 'singleRowSelected';
 
 export type TablePaginatorRendererProps = {
   /**
@@ -360,7 +360,7 @@ export const Table = <
         case TableActions.toggleAllRowsExpanded:
           onExpandHandler(newState, instance, onExpand);
           break;
-        case singleRowSelectedAction: {
+        case SINGLE_ROW_SELECTED_ACTION: {
           newState = onSingleSelectHandler(
             newState,
             action,
@@ -469,7 +469,7 @@ export const Table = <
       if (isSelectable && !isDisabled && selectRowOnClick) {
         if (!row.isSelected && !event.ctrlKey) {
           dispatch({
-            type: singleRowSelectedAction,
+            type: SINGLE_ROW_SELECTED_ACTION,
             id: row.id,
           });
         } else {

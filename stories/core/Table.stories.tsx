@@ -1318,7 +1318,7 @@ export const Full: Story<Partial<TableProps>> = (args) => {
             Filter: tableFilters.TextFilter(),
           },
           {
-            ...ActionColumn({ hasColumnManager: true }),
+            ...ActionColumn({ columnManager: true }),
             Cell: () => (
               <DropdownMenu menuItems={menuItems}>
                 <IconButton
@@ -2638,7 +2638,7 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
               return props.row.original.endDate.toLocaleDateString('en-US');
             },
           },
-          ActionColumn({ hasColumnManager: true }),
+          ActionColumn({ columnManager: true }),
         ],
       },
     ],
