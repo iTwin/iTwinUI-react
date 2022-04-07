@@ -16,7 +16,7 @@ const ACTION_CELL_ID = 'iui-table-action';
 
 export const ActionColumn = <T extends Record<string, unknown>>({
   columnManager = false,
-}) => {
+} = {}) => {
   return {
     id: ACTION_CELL_ID,
     disableResizing: true,
@@ -29,65 +29,62 @@ export const ActionColumn = <T extends Record<string, unknown>>({
     disableReordering: true,
     Header: ({ allColumns, dispatch, state }: HeaderProps<T>) => {
       const [isOpen, setIsOpen] = React.useState(false);
+      if (!columnManager) {
+        return null;
+      }
       const defaultColumnIds = [
         SELECTION_CELL_ID,
         EXPANDER_CELL_ID,
         ACTION_CELL_ID,
       ];
 
-      if (!columnManager) {
-        return null;
-      } else {
-        const headerCheckBoxes = () =>
-          allColumns
-            //Filters out any default columns made such as selection and expansion
-            .filter(({ id }) => !defaultColumnIds.includes(id))
-            .map((column) => {
-              const { checked } = column.getToggleHiddenProps();
-              const onClick = () => {
-                column.toggleHidden(checked);
-                // If no column was resized then leave table resize handling to the flexbox
-                if (
-                  Object.keys(state.columnResizing.columnWidths).length === 0
-                ) {
-                  return;
+      const headerCheckBoxes = () =>
+        allColumns
+          //Filters out any default columns made such as selection and expansion
+          .filter(({ id }) => !defaultColumnIds.includes(id))
+          .map((column) => {
+            const { checked } = column.getToggleHiddenProps();
+            const onClick = () => {
+              column.toggleHidden(checked);
+              // If no column was resized then leave table resize handling to the flexbox
+              if (Object.keys(state.columnResizing.columnWidths).length === 0) {
+                return;
+              }
+              // Triggers an update to resize the widths of all visible columns
+              dispatch({ type: tableResizeStartAction });
+            };
+            return (
+              <MenuItem
+                key={column.id}
+                icon={
+                  <Checkbox
+                    checked={checked}
+                    disabled={column.disableToggleVisibility}
+                    onClick={(e) => e.stopPropagation()}
+                    onChange={onClick}
+                    aria-labelledby={`iui-column-${column.id}`}
+                  />
                 }
-                // Triggers an update to resize the widths of all visible columns
-                dispatch({ type: tableResizeStartAction });
-              };
-              return (
-                <MenuItem
-                  key={column.id}
-                  icon={
-                    <Checkbox
-                      checked={checked}
-                      disabled={column.disableToggleVisibility}
-                      onClick={(e) => e.stopPropagation()}
-                      onChange={onClick}
-                      aria-labelledby={`iui-column-${column.id}`}
-                    />
-                  }
-                  onClick={onClick}
-                  disabled={column.disableToggleVisibility}
-                >
-                  <div id={`iui-column-${column.id}`}>
-                    {column.render('Header')}
-                  </div>
-                </MenuItem>
-              );
-            });
-        return (
-          <DropdownMenu
-            menuItems={headerCheckBoxes}
-            onHide={() => setIsOpen(false)}
-            onShow={() => setIsOpen(true)}
-          >
-            <IconButton styleType='borderless' isActive={isOpen}>
-              <SvgColumnManager />
-            </IconButton>
-          </DropdownMenu>
-        );
-      }
+                onClick={onClick}
+                disabled={column.disableToggleVisibility}
+              >
+                <div id={`iui-column-${column.id}`}>
+                  {column.render('Header')}
+                </div>
+              </MenuItem>
+            );
+          });
+      return (
+        <DropdownMenu
+          menuItems={headerCheckBoxes}
+          onHide={() => setIsOpen(false)}
+          onShow={() => setIsOpen(true)}
+        >
+          <IconButton styleType='borderless' isActive={isOpen}>
+            <SvgColumnManager />
+          </IconButton>
+        </DropdownMenu>
+      );
     },
   };
 };

@@ -2446,6 +2446,43 @@ it('should not have `draggable` attribute on columns with `disableReordering` en
   expect(headerCells[4].getAttribute('draggable')).toBeFalsy(); // View column
 });
 
+it('should render empty action column', () => {
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'View',
+          Cell: () => 'View',
+        },
+        ActionColumn(),
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+  });
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+
+  expect(headerCells).toHaveLength(4);
+  // The ActionColumn header cell should not contain a Column Manager
+  expect(headerCells[3].firstElementChild).toBeNull();
+});
+
 it('should render empty action column with column manager', () => {
   const columns: Column<TestDataType>[] = [
     {
@@ -2567,7 +2604,7 @@ it('should hide column when deselected in column manager', () => {
     '.iui-table-header .iui-cell',
   );
 
-  expect(headerCells.length).toBe(4);
+  expect(headerCells).toHaveLength(4);
   expect(headerCells[0].textContent).toBe('Name');
   expect(headerCells[1].textContent).toBe('Description');
   expect(headerCells[2].textContent).toBe('View');
@@ -2583,7 +2620,7 @@ it('should hide column when deselected in column manager', () => {
     '.iui-table-header .iui-cell',
   );
 
-  expect(headerCells.length).toBe(3);
+  expect(headerCells).toHaveLength(3);
   expect(headerCells[0].textContent).toBe('Name');
   expect(headerCells[1].textContent).toBe('View');
 });

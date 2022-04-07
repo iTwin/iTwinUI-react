@@ -548,10 +548,7 @@ export const Table = <
           ].getBoundingClientRect().width;
         }
       });
-      dispatch({
-        type: tableResizeEndAction,
-        columnWidths: newColumnWidths,
-      });
+      dispatch({ type: tableResizeEndAction, columnWidths: newColumnWidths });
     }
   });
 
