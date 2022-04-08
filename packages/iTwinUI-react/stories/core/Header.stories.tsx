@@ -52,7 +52,7 @@ export default {
   },
   parameters: {
     creevey: {
-      delay: 2000,
+      delay: 1000,
     },
   },
 } as Meta<HeaderProps> & CreeveyMeta;
