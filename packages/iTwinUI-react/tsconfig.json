@@ -18,8 +18,5 @@
     "noUnusedLocals": true,
     "skipLibCheck": true
   },
-  "exclude": [
-    "cjd/**/*",
-    "esm/**/*",
-  ]
+  "exclude": ["cjs/**/*", "esm/**/*"]
 }
