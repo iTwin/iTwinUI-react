@@ -37,7 +37,9 @@ Import the component you want and start using it!
 ```jsx
 import { Button } from '@itwin/itwinui-react';
 
-const App = () => <Button>Hello!</Button>;
+const App = () => (
+  <Button>Hello!</Button>
+);
 ```
 
 Yes, that's really all you need as you can see in this live interactive demo:
@@ -73,11 +75,15 @@ import { useTheme } from '@itwin/itwinui-react';
 
 const App = () => {
   useTheme('dark');
-  return <>// Your code goes here.</>;
+  return (
+    <>
+      // Your code goes here.
+    </>
+  );
 };
 ```
 
-_Note: You only need to use one of these methods, and it only needs to be done once._
+*Note: You only need to use one of these methods, and it only needs to be done once.*
 
 ---
 
