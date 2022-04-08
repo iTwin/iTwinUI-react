@@ -24,11 +24,10 @@
     "ux"
   ],
   "scripts": {
-    "build": "yarn clean && tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
-    "build:watch": "yarn clean && yarn mkdirp lib/ && yarn copy-files && concurrently \"tsc -p tsconfig.cjs.json --watch\" \"tsc -p tsconfig.esm.json --watch\"",
-    "clean": "yarn clean:coverage && yarn clean:lib && rimraf esm && rimraf cjs",
+    "build": "yarn clean && yarn copy-files && tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
+    "build:watch": "yarn clean && yarn copy-files && concurrently \"tsc -p tsconfig.cjs.json --watch\" \"tsc -p tsconfig.esm.json --watch\"",
+    "clean": "yarn clean:coverage && rimraf esm && rimraf cjs",
     "clean:coverage": "rimraf coverage",
-    "clean:lib": "rimraf lib",
     "test": "jest",
     "test:watch": "jest --watch",
     "createComponent": "node scripts/createComponent.js",
@@ -36,7 +35,7 @@
     "lint": "eslint --ext .js,.ts,.tsx --max-warnings=0",
     "lint:fix": "yarn lint --fix && yarn lint:copyright --fix */**/*.{js,ts,tsx}",
     "lint:copyright": "node scripts/copyrightLinter.js",
-    "copy-files": "cpx package.json lib && cpx \"{README,LICENSE,CHANGELOG}.md \" lib",
+    "copy-files": "cpx ../../README.md .",
     "storybook": "start-storybook -p 6006",
     "dev": "yarn storybook",
     "build-storybook": "build-storybook"
