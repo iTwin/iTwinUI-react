@@ -2519,6 +2519,7 @@ export const CustomizedColumns: Story<Partial<TableProps>> = (args) => {
       { name: 'Name1', description: 'Description1' },
       { name: 'Name2', description: 'Description2' },
       { name: 'Name3', description: 'Description3' },
+      { name: 'Name4', description: 'Description4' },
     ],
     [],
   );
@@ -2529,8 +2530,11 @@ export const CustomizedColumns: Story<Partial<TableProps>> = (args) => {
   const isExpanderDisabled = useCallback((rowData: typeof data[number]) => {
     return rowData.name === 'Name2';
   }, []);
-  const isRowDisabled = useCallback((rowData: typeof data[number]) => {
+  const isCellDisabled = useCallback((rowData: typeof data[number]) => {
     return rowData.name === 'Name3';
+  }, []);
+  const isRowDisabled = useCallback((rowData: typeof data[number]) => {
+    return rowData.name === 'Name4';
   }, []);
 
   const subComponent = useCallback(
@@ -2557,7 +2561,12 @@ export const CustomizedColumns: Story<Partial<TableProps>> = (args) => {
             Header: 'Name',
             accessor: 'name',
             cellRenderer: (props) => (
-              <DefaultCell {...props} disabled={isRowDisabled} />
+              <DefaultCell
+                {...props}
+                isDisabled={(rowData) =>
+                  isCellDisabled(rowData) || isRowDisabled(rowData)
+                }
+              />
             ),
           },
           {
@@ -2569,7 +2578,13 @@ export const CustomizedColumns: Story<Partial<TableProps>> = (args) => {
         ],
       },
     ],
-    [isCheckboxDisabled, subComponent, isExpanderDisabled, isRowDisabled],
+    [
+      isCheckboxDisabled,
+      subComponent,
+      isExpanderDisabled,
+      isCellDisabled,
+      isRowDisabled,
+    ],
   );
 
   return (
@@ -2580,6 +2595,7 @@ export const CustomizedColumns: Story<Partial<TableProps>> = (args) => {
       subComponent={subComponent}
       onExpand={onExpand}
       isSelectable
+      isRowDisabled={isRowDisabled}
       {...args}
     />
   );
@@ -2587,4 +2603,10 @@ export const CustomizedColumns: Story<Partial<TableProps>> = (args) => {
 
 CustomizedColumns.args = {
   isSelectable: true,
+  data: [
+    { name: 'Name1', description: 'Description1' },
+    { name: 'Name2', description: 'Description2' },
+    { name: 'Name3', description: 'Description3' },
+    { name: 'Name4', description: 'Description4' },
+  ],
 };

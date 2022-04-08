@@ -2477,7 +2477,7 @@ it('should add disabled column', () => {
           Header: 'Name',
           accessor: 'name',
           cellRenderer: (props) => (
-            <DefaultCell {...props} disabled={isRowDisabled} />
+            <DefaultCell {...props} isDisabled={isRowDisabled} />
           ),
         },
         {
