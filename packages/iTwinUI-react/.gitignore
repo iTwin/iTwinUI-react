@@ -1,3 +1,6 @@
+# README from root will be copied during build
+README.md
+
 # testing
 coverage
 
