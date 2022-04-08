@@ -10,11 +10,10 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format": "turbo run format",
     "test": "turbo run test"
   },
   "devDependencies": {
-    "prettier": "^2.6.1",
     "turbo": "latest",
     "webpack": "5"
   },

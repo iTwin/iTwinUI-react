@@ -32,7 +32,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "createComponent": "node scripts/createComponent.js",
-    "pretty": "prettier --config .prettierrc \"scripts/**/*\" src/{__tests__,core,style,utils}/**/*{tsx,ts,jsx,js,css,scss} --write",
+    "format": "prettier --config .prettierrc **/*.{tsx,ts,js,md} --ignore-path .gitignore --write",
     "lint": "eslint --ext .js,.ts,.tsx --max-warnings=0",
     "lint:fix": "yarn lint --fix && yarn lint:copyright --fix */**/*.{js,ts,tsx}",
     "lint:copyright": "node scripts/copyrightLinter.js",
