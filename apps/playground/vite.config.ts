@@ -6,6 +6,7 @@ import linaria from 'vite-plugin-linaria'
 export default defineConfig({
   plugins: [react(), linaria()],
   server: {
-    port: 4000
+    port: 4000,
+    open: true
   }
 })
