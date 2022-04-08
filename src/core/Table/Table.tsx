@@ -44,17 +44,15 @@ import {
   onExpandHandler,
   onFilterHandler,
   onSelectHandler,
-} from './actionHandlers';
-import { onSingleSelectHandler } from './actionHandlers/selectHandler';
-import {
+  onSingleSelectHandler,
   onTableResizeEnd,
   onTableResizeStart,
-} from './actionHandlers/resizeHandler';
+} from './actionHandlers';
 import VirtualScroll from '../utils/components/VirtualScroll';
 import { SELECTION_CELL_ID } from './columns';
 
 const singleRowSelectedAction = 'singleRowSelected';
-const tableResizeStartAction = 'tableResizeStart';
+export const tableResizeStartAction = 'tableResizeStart';
 const tableResizeEndAction = 'tableResizeEnd';
 
 export type TablePaginatorRendererProps = {
@@ -583,13 +581,14 @@ export const Table = <
   const bodyRef = React.useRef<HTMLDivElement>(null);
 
   const getPreparedRow = React.useCallback(
-    (row: Row<T>) => {
+    (index: number) => {
+      const row = page[index];
       prepareRow(row);
       return (
         <TableRowMemoized
           row={row}
           rowProps={rowProps}
-          isLast={row.index === data.length - 1}
+          isLast={index === page.length - 1}
           onRowInViewport={onRowInViewportRef}
           onBottomReached={onBottomReachedRef}
           intersectionMargin={intersectionMargin}
@@ -605,7 +604,7 @@ export const Table = <
       );
     },
     [
-      data.length,
+      page,
       expanderCell,
       hasAnySubRows,
       instance,
@@ -620,8 +619,8 @@ export const Table = <
   );
 
   const virtualizedItemRenderer = React.useCallback(
-    (index: number) => getPreparedRow(page[index]),
-    [getPreparedRow, page],
+    (index: number) => getPreparedRow(index),
+    [getPreparedRow],
   );
 
   return (
@@ -676,13 +675,13 @@ export const Table = <
                       }}
                     >
                       {column.render('Header')}
-                      {!isLoading && (data.length != 0 || areFiltersSet) && (
+                      {(data.length !== 0 || areFiltersSet) && (
                         <FilterToggle
                           column={column}
                           ownerDocument={ownerDocument}
                         />
                       )}
-                      {!isLoading && data.length != 0 && column.canSort && (
+                      {data.length !== 0 && column.canSort && (
                         <div className='iui-cell-end-icon'>
                           {column.isSorted && column.isSortedDesc ? (
                             <SvgSortUp
@@ -740,7 +739,7 @@ export const Table = <
                   itemRenderer={virtualizedItemRenderer}
                 />
               ) : (
-                page.map((row: Row<T>) => getPreparedRow(row))
+                page.map((_, index) => getPreparedRow(index))
               )}
             </>
           )}

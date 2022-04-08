@@ -17,6 +17,9 @@ import {
   Checkbox,
   Code,
   InputGroup,
+  DropdownMenu,
+  MenuItem,
+  IconButton,
   Table,
   Leading,
   tableFilters,
@@ -27,6 +30,7 @@ import {
   EditableCell,
   TablePaginator,
   TablePaginatorRendererProps,
+  ActionColumn,
   SelectionColumn,
   ExpanderColumn,
 } from '../../src/core';
@@ -34,6 +38,7 @@ import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
 import { action } from '@storybook/addon-actions';
 import { CreeveyMeta, CreeveyStoryParams } from 'creevey';
+import { SvgMore } from '@itwin/itwinui-icons-react';
 
 export default {
   title: 'Core/Table',
@@ -807,6 +812,7 @@ export const LazyLoading: Story<Partial<TableProps>> = (args) => {
             id: 'name',
             Header: 'Name',
             accessor: 'name',
+            Filter: tableFilters.TextFilter(),
           },
           {
             id: 'description',
@@ -863,11 +869,19 @@ export const LazyLoading: Story<Partial<TableProps>> = (args) => {
       emptyTableContent='No data.'
       onBottomReached={onBottomReached}
       isLoading={isLoading}
+      isSortable
       {...args}
       style={{ height: 440, maxHeight: '90vh' }}
       data={data}
+      // Prevents from resetting filters and sorting when more data is loaded
+      autoResetFilters={false}
+      autoResetSortBy={false}
     />
   );
+};
+
+LazyLoading.args = {
+  isSortable: true,
 };
 
 LazyLoading.argTypes = {
@@ -1275,6 +1289,17 @@ export const Full: Story<Partial<TableProps>> = (args) => {
     [],
   );
 
+  const menuItems = useCallback((close: () => void) => {
+    return [
+      <MenuItem key={1} onClick={() => close()}>
+        Edit
+      </MenuItem>,
+      <MenuItem key={2} onClick={() => close()}>
+        Delete
+      </MenuItem>,
+    ];
+  }, []);
+
   const columns = useMemo(
     () => [
       {
@@ -1285,6 +1310,7 @@ export const Full: Story<Partial<TableProps>> = (args) => {
             Header: 'Name',
             accessor: 'name',
             Filter: tableFilters.TextFilter(),
+            disableToggleVisibility: true,
           },
           {
             id: 'description',
@@ -1294,29 +1320,22 @@ export const Full: Story<Partial<TableProps>> = (args) => {
             Filter: tableFilters.TextFilter(),
           },
           {
-            id: 'click-me',
-            Header: 'Click',
-            width: 100,
-            // Manually handling disabled state in custom cells
-            Cell: (props: CellProps<{ name: string; description: string }>) => (
-              <>
-                {isRowDisabled(props.row.original) ? (
-                  <>Click me!</>
-                ) : (
-                  <a
-                    className='iui-anchor'
-                    onClick={action(props.row.original.name)}
-                  >
-                    Click me!
-                  </a>
-                )}
-              </>
+            ...ActionColumn({ columnManager: true }),
+            Cell: () => (
+              <DropdownMenu menuItems={menuItems}>
+                <IconButton
+                  styleType='borderless'
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <SvgMore />
+                </IconButton>
+              </DropdownMenu>
             ),
           },
         ],
       },
     ],
-    [isRowDisabled],
+    [menuItems],
   );
 
   const data = useMemo(
@@ -1393,8 +1412,73 @@ Full.args = {
   enableColumnReordering: true,
 };
 
-export const Condensed: Story<Partial<TableProps>> = Basic.bind({});
-Condensed.args = { density: 'condensed' };
+export const Condensed: Story<Partial<TableProps>> = (args) => {
+  const onClickHandler = (
+    props: CellProps<{ name: string; description: string }>,
+  ) => action(props.row.original.name)();
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+          },
+          {
+            id: 'click-me',
+            Header: 'Click',
+            width: 100,
+            Cell: (props: CellProps<{ name: string; description: string }>) => {
+              const onClick = () => onClickHandler(props);
+              return (
+                <a className='iui-anchor' onClick={onClick}>
+                  Click me!
+                </a>
+              );
+            },
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const data = useMemo(
+    () => [
+      { name: 'Name1', description: 'Description1' },
+      { name: 'Name2', description: 'Description2' },
+      { name: 'Name3', description: 'Description3' },
+    ],
+    [],
+  );
+
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      emptyTableContent='No data.'
+      density='condensed'
+      {...args}
+    />
+  );
+};
+Condensed.args = {
+  density: 'condensed',
+  data: [
+    { name: 'Name1', description: 'Description1' },
+    { name: 'Name2', description: 'Description2' },
+    { name: 'Name3', description: 'Description3' },
+  ],
+};
 
 export const Editable: Story<Partial<TableProps>> = (args) => {
   type TableStoryDataType = {
@@ -2609,4 +2693,184 @@ CustomizedColumns.args = {
     { name: 'Name3', description: 'Description3' },
     { name: 'Name4', description: 'Description4' },
   ],
+};
+
+export const ColumnManager: Story<Partial<TableProps>> = (args) => {
+  type TableStoryDataType = {
+    index: number;
+    name: string;
+    description: string;
+    id: string;
+    startDate: Date;
+    endDate: Date;
+  };
+
+  const columns = useMemo(
+    (): Column<TableStoryDataType>[] => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'index',
+            Header: '#',
+            accessor: 'index',
+            disableToggleVisibility: true,
+          },
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            fieldType: 'text',
+          },
+          {
+            id: 'id',
+            Header: 'ID',
+            accessor: 'id',
+          },
+          {
+            id: 'startDate',
+            Header: 'Start date',
+            accessor: 'startDate',
+            Cell: (props: CellProps<TableStoryDataType>) => {
+              return props.row.original.startDate.toLocaleDateString('en-US');
+            },
+          },
+          {
+            id: 'endDate',
+            Header: 'End date',
+            accessor: 'endDate',
+            Cell: (props: CellProps<TableStoryDataType>) => {
+              return props.row.original.endDate.toLocaleDateString('en-US');
+            },
+          },
+          ActionColumn({ columnManager: true }),
+        ],
+      },
+    ],
+    [],
+  );
+  const data = useMemo(
+    () => [
+      {
+        index: 1,
+        name: 'Name1',
+        description: 'Description1',
+        id: '111',
+        startDate: new Date('May 1, 2021'),
+        endDate: new Date('Jun 1, 2021'),
+      },
+      {
+        index: 2,
+        name: 'Name2',
+        description: 'Description2',
+        id: '222',
+        startDate: new Date('May 2, 2021'),
+        endDate: new Date('Jun 2, 2021'),
+      },
+      {
+        index: 3,
+        name: 'Name3',
+        description: 'Description3',
+        id: '333',
+        startDate: new Date('May 3, 2021'),
+        endDate: new Date('Jun 3, 2021'),
+      },
+      {
+        index: 4,
+        name: 'Name4',
+        description: 'Description4',
+        id: '444',
+        startDate: new Date('May 4, 2021'),
+        endDate: new Date('Jun 4, 2021'),
+      },
+      {
+        index: 5,
+        name: 'Name5',
+        description: 'Description5',
+        id: '555',
+        startDate: new Date('May 5, 2021'),
+        endDate: new Date('Jun 5, 2021'),
+      },
+    ],
+    [],
+  );
+
+  return (
+    <Table
+      isSelectable
+      columns={columns}
+      data={data}
+      emptyTableContent='No data.'
+      {...args}
+    />
+  );
+};
+
+ColumnManager.args = {
+  data: [
+    {
+      index: 1,
+      name: 'Name1',
+      description: 'Description1',
+      id: '111',
+      startDate: new Date('May 1, 2021'),
+      endDate: new Date('Jun 1, 2021'),
+    },
+    {
+      index: 2,
+      name: 'Name2',
+      description: 'Description2',
+      id: '222',
+      startDate: new Date('May 2, 2021'),
+      endDate: new Date('Jun 2, 2021'),
+    },
+    {
+      index: 3,
+      name: 'Name3',
+      description: 'Description3',
+      id: '333',
+      startDate: new Date('May 3, 2021'),
+      endDate: new Date('Jun 3, 2021'),
+    },
+    {
+      index: 4,
+      name: 'Name4',
+      description: 'Description4',
+      id: '444',
+      startDate: new Date('May 4, 2021'),
+      endDate: new Date('Jun 4, 2021'),
+    },
+    {
+      index: 5,
+      name: 'Name5',
+      description: 'Description5',
+      id: '555',
+      startDate: new Date('May 5, 2021'),
+      endDate: new Date('Jun 5, 2021'),
+    },
+  ],
+};
+
+ColumnManager.parameters = {
+  creevey: {
+    tests: {
+      async open() {
+        const button = await this.browser.findElement({
+          className: 'iui-button',
+        });
+        const closed = await this.takeScreenshot();
+        await button.click();
+        const opened = await this.takeScreenshot();
+        await this.expect({
+          closed,
+          opened,
+        }).to.matchImages();
+      },
+    },
+  } as CreeveyStoryParams,
 };
