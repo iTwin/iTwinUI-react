@@ -1,0 +1,19 @@
+name: Add issues and pull requests to project
+
+on:
+  issues:
+    types:
+      - opened
+  pull_request:
+    types:
+      - opened
+
+jobs:
+  add-to-project:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/add-to-project@main
+        with:
+          project-url:https://github.com/orgs/iTwin/projects/3/views/1
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          
