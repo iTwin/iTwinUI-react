@@ -65,6 +65,7 @@ declare module 'react-table' {
     cellElementProps: TableCellProps;
     cellProps: CellProps<D>;
     children: React.ReactNode;
+    isDisabled?: (rowData: D) => boolean;
   };
 
   // take this file as-is, or comment out the sections that don't apply to your plugin configuration

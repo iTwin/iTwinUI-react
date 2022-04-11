@@ -82,7 +82,10 @@ export const TableCell = <T extends Record<string, unknown>>(
   return (
     <>
       {cell.column.cellRenderer ? (
-        cell.column.cellRenderer(cellRendererProps)
+        cell.column.cellRenderer({
+          ...cellRendererProps,
+          isDisabled: () => isDisabled,
+        })
       ) : (
         <DefaultCell {...cellRendererProps} isDisabled={() => isDisabled} />
       )}

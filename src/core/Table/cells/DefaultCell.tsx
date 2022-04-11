@@ -6,10 +6,9 @@ import React from 'react';
 import { CellRendererProps } from 'react-table';
 import cx from 'classnames';
 
-export type DefaultCellProps<T extends Record<string, unknown>> = {
-  isDisabled?: (rowData: T) => boolean;
-} & CellRendererProps<T> &
-  React.ComponentPropsWithoutRef<'div'>;
+export type DefaultCellProps<
+  T extends Record<string, unknown>
+> = CellRendererProps<T> & React.ComponentPropsWithoutRef<'div'>;
 
 /**
  * Default cell.
