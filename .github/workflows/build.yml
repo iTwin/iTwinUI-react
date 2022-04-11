@@ -72,5 +72,5 @@ jobs:
       - run: yarn install --frozen-lockfile
 
       # `&` symbol is needed as it prevents Storybook from running endlessly
-      - run: yarn workspace @itwin/itwinui-react storybook &
+      - run: yarn dev &
       - run: yarn workspace @itwin/itwinui-react creevey
