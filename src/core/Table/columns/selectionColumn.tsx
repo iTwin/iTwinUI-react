@@ -3,8 +3,9 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { CellProps, HeaderProps } from 'react-table';
+import { CellProps, CellRendererProps, HeaderProps } from 'react-table';
 import { Checkbox } from '../../Checkbox';
+import { DefaultCell } from '../cells';
 
 export const SELECTION_CELL_ID = 'iui-table-checkbox-selector';
 
@@ -50,6 +51,12 @@ export const SelectionColumn = <T extends Record<string, unknown>>(
         style={{}} // Removes pointer cursor as we have it in CSS and it is also showing pointer when disabled
         disabled={isDisabled?.(row.original)}
         onClick={(e) => e.stopPropagation()} // Prevents triggering on row click
+      />
+    ),
+    cellRenderer: (props: CellRendererProps<T>) => (
+      <DefaultCell
+        {...props}
+        isDisabled={(rowData) => !!isDisabled?.(rowData)}
       />
     ),
   };

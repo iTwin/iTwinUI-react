@@ -4,8 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
-import { CellProps, Row } from 'react-table';
+import { CellProps, CellRendererProps, Row } from 'react-table';
 import { IconButton } from '../../Buttons';
+import { DefaultCell } from '../cells';
 
 export const EXPANDER_CELL_ID = 'iui-table-expander';
 
@@ -46,5 +47,11 @@ export const ExpanderColumn = <T extends Record<string, unknown>>(
         );
       }
     },
+    cellRenderer: (props: CellRendererProps<T>) => (
+      <DefaultCell
+        {...props}
+        isDisabled={(rowData) => !!isDisabled?.(rowData)}
+      />
+    ),
   };
 };
