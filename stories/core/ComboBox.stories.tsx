@@ -11,9 +11,10 @@ import {
   Label,
   StatusMessage,
   SelectOption,
+  ProgressRadial,
 } from '../../src/core';
 import { CreeveyStoryParams } from 'creevey';
-import { SvgCamera } from '@itwin/itwinui-icons-react';
+import { SvgCamera, SvgSearch } from '@itwin/itwinui-icons-react';
 
 export default {
   component: ComboBox,
@@ -34,7 +35,7 @@ export default {
   parameters: {
     docs: { source: { excludeDecorators: true } },
     creevey: {
-      skip: { stories: ['Disabled Items', 'Many Items'] },
+      skip: { stories: ['Disabled Items', 'Many Items', 'Async'] },
       tests: {
         async open() {
           const closed = await this.takeScreenshot();
@@ -525,27 +526,71 @@ ManyItems.args = {
   inputProps: { placeholder: 'Select an item' },
 };
 
-// export const Async: Story<Partial<ComboBoxProps<string>>> = (args) => {
-//   const [results, setResults] = React.useState([]);
+export const Async: Story<Partial<ComboBoxProps<string>>> = (args) => {
+  args; // ignore
+  const [results, setResults] = React.useState<Array<unknown>>([]);
+  const [inputValue, setInputValue] = React.useState('');
+  const [isLoading, setIsLoading] = React.useState(false);
 
-//   const handleInput = (e) => {
-//     // load results here
-//   };
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const searchTerm = event.target.value;
+    setInputValue(searchTerm);
+    setIsLoading(true);
+    setTimeout(() => {
+      setResults(
+        searchTerm
+          ? Array(10)
+              .fill(null)
+              .map((_, i) => ({
+                label: `Result ${i} for search term "${searchTerm}"`,
+                value: i,
+              }))
+          : [],
+      );
+      setIsLoading(false);
+    }, 1000);
+  };
 
-//   return (
-//     <ComboBox>
-//       <ComboBox.InputContainer>
-//         <ComboBox.Input onInput={handleInput} />
-//       </ComboBox.InputContainer>
-//       {results.length > 0 && (
-//         <ComboBox.Popover>
-//           <ComboBox.Menu>
-//             {results.map((result, index) => (
-//               <ComboBox.MenuItem key={index} label={result.label} {...result} />
-//             ))}
-//           </ComboBox.Menu>
-//         </ComboBox.Popover>
-//       )}
-//     </ComboBox>
-//   );
-// };
+  const handleItemClick = (label: string) => {
+    setInputValue(label);
+    setResults([]);
+  };
+
+  return (
+    <ComboBox options={[]}>
+      <ComboBox.InputContainer
+        endIcon={
+          <ComboBox.EndIcon style={{ pointerEvents: 'none' }}>
+            {isLoading ? (
+              <ProgressRadial indeterminate size='small' />
+            ) : (
+              <SvgSearch style={{ fill: 'var(--iui-icons-color)' }} />
+            )}
+          </ComboBox.EndIcon>
+        }
+      >
+        <ComboBox.Input
+          value={inputValue}
+          onInput={handleInput}
+          placeholder='Search...'
+        />
+      </ComboBox.InputContainer>
+      {results.length > 0 && (
+        <ComboBox.Popover visible>
+          <ComboBox.Menu>
+            {results.map(({ label, ...rest }, index) => (
+              <ComboBox.MenuItem
+                key={index}
+                {...rest}
+                onClick={() => handleItemClick(label)}
+              >
+                {label}
+              </ComboBox.MenuItem>
+            ))}
+          </ComboBox.Menu>
+        </ComboBox.Popover>
+      )}
+    </ComboBox>
+  );
+};
+Async.args = {};

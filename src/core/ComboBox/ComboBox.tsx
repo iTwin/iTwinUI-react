@@ -323,6 +323,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
                     className={cx({
                       'iui-actionable': !inputProps?.disabled,
                       'iui-disabled': inputProps?.disabled,
+                      'iui-open': isOpen,
                     })}
                   />
                 }
@@ -453,20 +454,20 @@ const ComboBoxInputContainer = (
 
 const ComboBoxEndIcon = ({
   className,
+  children,
   ...rest
 }: React.ComponentPropsWithoutRef<'span'>) => {
-  const { isOpen } = useSafeContext(ComboBoxStateContext);
   const dispatch = useSafeContext(ComboBoxActionContext);
   const { toggleButtonRef } = useSafeContext(ComboBoxRefsContext);
 
   return (
     <span
       ref={toggleButtonRef}
-      className={cx('iui-end-icon', { 'iui-open': isOpen }, className)}
+      className={cx('iui-end-icon', className)}
       onClick={() => dispatch(['toggle'])}
       {...rest}
     >
-      <SvgCaretDownSmall aria-hidden />
+      {children ?? <SvgCaretDownSmall aria-hidden />}
     </span>
   );
 };
@@ -721,6 +722,7 @@ ComboBoxMenuItem.displayName = 'ComboBoxMenuItem';
 
 ComboBox.InputContainer = ComboBoxInputContainer;
 ComboBox.Input = ComboBoxInput;
+ComboBox.EndIcon = ComboBoxEndIcon;
 ComboBox.Popover = ComboBoxPopover;
 ComboBox.Menu = ComboBoxMenu;
 ComboBox.MenuItem = ComboBoxMenuItem;
