@@ -9,7 +9,6 @@ import {
   ComboBox,
   ComboBoxProps,
   Label,
-  MenuItem,
   StatusMessage,
   SelectOption,
 } from '../../src/core';
@@ -35,7 +34,7 @@ export default {
   parameters: {
     docs: { source: { excludeDecorators: true } },
     creevey: {
-      skip: { stories: ['Disabled Items'] },
+      skip: { stories: ['Disabled Items', 'Many Items'] },
       tests: {
         async open() {
           const closed = await this.takeScreenshot();
@@ -424,8 +423,14 @@ export const CustomRenderer: Story<Partial<ComboBoxProps<string>>> = (args) => {
   }, []);
 
   const itemRenderer = React.useCallback(
-    ({ value, label }, { isSelected, id }) => (
-      <MenuItem key={value} id={id} isSelected={isSelected} value={value}>
+    ({ value, label }, { isSelected, id, ...rest }) => (
+      <ComboBox.MenuItem
+        key={id}
+        id={id}
+        isSelected={isSelected}
+        value={value}
+        {...rest}
+      >
         <em
           style={{
             textTransform: 'uppercase',
@@ -434,7 +439,7 @@ export const CustomRenderer: Story<Partial<ComboBoxProps<string>>> = (args) => {
         >
           {label}
         </em>
-      </MenuItem>
+      </ComboBox.MenuItem>
     ),
     [],
   ) as NonNullable<ComboBoxProps<string>['itemRenderer']>;
@@ -497,3 +502,50 @@ WithCustomMessageIcon.args = {
     <StatusMessage startIcon={<SvgCamera />}>This is a message</StatusMessage>
   ),
 };
+
+export const ManyItems: Story<Partial<ComboBoxProps<number>>> = (args) => {
+  const options = React.useMemo(
+    () =>
+      Array(10_000)
+        .fill(null)
+        .map((_, i) => ({ label: `Item ${i}`, value: i })),
+    [],
+  );
+
+  return (
+    <ComboBox
+      inputProps={{ placeholder: 'Select an item' }}
+      {...args}
+      options={options}
+      onChange={(value: number) => action(value.toString() ?? '')()}
+    />
+  );
+};
+ManyItems.args = {
+  inputProps: { placeholder: 'Select an item' },
+};
+
+// export const Async: Story<Partial<ComboBoxProps<string>>> = (args) => {
+//   const [results, setResults] = React.useState([]);
+
+//   const handleInput = (e) => {
+//     // load results here
+//   };
+
+//   return (
+//     <ComboBox>
+//       <ComboBox.InputContainer>
+//         <ComboBox.Input onInput={handleInput} />
+//       </ComboBox.InputContainer>
+//       {results.length > 0 && (
+//         <ComboBox.Popover>
+//           <ComboBox.Menu>
+//             {results.map((result, index) => (
+//               <ComboBox.MenuItem key={index} label={result.label} {...result} />
+//             ))}
+//           </ComboBox.Menu>
+//         </ComboBox.Popover>
+//       )}
+//     </ComboBox>
+//   );
+// };
