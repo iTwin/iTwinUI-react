@@ -1056,6 +1056,12 @@ it('should disable row and handle expansion accordingly', () => {
   expect(rows[1].classList).toContain('iui-disabled');
   expect(rows[2].classList).not.toContain('iui-disabled');
 
+  const disabledRowCells = rows[1].querySelectorAll('.iui-cell');
+  expect(disabledRowCells.length).toBe(4);
+  disabledRowCells.forEach((cell) =>
+    expect(cell.classList).toContain('iui-disabled'),
+  );
+
   const expansionCells = container.querySelectorAll(
     '.iui-slot .iui-button',
   ) as NodeListOf<HTMLButtonElement>;
@@ -1087,6 +1093,12 @@ it('should disable row and handle selection accordingly', () => {
   expect(rows[0].classList).not.toContain('iui-disabled');
   expect(rows[1].classList).toContain('iui-disabled');
   expect(rows[2].classList).not.toContain('iui-disabled');
+
+  const disabledRowCells = rows[1].querySelectorAll('.iui-cell');
+  expect(disabledRowCells.length).toBe(4);
+  disabledRowCells.forEach((cell) =>
+    expect(cell.classList).toContain('iui-disabled'),
+  );
 
   const checkboxCells = container.querySelectorAll('.iui-slot .iui-checkbox');
   expect(checkboxCells.length).toBe(4);
@@ -2761,7 +2773,7 @@ it('should add expander column manually', () => {
 });
 
 it('should add disabled column', () => {
-  const isRowDisabled = (rowData: TestDataType) => rowData.name === 'Name2';
+  const isCellDisabled = (rowData: TestDataType) => rowData.name === 'Name2';
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Table',
@@ -2771,7 +2783,7 @@ it('should add disabled column', () => {
           Header: 'Name',
           accessor: 'name',
           cellRenderer: (props) => (
-            <DefaultCell {...props} isDisabled={isRowDisabled} />
+            <DefaultCell {...props} isDisabled={isCellDisabled} />
           ),
         },
         {
@@ -2791,4 +2803,44 @@ it('should add disabled column', () => {
   ) as HTMLElement;
   expect(disabledCell).toBeTruthy();
   expect(disabledCell.textContent).toBe('Name2');
+});
+
+it('should show column enabled when whole row is disabled', () => {
+  const isCellDisabled = (rowData: TestDataType) => rowData.name !== 'Name2';
+  const isRowDisabled = (rowData: TestDataType) => rowData.name === 'Name2';
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Table',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          cellRenderer: (props) => (
+            <DefaultCell {...props} isDisabled={isCellDisabled} />
+          ),
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    isRowDisabled,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+  expect(rows[0].classList).not.toContain('iui-disabled');
+  expect(rows[1].classList).toContain('iui-disabled');
+  expect(rows[2].classList).not.toContain('iui-disabled');
+
+  const rowCells = rows[1].querySelectorAll('.iui-cell');
+  expect(rowCells.length).toBe(2);
+  expect(rowCells[0].classList).not.toContain('iui-disabled');
+  expect(rowCells[1].classList).toContain('iui-disabled');
 });
