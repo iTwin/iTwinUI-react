@@ -192,6 +192,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = event.currentTarget;
       setInputValue(value);
+      dispatch(['open']);
       setFilteredOptions(
         filterFunction?.(options, value) ??
           options.filter((option) =>
