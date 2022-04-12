@@ -42,7 +42,7 @@ export type SurfaceProps = {
 } & CommonProps;
 
 /**
- * The surface container allows your content to appear elevated through the use of a drop shadow
+ * The surface container allows content to appear elevated through the use of a drop shadow
  * @example
  * <Surface>Surface Content</Surface>
  * <Surface elevation={2}>Surface Content</Surface>
