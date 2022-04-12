@@ -2667,6 +2667,27 @@ CustomizedColumns.args = {
   ],
 };
 
+CustomizedColumns.parameters = {
+  creevey: {
+    tests: {
+      async open() {
+        const closed = await this.takeScreenshot();
+        const table = await this.browser.findElement({
+          css: '.iui-table',
+        });
+
+        const expanderButtons = await table.findElements({
+          css: '.iui-button',
+        });
+        await expanderButtons[3].click();
+
+        const expanded = await this.takeScreenshot();
+        await this.expect({ closed, expanded }).to.matchImages();
+      },
+    },
+  } as CreeveyStoryParams,
+};
+
 export const ColumnManager: Story<Partial<TableProps>> = (args) => {
   type TableStoryDataType = {
     index: number;
