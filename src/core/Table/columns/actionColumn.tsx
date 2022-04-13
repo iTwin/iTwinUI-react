@@ -15,6 +15,25 @@ import { EXPANDER_CELL_ID } from './expanderColumn';
 
 const ACTION_CELL_ID = 'iui-table-action';
 
+/**
+ * Action column that adds column manager to the Table header.
+ * It is recommended to add this column to the end of the Table
+ * and to override its `Cell` prop with your row actions menu.
+ * @example
+ * {
+ *   ...ActionColumn({ columnManager: true }),
+ *   Cell: () => (
+ *     <DropdownMenu menuItems={menuItems}>
+ *       <IconButton
+ *         styleType='borderless'
+ *         onClick={(e) => e.stopPropagation()}
+ *       >
+ *         <SvgMore />
+ *       </IconButton>
+ *     </DropdownMenu>
+ *   ),
+ * },
+ */
 export const ActionColumn = <T extends Record<string, unknown>>({
   columnManager = false,
 } = {}) => {

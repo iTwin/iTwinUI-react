@@ -9,6 +9,10 @@ import { DefaultCell } from '../cells';
 
 export const SELECTION_CELL_ID = 'iui-table-checkbox-selector';
 
+/**
+ * Selection column that adds selection checkbox column to the Table.
+ * It is recommended to use it only in the first column.
+ */
 export const SelectionColumn = <T extends Record<string, unknown>>(
   /** Function that returns whether row checkbox should be disabled. */
   isDisabled?: (rowData: T) => boolean,
