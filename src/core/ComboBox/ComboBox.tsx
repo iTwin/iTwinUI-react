@@ -16,6 +16,7 @@ import {
   CommonProps,
   getRandomValue,
   InputContainerProps,
+  useMergedRefs,
 } from '../utils';
 import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
 import 'tippy.js/animations/shift-away.css';
@@ -451,214 +452,237 @@ const ComboBoxInputContainer = (
     </InputContainer>
   );
 };
+ComboBoxInputContainer.displayName = 'ComboBoxInputContainer';
 
-const ComboBoxEndIcon = ({
-  className,
-  children,
-  ...rest
-}: React.ComponentPropsWithoutRef<'span'>) => {
-  const dispatch = useSafeContext(ComboBoxActionContext);
-  const { toggleButtonRef } = useSafeContext(ComboBoxRefsContext);
+const ComboBoxEndIcon = React.forwardRef(
+  (
+    props: React.ComponentPropsWithoutRef<'span'>,
+    forwardedRef: React.RefObject<HTMLSpanElement>,
+  ) => {
+    const { className, children, ...rest } = props;
+    const dispatch = useSafeContext(ComboBoxActionContext);
+    const { toggleButtonRef } = useSafeContext(ComboBoxRefsContext);
+    const refs = useMergedRefs(toggleButtonRef, forwardedRef);
 
-  return (
-    <span
-      ref={toggleButtonRef}
-      className={cx('iui-end-icon', className)}
-      onClick={() => dispatch(['toggle'])}
-      {...rest}
-    >
-      {children ?? <SvgCaretDownSmall aria-hidden />}
-    </span>
-  );
-};
-
-const ComboBoxInput = (props: InputProps) => {
-  const { onKeyDown: onKeyDownProp, onFocus: onFocusProp, ...rest } = props;
-
-  const { isOpen, id, focusedIndex } = useSafeContext(ComboBoxStateContext);
-  const dispatch = useSafeContext(ComboBoxActionContext);
-  const { inputRef, menuRef } = useSafeContext(ComboBoxRefsContext);
-
-  const focusedIndexRef = React.useRef(focusedIndex ?? -1);
-  React.useEffect(() => {
-    focusedIndexRef.current = focusedIndex ?? -1;
-  }, [focusedIndex]);
-
-  const getIdFromIndex = (index: number) => {
     return (
-      menuRef.current?.querySelector(`[data-iui-index="${index}"]`)?.id ?? ''
+      <span
+        ref={refs}
+        className={cx('iui-end-icon', className)}
+        onClick={() => dispatch(['toggle'])}
+        {...rest}
+      >
+        {children ?? <SvgCaretDownSmall aria-hidden />}
+      </span>
     );
-  };
+  },
+);
+ComboBoxEndIcon.displayName = 'ComboBoxEndIcon';
 
-  const handleKeyDown = React.useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      (() => {
-        const length =
-          menuRef.current?.querySelectorAll('[data-iui-index]').length ?? 0;
+const ComboBoxInput = React.forwardRef(
+  (props: InputProps, forwardedRef: React.RefObject<HTMLInputElement>) => {
+    const { onKeyDown: onKeyDownProp, onFocus: onFocusProp, ...rest } = props;
 
-        if (event.key === 'ArrowDown') {
-          event.preventDefault();
-          if (!isOpen) {
-            return dispatch(['open']);
-          }
+    const { isOpen, id, focusedIndex } = useSafeContext(ComboBoxStateContext);
+    const dispatch = useSafeContext(ComboBoxActionContext);
+    const { inputRef, menuRef } = useSafeContext(ComboBoxRefsContext);
+    const refs = useMergedRefs(inputRef, forwardedRef);
 
-          if (focusedIndexRef.current === -1 && length > 0) {
-            return dispatch(['focus', 0]);
-          }
+    const focusedIndexRef = React.useRef(focusedIndex ?? -1);
+    React.useEffect(() => {
+      focusedIndexRef.current = focusedIndex ?? -1;
+    }, [focusedIndex]);
 
-          if (length === 0) {
-            return;
-          }
+    const getIdFromIndex = (index: number) => {
+      return (
+        menuRef.current?.querySelector(`[data-iui-index="${index}"]`)?.id ?? ''
+      );
+    };
 
-          while (true) {
-            const currentElement =
-              menuRef.current?.querySelector(
-                `[data-iui-index="${focusedIndexRef.current}"]`,
-              ) ?? menuRef.current?.querySelector('[data-iui-index]');
-            const nextElement =
-              currentElement?.nextElementSibling ??
-              menuRef.current?.firstElementChild;
+    const handleKeyDown = React.useCallback(
+      (event: React.KeyboardEvent<HTMLInputElement>) => {
+        (() => {
+          const length =
+            menuRef.current?.querySelectorAll('[data-iui-index]').length ?? 0;
 
-            const nextIndex = nextElement?.getAttribute('data-iui-index');
-            if (
-              nextElement?.ariaDisabled === 'true' ||
-              nextIndex == undefined
-            ) {
-              continue;
-            }
-            return dispatch(['focus', Number(nextIndex)]);
-          }
-        } else if (event.key === 'ArrowUp') {
-          event.preventDefault();
-          if (!isOpen) {
-            return dispatch(['open']);
-          }
-
-          if (focusedIndexRef.current === -1 && length > 0) {
-            return dispatch(['focus', 0]);
-          }
-
-          if (length === 0) {
-            return;
-          }
-
-          while (true) {
-            const currentElement =
-              menuRef.current?.querySelector(
-                `[data-iui-index="${focusedIndexRef.current}"]`,
-              ) ?? menuRef.current?.querySelector('[data-iui-index]');
-            const prevElement =
-              currentElement?.previousElementSibling ??
-              menuRef.current?.lastElementChild;
-
-            const prevIndex = prevElement?.getAttribute('data-iui-index');
-            if (
-              prevElement?.ariaDisabled === 'true' ||
-              prevIndex == undefined
-            ) {
-              continue;
+          if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            if (!isOpen) {
+              return dispatch(['open']);
             }
 
-            return dispatch(['focus', Number(prevIndex)]);
-          }
-        } else if (event.key === 'Enter') {
-          event.preventDefault();
-          if (isOpen) {
-            dispatch(['select']);
-          } else {
-            dispatch(['open']);
-          }
-        } else if (event.key === 'Escape') {
-          event.preventDefault();
-          dispatch(['close']);
-        }
-      })();
-      onKeyDownProp?.(event);
-    },
-    [dispatch, isOpen, menuRef, onKeyDownProp],
-  );
+            if (focusedIndexRef.current === -1 && length > 0) {
+              return dispatch(['focus', 0]);
+            }
 
-  const handleFocus = React.useCallback(
-    (event: React.FocusEvent<HTMLInputElement>) => {
-      dispatch(['open']);
-      onFocusProp?.(event);
-    },
-    [dispatch, onFocusProp],
-  );
+            if (length === 0) {
+              return;
+            }
 
-  return (
-    <Input
-      ref={inputRef}
-      onKeyDown={handleKeyDown}
-      onFocus={handleFocus}
-      aria-activedescendant={
-        isOpen && focusedIndex != undefined && focusedIndex > -1
-          ? getIdFromIndex(focusedIndex)
-          : undefined
-      }
-      role='combobox'
-      aria-controls={isOpen ? `${id}-list` : undefined}
-      aria-autocomplete='list'
-      spellCheck={false}
-      autoCapitalize='none'
-      autoCorrect='off'
-      {...rest}
-    />
-  );
-};
+            while (true) {
+              const currentElement =
+                menuRef.current?.querySelector(
+                  `[data-iui-index="${focusedIndexRef.current}"]`,
+                ) ?? menuRef.current?.querySelector('[data-iui-index]');
+              const nextElement =
+                currentElement?.nextElementSibling ??
+                menuRef.current?.firstElementChild;
 
-const ComboBoxPopover = (props: PopoverProps & { children: JSX.Element }) => {
-  const { children, ...rest } = props;
-  const { isOpen } = useSafeContext(ComboBoxStateContext);
-  const dispatch = useSafeContext(ComboBoxActionContext);
-  const { inputRef, toggleButtonRef } = useSafeContext(ComboBoxRefsContext);
+              const nextIndex = nextElement?.getAttribute('data-iui-index');
+              if (
+                nextElement?.ariaDisabled === 'true' ||
+                nextIndex == undefined
+              ) {
+                continue;
+              }
+              return dispatch(['focus', Number(nextIndex)]);
+            }
+          } else if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            if (!isOpen) {
+              return dispatch(['open']);
+            }
 
-  return (
-    <Popover
-      placement='bottom-start'
-      visible={isOpen}
-      onClickOutside={React.useCallback(
-        (_, { target }) => {
-          if (!toggleButtonRef.current?.contains(target as Element)) {
+            if (focusedIndexRef.current === -1 && length > 0) {
+              return dispatch(['focus', 0]);
+            }
+
+            if (length === 0) {
+              return;
+            }
+
+            while (true) {
+              const currentElement =
+                menuRef.current?.querySelector(
+                  `[data-iui-index="${focusedIndexRef.current}"]`,
+                ) ?? menuRef.current?.querySelector('[data-iui-index]');
+              const prevElement =
+                currentElement?.previousElementSibling ??
+                menuRef.current?.lastElementChild;
+
+              const prevIndex = prevElement?.getAttribute('data-iui-index');
+              if (
+                prevElement?.ariaDisabled === 'true' ||
+                prevIndex == undefined
+              ) {
+                continue;
+              }
+
+              return dispatch(['focus', Number(prevIndex)]);
+            }
+          } else if (event.key === 'Enter') {
+            event.preventDefault();
+            if (isOpen) {
+              dispatch(['select']);
+            } else {
+              dispatch(['open']);
+            }
+          } else if (event.key === 'Escape') {
+            event.preventDefault();
             dispatch(['close']);
           }
-        },
-        [dispatch, toggleButtonRef],
-      )}
-      animation='shift-away'
-      duration={200}
-      reference={inputRef}
-      content={children}
-      {...rest}
-    />
-  );
-};
+        })();
+        onKeyDownProp?.(event);
+      },
+      [dispatch, isOpen, menuRef, onKeyDownProp],
+    );
 
-const ComboBoxMenu = (props: MenuProps) => {
-  const { className, style, ...rest } = props;
-  const { minWidth, id } = useSafeContext(ComboBoxStateContext);
-  const { menuRef } = useSafeContext(ComboBoxRefsContext);
+    const handleFocus = React.useCallback(
+      (event: React.FocusEvent<HTMLInputElement>) => {
+        dispatch(['open']);
+        onFocusProp?.(event);
+      },
+      [dispatch, onFocusProp],
+    );
 
-  return (
-    <Menu
-      id={`${id}-list`}
-      style={React.useMemo(
-        () => ({
-          minWidth,
-          maxWidth: `min(${minWidth * 2}px, 90vw)`,
-          maxHeight: 300,
-          ...style,
-        }),
-        [minWidth, style],
-      )}
-      setFocus={false}
-      role='listbox'
-      ref={menuRef}
-      className={cx('iui-scroll', className)}
-      {...rest}
-    />
-  );
-};
+    return (
+      <Input
+        ref={refs}
+        onKeyDown={handleKeyDown}
+        onFocus={handleFocus}
+        aria-activedescendant={
+          isOpen && focusedIndex != undefined && focusedIndex > -1
+            ? getIdFromIndex(focusedIndex)
+            : undefined
+        }
+        role='combobox'
+        aria-controls={isOpen ? `${id}-list` : undefined}
+        aria-autocomplete='list'
+        spellCheck={false}
+        autoCapitalize='none'
+        autoCorrect='off'
+        {...rest}
+      />
+    );
+  },
+);
+ComboBoxInput.displayName = 'ComboBoxInput';
+
+const ComboBoxPopover = React.forwardRef(
+  (
+    props: PopoverProps & { children: JSX.Element },
+    forwardedRef: React.RefObject<Element>,
+  ) => {
+    const { children, ...rest } = props;
+    const { isOpen } = useSafeContext(ComboBoxStateContext);
+    const dispatch = useSafeContext(ComboBoxActionContext);
+    const { inputRef, toggleButtonRef } = useSafeContext(ComboBoxRefsContext);
+
+    return (
+      <Popover
+        placement='bottom-start'
+        visible={isOpen}
+        onClickOutside={React.useCallback(
+          (_, { target }) => {
+            if (!toggleButtonRef.current?.contains(target as Element)) {
+              dispatch(['close']);
+            }
+          },
+          [dispatch, toggleButtonRef],
+        )}
+        animation='shift-away'
+        duration={200}
+        reference={inputRef}
+        ref={forwardedRef}
+        content={children}
+        {...rest}
+      />
+    );
+  },
+);
+ComboBoxPopover.displayName = 'ComboBoxPopover';
+
+const ComboBoxMenu = React.forwardRef(
+  (
+    props: Omit<MenuProps, 'onClick'> & React.ComponentPropsWithoutRef<'ul'>,
+    forwardedRef: React.Ref<HTMLUListElement>,
+  ) => {
+    const { className, style, ...rest } = props;
+    const { minWidth, id } = useSafeContext(ComboBoxStateContext);
+    const { menuRef } = useSafeContext(ComboBoxRefsContext);
+    const refs = useMergedRefs(menuRef, forwardedRef);
+
+    return (
+      <Menu
+        id={`${id}-list`}
+        style={React.useMemo(
+          () => ({
+            minWidth,
+            maxWidth: `min(${minWidth * 2}px, 90vw)`,
+            maxHeight: 300,
+            ...style,
+          }),
+          [minWidth, style],
+        )}
+        setFocus={false}
+        role='listbox'
+        ref={refs}
+        className={cx('iui-scroll', className)}
+        {...rest}
+      />
+    );
+  },
+);
+ComboBoxMenu.displayName = 'ComboBoxMenu';
 
 const ComboBoxMenuItem = React.memo(
   (props: MenuItemProps & { isFocused?: boolean }) => {
