@@ -12,7 +12,7 @@ export const EXPANDER_CELL_ID = 'iui-table-expander';
 
 /**
  * Expander column that adds sub-content expander column to the Table.
- * It is recommended to use it only in the first column or after selection column.
+ * It is recommended to use it as the first column or after selection column.
  */
 export const ExpanderColumn = <T extends Record<string, unknown>>(
   /** Function that returns expanded content. If row doesn't have it, then should return `false`/`null`. */
