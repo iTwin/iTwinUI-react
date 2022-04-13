@@ -25,7 +25,7 @@ export default {
   title: 'Core/Surface',
 } as Meta<SurfaceProps> & CreeveyMeta;
 
-export const Basic: Story<SurfaceProps> = ({ elevation }) => {
+export const Basic: Story<SurfaceProps> = ({ elevation = 2 }) => {
   const cardStyle = {
     height: '100px',
     display: 'flex',
