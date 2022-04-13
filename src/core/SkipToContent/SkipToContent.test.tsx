@@ -49,13 +49,14 @@ it('should render marker with children', () => {
   expect(marker?.querySelector('#main')).toBeTruthy();
 });
 
-it('should propagate misc props in link (except href)', () => {
+it('should propagate misc props in link', () => {
   const { container } = render(
     <SkipToContentLink
       className='test-class'
       style={{ color: 'red' }}
       aria-label='test-label'
       id='test-id'
+      href='#test-href'
     />,
   );
   const link = container.querySelector(
@@ -66,9 +67,10 @@ it('should propagate misc props in link (except href)', () => {
   expect(link).toHaveStyle('color: red');
   expect(link).toHaveAttribute('aria-label', 'test-label');
   expect(link).toHaveAttribute('id', 'test-id');
+  expect(link).toHaveAttribute('href', '#test-href');
 });
 
-it('should propagate misc props in marker (except id)', () => {
+it('should propagate misc props in marker', () => {
   const { container } = render(
     <SkipToContentMarker
       className='test-class'

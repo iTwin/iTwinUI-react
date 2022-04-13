@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { CommonProps, useTheme } from '../utils';
+import { useTheme } from '../utils';
 import '@itwin/itwinui-css/css/skip-to-content.css';
 
 export type SkipToContentLinkProps = {
@@ -13,15 +13,17 @@ export type SkipToContentLinkProps = {
    * @default 'Skip to main content'
    */
   children?: React.ReactNode;
-} & Omit<CommonProps, 'href'>;
+} & React.ComponentPropsWithoutRef<'a'>;
 
 /**
- * Link is for screen reader and keyboard users and will not be visible unless tabbed to.
+ * `SkipToContentLink` is for screen reader and keyboard users and will not be visible unless tabbed to.
  * Provides a shortcut to the main content of the page without navigating through the header, etc.
- * Should be placed just inside the body. Used in conjunction with `SkipToContentMarker`.
+ * Should be placed just inside the body. Used in conjunction with `SkipToContentMarker` or by setting
+ * the href to the id of your main content component.
  * @example
  * <body><SkipToContentLink /> ... </body>
  * <body><SkipToContentLink>{localizedLabel}</SkipToContentLink> ... </body>
+ * <body><SkipToContentLink href='#main-id' /> ... </body>
  */
 export const SkipToContentLink = (props: SkipToContentLinkProps) => {
   const { children = 'Skip to main content', className, ...rest } = props;

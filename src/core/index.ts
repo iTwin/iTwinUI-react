@@ -170,6 +170,12 @@ export type {
   SidenavSubmenuHeaderProps,
 } from './SideNavigation';
 
+export { SkipToContentLink, SkipToContentMarker } from './SkipToContent';
+export type {
+  SkipToContentLinkProps,
+  SkipToContentMarkerProps,
+} from './SkipToContent';
+
 export { Slider } from './Slider';
 export type { SliderProps } from './Slider';
 
@@ -277,9 +283,3 @@ export {
   MiddleTextTruncation,
 } from './utils';
 export type { ThemeType, MiddleTextTruncationProps } from './utils';
-
-export { SkipToContentLink, SkipToContentMarker } from './SkipToContent';
-export type {
-  SkipToContentLinkProps,
-  SkipToContentMarkerProps,
-} from './SkipToContent';
