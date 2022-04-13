@@ -526,17 +526,19 @@ ManyItems.args = {
   inputProps: { placeholder: 'Select an item' },
 };
 
-export const Async: Story<Partial<ComboBoxProps<string>>> = (args) => {
-  args; // ignore
+export const Async: Story<Partial<ComboBoxProps<string>>> = () => {
   const [results, setResults] = React.useState<Array<unknown>>([]);
   const [inputValue, setInputValue] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isPopoverVisible, setIsPopoverVisible] = React.useState(false);
+  const timeoutRef = React.useRef<number>();
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = event.target.value;
     setInputValue(searchTerm);
     setIsLoading(true);
-    setTimeout(() => {
+    window.clearTimeout(timeoutRef.current);
+    timeoutRef.current = window.setTimeout(() => {
       setResults(
         searchTerm
           ? Array(10)
@@ -554,6 +556,7 @@ export const Async: Story<Partial<ComboBoxProps<string>>> = (args) => {
   const handleItemClick = (label: string) => {
     setInputValue(label);
     setResults([]);
+    setIsPopoverVisible(false);
   };
 
   return (
@@ -572,15 +575,19 @@ export const Async: Story<Partial<ComboBoxProps<string>>> = (args) => {
         <ComboBox.Input
           value={inputValue}
           onInput={handleInput}
-          placeholder='Search...'
+          placeholder='Search…'
+          onFocus={() => setIsPopoverVisible(true)}
         />
       </ComboBox.InputContainer>
       {results.length > 0 && (
-        <ComboBox.Popover visible>
+        <ComboBox.Popover
+          visible={isPopoverVisible}
+          onClickOutside={() => setIsPopoverVisible(false)}
+        >
           <ComboBox.Menu>
-            {results.map(({ label, ...rest }, index) => (
+            {results.map(({ label, ...rest }) => (
               <ComboBox.MenuItem
-                key={index}
+                key={label}
                 {...rest}
                 onClick={() => handleItemClick(label)}
               >
@@ -593,4 +600,6 @@ export const Async: Story<Partial<ComboBoxProps<string>>> = (args) => {
     </ComboBox>
   );
 };
-Async.args = {};
+Async.parameters = {
+  controls: { hideNoControlsWarning: true },
+};
