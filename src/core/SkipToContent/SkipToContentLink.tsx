@@ -9,7 +9,7 @@ import '@itwin/itwinui-css/css/skip-to-content.css';
 
 export type SkipToContentLinkProps = {
   /**
-   * Localize 'Skip to main content' label if needed.
+   * Localize 'Skip to main content' label.
    * @default 'Skip to main content'
    */
   children?: React.ReactNode;
@@ -25,13 +25,17 @@ export type SkipToContentLinkProps = {
  * <body><SkipToContentLink>{localizedLabel}</SkipToContentLink> ... </body>
  * <body><SkipToContentLink href='#main-id' /> ... </body>
  */
-export const SkipToContentLink = (props: SkipToContentLinkProps) => {
+export const SkipToContentLink = React.forwardRef<
+  HTMLAnchorElement,
+  SkipToContentLinkProps
+>((props, ref) => {
   const { children = 'Skip to main content', className, ...rest } = props;
 
   useTheme();
 
   return (
     <a
+      ref={ref}
       className={cx('iui-skip-to-content-link', className)}
       href='#skip-to-content-marker'
       {...rest}
@@ -39,6 +43,6 @@ export const SkipToContentLink = (props: SkipToContentLinkProps) => {
       {children}
     </a>
   );
-};
+});
 
 export default SkipToContentLink;
