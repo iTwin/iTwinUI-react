@@ -12,6 +12,7 @@ export default {
   argTypes: {
     className: { control: { disable: true } },
     style: { control: { disable: true } },
+    id: { control: { disable: true } },
     elevation: {
       options: [2, 4, 8, 16, 24],
     },
@@ -24,13 +25,13 @@ export default {
   title: 'Core/Surface',
 } as Meta<SurfaceProps> & CreeveyMeta;
 
-const cardStyle = {
-  height: '100px',
-  display: 'flex',
-  'justify-content': 'center',
-  'align-items': 'center',
-};
 export const Basic: Story<SurfaceProps> = ({ elevation }) => {
+  const cardStyle = {
+    height: '100px',
+    display: 'flex',
+    'justify-content': 'center',
+    'align-items': 'center',
+  };
   return (
     <Surface elevation={elevation} style={cardStyle}>
       Sample Surface Component
@@ -38,4 +39,4 @@ export const Basic: Story<SurfaceProps> = ({ elevation }) => {
   );
 };
 
-Basic.args = {};
+Basic.args = { elevation: 2 };
