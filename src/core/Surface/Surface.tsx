@@ -40,12 +40,12 @@ export type SurfaceProps = {
 } & CommonProps;
 
 /**
- * The surface container allows content to appear elevated through the use of a drop shadow
+ * The Surface container allows content to appear elevated through the use of a drop shadow
  * @example
  * <Surface>Surface Content</Surface>
  * <Surface elevation={2}>Surface Content</Surface>
  */
-export const Surface = (props: SurfaceProps) => {
+export const Surface = React.forwardRef((props: SurfaceProps) => {
   const { elevation = 2, className, style, children, ...rest } = props;
   useTheme();
 
@@ -59,6 +59,6 @@ export const Surface = (props: SurfaceProps) => {
       {children}
     </div>
   );
-};
+});
 
 export default Surface;
