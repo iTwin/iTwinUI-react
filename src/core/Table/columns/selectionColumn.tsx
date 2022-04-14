@@ -18,8 +18,10 @@ export const SELECTION_CELL_ID = 'iui-table-checkbox-selector';
  * }, []);
  * const columns = useMemo(() => [
  *   Header: 'Table',
- *   SelectionColumn({ isDisabled: isCheckboxDisabled }),
- *   // Rest of your columns
+ *   columns: [
+ *     SelectionColumn({ isDisabled: isCheckboxDisabled }),
+ *     // Rest of your columns
+ *    ],
  * ], [isCheckboxDisabled]);
  */
 export const SelectionColumn = <T extends Record<string, unknown>>(

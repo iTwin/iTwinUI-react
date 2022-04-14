@@ -30,8 +30,10 @@ export const EXPANDER_CELL_ID = 'iui-table-expander';
  * }, []);
  * const columns = useMemo(() => [
  *   Header: 'Table',
- *   ExpanderColumn({ subComponent, isDisabled: isExpanderDisabled }),
- *   // Rest of your columns
+ *   columns: [
+ *     ExpanderColumn({ subComponent, isDisabled: isExpanderDisabled }),
+ *     // Rest of your columns
+ *   ],
  * ], [isExpanderDisabled, subComponent]);
  */
 export const ExpanderColumn = <T extends Record<string, unknown>>(
