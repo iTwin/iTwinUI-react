@@ -424,13 +424,13 @@ export const CustomRenderer: Story<Partial<ComboBoxProps<string>>> = (args) => {
   }, []);
 
   const itemRenderer = React.useCallback(
-    ({ value, label }, { isSelected, id, ...rest }) => (
+    ({ value, label }, { isSelected, id, index }) => (
       <ComboBox.MenuItem
         key={id}
         id={id}
         isSelected={isSelected}
         value={value}
-        {...rest}
+        index={index}
       >
         <em
           style={{
@@ -585,9 +585,10 @@ export const Async: Story<Partial<ComboBoxProps<string>>> = () => {
           onClickOutside={() => setIsPopoverVisible(false)}
         >
           <ComboBox.Menu>
-            {results.map(({ label, ...rest }) => (
+            {results.map(({ label, ...rest }, index) => (
               <ComboBox.MenuItem
                 key={label}
+                index={index}
                 {...rest}
                 onClick={() => handleItemClick(label)}
               >
