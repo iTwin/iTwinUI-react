@@ -62,7 +62,7 @@ export type ComboBoxProps<T> = {
   emptyStateMessage?: string;
   /**
    * A custom item renderer can be specified to control the rendering.
-   * This function should ideally return a customized version of `MenuItem`,
+   * This function should ideally return a customized version of `ComboBox.MenuItem`,
    * otherwise you will need to make sure to provide styling for the `isFocused` state.
    */
   itemRenderer?: (
@@ -138,6 +138,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const menuRef = React.useRef<HTMLUListElement>(null);
   const toggleButtonRef = React.useRef<HTMLSpanElement>(null);
+  const optionsRef = React.useRef<Array<HTMLLIElement>>([]);
 
   // Latest value of the onChange prop
   const onChangeProp = React.useRef(onChange);
@@ -154,14 +155,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       focusedIndex: -1,
     },
   );
-
-  // When the value prop changes, update the selectedIndex
-  React.useEffect(() => {
-    dispatch([
-      'select',
-      options.findIndex((option) => option.value === valueProp),
-    ]);
-  }, [options, valueProp]);
 
   React.useEffect(() => {
     if (isOpen) {
@@ -208,7 +201,15 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   // Reset focused item when filter changes
   React.useEffect(() => {
     dispatch(['focus']);
-  }, [filteredOptions, selectedIndex]);
+  }, [filteredOptions]);
+
+  // When the value prop changes, update the selectedIndex
+  React.useEffect(() => {
+    dispatch([
+      'select',
+      options.findIndex((option) => option.value === valueProp),
+    ]);
+  }, [options, valueProp]);
 
   // When value is selected, update input value and reset filtered options
   React.useEffect(() => {
@@ -245,16 +246,16 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
       return customItem ? (
         React.cloneElement(customItem, {
-          'data-iui-index': __originalIndex,
           onClick: (e: unknown) => {
             dispatch(['select', __originalIndex as number]);
             customItem.props.onClick?.(e);
           },
+          'data-iui-index': __originalIndex,
         })
       ) : (
         <ComboBoxMenuItem
           key={(__originalIndex as number) ?? index}
-          data-iui-index={option.__originalIndex}
+          index={option.__originalIndex}
           onClick={() => dispatch(['select', __originalIndex as number])}
           {...rest}
         >
@@ -268,6 +269,13 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     (option: ComboBoxOption<T>) => {
       const { __originalIndex, ...rest } = option;
 
+      if (
+        selectedIndex !== __originalIndex &&
+        focusedIndex !== __originalIndex
+      ) {
+        return memoizedItems[option.__originalIndex];
+      }
+
       const customItem = itemRenderer
         ? itemRenderer(option, {
             isFocused: focusedIndex === __originalIndex,
@@ -277,31 +285,27 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           })
         : null;
 
-      return selectedIndex === __originalIndex ||
-        focusedIndex === __originalIndex ? (
-        customItem ? (
-          React.cloneElement(customItem, {
-            className: cx(customItem.props.className, 'iui-focused'),
-            'data-iui-index': __originalIndex,
-            onClick: (e: unknown) => {
-              dispatch(['select', __originalIndex as number]);
-              customItem.props.onClick?.(e);
-            },
-          })
-        ) : (
-          <ComboBoxMenuItem
-            key={option.id ?? __originalIndex}
-            {...rest}
-            isSelected={selectedIndex === __originalIndex}
-            isFocused={focusedIndex === __originalIndex}
-            onClick={() => dispatch(['select', __originalIndex])}
-            data-iui-index={__originalIndex}
-          >
-            {option.label}
-          </ComboBoxMenuItem>
-        )
+      return customItem ? (
+        React.cloneElement(customItem, {
+          onClick: (e: unknown) => {
+            dispatch(['select', __originalIndex as number]);
+            customItem.props.onClick?.(e);
+          },
+          // ComboBox.MenuItem handles data-iui-index and iui-focused through context
+          // but we still need to pass them here for backwards compatibility with MenuItem
+          className: cx(customItem.props.className, 'iui-focused'),
+          'data-iui-index': __originalIndex,
+        })
       ) : (
-        memoizedItems[option.__originalIndex]
+        <ComboBoxMenuItem
+          key={option.id ?? __originalIndex}
+          {...rest}
+          isSelected={selectedIndex === __originalIndex}
+          onClick={() => dispatch(['select', __originalIndex])}
+          index={__originalIndex}
+        >
+          {option.label}
+        </ComboBoxMenuItem>
       );
     },
     [focusedIndex, itemRenderer, memoizedItems, selectedIndex],
@@ -309,7 +313,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   return (
     <ComboBoxRefsContext.Provider
-      value={{ inputRef, menuRef, toggleButtonRef }}
+      value={{ inputRef, menuRef, toggleButtonRef, optionsRef }}
     >
       <ComboBoxActionContext.Provider value={dispatch}>
         <ComboBoxStateContext.Provider
@@ -393,6 +397,7 @@ const ComboBoxRefsContext = React.createContext<
       inputRef: React.RefObject<HTMLInputElement>;
       menuRef: React.RefObject<HTMLUListElement>;
       toggleButtonRef: React.RefObject<HTMLSpanElement>;
+      optionsRef: React.MutableRefObject<Array<HTMLLIElement>>;
     }
   | undefined
 >(undefined);
@@ -484,13 +489,40 @@ const ComboBoxInput = React.forwardRef(
 
     const { isOpen, id, focusedIndex } = useSafeContext(ComboBoxStateContext);
     const dispatch = useSafeContext(ComboBoxActionContext);
-    const { inputRef, menuRef } = useSafeContext(ComboBoxRefsContext);
+    const { inputRef, menuRef, optionsRef } = useSafeContext(
+      ComboBoxRefsContext,
+    );
     const refs = useMergedRefs(inputRef, forwardedRef);
 
-    const focusedIndexRef = React.useRef(focusedIndex ?? -1);
+    const focusedIndexRef = React.useRef({ original: -1, filtered: -1 });
+
+    // FIXME: Currently, the selected item is not focused on the first render.
+
+    // const forceRerender = React.useReducer(() => ({}), {})[1];
+    // const [optionsMounted, setOptionsMounted] = React.useState(false);
+    // React.useEffect(() => {
+
+    //   if (!isOpen) {
+    //     return;
+    //   }
+
+    //   if (isOpen && !menuRef.current) {
+    //     forceRerender();
+    //   }
+
+    //   if (menuRef.current?.children.length && optionsRef.current.length > 0) {
+    //     setOptionsMounted(true);
+    //   }
+    // });
+
     React.useEffect(() => {
-      focusedIndexRef.current = focusedIndex ?? -1;
-    }, [focusedIndex]);
+      focusedIndexRef.current = {
+        original: focusedIndex ?? -1,
+        filtered: optionsRef.current.findIndex(
+          (el) => Number(el.dataset.iuiIndex) === focusedIndex,
+        ),
+      };
+    }, [focusedIndex, optionsRef]);
 
     const getIdFromIndex = (index: number) => {
       return (
@@ -501,8 +533,7 @@ const ComboBoxInput = React.forwardRef(
     const handleKeyDown = React.useCallback(
       (event: React.KeyboardEvent<HTMLInputElement>) => {
         (() => {
-          const length =
-            menuRef.current?.querySelectorAll('[data-iui-index]').length ?? 0;
+          const length = optionsRef.current.length ?? 0;
 
           if (event.key === 'ArrowDown') {
             event.preventDefault();
@@ -510,65 +541,57 @@ const ComboBoxInput = React.forwardRef(
               return dispatch(['open']);
             }
 
-            if (focusedIndexRef.current === -1 && length > 0) {
-              return dispatch(['focus', 0]);
+            if (focusedIndexRef.current.original === -1 && length > 0) {
+              return dispatch([
+                'focus',
+                Number(optionsRef.current[0].dataset.iuiIndex),
+              ]);
             }
 
             if (length === 0) {
               return;
             }
 
-            while (true) {
-              const currentElement =
-                menuRef.current?.querySelector(
-                  `[data-iui-index="${focusedIndexRef.current}"]`,
-                ) ?? menuRef.current?.querySelector('[data-iui-index]');
-              const nextElement =
-                currentElement?.nextElementSibling ??
-                menuRef.current?.firstElementChild;
+            let nextIndex = focusedIndexRef.current.filtered;
+            do {
+              nextIndex = (nextIndex + length + 1) % length;
+              const item = optionsRef.current[nextIndex];
 
-              const nextIndex = nextElement?.getAttribute('data-iui-index');
               if (
-                nextElement?.ariaDisabled === 'true' ||
-                nextIndex == undefined
+                item.dataset.iuiIndex != undefined &&
+                item.ariaDisabled !== 'true'
               ) {
-                continue;
+                return dispatch(['focus', Number(item.dataset.iuiIndex)]);
               }
-              return dispatch(['focus', Number(nextIndex)]);
-            }
+            } while (nextIndex !== focusedIndexRef.current.filtered);
           } else if (event.key === 'ArrowUp') {
             event.preventDefault();
             if (!isOpen) {
               return dispatch(['open']);
             }
 
-            if (focusedIndexRef.current === -1 && length > 0) {
-              return dispatch(['focus', 0]);
+            if (focusedIndexRef.current.original === -1 && length > 0) {
+              return dispatch([
+                'focus',
+                Number(optionsRef.current[length - 1].dataset.iuiIndex),
+              ]);
             }
 
             if (length === 0) {
               return;
             }
 
-            while (true) {
-              const currentElement =
-                menuRef.current?.querySelector(
-                  `[data-iui-index="${focusedIndexRef.current}"]`,
-                ) ?? menuRef.current?.querySelector('[data-iui-index]');
-              const prevElement =
-                currentElement?.previousElementSibling ??
-                menuRef.current?.lastElementChild;
-
-              const prevIndex = prevElement?.getAttribute('data-iui-index');
+            let prevIndex = focusedIndexRef.current.filtered;
+            do {
+              prevIndex = (prevIndex + length - 1) % length;
+              const item = optionsRef.current[prevIndex];
               if (
-                prevElement?.ariaDisabled === 'true' ||
-                prevIndex == undefined
+                item.dataset.iuiIndex != undefined &&
+                item.ariaDisabled !== 'true'
               ) {
-                continue;
+                return dispatch(['focus', Number(item.dataset.iuiIndex)]);
               }
-
-              return dispatch(['focus', Number(prevIndex)]);
-            }
+            } while (prevIndex !== focusedIndexRef.current.filtered);
           } else if (event.key === 'Enter') {
             event.preventDefault();
             if (isOpen) {
@@ -583,7 +606,7 @@ const ComboBoxInput = React.forwardRef(
         })();
         onKeyDownProp?.(event);
       },
-      [dispatch, isOpen, menuRef, onKeyDownProp],
+      [dispatch, isOpen, onKeyDownProp, optionsRef],
     );
 
     const handleFocus = React.useCallback(
@@ -627,6 +650,11 @@ const ComboBoxPopover = React.forwardRef(
     const dispatch = useSafeContext(ComboBoxActionContext);
     const { inputRef, toggleButtonRef } = useSafeContext(ComboBoxRefsContext);
 
+    // sync internal isOpen state with user's visible prop
+    React.useEffect(() => {
+      dispatch([props.visible ? 'open' : 'close']);
+    }, [dispatch, props.visible]);
+
     return (
       <Popover
         placement='bottom-start'
@@ -654,11 +682,19 @@ ComboBoxPopover.displayName = 'ComboBoxPopover';
 const ComboBoxMenu = React.forwardRef(
   (
     props: Omit<MenuProps, 'onClick'> & React.ComponentPropsWithoutRef<'ul'>,
-    forwardedRef: React.Ref<HTMLUListElement>,
+    forwardedRef: React.RefObject<HTMLUListElement>,
   ) => {
     const { className, style, ...rest } = props;
     const { minWidth, id } = useSafeContext(ComboBoxStateContext);
-    const { menuRef } = useSafeContext(ComboBoxRefsContext);
+    const { menuRef, optionsRef } = useSafeContext(ComboBoxRefsContext);
+
+    React.useEffect(() => {
+      if (menuRef.current != null) {
+        const items = menuRef.current.querySelectorAll('[data-iui-index]');
+        optionsRef.current = Array.from(items) as HTMLLIElement[]; // need this cast to make TS happy :(
+      }
+    }, [menuRef, optionsRef, props.children]);
+
     const refs = useMergedRefs(menuRef, forwardedRef);
 
     return (
@@ -685,62 +721,75 @@ const ComboBoxMenu = React.forwardRef(
 ComboBoxMenu.displayName = 'ComboBoxMenu';
 
 const ComboBoxMenuItem = React.memo(
-  (props: MenuItemProps & { isFocused?: boolean }) => {
-    const {
-      children,
-      isSelected,
-      disabled,
-      value,
-      onClick,
-      sublabel,
-      size = !!sublabel ? 'large' : 'default',
-      icon,
-      badge,
-      className,
-      role = 'menuitem',
-      isFocused = false,
-      ...rest
-    } = props;
+  React.forwardRef(
+    (
+      props: MenuItemProps & { index: number },
+      forwardedRef: React.RefObject<HTMLLIElement>,
+    ) => {
+      const {
+        children,
+        isSelected,
+        disabled,
+        value,
+        onClick,
+        sublabel,
+        size = !!sublabel ? 'large' : 'default',
+        icon,
+        badge,
+        className,
+        role = 'menuitem',
+        index,
+        ...rest
+      } = props;
 
-    return (
-      <li
-        className={cx(
-          'iui-menu-item',
-          {
-            'iui-large': size === 'large',
-            'iui-active': isSelected,
-            'iui-disabled': disabled,
-            'iui-focused': isFocused,
-          },
-          className,
-        )}
-        ref={(el) => {
-          if (isFocused) {
-            el?.scrollIntoView({ block: 'nearest' });
-          }
-        }}
-        onClick={() => !disabled && onClick?.(value)}
-        role={role}
-        tabIndex={disabled || role === 'presentation' ? undefined : -1}
-        aria-selected={isSelected}
-        aria-disabled={disabled}
-        {...rest}
-      >
-        {icon &&
-          React.cloneElement(icon, {
-            className: cx(icon.props.className, 'iui-icon'),
-          })}
-        <span className='iui-content'>
-          <div className='iui-menu-label'>{children}</div>
-          {sublabel && <div className='iui-menu-description'>{sublabel}</div>}
-        </span>
-        {badge &&
-          React.cloneElement(badge, {
-            className: cx(badge.props.className, 'iui-icon'),
-          })}
-      </li>
-    );
-  },
+      const { focusedIndex } = useSafeContext(ComboBoxStateContext);
+
+      const focusRef = (el: HTMLLIElement | null) => {
+        // will need to check for virtualization here too
+        if (focusedIndex === index) {
+          el?.scrollIntoView({ block: 'nearest' });
+        }
+      };
+
+      const refs = useMergedRefs(forwardedRef, focusRef);
+
+      return (
+        <li
+          className={cx(
+            'iui-menu-item',
+            {
+              'iui-large': size === 'large',
+              'iui-active': isSelected,
+              'iui-disabled': disabled,
+              'iui-focused': focusedIndex === index,
+            },
+            className,
+          )}
+          ref={refs}
+          onClick={() => !disabled && onClick?.(value)}
+          role={role}
+          tabIndex={disabled || role === 'presentation' ? undefined : -1}
+          aria-selected={isSelected}
+          aria-disabled={disabled}
+          data-iui-index={index}
+          {...rest}
+        >
+          {icon &&
+            React.cloneElement(icon, {
+              className: cx(icon.props.className, 'iui-icon'),
+            })}
+          <span className='iui-content'>
+            <div className='iui-menu-label'>{children}</div>
+            {sublabel && <div className='iui-menu-description'>{sublabel}</div>}
+          </span>
+          {badge &&
+            React.cloneElement(badge, {
+              className: cx(badge.props.className, 'iui-icon'),
+            })}
+        </li>
+      );
+    },
+  ),
 );
 ComboBoxMenuItem.displayName = 'ComboBoxMenuItem';
 
