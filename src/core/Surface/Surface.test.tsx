@@ -7,6 +7,10 @@ import { render } from '@testing-library/react';
 
 import { Surface } from './Surface';
 
+beforeAll(() => {
+  window.CSS = { supports: () => true, escape: (i) => i };
+});
+
 it('should render in its most basic state', () => {
   const { container } = render(<Surface>Surface Content</Surface>);
   const surface = container.querySelector('.iui-surface') as HTMLElement;
