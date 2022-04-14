@@ -15,6 +15,7 @@ it('should render in its most basic state', () => {
 });
 
 it.each([
+  [0, '0'],
   [2, ''],
   [4, '0 1px 10px rgba(0, 0, 0, 0.25)'],
   [8, '0 3px 14px rgba(0, 0, 0, 0.25)'],

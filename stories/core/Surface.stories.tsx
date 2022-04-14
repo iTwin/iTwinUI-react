@@ -14,7 +14,7 @@ export default {
     style: { control: { disable: true } },
     id: { control: { disable: true } },
     elevation: {
-      options: [2, 4, 8, 16, 24],
+      options: [0, 2, 4, 8, 16, 24],
     },
   },
   parameters: {

@@ -12,6 +12,8 @@ import '@itwin/itwinui-css/css/surface.css';
  */
 const getSurfaceElevationValue = (elevation: SurfaceProps['elevation']) => {
   switch (elevation) {
+    case 0:
+      return '0';
     case 4:
       return '0 1px 10px rgba(0, 0, 0, 0.25)';
     case 8:
@@ -30,7 +32,7 @@ export type SurfaceProps = {
    * Sets the size of the box shadow.
    * @default 2
    */
-  elevation?: 2 | 4 | 8 | 16 | 24;
+  elevation?: 0 | 2 | 4 | 8 | 16 | 24;
   /**
    * Content in the surface.
    */
