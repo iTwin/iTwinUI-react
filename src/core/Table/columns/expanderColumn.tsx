@@ -13,13 +13,36 @@ export const EXPANDER_CELL_ID = 'iui-table-expander';
 /**
  * Expander column that adds sub-content expander column to the Table.
  * It is recommended to use it as the first column or after selection column.
+ * @example
+ * const subComponent = useCallback(
+ *   (row: Row) => (
+ *     <div style={{ padding: 16 }}>
+ *       <Leading>Extra information</Leading>
+ *       <pre>
+ *         <code>{JSON.stringify({ values: row.values }, null, 2)}</code>
+ *       </pre>
+ *     </div>
+ *   ),
+ *   [],
+ * );
+ * const isExpanderDisabled = useCallback((rowData) => {
+ *   return rowData.name === 'Name2';
+ * }, []);
+ * const columns = useMemo(() => [
+ *   Header: 'Table',
+ *   ExpanderColumn({ subComponent, isDisabled: isExpanderDisabled }),
+ *   // Rest of your columns
+ * ], [isExpanderDisabled, subComponent]);
  */
 export const ExpanderColumn = <T extends Record<string, unknown>>(
-  /** Function that returns expanded content. If row doesn't have it, then should return `false`/`null`. */
-  subComponent?: (row: Row<T>) => React.ReactNode,
-  /** Function that returns whether expander is disabled */
-  isDisabled?: (rowData: T) => boolean,
+  props: {
+    /** Function that returns expanded content. If row doesn't have it, then should return `false`/`null`. */
+    subComponent?: (row: Row<T>) => React.ReactNode;
+    /** Function that returns whether expander is disabled */
+    isDisabled?: (rowData: T) => boolean;
+  } = {},
 ) => {
+  const { subComponent, isDisabled } = props;
   return {
     id: EXPANDER_CELL_ID,
     disableResizing: true,

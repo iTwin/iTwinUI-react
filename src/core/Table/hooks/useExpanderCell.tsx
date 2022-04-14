@@ -19,7 +19,10 @@ export const useExpanderCell = <T extends Record<string, unknown>>(
     if (hasExpanderColumn) {
       return columns;
     }
-    const expanderColumn = ExpanderColumn(subComponent, isRowDisabled);
+    const expanderColumn = ExpanderColumn({
+      subComponent,
+      isDisabled: isRowDisabled,
+    });
     return [
       { ...expanderColumn, Cell: expanderCell ?? expanderColumn.Cell },
       ...columns,

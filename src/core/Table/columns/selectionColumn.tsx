@@ -12,11 +12,23 @@ export const SELECTION_CELL_ID = 'iui-table-checkbox-selector';
 /**
  * Selection column that adds selection checkbox column to the Table.
  * It is recommended to use it as the first column.
+ * @example
+ * const isCheckboxDisabled = useCallback((rowData) => {
+ *   return rowData.name === 'Name1';
+ * }, []);
+ * const columns = useMemo(() => [
+ *   Header: 'Table',
+ *   SelectionColumn({ isDisabled: isCheckboxDisabled }),
+ *   // Rest of your columns
+ * ], [isCheckboxDisabled]);
  */
 export const SelectionColumn = <T extends Record<string, unknown>>(
-  /** Function that returns whether row checkbox should be disabled. */
-  isDisabled?: (rowData: T) => boolean,
+  props: {
+    /** Function that returns whether row checkbox should be disabled. */
+    isDisabled?: (rowData: T) => boolean;
+  } = {},
 ) => {
+  const { isDisabled } = props;
   return {
     id: SELECTION_CELL_ID,
     disableResizing: true,

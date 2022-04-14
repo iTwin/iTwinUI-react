@@ -16,6 +16,6 @@ export const useSelectionCell = <T extends Record<string, unknown>>(
   hooks.allColumns.push((columns: ColumnInstance<T>[]) =>
     columns.find((c) => c.id === SELECTION_CELL_ID)
       ? columns
-      : [SelectionColumn(isRowDisabled), ...columns],
+      : [SelectionColumn({ isDisabled: isRowDisabled }), ...columns],
   );
 };

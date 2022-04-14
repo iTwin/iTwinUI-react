@@ -2683,12 +2683,12 @@ it('should be disabled in column manager if `disableToggleVisibility` is true', 
 
 it('should add selection column manually', () => {
   const onSelect = jest.fn();
-  const isRowDisabled = (rowData: TestDataType) => rowData.name === 'Name2';
+  const isDisabled = (rowData: TestDataType) => rowData.name === 'Name2';
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Table',
       columns: [
-        SelectionColumn(isRowDisabled),
+        SelectionColumn({ isDisabled }),
         {
           id: 'name',
           Header: 'Name',
@@ -2735,7 +2735,7 @@ it('should add expander column manually', () => {
     {
       Header: 'Table',
       columns: [
-        ExpanderColumn(subComponent, isRowDisabled),
+        ExpanderColumn({ subComponent, isDisabled: isRowDisabled }),
         {
           id: 'name',
           Header: 'Name',

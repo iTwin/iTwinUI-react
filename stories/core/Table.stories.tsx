@@ -2610,8 +2610,8 @@ export const CustomizedColumns: Story<Partial<TableProps>> = (args) => {
       {
         Header: 'Table',
         columns: [
-          SelectionColumn(isCheckboxDisabled),
-          ExpanderColumn(subComponent, isExpanderDisabled),
+          SelectionColumn({ isDisabled: isCheckboxDisabled }),
+          ExpanderColumn({ subComponent, isDisabled: isExpanderDisabled }),
           {
             id: 'name',
             Header: 'Name',
