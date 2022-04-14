@@ -34,7 +34,8 @@ export const Basic: Story<SurfaceProps> = ({ elevation = 2 }) => {
   };
   return (
     <Surface elevation={elevation} style={cardStyle}>
-      Sample Surface Component
+      The Surface container allows content to appear elevated through the use of
+      a drop shadow
     </Surface>
   );
 };
