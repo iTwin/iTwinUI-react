@@ -13,7 +13,7 @@ import '@itwin/itwinui-css/css/surface.css';
 const getSurfaceElevationValue = (elevation: SurfaceProps['elevation']) => {
   switch (elevation) {
     case 0:
-      return '0';
+      return 'none';
     case 4:
       return '0 1px 10px rgba(0, 0, 0, 0.25)';
     case 8:
@@ -37,7 +37,7 @@ export type SurfaceProps = {
    * Content in the surface.
    */
   children: React.ReactNode;
-} & CommonProps;
+} & Omit<CommonProps, 'title'>;
 
 /**
  * The Surface container allows content to appear elevated through the use of a drop shadow
@@ -45,25 +45,32 @@ export type SurfaceProps = {
  * <Surface>Surface Content</Surface>
  * <Surface elevation={2}>Surface Content</Surface>
  */
-export const Surface = React.forwardRef((props: SurfaceProps) => {
-  const { elevation = 2, className, style, children, ...rest } = props;
-  useTheme();
+export const Surface = React.forwardRef<HTMLDivElement, SurfaceProps>(
+  (props: SurfaceProps, ref) => {
+    const { elevation = 2, className, style, children, ...rest } = props;
+    useTheme();
 
-  const _style = getWindow()?.CSS?.supports?.('--iui-surface-elevation: 0')
-    ? {
-        '--iui-surface-elevation': getSurfaceElevationValue(elevation),
-        ...style,
-      }
-    : {
-        'box-shadow': getSurfaceElevationValue(elevation),
-        ...style,
-      };
+    const _style = getWindow()?.CSS?.supports?.('--iui-surface-elevation: 0')
+      ? {
+          '--iui-surface-elevation': getSurfaceElevationValue(elevation),
+          ...style,
+        }
+      : {
+          'box-shadow': getSurfaceElevationValue(elevation),
+          ...style,
+        };
 
-  return (
-    <div className={cx('iui-surface', className)} style={_style} {...rest}>
-      {children}
-    </div>
-  );
-});
+    return (
+      <div
+        className={cx('iui-surface', className)}
+        style={_style}
+        ref={ref}
+        {...rest}
+      >
+        {children}
+      </div>
+    );
+  },
+);
 
 export default Surface;

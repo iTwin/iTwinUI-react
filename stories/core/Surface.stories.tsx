@@ -29,8 +29,8 @@ export const Basic: Story<SurfaceProps> = ({ elevation = 2 }) => {
   const cardStyle = {
     height: '100px',
     display: 'flex',
-    'justify-content': 'center',
-    'align-items': 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   };
   return (
     <Surface elevation={elevation} style={cardStyle}>
