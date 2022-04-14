@@ -29,7 +29,7 @@ const getSurfaceElevationValue = (elevation: SurfaceProps['elevation']) => {
 
 export type SurfaceProps = {
   /**
-   * Sets the size of the box shadow.
+   * Sets the elevation of the surface in density-independent pixels (dp)
    * @default 2
    */
   elevation?: 0 | 2 | 4 | 8 | 16 | 24;
