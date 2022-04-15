@@ -11,10 +11,9 @@ import '@itwin/itwinui-css/css/surface.css';
  * Helper function that returns one of the preset surface elevation values.
  */
 const getSurfaceElevationValue = (elevation: SurfaceProps['elevation']) => {
-  if (!elevation) {
-    return 'none';
-  }
   switch (elevation) {
+    case 1:
+      return '0 1px 5px rgba(0, 0, 0, 0.25)';
     case 2:
       return '0 1px 10px rgba(0, 0, 0, 0.25)';
     case 3:
@@ -24,7 +23,7 @@ const getSurfaceElevationValue = (elevation: SurfaceProps['elevation']) => {
     case 5:
       return '0 9px 46px rgba(0, 0, 0, 0.25)';
     default:
-      return '';
+      return 'none';
   }
 };
 
