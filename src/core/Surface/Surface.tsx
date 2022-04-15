@@ -48,7 +48,7 @@ export type SurfaceProps = {
  */
 export const Surface = React.forwardRef<HTMLDivElement, SurfaceProps>(
   (props, ref) => {
-    const { elevation = 0, className, style, children, ...rest } = props;
+    const { elevation, className, style, children, ...rest } = props;
     useTheme();
 
     const _style = getWindow()?.CSS?.supports?.(
