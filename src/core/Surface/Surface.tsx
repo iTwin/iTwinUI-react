@@ -46,17 +46,19 @@ export type SurfaceProps = {
  * <Surface elevation={2}>Surface Content</Surface>
  */
 export const Surface = React.forwardRef<HTMLDivElement, SurfaceProps>(
-  (props: SurfaceProps, ref) => {
+  (props, ref) => {
     const { elevation = 2, className, style, children, ...rest } = props;
     useTheme();
 
-    const _style = getWindow()?.CSS?.supports?.('--iui-surface-elevation: 0')
+    const _style = getWindow()?.CSS?.supports?.(
+      `--iui-surface-elevation: ${getSurfaceElevationValue(elevation)}`,
+    )
       ? {
           '--iui-surface-elevation': getSurfaceElevationValue(elevation),
           ...style,
         }
       : {
-          'box-shadow': getSurfaceElevationValue(elevation),
+          boxShadow: getSurfaceElevationValue(elevation),
           ...style,
         };
 
