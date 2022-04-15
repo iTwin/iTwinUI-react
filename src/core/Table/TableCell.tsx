@@ -7,7 +7,7 @@ import { Cell, CellProps, CellRendererProps, TableInstance } from 'react-table';
 import cx from 'classnames';
 import { getCellStyle } from './utils';
 import { SubRowExpander } from './SubRowExpander';
-import { SELECTION_CELL_ID } from './hooks';
+import { SELECTION_CELL_ID } from './columns';
 import { DefaultCell } from './cells';
 
 export type TableCellProps<T extends Record<string, unknown>> = {
@@ -82,9 +82,12 @@ export const TableCell = <T extends Record<string, unknown>>(
   return (
     <>
       {cell.column.cellRenderer ? (
-        cell.column.cellRenderer(cellRendererProps)
+        cell.column.cellRenderer({
+          ...cellRendererProps,
+          isDisabled: () => isDisabled,
+        })
       ) : (
-        <DefaultCell {...cellRendererProps} />
+        <DefaultCell {...cellRendererProps} isDisabled={() => isDisabled} />
       )}
     </>
   );

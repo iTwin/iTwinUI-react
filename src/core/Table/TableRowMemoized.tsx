@@ -98,7 +98,11 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
       </div>
       {subComponent && (
         <WithCSSTransition in={row.isExpanded}>
-          <div className='iui-row iui-expanded-content'>
+          <div
+            className={cx('iui-row', 'iui-expanded-content', {
+              'iui-disabled': isDisabled,
+            })}
+          >
             {subComponent(row)}
           </div>
         </WithCSSTransition>
@@ -123,6 +127,11 @@ export const TableRowMemoized = React.memo(
   TableRow,
   (prevProp, nextProp) =>
     prevProp.isLast === nextProp.isLast &&
+    prevProp.state.hiddenColumns?.length ===
+      nextProp.state.hiddenColumns?.length &&
+    !!prevProp.state.hiddenColumns?.every(
+      (column, index) => nextProp.state.hiddenColumns?.[index] === column,
+    ) &&
     prevProp.onRowInViewport === nextProp.onRowInViewport &&
     prevProp.onBottomReached === nextProp.onBottomReached &&
     prevProp.onClick === nextProp.onClick &&
@@ -148,5 +157,5 @@ export const TableRowMemoized = React.memo(
     prevProp.tableHasSubRows === nextProp.tableHasSubRows &&
     prevProp.state.columnOrder === nextProp.state.columnOrder &&
     !nextProp.state.columnResizing.isResizingColumn &&
-    !nextProp.state.isTableResizing,
+    prevProp.state.isTableResizing === nextProp.state.isTableResizing,
 ) as typeof TableRow;

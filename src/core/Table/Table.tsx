@@ -21,6 +21,7 @@ import {
   useExpanded,
   usePagination,
   useColumnOrder,
+  Column,
 } from 'react-table';
 import { ProgressRadial } from '../ProgressIndicators';
 import { useTheme, CommonProps, useResizeObserver } from '../utils';
@@ -43,16 +44,15 @@ import {
   onExpandHandler,
   onFilterHandler,
   onSelectHandler,
-} from './actionHandlers';
-import { onSingleSelectHandler } from './actionHandlers/selectHandler';
-import {
+  onSingleSelectHandler,
   onTableResizeEnd,
   onTableResizeStart,
-} from './actionHandlers/resizeHandler';
+} from './actionHandlers';
 import VirtualScroll from '../utils/components/VirtualScroll';
+import { SELECTION_CELL_ID } from './columns';
 
 const singleRowSelectedAction = 'singleRowSelected';
-const tableResizeStartAction = 'tableResizeStart';
+export const tableResizeStartAction = 'tableResizeStart';
 const tableResizeEndAction = 'tableResizeEnd';
 
 export type TablePaginatorRendererProps = {
@@ -344,6 +344,14 @@ export const Table = <
     onRowInViewportRef.current = onRowInViewport;
   }, [onBottomReached, onRowInViewport]);
 
+  // Original type for some reason is missing sub-columns
+  type ColumnType = Column<T> & {
+    columns: Column<T>[];
+  };
+  const hasManualSelectionColumn = (columns as ColumnType[])[0]?.columns.some(
+    (column) => column.id === SELECTION_CELL_ID,
+  );
+
   const tableStateReducer = React.useCallback(
     (
       newState: TableState<T>,
@@ -368,14 +376,21 @@ export const Table = <
             action,
             instance,
             onSelect,
-            isRowDisabled,
+            // If it has manual selection column, then we can't check whether row is disabled
+            hasManualSelectionColumn ? undefined : isRowDisabled,
           );
           break;
         }
         case TableActions.toggleRowSelected:
         case TableActions.toggleAllRowsSelected:
         case TableActions.toggleAllPageRowsSelected: {
-          onSelectHandler(newState, instance, onSelect, isRowDisabled);
+          onSelectHandler(
+            newState,
+            instance,
+            onSelect,
+            // If it has manual selection column, then we can't check whether row is disabled
+            hasManualSelectionColumn ? undefined : isRowDisabled,
+          );
           break;
         }
         case tableResizeStartAction: {
@@ -393,7 +408,15 @@ export const Table = <
         ? stateReducer(newState, action, previousState, instance)
         : newState;
     },
-    [isRowDisabled, onExpand, onFilter, onSelect, onSort, stateReducer],
+    [
+      hasManualSelectionColumn,
+      isRowDisabled,
+      onExpand,
+      onFilter,
+      onSelect,
+      onSort,
+      stateReducer,
+    ],
   );
 
   const filterTypes = React.useMemo(
