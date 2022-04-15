@@ -58,7 +58,7 @@ export const Menu = React.forwardRef<HTMLUListElement, MenuProps>(
 
     const getFocusableNodes = React.useCallback(() => {
       const focusableItems = getFocusableElements(menuRef.current);
-      // Filter out focusable elements that are inside each node, e.g. checkbox, anchor
+      // Filter out focusable elements that are inside each menu item, e.g. checkbox, anchor
       return focusableItems.filter(
         (i) => !focusableItems.some((p) => p.contains(i.parentElement)),
       ) as HTMLElement[];
