@@ -99,7 +99,7 @@ it('should handle keyboard navigation', () => {
   fireEvent.keyDown(menu, { key: 'ArrowDown' });
   assertBaseElement(menu, { labels, focusedIndex: 2 });
   // Test1 -> Test3
-  // Should skip separator and disabled item
+  // Should skip checkbox, separator and disabled item
   fireEvent.keyDown(menu, { key: 'ArrowDown' });
   assertBaseElement(menu, { labels, focusedIndex: 5 });
   // Test3 -> Test4
