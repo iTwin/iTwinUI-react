@@ -2,17 +2,15 @@
 
 ## [1.36.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.35.0...v1.36.0) (2022-04-15)
 
+### What's new
+
+* **Table:** Added `ColumnManager` for hiding columns ([#564](https://www.github.com/iTwin/iTwinUI-react/issues/564)) ([71cf927](https://www.github.com/iTwin/iTwinUI-react/commit/71cf9278d1e75dc426f24976a497d40b18da3c87))
+* **Table:** Default columns customization ([#599](https://www.github.com/iTwin/iTwinUI-react/issues/599)) ([e665821](https://www.github.com/iTwin/iTwinUI-react/commit/e665821b66972136873797058da6cd4036f4dd2d))
 
 ### Fixes
 
-* **Menu:** Fixed keyboard navigation when MenuItem contains selectable children ([#625](https://www.github.com/iTwin/iTwinUI-react/issues/625)) ([082e384](https://www.github.com/iTwin/iTwinUI-react/commit/082e384ed5ccc1fb2ded9ccc69bca06be6e3f29b))
-* **Popover:** Stop propagation of click in Popover ([#619](https://www.github.com/iTwin/iTwinUI-react/issues/619)) ([298cbf3](https://www.github.com/iTwin/iTwinUI-react/commit/298cbf3aba050763b481252ba76f5c945b5c2e17))
-
-
-### What's new
-
-* **Table:** Added ColumnManager for hiding columns ([#564](https://www.github.com/iTwin/iTwinUI-react/issues/564)) ([71cf927](https://www.github.com/iTwin/iTwinUI-react/commit/71cf9278d1e75dc426f24976a497d40b18da3c87))
-* **Table:** Default columns customization ([#599](https://www.github.com/iTwin/iTwinUI-react/issues/599)) ([e665821](https://www.github.com/iTwin/iTwinUI-react/commit/e665821b66972136873797058da6cd4036f4dd2d))
+* **Menu:** Fixed keyboard navigation when `MenuItem` contains selectable children ([#625](https://www.github.com/iTwin/iTwinUI-react/issues/625)) ([082e384](https://www.github.com/iTwin/iTwinUI-react/commit/082e384ed5ccc1fb2ded9ccc69bca06be6e3f29b))
+* **Popover:** Stop propagation of click in `Popover` ([#619](https://www.github.com/iTwin/iTwinUI-react/issues/619)) ([298cbf3](https://www.github.com/iTwin/iTwinUI-react/commit/298cbf3aba050763b481252ba76f5c945b5c2e17))
 
 ## [1.35.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.34.2...v1.35.0) (2022-04-05)
 
