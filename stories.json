@@ -2179,6 +2179,17 @@
         "__id": "core-table--draggable-columns"
       }
     },
+    "core-table--customized-columns": {
+      "id": "core-table--customized-columns",
+      "name": "Customized Columns",
+      "kind": "Core/Table",
+      "story": "Customized Columns",
+      "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Table.stories.tsx",
+        "framework": "react",
+        "__id": "core-table--customized-columns"
+      }
+    },
     "core-table--column-manager": {
       "id": "core-table--column-manager",
       "name": "Column Manager",
