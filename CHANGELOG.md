@@ -5,7 +5,9 @@
 ### What's new
 
 * **Table:** Added `ColumnManager` for hiding columns ([#564](https://www.github.com/iTwin/iTwinUI-react/issues/564)) ([71cf927](https://www.github.com/iTwin/iTwinUI-react/commit/71cf9278d1e75dc426f24976a497d40b18da3c87))
+  - `ActionColumn` was added to use with `ColumnManager`. It can be used for fixed width columns (i.e. column with menu).
 * **Table:** Default columns customization ([#599](https://www.github.com/iTwin/iTwinUI-react/issues/599)) ([e665821](https://www.github.com/iTwin/iTwinUI-react/commit/e665821b66972136873797058da6cd4036f4dd2d))
+  - `ExpanderColumn` and `SelectionColumn` were added for custom implementation of expansion and selection.
 
 ### Fixes
 
