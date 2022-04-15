@@ -20,11 +20,11 @@ it('should render in its most basic state', () => {
 
 it.each([
   [0, 'none'],
-  [2, ''],
-  [4, '0 1px 10px rgba(0, 0, 0, 0.25)'],
-  [8, '0 3px 14px rgba(0, 0, 0, 0.25)'],
-  [16, '0 6px 30px rgba(0, 0, 0, 0.25)'],
-  [24, '0 9px 46px rgba(0, 0, 0, 0.25)'],
+  [1, ''],
+  [2, '0 1px 10px rgba(0, 0, 0, 0.25)'],
+  [3, '0 3px 14px rgba(0, 0, 0, 0.25)'],
+  [4, '0 6px 30px rgba(0, 0, 0, 0.25)'],
+  [5, '0 9px 46px rgba(0, 0, 0, 0.25)'],
 ] as const)('should render elevation %d surface.', (key, value) => {
   const { container } = render(
     <Surface elevation={key}>Surface Content</Surface>,
@@ -37,7 +37,7 @@ it.each([
 
 it('should add className and style correctly', () => {
   const { container } = render(
-    <Surface elevation={2} className='test-class' style={{ color: 'grey' }}>
+    <Surface className='test-class' style={{ color: 'grey' }}>
       Surface Content
     </Surface>,
   );

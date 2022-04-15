@@ -11,16 +11,17 @@ import '@itwin/itwinui-css/css/surface.css';
  * Helper function that returns one of the preset surface elevation values.
  */
 const getSurfaceElevationValue = (elevation: SurfaceProps['elevation']) => {
+  if (!elevation) {
+    return 'none';
+  }
   switch (elevation) {
-    case 0:
-      return 'none';
-    case 4:
+    case 2:
       return '0 1px 10px rgba(0, 0, 0, 0.25)';
-    case 8:
+    case 3:
       return '0 3px 14px rgba(0, 0, 0, 0.25)';
-    case 16:
+    case 4:
       return '0 6px 30px rgba(0, 0, 0, 0.25)';
-    case 24:
+    case 5:
       return '0 9px 46px rgba(0, 0, 0, 0.25)';
     default:
       return '';
@@ -29,10 +30,10 @@ const getSurfaceElevationValue = (elevation: SurfaceProps['elevation']) => {
 
 export type SurfaceProps = {
   /**
-   * Sets the elevation of the surface in density-independent pixels (dp)
-   * @default 2
+   * Sets the elevation of the surface
+   * @default 0
    */
-  elevation?: 0 | 2 | 4 | 8 | 16 | 24;
+  elevation?: 0 | 1 | 2 | 3 | 4 | 5;
   /**
    * Content in the surface.
    */
@@ -47,7 +48,7 @@ export type SurfaceProps = {
  */
 export const Surface = React.forwardRef<HTMLDivElement, SurfaceProps>(
   (props, ref) => {
-    const { elevation = 2, className, style, children, ...rest } = props;
+    const { elevation = 0, className, style, children, ...rest } = props;
     useTheme();
 
     const _style = getWindow()?.CSS?.supports?.(

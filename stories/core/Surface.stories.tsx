@@ -14,7 +14,7 @@ export default {
     style: { control: { disable: true } },
     id: { control: { disable: true } },
     elevation: {
-      options: [0, 2, 4, 8, 16, 24],
+      options: [0, 1, 2, 3, 4, 5],
     },
   },
   parameters: {
@@ -25,7 +25,7 @@ export default {
   title: 'Core/Surface',
 } as Meta<SurfaceProps> & CreeveyMeta;
 
-export const Basic: Story<SurfaceProps> = ({ elevation = 2 }) => {
+export const Basic: Story<SurfaceProps> = ({ elevation = 0 }) => {
   const cardStyle = {
     height: '100px',
     display: 'flex',
@@ -40,4 +40,4 @@ export const Basic: Story<SurfaceProps> = ({ elevation = 2 }) => {
   );
 };
 
-Basic.args = { elevation: 2 };
+Basic.args = { elevation: 0 };
