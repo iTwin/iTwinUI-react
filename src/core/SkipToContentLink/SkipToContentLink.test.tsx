@@ -4,12 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { render } from '@testing-library/react';
-import { SkipToContentLink } from './SkipToContentLink';
+import SkipToContentLink from './SkipToContentLink';
 
 it('should render link in its most basic state', () => {
-  const { container } = render(
-    <SkipToContentLink mainContentId='main-content-id' />,
-  );
+  const { container } = render(<SkipToContentLink href='#main-content-id' />);
   const link = container.querySelector(
     '.iui-skip-to-content-link',
   ) as HTMLElement;
@@ -20,7 +18,7 @@ it('should render link in its most basic state', () => {
 
 it('should render link with children', () => {
   const { container } = render(
-    <SkipToContentLink mainContentId='main-content-id'>
+    <SkipToContentLink href='#main-content-id'>
       Custom child text
     </SkipToContentLink>,
   );
@@ -35,7 +33,7 @@ it('should render link with children', () => {
 it('should propagate misc props in link', () => {
   const { container } = render(
     <SkipToContentLink
-      mainContentId='main-content-id'
+      href='#main-content-id'
       className='test-class'
       style={{ color: 'red' }}
       aria-label='test-label'

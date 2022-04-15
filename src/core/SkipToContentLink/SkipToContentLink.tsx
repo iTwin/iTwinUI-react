@@ -9,9 +9,9 @@ import '@itwin/itwinui-css/css/skip-to-content.css';
 
 export type SkipToContentLinkProps = {
   /**
-   * The id of the main content that the link directs to.
+   * The id of the main content that the link directs to. Don't forget the #!
    */
-  mainContentId: string;
+  href: string;
   /**
    * Localize 'Skip to main content' label.
    * @default 'Skip to main content'
@@ -22,21 +22,16 @@ export type SkipToContentLinkProps = {
 /**
  * `SkipToContentLink` is for screen reader and keyboard users and will not be visible unless tabbed to.
  * Provides a shortcut to the main content of the page without navigating through the header, etc.
- * Should be placed just inside the body. Set `mainContentId` to the id of your main content component.
+ * Should be placed just inside the body. Set `href` to the id of your main content component. Don't forget the `#`!
  * @example
- * <body><SkipToContentLink id='main-content-id' /> ... </body>
- * <body><SkipToContentLink id='main-content-id'>{localizedLabel}</SkipToContentLink> ... </body>
+ * <body><SkipToContentLink href='#main-content-id' /> ... </body>
+ * <body><SkipToContentLink href='#main-content-id'>{localizedLabel}</SkipToContentLink> ... </body>
  */
 export const SkipToContentLink = React.forwardRef<
   HTMLAnchorElement,
   SkipToContentLinkProps
 >((props, ref) => {
-  const {
-    mainContentId,
-    children = 'Skip to main content',
-    className,
-    ...rest
-  } = props;
+  const { children = 'Skip to main content', className, ...rest } = props;
 
   useTheme();
 
@@ -44,7 +39,6 @@ export const SkipToContentLink = React.forwardRef<
     <a
       ref={ref}
       className={cx('iui-skip-to-content-link', className)}
-      href={`#${mainContentId}`}
       {...rest}
     >
       {children}

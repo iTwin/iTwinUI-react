@@ -37,7 +37,7 @@ export default {
 export const Basic: Story<SkipToContentLinkProps> = () => {
   return (
     <>
-      <SkipToContentLink mainContentId='main-content' />
+      <SkipToContentLink href='#main-content' />
       <Body>
         This is not the main content. Press&nbsp;
         <Kbd>tab</Kbd>&nbsp;to see skip-to-content-link component. You might
@@ -72,7 +72,7 @@ export const Basic: Story<SkipToContentLinkProps> = () => {
 export const CustomText: Story<SkipToContentLinkProps> = () => {
   return (
     <>
-      <SkipToContentLink mainContentId='main-content'>
+      <SkipToContentLink href='#main-content'>
         Skip to main content (translated)
       </SkipToContentLink>
       <Body>
