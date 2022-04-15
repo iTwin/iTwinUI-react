@@ -31,6 +31,7 @@ export const Basic: Story<SurfaceProps> = ({ elevation = 0 }) => {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    padding: '11px 12px',
   };
   return (
     <Surface elevation={elevation} style={cardStyle}>
