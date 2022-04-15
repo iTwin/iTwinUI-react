@@ -5,7 +5,7 @@
 import { Story, Meta } from '@storybook/react';
 import { CreeveyMeta } from 'creevey';
 import React from 'react';
-import { Surface, SurfaceProps } from '../../src/core';
+import { Surface, SurfaceProps, Code } from '../../src/core';
 
 export default {
   component: Surface,
@@ -34,8 +34,11 @@ export const Basic: Story<SurfaceProps> = ({ elevation = 0 }) => {
   };
   return (
     <Surface elevation={elevation} style={cardStyle}>
-      The Surface container allows content to appear elevated through the use of
-      a drop shadow
+      <p>
+        The Surface container allows content to appear elevated through the use
+        of a drop shadow. Change the <Code>elevation</Code> property of the
+        component to adjust the shadow level.
+      </p>
     </Surface>
   );
 };
