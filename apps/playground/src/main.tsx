@@ -6,7 +6,10 @@ import { useTheme } from '@itwin/itwinui-react';
 import App from './App';
 
 const Shell = () => {
-  const [theme, setTheme] = React.useState<'light' | 'dark'>('dark');
+  const [theme, setTheme] = React.useState<'light' | 'dark'>(() =>
+    matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
+  );
+
   useTheme(theme);
 
   return (
