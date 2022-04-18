@@ -132,7 +132,7 @@
   "lint-staged": {
     "*.{tsx,ts,jsx,js}": [
       "prettier --write",
-      "eslint --fix",
+      "eslint --max-warnings=0 --fix",
       "yarn lint:copyright --fix"
     ]
   },
