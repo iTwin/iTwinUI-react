@@ -6,7 +6,10 @@
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "typings": "cjs/index.d.ts",
-  "files": ["cjs", "esm"],
+  "files": [
+    "cjs",
+    "esm"
+  ],
   "description": "A react implementation of our iTwinUI UX standards",
   "homepage": "https://github.com/iTwin/iTwinUI-react",
   "keywords": [
@@ -32,7 +35,7 @@
     "test:watch": "jest --watch",
     "createComponent": "node scripts/createComponent.js",
     "format": "prettier --config .prettierrc **/*.{tsx,ts,js} --ignore-path .gitignore --write",
-    "lint": "eslint --ext .js,.ts,.tsx --max-warnings=0",
+    "lint": "eslint \"**/*.{js,ts,tsx}\" --max-warnings=0",
     "lint:fix": "yarn lint --fix && yarn lint:copyright --fix */**/*.{js,ts,tsx}",
     "lint:copyright": "node scripts/copyrightLinter.js",
     "copy-files": "cpx ../../README.md .",
@@ -78,15 +81,9 @@
     "@typescript-eslint/parser": "^5.17.0",
     "babel-loader": "^8.2.2",
     "concurrently": "^5.3.0",
+    "configs": "*",
     "cpx": "^1.5.0",
     "creevey": "^0.8.0-beta.0",
-    "eslint": "^8.12.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-react": "^7.25.1",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "eslint-plugin-storybook": "^0.5.7",
     "fast-glob": "^3.2.5",
     "husky": "^4.0.0",
     "inquirer": "^6.2.2",
@@ -96,7 +93,6 @@
     "lint-staged": "^12.1.2",
     "markdown-to-jsx": "6.11.4",
     "mkdirp": "^1.0.4",
-    "prettier": "2.2.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "rimraf": "^2.6.2",
@@ -140,6 +136,7 @@
       "yarn lint:copyright --fix"
     ]
   },
+  "prettier": "configs/prettier-config",
   "sideEffects": [
     "**/*.scss",
     "**/*.css"

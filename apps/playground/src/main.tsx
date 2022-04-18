@@ -11,7 +11,9 @@ const Shell = () => {
 
   return (
     <Main>
-      <ThemeButton onClick={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}>
+      <ThemeButton
+        onClick={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}
+      >
         <svg aria-hidden viewBox='0 0 15 15'>
           <path
             fill='currentColor'
@@ -60,5 +62,5 @@ ReactDOM.render(
   <React.StrictMode>
     <Shell />
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );

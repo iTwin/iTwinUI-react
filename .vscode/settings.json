@@ -3,6 +3,7 @@
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
   "files.insertFinalNewline": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[markdown]": {
     "editor.defaultFormatter": "vscode.markdown-language-features"
   },
