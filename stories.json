@@ -38,6 +38,7 @@
     "Input/RadioTileGroup": {},
     "Input/Select": {},
     "Core/SideNavigation": {},
+    "Core/SkipToContentLink": {},
     "Input/Slider": {},
     "Core/Surface": {},
     "Core/Table": {},
@@ -1837,6 +1838,28 @@
         "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/SideNavigation.stories.tsx",
         "framework": "react",
         "__id": "core-sidenavigation--submenu"
+      }
+    },
+    "core-skiptocontentlink--basic": {
+      "id": "core-skiptocontentlink--basic",
+      "name": "Basic",
+      "kind": "Core/SkipToContentLink",
+      "story": "Basic",
+      "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/SkipToContentLink.stories.tsx",
+        "framework": "react",
+        "__id": "core-skiptocontentlink--basic"
+      }
+    },
+    "core-skiptocontentlink--custom-text": {
+      "id": "core-skiptocontentlink--custom-text",
+      "name": "Custom Text",
+      "kind": "Core/SkipToContentLink",
+      "story": "Custom Text",
+      "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/SkipToContentLink.stories.tsx",
+        "framework": "react",
+        "__id": "core-skiptocontentlink--custom-text"
       }
     },
     "input-slider--basic": {
