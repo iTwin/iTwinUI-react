@@ -41,9 +41,9 @@ const isSplitButton = (
 };
 
 const isDropdownButton = (
-  props: Partial<DropdownButtonProps>,
+  props: Omit<Partial<DropdownButtonProps>, 'name'>,
 ): props is DropdownButtonProps => {
-  return !!props.menuItems && !props.onClick;
+  return !!props.menuItems;
 };
 
 type HeaderButtonComponent = PolymorphicForwardRefComponent<
@@ -89,10 +89,8 @@ export const HeaderButton: HeaderButtonComponent = React.forwardRef(
         {
           'iui-header-button': !isSplitButton(props),
           'iui-header-split-button': isSplitButton(props),
-          'iui-header-dropdown-button': isDropdownButton({
-            ...props,
-            name: undefined,
-          }),
+          'iui-header-dropdown-button':
+            !isSplitButton(props) && isDropdownButton(props),
           'iui-active': isActive,
         },
         className,
