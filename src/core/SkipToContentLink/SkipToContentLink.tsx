@@ -17,7 +17,7 @@ export type SkipToContentLinkProps = {
    * @default 'Skip to main content'
    */
   children?: React.ReactNode;
-} & React.ComponentPropsWithoutRef<'a'>;
+} & Omit<React.ComponentPropsWithoutRef<'a'>, 'href'>;
 
 /**
  * `SkipToContentLink` is for screen reader and keyboard users and will not be visible unless tabbed to.
