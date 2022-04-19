@@ -356,7 +356,7 @@ it('should not select when clicked on row but selectRowOnClick flag is false', (
   expect(onRowClick).toHaveBeenCalled();
 });
 
-it('should not select when clicked on row but preventDefault is set', () => {
+it('should not select when clicked on row and preventDefault is set', () => {
   const onSelect = jest.fn();
   renderComponent({
     isSelectable: true,
