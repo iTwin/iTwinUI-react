@@ -538,10 +538,11 @@ const ComboBoxInput = React.forwardRef(
 
     const handleKeyDown = React.useCallback(
       (event: React.KeyboardEvent<HTMLInputElement>) => {
-        (() => {
-          const length = optionsRef.current.length ?? 0;
+        onKeyDownProp?.(event);
+        const length = optionsRef.current.length ?? 0;
 
-          if (event.key === 'ArrowDown') {
+        switch (event.key) {
+          case 'ArrowDown': {
             event.preventDefault();
             if (!isOpen) {
               return dispatch(['open']);
@@ -570,7 +571,9 @@ const ComboBoxInput = React.forwardRef(
                 return dispatch(['focus', Number(item.dataset.iuiIndex)]);
               }
             } while (nextIndex !== focusedIndexRef.current.filtered);
-          } else if (event.key === 'ArrowUp') {
+            break;
+          }
+          case 'ArrowUp': {
             event.preventDefault();
             if (!isOpen) {
               return dispatch(['open']);
@@ -598,19 +601,23 @@ const ComboBoxInput = React.forwardRef(
                 return dispatch(['focus', Number(item.dataset.iuiIndex)]);
               }
             } while (prevIndex !== focusedIndexRef.current.filtered);
-          } else if (event.key === 'Enter') {
+            break;
+          }
+          case 'Enter': {
             event.preventDefault();
             if (isOpen) {
               dispatch(['select']);
             } else {
               dispatch(['open']);
             }
-          } else if (event.key === 'Escape') {
+            break;
+          }
+          case 'Escape': {
             event.preventDefault();
             dispatch(['close']);
+            break;
           }
-        })();
-        onKeyDownProp?.(event);
+        }
       },
       [dispatch, isOpen, onKeyDownProp, optionsRef],
     );
