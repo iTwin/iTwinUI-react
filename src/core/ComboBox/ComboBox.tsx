@@ -167,7 +167,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   }, [isOpen]);
 
   // Set min-width of menu to be same as input
-  const [minWidth, setMinWidth] = React.useState(300);
+  const [minWidth, setMinWidth] = React.useState(0);
   React.useEffect(() => {
     if (inputRef.current) {
       setMinWidth(inputRef.current.offsetWidth);
