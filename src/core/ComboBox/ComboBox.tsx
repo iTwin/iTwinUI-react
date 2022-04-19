@@ -401,6 +401,7 @@ const ComboBoxRefsContext = React.createContext<
     }
   | undefined
 >(undefined);
+ComboBoxRefsContext.displayName = 'ComboBoxRefsContext';
 
 const ComboBoxStateContext = React.createContext<
   | {
