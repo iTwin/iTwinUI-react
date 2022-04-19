@@ -214,10 +214,17 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   // When value is selected, update input value and reset filtered options
   React.useEffect(() => {
     if (selectedIndex != undefined && selectedIndex >= 0) {
-      setInputValue(`${options[selectedIndex]?.label ?? ''}`);
+      setInputValue(options[selectedIndex]?.label ?? '');
       setFilteredOptions(options);
     }
   }, [options, selectedIndex]);
+
+  // When dropdown is closed, reset input value to selected option label
+  React.useEffect(() => {
+    if (!isOpen && selectedIndex != undefined && selectedIndex >= 0) {
+      setInputValue(options[selectedIndex]?.label ?? '');
+    }
+  }, [isOpen, options, selectedIndex]);
 
   // Call user-defined onChange when the value actually changes
   React.useEffect(() => {
