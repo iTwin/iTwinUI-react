@@ -39,6 +39,7 @@
     "Input/Select": {},
     "Core/SideNavigation": {},
     "Input/Slider": {},
+    "Core/Surface": {},
     "Core/Table": {},
     "Core/Tabs": {},
     "Core/Tag": {},
@@ -1924,6 +1925,17 @@
         "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Slider.stories.tsx",
         "framework": "react",
         "__id": "input-slider--decimal-increment"
+      }
+    },
+    "core-surface--basic": {
+      "id": "core-surface--basic",
+      "name": "Basic",
+      "kind": "Core/Surface",
+      "story": "Basic",
+      "parameters": {
+        "fileName": "/home/runner/work/iTwinUI-react/iTwinUI-react/stories/core/Surface.stories.tsx",
+        "framework": "react",
+        "__id": "core-surface--basic"
       }
     },
     "core-table--basic": {
