@@ -122,7 +122,8 @@ export type TableProps<
    */
   onRowClick?: (event: React.MouseEvent, row: Row<T>) => void;
   /**
-   * Modify the selection mode of the table
+   * Modify the selection mode of the table.
+   * The Selectable Column will not be present with 'single' selection mode.
    * @default 'multi'
    */
   selectionMode?: 'multi' | 'single';

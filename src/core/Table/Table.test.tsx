@@ -2853,7 +2853,6 @@ it('should render selectable rows without select column', () => {
     onRowClick,
   });
 
-  expect(screen.queryByText('Header name')).toBeFalsy();
   const rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
 

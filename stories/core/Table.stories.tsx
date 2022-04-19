@@ -159,6 +159,76 @@ export const Basic: Story<Partial<TableProps>> = (args) => {
   );
 };
 
+export const SelectableSingle: Story<Partial<TableProps>> = (args) => {
+  const onRowClick = useCallback(
+    (event: React.MouseEvent, row: Row) =>
+      action(`Row clicked: ${JSON.stringify(row.original)}`)(),
+    [],
+  );
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+          },
+          {
+            id: 'click-me',
+            Header: 'Click',
+            width: 100,
+            Cell: (props: CellProps<{ name: string; description: string }>) => {
+              return (
+                <Anchor
+                  onClick={(e) => {
+                    e.stopPropagation(); // prevent row selection when clicking on link
+                    action(props.row.original.name)();
+                  }}
+                >
+                  Click me!
+                </Anchor>
+              );
+            },
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const data = useMemo(
+    () => [
+      { name: 'Name1', description: 'Description1' },
+      { name: 'Name2', description: 'Description2' },
+      { name: 'Name3', description: 'Description3' },
+    ],
+    [],
+  );
+
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      emptyTableContent='No data.'
+      isSelectable={true}
+      onRowClick={onRowClick}
+      selectionMode='single'
+      {...args}
+    />
+  );
+};
+
+SelectableSingle.args = { isSelectable: true, selectionMode: 'single' };
+
 export const SelectableMulti: Story<Partial<TableProps>> = (args) => {
   const onSelect = useCallback(
     (rows, state) =>
@@ -232,7 +302,7 @@ export const SelectableMulti: Story<Partial<TableProps>> = (args) => {
       isSelectable={true}
       onSelect={onSelect}
       onRowClick={onRowClick}
-      selectionMode={'multi'}
+      selectionMode='multi'
       {...args}
     />
   );
@@ -2869,73 +2939,3 @@ ColumnManager.parameters = {
     },
   } as CreeveyStoryParams,
 };
-
-export const SelectableSingle: Story<Partial<TableProps>> = (args) => {
-  const onRowClick = useCallback(
-    (event: React.MouseEvent, row: Row) =>
-      action(`Row clicked: ${JSON.stringify(row.original)}`)(),
-    [],
-  );
-
-  const columns = useMemo(
-    () => [
-      {
-        Header: 'Table',
-        columns: [
-          {
-            id: 'name',
-            Header: 'Name',
-            accessor: 'name',
-          },
-          {
-            id: 'description',
-            Header: 'Description',
-            accessor: 'description',
-            maxWidth: 200,
-          },
-          {
-            id: 'click-me',
-            Header: 'Click',
-            width: 100,
-            Cell: (props: CellProps<{ name: string; description: string }>) => {
-              return (
-                <Anchor
-                  onClick={(e) => {
-                    e.stopPropagation(); // prevent row selection when clicking on link
-                    action(props.row.original.name)();
-                  }}
-                >
-                  Click me!
-                </Anchor>
-              );
-            },
-          },
-        ],
-      },
-    ],
-    [],
-  );
-
-  const data = useMemo(
-    () => [
-      { name: 'Name1', description: 'Description1' },
-      { name: 'Name2', description: 'Description2' },
-      { name: 'Name3', description: 'Description3' },
-    ],
-    [],
-  );
-
-  return (
-    <Table
-      columns={columns}
-      data={data}
-      emptyTableContent='No data.'
-      isSelectable={true}
-      onRowClick={onRowClick}
-      selectionMode={'single'}
-      {...args}
-    />
-  );
-};
-
-SelectableSingle.args = { isSelectable: true, selectionMode: 'single' };
