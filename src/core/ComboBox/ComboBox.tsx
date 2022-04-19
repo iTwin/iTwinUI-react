@@ -465,7 +465,7 @@ const ComboBoxEndIcon = React.forwardRef(
     props: React.ComponentPropsWithoutRef<'span'>,
     forwardedRef: React.RefObject<HTMLSpanElement>,
   ) => {
-    const { className, children, ...rest } = props;
+    const { className, children, onClick: onClickProp, ...rest } = props;
     const dispatch = useSafeContext(ComboBoxActionContext);
     const { toggleButtonRef } = useSafeContext(ComboBoxRefsContext);
     const refs = useMergedRefs(toggleButtonRef, forwardedRef);
@@ -474,7 +474,12 @@ const ComboBoxEndIcon = React.forwardRef(
       <span
         ref={refs}
         className={cx('iui-end-icon', className)}
-        onClick={() => dispatch(['toggle'])}
+        onClick={(e) => {
+          onClickProp?.(e);
+          if (!e.isDefaultPrevented()) {
+            dispatch(['toggle']);
+          }
+        }}
         {...rest}
       >
         {children ?? <SvgCaretDownSmall aria-hidden />}
