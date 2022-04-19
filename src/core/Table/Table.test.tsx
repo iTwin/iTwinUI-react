@@ -2867,8 +2867,9 @@ it('should render selectable rows without select column', () => {
   expect(rows[2].classList).toContain('iui-selected');
   expect(onRowClick).toHaveBeenCalledTimes(2);
 
+  //Test that ctrl clicking doesn't highlight more than one row
   userEvent.click(getByText(mockedData()[1].name), { ctrlKey: true });
   expect(rows[1].classList).toContain('iui-selected');
-  expect(rows[2].classList).toContain('iui-selected');
+  expect(rows[2].classList).not.toContain('iui-selected');
   expect(onRowClick).toHaveBeenCalledTimes(3);
 });

@@ -499,7 +499,7 @@ export const Table = <
     (event: React.MouseEvent, row: Row<T>) => {
       const isDisabled = isRowDisabled?.(row.original);
       if (isSelectable && !isDisabled && selectRowOnClick) {
-        if (!row.isSelected && !event.ctrlKey) {
+        if (!row.isSelected && (selectionMode === 'single' || !event.ctrlKey)) {
           dispatch({
             type: singleRowSelectedAction,
             id: row.id,
@@ -512,7 +512,14 @@ export const Table = <
         onRowClick?.(event, row);
       }
     },
-    [isRowDisabled, isSelectable, selectRowOnClick, dispatch, onRowClick],
+    [
+      isRowDisabled,
+      isSelectable,
+      selectRowOnClick,
+      selectionMode,
+      dispatch,
+      onRowClick,
+    ],
   );
 
   React.useEffect(() => {
