@@ -12,6 +12,7 @@ import {
   MenuItem,
   StatusMessage,
   SelectOption,
+  MenuItemSkeleton,
 } from '../../src/core';
 import { CreeveyStoryParams } from 'creevey';
 import { SvgCamera } from '@itwin/itwinui-icons-react';
@@ -303,6 +304,20 @@ const countriesList = [
   { label: 'Zimbabwe', value: 'ZW' },
 ];
 
+const getFlagEmoji = (countryCode: string) => {
+  const codePoints = countryCode
+    .toUpperCase()
+    .split('')
+    .map((char) => 127397 + char.charCodeAt(0));
+  return String.fromCodePoint(...codePoints);
+};
+
+const countriesListWithFlags = countriesList.map((c) => ({
+  ...c,
+  sublabel: c.value,
+  icon: <div>{getFlagEmoji(c.value)}</div>,
+}));
+
 export const Basic: Story<Partial<ComboBoxProps<string>>> = (args) => {
   const options = React.useMemo(() => countriesList, []);
 
@@ -450,7 +465,7 @@ export const CustomRenderer: Story<Partial<ComboBoxProps<string>>> = (args) => {
     />
   );
 };
-WithStatus.args = {
+CustomRenderer.args = {
   inputProps: { placeholder: 'Select a country' },
 };
 
@@ -496,4 +511,72 @@ WithCustomMessageIcon.args = {
   message: (
     <StatusMessage startIcon={<SvgCamera />}>This is a message</StatusMessage>
   ),
+};
+
+export const Loading: Story<Partial<ComboBoxProps<string>>> = (args) => {
+  const [options, setOptions] = React.useState(
+    new Array(6)
+      .fill(null)
+      .map((_, index) => ({ label: 'Loading...', value: `${index}` })),
+  );
+  const [selectedValue, setSelectedValue] = React.useState<string>();
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  const onChange = React.useCallback((value: string) => {
+    action(value ?? '')();
+    setSelectedValue(value);
+  }, []);
+
+  const itemRenderer = React.useCallback(
+    ({ value, label }, { isSelected, id }) => {
+      // if (!isLoading) {
+      //   return (
+      //     <MenuItem
+      //       key={value}
+      //       id={id}
+      //       isSelected={isSelected}
+      //       value={value}
+      //       icon={<span>{getFlagEmoji(value)}</span>}
+      //       sublabel={value}
+      //     >
+      //       {label}
+      //     </MenuItem>
+      //   );
+      // }
+
+      const normalizedIndex = (Number.parseInt(value) % 2) + 1;
+      const randomValue = normalizedIndex * Math.random() * 60;
+      const boundedWidth = Math.min(Math.max(randomValue, 25), 60);
+      console.log(randomValue, boundedWidth);
+      return (
+        <MenuItemSkeleton hasIcon hasSublabel contentWidth={boundedWidth} />
+      );
+    },
+    [],
+  ) as NonNullable<ComboBoxProps<string>['itemRenderer']>;
+
+  return (
+    <ComboBox
+      inputProps={{ placeholder: 'Select a country' }}
+      value={selectedValue}
+      onChange={onChange}
+      itemRenderer={isLoading ? itemRenderer : undefined}
+      {...args}
+      dropdownMenuProps={{
+        onShown: () => {
+          if (!isLoading) {
+            return;
+          }
+          setTimeout(() => {
+            setIsLoading(false);
+            setOptions(countriesListWithFlags);
+          }, 1000);
+        },
+      }}
+      options={options}
+    />
+  );
+};
+Loading.args = {
+  inputProps: { placeholder: 'Select a country' },
 };
