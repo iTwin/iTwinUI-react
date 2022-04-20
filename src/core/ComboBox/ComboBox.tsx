@@ -301,7 +301,9 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           },
           // ComboBox.MenuItem handles data-iui-index and iui-focused through context
           // but we still need to pass them here for backwards compatibility with MenuItem
-          className: cx(customItem.props.className, 'iui-focused'),
+          className: cx(customItem.props.className, {
+            'iui-focused': focusedIndex === __originalIndex,
+          }),
           'data-iui-index': __originalIndex,
         })
       ) : (
@@ -500,35 +502,10 @@ const ComboBoxInput = React.forwardRef(
     );
     const refs = useMergedRefs(inputRef, forwardedRef);
 
-    const focusedIndexRef = React.useRef({ original: -1, filtered: -1 });
-
-    // FIXME: Currently, the selected item is not focused on the first render.
-
-    // const forceRerender = React.useReducer(() => ({}), {})[1];
-    // const [optionsMounted, setOptionsMounted] = React.useState(false);
-    // React.useEffect(() => {
-
-    //   if (!isOpen) {
-    //     return;
-    //   }
-
-    //   if (isOpen && !menuRef.current) {
-    //     forceRerender();
-    //   }
-
-    //   if (menuRef.current?.children.length && optionsRef.current.length > 0) {
-    //     setOptionsMounted(true);
-    //   }
-    // });
-
+    const focusedIndexRef = React.useRef(focusedIndex ?? -1);
     React.useEffect(() => {
-      focusedIndexRef.current = {
-        original: focusedIndex ?? -1,
-        filtered: optionsRef.current.findIndex(
-          (el) => Number(el.dataset.iuiIndex) === focusedIndex,
-        ),
-      };
-    }, [focusedIndex, optionsRef]);
+      focusedIndexRef.current = focusedIndex ?? -1;
+    }, [focusedIndex]);
 
     const getIdFromIndex = (index: number) => {
       return (
@@ -545,62 +522,73 @@ const ComboBoxInput = React.forwardRef(
           case 'ArrowDown': {
             event.preventDefault();
             if (!isOpen) {
-              return dispatch(['open']);
+              dispatch(['open']);
             }
 
-            if (focusedIndexRef.current.original === -1 && length > 0) {
+            if (length === 0) {
+              return;
+            }
+
+            if (focusedIndexRef.current === -1) {
               return dispatch([
                 'focus',
                 Number(optionsRef.current[0].dataset.iuiIndex),
               ]);
             }
 
-            if (length === 0) {
-              return;
-            }
-
-            let nextIndex = focusedIndexRef.current.filtered;
+            let nextIndex = focusedIndexRef.current;
             do {
-              nextIndex = (nextIndex + length + 1) % length;
-              const item = optionsRef.current[nextIndex];
+              const currentElement = menuRef.current?.querySelector(
+                `[data-iui-index="${nextIndex}"]`,
+              );
+              const nextElement =
+                currentElement?.nextElementSibling ??
+                menuRef.current?.querySelector('[data-iui-index]');
+              nextIndex = Number(nextElement?.getAttribute('data-iui-index'));
+              const __originalIndex = Number(
+                nextElement?.getAttribute('data-iui-index') ?? -1,
+              );
 
-              if (
-                item.dataset.iuiIndex != undefined &&
-                item.ariaDisabled !== 'true'
-              ) {
-                return dispatch(['focus', Number(item.dataset.iuiIndex)]);
+              if (nextElement?.ariaDisabled !== 'true') {
+                return dispatch(['focus', __originalIndex]);
               }
-            } while (nextIndex !== focusedIndexRef.current.filtered);
+            } while (nextIndex !== focusedIndexRef.current);
             break;
           }
           case 'ArrowUp': {
             event.preventDefault();
             if (!isOpen) {
-              return dispatch(['open']);
-            }
-
-            if (focusedIndexRef.current.original === -1 && length > 0) {
-              return dispatch([
-                'focus',
-                Number(optionsRef.current[length - 1].dataset.iuiIndex),
-              ]);
+              dispatch(['open']);
             }
 
             if (length === 0) {
               return;
             }
 
-            let prevIndex = focusedIndexRef.current.filtered;
+            if (focusedIndexRef.current === -1) {
+              return dispatch([
+                'focus',
+                Number(optionsRef.current[length].dataset.iuiIndex),
+              ]);
+            }
+
+            let prevIndex = focusedIndexRef.current;
             do {
-              prevIndex = (prevIndex + length - 1) % length;
-              const item = optionsRef.current[prevIndex];
-              if (
-                item.dataset.iuiIndex != undefined &&
-                item.ariaDisabled !== 'true'
-              ) {
-                return dispatch(['focus', Number(item.dataset.iuiIndex)]);
+              const currentElement = menuRef.current?.querySelector(
+                `[data-iui-index="${prevIndex}"]`,
+              );
+              const prevElement =
+                currentElement?.previousElementSibling ??
+                menuRef.current?.querySelector('[data-iui-index]:last-of-type');
+              prevIndex = Number(prevElement?.getAttribute('data-iui-index'));
+              const __originalIndex = Number(
+                prevElement?.getAttribute('data-iui-index') ?? -1,
+              );
+
+              if (prevElement?.ariaDisabled !== 'true') {
+                return dispatch(['focus', __originalIndex]);
               }
-            } while (prevIndex !== focusedIndexRef.current.filtered);
+            } while (prevIndex !== focusedIndexRef.current);
             break;
           }
           case 'Enter': {
@@ -619,7 +607,7 @@ const ComboBoxInput = React.forwardRef(
           }
         }
       },
-      [dispatch, isOpen, onKeyDownProp, optionsRef],
+      [dispatch, isOpen, menuRef, onKeyDownProp, optionsRef],
     );
 
     const handleFocus = React.useCallback(
