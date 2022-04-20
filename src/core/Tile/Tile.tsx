@@ -91,7 +91,11 @@ export type TileProps = {
    * Any custom nodes that will be appended to the tile's main content.
    */
   children?: React.ReactNode;
-} & Omit<CommonProps, 'title'>;
+  /**
+   * Whether the tile is expected to be interactable (i.e. `onClick`). It becomes focusable and gets on hover styling.
+   */
+  isActionable?: boolean;
+} & React.ComponentPropsWithoutRef<'div'>;
 
 /**
  * Tile component that displays content and actions in a card-like format.
@@ -126,6 +130,7 @@ export const Tile = (props: TileProps) => {
     moreOptions,
     variant = 'default',
     children,
+    isActionable,
     ...rest
   } = props;
 
@@ -139,11 +144,15 @@ export const Tile = (props: TileProps) => {
     <div
       className={cx(
         'iui-tile',
-        { 'iui-folder': variant === 'folder' },
-        { 'iui-new': isNew },
-        { 'iui-selected': isSelected },
+        {
+          'iui-folder': variant === 'folder',
+          'iui-new': isNew,
+          'iui-selected': isSelected,
+          'iui-actionable': isActionable,
+        },
         className,
       )}
+      tabIndex={isActionable ? 0 : undefined}
       {...rest}
     >
       {thumbnail && (
