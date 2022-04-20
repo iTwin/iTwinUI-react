@@ -255,16 +255,16 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       return customItem ? (
         React.cloneElement(customItem, {
           onClick: (e: unknown) => {
-            dispatch(['select', __originalIndex as number]);
+            dispatch(['select', __originalIndex]);
             customItem.props.onClick?.(e);
           },
           'data-iui-index': __originalIndex,
         })
       ) : (
         <ComboBoxMenuItem
-          key={(__originalIndex as number) ?? index}
+          key={__originalIndex}
           index={option.__originalIndex}
-          onClick={() => dispatch(['select', __originalIndex as number])}
+          onClick={() => dispatch(['select', __originalIndex])}
           {...rest}
         >
           {option.label}
@@ -296,7 +296,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       return customItem ? (
         React.cloneElement(customItem, {
           onClick: (e: unknown) => {
-            dispatch(['select', __originalIndex as number]);
+            dispatch(['select', __originalIndex]);
             customItem.props.onClick?.(e);
           },
           // ComboBox.MenuItem handles data-iui-index and iui-focused through context
@@ -743,6 +743,7 @@ const ComboBoxMenuItem = React.memo(
         ...rest
       } = props;
 
+      const { inputRef } = useSafeContext(ComboBoxRefsContext);
       const { focusedIndex } = useSafeContext(ComboBoxStateContext);
 
       const focusRef = (el: HTMLLIElement | null) => {
@@ -751,6 +752,17 @@ const ComboBoxMenuItem = React.memo(
           el?.scrollIntoView({ block: 'nearest' });
         }
       };
+
+      React.useEffect(() => {
+        if (
+          inputRef.current != null &&
+          inputRef.current === inputRef.current.ownerDocument.activeElement &&
+          focusedIndex === index &&
+          !disabled
+        ) {
+          onClick?.(value);
+        }
+      });
 
       const refs = useMergedRefs(forwardedRef, focusRef);
 
