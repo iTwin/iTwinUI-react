@@ -130,7 +130,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     setOptions(
       optionsProp.map((option, index) => ({
         ...option,
-        id: `${id}-option${index}`,
+        id: option.id ?? `${id}-option${index}`,
         __originalIndex: index,
       })),
     );
