@@ -17,6 +17,7 @@ import {
   getRandomValue,
   InputContainerProps,
   useMergedRefs,
+  useSafeContext,
 } from '../utils';
 import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
 import 'tippy.js/animations/shift-away.css';
@@ -425,14 +426,6 @@ const ComboBoxActionContext = React.createContext<
   ((x: [ComboBoxAction] | [ComboBoxAction, number]) => void) | undefined
 >(undefined);
 ComboBoxActionContext.displayName = 'ComboBoxActionContext';
-
-const useSafeContext = <T,>(context: React.Context<T>) => {
-  const value = React.useContext(context);
-  if (!value) {
-    throw new Error(`${context.displayName} is undefined`);
-  }
-  return value!; // eslint-disable-line @typescript-eslint/no-non-null-assertion -- we already checked for undefined
-};
 
 const ComboBoxInputContainer = (
   props: React.ComponentPropsWithoutRef<'div'> & {
