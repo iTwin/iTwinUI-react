@@ -199,7 +199,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     [filterFunction, inputProps, options],
   );
 
-  // Reset focused item when filter changes
+  // Reset focused item when filteredOptions change
   React.useEffect(() => {
     dispatch(['focus']);
   }, [filteredOptions]);
