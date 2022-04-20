@@ -92,7 +92,8 @@ export type TileProps = {
    */
   children?: React.ReactNode;
   /**
-   * Whether the tile is expected to be interactable (i.e. `onClick`). It becomes focusable and gets on hover styling.
+   * Whether the tile is expected to be interactable (i.e. `onClick`).
+   * It becomes focusable and gets on hover styling.
    */
   isActionable?: boolean;
 } & React.ComponentPropsWithoutRef<'div'>;
