@@ -32,6 +32,8 @@ import {
   TablePaginatorRendererProps,
   ActionColumn,
   Anchor,
+  SelectionColumn,
+  ExpanderColumn,
 } from '../../src/core';
 import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
@@ -55,6 +57,7 @@ export default {
   argTypes: {
     columns: { control: { disable: true } },
     isSelectable: { control: { disable: true } },
+    selectionMode: { control: { disable: true } },
     style: { control: { disable: true } },
     className: { control: { disable: true } },
     id: { control: { disable: true } },
@@ -156,7 +159,77 @@ export const Basic: Story<Partial<TableProps>> = (args) => {
   );
 };
 
-export const Selectable: Story<Partial<TableProps>> = (args) => {
+export const SelectableSingle: Story<Partial<TableProps>> = (args) => {
+  const onRowClick = useCallback(
+    (event: React.MouseEvent, row: Row) =>
+      action(`Row clicked: ${JSON.stringify(row.original)}`)(),
+    [],
+  );
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+          },
+          {
+            id: 'click-me',
+            Header: 'Click',
+            width: 100,
+            Cell: (props: CellProps<{ name: string; description: string }>) => {
+              return (
+                <Anchor
+                  onClick={(e) => {
+                    e.stopPropagation(); // prevent row selection when clicking on link
+                    action(props.row.original.name)();
+                  }}
+                >
+                  Click me!
+                </Anchor>
+              );
+            },
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const data = useMemo(
+    () => [
+      { name: 'Name1', description: 'Description1' },
+      { name: 'Name2', description: 'Description2' },
+      { name: 'Name3', description: 'Description3' },
+    ],
+    [],
+  );
+
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      emptyTableContent='No data.'
+      isSelectable={true}
+      onRowClick={onRowClick}
+      selectionMode='single'
+      {...args}
+    />
+  );
+};
+
+SelectableSingle.args = { isSelectable: true, selectionMode: 'single' };
+
+export const SelectableMulti: Story<Partial<TableProps>> = (args) => {
   const onSelect = useCallback(
     (rows, state) =>
       action(
@@ -229,12 +302,13 @@ export const Selectable: Story<Partial<TableProps>> = (args) => {
       isSelectable={true}
       onSelect={onSelect}
       onRowClick={onRowClick}
+      selectionMode='multi'
       {...args}
     />
   );
 };
 
-Selectable.args = { isSelectable: true };
+SelectableMulti.args = { isSelectable: true, selectionMode: 'multi' };
 
 export const Sortable: Story<Partial<TableProps>> = (args) => {
   const onClickHandler = (
@@ -2065,7 +2139,7 @@ export const HorizontalScroll: Story<Partial<TableProps>> = (args) => {
   );
 
   const columns = useMemo(
-    (): Column[] => [
+    (): Column<typeof data[number]>[] => [
       {
         Header: 'Table',
         columns: [
@@ -2555,6 +2629,138 @@ DraggableColumns.args = {
   ],
   enableColumnReordering: true,
   isSelectable: true,
+};
+
+export const CustomizedColumns: Story<Partial<TableProps>> = (args) => {
+  const onExpand = useCallback(
+    (rows, state) =>
+      action(
+        `Expanded rows: ${JSON.stringify(rows)}. Table state: ${JSON.stringify(
+          state,
+        )}`,
+      )(),
+    [],
+  );
+
+  const data = useMemo(
+    () => [
+      { name: 'Name1', description: 'Description1' },
+      { name: 'Name2', description: 'Description2' },
+      { name: 'Name3', description: 'Description3' },
+      { name: 'Name4', description: 'Description4' },
+    ],
+    [],
+  );
+
+  const isCheckboxDisabled = useCallback((rowData: typeof data[number]) => {
+    return rowData.name === 'Name1';
+  }, []);
+  const isExpanderDisabled = useCallback((rowData: typeof data[number]) => {
+    return rowData.name === 'Name2';
+  }, []);
+  const isCellDisabled = useCallback((rowData: typeof data[number]) => {
+    return rowData.name === 'Name3';
+  }, []);
+  const isRowDisabled = useCallback((rowData: typeof data[number]) => {
+    return rowData.name === 'Name4';
+  }, []);
+
+  const subComponent = useCallback(
+    (row: Row) => (
+      <div style={{ padding: 16 }}>
+        <Leading>Extra information</Leading>
+        <pre>
+          <code>{JSON.stringify({ values: row.values }, null, 2)}</code>
+        </pre>
+      </div>
+    ),
+    [],
+  );
+
+  const columns = useMemo(
+    (): Column<typeof data[number]>[] => [
+      {
+        Header: 'Table',
+        columns: [
+          SelectionColumn({ isDisabled: isCheckboxDisabled }),
+          ExpanderColumn({ subComponent, isDisabled: isExpanderDisabled }),
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+            cellRenderer: (props) => (
+              <DefaultCell
+                {...props}
+                isDisabled={(rowData) =>
+                  isCellDisabled(rowData) || isRowDisabled(rowData)
+                }
+              />
+            ),
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+          },
+        ],
+      },
+    ],
+    [
+      isCheckboxDisabled,
+      subComponent,
+      isExpanderDisabled,
+      isCellDisabled,
+      isRowDisabled,
+    ],
+  );
+
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      emptyTableContent='No data.'
+      subComponent={subComponent}
+      onExpand={onExpand}
+      isSelectable
+      isRowDisabled={isRowDisabled}
+      rowProps={({ index }) => ({
+        onClick: (e) => index === 0 && e.preventDefault(),
+      })}
+      {...args}
+    />
+  );
+};
+
+CustomizedColumns.args = {
+  isSelectable: true,
+  data: [
+    { name: 'Name1', description: 'Description1' },
+    { name: 'Name2', description: 'Description2' },
+    { name: 'Name3', description: 'Description3' },
+    { name: 'Name4', description: 'Description4' },
+  ],
+};
+
+CustomizedColumns.parameters = {
+  creevey: {
+    tests: {
+      async open() {
+        const closed = await this.takeScreenshot();
+        const table = await this.browser.findElement({
+          css: '.iui-table',
+        });
+
+        const expanderButtons = await table.findElements({
+          css: '.iui-button',
+        });
+        await expanderButtons[3].click();
+
+        const expanded = await this.takeScreenshot();
+        await this.expect({ closed, expanded }).to.matchImages();
+      },
+    },
+  } as CreeveyStoryParams,
 };
 
 export const ColumnManager: Story<Partial<TableProps>> = (args) => {

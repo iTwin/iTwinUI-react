@@ -21,6 +21,7 @@ import {
   useExpanded,
   usePagination,
   useColumnOrder,
+  Column,
 } from 'react-table';
 import { ProgressRadial } from '../ProgressIndicators';
 import { useTheme, CommonProps, useResizeObserver } from '../utils';
@@ -48,6 +49,7 @@ import {
   onTableResizeStart,
 } from './actionHandlers';
 import VirtualScroll from '../utils/components/VirtualScroll';
+import { SELECTION_CELL_ID } from './columns';
 
 const singleRowSelectedAction = 'singleRowSelected';
 export const tableResizeStartAction = 'tableResizeStart';
@@ -119,6 +121,12 @@ export type TableProps<
    * Handler for when a row is clicked. Must be memoized.
    */
   onRowClick?: (event: React.MouseEvent, row: Row<T>) => void;
+  /**
+   * Modify the selection mode of the table.
+   * The column with checkboxes will not be present with 'single' selection mode.
+   * @default 'multi'
+   */
+  selectionMode?: 'multi' | 'single';
   /**
    * Flag whether table columns can be sortable.
    * @default false
@@ -294,6 +302,7 @@ export const Table = <
     isSelectable = false,
     onSelect,
     onRowClick,
+    selectionMode = 'multi',
     isSortable = false,
     onSort,
     stateReducer,
@@ -342,6 +351,14 @@ export const Table = <
     onRowInViewportRef.current = onRowInViewport;
   }, [onBottomReached, onRowInViewport]);
 
+  // Original type for some reason is missing sub-columns
+  type ColumnType = Column<T> & {
+    columns: Column<T>[];
+  };
+  const hasManualSelectionColumn = (columns as ColumnType[])[0]?.columns.some(
+    (column) => column.id === SELECTION_CELL_ID,
+  );
+
   const tableStateReducer = React.useCallback(
     (
       newState: TableState<T>,
@@ -366,14 +383,21 @@ export const Table = <
             action,
             instance,
             onSelect,
-            isRowDisabled,
+            // If it has manual selection column, then we can't check whether row is disabled
+            hasManualSelectionColumn ? undefined : isRowDisabled,
           );
           break;
         }
         case TableActions.toggleRowSelected:
         case TableActions.toggleAllRowsSelected:
         case TableActions.toggleAllPageRowsSelected: {
-          onSelectHandler(newState, instance, onSelect, isRowDisabled);
+          onSelectHandler(
+            newState,
+            instance,
+            onSelect,
+            // If it has manual selection column, then we can't check whether row is disabled
+            hasManualSelectionColumn ? undefined : isRowDisabled,
+          );
           break;
         }
         case tableResizeStartAction: {
@@ -391,7 +415,15 @@ export const Table = <
         ? stateReducer(newState, action, previousState, instance)
         : newState;
     },
-    [isRowDisabled, onExpand, onFilter, onSelect, onSort, stateReducer],
+    [
+      hasManualSelectionColumn,
+      isRowDisabled,
+      onExpand,
+      onFilter,
+      onSelect,
+      onSort,
+      stateReducer,
+    ],
   );
 
   const filterTypes = React.useMemo(
@@ -430,7 +462,7 @@ export const Table = <
     useRowSelect,
     useSubRowSelection,
     useExpanderCell(subComponent, expanderCell, isRowDisabled),
-    useSelectionCell(isSelectable, isRowDisabled),
+    useSelectionCell(isSelectable, selectionMode, isRowDisabled),
     useColumnOrder,
     useColumnDragAndDrop(enableColumnReordering),
   );
@@ -466,8 +498,16 @@ export const Table = <
   const onRowClickHandler = React.useCallback(
     (event: React.MouseEvent, row: Row<T>) => {
       const isDisabled = isRowDisabled?.(row.original);
-      if (isSelectable && !isDisabled && selectRowOnClick) {
-        if (!row.isSelected && !event.ctrlKey) {
+      if (!isDisabled) {
+        onRowClick?.(event, row);
+      }
+      if (
+        isSelectable &&
+        !isDisabled &&
+        selectRowOnClick &&
+        !event.isDefaultPrevented()
+      ) {
+        if (!row.isSelected && (selectionMode === 'single' || !event.ctrlKey)) {
           dispatch({
             type: singleRowSelectedAction,
             id: row.id,
@@ -476,11 +516,15 @@ export const Table = <
           row.toggleRowSelected(!row.isSelected);
         }
       }
-      if (!isDisabled) {
-        onRowClick?.(event, row);
-      }
     },
-    [isRowDisabled, isSelectable, selectRowOnClick, dispatch, onRowClick],
+    [
+      isRowDisabled,
+      isSelectable,
+      selectRowOnClick,
+      selectionMode,
+      dispatch,
+      onRowClick,
+    ],
   );
 
   React.useEffect(() => {

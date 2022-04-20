@@ -170,11 +170,17 @@ export type {
   SidenavSubmenuHeaderProps,
 } from './SideNavigation';
 
+export { SkipToContentLink } from './SkipToContentLink';
+export type { SkipToContentLinkProps } from './SkipToContentLink';
+
 export { Slider } from './Slider';
 export type { SliderProps } from './Slider';
 
 export { StatusMessage } from './StatusMessage';
 export type { StatusMessageProps } from './StatusMessage';
+
+export { Surface } from './Surface';
+export type { SurfaceProps } from './Surface';
 
 export {
   Table,
@@ -184,6 +190,8 @@ export {
   EditableCell,
   TablePaginator,
   ActionColumn,
+  ExpanderColumn,
+  SelectionColumn,
 } from './Table';
 export type {
   TableProps,
