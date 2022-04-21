@@ -40,7 +40,7 @@
     "lint": "eslint \"**/*.{js,ts,tsx}\" --max-warnings=0",
     "lint:fix": "yarn lint --fix && yarn lint:copyright --fix */**/*.{js,ts,tsx}",
     "lint:copyright": "node scripts/copyrightLinter.js",
-    "copy-files": "cpx ../../README.md,../../LICENSE.md .",
+    "copy-files": "cpx \"../../{README,LICENSE}.md\" .",
     "storybook": "start-storybook -p 6006",
     "dev": "yarn storybook",
     "build-storybook": "build-storybook"
