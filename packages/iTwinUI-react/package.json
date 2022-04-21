@@ -8,7 +8,9 @@
   "typings": "cjs/index.d.ts",
   "files": [
     "cjs",
-    "esm"
+    "esm",
+    "CHANGELOG.md",
+    "LICENSE.md"
   ],
   "description": "A react implementation of our iTwinUI UX standards",
   "homepage": "https://github.com/iTwin/iTwinUI-react",
@@ -38,7 +40,7 @@
     "lint": "eslint \"**/*.{js,ts,tsx}\" --max-warnings=0",
     "lint:fix": "yarn lint --fix && yarn lint:copyright --fix */**/*.{js,ts,tsx}",
     "lint:copyright": "node scripts/copyrightLinter.js",
-    "copy-files": "cpx ../../README.md .",
+    "copy-files": "cpx ../../README.md,../../LICENSE.md .",
     "storybook": "start-storybook -p 6006",
     "dev": "yarn storybook",
     "build-storybook": "build-storybook"

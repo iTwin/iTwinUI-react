@@ -1,5 +1,6 @@
-# README from root will be copied during build
+# README and LICENSE from root will be copied during build
 README.md
+LICENSE.md
 
 # testing
 coverage
