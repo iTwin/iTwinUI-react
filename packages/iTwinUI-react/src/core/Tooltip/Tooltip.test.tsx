@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
+import { act } from 'react-dom/test-utils';
 
 import { Tooltip } from './Tooltip';
 
@@ -21,7 +22,7 @@ it('should toggle the visibility of tooltip on hover', () => {
   getByText('some text');
 
   fireEvent.mouseLeave(getByText('Hover Here'));
-  jest.runAllTimers();
+  act(() => void jest.runAllTimers());
   expect(queryByText('some text')).not.toBeInTheDocument();
 
   jest.useRealTimers();
