@@ -1,0 +1,33 @@
+---
+meta:
+  title: Alert
+  description: A small box to quickly grab user attention and communicate a brief message
+
+componentData:
+  exampleCode: |
+    import { Alert } from '@itwin/itwinui-react';
+
+    export default function App() {
+      return <Alert>This is an alert</Alert>;
+    }
+---
+
+import Sandbox from '~/utils/Sandbox';
+
+# Alert
+
+An alert is an element that notifies the user of something important that is not user initiated. If you need to alert the user because of something they did, consider using a toast notification or an inline message. Instead, an alert is used to notify the user of something unrelated to what they just did. Examples of this might be announcing a new feature within the product, or alerting the user of scheduled server maintenance and downtime.
+
+<Sandbox code={attributes.componentData.exampleCode} />
+
+## Placement
+
+The alert notification can display in two different ways:
+
+### Inline
+
+An inline alert appears embedded within the copy of the site as a block element. This means that when the user scrolls, the alert scrolls as well.
+
+### Sticky
+
+A sticky alert appears full width stuck at the top of the window frame. That means if the user scrolls, the alert stays at the top of the frame and as the content scrolls underneath it. A sticky alert must always be dismissible. The alert appears above all other UI elements except for toast notifications and modals.

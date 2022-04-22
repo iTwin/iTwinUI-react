@@ -1,0 +1,78 @@
+{
+  "name": "itwinui-website",
+  "version": "0.0.0",
+  "private": true,
+  "description": "",
+  "license": "",
+  "sideEffects": false,
+  "scripts": {
+    "build": "npm run build:css && remix build",
+    "postinstall": "remix setup node",
+    "start": "cross-env NODE_ENV=production netlify dev",
+    "dev": "concurrently \"npm run dev:css\" \"npm run dev:remix\"",
+    "dev:remix": "cross-env NODE_ENV=development netlify dev",
+    "dev:css": "postcss app/*[!.min].css app/*/**[!.min].css --base app --dir app --ext min.css -w",
+    "build:css": "rimraf app/*.min.css app/*/**.min.css && postcss app/*[!.min].css app/*/**[!.min].css --base app --dir app --ext min.css"
+  },
+  "dependencies": {
+    "@codesandbox/sandpack-react": "^0.18.0",
+    "@itwin/itwinui-react": "*",
+    "@netlify/functions": "^0.10.0",
+    "@remix-run/netlify": "^1.3.2",
+    "@remix-run/react": "^1.3.2",
+    "react": "^17.0.2",
+    "react-docgen-typescript": "^2.2.2",
+    "react-dom": "^17.0.2",
+    "remix": "^1.3.2",
+    "remix-utils": "^2.11.1"
+  },
+  "devDependencies": {
+    "@remix-run/dev": "^1.3.2",
+    "@remix-run/eslint-config": "^1.3.2",
+    "@types/react": "^17.0.24",
+    "@types/react-dom": "^17.0.9",
+    "concurrently": "^7.0.0",
+    "configs": "*",
+    "cross-env": "^7.0.3",
+    "cssnano": "^5.1.3",
+    "eslint": "^8.9.0",
+    "postcss": "^8.4.8",
+    "postcss-cli": "^9.1.0",
+    "postcss-preset-env": "^7.4.2",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.5.5"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "eslintConfig": {
+    "extends": "@remix-run/eslint-config"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "jsxSingleQuote": true,
+    "printWidth": 120,
+    "endOfLine": "lf"
+  },
+  "postcss": {
+    "plugins": {
+      "postcss-preset-env": {
+        "stage": 1,
+        "features": {
+          "logical-properties-and-values": false,
+          "prefers-color-scheme-query": false,
+          "gap-properties": false,
+          "custom-properties": false,
+          "place-properties": false,
+          "not-pseudo-class": false,
+          "focus-visible-pseudo-class": false,
+          "focus-within-pseudo-class": false,
+          "color-functional-notation": false
+        }
+      },
+      "cssnano": {
+        "preset": "default"
+      }
+    }
+  }
+}

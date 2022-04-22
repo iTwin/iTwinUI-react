@@ -1,0 +1,23 @@
+* {
+  margin: 0;
+
+  &,
+  &::before,
+  &::after {
+    box-sizing: border-box;
+  }
+}
+
+html {
+  height: 100%;
+  color-scheme: dark light;
+  font-family: system-ui, sans-serif;
+}
+
+body {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  overflow-y: auto;
+  overflow-y: overlay;
+}

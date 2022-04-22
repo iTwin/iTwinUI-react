@@ -1,0 +1,18 @@
+main {
+  display: grid;
+  place-items: center;
+  gap: 0.75rem;
+}
+
+h1 {
+  font-weight: 500;
+}
+
+section {
+  justify-self: stretch;
+}
+
+ul {
+  display: grid;
+  gap: 0.25rem;
+}
