@@ -1,6 +1,6 @@
 {
   "name": "itwinui-monorepo",
-  "version": "0.0.0",
+  "version": "1.37.1",
   "private": true,
   "workspaces": [
     "apps/*",
