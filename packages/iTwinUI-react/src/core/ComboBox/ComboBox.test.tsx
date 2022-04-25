@@ -274,11 +274,14 @@ it('should handle keyboard navigation', () => {
 
   // filter and focus item 2
   act(() => {
-    userEvent.keyboard('Item 2');
-    userEvent.keyboard('{ArrowDown}');
+    input.select();
+    userEvent.keyboard('2');
   });
-  items = document.querySelectorAll('.iui-menu-item');
-  expect(items[2]).toHaveClass('iui-focused');
+
+  act(() => void userEvent.keyboard('{ArrowDown}'));
+  expect(screen.getByText('Item 2').closest('.iui-menu-item')).toHaveClass(
+    'iui-focused',
+  );
   expect(input).toHaveAttribute('aria-activedescendant', `${id}-option2`);
 
   // select 2
@@ -287,17 +290,17 @@ it('should handle keyboard navigation', () => {
   expect(document.querySelector('.iui-menu')).not.toBeVisible();
 
   // reopen
-  userEvent.keyboard('{ArrowDown}');
-  items = document.querySelectorAll('.iui-menu-item');
-  expect(items[2]).toHaveClass('iui-active iui-focused');
-  expect(input).toHaveAttribute('aria-activedescendant', `${id}-option2`);
+  act(() => void userEvent.keyboard('{ArrowDown}'));
+  expect(screen.getByText('Item 2').closest('.iui-menu-item')).toHaveClass(
+    'iui-active',
+  );
 
   // close
-  userEvent.keyboard('{Esc}');
+  act(() => void userEvent.keyboard('{Esc}'));
   expect(document.querySelector('.iui-menu')).not.toBeVisible();
 
   // reopen and close
-  userEvent.keyboard('X');
+  act(() => void userEvent.keyboard('X'));
   expect(document.querySelector('.iui-menu')).toBeVisible();
   userEvent.tab();
   expect(document.querySelector('.iui-menu')).not.toBeVisible();
@@ -345,8 +348,7 @@ it('should work with custom itemRenderer', () => {
   expect(document.querySelector('.iui-menu')).not.toBeVisible();
   expect(input).toHaveValue('Item 1'); // the actual value of input doesn't change
 
-  userEvent.tab({ shift: true });
-  userEvent.tab();
+  userEvent.tab({ shift: true }); // reopen menu
 
   expect(
     document.querySelector(
@@ -354,13 +356,13 @@ it('should work with custom itemRenderer', () => {
     ),
   ).toHaveTextContent('CUSTOM Item 1');
 
-  userEvent.keyboard('{ArrowDown}');
+  act(() => void userEvent.keyboard('{ArrowDown}'));
 
   expect(
     document.querySelector('.iui-menu-item.iui-focused.my-custom-item'),
   ).toHaveTextContent('CUSTOM Item 2');
 
-  userEvent.keyboard('{Enter}');
+  act(() => void userEvent.keyboard('{Enter}'));
   expect(input).toHaveValue('Item 2');
 });
 
@@ -472,11 +474,11 @@ it('should use the latest onChange prop', () => {
   );
 
   userEvent.tab();
-  screen.getByText('Item 1').click();
+  userEvent.click(screen.getByText('Item 1'));
   expect(mockOnChange1).toHaveBeenNthCalledWith(1, 1);
 
   rerender(<ComboBox options={options} onChange={mockOnChange2} />);
-  screen.getByText('Item 2').click();
+  userEvent.click(screen.getByText('Item 2'));
   expect(mockOnChange2).toHaveBeenNthCalledWith(1, 2);
   expect(mockOnChange1).toHaveBeenCalledTimes(1);
 });
