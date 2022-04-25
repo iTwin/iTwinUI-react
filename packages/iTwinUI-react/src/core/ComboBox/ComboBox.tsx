@@ -534,7 +534,7 @@ const ComboBoxInput = React.forwardRef(
             if (focusedIndexRef.current === -1) {
               return dispatch([
                 'focus',
-                Number(optionsRef.current[0].dataset.iuiIndex),
+                Number(optionsRef.current[0].dataset.iuiIndex ?? -1),
               ]);
             }
 
@@ -547,12 +547,9 @@ const ComboBoxInput = React.forwardRef(
                 currentElement?.nextElementSibling ??
                 menuRef.current?.querySelector('[data-iui-index]');
               nextIndex = Number(nextElement?.getAttribute('data-iui-index'));
-              const __originalIndex = Number(
-                nextElement?.getAttribute('data-iui-index') ?? -1,
-              );
 
               if (nextElement?.ariaDisabled !== 'true') {
-                return dispatch(['focus', __originalIndex]);
+                return dispatch(['focus', nextIndex]);
               }
             } while (nextIndex !== focusedIndexRef.current);
             break;
@@ -570,7 +567,7 @@ const ComboBoxInput = React.forwardRef(
             if (focusedIndexRef.current === -1) {
               return dispatch([
                 'focus',
-                Number(optionsRef.current[length].dataset.iuiIndex),
+                Number(optionsRef.current[length - 1].dataset.iuiIndex ?? -1),
               ]);
             }
 
@@ -583,12 +580,9 @@ const ComboBoxInput = React.forwardRef(
                 currentElement?.previousElementSibling ??
                 menuRef.current?.querySelector('[data-iui-index]:last-of-type');
               prevIndex = Number(prevElement?.getAttribute('data-iui-index'));
-              const __originalIndex = Number(
-                prevElement?.getAttribute('data-iui-index') ?? -1,
-              );
 
               if (prevElement?.ariaDisabled !== 'true') {
-                return dispatch(['focus', __originalIndex]);
+                return dispatch(['focus', prevIndex]);
               }
             } while (prevIndex !== focusedIndexRef.current);
             break;
@@ -655,7 +649,9 @@ const ComboBoxPopover = React.forwardRef(
 
     // sync internal isOpen state with user's visible prop
     React.useEffect(() => {
-      dispatch([props.visible ? 'open' : 'close']);
+      if (props.visible != undefined) {
+        dispatch([props.visible ? 'open' : 'close']);
+      }
     }, [dispatch, props.visible]);
 
     return (
@@ -745,7 +741,6 @@ const ComboBoxMenuItem = React.memo(
         ...rest
       } = props;
 
-      const { inputRef } = useSafeContext(ComboBoxRefsContext);
       const { focusedIndex } = useSafeContext(ComboBoxStateContext);
 
       const focusRef = (el: HTMLLIElement | null) => {
@@ -754,17 +749,6 @@ const ComboBoxMenuItem = React.memo(
           el?.scrollIntoView({ block: 'nearest' });
         }
       };
-
-      React.useEffect(() => {
-        if (
-          inputRef.current != null &&
-          inputRef.current === inputRef.current.ownerDocument.activeElement &&
-          focusedIndex === index &&
-          !disabled
-        ) {
-          onClick?.(value);
-        }
-      });
 
       const refs = useMergedRefs(forwardedRef, focusRef);
 
