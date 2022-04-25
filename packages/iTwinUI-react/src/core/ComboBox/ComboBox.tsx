@@ -601,6 +601,9 @@ const ComboBoxInput = React.forwardRef(
             dispatch(['close']);
             break;
           }
+          case 'Tab':
+            dispatch(['close']);
+            break;
         }
       },
       [dispatch, isOpen, menuRef, onKeyDownProp, optionsRef],
