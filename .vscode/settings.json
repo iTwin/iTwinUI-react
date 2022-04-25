@@ -7,9 +7,18 @@
   "[markdown]": {
     "editor.defaultFormatter": "vscode.markdown-language-features"
   },
+  "[astro]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "prettier.documentSelectors": ["**/*.astro"],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
   "files.eol": "\n",
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "explorer.experimental.fileNesting.expand": false,
+  "explorer.experimental.fileNesting.enabled": true,
+  "explorer.experimental.fileNesting.patterns": {
+    "*.css": "$(capture).css.map, $(capture).min.css"
+  }
 }
