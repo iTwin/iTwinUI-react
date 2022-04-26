@@ -110,7 +110,7 @@ export const VirtualScroll = React.forwardRef<
   // Used only to recalculate on resize
   const [scrollContainerHeight, setScrollContainerHeight] = React.useState(0);
 
-  const onResize = React.useCallback(({ height }) => {
+  const onResize = React.useCallback(({ height }: DOMRectReadOnly) => {
     setScrollContainerHeight(height);
   }, []);
   const [resizeRef] = useResizeObserver(onResize);
