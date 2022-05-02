@@ -35,7 +35,7 @@ export default {
   parameters: {
     docs: { source: { excludeDecorators: true } },
     creevey: {
-      skip: { stories: ['Disabled Items', 'Many Items', 'Async'] },
+      skip: { stories: ['Disabled Items'] },
       tests: {
         async open() {
           const closed = await this.takeScreenshot();
@@ -496,26 +496,4 @@ WithCustomMessageIcon.args = {
   message: (
     <StatusMessage startIcon={<SvgCamera />}>This is a message</StatusMessage>
   ),
-};
-
-export const ManyItems: Story<Partial<ComboBoxProps<number>>> = (args) => {
-  const options = React.useMemo(
-    () =>
-      Array(10_000)
-        .fill(null)
-        .map((_, i) => ({ label: `Item ${i}`, value: i })),
-    [],
-  );
-
-  return (
-    <ComboBox
-      inputProps={{ placeholder: 'Select an item' }}
-      {...args}
-      options={options}
-      onChange={(value: number) => action(value.toString() ?? '')()}
-    />
-  );
-};
-ManyItems.args = {
-  inputProps: { placeholder: 'Select an item' },
 };
