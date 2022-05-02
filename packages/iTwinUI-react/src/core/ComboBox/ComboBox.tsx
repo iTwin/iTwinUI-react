@@ -335,11 +335,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
                 disabled={inputProps?.disabled}
                 endIcon={
                   <ComboBoxEndIcon
-                    className={cx({
-                      'iui-actionable': !inputProps?.disabled,
-                      'iui-disabled': inputProps?.disabled,
-                      'iui-open': isOpen,
-                    })}
+                    disabled={inputProps?.disabled}
+                    isOpen={isOpen}
                   />
                 }
                 {...rest}
@@ -467,10 +464,20 @@ ComboBoxInputContainer.displayName = 'ComboBoxInputContainer';
 
 const ComboBoxEndIcon = React.forwardRef(
   (
-    props: React.ComponentPropsWithoutRef<'span'>,
+    props: React.ComponentPropsWithoutRef<'span'> & {
+      disabled?: boolean;
+      isOpen?: boolean;
+    },
     forwardedRef: React.RefObject<HTMLSpanElement>,
   ) => {
-    const { className, children, onClick: onClickProp, ...rest } = props;
+    const {
+      className,
+      children,
+      onClick: onClickProp,
+      disabled,
+      isOpen,
+      ...rest
+    } = props;
     const dispatch = useSafeContext(ComboBoxActionContext);
     const { toggleButtonRef } = useSafeContext(ComboBoxRefsContext);
     const refs = useMergedRefs(toggleButtonRef, forwardedRef);
@@ -478,7 +485,15 @@ const ComboBoxEndIcon = React.forwardRef(
     return (
       <span
         ref={refs}
-        className={cx('iui-end-icon', className)}
+        className={cx(
+          'iui-end-icon',
+          {
+            'iui-actionable': !disabled,
+            'iui-disabled': disabled,
+            'iui-open': isOpen,
+          },
+          className,
+        )}
         onClick={(e) => {
           onClickProp?.(e);
           if (!e.isDefaultPrevented()) {
