@@ -456,7 +456,7 @@ export const CustomRenderer: Story<Partial<ComboBoxProps<string>>> = (args) => {
     />
   );
 };
-WithStatus.args = {
+CustomRenderer.args = {
   inputProps: { placeholder: 'Select a country' },
 };
 
