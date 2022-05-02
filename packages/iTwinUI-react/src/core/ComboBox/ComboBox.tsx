@@ -539,7 +539,7 @@ const ComboBoxInput = React.forwardRef(
           case 'ArrowDown': {
             event.preventDefault();
             if (!isOpen) {
-              dispatch(['open']);
+              return dispatch(['open']);
             }
 
             if (length === 0) {
@@ -572,7 +572,7 @@ const ComboBoxInput = React.forwardRef(
           case 'ArrowUp': {
             event.preventDefault();
             if (!isOpen) {
-              dispatch(['open']);
+              return dispatch(['open']);
             }
 
             if (length === 0) {
