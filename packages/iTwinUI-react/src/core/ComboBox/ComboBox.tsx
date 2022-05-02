@@ -14,6 +14,7 @@ import {
   CommonProps,
   getRandomValue,
   InputContainerProps,
+  mergeRefs,
 } from '../utils';
 import 'tippy.js/animations/shift-away.css';
 import {
@@ -305,12 +306,18 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             dispatch(['select', __originalIndex]);
             customItem.props.onClick?.(e);
           },
-          // ComboBox.MenuItem handles data-iui-index and iui-focused through context
+          // ComboBox.MenuItem handles scrollIntoView, data-iui-index and iui-focused through context
           // but we still need to pass them here for backwards compatibility with MenuItem
           className: cx(customItem.props.className, {
             'iui-focused': focusedIndex === __originalIndex,
           }),
           'data-iui-index': __originalIndex,
+          ref: mergeRefs(customItem.props.ref, (el: HTMLLIElement | null) => {
+            // will need to check for virtualization here too
+            if (focusedIndex === __originalIndex) {
+              el?.scrollIntoView({ block: 'nearest' });
+            }
+          }),
         })
       ) : (
         <ComboBoxMenuItem
