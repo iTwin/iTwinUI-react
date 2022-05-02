@@ -3,12 +3,11 @@ import { StatusMessage } from '../StatusMessage';
 import { InputContainer, InputContainerProps, useSafeContext } from '../utils';
 import { ComboBoxStateContext } from './helpers';
 
-type ComboBoxInputContainerProps = React.ComponentPropsWithoutRef<'div'> & {
-  endIcon?: React.ReactNode;
-} & Pick<InputContainerProps, 'status' | 'message' | 'disabled'>;
+type ComboBoxInputContainerProps = React.ComponentPropsWithoutRef<'div'> &
+  Pick<InputContainerProps, 'status' | 'message' | 'disabled'>;
 
 export const ComboBoxInputContainer = (props: ComboBoxInputContainerProps) => {
-  const { className, status, message, endIcon, children, ...rest } = props;
+  const { className, status, message, children, ...rest } = props;
 
   const { id } = useSafeContext(ComboBoxStateContext);
 
@@ -27,10 +26,7 @@ export const ComboBoxInputContainer = (props: ComboBoxInputContainerProps) => {
       {...rest}
       id={id}
     >
-      <div className='iui-input-with-icon'>
-        {children}
-        {endIcon}
-      </div>
+      <div className='iui-input-with-icon'>{children}</div>
     </InputContainer>
   );
 };

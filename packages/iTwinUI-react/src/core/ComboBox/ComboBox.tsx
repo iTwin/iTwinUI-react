@@ -344,20 +344,15 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
         >
           {children ?? (
             <>
-              <ComboBoxInputContainer
-                disabled={inputProps?.disabled}
-                endIcon={
-                  <ComboBoxEndIcon
-                    disabled={inputProps?.disabled}
-                    isOpen={isOpen}
-                  />
-                }
-                {...rest}
-              >
+              <ComboBoxInputContainer disabled={inputProps?.disabled} {...rest}>
                 <ComboBoxInput
                   value={inputValue}
                   {...inputProps}
                   onChange={handleOnInput}
+                />
+                <ComboBoxEndIcon
+                  disabled={inputProps?.disabled}
+                  isOpen={isOpen}
                 />
               </ComboBoxInputContainer>
               <ComboBoxDropdown {...dropdownMenuProps}>
