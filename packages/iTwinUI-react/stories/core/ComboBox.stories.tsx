@@ -530,7 +530,7 @@ export const Async: Story<Partial<ComboBoxProps<string>>> = () => {
   const [results, setResults] = React.useState<Array<unknown>>([]);
   const [inputValue, setInputValue] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
-  const [isPopoverVisible, setIsPopoverVisible] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const timeoutRef = React.useRef<number>();
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -556,7 +556,7 @@ export const Async: Story<Partial<ComboBoxProps<string>>> = () => {
   const handleItemClick = (label: string) => {
     setInputValue(label);
     setResults([]);
-    setIsPopoverVisible(false);
+    setIsMenuOpen(false);
   };
 
   return (
@@ -576,13 +576,13 @@ export const Async: Story<Partial<ComboBoxProps<string>>> = () => {
           value={inputValue}
           onInput={handleInput}
           placeholder='Search…'
-          onFocus={() => setIsPopoverVisible(true)}
+          onFocus={() => setIsMenuOpen(true)}
         />
       </ComboBox.InputContainer>
       {results.length > 0 && (
-        <ComboBox.Popover
-          visible={isPopoverVisible}
-          onClickOutside={() => setIsPopoverVisible(false)}
+        <ComboBox.Dropdown
+          visible={isMenuOpen}
+          onClickOutside={() => setIsMenuOpen(false)}
         >
           <ComboBox.Menu>
             {results.map(({ label, ...rest }, index) => (
@@ -596,7 +596,7 @@ export const Async: Story<Partial<ComboBoxProps<string>>> = () => {
               </ComboBox.MenuItem>
             ))}
           </ComboBox.Menu>
-        </ComboBox.Popover>
+        </ComboBox.Dropdown>
       )}
     </ComboBox>
   );
