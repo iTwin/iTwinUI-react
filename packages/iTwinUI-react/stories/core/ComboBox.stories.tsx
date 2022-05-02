@@ -11,10 +11,10 @@ import {
   Label,
   StatusMessage,
   SelectOption,
-  ProgressRadial,
+  MenuItem,
 } from '../../src/core';
 import { CreeveyStoryParams } from 'creevey';
-import { SvgCamera, SvgSearch } from '@itwin/itwinui-icons-react';
+import { SvgCamera } from '@itwin/itwinui-icons-react';
 
 export default {
   component: ComboBox,
@@ -424,14 +424,8 @@ export const CustomRenderer: Story<Partial<ComboBoxProps<string>>> = (args) => {
   }, []);
 
   const itemRenderer = React.useCallback(
-    ({ value, label }, { isSelected, id, index }) => (
-      <ComboBox.MenuItem
-        key={id}
-        id={id}
-        isSelected={isSelected}
-        value={value}
-        index={index}
-      >
+    ({ value, label }, { isSelected, id }) => (
+      <MenuItem key={id} id={id} isSelected={isSelected} value={value}>
         <em
           style={{
             textTransform: 'uppercase',
@@ -440,7 +434,7 @@ export const CustomRenderer: Story<Partial<ComboBoxProps<string>>> = (args) => {
         >
           {label}
         </em>
-      </ComboBox.MenuItem>
+      </MenuItem>
     ),
     [],
   ) as NonNullable<ComboBoxProps<string>['itemRenderer']>;
@@ -524,83 +518,4 @@ export const ManyItems: Story<Partial<ComboBoxProps<number>>> = (args) => {
 };
 ManyItems.args = {
   inputProps: { placeholder: 'Select an item' },
-};
-
-export const Async: Story<Partial<ComboBoxProps<string>>> = () => {
-  const [results, setResults] = React.useState<Array<unknown>>([]);
-  const [inputValue, setInputValue] = React.useState('');
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const timeoutRef = React.useRef<number>();
-
-  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const searchTerm = event.target.value;
-    setInputValue(searchTerm);
-    setIsLoading(true);
-    window.clearTimeout(timeoutRef.current);
-    timeoutRef.current = window.setTimeout(() => {
-      setResults(
-        searchTerm
-          ? Array(10)
-              .fill(null)
-              .map((_, i) => ({
-                label: `Result ${i} for search term "${searchTerm}"`,
-                value: i,
-              }))
-          : [],
-      );
-      setIsLoading(false);
-    }, 1000);
-  };
-
-  const handleItemClick = (label: string) => {
-    setInputValue(label);
-    setResults([]);
-    setIsMenuOpen(false);
-  };
-
-  return (
-    <ComboBox options={[]}>
-      <ComboBox.InputContainer
-        endIcon={
-          <ComboBox.EndIcon style={{ pointerEvents: 'none' }}>
-            {isLoading ? (
-              <ProgressRadial indeterminate size='small' />
-            ) : (
-              <SvgSearch style={{ fill: 'var(--iui-icons-color)' }} />
-            )}
-          </ComboBox.EndIcon>
-        }
-      >
-        <ComboBox.Input
-          value={inputValue}
-          onInput={handleInput}
-          placeholder='Search…'
-          onFocus={() => setIsMenuOpen(true)}
-        />
-      </ComboBox.InputContainer>
-      {results.length > 0 && (
-        <ComboBox.Dropdown
-          visible={isMenuOpen}
-          onClickOutside={() => setIsMenuOpen(false)}
-        >
-          <ComboBox.Menu>
-            {results.map(({ label, ...rest }, index) => (
-              <ComboBox.MenuItem
-                key={label}
-                index={index}
-                {...rest}
-                onClick={() => handleItemClick(label)}
-              >
-                {label}
-              </ComboBox.MenuItem>
-            ))}
-          </ComboBox.Menu>
-        </ComboBox.Dropdown>
-      )}
-    </ComboBox>
-  );
-};
-Async.parameters = {
-  controls: { hideNoControlsWarning: true },
 };

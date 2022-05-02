@@ -372,11 +372,4 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   );
 };
 
-ComboBox.InputContainer = ComboBoxInputContainer;
-ComboBox.Input = ComboBoxInput;
-ComboBox.EndIcon = ComboBoxEndIcon;
-ComboBox.Dropdown = ComboBoxDropdown;
-ComboBox.Menu = ComboBoxMenu;
-ComboBox.MenuItem = ComboBoxMenuItem;
-
 export default ComboBox;
