@@ -161,7 +161,6 @@ export const Actionable: Story<TileProps> = (props) => {
     metadata,
     badge,
     thumbnail,
-    buttons,
     leftIcon,
     rightIcon,
     isNew,
@@ -178,7 +177,6 @@ export const Actionable: Story<TileProps> = (props) => {
       metadata={metadata}
       badge={badge}
       thumbnail={thumbnail}
-      buttons={buttons}
       leftIcon={leftIcon}
       rightIcon={rightIcon}
       isSelected={selected}
@@ -205,14 +203,6 @@ Actionable.args = {
       <SvgStar />
     </IconButton>
   ),
-  buttons: [
-    <Button key={1} onClick={action('clicked left button')}>
-      Manage
-    </Button>,
-    <Button key={2} onClick={action('clicked right button')}>
-      Projects
-    </Button>,
-  ],
 };
 
 export const Condensed: Story<TileProps> = (props) => {
