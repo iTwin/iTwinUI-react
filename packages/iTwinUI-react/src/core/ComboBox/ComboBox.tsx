@@ -166,14 +166,24 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   );
 
   React.useEffect(() => {
+    // When the dropdown opens
     if (isOpen) {
-      // Make sure the input is focused when the dropdown opens
-      inputRef.current?.focus();
-    } else {
-      // Reset the focused index when the dropdown closes
-      dispatch(['focus']);
+      inputRef.current?.focus(); // Focus the input
+      setFilteredOptions(options); // Reset the filtered list
     }
-  }, [isOpen]);
+    // When the dropdown closes
+    else {
+      // Reset the focused index
+      dispatch(['focus']);
+
+      // Reset the input value
+      setInputValue(
+        selectedIndex != undefined && selectedIndex >= 0
+          ? options[selectedIndex]?.label
+          : '',
+      );
+    }
+  }, [isOpen, options, selectedIndex]);
 
   // Set min-width of menu to be same as input
   const [minWidth, setMinWidth] = React.useState(0);
@@ -219,22 +229,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       options.findIndex((option) => option.value === valueProp),
     ]);
   }, [options, valueProp]);
-
-  // When value is selected, update input value and reset filtered options
-  React.useEffect(() => {
-    if (selectedIndex != undefined && selectedIndex >= 0) {
-      setInputValue(options[selectedIndex]?.label ?? '');
-      setFilteredOptions(options);
-    }
-  }, [options, selectedIndex]);
-
-  // When dropdown is closed, reset input value to selected option label
-  React.useEffect(() => {
-    if (!isOpen && selectedIndex != undefined && selectedIndex >= 0) {
-      setInputValue(options[selectedIndex]?.label ?? '');
-      // TODO: fix options
-    }
-  }, [isOpen, options, selectedIndex]);
 
   // Call user-defined onChange when the value actually changes
   React.useEffect(() => {
