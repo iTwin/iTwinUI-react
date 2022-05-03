@@ -143,6 +143,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     );
   }, [id, optionsProp]);
 
+  // Refs get set in subcomponents
   const inputRef = React.useRef<HTMLInputElement>(null);
   const menuRef = React.useRef<HTMLUListElement>(null);
   const toggleButtonRef = React.useRef<HTMLSpanElement>(null);
@@ -194,7 +195,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = event.currentTarget;
       setInputValue(value);
-      dispatch(['open']);
+      dispatch(['open']); // reopen when typing
       setFilteredOptions(
         filterFunction?.(options, value) ??
           options.filter((option) =>
@@ -231,6 +232,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   React.useEffect(() => {
     if (!isOpen && selectedIndex != undefined && selectedIndex >= 0) {
       setInputValue(options[selectedIndex]?.label ?? '');
+      // TODO: fix options
     }
   }, [isOpen, options, selectedIndex]);
 
@@ -245,51 +247,9 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     }
   }, [options, selectedIndex, valueProp]);
 
-  // Memoize the default (not selected/focused) version of menu items
-  const memoizedItems = React.useMemo(() => {
-    return options.map((option) => {
-      const { __originalIndex, ...rest } = option;
-
-      const customItem = itemRenderer
-        ? itemRenderer(option, {
-            isFocused: false,
-            isSelected: false,
-            index: __originalIndex,
-            id: option.id,
-          })
-        : null;
-
-      return customItem ? (
-        React.cloneElement(customItem, {
-          onClick: (e: unknown) => {
-            dispatch(['select', __originalIndex]);
-            customItem.props.onClick?.(e);
-          },
-          'data-iui-index': __originalIndex,
-        })
-      ) : (
-        <ComboBoxMenuItem
-          key={__originalIndex}
-          index={option.__originalIndex}
-          onClick={() => dispatch(['select', __originalIndex])}
-          {...rest}
-        >
-          {option.label}
-        </ComboBoxMenuItem>
-      );
-    });
-  }, [itemRenderer, options]);
-
   const getMenuItem = React.useCallback(
     (option: ComboBoxOption<T>) => {
       const { __originalIndex, ...rest } = option;
-
-      if (
-        selectedIndex !== __originalIndex &&
-        focusedIndex !== __originalIndex
-      ) {
-        return memoizedItems[option.__originalIndex];
-      }
 
       const customItem = itemRenderer
         ? itemRenderer(option, {
@@ -331,7 +291,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
         </ComboBoxMenuItem>
       );
     },
-    [focusedIndex, itemRenderer, memoizedItems, selectedIndex],
+    [focusedIndex, itemRenderer, selectedIndex],
   );
 
   return (
