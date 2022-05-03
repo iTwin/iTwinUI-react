@@ -2233,7 +2233,7 @@ it('should handle table resize only when some columns were resized', () => {
       triggerResize = onResize;
       return [
         jest.fn(),
-        ({ disconnect: jest.fn() } as unknown) as ResizeObserver,
+        { disconnect: jest.fn() } as unknown as ResizeObserver,
       ];
     });
   const columns: Column<TestDataType>[] = [
@@ -2579,9 +2579,8 @@ it('should render action column with column manager', () => {
   });
 
   expect(container.querySelectorAll('[role="columnheader"]').length).toBe(3);
-  const actionColumn = container.querySelectorAll<HTMLInputElement>(
-    '.iui-slot',
-  );
+  const actionColumn =
+    container.querySelectorAll<HTMLInputElement>('.iui-slot');
   expect(
     actionColumn[0].firstElementChild?.className.includes(
       'iui-button iui-borderless',
@@ -2631,9 +2630,8 @@ it('should hide column when deselected in column manager', () => {
 
   const columnManager = container.querySelector('.iui-button') as HTMLElement;
   userEvent.click(columnManager);
-  const columnManagerColumns = document.querySelectorAll<HTMLLIElement>(
-    '.iui-menu-item',
-  );
+  const columnManagerColumns =
+    document.querySelectorAll<HTMLLIElement>('.iui-menu-item');
   userEvent.click(columnManagerColumns[1]);
 
   headerCells = container.querySelectorAll<HTMLDivElement>(
@@ -2677,9 +2675,8 @@ it('should be disabled in column manager if `disableToggleVisibility` is true', 
   const columnManager = container.querySelector('.iui-button') as HTMLElement;
 
   userEvent.click(columnManager);
-  const columnManagerColumns = document.querySelectorAll<HTMLLIElement>(
-    '.iui-menu-item',
-  );
+  const columnManagerColumns =
+    document.querySelectorAll<HTMLLIElement>('.iui-menu-item');
   expect(columnManagerColumns[0].classList).toContain('iui-disabled');
 
   expect(
@@ -2765,9 +2762,8 @@ it('should add expander column manually', () => {
   const rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
 
-  const expanders = container.querySelectorAll<HTMLButtonElement>(
-    '.iui-row-expander',
-  );
+  const expanders =
+    container.querySelectorAll<HTMLButtonElement>('.iui-row-expander');
   expect(expanders.length).toBe(3);
   expect(expanders[0].disabled).toBe(false);
   expect(expanders[1].disabled).toBe(true);
@@ -2879,4 +2875,25 @@ it('should render selectable rows without select column', () => {
   expect(rows[1].classList).toContain('iui-selected');
   expect(rows[2].classList).not.toContain('iui-selected');
   expect(onRowClick).toHaveBeenCalledTimes(3);
+});
+
+it('should not throw on headless table', () => {
+  const columns: Column<TestDataType>[] = [
+    {
+      id: 'name',
+      Header: 'Name',
+      accessor: 'name',
+    },
+    {
+      id: 'description',
+      Header: 'Description',
+      accessor: 'description',
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+  });
+
+  expect(container.querySelector('.iui-table-header .iui-row')).toBeFalsy();
+  expect(container.querySelector('.iui-table-body')).toBeTruthy();
 });

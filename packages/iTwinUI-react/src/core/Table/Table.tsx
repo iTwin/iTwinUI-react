@@ -93,7 +93,7 @@ export type TablePaginatorRendererProps = {
  * columns and data must be memoized.
  */
 export type TableProps<
-  T extends Record<string, unknown> = Record<string, unknown>
+  T extends Record<string, unknown> = Record<string, unknown>,
 > = Omit<TableOptions<T>, 'disableSortBy'> & {
   /**
    * Flag whether data is loading.
@@ -287,7 +287,7 @@ export type TableProps<
  * />
  */
 export const Table = <
-  T extends Record<string, unknown> = Record<string, unknown>
+  T extends Record<string, unknown> = Record<string, unknown>,
 >(
   props: TableProps<T>,
 ): JSX.Element => {
@@ -353,11 +353,25 @@ export const Table = <
 
   // Original type for some reason is missing sub-columns
   type ColumnType = Column<T> & {
-    columns: Column<T>[];
+    columns: ColumnType[];
   };
-  const hasManualSelectionColumn = (columns as ColumnType[])[0]?.columns.some(
-    (column) => column.id === SELECTION_CELL_ID,
+  const flattenColumns = React.useCallback(
+    (columns: ColumnType[]): ColumnType[] => {
+      const flatColumns: ColumnType[] = [];
+      columns.forEach((column) => {
+        flatColumns.push(column);
+        if (column.columns) {
+          flatColumns.push(...flattenColumns(column.columns));
+        }
+      });
+      return flatColumns;
+    },
+    [],
   );
+  const hasManualSelectionColumn = React.useMemo(() => {
+    const flatColumns = flattenColumns(columns as ColumnType[]);
+    return flatColumns.some((column) => column.id === SELECTION_CELL_ID);
+  }, [columns, flattenColumns]);
 
   const tableStateReducer = React.useCallback(
     (
@@ -564,9 +578,8 @@ export const Table = <
       // Update column widths when table was resized
       flatHeaders.forEach((header) => {
         if (columnRefs.current[header.id]) {
-          header.resizeWidth = columnRefs.current[
-            header.id
-          ].getBoundingClientRect().width;
+          header.resizeWidth =
+            columnRefs.current[header.id].getBoundingClientRect().width;
         }
       });
 
@@ -587,9 +600,8 @@ export const Table = <
       const newColumnWidths: Record<string, number> = {};
       flatHeaders.forEach((column) => {
         if (columnRefs.current[column.id]) {
-          newColumnWidths[column.id] = columnRefs.current[
-            column.id
-          ].getBoundingClientRect().width;
+          newColumnWidths[column.id] =
+            columnRefs.current[column.id].getBoundingClientRect().width;
         }
       });
       dispatch({ type: tableResizeEndAction, columnWidths: newColumnWidths });
