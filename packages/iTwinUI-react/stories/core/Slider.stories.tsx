@@ -21,11 +21,6 @@ export default {
     thumbMode: 'inhibit-crossing',
     trackDisplayMode: 'auto',
   },
-  parameters: {
-    creevey: {
-      delay: 1000,
-    },
-  },
 } as Meta<SliderProps>;
 
 export const Basic: Story<SliderProps> = (args) => {
