@@ -56,7 +56,7 @@ it('should render in its most basic state', () => {
   expect(list.children).toHaveLength(3);
   list.querySelectorAll('.iui-menu-item').forEach((item, index) => {
     expect(item).toHaveTextContent(`Item ${index}`);
-    expect(item).not.toHaveAttribute('aria-selected');
+    expect(item).toHaveAttribute('aria-selected', 'false');
     expect(item.id).toEqual(`${id}-option${index}`);
   });
 });
