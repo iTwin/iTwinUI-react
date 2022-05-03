@@ -20,7 +20,7 @@ export const comboBoxReducer = (
       return {
         ...state,
         isOpen: false,
-        selectedIndex: value ?? state.focusedIndex ?? state.selectedIndex,
+        selectedIndex: value ?? state.selectedIndex,
         focusedIndex: value ?? state.focusedIndex,
       };
     }
