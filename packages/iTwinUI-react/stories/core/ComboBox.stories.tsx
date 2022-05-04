@@ -527,33 +527,12 @@ export const Loading: Story<Partial<ComboBoxProps<string>>> = (args) => {
     setSelectedValue(value);
   }, []);
 
-  const itemRenderer = React.useCallback(
-    ({ value, label }, { isSelected, id }) => {
-      // if (!isLoading) {
-      //   return (
-      //     <MenuItem
-      //       key={value}
-      //       id={id}
-      //       isSelected={isSelected}
-      //       value={value}
-      //       icon={<span>{getFlagEmoji(value)}</span>}
-      //       sublabel={value}
-      //     >
-      //       {label}
-      //     </MenuItem>
-      //   );
-      // }
-
-      const normalizedIndex = (Number.parseInt(value) % 2) + 1;
-      const randomValue = normalizedIndex * Math.random() * 60;
-      const boundedWidth = Math.min(Math.max(randomValue, 25), 60);
-      console.log(randomValue, boundedWidth);
-      return (
-        <MenuItemSkeleton hasIcon hasSublabel contentWidth={boundedWidth} />
-      );
-    },
-    [],
-  ) as NonNullable<ComboBoxProps<string>['itemRenderer']>;
+  const itemRenderer = React.useCallback(({ value }) => {
+    const normalizedIndex = (Number.parseInt(value) % 2) + 1;
+    const randomValue = normalizedIndex * Math.random() * 60;
+    const boundedWidth = Math.min(Math.max(randomValue, 25), 60);
+    return <MenuItemSkeleton hasIcon hasSublabel contentWidth={boundedWidth} />;
+  }, []) as NonNullable<ComboBoxProps<string>['itemRenderer']>;
 
   return (
     <ComboBox
@@ -569,7 +548,101 @@ export const Loading: Story<Partial<ComboBoxProps<string>>> = (args) => {
           }
           setTimeout(() => {
             setIsLoading(false);
-            setOptions(countriesListWithFlags);
+            setOptions(
+              countriesList.map(
+                (country) =>
+                  ({
+                    ...country,
+                    sublabel: country.value,
+                    icon: (
+                      <img
+                        loading='lazy'
+                        style={{ width: 20, height: 15 }}
+                        src={`https://flagcdn.com/w20/${country.value.toLowerCase()}.png`}
+                        srcSet={`https://flagcdn.com/w40/${country.value.toLowerCase()}.png 2x`}
+                        alt=''
+                      />
+                    ),
+                  } as SelectOption<string>),
+              ),
+            );
+          }, 1000);
+        },
+      }}
+      options={options}
+    />
+  );
+};
+Loading.args = {
+  inputProps: { placeholder: 'Select a country' },
+};
+
+export const Loading2: Story<Partial<ComboBoxProps<string>>> = (args) => {
+  const [options, setOptions] = React.useState(
+    new Array(6)
+      .fill(null)
+      .map((_, index) => ({ label: 'Loading...', value: `${index}` })),
+  );
+  const [selectedValue, setSelectedValue] = React.useState<string>();
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  const onChange = React.useCallback((value: string) => {
+    action(value ?? '')();
+    setSelectedValue(value);
+  }, []);
+
+  const itemRenderer = React.useCallback(
+    (option, states) => {
+      if (!isLoading) {
+        return (
+          <MenuItem {...option} {...states}>
+            {option.label}
+          </MenuItem>
+        );
+      }
+
+      const normalizedIndex = (Number.parseInt(option.value) % 2) + 1;
+      const randomValue = normalizedIndex * Math.random() * 60;
+      const boundedWidth = Math.min(Math.max(randomValue, 25), 60);
+      return (
+        <MenuItemSkeleton hasIcon hasSublabel contentWidth={boundedWidth} />
+      );
+    },
+    [isLoading],
+  ) as NonNullable<ComboBoxProps<string>['itemRenderer']>;
+
+  return (
+    <ComboBox
+      inputProps={{ placeholder: 'Select a country' }}
+      value={selectedValue}
+      onChange={onChange}
+      itemRenderer={itemRenderer}
+      {...args}
+      dropdownMenuProps={{
+        onShown: () => {
+          if (!isLoading) {
+            return;
+          }
+          setTimeout(() => {
+            setIsLoading(false);
+            setOptions(
+              countriesList.map(
+                (country) =>
+                  ({
+                    ...country,
+                    sublabel: country.value,
+                    icon: (
+                      <img
+                        loading='lazy'
+                        style={{ width: 20, height: 15 }}
+                        src={`https://flagcdn.com/w20/${country.value.toLowerCase()}.png`}
+                        srcSet={`https://flagcdn.com/w40/${country.value.toLowerCase()}.png 2x`}
+                        alt=''
+                      />
+                    ),
+                  } as SelectOption<string>),
+              ),
+            );
           }, 1000);
         },
       }}
