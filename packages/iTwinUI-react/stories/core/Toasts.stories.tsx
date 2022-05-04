@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
+import ReactDOM from 'react-dom/client';
 import { Story, Meta } from '@storybook/react';
 import { Button, toaster, ProgressRadial } from '../../src/core';
 import { Toast, ToastProps } from '../../src/core/Toast/Toast';
@@ -15,7 +16,6 @@ export default {
     content: {
       description:
         'Content of the Toast message. Can be passed in as a string or a jsx element.',
-      type: { required: true },
     },
     type: {
       control: {
@@ -98,6 +98,17 @@ export default {
     },
   },
   title: 'Core/Toasts',
+  decorators: [
+    (Story) => {
+      toaster.setSettings({
+        getRoot: (container) =>
+          ReactDOM.createRoot(
+            container ?? document.getElementsByTagName('div')[0],
+          ),
+      });
+      return <Story />;
+    },
+  ],
 } as Meta<ToastProps & ToasterSettings> & CreeveyMeta;
 
 export const Positive: Story<ToastProps & ToasterSettings> = ({

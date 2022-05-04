@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Root } from '../../types/custom';
 import { getContainer } from '../utils';
 import { ToastCategory, ToastProps } from './Toast';
 import { ToastWrapper } from './ToastWrapper';
@@ -30,6 +31,11 @@ export type ToasterSettings = {
     | 'bottom'
     | 'bottom-start'
     | 'bottom-end';
+  /**
+   * If using React v18, use`ReactDom.createRoot`function to return root and enable v18.
+   * Otherwise, old `ReadDom.render` method will be used to render toasts.
+   */
+  getRoot?: (container: Element | undefined) => Root;
 };
 
 export type ToastOptions = Omit<
@@ -44,6 +50,7 @@ export default class Toaster {
     order: 'descending',
     placement: 'top',
   };
+  private root: Root | undefined;
 
   /**
    * Set global Toaster settings for toasts order and placement.
@@ -54,6 +61,8 @@ export default class Toaster {
     newSettings.order ??= newSettings.placement?.startsWith('bottom')
       ? 'ascending'
       : 'descending';
+    this.root =
+      newSettings?.getRoot?.(getContainer(TOASTS_CONTAINER_ID)) ?? this.root;
     this.settings = newSettings;
   }
 
@@ -105,15 +114,20 @@ export default class Toaster {
   }
 
   private updateView() {
+    const toastWrapper = (
+      <ToastWrapper toasts={this.toasts} placement={this.settings.placement} />
+    );
+    if (!!this.root) {
+      this.root.render(toastWrapper);
+      return;
+    }
+
     const container = getContainer(TOASTS_CONTAINER_ID);
     if (!container) {
       return;
     }
 
-    ReactDOM.render(
-      <ToastWrapper toasts={this.toasts} placement={this.settings.placement} />,
-      container,
-    );
+    ReactDOM.render(toastWrapper, container);
   }
 
   private closeToast(toastId: number): void {
