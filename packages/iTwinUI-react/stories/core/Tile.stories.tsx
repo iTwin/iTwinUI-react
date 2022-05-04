@@ -161,10 +161,7 @@ export const Actionable: Story<TileProps> = (props) => {
     metadata,
     badge,
     thumbnail,
-    leftIcon,
-    rightIcon,
     isNew,
-    moreOptions,
     isActionable = true,
     ...rest
   } = props;
@@ -177,11 +174,8 @@ export const Actionable: Story<TileProps> = (props) => {
       metadata={metadata}
       badge={badge}
       thumbnail={thumbnail}
-      leftIcon={leftIcon}
-      rightIcon={rightIcon}
       isSelected={selected}
       isNew={isNew}
-      moreOptions={moreOptions}
       isActionable={isActionable}
       {...rest}
       onClick={() => setSelected((prev) => !prev)}
@@ -193,16 +187,7 @@ Actionable.args = {
   ...Basic.args,
   description: 'If you click on this stadium, it is going to be selected.',
   isActionable: true,
-  leftIcon: (
-    <IconButton styleType='borderless' onClick={action('clicked left icon')}>
-      <SvgInfo />
-    </IconButton>
-  ),
-  rightIcon: (
-    <IconButton styleType='borderless' onClick={action('clicked right icon')}>
-      <SvgStar />
-    </IconButton>
-  ),
+  moreOptions: undefined,
 };
 
 export const Condensed: Story<TileProps> = (props) => {
