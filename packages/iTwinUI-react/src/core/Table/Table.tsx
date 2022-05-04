@@ -93,7 +93,7 @@ export type TablePaginatorRendererProps = {
  * columns and data must be memoized.
  */
 export type TableProps<
-  T extends Record<string, unknown> = Record<string, unknown>,
+  T extends Record<string, unknown> = Record<string, unknown>
 > = Omit<TableOptions<T>, 'disableSortBy'> & {
   /**
    * Flag whether data is loading.
@@ -245,10 +245,11 @@ export type TableProps<
 } & Omit<CommonProps, 'title'>;
 
 // Original type for some reason is missing sub-columns
-type ColumnType<T extends Record<string, unknown> = Record<string, unknown>> =
-  Column<T> & {
-    columns: ColumnType[];
-  };
+type ColumnType<
+  T extends Record<string, unknown> = Record<string, unknown>
+> = Column<T> & {
+  columns: ColumnType[];
+};
 const flattenColumns = (columns: ColumnType[]): ColumnType[] => {
   const flatColumns: ColumnType[] = [];
   columns.forEach((column) => {
@@ -303,7 +304,7 @@ const flattenColumns = (columns: ColumnType[]): ColumnType[] => {
  * />
  */
 export const Table = <
-  T extends Record<string, unknown> = Record<string, unknown>,
+  T extends Record<string, unknown> = Record<string, unknown>
 >(
   props: TableProps<T>,
 ): JSX.Element => {
@@ -577,8 +578,9 @@ export const Table = <
       // Update column widths when table was resized
       flatHeaders.forEach((header) => {
         if (columnRefs.current[header.id]) {
-          header.resizeWidth =
-            columnRefs.current[header.id].getBoundingClientRect().width;
+          header.resizeWidth = columnRefs.current[
+            header.id
+          ].getBoundingClientRect().width;
         }
       });
 
@@ -599,8 +601,9 @@ export const Table = <
       const newColumnWidths: Record<string, number> = {};
       flatHeaders.forEach((column) => {
         if (columnRefs.current[column.id]) {
-          newColumnWidths[column.id] =
-            columnRefs.current[column.id].getBoundingClientRect().width;
+          newColumnWidths[column.id] = columnRefs.current[
+            column.id
+          ].getBoundingClientRect().width;
         }
       });
       dispatch({ type: tableResizeEndAction, columnWidths: newColumnWidths });
