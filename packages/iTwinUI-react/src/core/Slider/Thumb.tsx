@@ -117,8 +117,14 @@ export const Thumb = (props: ThumbProps) => {
 
   const [hasFocus, setHasFocus] = React.useState(false);
   const [isHovered, setIsHovered] = React.useState(false);
-
-  const leftPercent = (100.0 * (value - sliderMin)) / (sliderMax - sliderMin);
+  const adjustedValue = React.useMemo (()=>{
+    if (value < sliderMin)
+      {return sliderMin;}
+    if (value > sliderMax)
+    {return sliderMax;}
+    return value;
+  }, [sliderMax, sliderMin, value]);
+  const leftPercent = (100.0 * (adjustedValue - sliderMin)) / (sliderMax - sliderMin);
   const { style, className, ...rest } = thumbProps || {};
 
   return (
