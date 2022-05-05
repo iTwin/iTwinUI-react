@@ -1,0 +1,7 @@
+{
+  "extends": "configs/tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ESNext", "DOM", "DOM.Iterable"]
+  },
+  "include": ["src", "cypress", "overrides.d.ts"]
+}
