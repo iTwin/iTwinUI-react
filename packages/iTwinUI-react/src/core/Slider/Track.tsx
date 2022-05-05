@@ -26,7 +26,8 @@ function generateSegments(
   if (
     0 === newValues.length ||
     newValues[0] < min ||
-    newValues[newValues.length - 1] > max
+    newValues[newValues.length - 1] > max ||
+    min === max
   ) {
     return [];
   }
@@ -66,11 +67,11 @@ export const Track = (props: TrackProps) => {
       {'none' !== trackDisplayMode &&
         segments.map((segment, index) => {
           const leftPercent =
-            segment.left >= sliderMin
+            segment.left >= sliderMin && sliderMax !== sliderMin
               ? (100.0 * (segment.left - sliderMin)) / (sliderMax - sliderMin)
               : 0;
           const rightPercent =
-            segment.right >= sliderMin
+            segment.right >= sliderMin && sliderMax !== sliderMin
               ? 100.0 -
                 (100.0 * (segment.right - sliderMin)) / (sliderMax - sliderMin)
               : 100;

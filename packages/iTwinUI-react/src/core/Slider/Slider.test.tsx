@@ -63,16 +63,19 @@ it('should not render thumbs if no values are defined', () => {
   expect(container.querySelector('.iui-slider-thumb')).toBeFalsy();
 });
 
-it('should not render track if value is below specified min/max', () => {
-  const { container } = render(<Slider values={[10]} min={20} max={40} />);
-  expect(
-    container.querySelector('.iui-slider-component-container'),
-  ).toBeTruthy();
-  expect(container.querySelector('.iui-slider-container')).toBeTruthy();
-  expect(container.querySelector('.iui-slider-rail')).toBeTruthy();
+it('should not render track if min and max are same value', () => {
+  const { container } = render(<Slider values={[10]} min={20} max={20} />);
   const element = container.querySelector('.iui-slider-thumb') as HTMLElement;
   expect(element).toBeTruthy();
-  expect(element.style.left).toBe("0%");
+  expect(element.style.left).toBe('0%');
+  expect(container.querySelector('.iui-slider-track')).toBeFalsy();
+});
+
+it('should not render track if value is below specified min/max', () => {
+  const { container } = render(<Slider values={[10]} min={20} max={40} />);
+  const element = container.querySelector('.iui-slider-thumb') as HTMLElement;
+  expect(element).toBeTruthy();
+  expect(element.style.left).toBe('0%');
   expect(container.querySelector('.iui-slider-track')).toBeFalsy();
 });
 
@@ -81,11 +84,9 @@ it('should not render track if value is above specified min/max', () => {
   expect(
     container.querySelector('.iui-slider-component-container'),
   ).toBeTruthy();
-  expect(container.querySelector('.iui-slider-container')).toBeTruthy();
-  expect(container.querySelector('.iui-slider-rail')).toBeTruthy();
   const element = container.querySelector('.iui-slider-thumb') as HTMLElement;
   expect(element).toBeTruthy();
-  expect(element.style.left).toBe("100%");
+  expect(element.style.left).toBe('100%');
   expect(container.querySelector('.iui-slider-track')).toBeFalsy();
 });
 
