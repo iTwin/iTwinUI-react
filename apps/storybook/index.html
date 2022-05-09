@@ -8,5 +8,13 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <script type="module">
+      import React from 'react';
+      import ReactDOM from 'react-dom';
+      ReactDOM.render(
+        React.createElement('main', null, 'hello'),
+        document.getElementById('root'),
+      );
+    </script>
   </body>
 </html>
