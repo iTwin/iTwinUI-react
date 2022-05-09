@@ -9,6 +9,7 @@ describe('Carousel', () => {
 
     it(testName, () => {
       cy.visit('iframe', { qs: { id } });
+      cy.wait(1000); // wait for dots list to finish scrolling
       cy.compareSnapshot(testName);
     });
   });

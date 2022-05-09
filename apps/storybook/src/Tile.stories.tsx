@@ -263,7 +263,7 @@ WithUserIcon.args = {
   metadata: undefined,
   thumbnail: (
     <UserIcon
-      size='large'
+      size='x-large'
       status='online'
       abbreviation='TR'
       backgroundColor={getUserColor('Terry Rivers')}

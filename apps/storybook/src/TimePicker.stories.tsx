@@ -3,7 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { action } from '@storybook/addon-actions';
-import { useEffect, useState } from '@storybook/addons';
 import { Meta, Story } from '@storybook/react';
 import React from 'react';
 import {
@@ -33,14 +32,14 @@ export const Basic: Story<TimePickerProps> = (args) => {
     setFocusHour = true,
     ...rest
   } = args;
-  const [opened, setOpened] = useState(false);
-  const [currentDate, setCurrentDate] = useState(new Date(date));
+  const [opened, setOpened] = React.useState(false);
+  const [currentDate, setCurrentDate] = React.useState(new Date(date));
   const onChange = (date: Date) => {
     setCurrentDate(date);
     action(`New Time value: ${date}`, { clearOnStoryChange: false })();
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     setCurrentDate(new Date(date));
     return () => action('', { clearOnStoryChange: true })();
   }, [date]);

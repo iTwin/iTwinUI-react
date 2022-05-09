@@ -12,7 +12,6 @@ import {
   ModalButtonBar,
   ModalContent,
 } from '@itwin/itwinui-react';
-import { useEffect, useState } from '@storybook/addons';
 
 export default {
   title: 'Core/Modal',
@@ -34,9 +33,9 @@ export const Basic: Story<ModalProps> = ({
   title = 'This is the title',
   ...rest
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(isOpen);
+  const [isModalOpen, setIsModalOpen] = React.useState(isOpen);
 
-  useEffect(() => {
+  React.useEffect(() => {
     setIsModalOpen(isOpen);
   }, [isOpen]);
 
@@ -100,9 +99,9 @@ export const NonDismissibleModal: Story<ModalProps> = ({
   title = 'This is the title',
   ...rest
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(isOpen);
+  const [isModalOpen, setIsModalOpen] = React.useState(isOpen);
 
-  useEffect(() => {
+  React.useEffect(() => {
     setIsModalOpen(isOpen);
   }, [isOpen]);
 
@@ -171,9 +170,9 @@ export const OutsideClickAndEscDoesNotClose: Story<ModalProps> = ({
   title = 'This is the title',
   ...rest
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(isOpen);
+  const [isModalOpen, setIsModalOpen] = React.useState(isOpen);
 
-  useEffect(() => {
+  React.useEffect(() => {
     setIsModalOpen(isOpen);
   }, [isOpen]);
 
@@ -244,9 +243,9 @@ export const FullPageModal: Story<ModalProps> = ({
   title = 'This is the title',
   ...rest
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(isOpen);
+  const [isModalOpen, setIsModalOpen] = React.useState(isOpen);
 
-  useEffect(() => {
+  React.useEffect(() => {
     setIsModalOpen(isOpen);
   }, [isOpen]);
 
