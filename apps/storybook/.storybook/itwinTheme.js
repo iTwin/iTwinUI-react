@@ -22,7 +22,7 @@ export const lightTheme = create({
 
   // Typography
   fontBase:
-    'BlinkMacSystemFont, -apple-system, "Open Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif',
+    '"Open Sans", BlinkMacSystemFont, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, system-ui, sans-serif',
   fontCode:
     '"SF Mono", SFMono-Regular, ui-monospace, "DejaVu Sans Mono", Menlo, Consolas, monospace',
 
@@ -57,7 +57,7 @@ export const darkTheme = create({
 
   // Typography
   fontBase:
-    'BlinkMacSystemFont, -apple-system, "Open Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif',
+    '"Open Sans", BlinkMacSystemFont, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, system-ui, sans-serif',
   fontCode:
     '"SF Mono", SFMono-Regular, ui-monospace, "DejaVu Sans Mono", Menlo, Consolas, monospace',
 
