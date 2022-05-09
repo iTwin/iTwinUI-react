@@ -16,12 +16,7 @@ const ThemeToggle = () => {
   });
 
   useEffect(() => {
-    const root = document.documentElement;
-    if (theme === 'light') {
-      root.classList.remove('theme-dark');
-    } else {
-      root.classList.add('theme-dark');
-    }
+    document.documentElement.dataset.theme = theme;
   }, [theme]);
 
   return (

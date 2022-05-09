@@ -1,5 +1,5 @@
 {
-  "name": "@example/docs",
+  "name": "website",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -9,15 +9,28 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "@types/react": "^17.0.0",
+    "@codesandbox/sandpack-react": "^0.19.6",
     "react": "^17.0.0",
     "react-dom": "^17.0.0"
   },
   "devDependencies": {
     "@astrojs/react": "^0.1.1",
-    "astro": "^1.0.0-beta.17",
+    "@itwin/itwinui-react": "*",
+    "@types/react": "^17.0.0",
+    "astro": "^1.0.0-beta.27",
+    "postcss-preset-env": "^7.4.4",
     "prettier": "2.6.2",
-    "prettier-plugin-astro": "^0.1.0-next.4"
+    "prettier-plugin-astro": "^0.1.0-next.4",
+    "react-docgen-typescript": "^2.2.2"
+  },
+  "postcss": {
+    "plugins": {
+      "postcss-preset-env": {
+        "features": {
+          "nesting-rules": "true"
+        }
+      }
+    }
   },
   "prettier": {
     "printWidth": 120,

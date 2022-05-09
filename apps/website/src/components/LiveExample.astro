@@ -1,0 +1,22 @@
+---
+import LiveExample from './LiveExample';
+import '@codesandbox/sandpack-react/dist/index.css';
+
+const { props } = Astro;
+---
+
+<div class='wrapper'>
+  <LiveExample client:load {...props} />
+</div>
+
+<style>
+  .wrapper {
+    & :global(.sp-stack) {
+      flex-basis: unset;
+    }
+
+    & :global(path) {
+      fill: currentColor;
+    }
+  }
+</style>

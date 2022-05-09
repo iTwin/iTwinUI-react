@@ -1,0 +1,81 @@
+---
+import { createRequire } from 'module';
+import { parse } from 'react-docgen-typescript';
+import { Markdown } from 'astro/components';
+
+export interface Props {
+  path: string;
+}
+
+const path = createRequire(import.meta.url).resolve(Astro.props.path);
+
+const [docs] = parse(path);
+const props = docs.props;
+---
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+    {Object.values(props).map((value) => {
+      return (
+        <tr>
+          <td>{value.name}</td>
+          <td>
+            <div class='md'>
+              <Markdown>{value.description}</Markdown>
+            </div>
+            <div>{value.type.name}</div>
+          </td>
+          <td>{value.defaultValue?.value ?? ''}</td>
+        </tr>
+      )
+    })}
+  </tbody>
+</table>
+
+<style>
+  tr {
+    background: transparent;
+
+    & + & {
+      border-top: 0.5px solid hsl(0 0% 0% / 0.2);
+    }
+  }
+
+  th,
+  td {
+    padding: 0.75rem;
+
+    &:first-child {
+      padding-left: 0;
+    }
+  }
+
+  th {
+    font-family: var(--font-body);
+  }
+
+  td:first-child,
+  td:last-child {
+    display: flex;
+  }
+
+  .md {
+    font-family: var(--font-body);
+    margin-bottom: 0.5rem;
+
+    & > * {
+      white-space: pre-line;
+    }
+
+    & code {
+      font-family: var(--font-mono);
+    }
+  }
+</style>
