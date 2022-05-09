@@ -23,15 +23,9 @@ addParameters({
     light: { ...themes.light, ...lightTheme },
   },
   docs: {
-    theme: prefersDark ? { ...themes.dark, ...darkTheme } : { ...themes.light, ...lightTheme },
-  },
-  backgrounds: {
-    grid: { disable: true },
-    default: 'background-2',
-    values: [
-      { name: 'background-1', value: 'var(--iui-color-background-1)' },
-      { name: 'background-2', value: 'var(--iui-color-background-2)' },
-    ],
+    theme: prefersDark
+      ? { ...themes.dark, ...darkTheme }
+      : { ...themes.light, ...lightTheme },
   },
   options: { showPanel: true },
 });
@@ -39,7 +33,9 @@ addParameters({
 // helper for updating theme according to dark mode flag
 const updateTheme = (isDark) => {
   const classes = document.documentElement.classList;
-  const currentTheme = Array.from(classes).find((cls) => cls.startsWith('iui-theme'));
+  const currentTheme = Array.from(classes).find((cls) =>
+    cls.startsWith('iui-theme'),
+  );
   const isHc = currentTheme?.includes('-hc');
   const isHcString = isHc ? '-hc' : '';
   if (isDark) {
@@ -53,7 +49,9 @@ const updateTheme = (isDark) => {
 
 // update iframe theme for non-inline stories
 if (window.parent !== window) {
-  updateTheme(window.parent.document.documentElement.classList.contains('iui-theme-dark'));
+  updateTheme(
+    window.parent.document.documentElement.classList.contains('iui-theme-dark'),
+  );
 
   new MutationObserver(([mutation]) => {
     if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
@@ -64,6 +62,14 @@ if (window.parent !== window) {
 
 export const parameters = {
   controls: { sort: 'requiredFirst' },
+  backgrounds: {
+    grid: { disable: true },
+    default: 'background-2',
+    values: [
+      { name: 'background-1', value: 'var(--iui-color-background-1)' },
+      { name: 'background-2', value: 'var(--iui-color-background-2)' },
+    ],
+  },
 };
 
 export const decorators = [
@@ -74,7 +80,9 @@ export const decorators = [
 
     React.useEffect(() => {
       const classes = document.documentElement.classList;
-      const currentTheme = Array.from(classes).find((cls) => cls.startsWith('iui-theme'));
+      const currentTheme = Array.from(classes).find((cls) =>
+        cls.startsWith('iui-theme'),
+      );
       if (!currentTheme) {
         return;
       }
@@ -91,6 +99,6 @@ export const decorators = [
       }
     }, [highContrast]);
 
-    return <Story />;
+    return Story(); // builder-vite does not allow JSX here so we call Story as a function
   },
 ];

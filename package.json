@@ -16,8 +16,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "turbo": "~1.2.4",
-    "webpack": "5"
+    "turbo": "~1.2.4"
   },
   "resolutions": {
     "braces": "^2.3.1",

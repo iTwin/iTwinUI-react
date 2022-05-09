@@ -2,11 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-const WebpackFailOnWarningsPlugin = require('./webpack-fail-on-warnings-plugin');
-
 module.exports = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
-  staticDirs: ['./public'],
   addons: [
     {
       name: '@storybook/addon-essentials',
@@ -25,21 +22,11 @@ module.exports = {
       },
     },
     './hcThemeAddon/register.js',
-    '@storybook/addon-a11y',
-    '@storybook/preset-create-react-app',
+    // need to wait for https://github.com/storybookjs/storybook/pull/17997
+    // '@storybook/addon-a11y',
   ],
   framework: '@storybook/react',
   core: {
-    builder: '@storybook/builder-webpack5',
+    builder: 'storybook-builder-vite',
   },
-  webpackFinal: async (config, { configType }) => {
-    if (configType === 'PRODUCTION') {
-      config.plugins.push(new WebpackFailOnWarningsPlugin());
-    }
-    return config;
-  },
-  babel: async (options) => ({
-    ...options,
-    plugins: [['@babel/plugin-proposal-class-properties', { loose: true }]],
-  }),
 };
