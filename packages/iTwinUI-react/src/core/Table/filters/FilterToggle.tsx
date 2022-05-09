@@ -42,7 +42,7 @@ export const FilterToggle = <T extends Record<string, unknown>>(
     close();
   }, [close, column]);
 
-  const columnFiltered = column.filterValue !== undefined && column.filterValue !== null && column.filterValue !== '';
+  const isColumnFiltered = column.filterValue != null && column.filterValue !== '';
 
   return (
     <>
@@ -56,7 +56,7 @@ export const FilterToggle = <T extends Record<string, unknown>>(
         >
           <IconButton
             styleType='borderless'
-            isActive={isVisible || columnFiltered}
+            isActive={isVisible || isColumnFiltered}
             className={cx('iui-filter-button', className)}
             onClick={(e) => {
               setIsVisible((v) => !v);
@@ -65,7 +65,7 @@ export const FilterToggle = <T extends Record<string, unknown>>(
             }}
             {...rest}
           >
-            {columnFiltered ? <SvgFilter /> : <SvgFilterHollow />}
+            {isColumnFiltered ? <SvgFilter /> : <SvgFilterHollow />}
           </IconButton>
         </Popover>
       )}
