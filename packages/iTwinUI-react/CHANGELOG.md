@@ -1,5 +1,18 @@
 # Changelog
 
+### [1.37.3](https://www.github.com/iTwin/iTwinUI-react/compare/v1.37.2...v1.37.3) (2022-05-06)
+
+### Fixes
+
+* **Slider:** Skip drawing track if thumb values are out of range ([#652](https://www.github.com/iTwin/iTwinUI-react/issues/652)) ([38d6574](https://www.github.com/iTwin/iTwinUI-react/commit/38d657423d2def7d54b9e195f0c543a35e725d3f))
+
+### [1.37.2](https://www.github.com/iTwin/iTwinUI-react/compare/v1.37.1...v1.37.2) (2022-05-04)
+
+### Fixes
+
+* **Table:** Fix direction of sort icons ([#645](https://www.github.com/iTwin/iTwinUI-react/issues/645)) ([1a0683b](https://www.github.com/iTwin/iTwinUI-react/commit/1a0683b2d8f18b8ec80412e2208fbfa12df88d51))
+* **Table:** Fix error of headless table ([#648](https://www.github.com/iTwin/iTwinUI-react/issues/648)) ([87c6b9e](https://www.github.com/iTwin/iTwinUI-react/commit/87c6b9eb0b8338357aec107af3f7a7539dd0f5a3))
+
 ### [1.37.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.37.0...v1.37.1) (2022-04-22)
 
 ### Fixes
