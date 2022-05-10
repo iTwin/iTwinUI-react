@@ -1,6 +1,6 @@
 import React from 'react';
 
-type ComboBoxAction = 'open' | 'close' | 'toggle' | 'select' | 'focus';
+type ComboBoxAction = 'open' | 'close' | 'select' | 'focus';
 
 export const comboBoxReducer = (
   state: { isOpen: boolean; selectedIndex: number; focusedIndex: number },
@@ -12,9 +12,6 @@ export const comboBoxReducer = (
     }
     case 'close': {
       return { ...state, isOpen: false };
-    }
-    case 'toggle': {
-      return { ...state, isOpen: !state.isOpen };
     }
     case 'select': {
       return {
@@ -33,32 +30,29 @@ export const comboBoxReducer = (
   }
 };
 
-export const ComboBoxRefsContext =
-  React.createContext<
-    | {
-        inputRef: React.RefObject<HTMLInputElement>;
-        menuRef: React.RefObject<HTMLUListElement>;
-        toggleButtonRef: React.RefObject<HTMLSpanElement>;
-        optionsRef: React.MutableRefObject<Array<HTMLLIElement>>;
-      }
-    | undefined
-  >(undefined);
+export const ComboBoxRefsContext = React.createContext<
+  | {
+      inputRef: React.RefObject<HTMLInputElement>;
+      menuRef: React.RefObject<HTMLUListElement>;
+      toggleButtonRef: React.RefObject<HTMLSpanElement>;
+      optionsRef: React.MutableRefObject<Array<HTMLLIElement>>;
+    }
+  | undefined
+>(undefined);
 ComboBoxRefsContext.displayName = 'ComboBoxRefsContext';
 
-export const ComboBoxStateContext =
-  React.createContext<
-    | {
-        isOpen: boolean;
-        id: string;
-        minWidth: number;
-        focusedIndex?: number;
-      }
-    | undefined
-  >(undefined);
+export const ComboBoxStateContext = React.createContext<
+  | {
+      isOpen: boolean;
+      id: string;
+      minWidth: number;
+      focusedIndex?: number;
+    }
+  | undefined
+>(undefined);
 ComboBoxStateContext.displayName = 'ComboBoxStateContext';
 
-export const ComboBoxActionContext =
-  React.createContext<
-    ((x: [ComboBoxAction] | [ComboBoxAction, number]) => void) | undefined
-  >(undefined);
+export const ComboBoxActionContext = React.createContext<
+  ((x: [ComboBoxAction] | [ComboBoxAction, number]) => void) | undefined
+>(undefined);
 ComboBoxActionContext.displayName = 'ComboBoxActionContext';
