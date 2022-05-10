@@ -2,7 +2,6 @@ describe('ProgressLinear', () => {
   const storyPath = 'ProgressIndicators/ProgressLinear';
   const tests = [
     'Determinate',
-    'Determinate Animated',
     'Indeterminate',
     'Labeled Center',
     'Labeled Left Right',

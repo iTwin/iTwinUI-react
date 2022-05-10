@@ -1,11 +1,6 @@
 describe('Modal', () => {
   const storyPath = 'Core/Modal';
-  const tests = [
-    'Basic',
-    'Full Page Modal',
-    'Non Dismissible Modal',
-    'Outside Click And Esc Does Not Close',
-  ];
+  const tests = ['Basic', 'Full Page Modal', 'Non Dismissible Modal'];
 
   tests.forEach((testName) => {
     const id = `${storyPath
