@@ -926,7 +926,7 @@ export const RowInViewport: Story<Partial<TableProps>> = (args) => {
         Open{' '}
         <Anchor
           onClick={() =>
-            (window.parent.document.querySelector(
+            (parent.document.querySelector(
               '[id^="tabbutton-actions"]',
             ) as HTMLButtonElement)?.click()
           }
