@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { fireEvent, render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { MeridiemType, TimePicker } from './TimePicker';
 
@@ -46,7 +47,7 @@ it('should return selected time', () => {
   ) as HTMLElement;
   expect(selectedHours.textContent).toBe('14');
   const newHour = getByText('17', { selector: '.iui-time:first-child li' });
-  newHour.click();
+  userEvent.click(newHour);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 17, 21, 33));
   selectedHours = container.querySelector(
     '.iui-time:first-child .iui-selected',
@@ -68,7 +69,7 @@ it('should return selected time (minutes)', () => {
   ) as HTMLElement;
   expect(selectedMinutes.textContent).toBe('21');
   const newHour = getByText('43', { selector: '.iui-time:last-child li' });
-  newHour.click();
+  userEvent.click(newHour);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 14, 43, 0));
   selectedMinutes = container.querySelector(
     '.iui-time:last-child .iui-selected',
@@ -90,7 +91,7 @@ it('should return selected time (hours)', () => {
   ) as HTMLElement;
   expect(selectedHours.textContent).toBe('14');
   const newHour = getByText('02', { selector: '.iui-time:first-child li' });
-  newHour.click();
+  userEvent.click(newHour);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 2, 0, 0));
   selectedHours = container.querySelector(
     '.iui-time:first-child .iui-selected',
@@ -352,7 +353,7 @@ it('should show 12 hours', () => {
   ) as HTMLElement;
   expect(selectedMeridiem.textContent).toBe('PM');
   selectedMeridiem = getByText('AM');
-  selectedMeridiem.click();
+  userEvent.click(selectedMeridiem);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 2, 21, 33));
   // select new seconds
   let selectedSeconds = container.querySelector(
@@ -360,7 +361,7 @@ it('should show 12 hours', () => {
   ) as HTMLElement;
   expect(selectedSeconds.textContent).toBe('33');
   selectedSeconds = getByText('11', { selector: '.iui-time:nth-child(3) li' });
-  selectedSeconds.click();
+  userEvent.click(selectedSeconds);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 2, 21, 11));
   // select new minutes
   let selectedMinutes = container.querySelector(
@@ -368,7 +369,7 @@ it('should show 12 hours', () => {
   ) as HTMLElement;
   expect(selectedMinutes.textContent).toBe('21');
   selectedMinutes = getByText('02', { selector: '.iui-time:nth-child(2) li' });
-  selectedMinutes.click();
+  userEvent.click(selectedMinutes);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 2, 2, 11));
   // select new hours
   let selectedHour = container.querySelector(
@@ -376,7 +377,7 @@ it('should show 12 hours', () => {
   ) as HTMLElement;
   expect(selectedHour.textContent).toBe('02');
   selectedHour = getByText('12', { selector: '.iui-time:first-child li' });
-  selectedHour.click();
+  userEvent.click(selectedHour);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 0, 2, 11));
   // select different meridiem
   selectedMeridiem = container.querySelector(
@@ -384,7 +385,7 @@ it('should show 12 hours', () => {
   ) as HTMLElement;
   expect(selectedMeridiem.textContent).toBe('AM');
   selectedMeridiem = getByText('PM');
-  selectedMeridiem.click();
+  userEvent.click(selectedMeridiem);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 12, 2, 11));
 });
 
@@ -413,7 +414,7 @@ it('should show values with applied steps', () => {
   ) as HTMLElement;
   expect(selectedHour.textContent).toBe('09');
   selectedHour = getByText('18', { selector: '.iui-time:first-child li' });
-  selectedHour.click();
+  userEvent.click(selectedHour);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 18, 10, 40));
   // select new seconds
   let selectedSeconds = container.querySelector(
@@ -421,7 +422,7 @@ it('should show values with applied steps', () => {
   ) as HTMLElement;
   expect(selectedSeconds.textContent).toBe('40');
   selectedSeconds = getByText('20', { selector: '.iui-time:nth-child(3) li' });
-  selectedSeconds.click();
+  userEvent.click(selectedSeconds);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 18, 10, 20));
   // select new minutes
   let selectedMinutes = container.querySelector(
@@ -429,7 +430,7 @@ it('should show values with applied steps', () => {
   ) as HTMLElement;
   expect(selectedMinutes.textContent).toBe('10');
   selectedMinutes = getByText('30', { selector: '.iui-time:nth-child(2) li' });
-  selectedMinutes.click();
+  userEvent.click(selectedMinutes);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 18, 30, 20));
 });
 

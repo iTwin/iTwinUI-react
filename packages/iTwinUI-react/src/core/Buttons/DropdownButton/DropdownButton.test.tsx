@@ -9,6 +9,7 @@ import { DropdownButton, DropdownButtonProps } from './DropdownButton';
 import { MenuItem } from '../../Menu';
 import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
 import SvgCaretUpSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretUpSmall';
+import userEvent from '@testing-library/user-event';
 
 function renderComponent(props?: Partial<DropdownButtonProps>) {
   return render(
@@ -48,13 +49,13 @@ it('should update icon when menu opens or closes', () => {
   } = render(<SvgCaretDownSmall className='iui-button-icon' aria-hidden />);
   expect(container.querySelector('.iui-button-icon')).toEqual(downArrow);
 
-  button.click();
+  userEvent.click(button);
   const {
     container: { firstChild: upArrow },
   } = render(<SvgCaretUpSmall className='iui-button-icon' aria-hidden />);
   expect(container.querySelector('.iui-button-icon')).toEqual(upArrow);
 
-  button.click();
+  userEvent.click(button);
   expect(container.querySelector('.iui-button-icon')).toEqual(downArrow);
 });
 
@@ -67,7 +68,7 @@ it('should work with menu items', () => {
   let menu = document.querySelector('.iui-menu') as HTMLUListElement;
   expect(menu).toBeFalsy();
 
-  button.click();
+  userEvent.click(button);
   const tippy = document.querySelector('[data-tippy-root]') as HTMLElement;
   expect(tippy).toBeVisible();
 
@@ -78,7 +79,7 @@ it('should work with menu items', () => {
 
   const menuItem = menu.querySelector('li') as HTMLLIElement;
   expect(menuItem).toBeTruthy();
-  menuItem.click();
+  userEvent.click(menuItem);
 
   expect(tippy).not.toBeVisible();
 });

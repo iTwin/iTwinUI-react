@@ -10,6 +10,7 @@ import SvgCaretUpSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretUpSmall';
 
 import HeaderButton from './HeaderButton';
 import { MenuItem } from '../Menu';
+import userEvent from '@testing-library/user-event';
 
 it('should render in its most basic state', () => {
   const { container } = render(<HeaderButton name='MockName' />);
@@ -93,16 +94,16 @@ it('should render split button correctly', () => {
   const innerButtons = splitButton.querySelectorAll('.iui-borderless');
   expect(innerButtons.length).toBe(2);
 
-  (innerButtons[0] as HTMLButtonElement).click();
+  userEvent.click(innerButtons[0] as HTMLButtonElement);
   expect(buttonOnClick).toBeCalled();
 
-  (innerButtons[1] as HTMLButtonElement).click();
+  userEvent.click(innerButtons[1] as HTMLButtonElement);
   const menu = document.querySelector('.iui-menu') as HTMLUListElement;
   expect(menu).toBeTruthy();
   expect(document.querySelectorAll('li')).toHaveLength(3);
   const menuItem = menu.querySelector('li') as HTMLLIElement;
   expect(menuItem).toBeTruthy();
-  menuItem.click();
+  userEvent.click(menuItem);
   expect(itemOneOnClick).toBeCalled();
 });
 
@@ -163,7 +164,7 @@ it('should render menuItems correctly', () => {
   let menu = document.querySelector('.iui-menu') as HTMLUListElement;
   expect(menu).toBeFalsy();
 
-  button.click();
+  userEvent.click(button);
 
   const {
     container: { firstChild: upArrow },
@@ -182,7 +183,7 @@ it('should render menuItems correctly', () => {
 
   const menuItem = menu.querySelector('li') as HTMLLIElement;
   expect(menuItem).toBeTruthy();
-  menuItem.click();
+  userEvent.click(menuItem);
 
   expect(tippy).not.toBeVisible();
 

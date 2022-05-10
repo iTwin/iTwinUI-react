@@ -9,6 +9,7 @@ import { SplitButton, SplitButtonProps } from './SplitButton';
 import { MenuItem } from '../../Menu';
 import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
 import SvgCaretUpSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretUpSmall';
+import userEvent from '@testing-library/user-event';
 
 function renderComponent(
   onClick?: () => void,
@@ -72,13 +73,13 @@ it('should update icon when menu opens or closes', () => {
   } = render(<SvgCaretDownSmall className='iui-button-icon' aria-hidden />);
   expect(container.querySelector('.iui-button-icon')).toEqual(downArrow);
 
-  dropdownButton.click();
+  userEvent.click(dropdownButton);
   const {
     container: { firstChild: upArrow },
   } = render(<SvgCaretUpSmall className='iui-button-icon' aria-hidden />);
   expect(container.querySelector('.iui-button-icon')).toEqual(upArrow);
 
-  dropdownButton.click();
+  userEvent.click(dropdownButton);
   expect(container.querySelector('.iui-button-icon')).toEqual(downArrow);
 });
 
@@ -92,7 +93,7 @@ it('should work with menu items', () => {
   const dropdownButton = container.querySelectorAll(
     '.iui-button',
   )[1] as HTMLButtonElement;
-  dropdownButton.click();
+  userEvent.click(dropdownButton);
 
   menu = document.querySelector('.iui-menu') as HTMLUListElement;
   expect(menu).toBeTruthy();
@@ -102,7 +103,7 @@ it('should work with menu items', () => {
   const tippy = document.querySelector('[data-tippy-root]') as HTMLElement;
   const menuItem = menu.querySelector('li') as HTMLLIElement;
   expect(menuItem).toBeTruthy();
-  menuItem.click();
+  userEvent.click(menuItem);
 
   expect(tippy).not.toBeVisible();
 });
@@ -138,6 +139,6 @@ it('should support polymorphic `as` prop', () => {
 
   expect(document.querySelector('.iui-menu')).toBeFalsy();
   const dropdownButton = splitMenu.querySelector('button') as HTMLButtonElement;
-  dropdownButton.click();
+  userEvent.click(dropdownButton);
   expect(document.querySelector('.iui-menu')).toBeVisible();
 });

@@ -43,7 +43,7 @@ it('should render in its most basic state', () => {
   const id = container.querySelector('.iui-input-container')?.id;
   const input = assertBaseElement(container);
 
-  input.focus();
+  fireEvent.focus(input);
   expect(input).toHaveAttribute('aria-expanded', 'true');
   expect(input).toHaveAttribute('aria-controls', `${id}-list`);
   expect(input).toHaveAttribute('aria-autocomplete', 'list');
@@ -65,7 +65,7 @@ it('should render with selected value', () => {
   const input = assertBaseElement(container);
   expect(input.value).toEqual('Item 2');
 
-  input.focus();
+  fireEvent.focus(input);
   document.querySelectorAll('.iui-menu-item').forEach((item, index) => {
     expect(item).toHaveTextContent(`Item ${index}`);
     if (index === 2) {
@@ -111,7 +111,7 @@ it('should filter list according to text input', () => {
     emptyStateMessage: emptyText,
   });
   const input = assertBaseElement(container);
-  input.focus();
+  fireEvent.focus(input);
   const menu = document.querySelector('.iui-menu') as HTMLElement;
 
   // no filter
@@ -160,7 +160,7 @@ it('should accept custom filter function', () => {
       ),
   });
   const input = assertBaseElement(container);
-  input.focus();
+  fireEvent.focus(input);
   const menu = document.querySelector('.iui-menu') as HTMLElement;
 
   // no filter
@@ -191,14 +191,14 @@ it('should select value on click', () => {
   const { container, getByText } = renderComponent({ onChange: mockOnChange });
   const input = assertBaseElement(container);
 
-  input.focus();
-  getByText('Item 1').click();
+  fireEvent.focus(input);
+  userEvent.click(getByText('Item 1'));
   expect(mockOnChange).toHaveBeenCalledWith(1);
   expect(document.querySelector('.iui-menu')).not.toBeVisible();
   expect(input.value).toEqual('Item 1');
 
-  input.blur();
-  input.focus();
+  fireEvent.blur(input);
+  fireEvent.focus(input);
   expect(
     document.querySelector('.iui-menu-item.iui-active.iui-focused'),
   ).toHaveTextContent('Item 1');
@@ -210,7 +210,7 @@ it('should handle keyboard navigation', () => {
   const { container } = renderComponent({ id, onChange: mockOnChange });
 
   const input = assertBaseElement(container);
-  input.focus();
+  fireEvent.focus(input);
   expect(input).toHaveAttribute('aria-controls', `${id}-list`);
 
   const items = document.querySelectorAll('.iui-menu-item');
@@ -294,7 +294,7 @@ it('should accept inputProps', () => {
   expect(input.required).toBeTruthy();
   expect(input.id).toBe(inputId);
 
-  input.focus();
+  fireEvent.focus(input);
   expect(container.querySelector('.iui-input-container')?.id).toBe(
     `${inputId}-cb`,
   );
@@ -319,14 +319,14 @@ it('should work with custom itemRenderer', () => {
   });
   const input = assertBaseElement(container);
 
-  input.focus();
-  getByText('CUSTOM Item 1').click();
+  fireEvent.focus(input);
+  userEvent.click(getByText('CUSTOM Item 1'));
   expect(mockOnChange).toHaveBeenCalledWith(1);
   expect(document.querySelector('.iui-menu')).not.toBeVisible();
   expect(input).toHaveValue('Item 1'); // the actual value of input doesn't change
 
-  input.blur();
-  input.focus();
+  fireEvent.blur(input);
+  fireEvent.focus(input);
   expect(
     document.querySelector(
       '.iui-menu-item.iui-active.iui-focused.my-custom-item',

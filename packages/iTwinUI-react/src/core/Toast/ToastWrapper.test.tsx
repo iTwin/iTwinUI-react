@@ -8,6 +8,7 @@ import { render } from '@testing-library/react';
 import { ToastWrapper } from './ToastWrapper';
 import { ToastProps } from './Toast';
 import { act } from 'react-dom/test-utils';
+import userEvent from '@testing-library/user-event';
 
 const mockToastObject1 = {
   category: 'informational',
@@ -53,7 +54,7 @@ it('should remove toast with close icon click', () => {
     const closeIcon = container.querySelector(
       '.iui-button[aria-label="Close"]',
     ) as HTMLButtonElement;
-    closeIcon.click();
+    userEvent.click(closeIcon);
   });
   jest.advanceTimersByTime(400);
   toasts = container.querySelectorAll('.iui-toast');

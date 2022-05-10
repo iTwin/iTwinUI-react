@@ -179,7 +179,7 @@ const clearFilter = (container: HTMLElement) => {
   expect(filterIcon).toBeTruthy();
   userEvent.click(filterIcon);
 
-  screen.getByText('Clear').click();
+  userEvent.click(screen.getByText('Clear'));
 };
 
 const expandAll = (container: HTMLElement, oldExpanders: Element[] = []) => {
@@ -683,7 +683,7 @@ it('should clear filter', () => {
   expect(filterInput).toBeVisible();
   expect(filterInput.value).toEqual('2');
 
-  screen.getByText('Clear').click();
+  userEvent.click(screen.getByText('Clear'));
   expect(filterInput).not.toBeVisible();
 
   rows = container.querySelectorAll('.iui-table-body .iui-row');
@@ -918,18 +918,18 @@ it('should render filter dropdown in the correct document', () => {
       ],
     },
   ];
-  const { container } = renderComponent(
+  const { container, baseElement } = renderComponent(
     { columns: mockedColumns, onFilter },
     undefined,
     mockContainer,
   );
   expect(container.querySelector('.iui-table')).toBeTruthy();
 
-  const filterToggle = container.querySelector(
+  const filterToggle = baseElement.querySelector(
     '.iui-filter-button',
   ) as HTMLElement;
   expect(filterToggle).toBeTruthy();
-  filterToggle.click();
+  fireEvent.click(filterToggle);
 
   expect(mockDocument.querySelector('.iui-column-filter')).toBeTruthy();
   expect(document.querySelector('.iui-column-filter')).toBeFalsy();
@@ -946,7 +946,7 @@ it('should rerender table when columns change', () => {
             {
               id: 'name',
               Header: 'Name',
-              Cell: () => 'test1',
+              Cell: () => <>test1</>,
             },
           ],
         },
@@ -966,7 +966,7 @@ it('should rerender table when columns change', () => {
             {
               id: 'name',
               Header: 'Name',
-              Cell: () => 'test2',
+              Cell: () => <>test2</>,
             },
           ],
         },
@@ -1733,7 +1733,7 @@ it('should render data in pages', () => {
     '.iui-paginator .iui-paginator-page-button',
   );
   expect(pages).toHaveLength(10);
-  pages[3].click();
+  userEvent.click(pages[3]);
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows).toHaveLength(10);
   expect(rows[0].querySelector('.iui-cell')?.textContent).toEqual('Name31');
@@ -1757,9 +1757,9 @@ it('should change page size', () => {
     '.iui-dropdown',
   ) as HTMLButtonElement;
   expect(pageSizeSelector).toBeTruthy();
-  pageSizeSelector.click();
+  userEvent.click(pageSizeSelector);
 
-  screen.getByText('50 per page').click();
+  userEvent.click(screen.getByText('50 per page'));
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows).toHaveLength(50);
   expect(rows[0].querySelector('.iui-cell')?.textContent).toEqual('Name1');
@@ -1787,7 +1787,7 @@ it('should handle resize by increasing width of current column and decreasing th
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
       ],
     },
@@ -1838,7 +1838,7 @@ it('should handle resize with touch', () => {
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
       ],
     },
@@ -1889,7 +1889,7 @@ it('should prevent from resizing past 1px width', () => {
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
       ],
     },
@@ -1943,7 +1943,7 @@ it('should prevent from resizing past max-width', () => {
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
       ],
     },
@@ -2008,7 +2008,7 @@ it('should prevent from resizing past min-width', () => {
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
       ],
     },
@@ -2072,13 +2072,13 @@ it('should not resize column with disabled resize but resize closest ones', () =
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
           disableResizing: true,
         },
         {
           id: 'edit',
           Header: 'edit',
-          Cell: () => 'Edit',
+          Cell: () => <>Edit</>,
         },
       ],
     },
@@ -2153,7 +2153,7 @@ it('should not show resizer when there are no next resizable columns', () => {
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
           disableResizing: true,
         },
       ],
@@ -2195,7 +2195,7 @@ it('should not trigger sort when resizing', () => {
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
       ],
     },
@@ -2253,7 +2253,7 @@ it('should handle table resize only when some columns were resized', () => {
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
       ],
     },
@@ -2436,7 +2436,7 @@ it('should not have `draggable` attribute on columns with `disableReordering` en
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
           disableReordering: true,
         },
       ],
@@ -2484,7 +2484,7 @@ it('should render empty action column', () => {
         {
           id: 'view',
           Header: 'View',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
         ActionColumn(),
       ],
@@ -2521,7 +2521,7 @@ it('should render empty action column with column manager', () => {
         {
           id: 'view',
           Header: 'View',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
         ActionColumn({ columnManager: true }),
       ],
@@ -2569,7 +2569,7 @@ it('should render action column with column manager', () => {
         {
           ...ActionColumn({ columnManager: true }),
           id: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
       ],
     },
@@ -2610,7 +2610,7 @@ it('should hide column when deselected in column manager', () => {
         {
           id: 'view',
           Header: 'View',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
         ActionColumn({ columnManager: true }),
       ],
@@ -2664,7 +2664,7 @@ it('should be disabled in column manager if `disableToggleVisibility` is true', 
         {
           id: 'view',
           Header: 'View',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
         ActionColumn({ columnManager: true }),
       ],

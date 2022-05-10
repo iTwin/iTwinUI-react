@@ -9,6 +9,7 @@ import { SideNavigation, SideNavigationProps } from './SideNavigation';
 import { SidenavButton } from './SidenavButton';
 import { SidenavSubmenu } from './SidenavSubmenu';
 import { SvgPlaceholder, SvgChevronRight } from '@itwin/itwinui-icons-react/';
+import userEvent from '@testing-library/user-event';
 
 function renderComponent(props?: Partial<SideNavigationProps>) {
   return render(
@@ -131,13 +132,13 @@ it('should handle clicking on expand button', () => {
   ).toBeTruthy();
 
   const expandButton = container.querySelector('.iui-expand') as HTMLElement;
-  expandButton.click();
+  userEvent.click(expandButton);
   expect(mockFn).toHaveBeenCalledTimes(1);
   expect(
     container.querySelector('.iui-side-navigation.iui-expanded'),
   ).toBeTruthy();
 
-  expandButton.click();
+  userEvent.click(expandButton);
   expect(mockFn).toHaveBeenCalledTimes(2);
   expect(
     container.querySelector('.iui-side-navigation.iui-collapsed'),
@@ -173,7 +174,7 @@ it('should only add tooltips to items when collapsed', () => {
 
   // expanded
   const expandButton = container.querySelector('.iui-expand') as HTMLElement;
-  expandButton.click();
+  userEvent.click(expandButton);
   expect(queryByText('mockbutton 0', { selector: '.iui-tooltip' })).toBeFalsy();
 });
 

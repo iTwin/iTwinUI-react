@@ -114,7 +114,7 @@ it('should be mounted lazily', () => {
   });
   expect((content as Element).children.length).toBe(0);
 
-  screen.getByText('Click here').click();
+  userEvent.click(screen.getByText('Click here'));
   expect((content as Element).children.length).toBe(1);
 });
 
@@ -123,10 +123,10 @@ it('should focus target after hide', () => {
 
   const button = container.querySelector('.iui-button') as HTMLButtonElement;
 
-  button.click();
+  userEvent.click(button);
   expect(document.activeElement).not.toEqual(button);
 
-  button.click();
+  userEvent.click(button);
   expect(document.activeElement).toEqual(button);
 });
 

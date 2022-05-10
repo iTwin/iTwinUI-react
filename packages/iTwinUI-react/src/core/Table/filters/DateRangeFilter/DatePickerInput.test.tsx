@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import DatePickerInput, { DatePickerInputProps } from './DatePickerInput';
 
@@ -29,7 +30,7 @@ it('should render correctly', () => {
   ) as HTMLButtonElement;
   expect(iconButton).toBeTruthy();
 
-  iconButton.click();
+  userEvent.click(iconButton);
   const calendar = container.querySelector('.iui-date-picker');
   expect(calendar).toBeTruthy();
 });
@@ -92,11 +93,11 @@ it('should call onChange when selected day from calendar', () => {
     '.iui-input-icon.iui-button.iui-borderless',
   ) as HTMLButtonElement;
   expect(iconButton).toBeTruthy();
-  iconButton.click();
+  userEvent.click(iconButton);
 
   const tippy = document.querySelector('[data-tippy-root]') as HTMLElement;
   expect(tippy.style.visibility).toEqual('visible');
-  screen.getByText('7').click();
+  userEvent.click(screen.getByText('7'));
 
   expect(tippy).not.toBeVisible();
   expect(document.activeElement).toEqual(iconButton);
@@ -114,9 +115,9 @@ it('should call onChange with undefined when input field is cleared', () => {
     '.iui-input-icon.iui-button.iui-borderless',
   ) as HTMLButtonElement;
   expect(iconButton).toBeTruthy();
-  iconButton.click();
+  userEvent.click(iconButton);
 
-  screen.getByText('7').click();
+  userEvent.click(screen.getByText('7'));
   expect(onChange).toHaveBeenNthCalledWith(1, new Date(2021, 4, 7));
 
   const input = container.querySelector(

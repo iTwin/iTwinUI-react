@@ -7,6 +7,7 @@ import { fireEvent, render } from '@testing-library/react';
 import { ColorPicker } from './ColorPicker';
 import { ColorInputPanel } from './ColorInputPanel';
 import { ColorValue } from '../utils';
+import userEvent from '@testing-library/user-event';
 
 it('should render ColorInputPanel with input fields', () => {
   const { container } = render(
@@ -33,15 +34,15 @@ it('should render ColorInputPanel with input fields', () => {
   ) as HTMLButtonElement;
   expect(swapButton).toBeTruthy();
 
-  swapButton.click();
+  userEvent.click(swapButton);
   expect(element.textContent).toBe('HSL');
   expect(container.querySelectorAll('.iui-input-container').length).toBe(3);
 
-  swapButton.click();
+  userEvent.click(swapButton);
   expect(element.textContent).toBe('RGB');
   expect(container.querySelectorAll('.iui-input-container').length).toBe(3);
 
-  swapButton.click();
+  userEvent.click(swapButton);
   expect(element.textContent).toBe('HEX');
   expect(container.querySelectorAll('.iui-input-container').length).toBe(1);
 });
@@ -71,15 +72,15 @@ it('should render ColorInputPanel with input fields with alpha', () => {
   ) as HTMLButtonElement;
   expect(swapButton).toBeTruthy();
 
-  swapButton.click();
+  userEvent.click(swapButton);
   expect(element.textContent).toBe('HSLA');
   expect(container.querySelectorAll('.iui-input-container').length).toBe(4);
 
-  swapButton.click();
+  userEvent.click(swapButton);
   expect(element.textContent).toBe('RGBA');
   expect(container.querySelectorAll('.iui-input-container').length).toBe(4);
 
-  swapButton.click();
+  userEvent.click(swapButton);
   expect(element.textContent).toBe('HEX');
   expect(container.querySelectorAll('.iui-input-container').length).toBe(1);
 });
@@ -108,10 +109,10 @@ it('should only show allowed color formats on input panel', () => {
   ) as HTMLButtonElement;
   expect(swapButton).toBeTruthy();
 
-  swapButton.click();
+  userEvent.click(swapButton);
   expect(element.textContent).toBe('HSL');
 
-  swapButton.click();
+  userEvent.click(swapButton);
   expect(element.textContent).toBe('HEX');
 });
 

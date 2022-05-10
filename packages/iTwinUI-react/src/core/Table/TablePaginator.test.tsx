@@ -7,6 +7,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { TablePaginator, TablePaginatorProps } from './TablePaginator';
 import * as UseOverflow from '../utils/hooks/useOverflow';
 import * as UseContainerWidth from '../utils/hooks/useContainerWidth';
+import userEvent from '@testing-library/user-event';
 
 const renderComponent = (props?: Partial<TablePaginatorProps>) => {
   return render(
@@ -69,7 +70,7 @@ it('should render currently visible rows info and page size selector', () => {
   expect(pageSizeSelector).toBeTruthy();
   expect(pageSizeSelector.textContent).toEqual('191-195 of 195');
 
-  pageSizeSelector.click();
+  userEvent.click(pageSizeSelector);
   const pageSizeSelections = document.querySelectorAll('.iui-menu-item');
   expect(pageSizeSelections).toHaveLength(3);
   pageSizeSelections.forEach((el, index) => {
@@ -77,7 +78,7 @@ it('should render currently visible rows info and page size selector', () => {
     expect(el.classList.contains('iui-active')).toBe(index === 0);
   });
 
-  fireEvent.click(pageSizeSelections[1]);
+  userEvent.click(pageSizeSelections[1]);
   expect(onPageSizeChange).toHaveBeenCalledWith(25);
 });
 
@@ -178,11 +179,11 @@ it('should handle clicks', () => {
   ) as HTMLButtonElement;
   expect(nextPageButton.disabled).toBe(false);
 
-  pages[10].click();
+  userEvent.click(pages[10]);
   expect(onPageChange).toHaveBeenCalledWith(10);
-  previousPageButton.click();
+  userEvent.click(previousPageButton);
   expect(onPageChange).toHaveBeenCalledWith(4);
-  nextPageButton.click();
+  userEvent.click(nextPageButton);
   expect(onPageChange).toHaveBeenCalledWith(6);
 });
 
@@ -318,7 +319,7 @@ it('should render with custom localization', () => {
     container.querySelector('.iui-paginator-page-size-label'),
   ).toHaveTextContent('Items per test page');
 
-  pageSizeSelector.click();
+  userEvent.click(pageSizeSelector);
   const pageSizeSelections = document.querySelectorAll('.iui-menu-item');
   expect(pageSizeSelections).toHaveLength(3);
   pageSizeSelections.forEach((el, index) => {
