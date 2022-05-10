@@ -15,6 +15,11 @@ describe('Wizard', () => {
 
     it(testName, () => {
       cy.visit('iframe', { qs: { id } });
+
+      if (testName.includes('Tooltip')) {
+        cy.get('.iui-wizard-step').first().trigger('mouseenter'); // trigger tooltip
+      }
+
       cy.compareSnapshot(testName);
     });
   });

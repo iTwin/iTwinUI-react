@@ -15,6 +15,11 @@ describe('UserIconGroup', () => {
 
     it(testName, () => {
       cy.visit('iframe', { qs: { id } });
+
+      if (testName.includes('Tooltip')) {
+        cy.get('.iui-user-icon-count').trigger('mouseenter'); // trigger tooltip
+      }
+
       cy.compareSnapshot(testName);
     });
   });
