@@ -20,7 +20,7 @@ jobs:
           cache: yarn
 
       - run: yarn install --frozen-lockfile
-      - run: yarn build
+      - run: yarn build --filter=storybook
 
       - name: Publish storybook
         uses: peaceiris/actions-gh-pages@v3.7.3
