@@ -186,13 +186,13 @@ it('should accept custom filter function', () => {
   expect(menu.firstElementChild).toHaveTextContent('No options');
 });
 
-it('should select value on click', () => {
+it('should select value on click', async () => {
   const mockOnChange = jest.fn();
   const { container, getByText } = renderComponent({ onChange: mockOnChange });
   const input = assertBaseElement(container);
 
   fireEvent.focus(input);
-  userEvent.click(getByText('Item 1'));
+  await userEvent.click(getByText('Item 1'));
   expect(mockOnChange).toHaveBeenCalledWith(1);
   expect(document.querySelector('.iui-menu')).not.toBeVisible();
   expect(input.value).toEqual('Item 1');
@@ -301,7 +301,7 @@ it('should accept inputProps', () => {
   expect(document.querySelector('.iui-menu')?.id).toBe(`${inputId}-cb-list`);
 });
 
-it('should work with custom itemRenderer', () => {
+it('should work with custom itemRenderer', async () => {
   const mockOnChange = jest.fn();
   const { container, getByText } = renderComponent({
     itemRenderer: ({ value, label }, { isSelected, id }) => (
@@ -320,7 +320,7 @@ it('should work with custom itemRenderer', () => {
   const input = assertBaseElement(container);
 
   fireEvent.focus(input);
-  userEvent.click(getByText('CUSTOM Item 1'));
+  await userEvent.click(getByText('CUSTOM Item 1'));
   expect(mockOnChange).toHaveBeenCalledWith(1);
   expect(document.querySelector('.iui-menu')).not.toBeVisible();
   expect(input).toHaveValue('Item 1'); // the actual value of input doesn't change
@@ -425,7 +425,7 @@ it('should render with message and status', () => {
   expect(message.textContent).toBe('Text here');
 });
 
-it('should merge inputProps.onChange correctly', () => {
+it('should merge inputProps.onChange correctly', async () => {
   const mockOnChange = jest.fn();
   const { container } = renderComponent({
     inputProps: { onChange: ({ target: { value } }) => mockOnChange(value) },
@@ -433,14 +433,14 @@ it('should merge inputProps.onChange correctly', () => {
 
   assertBaseElement(container);
   const input = container.querySelector('.iui-input') as HTMLInputElement;
-  userEvent.tab();
-  userEvent.keyboard('hi');
+  await userEvent.tab();
+  await userEvent.keyboard('hi');
 
   expect(input).toHaveValue('hi');
   expect(mockOnChange).toHaveBeenCalledWith('hi');
 });
 
-it('should use the latest onChange prop', () => {
+it('should use the latest onChange prop', async () => {
   const mockOnChange1 = jest.fn();
   const mockOnChange2 = jest.fn();
   const options = [0, 1, 2].map((value) => ({ value, label: `Item ${value}` }));
@@ -449,7 +449,7 @@ it('should use the latest onChange prop', () => {
     <ComboBox options={options} onChange={mockOnChange1} />,
   );
 
-  userEvent.tab();
+  await userEvent.tab();
   screen.getByText('Item 1').click();
   expect(mockOnChange1).toHaveBeenNthCalledWith(1, 1);
 

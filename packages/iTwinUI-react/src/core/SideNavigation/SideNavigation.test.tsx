@@ -124,7 +124,7 @@ it('should render expand button svg correctly', () => {
   );
 });
 
-it('should handle clicking on expand button', () => {
+it('should handle clicking on expand button', async () => {
   const mockFn = jest.fn();
   const { container } = renderComponent({ onExpanderClick: mockFn });
   expect(
@@ -132,13 +132,13 @@ it('should handle clicking on expand button', () => {
   ).toBeTruthy();
 
   const expandButton = container.querySelector('.iui-expand') as HTMLElement;
-  userEvent.click(expandButton);
+  await userEvent.click(expandButton);
   expect(mockFn).toHaveBeenCalledTimes(1);
   expect(
     container.querySelector('.iui-side-navigation.iui-expanded'),
   ).toBeTruthy();
 
-  userEvent.click(expandButton);
+  await userEvent.click(expandButton);
   expect(mockFn).toHaveBeenCalledTimes(2);
   expect(
     container.querySelector('.iui-side-navigation.iui-collapsed'),
@@ -157,7 +157,7 @@ it('should work with controlled isExpanded prop', () => {
   ).toBeTruthy();
 });
 
-it('should only add tooltips to items when collapsed', () => {
+it('should only add tooltips to items when collapsed', async () => {
   // collapsed
   const { container, getByText, queryByText } = renderComponent();
   expect(container.querySelector('.iui-side-navigation')).toBeTruthy();
@@ -174,7 +174,7 @@ it('should only add tooltips to items when collapsed', () => {
 
   // expanded
   const expandButton = container.querySelector('.iui-expand') as HTMLElement;
-  userEvent.click(expandButton);
+  await userEvent.click(expandButton);
   expect(queryByText('mockbutton 0', { selector: '.iui-tooltip' })).toBeFalsy();
 });
 

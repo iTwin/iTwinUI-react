@@ -9,7 +9,7 @@ import { ColorInputPanel } from './ColorInputPanel';
 import { ColorValue } from '../utils';
 import userEvent from '@testing-library/user-event';
 
-it('should render ColorInputPanel with input fields', () => {
+it('should render ColorInputPanel with input fields', async () => {
   const { container } = render(
     <ColorPicker>
       <ColorInputPanel defaultColorFormat='hex' />
@@ -34,20 +34,20 @@ it('should render ColorInputPanel with input fields', () => {
   ) as HTMLButtonElement;
   expect(swapButton).toBeTruthy();
 
-  userEvent.click(swapButton);
+  await userEvent.click(swapButton);
   expect(element.textContent).toBe('HSL');
   expect(container.querySelectorAll('.iui-input-container').length).toBe(3);
 
-  userEvent.click(swapButton);
+  await userEvent.click(swapButton);
   expect(element.textContent).toBe('RGB');
   expect(container.querySelectorAll('.iui-input-container').length).toBe(3);
 
-  userEvent.click(swapButton);
+  await userEvent.click(swapButton);
   expect(element.textContent).toBe('HEX');
   expect(container.querySelectorAll('.iui-input-container').length).toBe(1);
 });
 
-it('should render ColorInputPanel with input fields with alpha', () => {
+it('should render ColorInputPanel with input fields with alpha', async () => {
   const { container } = render(
     <ColorPicker showAlpha={true}>
       <ColorInputPanel defaultColorFormat='hex' />
@@ -72,20 +72,20 @@ it('should render ColorInputPanel with input fields with alpha', () => {
   ) as HTMLButtonElement;
   expect(swapButton).toBeTruthy();
 
-  userEvent.click(swapButton);
+  await userEvent.click(swapButton);
   expect(element.textContent).toBe('HSLA');
   expect(container.querySelectorAll('.iui-input-container').length).toBe(4);
 
-  userEvent.click(swapButton);
+  await userEvent.click(swapButton);
   expect(element.textContent).toBe('RGBA');
   expect(container.querySelectorAll('.iui-input-container').length).toBe(4);
 
-  userEvent.click(swapButton);
+  await userEvent.click(swapButton);
   expect(element.textContent).toBe('HEX');
   expect(container.querySelectorAll('.iui-input-container').length).toBe(1);
 });
 
-it('should only show allowed color formats on input panel', () => {
+it('should only show allowed color formats on input panel', async () => {
   const { container } = render(
     <ColorPicker>
       <ColorInputPanel
@@ -109,10 +109,10 @@ it('should only show allowed color formats on input panel', () => {
   ) as HTMLButtonElement;
   expect(swapButton).toBeTruthy();
 
-  userEvent.click(swapButton);
+  await userEvent.click(swapButton);
   expect(element.textContent).toBe('HSL');
 
-  userEvent.click(swapButton);
+  await userEvent.click(swapButton);
   expect(element.textContent).toBe('HEX');
 });
 

@@ -33,7 +33,7 @@ it('should not display selected time', () => {
   expect(time).toBeFalsy();
 });
 
-it('should return selected time', () => {
+it('should return selected time', async () => {
   const onClick = jest.fn();
   const { container, getByText } = render(
     <TimePicker
@@ -47,7 +47,7 @@ it('should return selected time', () => {
   ) as HTMLElement;
   expect(selectedHours.textContent).toBe('14');
   const newHour = getByText('17', { selector: '.iui-time:first-child li' });
-  userEvent.click(newHour);
+  await userEvent.click(newHour);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 17, 21, 33));
   selectedHours = container.querySelector(
     '.iui-time:first-child .iui-selected',
@@ -55,7 +55,7 @@ it('should return selected time', () => {
   expect(selectedHours.textContent).toBe('17');
 });
 
-it('should return selected time (minutes)', () => {
+it('should return selected time (minutes)', async () => {
   const onClick = jest.fn();
   const { container, getByText } = render(
     <TimePicker
@@ -69,7 +69,7 @@ it('should return selected time (minutes)', () => {
   ) as HTMLElement;
   expect(selectedMinutes.textContent).toBe('21');
   const newHour = getByText('43', { selector: '.iui-time:last-child li' });
-  userEvent.click(newHour);
+  await userEvent.click(newHour);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 14, 43, 0));
   selectedMinutes = container.querySelector(
     '.iui-time:last-child .iui-selected',
@@ -77,7 +77,7 @@ it('should return selected time (minutes)', () => {
   expect(selectedMinutes.textContent).toBe('43');
 });
 
-it('should return selected time (hours)', () => {
+it('should return selected time (hours)', async () => {
   const onClick = jest.fn();
   const { container, getByText } = render(
     <TimePicker
@@ -91,7 +91,7 @@ it('should return selected time (hours)', () => {
   ) as HTMLElement;
   expect(selectedHours.textContent).toBe('14');
   const newHour = getByText('02', { selector: '.iui-time:first-child li' });
-  userEvent.click(newHour);
+  await userEvent.click(newHour);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 2, 0, 0));
   selectedHours = container.querySelector(
     '.iui-time:first-child .iui-selected',
@@ -326,7 +326,7 @@ it('should navigate with keyboard (12 hours)', () => {
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 1, 1, 21, 21));
 });
 
-it('should show 12 hours', () => {
+it('should show 12 hours', async () => {
   const onClick = jest.fn();
   const { container, getByText } = render(
     <TimePicker
@@ -353,7 +353,7 @@ it('should show 12 hours', () => {
   ) as HTMLElement;
   expect(selectedMeridiem.textContent).toBe('PM');
   selectedMeridiem = getByText('AM');
-  userEvent.click(selectedMeridiem);
+  await userEvent.click(selectedMeridiem);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 2, 21, 33));
   // select new seconds
   let selectedSeconds = container.querySelector(
@@ -361,7 +361,7 @@ it('should show 12 hours', () => {
   ) as HTMLElement;
   expect(selectedSeconds.textContent).toBe('33');
   selectedSeconds = getByText('11', { selector: '.iui-time:nth-child(3) li' });
-  userEvent.click(selectedSeconds);
+  await userEvent.click(selectedSeconds);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 2, 21, 11));
   // select new minutes
   let selectedMinutes = container.querySelector(
@@ -369,7 +369,7 @@ it('should show 12 hours', () => {
   ) as HTMLElement;
   expect(selectedMinutes.textContent).toBe('21');
   selectedMinutes = getByText('02', { selector: '.iui-time:nth-child(2) li' });
-  userEvent.click(selectedMinutes);
+  await userEvent.click(selectedMinutes);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 2, 2, 11));
   // select new hours
   let selectedHour = container.querySelector(
@@ -377,7 +377,7 @@ it('should show 12 hours', () => {
   ) as HTMLElement;
   expect(selectedHour.textContent).toBe('02');
   selectedHour = getByText('12', { selector: '.iui-time:first-child li' });
-  userEvent.click(selectedHour);
+  await userEvent.click(selectedHour);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 0, 2, 11));
   // select different meridiem
   selectedMeridiem = container.querySelector(
@@ -385,11 +385,11 @@ it('should show 12 hours', () => {
   ) as HTMLElement;
   expect(selectedMeridiem.textContent).toBe('AM');
   selectedMeridiem = getByText('PM');
-  userEvent.click(selectedMeridiem);
+  await userEvent.click(selectedMeridiem);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 12, 2, 11));
 });
 
-it('should show values with applied steps', () => {
+it('should show values with applied steps', async () => {
   const onClick = jest.fn();
   const { container, getByText } = render(
     <TimePicker
@@ -414,7 +414,7 @@ it('should show values with applied steps', () => {
   ) as HTMLElement;
   expect(selectedHour.textContent).toBe('09');
   selectedHour = getByText('18', { selector: '.iui-time:first-child li' });
-  userEvent.click(selectedHour);
+  await userEvent.click(selectedHour);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 18, 10, 40));
   // select new seconds
   let selectedSeconds = container.querySelector(
@@ -422,7 +422,7 @@ it('should show values with applied steps', () => {
   ) as HTMLElement;
   expect(selectedSeconds.textContent).toBe('40');
   selectedSeconds = getByText('20', { selector: '.iui-time:nth-child(3) li' });
-  userEvent.click(selectedSeconds);
+  await userEvent.click(selectedSeconds);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 18, 10, 20));
   // select new minutes
   let selectedMinutes = container.querySelector(
@@ -430,7 +430,7 @@ it('should show values with applied steps', () => {
   ) as HTMLElement;
   expect(selectedMinutes.textContent).toBe('10');
   selectedMinutes = getByText('30', { selector: '.iui-time:nth-child(2) li' });
-  userEvent.click(selectedMinutes);
+  await userEvent.click(selectedMinutes);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 18, 30, 20));
 });
 

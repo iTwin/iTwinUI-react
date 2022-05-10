@@ -70,7 +70,7 @@ it('renders the message correctly', () => {
   getByText('Job Processing Completed');
 });
 
-it('renders a report message Link correctly', () => {
+it('renders a report message Link correctly', async () => {
   const mockedFn = jest.fn();
   const { container } = render(
     <Toast
@@ -88,7 +88,7 @@ it('renders a report message Link correctly', () => {
 
   const link = container.querySelector('.iui-toast-anchor') as HTMLElement;
   expect(link.textContent).toBe('View Message Function');
-  userEvent.click(link);
+  await userEvent.click(link);
   expect(mockedFn).toHaveBeenCalled();
 });
 
@@ -155,9 +155,12 @@ it('should close temporary toast after 7s', () => {
   act(() => {
     jest.advanceTimersByTime(7300);
   });
-  jest.runAllTimers();
 
-  // expect(mockedFn).toHaveBeenCalledTimes(1);
+  act(() => {
+    jest.runAllTimers();
+  });
+
+  expect(mockedFn).toHaveBeenCalledTimes(1);
   expect(container.querySelector('.iui-toast-all')).toBeFalsy();
 
   jest.useRealTimers();
