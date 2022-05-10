@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Story, Meta } from '@storybook/react/types-6-0';
+import { Story, Meta } from '@storybook/react';
 
 import React from 'react';
 import { Anchor, ErrorPage, ErrorPageProps } from '@itwin/itwinui-react';
@@ -11,6 +11,10 @@ export default {
   title: 'Core/ErrorPage',
   component: ErrorPage,
   argTypes: {
+    id: { control: { disable: true } },
+    errorType: {
+      type: { required: true } as unknown,
+    },
     primaryButtonHandle: { action: 'Primary button clicked' },
     secondaryButtonHandle: { action: 'Secondary button clicked' },
   },
