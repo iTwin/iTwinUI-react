@@ -5,7 +5,6 @@
 import { Meta, Story } from '@storybook/react';
 import React from 'react';
 import { action } from '@storybook/addon-actions';
-
 import {
   DropdownMenu,
   getUserColor,
@@ -28,7 +27,6 @@ import SvgVersion from '@itwin/itwinui-icons-react/cjs/icons/Pin';
 import SvgNetwork from '@itwin/itwinui-icons-react/cjs/icons/Network';
 import SvgNotification from '@itwin/itwinui-icons-react/cjs/icons/Notification';
 import { SvgImodel } from '@itwin/itwinui-icons-react';
-
 import { useState } from '@storybook/addons';
 
 export default {

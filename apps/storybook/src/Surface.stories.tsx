@@ -3,7 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { Story, Meta } from '@storybook/react';
-
 import React from 'react';
 import { Surface, SurfaceProps, Code } from '@itwin/itwinui-react';
 

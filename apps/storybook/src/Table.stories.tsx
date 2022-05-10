@@ -38,7 +38,6 @@ import {
 import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
 import { action } from '@storybook/addon-actions';
-
 import { SvgMore } from '@itwin/itwinui-icons-react';
 
 export default {

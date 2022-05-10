@@ -5,7 +5,6 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
 import { Button, toaster, ProgressRadial } from '@itwin/itwinui-react';
-
 import { ToastProps } from '@itwin/itwinui-react/esm/core/Toast/Toast';
 import { ToasterSettings } from '@itwin/itwinui-react/esm/core/Toast/Toaster';
 

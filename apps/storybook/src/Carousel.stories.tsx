@@ -3,7 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { Story, Meta } from '@storybook/react';
-
 import React from 'react';
 import { Carousel, CarouselProps, Text, Code } from '@itwin/itwinui-react';
 
