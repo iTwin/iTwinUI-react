@@ -163,16 +163,6 @@ Disabled.args = {
   ],
 };
 
-Disabled.parameters = {
-  // creevey: {
-  //   tests: {
-  //     async open() {
-  //       await this.expect(await this.takeScreenshot()).to.matchImage('open');
-  //     },
-  //   },
-  // },
-};
-
 export const DisabledWithSelectedValue: Story<SelectProps<number>> = (args) => {
   const {
     options = [
