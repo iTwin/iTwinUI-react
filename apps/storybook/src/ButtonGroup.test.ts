@@ -18,6 +18,7 @@ describe('ButtonGroup', () => {
 
       if (testName.includes('Overflow')) {
         cy.get('small').hide();
+        cy.viewport(800, 600);
       }
 
       cy.compareSnapshot(testName);
