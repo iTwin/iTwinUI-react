@@ -323,6 +323,7 @@ export const CustomWidth: Story<InformationPanelProps> = (args) => {
           backgroundColor: 'var(--iui-color-background-4)',
           padding: 16,
           height: '100%',
+          boxSizing: 'border-box',
         }}
       >
         <Button onClick={() => setIsOpen((open) => !open)}>Toggle</Button>
