@@ -304,20 +304,6 @@ const countriesList = [
   { label: 'Zimbabwe', value: 'ZW' },
 ];
 
-const getFlagEmoji = (countryCode: string) => {
-  const codePoints = countryCode
-    .toUpperCase()
-    .split('')
-    .map((char) => 127397 + char.charCodeAt(0));
-  return String.fromCodePoint(...codePoints);
-};
-
-const countriesListWithFlags = countriesList.map((c) => ({
-  ...c,
-  sublabel: c.value,
-  icon: <div>{getFlagEmoji(c.value)}</div>,
-}));
-
 export const Basic: Story<Partial<ComboBoxProps<string>>> = (args) => {
   const options = React.useMemo(() => countriesList, []);
 
@@ -528,6 +514,7 @@ export const Loading: Story<Partial<ComboBoxProps<string>>> = (args) => {
   }, []);
 
   const itemRenderer = React.useCallback(({ value }) => {
+    // This makes skeletons to have different widths
     const normalizedIndex = (Number.parseInt(value) % 2) + 1;
     const randomValue = normalizedIndex * Math.random() * 60;
     const boundedWidth = Math.min(Math.max(randomValue, 25), 60);
@@ -546,6 +533,7 @@ export const Loading: Story<Partial<ComboBoxProps<string>>> = (args) => {
           if (!isLoading) {
             return;
           }
+          // Mock API request
           setTimeout(() => {
             setIsLoading(false);
             setOptions(
@@ -601,6 +589,7 @@ export const Loading2: Story<Partial<ComboBoxProps<string>>> = (args) => {
         );
       }
 
+      // This makes skeletons to have different widths
       const normalizedIndex = (Number.parseInt(option.value) % 2) + 1;
       const randomValue = normalizedIndex * Math.random() * 60;
       const boundedWidth = Math.min(Math.max(randomValue, 25), 60);
@@ -623,6 +612,7 @@ export const Loading2: Story<Partial<ComboBoxProps<string>>> = (args) => {
           if (!isLoading) {
             return;
           }
+          // Mock API request
           setTimeout(() => {
             setIsLoading(false);
             setOptions(
@@ -650,6 +640,6 @@ export const Loading2: Story<Partial<ComboBoxProps<string>>> = (args) => {
     />
   );
 };
-Loading.args = {
+Loading2.args = {
   inputProps: { placeholder: 'Select a country' },
 };
