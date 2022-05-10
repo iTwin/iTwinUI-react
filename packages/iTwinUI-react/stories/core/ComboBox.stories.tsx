@@ -9,9 +9,9 @@ import {
   ComboBox,
   ComboBoxProps,
   Label,
+  MenuItem,
   StatusMessage,
   SelectOption,
-  MenuItem,
 } from '../../src/core';
 import { CreeveyStoryParams } from 'creevey';
 import { SvgCamera } from '@itwin/itwinui-icons-react';
