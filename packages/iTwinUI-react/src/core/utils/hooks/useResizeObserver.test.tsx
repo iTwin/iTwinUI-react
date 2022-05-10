@@ -3,8 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-import { renderHook } from '@testing-library/react';
-import { act } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 import { useResizeObserver } from './useResizeObserver';
 
 const observe = jest.fn();

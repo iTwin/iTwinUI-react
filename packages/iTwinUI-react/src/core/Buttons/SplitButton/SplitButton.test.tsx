@@ -42,19 +42,19 @@ it('should render in its most basic state', () => {
   expect(container.querySelector('.iui-button-icon')).toBeTruthy();
 });
 
-it('should fire onClick callback', () => {
+it('should fire onClick callback', async () => {
   const onClickMock = jest.fn();
   const { container } = renderComponent(onClickMock);
   expect(container.querySelector('.iui-button-split-menu')).toBeTruthy();
 
   const button = container.querySelector('.iui-button') as HTMLButtonElement;
-  button.click();
+  await userEvent.click(button);
   expect(onClickMock).toHaveBeenCalledTimes(1);
 
   const dropdownButton = container.querySelectorAll(
     '.iui-button',
   )[1] as HTMLButtonElement;
-  dropdownButton.click();
+  await userEvent.click(dropdownButton);
   expect(onClickMock).toHaveBeenCalledTimes(1);
 });
 

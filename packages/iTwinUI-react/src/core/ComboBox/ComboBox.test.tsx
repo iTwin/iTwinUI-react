@@ -450,11 +450,11 @@ it('should use the latest onChange prop', async () => {
   );
 
   await userEvent.tab();
-  screen.getByText('Item 1').click();
+  await userEvent.click(screen.getByText('Item 1'));
   expect(mockOnChange1).toHaveBeenNthCalledWith(1, 1);
 
   rerender(<ComboBox options={options} onChange={mockOnChange2} />);
-  screen.getByText('Item 2').click();
+  await userEvent.click(screen.getByText('Item 2'));
   expect(mockOnChange2).toHaveBeenNthCalledWith(1, 2);
   expect(mockOnChange1).toHaveBeenCalledTimes(1);
 });

@@ -4,8 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { useContainerWidth } from './useContainerWidth';
 import * as UseResizeObserver from './useResizeObserver';
-import { act } from '@testing-library/react-hooks';
-import { renderHook } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 
 beforeEach(() => {
   jest.clearAllMocks();
