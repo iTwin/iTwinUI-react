@@ -38,7 +38,7 @@ export const ComboBoxEndIcon = React.forwardRef(
         onClick={(e) => {
           onClickProp?.(e);
           if (!e.isDefaultPrevented()) {
-            dispatch(['toggle']);
+            dispatch([isOpen ? 'close' : 'open']);
           }
         }}
         {...rest}
