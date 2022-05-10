@@ -5,12 +5,14 @@
 import { action } from '@storybook/addon-actions';
 import { Meta, Story } from '@storybook/react';
 import React from 'react';
-import { DatePicker, IconButton, TimePicker } from '@itwin/itwinui-react';
 import {
+  DatePicker,
+  IconButton,
+  TimePicker,
   DatePickerProps,
   generateLocalizedStrings,
-} from '@itwin/itwinui-react/esm/core/DatePicker/DatePicker';
-import SvgCalendar from '@itwin/itwinui-icons-react/cjs/icons/Calendar';
+} from '@itwin/itwinui-react';
+import { SvgCalendar } from '@itwin/itwinui-icons-react';
 
 export default {
   title: 'Core/DatePicker',
