@@ -6,19 +6,18 @@ import React from 'react';
 import { Story, Meta } from '@storybook/react';
 import { Button, toaster, ProgressRadial } from '@itwin/itwinui-react';
 
-import { Toast, ToastProps } from '@itwin/itwinui-react/esm/core/Toast/Toast';
+import { ToastProps } from '@itwin/itwinui-react/esm/core/Toast/Toast';
 import { ToasterSettings } from '@itwin/itwinui-react/esm/core/Toast/Toaster';
 
 export default {
-  subcomponents: { Toast },
   argTypes: {
     content: {
       description:
         'Content of the Toast message. Can be passed in as a string or a jsx element.',
     },
     type: {
+      options: ['persisting', 'temporary'],
       control: {
-        options: ['persisting', 'temporary'],
         type: 'select',
       },
       description:
@@ -38,24 +37,24 @@ export default {
       action: 'Toast removed!',
     },
     placement: {
+      options: [
+        'top',
+        'top-start',
+        'top-end',
+        'bottom',
+        'bottom-start',
+        'bottom-end',
+      ],
       control: {
-        options: [
-          'top',
-          'top-start',
-          'top-end',
-          'bottom',
-          'bottom-start',
-          'bottom-end',
-        ],
         type: 'select',
       },
-      defaultValue: 'top',
+      table: { defaultValue: { summary: 'top' } },
       description:
         'Changes placement of toasts. *-start indicated left side of viewport. *-end - right side of viewport.',
     },
     order: {
+      options: ['descending', 'ascending'],
       control: {
-        options: ['descending', 'ascending'],
         type: 'select',
       },
       description: `Order of toasts. Descending places toasts from newest to oldest (new toasts appear on the top of the list). Ascending - from oldest to newest (new toasts appear on the bottom of the list). When placement is set and order not specified, toasts are ordered by placement. Top placement sets order 'descending', bottom placement sets order 'ascending'.`,
