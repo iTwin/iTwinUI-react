@@ -30,7 +30,7 @@ beforeEach(() => {
   ref = React.createRef<ToastWrapperHandle>();
 });
 
-it.only('should render toasts', () => {
+it('should render toasts', () => {
   const { container } = render(<ToastWrapper ref={ref} />);
   expect(container.querySelector('.iui-toast-wrapper')).toBeTruthy();
 
