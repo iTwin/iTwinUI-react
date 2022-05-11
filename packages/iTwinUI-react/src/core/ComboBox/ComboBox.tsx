@@ -52,9 +52,9 @@ export type ComboBoxProps<T> = {
    * Function to customize the default filtering logic.
    */
   filterFunction?: (
-    options: ComboBoxOption<T>[],
+    options: SelectOption<T>[],
     inputValue: string,
-  ) => ComboBoxOption<T>[];
+  ) => SelectOption<T>[];
   /**
    * Native input element props.
    */
@@ -89,9 +89,9 @@ export type ComboBoxProps<T> = {
 } & Pick<InputContainerProps, 'status'> &
   Omit<CommonProps, 'title'>;
 
-type ComboBoxOption<T> = SelectOption<T> & {
-  id: string;
-  __originalIndex: number;
+/** Returns either `option.id` or derives a stable id using `idPrefix` and `option.label` (without whitespace) */
+const getOptionId = (option: SelectOption<unknown>, idPrefix: string) => {
+  return option.id ?? `${idPrefix}-option-${option.label.replace(/\s/g, '-')}`;
 };
 
 /**
@@ -109,7 +109,7 @@ type ComboBoxOption<T> = SelectOption<T> & {
  */
 export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   const {
-    options: optionsProp,
+    options,
     value: valueProp,
     onChange,
     filterFunction,
@@ -131,18 +131,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   useTheme();
 
-  // Add id and originalIndex to each option
-  const [options, setOptions] = React.useState<ComboBoxOption<T>[]>([]);
-  React.useLayoutEffect(() => {
-    setOptions(
-      optionsProp.map((option, index) => ({
-        ...option,
-        id: option.id ?? `${id}-option${index}`,
-        __originalIndex: index,
-      })),
-    );
-  }, [id, optionsProp]);
-
   // Refs get set in subcomponents
   const inputRef = React.useRef<HTMLInputElement>(null);
   const menuRef = React.useRef<HTMLUListElement>(null);
@@ -154,6 +142,28 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   React.useEffect(() => {
     onChangeProp.current = onChange;
   }, [onChange]);
+
+  // Record to store all extra information (e.g. original indexes), where the key is the id of the option
+  const optionsExtraInfoRef = React.useRef<
+    Record<string, { __originalIndex: number }>
+  >({});
+
+  // Clear the extra info when the options change so that it can be reinitialized below
+  React.useEffect(() => {
+    optionsExtraInfoRef.current = {};
+  }, [id, options]);
+
+  // Initialize the extra info only if it is not already initialized
+  if (
+    options.length > 0 &&
+    Object.keys(optionsExtraInfoRef.current).length === 0
+  ) {
+    options.forEach((option, index) => {
+      optionsExtraInfoRef.current[getOptionId(option, id)] = {
+        __originalIndex: index,
+      };
+    });
+  }
 
   // Reducer where all the component-wide state is stored
   const [{ isOpen, selectedIndex, focusedIndex }, dispatch] = React.useReducer(
@@ -242,15 +252,16 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   }, [options, selectedIndex, valueProp]);
 
   const getMenuItem = React.useCallback(
-    (option: ComboBoxOption<T>) => {
-      const { __originalIndex, ...rest } = option;
+    (option: SelectOption<T>) => {
+      const optionId = getOptionId(option, id);
+      const { __originalIndex } = optionsExtraInfoRef.current[optionId];
 
       const customItem = itemRenderer
         ? itemRenderer(option, {
             isFocused: focusedIndex === __originalIndex,
             isSelected: selectedIndex === __originalIndex,
             index: __originalIndex,
-            id: option.id,
+            id: optionId,
           })
         : null;
 
@@ -275,8 +286,9 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
         })
       ) : (
         <ComboBoxMenuItem
-          key={option.id ?? __originalIndex}
-          {...rest}
+          key={optionId}
+          id={optionId}
+          {...option}
           isSelected={selectedIndex === __originalIndex}
           onClick={() => dispatch(['select', __originalIndex])}
           index={__originalIndex}
@@ -285,7 +297,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
         </ComboBoxMenuItem>
       );
     },
-    [focusedIndex, itemRenderer, selectedIndex],
+    [focusedIndex, id, itemRenderer, selectedIndex],
   );
 
   return (
