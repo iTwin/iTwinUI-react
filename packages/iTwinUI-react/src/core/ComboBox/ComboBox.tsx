@@ -150,7 +150,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   // Clear the extra info when the options change so that it can be reinitialized below
   React.useEffect(() => {
     optionsExtraInfoRef.current = {};
-  }, [id, options]);
+  }, [options]);
 
   // Initialize the extra info only if it is not already initialized
   if (
