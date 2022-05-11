@@ -24,25 +24,25 @@ export default {
   },
 } as Meta<LabeledTextareaProps>;
 
-export const Basic: Story<LabeledTextareaProps> = (args) => {
+export const Basic: Story<Partial<LabeledTextareaProps>> = (args) => {
   return (
     <LabeledTextarea
+      label='Textarea Label'
       message='Display Message'
       placeholder='This is a textarea'
       {...args}
-      label='Textarea Label'
     />
   );
 };
 
-export const Disabled: Story<LabeledTextareaProps> = (args) => {
+export const Disabled: Story<Partial<LabeledTextareaProps>> = (args) => {
   return (
     <LabeledTextarea
+      label='Textarea Label'
       message='Display Message'
       placeholder='This is a textarea'
       disabled={true}
       {...args}
-      label='Textarea Label'
     />
   );
 };
@@ -51,14 +51,14 @@ Disabled.args = {
   disabled: true,
 };
 
-export const Positive: Story<LabeledTextareaProps> = (args) => {
+export const Positive: Story<Partial<LabeledTextareaProps>> = (args) => {
   return (
     <LabeledTextarea
+      label='Textarea Label'
       message='Display Message'
       placeholder='This is a textarea'
       status='positive'
       {...args}
-      label='Textarea Label'
     />
   );
 };
@@ -67,14 +67,14 @@ Positive.args = {
   status: 'positive',
 };
 
-export const Warning: Story<LabeledTextareaProps> = (args) => {
+export const Warning: Story<Partial<LabeledTextareaProps>> = (args) => {
   return (
     <LabeledTextarea
+      label='Textarea Label'
       message='Display Message'
       placeholder='This is a textarea'
       status='warning'
       {...args}
-      label='Textarea Label'
     />
   );
 };
@@ -83,14 +83,14 @@ Warning.args = {
   status: 'warning',
 };
 
-export const Negative: Story<LabeledTextareaProps> = (args) => {
+export const Negative: Story<Partial<LabeledTextareaProps>> = (args) => {
   return (
     <LabeledTextarea
+      label='Textarea Label'
       message='Display Message'
       placeholder='This is a textarea'
       status='negative'
       {...args}
-      label='Textarea Label'
     />
   );
 };
@@ -99,25 +99,25 @@ Negative.args = {
   status: 'negative',
 };
 
-export const WithCustomIcon: Story<LabeledTextareaProps> = (args) => {
+export const WithCustomIcon: Story<Partial<LabeledTextareaProps>> = (args) => {
   return (
     <LabeledTextarea
       placeholder='Enter text here'
+      label='This is a label'
       svgIcon={<SvgCamera />}
       {...args}
-      label='This is a label'
     />
   );
 };
 
-export const Inline: Story<LabeledTextareaProps> = (args) => {
+export const Inline: Story<Partial<LabeledTextareaProps>> = (args) => {
   return (
     <LabeledTextarea
       placeholder='Enter text here'
       status='negative'
+      label='This is a label'
       displayStyle='inline'
       {...args}
-      label='This is a label'
     />
   );
 };
