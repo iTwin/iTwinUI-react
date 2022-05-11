@@ -13,7 +13,6 @@ import {
   StatusMessage,
   SelectOption,
 } from '@itwin/itwinui-react';
-
 import { SvgCamera } from '@itwin/itwinui-icons-react';
 
 export default {
