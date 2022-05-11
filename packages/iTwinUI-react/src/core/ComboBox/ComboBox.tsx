@@ -70,8 +70,10 @@ export type ComboBoxProps<T> = {
   emptyStateMessage?: string;
   /**
    * A custom item renderer can be specified to control the rendering.
-   * This function should ideally return a customized version of `ComboBox.MenuItem`,
-   * otherwise you will need to make sure to provide styling for the `isFocused` state.
+   *
+   * For keyboard navigation to work, the returned element should use the `id` provided by this function.
+   * The `isFocused` state is calculated using this `id` and can be used for specifying the focus styling.
+   * If a `MenuItem` is returned, then focus sytling is automatically handled.
    */
   itemRenderer?: (
     option: SelectOption<T>,
@@ -82,10 +84,6 @@ export type ComboBoxProps<T> = {
       index: number;
     },
   ) => JSX.Element;
-  /**
-   * Children can be specified to customize individual parts.
-   */
-  children?: React.ReactNode;
 } & Pick<InputContainerProps, 'status'> &
   Omit<CommonProps, 'title'>;
 
@@ -117,7 +115,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     dropdownMenuProps,
     emptyStateMessage = 'No options found',
     itemRenderer,
-    children,
     ...rest
   } = props;
 
@@ -307,32 +304,25 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
         <ComboBoxStateContext.Provider
           value={{ id, minWidth, isOpen, focusedIndex }}
         >
-          {children ?? (
-            <>
-              <ComboBoxInputContainer disabled={inputProps?.disabled} {...rest}>
-                <ComboBoxInput
-                  value={inputValue}
-                  {...inputProps}
-                  onChange={handleOnInput}
-                />
-                <ComboBoxEndIcon
-                  disabled={inputProps?.disabled}
-                  isOpen={isOpen}
-                />
-              </ComboBoxInputContainer>
-              <ComboBoxDropdown {...dropdownMenuProps}>
-                <ComboBoxMenu>
-                  {filteredOptions.length > 0 ? (
-                    filteredOptions.map(getMenuItem)
-                  ) : (
-                    <MenuExtraContent>
-                      <Text isMuted>{emptyStateMessage}</Text>
-                    </MenuExtraContent>
-                  )}
-                </ComboBoxMenu>
-              </ComboBoxDropdown>
-            </>
-          )}
+          <ComboBoxInputContainer disabled={inputProps?.disabled} {...rest}>
+            <ComboBoxInput
+              value={inputValue}
+              {...inputProps}
+              onChange={handleOnInput}
+            />
+            <ComboBoxEndIcon disabled={inputProps?.disabled} isOpen={isOpen} />
+          </ComboBoxInputContainer>
+          <ComboBoxDropdown {...dropdownMenuProps}>
+            <ComboBoxMenu>
+              {filteredOptions.length > 0 ? (
+                filteredOptions.map(getMenuItem)
+              ) : (
+                <MenuExtraContent>
+                  <Text isMuted>{emptyStateMessage}</Text>
+                </MenuExtraContent>
+              )}
+            </ComboBoxMenu>
+          </ComboBoxDropdown>
         </ComboBoxStateContext.Provider>
       </ComboBoxActionContext.Provider>
     </ComboBoxRefsContext.Provider>
