@@ -31,11 +31,6 @@ export type ToasterSettings = {
     | 'bottom'
     | 'bottom-start'
     | 'bottom-end';
-  /**
-   * If using React v18, use`ReactDom.createRoot`function to return root and enable v18.
-   * Otherwise, old `ReadDom.render` method will be used to render toasts.
-   */
-  getRoot?: (container: Element | undefined) => Root;
 };
 
 export type ToastOptions = Omit<
@@ -52,6 +47,19 @@ export default class Toaster {
   };
   private root: Root | undefined;
 
+  constructor() {
+    this.prepareRoot();
+  }
+
+  private prepareRoot = async () => {
+    if (React.version.includes('18')) {
+      const reactDomClient = (await import('react-dom/client')).default;
+      this.root = reactDomClient.createRoot(
+        getContainer(TOASTS_CONTAINER_ID) ?? document.body,
+      );
+    }
+  };
+
   /**
    * Set global Toaster settings for toasts order and placement.
    * Settings will be applied to new toasts on the page.
@@ -61,8 +69,6 @@ export default class Toaster {
     newSettings.order ??= newSettings.placement?.startsWith('bottom')
       ? 'ascending'
       : 'descending';
-    this.root =
-      newSettings?.getRoot?.(getContainer(TOASTS_CONTAINER_ID)) ?? this.root;
     this.settings = newSettings;
   }
 
