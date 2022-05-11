@@ -11,14 +11,7 @@ export const ComboBoxMenu = React.forwardRef(
   (props: ComboBoxMenuProps, forwardedRef: React.Ref<HTMLUListElement>) => {
     const { className, style, ...rest } = props;
     const { minWidth, id } = useSafeContext(ComboBoxStateContext);
-    const { menuRef, optionsRef } = useSafeContext(ComboBoxRefsContext);
-
-    React.useEffect(() => {
-      if (menuRef.current != null) {
-        const items = menuRef.current.querySelectorAll('[data-iui-index]');
-        optionsRef.current = Array.from(items) as HTMLLIElement[]; // need this cast to make TS happy :(
-      }
-    }, [menuRef, optionsRef, props.children]);
+    const { menuRef } = useSafeContext(ComboBoxRefsContext);
 
     const refs = useMergedRefs(menuRef, forwardedRef);
 

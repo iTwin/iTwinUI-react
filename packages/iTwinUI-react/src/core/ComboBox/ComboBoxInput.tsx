@@ -15,8 +15,9 @@ export const ComboBoxInput = React.forwardRef(
 
     const { isOpen, id, focusedIndex } = useSafeContext(ComboBoxStateContext);
     const dispatch = useSafeContext(ComboBoxActionContext);
-    const { inputRef, menuRef, optionsRef } =
-      useSafeContext(ComboBoxRefsContext);
+    const { inputRef, menuRef, optionsExtraInfoRef } = useSafeContext(
+      ComboBoxRefsContext,
+    );
     const refs = useMergedRefs(inputRef, forwardedRef);
 
     const focusedIndexRef = React.useRef(focusedIndex ?? -1);
@@ -33,7 +34,7 @@ export const ComboBoxInput = React.forwardRef(
     const handleKeyDown = React.useCallback(
       (event: React.KeyboardEvent<HTMLInputElement>) => {
         onKeyDownProp?.(event);
-        const length = optionsRef.current.length ?? 0;
+        const length = Object.keys(optionsExtraInfoRef.current).length ?? 0;
 
         switch (event.key) {
           case 'ArrowDown': {
@@ -49,7 +50,8 @@ export const ComboBoxInput = React.forwardRef(
             if (focusedIndexRef.current === -1) {
               return dispatch([
                 'focus',
-                Number(optionsRef.current[0].dataset.iuiIndex ?? -1),
+                Object.values(optionsExtraInfoRef.current)?.[0]
+                  .__originalIndex ?? -1,
               ]);
             }
 
@@ -82,7 +84,8 @@ export const ComboBoxInput = React.forwardRef(
             if (focusedIndexRef.current === -1) {
               return dispatch([
                 'focus',
-                Number(optionsRef.current[length - 1].dataset.iuiIndex ?? -1),
+                Object.values(optionsExtraInfoRef.current)?.[length]
+                  .__originalIndex ?? -1,
               ]);
             }
 
@@ -121,7 +124,7 @@ export const ComboBoxInput = React.forwardRef(
             break;
         }
       },
-      [dispatch, isOpen, menuRef, onKeyDownProp, optionsRef],
+      [dispatch, isOpen, menuRef, onKeyDownProp, optionsExtraInfoRef],
     );
 
     const handleFocus = React.useCallback(

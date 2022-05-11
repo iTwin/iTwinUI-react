@@ -135,7 +135,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const menuRef = React.useRef<HTMLUListElement>(null);
   const toggleButtonRef = React.useRef<HTMLSpanElement>(null);
-  const optionsRef = React.useRef<Array<HTMLLIElement>>([]);
 
   // Latest value of the onChange prop
   const onChangeProp = React.useRef(onChange);
@@ -302,7 +301,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   return (
     <ComboBoxRefsContext.Provider
-      value={{ inputRef, menuRef, toggleButtonRef, optionsRef }}
+      value={{ inputRef, menuRef, toggleButtonRef, optionsExtraInfoRef }}
     >
       <ComboBoxActionContext.Provider value={dispatch}>
         <ComboBoxStateContext.Provider

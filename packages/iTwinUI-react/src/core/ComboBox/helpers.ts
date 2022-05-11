@@ -35,7 +35,9 @@ export const ComboBoxRefsContext = React.createContext<
       inputRef: React.RefObject<HTMLInputElement>;
       menuRef: React.RefObject<HTMLUListElement>;
       toggleButtonRef: React.RefObject<HTMLSpanElement>;
-      optionsRef: React.MutableRefObject<Array<HTMLLIElement>>;
+      optionsExtraInfoRef: React.MutableRefObject<
+        Record<string, { __originalIndex: number }>
+      >;
     }
   | undefined
 >(undefined);
