@@ -74,7 +74,6 @@
     "@testing-library/user-event": "^14.1.1",
     "@types/classnames": "^2.2.7",
     "@types/jest": "^27.0.0",
-    "@types/jsdom": "^16.2.14",
     "@types/node": "^10.12.2",
     "@types/react": "^18.0.6",
     "@types/react-dom": "^18.0.2",
