@@ -3,14 +3,12 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
-
+import { fireEvent, render, screen, act } from '@testing-library/react';
 import { ComboBox, ComboBoxProps } from './ComboBox';
 import { SvgCaretDownSmall } from '@itwin/itwinui-icons-react';
 import { MenuItem } from '../Menu';
 import { StatusMessage } from '../StatusMessage';
 import userEvent from '@testing-library/user-event';
-import { act } from 'react-dom/test-utils';
 
 const renderComponent = (props?: Partial<ComboBoxProps<number>>) => {
   return render(
