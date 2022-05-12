@@ -5,6 +5,7 @@
   "main": "index.js",
   "license": "MIT",
   "files": [
+    "copyrightLinter.js",
     "eslint-preset.js",
     "prettier-config.js",
     "tsconfig.base.json"
