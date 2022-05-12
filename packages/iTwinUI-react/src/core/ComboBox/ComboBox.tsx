@@ -73,7 +73,7 @@ export type ComboBoxProps<T> = {
    *
    * For keyboard navigation to work, the returned element should use the `id` provided by this function.
    * The `isFocused` state is calculated using this `id` and can be used for specifying the focus styling.
-   * If a `MenuItem` is returned, then focus sytling is automatically handled.
+   * If a `MenuItem` is returned, then focus styling is automatically handled.
    */
   itemRenderer?: (
     option: SelectOption<T>,
