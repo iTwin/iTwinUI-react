@@ -23,12 +23,8 @@ export const ToastWrapper = React.forwardRef<ToastWrapperHandle>((_, ref) => {
   React.useImperativeHandle(
     ref,
     () => ({
-      setToasts: (t) => {
-        setToasts(t);
-      },
-      setPlacement: (p) => {
-        setPlacement(p);
-      },
+      setToasts,
+      setPlacement,
     }),
     [],
   );
