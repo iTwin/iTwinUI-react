@@ -16,21 +16,15 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "cpy-cli": "^3.1.1",
+    "rimraf": "^3.0.2",
     "turbo": "~1.2.4"
   },
   "resolutions": {
-    "braces": "^2.3.1",
-    "hosted-git-info": ">=3.0.8",
     "trim": "^0.0.3",
-    "browserslist": "^4.16.6",
     "glob-parent": "^5.1.2",
-    "css-what": "^5.0.1",
-    "immer": "^9.0.6",
     "set-value": "^4.1.0",
-    "prismjs": "^1.25.0",
-    "nth-check": "^2.0.1",
     "ansi-regex": "^5.0.1",
-    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.1",
     "postcss": "8",
     "nanoid": "^3.1.31"
   },
