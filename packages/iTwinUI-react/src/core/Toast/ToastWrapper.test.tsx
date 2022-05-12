@@ -3,11 +3,10 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 
 import { ToastWrapper, ToastWrapperHandle } from './ToastWrapper';
 import { ToastProps } from './Toast';
-import { act } from 'react-dom/test-utils';
 
 const mockToastObject1 = {
   category: 'informational',

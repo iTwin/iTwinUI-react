@@ -65,7 +65,7 @@ export default class Toaster {
       ? 'ascending'
       : 'descending';
     this.settings = newSettings;
-    this.toastsRef?.current?.setPlacement(this.settings.placement ?? 'top');
+    this.toastsRef.current?.setPlacement(this.settings.placement ?? 'top');
   }
 
   public positive(content: React.ReactNode, options?: ToastOptions) {

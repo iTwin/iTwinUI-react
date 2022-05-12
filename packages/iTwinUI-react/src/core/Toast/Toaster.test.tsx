@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { act } from 'react-dom/test-utils';
+import { act } from '@testing-library/react';
 import toaster from '.';
 import { ToastCategory, ToastProps } from './Toast';
 import { ToastOptions } from './Toaster';
