@@ -11,7 +11,9 @@ const filePaths = fg.sync(pattern, {
   ignore: [
     '**/node_modules/**/*',
     '**/coverage/**/*',
-    '**/lib/**/*',
+    '**/esm/**/*',
+    '**/cjs/**/*',
+    '**/dist/**/*',
     '**/storybook-static/**/*',
   ],
 });

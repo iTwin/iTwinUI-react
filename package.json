@@ -10,6 +10,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
+    "lint:copyright": "node packages/configs/copyrightLinter.js",
     "prepare": "husky install",
     "format": "turbo run format",
     "test": "turbo run test"

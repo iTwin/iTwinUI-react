@@ -16,6 +16,7 @@
     "eslint-plugin-react": "^7.29.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-storybook": "^0.5.7",
+    "fast-glob": "^3.2.5",
     "prettier": "2.2.1"
   },
   "prettier": "./prettier-config"
