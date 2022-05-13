@@ -397,7 +397,7 @@ export const useVirtualization = (props: VirtualScrollProps) => {
     innerProps: {
       style: { willChange: 'transform' },
       ref: parentRef,
-    } as React.HTMLAttributes<HTMLElement>,
+    } as const,
     visibleChildren,
   };
 };
