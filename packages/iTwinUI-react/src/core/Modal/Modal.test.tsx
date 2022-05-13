@@ -185,13 +185,13 @@ it('should call onKeyDown when pressed any key inside dialog', () => {
 });
 
 it('should work with portal container properly', () => {
-  renderComponent({ dialogRootId: 'test-id' });
+  renderComponent({ modalRootId: 'test-id' });
 
   let container = document.querySelector('body > #test-id') as HTMLElement;
   expect(container).toBeTruthy();
   expect(container.children.length).toBe(1);
 
-  renderComponent({ dialogRootId: 'test-id' });
+  renderComponent({ modalRootId: 'test-id' });
   container = document.querySelector('body > #test-id') as HTMLElement;
   expect(container.children.length).toBe(2);
 });

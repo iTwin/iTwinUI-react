@@ -14,10 +14,16 @@ export type ModalProps = {
    */
   title: React.ReactNode;
   /**
-   * Content of the modal.
+   * Id of the root where the modal will be rendered in.
+   * @default 'iui-react-portal-container'
+   */
+  modalRootId?: string;
+  /**
+
+  * Content of the modal.
    */
   children: React.ReactNode;
-} & Omit<DialogBackdropProps, 'children'> &
+} & Omit<DialogBackdropProps, 'children' & 'dialogRootId'> &
   Omit<CommonProps, 'title'>;
 
 /**
@@ -42,12 +48,24 @@ export type ModalProps = {
  * </Modal>
  */
 export const Modal = (props: ModalProps) => {
-  const { title, isDismissible = true, id, style, children, ...rest } = props;
+  const {
+    title,
+    isDismissible = true,
+    id,
+    style,
+    children,
+    modalRootId = 'iui-react-portal-container',
+    ...rest
+  } = props;
 
   useTheme();
 
   return (
-    <Dialog.Backdrop isDismissible={isDismissible} {...rest}>
+    <Dialog.Backdrop
+      isDismissible={isDismissible}
+      dialogRootId={modalRootId}
+      {...rest}
+    >
       <Dialog style={style} id={id} aria-modal>
         <Dialog.TitleBar onClose={props.onClose} isDismissible={isDismissible}>
           {title}
