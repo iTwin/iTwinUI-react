@@ -5,27 +5,27 @@
 import React from 'react';
 import cx from 'classnames';
 import { CommonProps, useTheme } from '../utils';
-import '@itwin/itwinui-css/css/modal.css';
+import '@itwin/itwinui-css/css/dialog.css';
 
-export type ModalButtonBarProps = {
+export type DialogButtonBarProps = {
   /**
-   * Buttons in the modal bar.
+   * Buttons in the dialog bar.
    */
   children: React.ReactNode;
 } & Omit<CommonProps, 'title'>;
 
 /**
- * Container for Buttons in modal.
+ * Container for Buttons in dialog.
  */
-export const ModalButtonBar = (props: ModalButtonBarProps) => {
+export const DialogButtonBar = (props: DialogButtonBarProps) => {
   const { children, className, ...rest } = props;
 
   useTheme();
   return (
-    <div className={cx('iui-button-bar', className)} {...rest}>
+    <div className={cx('iui-dialog-button-bar', className)} {...rest}>
       {children}
     </div>
   );
 };
 
-export default ModalButtonBar;
+export default DialogButtonBar;

@@ -4,8 +4,11 @@
  *--------------------------------------------------------------------------------------------*/
 export { Modal } from './Modal';
 export type { ModalProps } from './Modal';
-export { ModalButtonBar } from './ModalButtonBar';
-export type { ModalButtonBarProps } from './ModalButtonBar';
-export { ModalContent } from './ModalContent';
-export type { ModalContentProps } from './ModalContent';
+
+export { DialogButtonBar as ModalButtonBar } from '../Dialog/DialogButtonBar';
+export type { DialogButtonBarProps as ModalButtonBarProps } from '../Dialog/DialogButtonBar';
+
+export { DialogContent as ModalContent } from '../Dialog/DialogContent';
+export type { DialogContentProps as ModalContentProps } from '../Dialog/DialogContent';
+
 export default './Modal';
