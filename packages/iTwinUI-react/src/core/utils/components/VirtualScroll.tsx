@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
+import { mergeRefs } from '../hooks';
 import { useResizeObserver } from '../hooks/useResizeObserver';
 
 const getScrollableParent = (
@@ -161,7 +162,7 @@ export const useVirtualization = (props: VirtualScrollProps) => {
   const [startNode, setStartNode] = React.useState(0);
   const [visibleNodeCount, setVisibleNodeCount] = React.useState(0);
   const scrollContainer = React.useRef<HTMLElement>();
-  const parentRef = React.useRef<HTMLDivElement>(null);
+  const parentRef = React.useRef<HTMLElement>(null);
   const childHeight = React.useRef({ first: 0, middle: 0, last: 0 });
   const onScrollRef = React.useRef<(e: Event) => void>();
   // Used only to recalculate on resize
@@ -396,7 +397,7 @@ export const useVirtualization = (props: VirtualScrollProps) => {
     } as React.HTMLAttributes<HTMLElement>,
     innerProps: {
       style: { willChange: 'transform' },
-      ref: parentRef,
+      ref: mergeRefs(parentRef),
     } as const,
     visibleChildren,
   };
