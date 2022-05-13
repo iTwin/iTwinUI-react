@@ -1,8 +1,7 @@
 /*---------------------------------------------------------------------------------------------
- * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { SvgChevronRight } from '@itwin/itwinui-icons-react';
 import {
   act,
   fireEvent,
@@ -10,24 +9,25 @@ import {
   screen,
   waitFor,
 } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import React from 'react';
-import { CellProps, Column, Row } from 'react-table';
-import { InputGroup } from '../InputGroup';
-import { Radio } from '../Radio';
+import { Table, TableProps } from './Table';
 import * as IntersectionHooks from '../utils/hooks/useIntersection';
-import * as UseOverflow from '../utils/hooks/useOverflow';
-import * as UseResizeObserver from '../utils/hooks/useResizeObserver';
-import { DefaultCell, EditableCell } from './cells';
-import { ActionColumn, ExpanderColumn, SelectionColumn } from './columns';
 import {
   BaseFilter,
   FilterButtonBar,
   TableFilterProps,
-  tableFilters,
+  tableFilters
 } from './filters';
-import { Table, TableProps } from './Table';
+import { CellProps, Column, Row } from 'react-table';
+import { InputGroup } from '../InputGroup';
+import { Radio } from '../Radio';
+import { SvgChevronRight } from '@itwin/itwinui-icons-react';
+import { DefaultCell, EditableCell } from './cells';
 import { TablePaginator } from './TablePaginator';
+import * as UseOverflow from '../utils/hooks/useOverflow';
+import * as UseResizeObserver from '../utils/hooks/useResizeObserver';
+import userEvent from '@testing-library/user-event';
+import { ActionColumn, SelectionColumn, ExpanderColumn } from './columns';
 
 const intersectionCallbacks = new Map<Element, () => void>();
 jest
