@@ -2,6 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { SvgChevronRight } from '@itwin/itwinui-icons-react';
 import {
   act,
   fireEvent,
@@ -9,25 +10,24 @@ import {
   screen,
   waitFor,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
-import { Table, TableProps } from './Table';
+import { CellProps, Column, Row } from 'react-table';
+import { InputGroup } from '../InputGroup';
+import { Radio } from '../Radio';
 import * as IntersectionHooks from '../utils/hooks/useIntersection';
+import * as UseOverflow from '../utils/hooks/useOverflow';
+import * as UseResizeObserver from '../utils/hooks/useResizeObserver';
+import { DefaultCell, EditableCell } from './cells';
+import { ActionColumn, ExpanderColumn, SelectionColumn } from './columns';
 import {
   BaseFilter,
   FilterButtonBar,
   TableFilterProps,
-  tableFilters
+  tableFilters,
 } from './filters';
-import { CellProps, Column, Row } from 'react-table';
-import { InputGroup } from '../InputGroup';
-import { Radio } from '../Radio';
-import { SvgChevronRight } from '@itwin/itwinui-icons-react';
-import { DefaultCell, EditableCell } from './cells';
+import { Table, TableProps } from './Table';
 import { TablePaginator } from './TablePaginator';
-import * as UseOverflow from '../utils/hooks/useOverflow';
-import * as UseResizeObserver from '../utils/hooks/useResizeObserver';
-import userEvent from '@testing-library/user-event';
-import { ActionColumn, SelectionColumn, ExpanderColumn } from './columns';
 
 const intersectionCallbacks = new Map<Element, () => void>();
 jest
@@ -683,8 +683,6 @@ it('should filter table', () => {
 });
 
 it('should filter false values', () => {
-  const onFilter = jest.fn();
-
   const columns = [
     {
       Header: 'Header',
@@ -710,7 +708,7 @@ it('should filter false values', () => {
     { name: 'Name2', description: 'Description2', booleanValue: false },
   ] as TestDataType[];
 
-  const { container } = renderComponent({ columns, onFilter, data });
+  const { container } = renderComponent({ columns, onFilter: jest.fn(), data });
 
   const filterIcon = container.querySelector(
     '.iui-filter-button .iui-button-icon',
@@ -725,8 +723,6 @@ it('should filter false values', () => {
 });
 
 it('should not filter undefined values', () => {
-  const onFilter = jest.fn();
-
   const columns = [
     {
       Header: 'Header',
@@ -753,7 +749,7 @@ it('should not filter undefined values', () => {
     { name: 'Name3', description: 'Description2' },
   ] as TestDataType[];
 
-  const { container } = renderComponent({ columns, onFilter, data });
+  const { container } = renderComponent({ columns, onFilter: jest.fn(), data });
 
   const filterIcon = container.querySelector(
     '.iui-filter-button .iui-button-icon',
