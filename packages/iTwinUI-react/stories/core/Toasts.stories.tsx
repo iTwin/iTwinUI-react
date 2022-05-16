@@ -3,7 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import ReactDOM from 'react-dom/client';
 import { Story, Meta } from '@storybook/react';
 import { Button, toaster, ProgressRadial } from '../../src/core';
 import { Toast, ToastProps } from '../../src/core/Toast/Toast';
