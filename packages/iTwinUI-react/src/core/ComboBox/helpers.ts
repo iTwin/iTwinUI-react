@@ -55,6 +55,7 @@ type ComboBoxStateContextProps<T = unknown> = {
   enableVirtualization: boolean;
   filteredOptions: SelectOption<T>[];
   getMenuItem: (option: SelectOption<T>) => JSX.Element;
+  emptyStateContent: JSX.Element;
   focusedIndex?: number;
 };
 

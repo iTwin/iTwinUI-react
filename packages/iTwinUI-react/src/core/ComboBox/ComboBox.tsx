@@ -303,6 +303,15 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     [enableVirtualization, focusedIndex, id, itemRenderer, selectedIndex],
   );
 
+  const emptyStateContent = React.useMemo(
+    () => (
+      <MenuExtraContent>
+        <Text isMuted>{emptyStateMessage}</Text>
+      </MenuExtraContent>
+    ),
+    [emptyStateMessage],
+  );
+
   return (
     <ComboBoxRefsContext.Provider
       value={{ inputRef, menuRef, toggleButtonRef, optionsExtraInfoRef }}
@@ -317,6 +326,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             enableVirtualization,
             filteredOptions,
             getMenuItem,
+            emptyStateContent,
           }}
         >
           <ComboBoxInputContainer disabled={inputProps?.disabled} {...rest}>
@@ -329,13 +339,9 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           </ComboBoxInputContainer>
           <ComboBoxDropdown {...dropdownMenuProps}>
             <ComboBoxMenu>
-              {filteredOptions.length > 0 ? (
-                filteredOptions.map(getMenuItem)
-              ) : (
-                <MenuExtraContent>
-                  <Text isMuted>{emptyStateMessage}</Text>
-                </MenuExtraContent>
-              )}
+              {filteredOptions.length > 0
+                ? filteredOptions.map(getMenuItem)
+                : emptyStateContent}
             </ComboBoxMenu>
           </ComboBoxDropdown>
         </ComboBoxStateContext.Provider>

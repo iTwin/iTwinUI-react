@@ -52,6 +52,7 @@ export const ComboBoxMenu = React.forwardRef(
       filteredOptions,
       getMenuItem,
       focusedIndex,
+      emptyStateContent,
     } = useSafeContext(ComboBoxStateContext);
     const { menuRef } = useSafeContext(ComboBoxRefsContext);
 
@@ -70,9 +71,14 @@ export const ComboBoxMenu = React.forwardRef(
       ? { overflowY: 'overlay' }
       : { overflowY: 'auto' };
 
+    // 'Fool' VirtualScroll by passing length 1
+    // whenever there is no elements, to show empty state message
     const virtualItemRenderer = React.useCallback(
-      (index: number) => getMenuItem(filteredOptions[index]),
-      [filteredOptions, getMenuItem],
+      (index: number) =>
+        filteredOptions.length > 0
+          ? getMenuItem(filteredOptions[index])
+          : emptyStateContent,
+      [emptyStateContent, filteredOptions, getMenuItem],
     );
 
     return (
@@ -93,7 +99,7 @@ export const ComboBoxMenu = React.forwardRef(
             style={{ ...styles, ...(overflowY as React.CSSProperties) }}
           >
             <VirtualComboboxMenu
-              itemsLength={filteredOptions.length}
+              itemsLength={filteredOptions.length || 1}
               itemRenderer={virtualItemRenderer}
               scrollToIndex={focusedIndex}
             >
