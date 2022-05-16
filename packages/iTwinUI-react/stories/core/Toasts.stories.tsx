@@ -98,17 +98,6 @@ export default {
     },
   },
   title: 'Core/Toasts',
-  decorators: [
-    (Story) => {
-      toaster.setSettings({
-        getRoot: (container) =>
-          ReactDOM.createRoot(
-            container ?? document.getElementsByTagName('div')[0],
-          ),
-      });
-      return <Story />;
-    },
-  ],
 } as Meta<ToastProps & ToasterSettings> & CreeveyMeta;
 
 export const Positive: Story<ToastProps & ToasterSettings> = ({
