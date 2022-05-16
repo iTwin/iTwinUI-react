@@ -13,6 +13,9 @@ import { useVirtualization } from '.';
 const heightsMock = jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect');
 let triggerResize: (size: DOMRectReadOnly) => void = jest.fn();
 
+const generateDataArray = (length: number) =>
+  new Array(length).fill(null).map((_, index) => ++index);
+
 beforeAll(() => {
   jest
     .spyOn(UseResizeObserver, 'useResizeObserver')
@@ -37,16 +40,17 @@ it('should render only few elements out of big list', () => {
     }
     return { height: 40 } as DOMRect;
   });
+  const data = generateDataArray(1000);
   const { container } = render(
     <div style={{ overflow: 'auto', height: 400 }} id='scroller'>
       <VirtualScroll
-        itemsLength={1000}
+        itemsLength={data.length}
         itemRenderer={(index) => (
           <div
             key={index}
             className='element'
             style={{ height: 40 }}
-          >{`Element${index + 1}`}</div>
+          >{`Element${data[index]}`}</div>
         )}
       />
     </div>,
@@ -102,10 +106,11 @@ it('should not crash with empty list items', () => {
     }
     return { height: 0 } as DOMRect;
   });
+  const data = generateDataArray(1000);
   const { container } = render(
     <div style={{ overflow: 'auto', height: 400 }} id='scroller'>
       <VirtualScroll
-        itemsLength={1000}
+        itemsLength={data.length}
         itemRenderer={(index) => <div key={index} className='element' />}
       />
     </div>,
@@ -113,6 +118,32 @@ it('should not crash with empty list items', () => {
   act(() => triggerResize({ height: 400 } as DOMRectReadOnly));
 
   expect(container.querySelectorAll('.element').length).toBe(20);
+});
+
+it('should render 1 item', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  heightsMock.mockImplementation(function (this: Record<string, any>) {
+    if (Object.values(this)[0].memoizedProps.id === 'scroller') {
+      return { height: 40 } as DOMRect;
+    }
+    return { height: 40 } as DOMRect;
+  });
+  const data = generateDataArray(1);
+  const { container } = render(
+    <div style={{ overflow: 'auto', maxHeight: 400 }} id='scroller'>
+      <VirtualScroll
+        itemsLength={data.length}
+        itemRenderer={(index) => (
+          <div key={index} className='element'>
+            {data[index]}
+          </div>
+        )}
+      />
+    </div>,
+  );
+  act(() => triggerResize({ height: 40 } as DOMRectReadOnly));
+
+  expect(container.querySelectorAll('.element').length).toBe(1);
 });
 
 it('should show provided index on first render', () => {
@@ -132,16 +163,17 @@ it('should show provided index on first render', () => {
         target: { scrollTop: (options as ScrollToOptions).top ?? 0 },
       });
     });
+  const data = generateDataArray(1000);
   const { container } = render(
     <div style={{ overflow: 'auto', height: 400 }} id='scroller'>
       <VirtualScroll
-        itemsLength={1000}
+        itemsLength={data.length}
         itemRenderer={(index) => (
           <div
             key={index}
             className='element'
             style={{ height: 40 }}
-          >{`Element${index + 1}`}</div>
+          >{`Element${data[index]}`}</div>
         )}
         scrollToIndex={50}
       />
@@ -172,14 +204,16 @@ it('should render parent as ul', () => {
         target: { scrollTop: (options as ScrollToOptions).top ?? 0 },
       });
     });
-
+  const data = generateDataArray(4000);
   const MyComponentToRender = () => {
     const { outerProps, innerProps, visibleChildren } = useVirtualization({
-      itemsLength: 1000,
+      itemsLength: data.length,
       itemRenderer: (index) => (
-        <li key={index} className='element' style={{ height: 40 }}>{`Element${
-          index + 1
-        }`}</li>
+        <li
+          key={index}
+          className='element'
+          style={{ height: 40 }}
+        >{`Element${data[index]}`}</li>
       ),
     });
 

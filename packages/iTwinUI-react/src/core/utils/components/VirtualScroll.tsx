@@ -36,7 +36,7 @@ const getElementHeight = (element: HTMLElement | undefined) => {
 
 const getElementHeightWithMargins = (element: HTMLElement | undefined) => {
   if (!element) {
-    return 0;
+    return undefined;
   }
 
   const margin =
@@ -225,15 +225,18 @@ export const useVirtualization = (props: VirtualScrollProps) => {
       parentRef.current.children.length - 1,
     ) as HTMLElement;
     const firstChildHeight = Number(
-      getElementHeightWithMargins(firstChild).toFixed(2),
+      getElementHeightWithMargins(firstChild)?.toFixed(2) ?? 0,
     );
 
     childHeight.current = {
       first: firstChildHeight,
-      middle:
-        Number(getElementHeightWithMargins(secondChild).toFixed(2)) ??
-        firstChildHeight,
-      last: Number(getElementHeightWithMargins(lastChild).toFixed(2)),
+      middle: Number(
+        getElementHeightWithMargins(secondChild)?.toFixed(2) ??
+          firstChildHeight,
+      ),
+      last: Number(
+        getElementHeightWithMargins(lastChild)?.toFixed(2) ?? firstChildHeight,
+      ),
     };
   }, [visibleChildren.length]);
 
