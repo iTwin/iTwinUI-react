@@ -70,6 +70,11 @@ export const ComboBoxMenu = React.forwardRef(
       ? { overflowY: 'overlay' }
       : { overflowY: 'auto' };
 
+    const virtualItemRenderer = React.useCallback(
+      (index: number) => getMenuItem(filteredOptions[index]),
+      [filteredOptions, getMenuItem],
+    );
+
     return (
       <>
         {!enableVirtualization ? (
@@ -83,10 +88,13 @@ export const ComboBoxMenu = React.forwardRef(
             {...rest}
           />
         ) : (
-          <Surface style={{ ...styles, ...(overflowY as React.CSSProperties) }}>
+          <Surface
+            elevation={1}
+            style={{ ...styles, ...(overflowY as React.CSSProperties) }}
+          >
             <VirtualComboboxMenu
               itemsLength={filteredOptions.length}
-              itemRenderer={(index) => getMenuItem(filteredOptions[index])}
+              itemRenderer={virtualItemRenderer}
               scrollToIndex={focusedIndex}
             >
               <Menu
