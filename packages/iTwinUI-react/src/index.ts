@@ -4,4 +4,3 @@
  *--------------------------------------------------------------------------------------------*/
 export * from './core';
 export * from './types/react-table-config';
-export * from './types/toaster';

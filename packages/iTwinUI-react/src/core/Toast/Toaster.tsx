@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { getContainer } from '../utils';
+import { getContainer, getDocument } from '../utils';
 import { ToastCategory, ToastProps } from './Toast';
 import { ToastWrapper, ToastWrapperHandle } from './ToastWrapper';
 
@@ -45,15 +45,7 @@ export default class Toaster {
     placement: 'top',
   };
   private toastsRef = React.createRef<ToastWrapperHandle>();
-
-  constructor() {
-    const container = getContainer(TOASTS_CONTAINER_ID);
-    if (!container) {
-      return;
-    }
-
-    ReactDOM.render(<ToastWrapper ref={this.toastsRef} />, container);
-  }
+  private isInitialized = false;
 
   /**
    * Set global Toaster settings for toasts order and placement.
@@ -115,8 +107,37 @@ export default class Toaster {
     this.updateView();
   }
 
+  private async createContainer() {
+    const container = getContainer(TOASTS_CONTAINER_ID) ?? getDocument()?.body;
+    if (!container) {
+      return;
+    }
+
+    const toastWrapper = <ToastWrapper ref={this.toastsRef} />;
+
+    try {
+      if (Number(React.version.split('.')[0]) > 17) {
+        const reactDomClient = (await import('react-dom/client')).default;
+        const root = reactDomClient.createRoot(container);
+        root.render(toastWrapper);
+      } else {
+        ReactDOM.render(toastWrapper, container);
+      }
+    } catch (e) {
+      console.error('Toasts renderer got an unexpected error: ', e);
+      ReactDOM.render(toastWrapper, container);
+    }
+  }
+
   private updateView() {
-    this.toastsRef.current?.setToasts(this.toasts);
+    if (!this.isInitialized) {
+      this.createContainer().then(() => {
+        this.isInitialized = true;
+        this.toastsRef.current?.setToasts(this.toasts);
+      });
+    } else {
+      this.toastsRef.current?.setToasts(this.toasts);
+    }
   }
 
   private closeToast(toastId: number): void {
