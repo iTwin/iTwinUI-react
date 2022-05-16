@@ -254,10 +254,11 @@ export const useVirtualization = (props: VirtualScrollProps) => {
       scrollableContainer,
     );
     // If there are less items at the end than buffer size
-    // show more items at the start
+    // show more items at the start.
+    // Have boundaries for edge cases, e.g. 1 item length
     const startIndex = Math.min(
       Math.max(0, start - bufferSize),
-      itemsLength - bufferSize * 2 - visibleNodes,
+      Math.max(0, itemsLength - bufferSize * 2 - visibleNodes),
     );
     visibleIndex.current = { start: start, end: start + visibleNodes };
     setStartNode(startIndex);
