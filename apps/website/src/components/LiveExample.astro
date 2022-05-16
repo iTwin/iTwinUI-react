@@ -1,16 +1,63 @@
 ---
-import LiveExample from './LiveExample';
+import { createRequire } from 'module';
+import fs from 'fs';
+import ReactDOMServer from 'react-dom/server';
+import { Code } from 'astro/components';
 import '@codesandbox/sandpack-react/dist/index.css';
 
-const { props } = Astro;
+export interface Props {
+  path: string;
+}
+
+const require = createRequire(import.meta.url);
+const component = (await import(Astro.props.path)).default;
+
+const markup = ReactDOMServer.renderToString(component());
+
+const styles = `
+  ${await fs.promises.readFile(require.resolve('@itwin/itwinui-css/css/all.css'))}
+`;
+const code = await fs.promises.readFile(require.resolve(Astro.props.path), 'utf8');
+
+const iframeSrcDoc = `
+  <!DOCTYPE html>
+    <html>
+      <head>
+        <style>
+          ${styles}
+        </style>
+        <style>
+          * {
+            margin: 0;
+            box-sizing: border-box;
+          }
+          body {
+            height: 100vh;
+            width: 100vw;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(225deg, #4e5d6e 0%, #363944 100%);
+          }
+        </style>
+      </head>
+      <body class="iui-body">
+        ${markup}
+      </body>
+    </html>
+`;
 ---
 
 <div class='wrapper'>
-  <LiveExample client:load {...props} />
+  <iframe srcdoc={iframeSrcDoc}></iframe>
+  <button class='code-button' data-shown='false'>Show code</button>
+  <Code class='code' lang='js' code={code} theme='one-dark-pro' />
 </div>
+
 
 <style>
   .wrapper {
+    display: grid;
+
     & :global(.sp-stack) {
       flex-basis: unset;
     }
@@ -19,4 +66,41 @@ const { props } = Astro;
       fill: currentColor;
     }
   }
+
+  iframe {
+    grid-area: 1 / -1;
+    border: none;
+    border-radius: 0.5rem;
+    aspect-ratio: 2;
+  }
+
+  .code-button {
+    all: unset;
+    grid-area: 1 / -1;
+    place-self: end;
+    margin: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    border-radius: 0.25rem;
+
+    &:hover {
+      background: hsl(0 0% 0% / 0.2);
+    }
+
+    &[data-shown='false'] + :global(.astro-code) {
+      display: none;
+    }
+  }
+
+  .code {
+    scrollbar-gutter: stable;
+  }
 </style>
+
+<script is:inline>
+  const codeButton = document.querySelector('.code-button');
+  codeButton.addEventListener('click', () => {
+    codeButton.dataset.shown = codeButton.dataset.shown == 'false' ? 'true' : 'false';
+  });
+</script>
