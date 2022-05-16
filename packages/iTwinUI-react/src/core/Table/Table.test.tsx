@@ -12,8 +12,15 @@ import {
 import React from 'react';
 import { Table, TableProps } from './Table';
 import * as IntersectionHooks from '../utils/hooks/useIntersection';
-import { tableFilters } from './filters';
+import {
+  BaseFilter,
+  FilterButtonBar,
+  TableFilterProps,
+  tableFilters,
+} from './filters';
 import { CellProps, Column, Row } from 'react-table';
+import { InputGroup } from '../InputGroup';
+import { Radio } from '../Radio';
 import { SvgChevronRight } from '@itwin/itwinui-icons-react';
 import { DefaultCell, EditableCell } from './cells';
 import { TablePaginator } from './TablePaginator';
@@ -63,6 +70,7 @@ type TestDataType = {
   name: string;
   description: string;
   subRows?: TestDataType[];
+  booleanValue?: boolean;
 };
 
 const mockedData = (count = 3): TestDataType[] =>
@@ -180,6 +188,36 @@ const clearFilter = async (container: HTMLElement) => {
   await userEvent.click(filterIcon);
 
   await userEvent.click(screen.getByText('Clear'));
+};
+
+const BooleanFilter = (
+  props: TableFilterProps<Record<string, unknown>>,
+): JSX.Element => {
+  const [value, setValue] = React.useState<boolean | undefined>(
+    props.column.filterValue as boolean | undefined,
+  );
+  return (
+    <BaseFilter>
+      <InputGroup displayStyle='inline'>
+        <Radio
+          name='filterOption'
+          onChange={() => setValue(true)}
+          label='True'
+          defaultChecked={value}
+        />
+        <Radio
+          name='filterOption'
+          onChange={() => setValue(false)}
+          label='False'
+          defaultChecked={value === false}
+        />
+      </InputGroup>
+      <FilterButtonBar
+        setFilter={() => props.setFilter(value)}
+        clearFilter={props.clearFilter}
+      />
+    </BaseFilter>
+  );
 };
 
 const expandAll = async (
@@ -649,6 +687,88 @@ it('should filter table', async () => {
     [{ fieldType: 'text', filterType: 'text', id: 'name', value: '2' }],
     expect.objectContaining({ filters: [{ id: 'name', value: '2' }] }),
   );
+});
+
+it('should filter false values', async () => {
+  const columns = [
+    {
+      Header: 'Header',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'booleanValue',
+          Header: 'Bool Value',
+          accessor: 'booleanValue',
+          Filter: BooleanFilter,
+          filter: 'equals',
+        },
+      ],
+    },
+  ];
+
+  const data = [
+    { name: 'Name1', description: 'Description1', booleanValue: true },
+    { name: 'Name2', description: 'Description2', booleanValue: false },
+  ] as TestDataType[];
+
+  const { container } = renderComponent({ columns, onFilter: jest.fn(), data });
+
+  const filterIcon = container.querySelector(
+    '.iui-filter-button .iui-button-icon',
+  ) as HTMLElement;
+
+  await userEvent.click(filterIcon);
+  await userEvent.click(screen.getByText('False'));
+  await userEvent.click(screen.getByText('Filter'));
+
+  expect(screen.queryByText('Name1')).not.toBeInTheDocument();
+  screen.getByText('Name2');
+});
+
+it('should not filter undefined values', async () => {
+  const columns = [
+    {
+      Header: 'Header',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'booleanValue',
+          Header: 'Bool Value',
+          accessor: 'booleanValue',
+          Filter: BooleanFilter,
+          filter: 'equals',
+        },
+      ],
+    },
+  ];
+
+  const data = [
+    { name: 'Name1', description: 'Description1', booleanValue: true },
+    { name: 'Name2', description: 'Description2', booleanValue: false },
+    { name: 'Name3', description: 'Description2' },
+  ] as TestDataType[];
+
+  const { container } = renderComponent({ columns, onFilter: jest.fn(), data });
+
+  const filterIcon = container.querySelector(
+    '.iui-filter-button .iui-button-icon',
+  ) as HTMLElement;
+
+  await userEvent.click(filterIcon);
+  await userEvent.click(screen.getByText('False'));
+  await userEvent.click(screen.getByText('Filter'));
+
+  expect(screen.queryByText('Name1')).not.toBeInTheDocument();
+  screen.getByText('Name2');
+  expect(screen.queryByText('Name3')).not.toBeInTheDocument();
 });
 
 it('should clear filter', async () => {

@@ -1,6 +1,6 @@
 {
   "name": "@itwin/itwinui-react",
-  "version": "1.37.2",
+  "version": "1.37.3",
   "author": "Bentley Systems",
   "license": "MIT",
   "main": "cjs/index.js",
@@ -40,7 +40,7 @@
     "lint": "eslint \"**/*.{js,ts,tsx}\" --max-warnings=0",
     "lint:fix": "yarn lint --fix && yarn lint:copyright --fix */**/*.{js,ts,tsx}",
     "lint:copyright": "node scripts/copyrightLinter.js",
-    "copy-files": "cpx \"../../{README,LICENSE}.md\" .",
+    "copy-files": "cpy \"../../{README,LICENSE}.md\" .",
     "storybook": "start-storybook -p 6006",
     "dev": "yarn storybook",
     "build-storybook": "yarn copy-files && build-storybook"
@@ -83,7 +83,6 @@
     "babel-loader": "^8.2.2",
     "concurrently": "^5.3.0",
     "configs": "*",
-    "cpx": "^1.5.0",
     "creevey": "^0.8.0-beta.0",
     "fast-glob": "^3.2.5",
     "husky": "^4.0.0",
@@ -94,11 +93,9 @@
     "jest-junit": "^13.2.0",
     "lint-staged": "^12.1.2",
     "markdown-to-jsx": "6.11.4",
-    "mkdirp": "^1.0.4",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "rimraf": "^2.6.2",
-    "storybook-dark-mode": "^1.1.1-canary.120.3843.0",
+    "storybook-dark-mode": "^1.0.9",
     "tippy.js": "^6.3.1",
     "ts-jest": "^28.0.2",
     "ts-loader": "^9.2.8",
@@ -109,22 +106,6 @@
   "peerDependencies": {
     "react": ">=16.8.6",
     "react-dom": ">=16.8.6"
-  },
-  "resolutions": {
-    "braces": "^2.3.1",
-    "hosted-git-info": ">=3.0.8",
-    "trim": "^0.0.3",
-    "browserslist": "^4.16.6",
-    "glob-parent": "^5.1.2",
-    "css-what": "^5.0.1",
-    "immer": "^9.0.6",
-    "set-value": "^4.1.0",
-    "prismjs": "^1.25.0",
-    "nth-check": "^2.0.1",
-    "ansi-regex": "^5.0.1",
-    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.1",
-    "postcss": "8",
-    "nanoid": "^3.1.31"
   },
   "husky": {
     "hooks": {

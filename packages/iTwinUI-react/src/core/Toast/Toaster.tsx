@@ -4,10 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Root } from '../../types/toaster';
 import { getContainer } from '../utils';
 import { ToastCategory, ToastProps } from './Toast';
-import { ToastWrapper } from './ToastWrapper';
+import { ToastWrapper, ToastWrapperHandle } from './ToastWrapper';
 
 const TOASTS_CONTAINER_ID = 'iui-toasts-container';
 
@@ -45,20 +44,16 @@ export default class Toaster {
     order: 'descending',
     placement: 'top',
   };
-  private root: Root | undefined;
+  private toastsRef = React.createRef<ToastWrapperHandle>();
 
   constructor() {
-    this.prepareRoot();
-  }
-
-  private prepareRoot = async () => {
-    if (React.version.includes('18')) {
-      const reactDomClient = (await import('react-dom/client')).default;
-      this.root = reactDomClient.createRoot(
-        getContainer(TOASTS_CONTAINER_ID) ?? document.body,
-      );
+    const container = getContainer(TOASTS_CONTAINER_ID);
+    if (!container) {
+      return;
     }
-  };
+
+    ReactDOM.render(<ToastWrapper ref={this.toastsRef} />, container);
+  }
 
   /**
    * Set global Toaster settings for toasts order and placement.
@@ -70,6 +65,7 @@ export default class Toaster {
       ? 'ascending'
       : 'descending';
     this.settings = newSettings;
+    this.toastsRef.current?.setPlacement(this.settings.placement ?? 'top');
   }
 
   public positive(content: React.ReactNode, options?: ToastOptions) {
@@ -120,20 +116,7 @@ export default class Toaster {
   }
 
   private updateView() {
-    const toastWrapper = (
-      <ToastWrapper toasts={this.toasts} placement={this.settings.placement} />
-    );
-    if (!!this.root) {
-      this.root.render(toastWrapper);
-      return;
-    }
-
-    const container = getContainer(TOASTS_CONTAINER_ID);
-    if (!container) {
-      return;
-    }
-
-    ReactDOM.render(toastWrapper, container);
+    this.toastsRef.current?.setToasts(this.toasts);
   }
 
   private closeToast(toastId: number): void {
