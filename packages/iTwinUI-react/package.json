@@ -38,7 +38,7 @@
     "createComponent": "node scripts/createComponent.js",
     "format": "prettier --config .prettierrc **/*.{tsx,ts,js} --ignore-path .gitignore --write",
     "lint": "eslint \"**/*.{js,ts,tsx}\" --max-warnings=0",
-    "lint:fix": "yarn lint --fix && yarn lint:copyright --fix */**/*.{js,ts,tsx}",
+    "lint:fix": "yarn lint --fix && node ../configs/copyrightLinter.js --fix \"*/**/*.{js,ts,tsx}\"",
     "copy-files": "cpy \"../../{README,LICENSE}.md\" .",
     "storybook": "start-storybook -p 6006",
     "dev": "yarn storybook",
