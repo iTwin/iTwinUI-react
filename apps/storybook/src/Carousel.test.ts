@@ -3,12 +3,9 @@ describe('Carousel', () => {
   const tests = ['Basic', 'Controlled'];
 
   tests.forEach((testName) => {
-    const id = `${storyPath
-      .replace('/', '-')
-      .toLowerCase()}--${testName.replaceAll(' ', '-').toLowerCase()}`;
-
-    it(testName, () => {
-      cy.visit('iframe', { qs: { id } });
+    it(testName, function () {
+      cy.storyId(storyPath, testName).as('id');
+      cy.visit('iframe', { qs: { id: this.id } });
       cy.wait(1000); // wait for dots list to finish scrolling
       cy.compareSnapshot(testName);
     });

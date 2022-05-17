@@ -9,12 +9,9 @@ describe('ButtonGroup', () => {
   ];
 
   tests.forEach((testName) => {
-    const id = `${storyPath
-      .replace('/', '-')
-      .toLowerCase()}--${testName.replaceAll(' ', '-').toLowerCase()}`;
-
-    it(testName, () => {
-      cy.visit('iframe', { qs: { id } });
+    it(testName, function () {
+      cy.storyId(storyPath, testName).as('id');
+      cy.visit('iframe', { qs: { id: this.id } });
 
       if (testName.includes('Overflow')) {
         cy.get('small').hide();

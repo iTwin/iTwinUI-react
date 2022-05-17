@@ -3,12 +3,9 @@ describe('SplitButton', () => {
   const tests = ['Basic'];
 
   tests.forEach((testName) => {
-    const id = `${storyPath
-      .replace('/', '-')
-      .toLowerCase()}--${testName.replaceAll(' ', '-').toLowerCase()}`;
-
-    it(testName, () => {
-      cy.visit('iframe', { qs: { id } });
+    it(testName, function () {
+      cy.storyId(storyPath, testName).as('id');
+      cy.visit('iframe', { qs: { id: this.id } });
       cy.compareSnapshot(`${testName} (Closed)`);
       cy.get('.iui-button').last().click();
       cy.compareSnapshot(`${testName} (Open)`);

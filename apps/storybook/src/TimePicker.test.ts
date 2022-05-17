@@ -3,12 +3,9 @@ describe('TimePicker', () => {
   const tests = ['Basic'];
 
   tests.forEach((testName) => {
-    const id = `${storyPath
-      .replace('/', '-')
-      .toLowerCase()}--${testName.replaceAll(' ', '-').toLowerCase()}`;
-
-    it(testName, () => {
-      cy.visit('iframe', { qs: { id } });
+    it(testName, function () {
+      cy.storyId(storyPath, testName).as('id');
+      cy.visit('iframe', { qs: { id: this.id } });
       cy.get('.iui-button').last().click();
       cy.get('.iui-input-container').hide();
       cy.compareSnapshot(testName);

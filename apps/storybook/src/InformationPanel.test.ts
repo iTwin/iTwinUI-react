@@ -3,12 +3,9 @@ describe('InformationPanel', () => {
   const tests = ['Basic', 'Custom Actions', 'Custom Width', 'Horizontal'];
 
   tests.forEach((testName) => {
-    const id = `${storyPath
-      .replace('/', '-')
-      .toLowerCase()}--${testName.replaceAll(' ', '-').toLowerCase()}`;
-
-    it(testName, () => {
-      cy.visit('iframe', { qs: { id } });
+    it(testName, function () {
+      cy.storyId(storyPath, testName).as('id');
+      cy.visit('iframe', { qs: { id: this.id } });
       cy.get('.iui-button').first().click();
       cy.compareSnapshot(testName);
     });
