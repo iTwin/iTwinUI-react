@@ -89,5 +89,4 @@ jobs:
 
       - run: yarn install --frozen-lockfile
 
-      - run: yarn build --filter=storybook
       - run: yarn test --filter=storybook
