@@ -4,8 +4,8 @@ describe('DatePicker', () => {
 
   tests.forEach((testName) => {
     it(testName, function () {
-      cy.storyId(storyPath, testName).as('id');
-      cy.visit('iframe', { qs: { id: this.id } });
+      const id = Cypress.storyId(storyPath, testName);
+      cy.visit('iframe', { qs: { id } });
       cy.get('#picker-button + span').hide();
       cy.get('#picker-button').click();
       cy.compareSnapshot(testName);

@@ -4,8 +4,8 @@ describe('TimePicker', () => {
 
   tests.forEach((testName) => {
     it(testName, function () {
-      cy.storyId(storyPath, testName).as('id');
-      cy.visit('iframe', { qs: { id: this.id } });
+      const id = Cypress.storyId(storyPath, testName);
+      cy.visit('iframe', { qs: { id } });
       cy.get('.iui-button').last().click();
       cy.get('.iui-input-container').hide();
       cy.compareSnapshot(testName);

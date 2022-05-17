@@ -22,3 +22,14 @@ Cypress.on('uncaught:exception', (err, runnable) => {
     return false;
   }
 });
+
+/**
+ * Helper function to get the storybook story id from the base path and the story name.
+ * @param {string} storyPath
+ * @param {string} storyName
+ */
+Cypress.storyId = (storyPath, storyName) => {
+  return `${storyPath.replace('/', '-').toLowerCase()}--${storyName
+    .replaceAll(' ', '-')
+    .toLowerCase()}`;
+};

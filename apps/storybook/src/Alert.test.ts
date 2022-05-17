@@ -10,9 +10,9 @@ describe('Alert', () => {
   ];
 
   tests.forEach((testName) => {
-    it(testName, function () {
-      cy.storyId(storyPath, testName).as('id');
-      cy.visit('iframe', { qs: { id: this.id } });
+    it(testName, () => {
+      const id = Cypress.storyId(storyPath, testName);
+      cy.visit('iframe', { qs: { id } });
       cy.compareSnapshot(testName);
     });
   });

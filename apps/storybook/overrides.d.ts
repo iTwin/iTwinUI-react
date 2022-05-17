@@ -24,11 +24,13 @@ declare global {
        * Hides the element by setting `visibility: hidden`.
        */
       hide(): Cypress.Chainable<Element>;
+    }
 
+    interface Cypress {
       /**
        * Helper function to get the story id from its base path and name.
        */
-      storyId(storyName: string, storyPath: string): Cypress.Chainable<string>;
+      storyId(storyPath: string, storyName: string): string;
     }
   }
 }

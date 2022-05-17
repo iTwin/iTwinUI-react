@@ -11,8 +11,8 @@ describe('ExpandableBlock', () => {
 
   tests.forEach((testName) => {
     it(testName, function () {
-      cy.storyId(storyPath, testName).as('id');
-      cy.visit('iframe', { qs: { id: this.id } });
+      const id = Cypress.storyId(storyPath, testName);
+      cy.visit('iframe', { qs: { id } });
       cy.compareSnapshot(`${testName} (Closed)`);
       cy.get('.iui-header').first().click();
       cy.compareSnapshot(`${testName} (Open)`);

@@ -4,8 +4,8 @@ describe('Carousel', () => {
 
   tests.forEach((testName) => {
     it(testName, function () {
-      cy.storyId(storyPath, testName).as('id');
-      cy.visit('iframe', { qs: { id: this.id } });
+      const id = Cypress.storyId(storyPath, testName);
+      cy.visit('iframe', { qs: { id } });
       cy.wait(1000); // wait for dots list to finish scrolling
       cy.compareSnapshot(testName);
     });
