@@ -1,7 +1,3 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
- * See LICENSE.md in the project root for license terms and full copyright notice.
- *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 
 type ComboBoxAction = 'open' | 'close' | 'select' | 'focus';
@@ -34,31 +30,34 @@ export const comboBoxReducer = (
   }
 };
 
-export const ComboBoxRefsContext = React.createContext<
-  | {
-      inputRef: React.RefObject<HTMLInputElement>;
-      menuRef: React.RefObject<HTMLUListElement>;
-      toggleButtonRef: React.RefObject<HTMLSpanElement>;
-      optionsExtraInfoRef: React.MutableRefObject<
-        Record<string, { __originalIndex: number }>
-      >;
-    }
-  | undefined
->(undefined);
+export const ComboBoxRefsContext =
+  React.createContext<
+    | {
+        inputRef: React.RefObject<HTMLInputElement>;
+        menuRef: React.RefObject<HTMLUListElement>;
+        toggleButtonRef: React.RefObject<HTMLSpanElement>;
+        optionsExtraInfoRef: React.MutableRefObject<
+          Record<string, { __originalIndex: number }>
+        >;
+      }
+    | undefined
+  >(undefined);
 ComboBoxRefsContext.displayName = 'ComboBoxRefsContext';
 
-export const ComboBoxStateContext = React.createContext<
-  | {
-      isOpen: boolean;
-      id: string;
-      minWidth: number;
-      focusedIndex?: number;
-    }
-  | undefined
->(undefined);
+export const ComboBoxStateContext =
+  React.createContext<
+    | {
+        isOpen: boolean;
+        id: string;
+        minWidth: number;
+        focusedIndex?: number;
+      }
+    | undefined
+  >(undefined);
 ComboBoxStateContext.displayName = 'ComboBoxStateContext';
 
-export const ComboBoxActionContext = React.createContext<
-  ((x: [ComboBoxAction] | [ComboBoxAction, number]) => void) | undefined
->(undefined);
+export const ComboBoxActionContext =
+  React.createContext<
+    ((x: [ComboBoxAction] | [ComboBoxAction, number]) => void) | undefined
+  >(undefined);
 ComboBoxActionContext.displayName = 'ComboBoxActionContext';
