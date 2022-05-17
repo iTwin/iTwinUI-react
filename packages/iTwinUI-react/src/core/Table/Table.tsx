@@ -708,24 +708,28 @@ export const Table = <
                       }}
                     >
                       {column.render('Header')}
-                      {(data.length !== 0 || areFiltersSet) && (
-                        <FilterToggle
-                          column={column}
-                          ownerDocument={ownerDocument}
-                        />
-                      )}
-                      {data.length !== 0 && column.canSort && (
-                        <div className='iui-cell-end-icon'>
-                          {column.isSorted && column.isSortedDesc ? (
-                            <SvgSortDown
-                              className='iui-icon iui-sort'
-                              aria-hidden
+                      {(column.Filter || column.canSort) && (
+                        <div className='iui-table-header-actions-container'>
+                          {(data.length !== 0 || areFiltersSet) && (
+                            <FilterToggle
+                              column={column}
+                              ownerDocument={ownerDocument}
                             />
-                          ) : (
-                            <SvgSortUp
-                              className='iui-icon iui-sort'
-                              aria-hidden
-                            />
+                          )}
+                          {data.length !== 0 && column.canSort && (
+                            <div className='iui-cell-end-icon'>
+                              {column.isSorted && column.isSortedDesc ? (
+                                <SvgSortDown
+                                  className='iui-icon iui-sort'
+                                  aria-hidden
+                                />
+                              ) : (
+                                <SvgSortUp
+                                  className='iui-icon iui-sort'
+                                  aria-hidden
+                                />
+                              )}
+                            </div>
                           )}
                         </div>
                       )}

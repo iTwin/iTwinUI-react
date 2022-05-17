@@ -54,6 +54,7 @@ export const FilterToggle = <T extends Record<string, unknown>>(
         >
           <IconButton
             styleType='borderless'
+            size='small'
             isActive={isVisible || column.filterValue}
             className={cx('iui-filter-button', className)}
             onClick={(e) => {

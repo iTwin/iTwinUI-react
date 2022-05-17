@@ -22,7 +22,7 @@ export const ModalContent = (props: ModalContentProps) => {
 
   useTheme();
   return (
-    <div className={cx('iui-modal-content', className)} {...rest}>
+    <div className={cx('iui-dialog-content', className)} {...rest}>
       {children}
     </div>
   );
