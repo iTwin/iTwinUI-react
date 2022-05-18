@@ -10,52 +10,85 @@ import {
   useSafeContext,
   useMergedRefs,
   useVirtualization,
-  VirtualScrollProps,
   mergeRefs,
   getWindow,
 } from '../utils';
 import { ComboBoxStateContext, ComboBoxRefsContext } from './helpers';
 
-const VirtualizedComboboxMenu = ({
-  children,
-  ...props
-}: VirtualScrollProps) => {
-  const { outerProps, innerProps, visibleChildren } = useVirtualization(props);
-
-  return (
-    <div {...outerProps}>
-      {React.cloneElement(
-        children as JSX.Element,
-        {
-          ref: mergeRefs(
-            innerProps.ref,
-            (children as React.FunctionComponentElement<HTMLElement>).ref,
-          ),
-          style: {
-            ...innerProps.style,
-            ...(children as JSX.Element).props.style,
-          },
-        },
-        visibleChildren,
-      )}
-    </div>
-  );
-};
-
 type ComboBoxMenuProps = Omit<MenuProps, 'onClick'> &
   React.ComponentPropsWithoutRef<'ul'>;
 
-export const ComboBoxMenu = React.forwardRef(
-  (props: ComboBoxMenuProps, forwardedRef: React.Ref<HTMLUListElement>) => {
-    const { className, style, ...rest } = props;
+const VirtualizedComboBoxMenu = React.forwardRef(
+  (
+    { children, style, ...rest }: ComboBoxMenuProps,
+    forwardedRef: React.Ref<HTMLUListElement>,
+  ) => {
     const {
       minWidth,
       id,
-      enableVirtualization,
       filteredOptions,
       getMenuItem,
       focusedIndex,
     } = useSafeContext(ComboBoxStateContext);
+    const { menuRef } = useSafeContext(ComboBoxRefsContext);
+
+    const virtualItemRenderer = React.useCallback(
+      (index: number) =>
+        filteredOptions.length > 0
+          ? getMenuItem(filteredOptions[index])
+          : (children as JSX.Element), // Here is expected empty state content
+      [filteredOptions, getMenuItem, children],
+    );
+
+    const { outerProps, innerProps, visibleChildren } = useVirtualization({
+      // 'Fool' VirtualScroll by passing length 1
+      // whenever there is no elements, to show empty state message
+      itemsLength: filteredOptions.length || 1,
+      itemRenderer: virtualItemRenderer,
+      scrollToIndex: focusedIndex,
+    });
+
+    const overflowY = getWindow()?.CSS?.supports?.('overflow-x: overlay')
+      ? { overflowY: 'overlay' }
+      : { overflowY: 'auto' };
+
+    const styles = React.useMemo(
+      () => ({
+        minWidth,
+        maxWidth: `min(${minWidth * 2}px, 90vw)`,
+        maxHeight: 315,
+      }),
+      [minWidth],
+    );
+
+    return (
+      <Surface
+        elevation={1}
+        style={{ ...styles, ...(overflowY as React.CSSProperties), ...style }}
+        {...rest}
+      >
+        <div {...outerProps}>
+          <Menu
+            id={`${id}-list`}
+            setFocus={false}
+            role='listbox'
+            ref={mergeRefs(menuRef, innerProps.ref, forwardedRef)}
+            style={innerProps.style}
+          >
+            {visibleChildren}
+          </Menu>
+        </div>
+      </Surface>
+    );
+  },
+);
+
+export const ComboBoxMenu = React.forwardRef(
+  (props: ComboBoxMenuProps, forwardedRef: React.Ref<HTMLUListElement>) => {
+    const { className, style, ...rest } = props;
+    const { minWidth, id, enableVirtualization } = useSafeContext(
+      ComboBoxStateContext,
+    );
     const { menuRef } = useSafeContext(ComboBoxRefsContext);
 
     const refs = useMergedRefs(menuRef, forwardedRef);
@@ -67,20 +100,6 @@ export const ComboBoxMenu = React.forwardRef(
         maxHeight: 315,
       }),
       [minWidth],
-    );
-
-    const overflowY = getWindow()?.CSS?.supports?.('overflow-x: overlay')
-      ? { overflowY: 'overlay' }
-      : { overflowY: 'auto' };
-
-    // 'Fool' VirtualScroll by passing length 1
-    // whenever there is no elements, to show empty state message
-    const virtualItemRenderer = React.useCallback(
-      (index: number) =>
-        filteredOptions.length > 0
-          ? getMenuItem(filteredOptions[index])
-          : (rest.children as JSX.Element), // Here is expected empty state content
-      [filteredOptions, getMenuItem, rest.children],
     );
 
     return (
@@ -96,26 +115,7 @@ export const ComboBoxMenu = React.forwardRef(
             {...rest}
           />
         ) : (
-          <Surface
-            elevation={1}
-            style={{ ...styles, ...(overflowY as React.CSSProperties) }}
-          >
-            <VirtualizedComboboxMenu
-              itemsLength={filteredOptions.length || 1}
-              itemRenderer={virtualItemRenderer}
-              scrollToIndex={focusedIndex}
-            >
-              <Menu
-                id={`${id}-list`}
-                style={style}
-                setFocus={false}
-                role='listbox'
-                ref={refs}
-                className={className}
-                {...rest}
-              />
-            </VirtualizedComboboxMenu>
-          </Surface>
+          <VirtualizedComboBoxMenu ref={forwardedRef} {...props} />
         )}
       </>
     );
