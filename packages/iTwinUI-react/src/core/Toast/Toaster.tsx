@@ -107,6 +107,8 @@ export default class Toaster {
     this.updateView();
   }
 
+  // Create container on demand.
+  // Cannot do it in constructor, because SSG/SSR apps would fail.
   private async createContainer() {
     const container = getContainer(TOASTS_CONTAINER_ID) ?? getDocument()?.body;
     if (!container) {
@@ -115,6 +117,8 @@ export default class Toaster {
 
     const toastWrapper = <ToastWrapper ref={this.toastsRef} />;
 
+    // Check React version and import react-dom/client asynchronously,
+    // because this import path fails on version 17.
     try {
       if (Number(React.version.split('.')[0]) > 17) {
         const reactDomClient = (await import('react-dom/client')).default;
