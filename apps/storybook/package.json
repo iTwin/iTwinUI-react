@@ -44,7 +44,7 @@
     "*.{tsx,ts,jsx,js}": [
       "prettier --write",
       "eslint --max-warnings=0 --fix",
-      "node ../configs/copyrightLinter.js --fix"
+      "node ../../packages/configs/copyrightLinter.js --fix"
     ]
   },
   "prettier": "configs/prettier-config",
