@@ -17,9 +17,9 @@ export type RadioTileProps = {
    */
   label?: React.ReactNode;
   /**
-   * Additional sublabel, if needed.
+   * Additional description, if needed.
    */
-  sublabel?: React.ReactNode;
+  description?: React.ReactNode;
   /**
    * Set focus on radio tile element.
    * @default false
@@ -37,7 +37,7 @@ export const RadioTile = React.forwardRef<HTMLInputElement, RadioTileProps>(
     const {
       icon,
       label,
-      sublabel,
+      description,
       setFocus = false,
       className,
       style,
@@ -69,8 +69,8 @@ export const RadioTile = React.forwardRef<HTMLInputElement, RadioTileProps>(
               className: cx('iui-radio-tile-icon', icon.props.className),
             })}
           {label && <div className='iui-radio-tile-label'>{label}</div>}
-          {sublabel && (
-            <div className='iui-radio-tile-sublabel'>{sublabel}</div>
+          {description && (
+            <div className='iui-radio-tile-sublabel'>{description}</div>
           )}
         </div>
       </label>
