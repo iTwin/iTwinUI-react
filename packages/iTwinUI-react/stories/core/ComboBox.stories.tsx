@@ -426,7 +426,7 @@ export const CustomRenderer: Story<Partial<ComboBoxProps<string>>> = (args) => {
 
   const itemRenderer = React.useCallback(
     ({ value, label }, { isSelected, id }) => (
-      <MenuItem key={value} id={id} isSelected={isSelected} value={value}>
+      <MenuItem key={id} id={id} isSelected={isSelected} value={value}>
         <em
           style={{
             textTransform: 'uppercase',
