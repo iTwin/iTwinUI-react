@@ -131,10 +131,10 @@ export const VirtualScroll = React.forwardRef<
 });
 
 /**
- * `useVirtualization` hook is using `VirtualScroll` component to render a huge amount of items.
+ * `useVirtualization` is used for efficiently rendering only the visible rows from a large list.
  * It returns `outerProps` and `innerProps`, which need to be applied on 2 container elements and `visibleChildren` which is a list of virtualized items.
  * @example
- * const itemRenderer = React.useCallback(() => (
+ * const itemRenderer = React.useCallback((index: number) => (
  *  <li key={index}>
  *    This is my item #{index}
  *  </li>
@@ -173,6 +173,8 @@ export const useVirtualization = (props: VirtualScrollProps) => {
   const [isMounted, setIsMounted] = React.useState(false);
 
   const onResize = React.useCallback(({ height }) => {
+    // Initial value returned by resize observer is 0
+    // So wait for the next one
     if (height > 0) {
       setIsMounted(true);
     }
@@ -401,7 +403,7 @@ export const useVirtualization = (props: VirtualScrollProps) => {
     } as React.HTMLAttributes<HTMLElement>,
     innerProps: {
       style: { willChange: 'transform' },
-      ref: mergeRefs(parentRef),
+      ref: mergeRefs(parentRef), // convert object ref to callback ref for better types
     } as const,
     visibleChildren,
   };

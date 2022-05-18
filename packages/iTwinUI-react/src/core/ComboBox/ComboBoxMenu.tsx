@@ -19,7 +19,10 @@ import { ComboBoxStateContext, ComboBoxRefsContext } from './helpers';
 type ComboBoxMenuProps = Omit<MenuProps, 'onClick'> &
   React.ComponentPropsWithoutRef<'ul'>;
 
-const VirtualComboboxMenu = ({ children, ...props }: VirtualScrollProps) => {
+const VirtualizedComboboxMenu = ({
+  children,
+  ...props
+}: VirtualScrollProps) => {
   const { outerProps, innerProps, visibleChildren } = useVirtualization(props);
 
   return (
@@ -98,7 +101,7 @@ export const ComboBoxMenu = React.forwardRef(
             elevation={1}
             style={{ ...styles, ...(overflowY as React.CSSProperties) }}
           >
-            <VirtualComboboxMenu
+            <VirtualizedComboboxMenu
               itemsLength={filteredOptions.length || 1}
               itemRenderer={virtualItemRenderer}
               scrollToIndex={focusedIndex}
@@ -112,7 +115,7 @@ export const ComboBoxMenu = React.forwardRef(
                 className={className}
                 {...rest}
               />
-            </VirtualComboboxMenu>
+            </VirtualizedComboboxMenu>
           </Surface>
         )}
       </>

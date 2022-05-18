@@ -85,7 +85,7 @@ export type ComboBoxProps<T> = {
     },
   ) => JSX.Element;
   /**
-   * Virtualization is used for the scrollable dropdown list.
+   * If enabled, virtualization is used for the scrollable dropdown list.
    * Use it if you expect a very long list of items.
    * @default false
    * @beta
