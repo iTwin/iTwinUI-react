@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { CommonProps, useTheme } from '../utils';
+import { useTheme } from '../utils';
 import '@itwin/itwinui-css/css/dialog.css';
 
 export type DialogContentProps = {

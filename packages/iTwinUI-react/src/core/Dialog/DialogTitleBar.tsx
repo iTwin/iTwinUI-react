@@ -5,7 +5,6 @@
 import React from 'react';
 import cx from 'classnames';
 import SvgClose from '@itwin/itwinui-icons-react/cjs/icons/Close';
-import { CommonProps } from '../utils';
 import { useTheme } from '@storybook/theming';
 import { IconButton } from '../Buttons';
 import '@itwin/itwinui-css/css/dialog.css';
