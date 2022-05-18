@@ -26,7 +26,7 @@ it('should render radio tile with label', () => {
 
 it('should render radio tile with label and sublabel', () => {
   const { container } = render(
-    <RadioTile label='My label' sublabel='And sublabel' />,
+    <RadioTile label='My label' description='And sublabel' />,
   );
   expect(container.querySelector('.iui-radio-tile')).toBeTruthy();
   const label = container.querySelector('.iui-radio-tile-label') as HTMLElement;
