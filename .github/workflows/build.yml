@@ -74,3 +74,10 @@ jobs:
       # `&` symbol is needed as it prevents Storybook from running endlessly
       - run: yarn dev &
       - run: yarn workspace @itwin/itwinui-react creevey
+      
+      - name: Publish test results artifact
+        if: failure()
+        uses: actions/upload-artifact@v3.0.0
+        with:
+          name: 'creevey_test_results'
+          path: '${{ github.workspace }}/tests'
