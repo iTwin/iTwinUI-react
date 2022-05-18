@@ -36,6 +36,7 @@ module.exports = {
   },
   async viteFinal(config, { configType }) {
     return mergeConfig(config, {
+      base: configType === 'PRODUCTION' ? './' : '/',
       server: {
         watch: {
           ignored: ['cypress-visual-report', 'cypress-visual-report/**'],
