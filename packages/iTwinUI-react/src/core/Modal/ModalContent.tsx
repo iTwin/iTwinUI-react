@@ -5,7 +5,7 @@
 import React from 'react';
 import cx from 'classnames';
 import { CommonProps, useTheme } from '../utils';
-import '@itwin/itwinui-css/css/modal.css';
+import '@itwin/itwinui-css/css/dialog.css';
 
 export type ModalContentProps = {
   /**
