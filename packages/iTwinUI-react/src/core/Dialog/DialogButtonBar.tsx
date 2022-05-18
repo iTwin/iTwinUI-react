@@ -12,20 +12,23 @@ export type DialogButtonBarProps = {
    * Buttons in the dialog bar.
    */
   children: React.ReactNode;
-} & Omit<CommonProps, 'title'>;
+} & React.ComponentPropsWithRef<'div'>;
 
 /**
  * Container for Buttons in dialog.
  */
-export const DialogButtonBar = (props: DialogButtonBarProps) => {
+export const DialogButtonBar = React.forwardRef<
+  HTMLDivElement,
+  DialogButtonBarProps
+>((props, ref) => {
   const { children, className, ...rest } = props;
 
   useTheme();
   return (
-    <div className={cx('iui-dialog-button-bar', className)} {...rest}>
+    <div className={cx('iui-dialog-button-bar', className)} ref={ref} {...rest}>
       {children}
     </div>
   );
-};
+});
 
 export default DialogButtonBar;

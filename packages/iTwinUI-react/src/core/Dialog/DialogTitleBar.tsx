@@ -24,18 +24,21 @@ export type DialogTitleBarProps = {
    * Dialog title bar content.
    */
   children: React.ReactNode;
-} & Omit<CommonProps, 'title'>;
+} & React.ComponentPropsWithRef<'div'>;
 
 /**
  * Dialog title bar.
  * @example
  * <Dialog.TitleBar isDismissible={true} onClose={onClose}>My dialog title</Dialog.TitleBar>
  */
-export const DialogTitleBar = (props: DialogTitleBarProps) => {
+export const DialogTitleBar = React.forwardRef<
+  HTMLDivElement,
+  DialogTitleBarProps
+>((props, ref) => {
   const { children, isDismissible = true, onClose, className, ...rest } = props;
   useTheme();
   return (
-    <div className={cx('iui-dialog-title-bar', className)} {...rest}>
+    <div className={cx('iui-dialog-title-bar', className)} ref={ref} {...rest}>
       <div className='iui-dialog-title'>{children}</div>
       {isDismissible && (
         <IconButton
@@ -49,6 +52,6 @@ export const DialogTitleBar = (props: DialogTitleBarProps) => {
       )}
     </div>
   );
-};
+});
 
 export default DialogTitleBar;

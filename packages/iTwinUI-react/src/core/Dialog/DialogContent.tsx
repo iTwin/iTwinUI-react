@@ -12,20 +12,23 @@ export type DialogContentProps = {
    * Main content in the `Dialog`.
    */
   children: React.ReactNode;
-} & Omit<CommonProps, 'title'>;
+} & React.ComponentPropsWithRef<'div'>;
 
 /**
  * Container for content in `Dialog`.
  */
-export const DialogContent = (props: DialogContentProps) => {
+export const DialogContent = React.forwardRef<
+  HTMLDivElement,
+  DialogContentProps
+>((props, ref) => {
   const { children, className, ...rest } = props;
 
   useTheme();
   return (
-    <div className={cx('iui-dialog-content', className)} {...rest}>
+    <div className={cx('iui-dialog-content', className)} ref={ref} {...rest}>
       {children}
     </div>
   );
-};
+});
 
 export default DialogContent;

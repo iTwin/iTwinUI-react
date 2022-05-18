@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { CommonProps, useTheme } from '../utils';
+import { useTheme } from '../utils';
 import '@itwin/itwinui-css/css/dialog.css';
 import { DialogBackdrop } from './DialogBackdrop';
 import { DialogTitleBar } from './DialogTitleBar';
@@ -15,7 +15,7 @@ export type DialogProps = {
    * Content of the dialog.
    */
   children: React.ReactNode;
-} & Omit<CommonProps, 'title'>;
+} & React.ComponentPropsWithRef<'div'>;
 
 /**
  * Dialog component which can wrap any content.
@@ -37,20 +37,28 @@ export type DialogProps = {
  *   </Dialog.ButtonBar>
  * </Dialog>
  */
-export const Dialog = (props: DialogProps) => {
-  const { className, children, ...rest } = props;
+const DialogComponent = React.forwardRef<HTMLDivElement, DialogProps>(
+  (props, ref) => {
+    const { className, children, ...rest } = props;
 
-  useTheme();
+    useTheme();
 
-  return (
-    <div className={cx('iui-dialog', className)} role='dialog' {...rest}>
-      {children}
-    </div>
-  );
-};
+    return (
+      <div
+        className={cx('iui-dialog', className)}
+        role='dialog'
+        ref={ref}
+        {...rest}
+      >
+        {children}
+      </div>
+    );
+  },
+);
+export const Dialog = Object.assign(DialogComponent, {
+  Backdrop: DialogBackdrop,
+  TitleBar: DialogTitleBar,
+  Content: DialogContent,
+});
 
-Dialog.Backdrop = DialogBackdrop;
-Dialog.TitleBar = DialogTitleBar;
-Dialog.Content = DialogContent;
-
-export default Dialog;
+export default DialogComponent;

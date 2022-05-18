@@ -6,11 +6,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import cx from 'classnames';
 import {
-  CommonProps,
   useTheme,
   getContainer,
   getDocument,
   FocusTrap,
+  useMergedRefs,
 } from '../utils';
 import '@itwin/itwinui-css/css/dialog.css';
 import { CSSTransition } from 'react-transition-group';
@@ -41,10 +41,6 @@ export type DialogBackdropProps = {
    */
   closeOnEsc?: boolean;
   /**
-   * Handle key press. Returns the keyboard event.
-   */
-  onKeyDown?: React.KeyboardEventHandler;
-  /**
    * Id of the root where the dialog will be rendered in.
    * @default 'iui-react-portal-container'
    */
@@ -64,7 +60,7 @@ export type DialogBackdropProps = {
    * Content of the backdrop.
    */
   children: React.ReactNode;
-} & Omit<CommonProps, 'title'>;
+} & React.ComponentPropsWithRef<'div'>;
 
 /**
  * It is a wrapper component for `Dialog` that also adds a backdrop.
@@ -91,7 +87,10 @@ export type DialogBackdropProps = {
  *   </Dialog>
  * </Dialog.Backdrop>
  */
-export const DialogBackdrop = (props: DialogBackdropProps) => {
+export const DialogBackdrop = React.forwardRef<
+  HTMLDivElement,
+  DialogBackdropProps
+>((props, ref) => {
   const {
     children,
     isOpen = false,
@@ -112,6 +111,7 @@ export const DialogBackdrop = (props: DialogBackdropProps) => {
   const container = getContainer(dialogRootId, ownerDocument);
 
   const overlayRef = React.useRef<HTMLDivElement>(null);
+  const refs = useMergedRefs(overlayRef, ref);
 
   const originalBodyOverflow = React.useRef('');
 
@@ -148,7 +148,7 @@ export const DialogBackdrop = (props: DialogBackdropProps) => {
     };
   }, [isOpen, ownerDocument]);
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     // Prevents React from resetting its properties
     event.persist();
     if (isDismissible && closeOnEsc && event.key === 'Escape' && onClose) {
@@ -191,7 +191,7 @@ export const DialogBackdrop = (props: DialogBackdropProps) => {
             )}
             tabIndex={-1}
             onKeyDown={handleKeyDown}
-            ref={overlayRef}
+            ref={refs}
             onMouseDown={handleMouseDown}
             {...rest}
           >
@@ -204,6 +204,6 @@ export const DialogBackdrop = (props: DialogBackdropProps) => {
   ) : (
     <></>
   );
-};
+});
 
 export default DialogBackdrop;
