@@ -16,9 +16,6 @@ import {
 } from '../utils';
 import { ComboBoxStateContext, ComboBoxRefsContext } from './helpers';
 
-type ComboBoxMenuProps = Omit<MenuProps, 'onClick'> &
-  React.ComponentPropsWithoutRef<'ul'>;
-
 const VirtualizedComboboxMenu = ({
   children,
   ...props
@@ -45,6 +42,9 @@ const VirtualizedComboboxMenu = ({
   );
 };
 
+type ComboBoxMenuProps = Omit<MenuProps, 'onClick'> &
+  React.ComponentPropsWithoutRef<'ul'>;
+
 export const ComboBoxMenu = React.forwardRef(
   (props: ComboBoxMenuProps, forwardedRef: React.Ref<HTMLUListElement>) => {
     const { className, style, ...rest } = props;
@@ -55,7 +55,6 @@ export const ComboBoxMenu = React.forwardRef(
       filteredOptions,
       getMenuItem,
       focusedIndex,
-      emptyStateContent,
     } = useSafeContext(ComboBoxStateContext);
     const { menuRef } = useSafeContext(ComboBoxRefsContext);
 
@@ -80,8 +79,8 @@ export const ComboBoxMenu = React.forwardRef(
       (index: number) =>
         filteredOptions.length > 0
           ? getMenuItem(filteredOptions[index])
-          : emptyStateContent,
-      [emptyStateContent, filteredOptions, getMenuItem],
+          : (rest.children as JSX.Element), // Here is expected empty state content
+      [filteredOptions, getMenuItem, rest.children],
     );
 
     return (
