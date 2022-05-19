@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import ReactDOM from 'react-dom';
+import * as ReactDOM from 'react-dom';
 import { getContainer, getDocument } from '../utils';
 import { ToastCategory, ToastProps } from './Toast';
 import { ToastWrapper, ToastWrapperHandle } from './ToastWrapper';
@@ -117,18 +117,17 @@ export default class Toaster {
 
     const toastWrapper = <ToastWrapper ref={this.toastsRef} />;
 
-    // Check React version and import react-dom/client asynchronously,
-    // because this import path fails on version 17.
-    try {
-      if (Number(React.version.split('.')[0]) > 17) {
-        const reactDomClient = (await import('react-dom/client')).default;
-        const root = reactDomClient.createRoot(container);
-        root.render(toastWrapper);
-      } else {
-        ReactDOM.render(toastWrapper, container);
-      }
-    } catch (e) {
-      console.error('Toasts renderer got an unexpected error: ', e);
+    const _ReactDOM = ReactDOM as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+
+    // v18 mode
+    if (_ReactDOM.createRoot) {
+      // suppress warning about importing createRoot from react-dom/client
+      _ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.usingClientEntryPoint = true;
+
+      const root = _ReactDOM.createRoot(container);
+      root.render(toastWrapper);
+    } else {
+      // v17 and before
       ReactDOM.render(toastWrapper, container);
     }
   }
