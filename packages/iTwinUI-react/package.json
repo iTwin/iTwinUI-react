@@ -38,8 +38,7 @@
     "createComponent": "node scripts/createComponent.js",
     "format": "prettier --config .prettierrc **/*.{tsx,ts,js} --ignore-path .gitignore --write",
     "lint": "eslint \"**/*.{js,ts,tsx}\" --max-warnings=0",
-    "lint:fix": "yarn lint --fix && yarn lint:copyright --fix */**/*.{js,ts,tsx}",
-    "lint:copyright": "node scripts/copyrightLinter.js",
+    "lint:fix": "yarn lint --fix && node ../configs/copyrightLinter.js --fix \"*/**/*.{js,ts,tsx}\"",
     "copy-files": "cpy \"../../{README,LICENSE}.md\" .",
     "storybook": "start-storybook -p 6006",
     "dev": "yarn storybook",
@@ -84,14 +83,11 @@
     "concurrently": "^5.3.0",
     "configs": "*",
     "creevey": "^0.8.0-beta.0",
-    "fast-glob": "^3.2.5",
-    "husky": "^4.0.0",
     "inquirer": "^6.2.2",
     "jest": "^28.1.0",
     "jest-cli": "^28.1.0",
     "jest-environment-jsdom": "^28.1.0",
     "jest-junit": "^13.2.0",
-    "lint-staged": "^12.1.2",
     "markdown-to-jsx": "6.11.4",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
@@ -107,16 +103,11 @@
     "react": ">=16.8.6",
     "react-dom": ">=16.8.6"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "*.{tsx,ts,jsx,js}": [
       "prettier --write",
       "eslint --max-warnings=0 --fix",
-      "yarn lint:copyright --fix"
+      "node ../configs/copyrightLinter.js --fix"
     ]
   },
   "prettier": "configs/prettier-config",
