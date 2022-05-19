@@ -37,8 +37,8 @@ export type DialogProps = {
  *   </Dialog.ButtonBar>
  * </Dialog>
  */
-const DialogComponent = React.forwardRef<HTMLDivElement, DialogProps>(
-  (props, ref) => {
+export const Dialog = Object.assign(
+  React.forwardRef<HTMLDivElement, DialogProps>((props, ref) => {
     const { className, children, ...rest } = props;
 
     useTheme();
@@ -53,12 +53,12 @@ const DialogComponent = React.forwardRef<HTMLDivElement, DialogProps>(
         {children}
       </div>
     );
+  }),
+  {
+    Backdrop: DialogBackdrop,
+    TitleBar: DialogTitleBar,
+    Content: DialogContent,
   },
 );
-export const Dialog = Object.assign(DialogComponent, {
-  Backdrop: DialogBackdrop,
-  TitleBar: DialogTitleBar,
-  Content: DialogContent,
-});
 
-export default DialogComponent;
+export default Dialog;
