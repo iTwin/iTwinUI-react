@@ -507,7 +507,9 @@ export const Table = <
     {} as Record<string, string>,
   );
 
-  const areFiltersSet = allColumns.some((column) => column.filterValue != null && column.filterValue !== '');
+  const areFiltersSet = allColumns.some(
+    (column) => column.filterValue != null && column.filterValue !== '',
+  );
 
   const onRowClickHandler = React.useCallback(
     (event: React.MouseEvent, row: Row<T>) => {
@@ -692,7 +694,10 @@ export const Table = <
                       { 'iui-sorted': column.isSorted },
                       column.columnClassName,
                     ),
-                    style: { ...getCellStyle(column, !!state.isTableResizing) },
+                    style: {
+                      ...getCellStyle(column, !!state.isTableResizing),
+                      flexWrap: 'unset',
+                    },
                   });
                   return (
                     <div
@@ -708,28 +713,24 @@ export const Table = <
                       }}
                     >
                       {column.render('Header')}
-                      {(column.Filter || column.canSort) && (
-                        <div className='iui-table-header-actions-container'>
-                          {(data.length !== 0 || areFiltersSet) && (
-                            <FilterToggle
-                              column={column}
-                              ownerDocument={ownerDocument}
+                      {(data.length !== 0 || areFiltersSet) && (
+                        <FilterToggle
+                          column={column}
+                          ownerDocument={ownerDocument}
+                        />
+                      )}
+                      {data.length !== 0 && column.canSort && (
+                        <div className='iui-cell-end-icon'>
+                          {column.isSorted && column.isSortedDesc ? (
+                            <SvgSortDown
+                              className='iui-icon iui-sort'
+                              aria-hidden
                             />
-                          )}
-                          {data.length !== 0 && column.canSort && (
-                            <div className='iui-cell-end-icon'>
-                              {column.isSorted && column.isSortedDesc ? (
-                                <SvgSortDown
-                                  className='iui-icon iui-sort'
-                                  aria-hidden
-                                />
-                              ) : (
-                                <SvgSortUp
-                                  className='iui-icon iui-sort'
-                                  aria-hidden
-                                />
-                              )}
-                            </div>
+                          ) : (
+                            <SvgSortUp
+                              className='iui-icon iui-sort'
+                              aria-hidden
+                            />
                           )}
                         </div>
                       )}
