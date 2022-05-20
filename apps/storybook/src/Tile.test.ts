@@ -17,6 +17,16 @@ describe('Tile', () => {
     it(testName, function () {
       const id = Cypress.storyId(storyPath, testName);
       cy.visit('iframe', { qs: { id } });
+
+      // Hide thumbnail if present
+      if (
+        testName === 'Basic' ||
+        testName === 'All Props' ||
+        testName === 'Actionable'
+      ) {
+        cy.get('.iui-tile-thumbnail-picture').hide();
+      }
+
       cy.compareSnapshot(testName);
     });
   });
