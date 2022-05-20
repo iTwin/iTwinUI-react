@@ -126,6 +126,8 @@ export default class Toaster {
 
       const root = _ReactDOM.createRoot(container);
       root.render(toastWrapper);
+      // revert suppression, not to influence users app
+      _ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.usingClientEntryPoint = false;
     } else {
       // v17 and before
       ReactDOM.render(toastWrapper, container);
