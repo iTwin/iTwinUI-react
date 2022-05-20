@@ -51,10 +51,10 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v1.16
         if: always()
         with:
-          files: "packages/iTwinUI-react/coverage/junit.xml"
+          files: 'packages/iTwinUI-react/coverage/junit.xml'
           comment_mode: off
-          check_name: "Test results"
-          fail_on: "nothing"
+          check_name: 'Test results'
+          fail_on: 'nothing'
 
   visual-test:
     name: Run visual tests
