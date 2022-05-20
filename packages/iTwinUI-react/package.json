@@ -100,8 +100,8 @@
     "webpack": "5"
   },
   "peerDependencies": {
-    "react": "^16.8.6 || ^17.0.0 || ^18.0.0",
-    "react-dom": "^16.8.6 || ^17.0.0 || ^18.0.0"
+    "react": ">=16.8.6 < 19.0.0",
+    "react-dom": ">=16.8.6 < 19.0.0"
   },
   "lint-staged": {
     "*.{tsx,ts,jsx,js}": [
