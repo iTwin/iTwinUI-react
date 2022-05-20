@@ -32,11 +32,11 @@ it('should render radio tile with label and description', () => {
   const label = container.querySelector('.iui-radio-tile-label') as HTMLElement;
   expect(label).toBeTruthy();
   expect(label.textContent).toBe('My label');
-  const sublabel = container.querySelector(
+  const description = container.querySelector(
     '.iui-radio-tile-sublabel',
   ) as HTMLElement;
-  expect(sublabel).toBeTruthy();
-  expect(sublabel.textContent).toBe('And description');
+  expect(description).toBeTruthy();
+  expect(description.textContent).toBe('And description');
 });
 
 it('should render radio tile with icon', () => {
