@@ -30,7 +30,7 @@ export type RadioTileProps = {
 /**
  * RadioTile component to be used in RadioTileGroup component
  * @example
- * <RadioTile label='My tile' sublabel='Some info' icon={<SvgSmileyHappy />} />
+ * <RadioTile label='My tile' description='Some info' icon={<SvgSmileyHappy />} />
  */
 export const RadioTile = React.forwardRef<HTMLInputElement, RadioTileProps>(
   (props, ref) => {
