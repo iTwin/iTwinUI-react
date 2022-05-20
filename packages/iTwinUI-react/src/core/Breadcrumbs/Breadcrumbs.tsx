@@ -63,7 +63,7 @@ export const Breadcrumbs = React.forwardRef(
     const refs = useMergedRefs(overflowRef, ref);
 
     const Separator = () => (
-      <li className='iui-breadcrumbs-separator' aria-hidden='true'>
+      <li className='iui-breadcrumbs-separator' aria-hidden>
         {separator ?? <SvgChevronRight />}
       </li>
     );

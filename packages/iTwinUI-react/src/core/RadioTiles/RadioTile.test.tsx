@@ -24,9 +24,9 @@ it('should render radio tile with label', () => {
   expect(label.textContent).toBe('My label');
 });
 
-it('should render radio tile with label and sublabel', () => {
+it('should render radio tile with label and description', () => {
   const { container } = render(
-    <RadioTile label='My label' description='And sublabel' />,
+    <RadioTile label='My label' description='And description' />,
   );
   expect(container.querySelector('.iui-radio-tile')).toBeTruthy();
   const label = container.querySelector('.iui-radio-tile-label') as HTMLElement;
@@ -36,7 +36,7 @@ it('should render radio tile with label and sublabel', () => {
     '.iui-radio-tile-sublabel',
   ) as HTMLElement;
   expect(sublabel).toBeTruthy();
-  expect(sublabel.textContent).toBe('And sublabel');
+  expect(sublabel.textContent).toBe('And description');
 });
 
 it('should render radio tile with icon', () => {
