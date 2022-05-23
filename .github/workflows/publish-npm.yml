@@ -1,0 +1,27 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: Publish npm package
+    runs-on: ubuntu-latest
+    needs: release-please
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node 16.X
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          registry-url: https://registry.npmjs.org/
+
+      - run: yarn install
+      - run: yarn build
+
+      - run: npm publish --access public
+        working-directory: "./packages/iTwinUI-react"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPMJS_PUBLISH_ITWIN }}
