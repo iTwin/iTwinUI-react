@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.38.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.37.3...v1.38.0) (2022-05-23)
+
+
+### Fixes
+
+* **Table:** Allow 'false' as valid filter value ([#664](https://www.github.com/iTwin/iTwinUI-react/issues/664)) ([628cc26](https://www.github.com/iTwin/iTwinUI-react/commit/628cc26afc044e1b3f1c09b2489b31fe15b34de1))
+* **toaster:** Do not call `ReactDOM` render multiple times ([#667](https://www.github.com/iTwin/iTwinUI-react/issues/667)) ([195a857](https://www.github.com/iTwin/iTwinUI-react/commit/195a8573157ce6588e0edb40569770ffa4636584))
+* **Toaster:** Support SSG/SSR apps ([#685](https://www.github.com/iTwin/iTwinUI-react/issues/685)) ([72f02c5](https://www.github.com/iTwin/iTwinUI-react/commit/72f02c51be595286a9493ea3405523e224d52402))
+* Update iTwinUI-css to 0.58.0 ([#678](https://www.github.com/iTwin/iTwinUI-react/issues/678)) ([16b9310](https://www.github.com/iTwin/iTwinUI-react/commit/16b93106c8d3787cc3f6bdee469604db6167ccf0))
+
 ### [1.37.3](https://www.github.com/iTwin/iTwinUI-react/compare/v1.37.2...v1.37.3) (2022-05-06)
 
 ### Fixes
