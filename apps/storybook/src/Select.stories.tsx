@@ -25,6 +25,18 @@ export default {
     menuStyle: { control: { disable: true } },
     menuClassName: { control: { disable: true } },
   },
+  decorators: [
+    (Story, context) =>
+      context.story.includes('Truncate Middle Text') ? (
+        <div style={{ minHeight: 365, width: 300 }}>
+          <Story />
+        </div>
+      ) : (
+        <div style={{ minHeight: 365 }}>
+          <Story />
+        </div>
+      ),
+  ],
 } as Meta<SelectProps<unknown>>;
 
 export const Basic: Story<SelectProps<number>> = (args) => {
