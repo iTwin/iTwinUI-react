@@ -87,7 +87,7 @@ export const Carousel = Object.assign(
       }
 
       justMounted.current = false;
-    }, [scrollToSlide, userActiveIndex]);
+    }, [userActiveIndex]);
 
     const [slideCount, setSlideCount] = React.useState(0);
 
