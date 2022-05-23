@@ -73,12 +73,10 @@ export const Carousel = Object.assign(
 
     const justMounted = React.useRef(true);
     React.useEffect(() => {
-      if (userActiveIndex != undefined) {
-        setCurrentIndex(userActiveIndex);
-        scrollToSlide.current(userActiveIndex, {
-          instant: justMounted.current,
-        });
-      }
+      setCurrentIndex(userActiveIndex);
+      scrollToSlide.current(userActiveIndex, {
+        instant: justMounted.current,
+      });
 
       // re-focus the carousel for keyboard nav, but not on first mount
       // because it shows outline and might interfere with other components
