@@ -124,8 +124,9 @@ export default class Toaster {
         this.isInitialized = true;
         this.toastsRef.current?.setToasts(this.toasts);
       });
+    } else {
+      this.toastsRef.current?.setToasts(this.toasts);
     }
-    this.toastsRef.current?.setToasts(this.toasts);
   }
 
   private closeToast(toastId: number): void {
