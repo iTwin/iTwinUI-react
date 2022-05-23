@@ -694,7 +694,10 @@ export const Table = <
                       { 'iui-sorted': column.isSorted },
                       column.columnClassName,
                     ),
-                    style: { ...getCellStyle(column, !!state.isTableResizing) },
+                    style: {
+                      ...getCellStyle(column, !!state.isTableResizing),
+                      flexWrap: 'unset',
+                    },
                   });
                   return (
                     <div
