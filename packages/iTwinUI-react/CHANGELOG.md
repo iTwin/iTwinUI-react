@@ -10,10 +10,11 @@
 
 * **Table:** Allow 'false' as valid filter value ([#664](https://www.github.com/iTwin/iTwinUI-react/issues/664)) ([628cc26](https://www.github.com/iTwin/iTwinUI-react/commit/628cc26afc044e1b3f1c09b2489b31fe15b34de1))
 * **Toaster:** Do not call `ReactDOM` render multiple times ([#667](https://www.github.com/iTwin/iTwinUI-react/issues/667)) ([195a857](https://www.github.com/iTwin/iTwinUI-react/commit/195a8573157ce6588e0edb40569770ffa4636584))
-* **Checkbox:** Add border to disabled checkbox through css package update ([#678](https://www.github.com/iTwin/iTwinUI-react/issues/678)) ([16b9310](https://www.github.com/iTwin/iTwinUI-react/commit/16b93106c8d3787cc3f6bdee469604db6167ccf0))
-* **Select:** Fix arrow color through css package update ([#678](https://www.github.com/iTwin/iTwinUI-react/issues/678)) ([16b9310](https://www.github.com/iTwin/iTwinUI-react/commit/16b93106c8d3787cc3f6bdee469604db6167ccf0))
-* **Tabs:** Fix description color through css package update ([#678](https://www.github.com/iTwin/iTwinUI-react/issues/678)) ([16b9310](https://www.github.com/iTwin/iTwinUI-react/commit/16b93106c8d3787cc3f6bdee469604db6167ccf0))
-* **Skeleton:** Changed color through css package update ([#678](https://www.github.com/iTwin/iTwinUI-react/issues/678)) ([16b9310](https://www.github.com/iTwin/iTwinUI-react/commit/16b93106c8d3787cc3f6bdee469604db6167ccf0))
+* Visuals change after CSS update ([#678](https://www.github.com/iTwin/iTwinUI-react/issues/678)) ([16b9310](https://www.github.com/iTwin/iTwinUI-react/commit/16b93106c8d3787cc3f6bdee469604db6167ccf0))
+  - **Select:** Arrow color
+  - **Tabs:** Description color
+  - **Skeleton:** Background color
+  - **Checkbox:** Add border to disabled state
 
 ### [1.37.3](https://www.github.com/iTwin/iTwinUI-react/compare/v1.37.2...v1.37.3) (2022-05-06)
 
