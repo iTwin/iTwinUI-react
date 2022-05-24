@@ -77,10 +77,10 @@ export const CarouselSlider = React.forwardRef<
   // reset isManuallyUpdating.current to false after the last scroll event
   const handleOnScroll = React.useCallback(() => {
     if (scrollTimeout.current) {
-      clearTimeout(scrollTimeout.current);
+      getWindow()?.clearTimeout(scrollTimeout.current);
     }
 
-    scrollTimeout.current = window.setTimeout(() => {
+    scrollTimeout.current = getWindow()?.setTimeout(() => {
       isManuallyUpdating.current = false;
     }, 100);
   }, [isManuallyUpdating]);
