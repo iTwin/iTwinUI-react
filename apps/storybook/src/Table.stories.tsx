@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React, { useCallback } from 'react';
-import {
+import type {
   actions,
   ActionType,
   CellProps,
