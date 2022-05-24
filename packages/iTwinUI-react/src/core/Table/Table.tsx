@@ -238,6 +238,11 @@ export type TableProps<
    */
   enableVirtualization?: boolean;
   /**
+   * When using virtualized table, initialize the table scrolled to this item
+   * Does not support non-virtualized tables or tables with pagination
+   */
+  scrollToItem?: T;
+  /**
    * Flag whether columns can be reordered.
    * @default false
    */
@@ -344,6 +349,7 @@ export const Table = <
     styleType = 'default',
     enableVirtualization = false,
     enableColumnReordering = false,
+    scrollToItem,
     ...rest
   } = props;
 
@@ -568,6 +574,17 @@ export const Table = <
     ],
   );
 
+  const scrollToIndex = React.useMemo((): number | undefined => {
+    if (!enableVirtualization || paginatorRenderer) {
+      return undefined;
+    }
+    const index = rows.findIndex((row) => row.original == scrollToItem);
+    if (index < 0) {
+      return undefined;
+    }
+    return index;
+  }, [enableVirtualization, paginatorRenderer, rows, scrollToItem]);
+
   const columnRefs = React.useRef<Record<string, HTMLDivElement>>({});
   const previousTableWidth = React.useRef(0);
   const onTableResize = React.useCallback(
@@ -775,6 +792,7 @@ export const Table = <
                 <VirtualScroll
                   itemsLength={page.length}
                   itemRenderer={virtualizedItemRenderer}
+                  scrollToIndex={scrollToIndex}
                 />
               ) : (
                 page.map((_, index) => getPreparedRow(index))
