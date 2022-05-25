@@ -49,16 +49,13 @@ export default class Toaster {
 
   // Create container on demand.
   // Cannot do it in constructor, because SSG/SSR apps would fail.
-  private asyncInit = new Promise<void>((resolve) => {
+  private asyncInit = async () => {
     if (this.isInitialized) {
-      resolve();
       return;
     }
 
     const container = getContainer(TOASTS_CONTAINER_ID) ?? getDocument()?.body;
     if (!container) {
-      // should never happen
-      resolve();
       return;
     }
     this.isInitialized = true;
@@ -70,20 +67,17 @@ export default class Toaster {
     // v18 mode
     if (_ReactDOM.createRoot) {
       // suppress warning about importing createRoot from react-dom/client
-      _ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.usingClientEntryPoint =
-        true;
+      _ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.usingClientEntryPoint = true;
 
       const root = _ReactDOM.createRoot(container);
       root.render(toastWrapper);
       // revert suppression, not to influence users app
-      _ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.usingClientEntryPoint =
-        false;
+      _ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.usingClientEntryPoint = false;
     } else {
       // v17 and before
       ReactDOM.render(toastWrapper, container);
     }
-    resolve();
-  });
+  };
 
   /**
    * Set global Toaster settings for toasts order and placement.
@@ -95,7 +89,7 @@ export default class Toaster {
       ? 'ascending'
       : 'descending';
     this.settings = newSettings;
-    this.asyncInit.then(() => {
+    this.asyncInit().then(() => {
       this.toastsRef.current?.setPlacement(this.settings.placement ?? 'top');
     });
   }
@@ -148,7 +142,7 @@ export default class Toaster {
   }
 
   private updateView() {
-    this.asyncInit.then(() => {
+    this.asyncInit().then(() => {
       this.toastsRef.current?.setToasts(this.toasts);
     });
   }
