@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 import React, { useCallback } from 'react';
 import type {
-  actions,
   ActionType,
   CellProps,
   CellRendererProps,
@@ -13,6 +12,7 @@ import type {
   TableInstance,
   TableState,
 } from 'react-table';
+import { actions } from 'react-table';
 import {
   Checkbox,
   Code,
