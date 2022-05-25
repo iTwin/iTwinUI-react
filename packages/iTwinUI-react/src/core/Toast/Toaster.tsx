@@ -66,13 +66,20 @@ export default class Toaster {
 
     // v18 mode
     if (_ReactDOM.createRoot) {
+      const _ReactDOMInternals =
+        _ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+
       // suppress warning about importing createRoot from react-dom/client
-      _ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.usingClientEntryPoint = true;
+      if (_ReactDOMInternals) {
+        _ReactDOMInternals.usingClientEntryPoint = true;
+      }
 
       const root = _ReactDOM.createRoot(container);
       root.render(toastWrapper);
       // revert suppression, not to influence users app
-      _ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.usingClientEntryPoint = false;
+      if (_ReactDOMInternals) {
+        _ReactDOMInternals.usingClientEntryPoint = false;
+      }
     } else {
       // v17 and before
       ReactDOM.render(toastWrapper, container);
