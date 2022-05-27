@@ -40,10 +40,11 @@ export const getStickyStyle = <T extends Record<string, unknown>>(
 
   let left = 0;
   for (const col of columnList) {
+    console.log(column.id, col.id, col.width, col.resizeWidth);
     if (col.id === column.id) {
       break;
     }
-    left += Number(col.width ?? col.resizeWidth ?? 0);
+    left += Number(col.width || col.resizeWidth || 0);
   }
 
   let right = 0;
@@ -51,7 +52,7 @@ export const getStickyStyle = <T extends Record<string, unknown>>(
     if (col.id === column.id) {
       break;
     }
-    right += Number(col.width ?? col.resizeWidth ?? 0);
+    right += Number(col.width || col.resizeWidth || 0);
   }
 
   return {
