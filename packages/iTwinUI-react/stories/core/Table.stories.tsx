@@ -2349,6 +2349,71 @@ Virtualized.argTypes = {
   data: { control: { disable: true } },
 };
 
+export const ScrollToItem: Story<Partial<TableProps>> = (args) => {
+  const onClickHandler = (
+    props: CellProps<{ name: string; description: string }>,
+  ) => action(props.row.original.name)();
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+          },
+          {
+            id: 'click-me',
+            Header: 'Click',
+            width: 100,
+            Cell: (props: CellProps<{ name: string; description: string }>) => {
+              const onClick = () => onClickHandler(props);
+              return <Anchor onClick={onClick}>Click me!</Anchor>;
+            },
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const data = useMemo(() => {
+    const size = 100000;
+    const arr = new Array(size);
+    for (let i = 0; i < size; ++i) {
+      arr[i] = {
+        name: `Name${i}`,
+        description: `Description${i}`,
+      };
+    }
+    return arr;
+  }, []);
+
+  return (
+    <Table
+      enableVirtualization
+      columns={columns}
+      emptyTableContent='No data.'
+      {...args}
+      style={{ maxHeight: '90vh' }}
+      data={data}
+      scrollToItem={data[12345]}
+    />
+  );
+};
+
+ScrollToItem.argTypes = {
+  isLoading: { control: { disable: true } },
+  data: { control: { disable: true } },
+};
+
 export const VirtualizedSubRows: Story<Partial<TableProps>> = (args) => {
   const columns = useMemo(
     () => [
