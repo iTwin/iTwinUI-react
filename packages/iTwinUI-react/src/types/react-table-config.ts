@@ -143,6 +143,10 @@ declare module 'react-table' {
     };
     isTableResizing?: boolean;
     columnReorderStartIndex: number;
+    sticky?: {
+      isScrolledToRight?: boolean;
+      isScrolledToLeft?: boolean;
+    };
   }
 
   export interface ColumnInterface<D extends object = {}>
@@ -194,6 +198,10 @@ declare module 'react-table' {
      * @default false
      */
     disableToggleVisibility?: boolean;
+    /**
+     * Side on which column should be sticked to.
+     */
+    sticky?: 'left' | 'right';
   }
 
   export interface ColumnInstance<D extends object = {}>

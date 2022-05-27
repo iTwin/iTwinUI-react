@@ -16,7 +16,7 @@ import {
   BaseFilter,
   FilterButtonBar,
   TableFilterProps,
-  tableFilters
+  tableFilters,
 } from './filters';
 import { CellProps, Column, Row } from 'react-table';
 import { InputGroup } from '../InputGroup';
@@ -2426,17 +2426,19 @@ it('should render zebra striped table', () => {
 it('should sync body horizontal scroll with header scroll', () => {
   const { container } = renderComponent();
 
-  const header = container.querySelector('.iui-table-header') as HTMLDivElement;
+  const headerWrapper = container.querySelector(
+    '.iui-table-header-wrapper',
+  ) as HTMLDivElement;
   const body = container.querySelector('.iui-table-body') as HTMLDivElement;
 
-  expect(header.scrollLeft).toBe(0);
+  expect(headerWrapper.scrollLeft).toBe(0);
   expect(body.scrollLeft).toBe(0);
 
   fireEvent.scroll(body, {
     target: { scrollLeft: 100 },
   });
 
-  expect(header.scrollLeft).toBe(100);
+  expect(headerWrapper.scrollLeft).toBe(100);
   expect(body.scrollLeft).toBe(100);
 });
 
@@ -3020,4 +3022,286 @@ it('should not throw on headless table', () => {
 
   expect(container.querySelector('.iui-table-header .iui-row')).toBeFalsy();
   expect(container.querySelector('.iui-table-body')).toBeTruthy();
+});
+
+it('should render sticky columns correctly', () => {
+  jest
+    .spyOn(HTMLDivElement.prototype, 'scrollWidth', 'get')
+    .mockReturnValue(900);
+  jest
+    .spyOn(HTMLDivElement.prototype, 'clientWidth', 'get')
+    .mockReturnValue(500);
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          width: 400,
+          sticky: 'left',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+          width: 400,
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+          width: 100,
+          sticky: 'right',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+  });
+
+  const leftSideStickyCells = container.querySelectorAll(
+    '.iui-cell-sticky:first-of-type',
+  );
+  expect(leftSideStickyCells.length).toBe(4);
+  leftSideStickyCells.forEach((cell) => {
+    expect(cell.querySelector('.iui-cell-shadow-left')).toBeFalsy();
+    expect(cell.querySelector('.iui-cell-shadow-right')).toBeFalsy();
+  });
+
+  const rightSideStickyCells = container.querySelectorAll(
+    '.iui-cell-sticky:last-of-type',
+  );
+  expect(rightSideStickyCells.length).toBe(4);
+  rightSideStickyCells.forEach((cell) => {
+    expect(cell.querySelector('.iui-cell-shadow-left')).toBeTruthy();
+    expect(cell.querySelector('.iui-cell-shadow-right')).toBeFalsy();
+  });
+
+  // Scroll a bit to the right
+  const body = container.querySelector('.iui-table-body') as HTMLDivElement;
+  fireEvent.scroll(body, {
+    target: { scrollLeft: 100 },
+  });
+
+  expect(leftSideStickyCells.length).toBe(4);
+  leftSideStickyCells.forEach((cell) => {
+    expect(cell.querySelector('.iui-cell-shadow-left')).toBeFalsy();
+    expect(cell.querySelector('.iui-cell-shadow-right')).toBeTruthy();
+  });
+
+  expect(rightSideStickyCells.length).toBe(4);
+  rightSideStickyCells.forEach((cell) => {
+    expect(cell.querySelector('.iui-cell-shadow-left')).toBeTruthy();
+    expect(cell.querySelector('.iui-cell-shadow-right')).toBeFalsy();
+  });
+
+  // Scroll to the very right
+  fireEvent.scroll(body, {
+    target: { scrollLeft: 400 },
+  });
+
+  expect(leftSideStickyCells.length).toBe(4);
+  leftSideStickyCells.forEach((cell) => {
+    expect(cell.querySelector('.iui-cell-shadow-left')).toBeFalsy();
+    expect(cell.querySelector('.iui-cell-shadow-right')).toBeTruthy();
+  });
+
+  expect(rightSideStickyCells.length).toBe(4);
+  rightSideStickyCells.forEach((cell) => {
+    expect(cell.querySelector('.iui-cell-shadow-left')).toBeFalsy();
+    expect(cell.querySelector('.iui-cell-shadow-right')).toBeFalsy();
+  });
+});
+
+it('should have correct sticky left style property', () => {
+  jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 400 } as DOMRect);
+  jest
+    .spyOn(HTMLDivElement.prototype, 'scrollWidth', 'get')
+    .mockReturnValue(900);
+  jest
+    .spyOn(HTMLDivElement.prototype, 'clientWidth', 'get')
+    .mockReturnValue(500);
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          width: 400,
+          sticky: 'left',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+          width: 400,
+          sticky: 'left',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+          width: 100,
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+  });
+
+  const nameCells = container.querySelectorAll<HTMLElement>(
+    '.iui-cell-sticky:first-of-type',
+  );
+  expect(nameCells.length).toBe(4);
+  nameCells.forEach((cell) => {
+    expect(cell).toHaveStyle('--iui-table-sticky-left: 0px');
+  });
+
+  const descriptionCells = container.querySelectorAll<HTMLElement>(
+    '.iui-cell-sticky:nth-of-type(2)',
+  );
+  expect(descriptionCells.length).toBe(4);
+  descriptionCells.forEach((cell) => {
+    expect(cell).toHaveStyle('--iui-table-sticky-left: 400px');
+  });
+});
+
+it('should have correct sticky right style property', () => {
+  jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 400 } as DOMRect);
+  jest
+    .spyOn(HTMLDivElement.prototype, 'scrollWidth', 'get')
+    .mockReturnValue(900);
+  jest
+    .spyOn(HTMLDivElement.prototype, 'clientWidth', 'get')
+    .mockReturnValue(500);
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          width: 400,
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+          width: 400,
+          sticky: 'right',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+          width: 400,
+          sticky: 'right',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+  });
+
+  const descriptionCells = container.querySelectorAll<HTMLElement>(
+    '.iui-cell-sticky:nth-of-type(2)',
+  );
+  expect(descriptionCells.length).toBe(4);
+  descriptionCells.forEach((cell) => {
+    expect(cell).toHaveStyle('--iui-table-sticky-right: 400px');
+  });
+
+  const viewCells = container.querySelectorAll<HTMLElement>(
+    '.iui-cell-sticky:nth-of-type(3)',
+  );
+  expect(viewCells.length).toBe(4);
+  viewCells.forEach((cell) => {
+    expect(cell).toHaveStyle('--iui-table-sticky-right: 0px');
+  });
+});
+
+it('should have correct sticky left style property after resizing', () => {
+  jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 400 } as DOMRect);
+  jest
+    .spyOn(HTMLDivElement.prototype, 'scrollWidth', 'get')
+    .mockReturnValue(900);
+  jest
+    .spyOn(HTMLDivElement.prototype, 'clientWidth', 'get')
+    .mockReturnValue(500);
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          width: 400,
+          sticky: 'left',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+          width: 400,
+          sticky: 'left',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => 'View',
+          width: 100,
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    isResizable: true,
+  });
+
+  const nameCells = container.querySelectorAll<HTMLElement>(
+    '.iui-cell-sticky:first-of-type',
+  );
+  expect(nameCells.length).toBe(4);
+  nameCells.forEach((cell) => {
+    expect(cell).toHaveStyle('--iui-table-sticky-left: 0px');
+  });
+
+  const descriptionCells = container.querySelectorAll<HTMLElement>(
+    '.iui-cell-sticky:nth-of-type(2)',
+  );
+  expect(descriptionCells.length).toBe(4);
+  descriptionCells.forEach((cell) => {
+    expect(cell).toHaveStyle('--iui-table-sticky-left: 400px');
+  });
+
+  // Resize
+  const resizer = container.querySelector('.iui-resizer') as HTMLDivElement;
+  expect(resizer).toBeTruthy();
+
+  fireEvent.mouseDown(resizer, { clientX: 400 });
+  fireEvent.mouseMove(resizer, { clientX: 450 });
+  fireEvent.mouseUp(resizer);
+
+  nameCells.forEach((cell) => {
+    expect(cell).toHaveStyle('--iui-table-sticky-left: 0px');
+  });
+  descriptionCells.forEach((cell) => {
+    expect(cell).toHaveStyle('--iui-table-sticky-left: 450px');
+  });
 });

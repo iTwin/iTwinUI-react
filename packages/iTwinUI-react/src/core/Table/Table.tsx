@@ -28,7 +28,7 @@ import { useTheme, CommonProps, useResizeObserver } from '../utils';
 import '@itwin/itwinui-css/css/table.css';
 import SvgSortDown from '@itwin/itwinui-icons-react/cjs/icons/SortDown';
 import SvgSortUp from '@itwin/itwinui-icons-react/cjs/icons/SortUp';
-import { getCellStyle } from './utils';
+import { getCellStyle, getStickyStyle } from './utils';
 import { TableRowMemoized } from './TableRowMemoized';
 import { FilterToggle, TableFilterValue } from './filters';
 import { customFilterFunctions } from './filters/customFilterFunctions';
@@ -39,6 +39,7 @@ import {
   useSubRowSelection,
   useResizeColumns,
   useColumnDragAndDrop,
+  useStickyColumns,
 } from './hooks';
 import {
   onExpandHandler,
@@ -479,6 +480,7 @@ export const Table = <
     useSelectionCell(isSelectable, selectionMode, isRowDisabled),
     useColumnOrder,
     useColumnDragAndDrop(enableColumnReordering),
+    useStickyColumns,
   );
 
   const {
@@ -613,7 +615,7 @@ export const Table = <
   });
 
   const headerRef = React.useRef<HTMLDivElement>(null);
-  const bodyRef = React.useRef<HTMLDivElement>(null);
+  const bodyRef = React.useRef<HTMLDivElement>();
 
   const getPreparedRow = React.useCallback(
     (index: number) => {
@@ -658,6 +660,29 @@ export const Table = <
     [getPreparedRow],
   );
 
+  const setStickyState = () => {
+    if (!bodyRef.current || flatHeaders.every((header) => !header.sticky)) {
+      return;
+    }
+
+    // If scrolled a bit to the right
+    if (bodyRef.current.scrollLeft !== 0) {
+      dispatch({ type: TableActions.setScrolledRight, value: true });
+    } else {
+      dispatch({ type: TableActions.setScrolledRight, value: false });
+    }
+
+    // If scrolled a bit to the left looking from the right side
+    if (
+      bodyRef.current.scrollLeft !==
+      bodyRef.current.scrollWidth - bodyRef.current.clientWidth
+    ) {
+      dispatch({ type: TableActions.setScrolledLeft, value: true });
+    } else {
+      dispatch({ type: TableActions.setScrolledLeft, value: false });
+    }
+  };
+
   return (
     <>
       <div
@@ -678,81 +703,96 @@ export const Table = <
         })}
         {...ariaDataAttributes}
       >
-        <div className='iui-table-header' ref={headerRef}>
-          {headerGroups.slice(1).map((headerGroup: HeaderGroup<T>) => {
-            const headerGroupProps = headerGroup.getHeaderGroupProps({
-              className: 'iui-row',
-            });
-            return (
-              <div {...headerGroupProps} key={headerGroupProps.key}>
-                {headerGroup.headers.map((column, index) => {
-                  const columnProps = column.getHeaderProps({
-                    ...column.getSortByToggleProps(),
-                    className: cx(
-                      'iui-cell',
-                      { 'iui-actionable': column.canSort },
-                      { 'iui-sorted': column.isSorted },
-                      column.columnClassName,
-                    ),
-                    style: {
-                      ...getCellStyle(column, !!state.isTableResizing),
-                      flexWrap: 'unset',
-                    },
-                  });
-                  return (
-                    <div
-                      {...columnProps}
-                      {...column.getDragAndDropProps()}
-                      key={columnProps.key}
-                      title={undefined}
-                      ref={(el) => {
-                        if (el && isResizable) {
-                          columnRefs.current[column.id] = el;
-                          column.resizeWidth = el.getBoundingClientRect().width;
-                        }
-                      }}
-                    >
-                      {column.render('Header')}
-                      {(data.length !== 0 || areFiltersSet) && (
-                        <FilterToggle
-                          column={column}
-                          ownerDocument={ownerDocument}
-                        />
-                      )}
-                      {data.length !== 0 && column.canSort && (
-                        <div className='iui-cell-end-icon'>
-                          {column.isSorted && column.isSortedDesc ? (
-                            <SvgSortDown
-                              className='iui-icon iui-sort'
-                              aria-hidden
-                            />
-                          ) : (
-                            <SvgSortUp
-                              className='iui-icon iui-sort'
-                              aria-hidden
-                            />
-                          )}
-                        </div>
-                      )}
-                      {isResizable &&
-                        column.isResizerVisible &&
-                        index !== headerGroup.headers.length - 1 && (
-                          <div
-                            {...column.getResizerProps()}
-                            className='iui-resizer'
-                          >
-                            <div className='iui-resizer-bar' />
+        <div className='iui-table-header-wrapper' ref={headerRef}>
+          <div className='iui-table-header'>
+            {headerGroups.slice(1).map((headerGroup: HeaderGroup<T>) => {
+              const headerGroupProps = headerGroup.getHeaderGroupProps({
+                className: 'iui-row',
+              });
+              return (
+                <div {...headerGroupProps} key={headerGroupProps.key}>
+                  {headerGroup.headers.map((column, index) => {
+                    const columnProps = column.getHeaderProps({
+                      ...column.getSortByToggleProps(),
+                      className: cx(
+                        'iui-cell',
+                        {
+                          'iui-actionable': column.canSort,
+                          'iui-sorted': column.isSorted,
+                          'iui-cell-sticky': column.sticky,
+                        },
+                        column.columnClassName,
+                      ),
+                      style: {
+                        ...getCellStyle(column, !!state.isTableResizing),
+                        ...getStickyStyle(column, flatHeaders),
+                        flexWrap: 'unset',
+                      },
+                    });
+                    return (
+                      <div
+                        {...columnProps}
+                        {...column.getDragAndDropProps()}
+                        key={columnProps.key}
+                        title={undefined}
+                        ref={(el) => {
+                          if (el) {
+                            columnRefs.current[column.id] = el;
+                            column.resizeWidth = el.getBoundingClientRect().width;
+                          }
+                        }}
+                      >
+                        {column.render('Header')}
+                        {(data.length !== 0 || areFiltersSet) && (
+                          <FilterToggle
+                            column={column}
+                            ownerDocument={ownerDocument}
+                          />
+                        )}
+                        {data.length !== 0 && column.canSort && (
+                          <div className='iui-cell-end-icon'>
+                            {column.isSorted && column.isSortedDesc ? (
+                              <SvgSortDown
+                                className='iui-icon iui-sort'
+                                aria-hidden
+                              />
+                            ) : (
+                              <SvgSortUp
+                                className='iui-icon iui-sort'
+                                aria-hidden
+                              />
+                            )}
                           </div>
                         )}
-                      {enableColumnReordering && !column.disableReordering && (
-                        <div className='iui-reorder-bar' />
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })}
+                        {isResizable &&
+                          column.isResizerVisible &&
+                          index !== headerGroup.headers.length - 1 && (
+                            <div
+                              {...column.getResizerProps()}
+                              className='iui-resizer'
+                            >
+                              <div className='iui-resizer-bar' />
+                            </div>
+                          )}
+                        {enableColumnReordering &&
+                          !column.disableReordering && (
+                            <div className='iui-reorder-bar' />
+                          )}
+                        {column.sticky === 'left' &&
+                          state.sticky?.isScrolledToRight && (
+                            <div className='iui-cell-shadow-right' />
+                          )}
+                        {column.sticky === 'right' &&
+                          state.sticky?.isScrolledToLeft && (
+                            <div className='iui-cell-shadow-left' />
+                          )}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
         </div>
         <div
           {...getTableBodyProps({
@@ -761,10 +801,20 @@ export const Table = <
             }),
             style: { outline: 0 },
           })}
-          ref={bodyRef}
+          ref={(el) => {
+            if (el) {
+              bodyRef.current = el;
+            }
+
+            // Set initial sticky state
+            if (!state.sticky) {
+              setStickyState();
+            }
+          }}
           onScroll={() => {
             if (headerRef.current && bodyRef.current) {
               headerRef.current.scrollLeft = bodyRef.current.scrollLeft;
+              setStickyState();
             }
           }}
           tabIndex={-1}
