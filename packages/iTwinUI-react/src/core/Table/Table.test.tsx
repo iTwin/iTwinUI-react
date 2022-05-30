@@ -3059,7 +3059,7 @@ it('should render sticky columns correctly', () => {
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
           width: 100,
           sticky: 'right',
         },
@@ -3155,7 +3155,7 @@ it('should have correct sticky left style property', () => {
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
           width: 100,
         },
       ],
@@ -3212,7 +3212,7 @@ it('should have correct sticky right style property', () => {
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
           width: 400,
           sticky: 'right',
         },
@@ -3271,7 +3271,7 @@ it('should have correct sticky left style property after resizing', () => {
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
           width: 100,
         },
       ],

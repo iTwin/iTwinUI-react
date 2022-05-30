@@ -40,7 +40,6 @@ export const getStickyStyle = <T extends Record<string, unknown>>(
 
   let left = 0;
   for (const col of columnList) {
-    console.log(column.id, col.id, col.width, col.resizeWidth);
     if (col.id === column.id) {
       break;
     }
