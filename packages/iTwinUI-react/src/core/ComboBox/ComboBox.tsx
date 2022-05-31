@@ -226,9 +226,12 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             option.label.toLowerCase().includes(value.toLowerCase()),
           ),
       );
+      if (focusedIndex != -1) {
+        dispatch(['focus', -1]);
+      }
       inputProps?.onChange?.(event);
     },
-    [filterFunction, inputProps, options],
+    [filterFunction, focusedIndex, inputProps, options],
   );
 
   // Reset focused item when filteredOptions change
