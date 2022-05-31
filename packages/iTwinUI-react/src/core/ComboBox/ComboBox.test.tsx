@@ -203,106 +203,161 @@ it('should select value on click', async () => {
   ).toHaveTextContent('Item 1');
 });
 
-it('should handle keyboard navigation', async () => {
-  const id = 'test-component';
-  const mockOnChange = jest.fn();
-  const { container } = renderComponent({ id, onChange: mockOnChange });
+it.each([true, false] as const)(
+  'should handle keyboard navigation when `enableVirtualization` is %s',
+  async (enableVirtualization) => {
+    const id = 'test-component';
+    const mockOnChange = jest.fn();
+    const { container } = renderComponent({
+      id,
+      onChange: mockOnChange,
+      enableVirtualization,
+    });
 
-  await userEvent.tab();
+    await userEvent.tab();
 
-  const input = assertBaseElement(container);
-  expect(input).toHaveAttribute('aria-controls', `${id}-list`);
+    const input = assertBaseElement(container);
+    expect(input).toHaveAttribute('aria-controls', `${id}-list`);
 
-  let items = document.querySelectorAll('.iui-menu-item');
+    let items = document.querySelectorAll('.iui-menu-item');
 
-  // focus index 0
-  await userEvent.keyboard('{ArrowDown}');
-  expect(input).toHaveAttribute('aria-activedescendant', `${id}-option-Item-0`);
-  items = document.querySelectorAll('.iui-menu-item');
-  expect(items[0]).toHaveClass('iui-focused');
+    // focus index 0
+    await userEvent.keyboard('{ArrowDown}');
+    expect(input).toHaveAttribute(
+      'aria-activedescendant',
+      `${id}-option-Item-0`,
+    );
+    items = document.querySelectorAll('.iui-menu-item');
+    expect(items[0]).toHaveClass('iui-focused');
 
-  // 0 -> 1
-  await userEvent.keyboard('{ArrowDown}');
-  items = document.querySelectorAll('.iui-menu-item');
-  expect(input).toHaveAttribute('aria-activedescendant', `${id}-option-Item-1`);
-  expect(items[1]).toHaveClass('iui-focused');
-  expect(items[0]).not.toHaveClass('iui-focused');
+    // 0 -> 1
+    await userEvent.keyboard('{ArrowDown}');
+    items = document.querySelectorAll('.iui-menu-item');
+    expect(input).toHaveAttribute(
+      'aria-activedescendant',
+      `${id}-option-Item-1`,
+    );
+    expect(items[1]).toHaveClass('iui-focused');
+    expect(items[0]).not.toHaveClass('iui-focused');
 
-  // 1 -> 2
-  await userEvent.keyboard('{ArrowDown}');
-  items = document.querySelectorAll('.iui-menu-item');
-  expect(input).toHaveAttribute('aria-activedescendant', `${id}-option-Item-2`);
-  expect(items[2]).toHaveClass('iui-focused');
+    // 1 -> 2
+    await userEvent.keyboard('{ArrowDown}');
+    items = document.querySelectorAll('.iui-menu-item');
+    expect(input).toHaveAttribute(
+      'aria-activedescendant',
+      `${id}-option-Item-2`,
+    );
+    expect(items[2]).toHaveClass('iui-focused');
 
-  // 2 -> 0
-  await userEvent.keyboard('{ArrowDown}');
-  items = document.querySelectorAll('.iui-menu-item');
-  expect(input).toHaveAttribute('aria-activedescendant', `${id}-option-Item-0`);
-  expect(items[0]).toHaveClass('iui-focused');
+    // 2 -> 0 (or stay if virtualization enabled)
+    await userEvent.keyboard('{ArrowDown}');
+    items = document.querySelectorAll('.iui-menu-item');
+    if (enableVirtualization) {
+      expect(input).toHaveAttribute(
+        'aria-activedescendant',
+        `${id}-option-Item-2`,
+      );
+      expect(items[2]).toHaveClass('iui-focused');
+      // Go back to 0
+      await userEvent.keyboard('{ArrowUp}');
+      await userEvent.keyboard('{ArrowUp}');
+      expect(items[0]).toHaveClass('iui-focused');
+    } else {
+      expect(input).toHaveAttribute(
+        'aria-activedescendant',
+        `${id}-option-Item-0`,
+      );
+      expect(items[0]).toHaveClass('iui-focused');
+    }
 
-  // 0 -> 2
-  await userEvent.keyboard('{ArrowUp}');
-  items = document.querySelectorAll('.iui-menu-item');
-  expect(input).toHaveAttribute('aria-activedescendant', `${id}-option-Item-2`);
-  expect(items[2]).toHaveClass('iui-focused');
+    // 0 -> 2 (or stay if virtualization enabled)
+    await userEvent.keyboard('{ArrowUp}');
+    items = document.querySelectorAll('.iui-menu-item');
+    if (enableVirtualization) {
+      expect(input).toHaveAttribute(
+        'aria-activedescendant',
+        `${id}-option-Item-0`,
+      );
+      expect(items[0]).toHaveClass('iui-focused');
+      // Go back to 2
+      await userEvent.keyboard('{ArrowDown}');
+      await userEvent.keyboard('{ArrowDown}');
+      expect(items[2]).toHaveClass('iui-focused');
+    } else {
+      expect(input).toHaveAttribute(
+        'aria-activedescendant',
+        `${id}-option-Item-2`,
+      );
+      expect(items[2]).toHaveClass('iui-focused');
+    }
 
-  // 2 -> 1
-  await userEvent.keyboard('{ArrowUp}');
-  items = document.querySelectorAll('.iui-menu-item');
-  expect(input).toHaveAttribute('aria-activedescendant', `${id}-option-Item-1`);
-  expect(items[1]).toHaveClass('iui-focused');
-  expect(items[2]).not.toHaveClass('iui-focused');
+    // 2 -> 1
+    await userEvent.keyboard('{ArrowUp}');
+    items = document.querySelectorAll('.iui-menu-item');
+    expect(input).toHaveAttribute(
+      'aria-activedescendant',
+      `${id}-option-Item-1`,
+    );
+    expect(items[1]).toHaveClass('iui-focused');
+    expect(items[2]).not.toHaveClass('iui-focused');
 
-  // 1 -> 0
-  await userEvent.keyboard('{ArrowUp}');
-  items = document.querySelectorAll('.iui-menu-item');
-  expect(input).toHaveAttribute('aria-activedescendant', `${id}-option-Item-0`);
-  expect(items[0]).toHaveClass('iui-focused');
+    // 1 -> 0
+    await userEvent.keyboard('{ArrowUp}');
+    items = document.querySelectorAll('.iui-menu-item');
+    expect(input).toHaveAttribute(
+      'aria-activedescendant',
+      `${id}-option-Item-0`,
+    );
+    expect(items[0]).toHaveClass('iui-focused');
 
-  // select 0
-  await userEvent.keyboard('{Enter}');
-  items = document.querySelectorAll('.iui-menu-item');
-  expect(mockOnChange).toHaveBeenCalledWith(0);
-  expect(document.querySelector('.iui-menu')).not.toBeVisible();
+    // select 0
+    await userEvent.keyboard('{Enter}');
+    items = document.querySelectorAll('.iui-menu-item');
+    expect(mockOnChange).toHaveBeenCalledWith(0);
+    expect(document.querySelector('.iui-menu')).not.toBeVisible();
 
-  // reopen menu
-  await userEvent.keyboard('{Enter}');
-  items = document.querySelectorAll('.iui-menu-item');
-  expect(items[0]).toHaveClass('iui-active iui-focused');
+    // reopen menu
+    await userEvent.keyboard('{Enter}');
+    items = document.querySelectorAll('.iui-menu-item');
+    expect(items[0]).toHaveClass('iui-active iui-focused');
 
-  // filter and focus item 2
-  await act(async () => {
-    input.select();
-    await userEvent.keyboard('2');
-  });
+    // filter and focus item 2
+    await act(async () => {
+      input.select();
+      await userEvent.keyboard('2');
+    });
 
-  await act(async () => void (await userEvent.keyboard('{ArrowDown}')));
-  expect(screen.getByText('Item 2').closest('.iui-menu-item')).toHaveClass(
-    'iui-focused',
-  );
-  expect(input).toHaveAttribute('aria-activedescendant', `${id}-option-Item-2`);
+    await act(async () => void (await userEvent.keyboard('{ArrowDown}')));
+    expect(screen.getByText('Item 2').closest('.iui-menu-item')).toHaveClass(
+      'iui-focused',
+    );
+    expect(input).toHaveAttribute(
+      'aria-activedescendant',
+      `${id}-option-Item-2`,
+    );
 
-  // select 2
-  await userEvent.keyboard('{Enter}');
-  expect(mockOnChange).toHaveBeenCalledWith(2);
-  expect(document.querySelector('.iui-menu')).not.toBeVisible();
+    // select 2
+    await userEvent.keyboard('{Enter}');
+    expect(mockOnChange).toHaveBeenCalledWith(2);
+    expect(document.querySelector('.iui-menu')).not.toBeVisible();
 
-  // reopen
-  await act(async () => void (await userEvent.keyboard('{ArrowDown}')));
-  expect(screen.getByText('Item 2').closest('.iui-menu-item')).toHaveClass(
-    'iui-active',
-  );
+    // reopen
+    await act(async () => void (await userEvent.keyboard('{ArrowDown}')));
+    expect(screen.getByText('Item 2').closest('.iui-menu-item')).toHaveClass(
+      'iui-active',
+    );
 
-  // close
-  await act(async () => void (await userEvent.keyboard('{Esc}')));
-  expect(document.querySelector('.iui-menu')).not.toBeVisible();
+    // close
+    await act(async () => void (await userEvent.keyboard('{Esc}')));
+    expect(document.querySelector('.iui-menu')).not.toBeVisible();
 
-  // reopen and close
-  await act(async () => void (await userEvent.keyboard('X')));
-  expect(document.querySelector('.iui-menu')).toBeVisible();
-  await userEvent.tab();
-  expect(document.querySelector('.iui-menu')).not.toBeVisible();
-});
+    // reopen and close
+    await act(async () => void (await userEvent.keyboard('X')));
+    expect(document.querySelector('.iui-menu')).toBeVisible();
+    await userEvent.tab();
+    expect(document.querySelector('.iui-menu')).not.toBeVisible();
+  },
+);
 
 it('should accept inputProps', () => {
   const inputId = 'test-input';
