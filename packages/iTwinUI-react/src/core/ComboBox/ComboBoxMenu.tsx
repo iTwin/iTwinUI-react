@@ -41,24 +41,16 @@ const VirtualizedComboBoxMenu = React.forwardRef(
     );
 
     const focusedVisibleIndex = React.useMemo(() => {
-      const allItems = menuRef.current?.querySelectorAll('[data-iui-index]');
-      if (!allItems) {
+      const currentElement = menuRef.current?.querySelector(
+        `[data-iui-index="${focusedIndex}"]`,
+      );
+      if (!currentElement) {
         return focusedIndex;
       }
-      let index = focusedIndex;
-      for (let i = 0; i < allItems.length; ++i) {
-        const originalInd = Number(
-          allItems[i].getAttribute('data-iui-index') ?? -1,
-        );
-        if (originalInd === focusedIndex) {
-          console.log(allItems.length, i, focusedIndex);
-          index = Number(
-            allItems[i].getAttribute('data-iui-filtered-index') ?? focusedIndex,
-          );
-          break;
-        }
-      }
-      return index;
+
+      return Number(
+        currentElement.getAttribute('data-iui-filtered-index') ?? focusedIndex,
+      );
     }, [focusedIndex, menuRef]);
 
     const { outerProps, innerProps, visibleChildren } = useVirtualization({
