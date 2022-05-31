@@ -95,10 +95,16 @@ export const ComboBoxInput = React.forwardRef(
               return dispatch(['open']);
             }
 
+            if (length === 0) {
+              return;
+            }
+
             // If virtualization is enabled, dont let round scrolling
             if (
-              length === 0 ||
-              (enableVirtualization && focusedIndexRef.current === 0)
+              enableVirtualization &&
+              !menuRef.current?.querySelector(
+                `[data-iui-index="${focusedIndexRef.current}"]`,
+              )?.previousElementSibling
             ) {
               return;
             }

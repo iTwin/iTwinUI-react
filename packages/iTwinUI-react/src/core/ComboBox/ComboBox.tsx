@@ -259,7 +259,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   }, [options, selectedIndex, valueProp]);
 
   const getMenuItem = React.useCallback(
-    (option: SelectOption<T>) => {
+    (option: SelectOption<T>, filteredIndex?: number) => {
       const optionId = getOptionId(option, id);
       const { __originalIndex } = optionsExtraInfoRef.current[optionId];
 
@@ -284,6 +284,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             'iui-focused': focusedIndex === __originalIndex,
           }),
           'data-iui-index': __originalIndex,
+          'data-iui-filtered-index': filteredIndex,
           ref: mergeRefs(customItem.props.ref, (el: HTMLLIElement | null) => {
             if (!enableVirtualization && focusedIndex === __originalIndex) {
               el?.scrollIntoView({ block: 'nearest' });
@@ -298,6 +299,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           isSelected={selectedIndex === __originalIndex}
           onClick={() => dispatch(['select', __originalIndex])}
           index={__originalIndex}
+          data-iui-filtered-index={filteredIndex}
         >
           {option.label}
         </ComboBoxMenuItem>
