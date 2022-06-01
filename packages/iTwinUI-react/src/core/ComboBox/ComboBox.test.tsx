@@ -373,6 +373,17 @@ it('should handle keyboard navigation when virtualization is enabled', async () 
   );
   expect(items[11]).toHaveClass('iui-focused');
 
+  // select 11
+  await userEvent.keyboard('{Enter}');
+  items = document.querySelectorAll('.iui-menu-item');
+  expect(mockOnChange).toHaveBeenCalledWith(11);
+  expect(document.querySelector('.iui-menu')).not.toBeVisible();
+
+  // reopen menu
+  await userEvent.keyboard('{Enter}');
+  items = document.querySelectorAll('.iui-menu-item');
+  expect(items[11]).toHaveClass('iui-active iui-focused');
+
   // filter and focus item 1
   await act(async () => {
     input.select();

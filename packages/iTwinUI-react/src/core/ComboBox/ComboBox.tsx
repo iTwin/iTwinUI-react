@@ -184,6 +184,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     if (isOpen) {
       inputRef.current?.focus(); // Focus the input
       setFilteredOptions(options); // Reset the filtered list
+      dispatch(['focus']);
     }
     // When the dropdown closes
     else {
@@ -211,6 +212,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   const [filteredOptions, setFilteredOptions] = React.useState(options);
   React.useEffect(() => {
     setFilteredOptions(options);
+    dispatch(['focus']);
   }, [options]);
 
   // Filter options based on input value
@@ -233,11 +235,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     },
     [filterFunction, focusedIndex, inputProps, options],
   );
-
-  // Reset focused item when filteredOptions change
-  React.useEffect(() => {
-    dispatch(['focus']);
-  }, [filteredOptions]);
 
   // When the value prop changes, update the selectedIndex
   React.useEffect(() => {
