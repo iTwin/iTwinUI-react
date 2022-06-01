@@ -33,7 +33,7 @@ export const getCellStyle = <T extends Record<string, unknown>>(
 export const getStickyStyle = <T extends Record<string, unknown>>(
   column: ColumnInstance<T>,
   columnList: ColumnInstance<T>[],
-): React.CSSProperties | undefined => {
+): React.CSSProperties => {
   if (!column.sticky) {
     return {};
   }

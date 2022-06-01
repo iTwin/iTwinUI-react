@@ -615,7 +615,7 @@ export const Table = <
   });
 
   const headerRef = React.useRef<HTMLDivElement>(null);
-  const bodyRef = React.useRef<HTMLDivElement>();
+  const bodyRef = React.useRef<HTMLDivElement>(null);
 
   const getPreparedRow = React.useCallback(
     (index: number) => {
@@ -665,7 +665,6 @@ export const Table = <
       return;
     }
 
-    // If scrolled a bit to the right
     if (bodyRef.current.scrollLeft !== 0) {
       dispatch({ type: TableActions.setScrolledRight, value: true });
     } else {
@@ -682,6 +681,12 @@ export const Table = <
       dispatch({ type: TableActions.setScrolledLeft, value: false });
     }
   };
+
+  React.useEffect(() => {
+    setStickyState();
+    // Call only on init
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -719,7 +724,7 @@ export const Table = <
                         {
                           'iui-actionable': column.canSort,
                           'iui-sorted': column.isSorted,
-                          'iui-cell-sticky': column.sticky,
+                          'iui-cell-sticky': !!column.sticky,
                         },
                         column.columnClassName,
                       ),
@@ -779,11 +784,11 @@ export const Table = <
                             <div className='iui-reorder-bar' />
                           )}
                         {column.sticky === 'left' &&
-                          state.sticky?.isScrolledToRight && (
+                          state.sticky.isScrolledToRight && (
                             <div className='iui-cell-shadow-right' />
                           )}
                         {column.sticky === 'right' &&
-                          state.sticky?.isScrolledToLeft && (
+                          state.sticky.isScrolledToLeft && (
                             <div className='iui-cell-shadow-left' />
                           )}
                       </div>
@@ -801,16 +806,7 @@ export const Table = <
             }),
             style: { outline: 0 },
           })}
-          ref={(el) => {
-            if (el) {
-              bodyRef.current = el;
-            }
-
-            // Set initial sticky state
-            if (!state.sticky) {
-              setStickyState();
-            }
-          }}
+          ref={bodyRef}
           onScroll={() => {
             if (headerRef.current && bodyRef.current) {
               headerRef.current.scrollLeft = bodyRef.current.scrollLeft;

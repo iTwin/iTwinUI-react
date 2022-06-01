@@ -2908,7 +2908,7 @@ export const StickyColumns: Story<Partial<TableProps>> = (args) => {
             accessor: 'price',
             width: 150,
             Cell: (props: CellProps<typeof data[0]>) => {
-              return `$${props.value}`;
+              return <>${props.value}</>;
             },
             sticky: 'left',
           },
@@ -2930,7 +2930,7 @@ export const StickyColumns: Story<Partial<TableProps>> = (args) => {
             accessor: 'deliveryTime',
             width: 400,
             Cell: (props: CellProps<typeof data[0]>) => {
-              return `${props.value} day(s)`;
+              return <>{props.value} day(s)</>;
             },
           },
           {

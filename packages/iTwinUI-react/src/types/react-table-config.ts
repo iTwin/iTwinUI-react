@@ -143,7 +143,7 @@ declare module 'react-table' {
     };
     isTableResizing?: boolean;
     columnReorderStartIndex: number;
-    sticky?: {
+    sticky: {
       isScrolledToRight?: boolean;
       isScrolledToLeft?: boolean;
     };

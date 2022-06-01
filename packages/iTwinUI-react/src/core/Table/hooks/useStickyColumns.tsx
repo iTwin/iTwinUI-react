@@ -17,7 +17,17 @@ const reducer = <T extends Record<string, unknown>>(
   newState: TableState<T>,
   action: ActionType,
 ): TableState<T> => {
-  if (action.type === actions.setScrolledLeft) {
+  if (action.type === actions.init) {
+    return {
+      ...newState,
+      sticky: {},
+    };
+  }
+
+  if (
+    action.type === actions.setScrolledLeft &&
+    newState.sticky?.isScrolledToLeft !== action.value // Prevents unnecessary re-render
+  ) {
     return {
       ...newState,
       sticky: {
@@ -27,7 +37,10 @@ const reducer = <T extends Record<string, unknown>>(
     };
   }
 
-  if (action.type === actions.setScrolledRight) {
+  if (
+    action.type === actions.setScrolledRight &&
+    newState.sticky?.isScrolledToRight !== action.value // Prevents unnecessary re-render
+  ) {
     return {
       ...newState,
       sticky: {
