@@ -53,7 +53,7 @@ export const TableCell = <T extends Record<string, unknown>>(
     style: {
       ...getCellStyle(cell.column, !!tableInstance.state.isTableResizing),
       ...getSubRowStyle(),
-      ...getStickyStyle(cell.column, tableInstance.flatHeaders),
+      ...getStickyStyle(cell.column, tableInstance.visibleColumns),
     },
   });
 

@@ -497,6 +497,7 @@ export const Table = <
     gotoPage,
     setPageSize,
     flatHeaders,
+    visibleColumns,
   } = instance;
 
   const ariaDataAttributes = Object.entries(rest).reduce(
@@ -730,7 +731,7 @@ export const Table = <
                       ),
                       style: {
                         ...getCellStyle(column, !!state.isTableResizing),
-                        ...getStickyStyle(column, flatHeaders),
+                        ...getStickyStyle(column, visibleColumns),
                         flexWrap: 'unset',
                       },
                     });

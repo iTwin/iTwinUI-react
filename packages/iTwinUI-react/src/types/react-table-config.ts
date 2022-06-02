@@ -213,6 +213,7 @@ declare module 'react-table' {
     resizeWidth?: number;
     isResizerVisible?: boolean;
     getDragAndDropProps: () => TableKeyedProps;
+    originalSticky?: 'left' | 'right' | 'none';
   }
 
   export interface Cell<D extends object = {}>

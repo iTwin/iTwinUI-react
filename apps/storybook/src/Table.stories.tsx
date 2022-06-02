@@ -1381,6 +1381,183 @@ Full.args = {
   enableColumnReordering: true,
 };
 
+export const Full2: Story<Partial<TableProps>> = (args) => {
+  type TableStoryDataType = {
+    product: string;
+    price: number;
+    quantity: number;
+    rating: number;
+    deliveryTime: number;
+    subRows: TableStoryDataType[];
+  };
+
+  const generateItem = useCallback(
+    (index: number, parentRow = '', depth = 0): TableStoryDataType => {
+      const keyValue = parentRow ? `${parentRow}.${index}` : `${index}`;
+      return {
+        product: `Product ${keyValue}`,
+        price: Math.round(Math.random() * 100),
+        quantity: Math.round(Math.random() * 1000),
+        rating: Math.round((Math.random() * 10) % 4) + 1,
+        deliveryTime: Math.round(Math.random() * 10),
+        subRows:
+          depth < 2
+            ? Array(Math.round(index % 5))
+                .fill(null)
+                .map((_, index) => generateItem(index, keyValue, depth + 1))
+            : [],
+      };
+    },
+    [],
+  );
+
+  const data = useMemo(
+    () =>
+      Array(25)
+        .fill(null)
+        .map((_, index) => generateItem(index)),
+    [generateItem],
+  );
+
+  const isRowDisabled = useCallback((rowData: TableStoryDataType) => {
+    return rowData.product.endsWith('3');
+  }, []);
+
+  const menuItems = useCallback((close: () => void) => {
+    return [
+      <MenuItem key={1} onClick={() => close()}>
+        Edit
+      </MenuItem>,
+      <MenuItem key={2} onClick={() => close()}>
+        Delete
+      </MenuItem>,
+    ];
+  }, []);
+
+  const columns = useMemo(
+    (): Column<TableStoryDataType>[] => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'product',
+            Header: 'Product',
+            accessor: 'product',
+            Filter: tableFilters.TextFilter(),
+            disableToggleVisibility: true,
+            disableReordering: true,
+            width: 200,
+            sticky: 'left',
+          },
+          {
+            id: 'price',
+            Header: 'Price',
+            accessor: 'price',
+            width: 200,
+            Filter: tableFilters.NumberRangeFilter(),
+            filter: 'between',
+            disableReordering: true,
+            sortType: 'number',
+            Cell: (props: CellProps<TableStoryDataType>) => {
+              return <>${props.value}</>;
+            },
+            sticky: 'left',
+          },
+          {
+            id: 'quantity',
+            Header: 'Quantity',
+            accessor: 'quantity',
+            Filter: tableFilters.NumberRangeFilter(),
+            filter: 'between',
+            sortType: 'number',
+            width: 400,
+          },
+          {
+            id: 'rating',
+            Header: 'Rating',
+            accessor: 'rating',
+            Filter: tableFilters.NumberRangeFilter(),
+            filter: 'between',
+            sortType: 'number',
+            width: 400,
+            Cell: (props: CellProps<TableStoryDataType>) => {
+              return <>{props.value}/5</>;
+            },
+          },
+          {
+            id: 'deliveryTime',
+            Header: 'Delivery Time',
+            accessor: 'deliveryTime',
+            Filter: tableFilters.NumberRangeFilter(),
+            filter: 'between',
+            sortType: 'number',
+            width: 400,
+            Cell: (props: CellProps<TableStoryDataType>) => {
+              return <>{props.value} day(s)</>;
+            },
+          },
+          {
+            ...ActionColumn({ columnManager: true }),
+            Cell: (props: CellProps<TableStoryDataType>) => (
+              <DropdownMenu menuItems={menuItems}>
+                <IconButton
+                  styleType='borderless'
+                  onClick={(e) => e.stopPropagation()}
+                  disabled={isRowDisabled(props.row.original)}
+                >
+                  <SvgMore />
+                </IconButton>
+              </DropdownMenu>
+            ),
+            sticky: 'right',
+          },
+        ],
+      },
+    ],
+    [isRowDisabled, menuItems],
+  );
+
+  return (
+    <Table
+      columns={columns}
+      emptyTableContent='No data.'
+      isRowDisabled={isRowDisabled}
+      isSelectable
+      isSortable
+      isResizable
+      enableColumnReordering
+      {...args}
+      data={data}
+      style={{ height: '100%' }}
+    />
+  );
+};
+
+Full2.args = {
+  isSelectable: true,
+  isSortable: true,
+  isResizable: true,
+  enableColumnReordering: true,
+};
+
+Full2.argTypes = {
+  data: { control: { disable: true } },
+};
+
+Full2.decorators = [
+  (Story) => (
+    <div
+      style={{
+        height: '375px',
+        maxHeight: '90vh',
+        maxWidth: '1000px',
+      }}
+    >
+      <Story />
+    </div>
+  ),
+];
+
 export const Condensed: Story<Partial<TableProps>> = (args) => {
   const onClickHandler = (
     props: CellProps<{ name: string; description: string }>,

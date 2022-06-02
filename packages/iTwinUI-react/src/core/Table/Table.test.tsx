@@ -3182,6 +3182,63 @@ it('should have correct sticky left style property', () => {
   });
 });
 
+it('should have correct sticky left style property when prior column does not have sticky prop', () => {
+  jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 400 } as DOMRect);
+  jest
+    .spyOn(HTMLDivElement.prototype, 'scrollWidth', 'get')
+    .mockReturnValue(900);
+  jest
+    .spyOn(HTMLDivElement.prototype, 'clientWidth', 'get')
+    .mockReturnValue(500);
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          width: 400,
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+          width: 400,
+          sticky: 'left',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => <>View</>,
+          width: 100,
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+  });
+
+  const nameCells = container.querySelectorAll<HTMLElement>(
+    '.iui-cell-sticky:first-of-type',
+  );
+  expect(nameCells.length).toBe(4);
+  nameCells.forEach((cell) => {
+    expect(cell).toHaveStyle('--iui-table-sticky-left: 0px');
+  });
+
+  const descriptionCells = container.querySelectorAll<HTMLElement>(
+    '.iui-cell-sticky:nth-of-type(2)',
+  );
+  expect(descriptionCells.length).toBe(4);
+  descriptionCells.forEach((cell) => {
+    expect(cell).toHaveStyle('--iui-table-sticky-left: 400px');
+  });
+});
+
 it('should have correct sticky right style property', () => {
   jest
     .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
@@ -3215,6 +3272,63 @@ it('should have correct sticky right style property', () => {
           Cell: () => <>View</>,
           width: 400,
           sticky: 'right',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+  });
+
+  const descriptionCells = container.querySelectorAll<HTMLElement>(
+    '.iui-cell-sticky:nth-of-type(2)',
+  );
+  expect(descriptionCells.length).toBe(4);
+  descriptionCells.forEach((cell) => {
+    expect(cell).toHaveStyle('--iui-table-sticky-right: 400px');
+  });
+
+  const viewCells = container.querySelectorAll<HTMLElement>(
+    '.iui-cell-sticky:nth-of-type(3)',
+  );
+  expect(viewCells.length).toBe(4);
+  viewCells.forEach((cell) => {
+    expect(cell).toHaveStyle('--iui-table-sticky-right: 0px');
+  });
+});
+
+it('should have correct sticky right style property when column after does not have sticky prop', () => {
+  jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 400 } as DOMRect);
+  jest
+    .spyOn(HTMLDivElement.prototype, 'scrollWidth', 'get')
+    .mockReturnValue(900);
+  jest
+    .spyOn(HTMLDivElement.prototype, 'clientWidth', 'get')
+    .mockReturnValue(500);
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          width: 400,
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+          width: 400,
+          sticky: 'right',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => <>View</>,
+          width: 400,
         },
       ],
     },
@@ -3311,5 +3425,107 @@ it('should have correct sticky left style property after resizing', () => {
   });
   descriptionCells.forEach((cell) => {
     expect(cell).toHaveStyle('--iui-table-sticky-left: 450px');
+  });
+});
+
+it('should make column sticky and then non-sticky after dragging sticky column ahead of it and back', () => {
+  jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 400 } as DOMRect);
+  jest
+    .spyOn(HTMLDivElement.prototype, 'scrollWidth', 'get')
+    .mockReturnValue(900);
+  jest
+    .spyOn(HTMLDivElement.prototype, 'clientWidth', 'get')
+    .mockReturnValue(500);
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          width: 400,
+          sticky: 'left',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+          width: 400,
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => <>View</>,
+          width: 100,
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    enableColumnReordering: true,
+  });
+
+  let nameCells = container.querySelectorAll<HTMLElement>(
+    '.iui-cell:first-of-type',
+  );
+  expect(nameCells.length).toBe(4);
+  nameCells.forEach((cell) => {
+    expect(cell).toHaveStyle('--iui-table-sticky-left: 0px');
+  });
+
+  let descriptionCells = container.querySelectorAll<HTMLElement>(
+    '.iui-cell:nth-of-type(2)',
+  );
+  expect(descriptionCells.length).toBe(4);
+  descriptionCells.forEach((cell) => {
+    expect(cell).not.toHaveStyle('--iui-table-sticky-left: 400px');
+  });
+
+  // Dragging sticky Name column ahead of Description column
+  fireEvent.dragStart(nameCells[0]);
+  fireEvent.dragEnter(descriptionCells[0]);
+  fireEvent.dragOver(descriptionCells[0]);
+  fireEvent.drop(descriptionCells[0]);
+
+  nameCells = container.querySelectorAll<HTMLElement>(
+    '.iui-cell:nth-of-type(2)',
+  );
+  expect(nameCells.length).toBe(4);
+  nameCells.forEach((cell) => {
+    expect(cell).toHaveStyle('--iui-table-sticky-left: 400px');
+  });
+
+  descriptionCells = container.querySelectorAll<HTMLElement>(
+    '.iui-cell:first-of-type',
+  );
+  expect(descriptionCells.length).toBe(4);
+  descriptionCells.forEach((cell) => {
+    expect(cell).toHaveStyle('--iui-table-sticky-left: 0px');
+  });
+
+  // Dragging Name column back to the beginning
+  fireEvent.dragStart(nameCells[0]);
+  fireEvent.dragEnter(descriptionCells[0]);
+  fireEvent.dragOver(descriptionCells[0]);
+  fireEvent.drop(descriptionCells[0]);
+
+  nameCells = container.querySelectorAll<HTMLElement>(
+    '.iui-cell:first-of-type',
+  );
+  expect(nameCells.length).toBe(4);
+  nameCells.forEach((cell) => {
+    expect(cell).toHaveStyle('--iui-table-sticky-left: 0px');
+  });
+
+  descriptionCells = container.querySelectorAll<HTMLElement>(
+    '.iui-cell:nth-of-type(2)',
+  );
+  expect(descriptionCells.length).toBe(4);
+  descriptionCells.forEach((cell) => {
+    expect(cell).not.toHaveStyle('--iui-table-sticky-left: 400px');
   });
 });
