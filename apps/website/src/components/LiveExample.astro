@@ -1,25 +1,49 @@
 ---
-import { createRequire } from 'module';
-import fs from 'fs';
-import ReactDOMServer from 'react-dom/server';
-import { Code } from 'astro/components';
-import '@codesandbox/sandpack-react/dist/index.css';
+import LiveExample from './LiveExample.tsx';
+import { getSandpackCssText } from '@codesandbox/sandpack-react';
 
-export interface Props {
-  path: string;
+export type Props = {
+  code: string;
 }
 
-const { path: examplePath } = Astro.props;
-
-const require = createRequire(import.meta.url);
-const component = (await import(examplePath)).default;
-
-const markup = ReactDOMServer.renderToString(component());
-const styles = `${await fs.promises.readFile(require.resolve('@itwin/itwinui-css/css/all.css'))}`;
-const code = await fs.promises.readFile(require.resolve(Astro.props.path), 'utf8');
-
+const { code } = Astro.props;
+const staticSandpackCss = getSandpackCssText();
 ---
 
+<LiveExample code={code} client:load />
+
+<style is:global>
+  .sp-wrapper {
+    color-scheme: dark !important;
+  }
+</style>
+<style id='sandpack' set:html={staticSandpackCss} />
+
+
+
+<!--
+⬇️ All my past efforts to prerender the component while JS loads.
+---
+// import { createRequire } from 'module';
+// import fs from 'fs';
+// import ReactDOMServer from 'react-dom/server';
+// import { Code } from 'astro/components';
+// import '@codesandbox/sandpack-react/dist/index.css';
+
+// export interface Props {
+//   path: string;
+// }
+
+// const { path: examplePath } = Astro.props;
+
+// const require = createRequire(import.meta.url);
+// const component = (await import(examplePath)).default;
+
+// const markup = ReactDOMServer.renderToString(component());
+// const styles = `${await fs.promises.readFile(require.resolve('@itwin/itwinui-css/css/all.css'))}`;
+// const code = await fs.promises.readFile(require.resolve(Astro.props.path), 'utf8');
+
+---
 <div class='wrapper'>
   <iframe></iframe>
   <button class='code-button' data-shown='false'>Show code</button>
@@ -65,7 +89,7 @@ const code = await fs.promises.readFile(require.resolve(Astro.props.path), 'utf8
       display: none;
     }
   }
-</style>
+<\/style>
 
 <script define:vars={{ styles, markup }}>
   const iframe = document.querySelector('iframe');
@@ -103,4 +127,4 @@ const code = await fs.promises.readFile(require.resolve(Astro.props.path), 'utf8
   codeButton.addEventListener('click', () => {
     codeButton.dataset.shown = codeButton.dataset.shown == 'false' ? 'true' : 'false';
   });
-</script>
+</script> -->

@@ -1,7 +1,8 @@
 ---
-import * as CONFIG from '../../config.ts';
+import * as CONFIG from '../config.ts';
 import SkipToContent from './SkipToContent.astro';
 import SidebarToggle from './SidebarToggle.tsx';
+import ThemeToggleButton from './ThemeToggleButton.astro';
 ---
 
 <header>
@@ -22,6 +23,7 @@ import SidebarToggle from './SidebarToggle.tsx';
       </a>
     </div>
   </nav>
+  <ThemeToggleButton />
 </header>
 
 <style>
