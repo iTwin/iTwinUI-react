@@ -2432,19 +2432,19 @@ it('should render zebra striped table', () => {
 it('should sync body horizontal scroll with header scroll', () => {
   const { container } = renderComponent();
 
-  const headerWrapper = container.querySelector(
+  const header = container.querySelector(
     '.iui-table-header-wrapper',
   ) as HTMLDivElement;
   const body = container.querySelector('.iui-table-body') as HTMLDivElement;
 
-  expect(headerWrapper.scrollLeft).toBe(0);
+  expect(header.scrollLeft).toBe(0);
   expect(body.scrollLeft).toBe(0);
 
   fireEvent.scroll(body, {
     target: { scrollLeft: 100 },
   });
 
-  expect(headerWrapper.scrollLeft).toBe(100);
+  expect(header.scrollLeft).toBe(100);
   expect(body.scrollLeft).toBe(100);
 });
 
