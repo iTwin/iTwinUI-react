@@ -244,6 +244,23 @@ export type TableProps<
   enableColumnReordering?: boolean;
 } & Omit<CommonProps, 'title'>;
 
+// Original type for some reason is missing sub-columns
+type ColumnType<
+  T extends Record<string, unknown> = Record<string, unknown>
+> = Column<T> & {
+  columns: ColumnType[];
+};
+const flattenColumns = (columns: ColumnType[]): ColumnType[] => {
+  const flatColumns: ColumnType[] = [];
+  columns.forEach((column) => {
+    flatColumns.push(column);
+    if (column.columns) {
+      flatColumns.push(...flattenColumns(column.columns));
+    }
+  });
+  return flatColumns;
+};
+
 /**
  * Table based on [react-table](https://react-table.tanstack.com/docs/api/overview).
  * @example
@@ -351,13 +368,10 @@ export const Table = <
     onRowInViewportRef.current = onRowInViewport;
   }, [onBottomReached, onRowInViewport]);
 
-  // Original type for some reason is missing sub-columns
-  type ColumnType = Column<T> & {
-    columns: Column<T>[];
-  };
-  const hasManualSelectionColumn = (columns as ColumnType[])[0]?.columns.some(
-    (column) => column.id === SELECTION_CELL_ID,
-  );
+  const hasManualSelectionColumn = React.useMemo(() => {
+    const flatColumns = flattenColumns(columns as ColumnType[]);
+    return flatColumns.some((column) => column.id === SELECTION_CELL_ID);
+  }, [columns]);
 
   const tableStateReducer = React.useCallback(
     (
@@ -493,7 +507,15 @@ export const Table = <
     {} as Record<string, string>,
   );
 
-  const areFiltersSet = allColumns.some((column) => !!column.filterValue);
+  const areFiltersSet = allColumns.some(
+    (column) => column.filterValue != null && column.filterValue !== '',
+  );
+
+  const showFilterButton = (column: HeaderGroup<T>) =>
+    (data.length !== 0 || areFiltersSet) && column.canFilter;
+
+  const showSortButton = (column: HeaderGroup<T>) =>
+    data.length !== 0 && column.canSort;
 
   const onRowClickHandler = React.useCallback(
     (event: React.MouseEvent, row: Row<T>) => {
@@ -662,78 +684,86 @@ export const Table = <
         })}
         {...ariaDataAttributes}
       >
-        <div className='iui-table-header' ref={headerRef}>
-          {headerGroups.slice(1).map((headerGroup: HeaderGroup<T>) => {
-            const headerGroupProps = headerGroup.getHeaderGroupProps({
-              className: 'iui-row',
-            });
-            return (
-              <div {...headerGroupProps} key={headerGroupProps.key}>
-                {headerGroup.headers.map((column, index) => {
-                  const columnProps = column.getHeaderProps({
-                    ...column.getSortByToggleProps(),
-                    className: cx(
-                      'iui-cell',
-                      { 'iui-actionable': column.canSort },
-                      { 'iui-sorted': column.isSorted },
-                      column.columnClassName,
-                    ),
-                    style: { ...getCellStyle(column, !!state.isTableResizing) },
-                  });
-                  return (
-                    <div
-                      {...columnProps}
-                      {...column.getDragAndDropProps()}
-                      key={columnProps.key}
-                      title={undefined}
-                      ref={(el) => {
-                        if (el && isResizable) {
-                          columnRefs.current[column.id] = el;
-                          column.resizeWidth = el.getBoundingClientRect().width;
-                        }
-                      }}
-                    >
-                      {column.render('Header')}
-                      {(data.length !== 0 || areFiltersSet) && (
-                        <FilterToggle
-                          column={column}
-                          ownerDocument={ownerDocument}
-                        />
-                      )}
-                      {data.length !== 0 && column.canSort && (
-                        <div className='iui-cell-end-icon'>
-                          {column.isSorted && column.isSortedDesc ? (
-                            <SvgSortUp
-                              className='iui-icon iui-sort'
-                              aria-hidden
-                            />
-                          ) : (
-                            <SvgSortDown
-                              className='iui-icon iui-sort'
-                              aria-hidden
-                            />
-                          )}
-                        </div>
-                      )}
-                      {isResizable &&
-                        column.isResizerVisible &&
-                        index !== headerGroup.headers.length - 1 && (
-                          <div
-                            {...column.getResizerProps()}
-                            className='iui-resizer'
-                          >
-                            <div className='iui-resizer-bar' />
+        <div className='iui-table-header-wrapper' ref={headerRef}>
+          <div className='iui-table-header'>
+            {headerGroups.slice(1).map((headerGroup: HeaderGroup<T>) => {
+              const headerGroupProps = headerGroup.getHeaderGroupProps({
+                className: 'iui-row',
+              });
+              return (
+                <div {...headerGroupProps} key={headerGroupProps.key}>
+                  {headerGroup.headers.map((column, index) => {
+                    const columnProps = column.getHeaderProps({
+                      ...column.getSortByToggleProps(),
+                      className: cx(
+                        'iui-cell',
+                        { 'iui-actionable': column.canSort },
+                        { 'iui-sorted': column.isSorted },
+                        column.columnClassName,
+                      ),
+                      style: getCellStyle(column, !!state.isTableResizing),
+                    });
+                    return (
+                      <div
+                        {...columnProps}
+                        {...column.getDragAndDropProps()}
+                        key={columnProps.key}
+                        title={undefined}
+                        ref={(el) => {
+                          if (el && isResizable) {
+                            columnRefs.current[column.id] = el;
+                            column.resizeWidth = el.getBoundingClientRect().width;
+                          }
+                        }}
+                      >
+                        {column.render('Header')}
+                        {(showFilterButton(column) ||
+                          showSortButton(column)) && (
+                          <div className='iui-table-header-actions-container'>
+                            {showFilterButton(column) && (
+                              <FilterToggle
+                                column={column}
+                                ownerDocument={ownerDocument}
+                              />
+                            )}
+                            {showSortButton(column) && (
+                              <div className='iui-cell-end-icon'>
+                                {column.isSorted && column.isSortedDesc ? (
+                                  <SvgSortDown
+                                    className='iui-icon iui-sort'
+                                    aria-hidden
+                                  />
+                                ) : (
+                                  <SvgSortUp
+                                    className='iui-icon iui-sort'
+                                    aria-hidden
+                                  />
+                                )}
+                              </div>
+                            )}
                           </div>
                         )}
-                      {enableColumnReordering && !column.disableReordering && (
-                        <div className='iui-reorder-bar' />
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })}
+                        {isResizable &&
+                          column.isResizerVisible &&
+                          index !== headerGroup.headers.length - 1 && (
+                            <div
+                              {...column.getResizerProps()}
+                              className='iui-resizer'
+                            >
+                              <div className='iui-resizer-bar' />
+                            </div>
+                          )}
+                        {enableColumnReordering &&
+                          !column.disableReordering && (
+                            <div className='iui-reorder-bar' />
+                          )}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
         </div>
         <div
           {...getTableBodyProps({

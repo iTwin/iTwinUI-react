@@ -12,8 +12,15 @@ import {
 import React from 'react';
 import { Table, TableProps } from './Table';
 import * as IntersectionHooks from '../utils/hooks/useIntersection';
-import { tableFilters } from './filters';
+import {
+  BaseFilter,
+  FilterButtonBar,
+  TableFilterProps,
+  tableFilters,
+} from './filters';
 import { CellProps, Column, Row } from 'react-table';
+import { InputGroup } from '../InputGroup';
+import { Radio } from '../Radio';
 import { SvgChevronRight } from '@itwin/itwinui-icons-react';
 import { DefaultCell, EditableCell } from './cells';
 import { TablePaginator } from './TablePaginator';
@@ -63,6 +70,7 @@ type TestDataType = {
   name: string;
   description: string;
   subRows?: TestDataType[];
+  booleanValue?: boolean;
 };
 
 const mockedData = (count = 3): TestDataType[] =>
@@ -140,7 +148,7 @@ const flattenData = (data: TestDataType[]) => {
   return flatData;
 };
 
-function assertRowsData(rows: NodeListOf<Element>, data = mockedData()) {
+async function assertRowsData(rows: NodeListOf<Element>, data = mockedData()) {
   expect(rows.length).toBe(data.length);
   for (let i = 0; i < rows.length; i++) {
     const row = rows.item(i);
@@ -150,46 +158,81 @@ function assertRowsData(rows: NodeListOf<Element>, data = mockedData()) {
     expect(cells[0].textContent).toEqual(name);
     expect(cells[1].textContent).toEqual(description);
     expect(cells[2].textContent).toEqual('View');
-    userEvent.click(cells[2].firstElementChild as HTMLElement);
+    await userEvent.click(cells[2].firstElementChild as HTMLElement);
   }
 }
 
-const setFilter = (container: HTMLElement, value: string) => {
+const setFilter = async (container: HTMLElement, value: string) => {
   const filterIcon = container.querySelector(
     '.iui-filter-button .iui-button-icon',
   ) as HTMLElement;
   expect(filterIcon).toBeTruthy();
-  userEvent.click(filterIcon);
+  await userEvent.click(filterIcon);
 
   const filterInput = document.querySelector(
     '.iui-column-filter input',
   ) as HTMLInputElement;
   expect(filterInput).toBeVisible();
 
-  userEvent.type(filterInput, value);
-  userEvent.click(screen.getByText('Filter'));
+  await userEvent.type(filterInput, value);
+  await userEvent.click(screen.getByText('Filter'));
 
   expect(filterInput).not.toBeVisible();
 };
 
-const clearFilter = (container: HTMLElement) => {
+const clearFilter = async (container: HTMLElement) => {
   const filterIcon = container.querySelector(
     '.iui-filter-button .iui-button-icon',
   ) as HTMLElement;
   expect(filterIcon).toBeTruthy();
-  userEvent.click(filterIcon);
+  await userEvent.click(filterIcon);
 
-  screen.getByText('Clear').click();
+  await userEvent.click(screen.getByText('Clear'));
 };
 
-const expandAll = (container: HTMLElement, oldExpanders: Element[] = []) => {
+const BooleanFilter = (
+  props: TableFilterProps<Record<string, unknown>>,
+): JSX.Element => {
+  const [value, setValue] = React.useState<boolean | undefined>(
+    props.column.filterValue as boolean | undefined,
+  );
+  return (
+    <BaseFilter>
+      <InputGroup displayStyle='inline'>
+        <Radio
+          name='filterOption'
+          onChange={() => setValue(true)}
+          label='True'
+          defaultChecked={value}
+        />
+        <Radio
+          name='filterOption'
+          onChange={() => setValue(false)}
+          label='False'
+          defaultChecked={value === false}
+        />
+      </InputGroup>
+      <FilterButtonBar
+        setFilter={() => props.setFilter(value)}
+        clearFilter={props.clearFilter}
+      />
+    </BaseFilter>
+  );
+};
+
+const expandAll = async (
+  container: HTMLElement,
+  oldExpanders: Element[] = [],
+) => {
   const allExpanders = Array.from(
     container.querySelectorAll('.iui-row-expander'),
   );
   const newExpanders = allExpanders.filter((e) => !oldExpanders.includes(e));
-  newExpanders.forEach((button) => userEvent.click(button));
+  for (const button of newExpanders) {
+    await userEvent.click(button);
+  }
   if (newExpanders.length) {
-    expandAll(container, allExpanders);
+    await expandAll(container, allExpanders);
   }
 };
 
@@ -197,13 +240,13 @@ beforeEach(() => {
   intersectionCallbacks.clear();
 });
 
-it('should render table with data', () => {
+it('should render table with data', async () => {
   const onViewClick = jest.fn();
   const { container } = renderComponent(undefined, onViewClick);
 
   expect(screen.queryByText('Header name')).toBeFalsy();
   const rows = container.querySelectorAll('.iui-table-body .iui-row');
-  assertRowsData(rows);
+  await assertRowsData(rows);
   expect(onViewClick).toHaveBeenCalledTimes(3);
 });
 
@@ -286,7 +329,7 @@ it('should render cell with custom className', () => {
   expect(cell).toBeTruthy();
 });
 
-it('should handle checkbox clicks', () => {
+it('should handle checkbox clicks', async () => {
   const onSelect = jest.fn();
   const { container } = renderComponent({ isSelectable: true, onSelect });
 
@@ -298,17 +341,17 @@ it('should handle checkbox clicks', () => {
 
   const checkboxCells = container.querySelectorAll('.iui-slot .iui-checkbox');
   expect(checkboxCells.length).toBe(4);
-  userEvent.click(checkboxCells[2]);
+  await userEvent.click(checkboxCells[2]);
   expect(onSelect).toHaveBeenCalledWith([mockedData()[1]], expect.any(Object));
 
-  userEvent.click(checkboxCells[0]);
+  await userEvent.click(checkboxCells[0]);
   expect(onSelect).toHaveBeenCalledWith(mockedData(), expect.any(Object));
 
-  userEvent.click(checkboxCells[0]);
+  await userEvent.click(checkboxCells[0]);
   expect(onSelect).toHaveBeenCalledWith([], expect.any(Object));
 });
 
-it('should handle row clicks', () => {
+it('should handle row clicks', async () => {
   const onSelect = jest.fn();
   const onRowClick = jest.fn();
   const { container, getByText } = renderComponent({
@@ -321,25 +364,27 @@ it('should handle row clicks', () => {
   const rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
 
-  userEvent.click(getByText(mockedData()[1].name));
+  await userEvent.click(getByText(mockedData()[1].name));
   expect(rows[1].classList).toContain('iui-selected');
   expect(onSelect).toHaveBeenCalledTimes(1);
   expect(onRowClick).toHaveBeenCalledTimes(1);
 
-  userEvent.click(getByText(mockedData()[2].name));
+  await userEvent.click(getByText(mockedData()[2].name));
   expect(rows[1].classList).not.toContain('iui-selected');
   expect(rows[2].classList).toContain('iui-selected');
   expect(onSelect).toHaveBeenCalledTimes(2);
   expect(onRowClick).toHaveBeenCalledTimes(2);
 
-  userEvent.click(getByText(mockedData()[1].name), { ctrlKey: true });
+  const user = userEvent.setup();
+  await user.keyboard('[ControlLeft>]'); // Press Control (without releasing it)
+  await user.click(getByText(mockedData()[1].name)); // Perform a click with `ctrlKey: true`
   expect(rows[1].classList).toContain('iui-selected');
   expect(rows[2].classList).toContain('iui-selected');
   expect(onSelect).toHaveBeenCalledTimes(3);
   expect(onRowClick).toHaveBeenCalledTimes(3);
 });
 
-it('should not select when clicked on row but selectRowOnClick flag is false', () => {
+it('should not select when clicked on row but selectRowOnClick flag is false', async () => {
   const onSelect = jest.fn();
   const onRowClick = jest.fn();
   const { container, getByText } = renderComponent({
@@ -353,12 +398,12 @@ it('should not select when clicked on row but selectRowOnClick flag is false', (
   const rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
 
-  userEvent.click(getByText(mockedData()[1].name));
+  await userEvent.click(getByText(mockedData()[1].name));
   expect(onSelect).not.toHaveBeenCalled();
   expect(onRowClick).toHaveBeenCalled();
 });
 
-it('should not select when clicked on row and preventDefault is set', () => {
+it('should not select when clicked on row and preventDefault is set', async () => {
   const onSelect = jest.fn();
   renderComponent({
     isSelectable: true,
@@ -366,11 +411,11 @@ it('should not select when clicked on row and preventDefault is set', () => {
     rowProps: () => ({ onClick: (e) => e.preventDefault() }),
   });
 
-  userEvent.click(screen.getByText(mockedData()[1].name));
+  await userEvent.click(screen.getByText(mockedData()[1].name));
   expect(onSelect).not.toHaveBeenCalled();
 });
 
-it('should not trigger onSelect when sorting and filtering', () => {
+it('should not trigger onSelect when sorting and filtering', async () => {
   const onSort = jest.fn();
   const onSelect = jest.fn();
   const onFilter = jest.fn();
@@ -402,11 +447,11 @@ it('should not trigger onSelect when sorting and filtering', () => {
   expect(nameHeader).toBeTruthy();
   expect(nameHeader.classList).not.toContain('iui-sorted');
 
-  userEvent.click(nameHeader);
+  await userEvent.click(nameHeader);
   expect(onSort).toHaveBeenCalled();
   expect(onSelect).not.toHaveBeenCalled();
 
-  setFilter(container, '2');
+  await setFilter(container, '2');
   expect(onFilter).toHaveBeenCalled();
   expect(onSelect).not.toHaveBeenCalled();
 });
@@ -447,7 +492,7 @@ it('should not show sort icon if data is empty', () => {
   expect(container.querySelector('.iui-cell-end-icon .iui-sort')).toBeFalsy();
 });
 
-it('should sort name column correctly', () => {
+it('should sort name column correctly', async () => {
   const mocked = [
     { name: 'name1', description: 'Description1' },
     { name: 'name3', description: 'Description3' },
@@ -468,7 +513,7 @@ it('should sort name column correctly', () => {
   expect(nameHeader.classList).not.toContain('iui-sorted');
   let rows = container.querySelectorAll('.iui-table-body .iui-row');
 
-  assertRowsData(rows, mocked);
+  await assertRowsData(rows, mocked);
 
   const sortIcon = container.querySelector(
     '.iui-cell-end-icon .iui-sort',
@@ -476,10 +521,10 @@ it('should sort name column correctly', () => {
   expect(sortIcon).toBeTruthy();
 
   //first click
-  userEvent.click(nameHeader);
+  await userEvent.click(nameHeader);
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(nameHeader.classList).toContain('iui-sorted');
-  assertRowsData(rows, sortedByName);
+  await assertRowsData(rows, sortedByName);
   expect(onSort).toHaveBeenCalledWith(
     expect.objectContaining({
       sortBy: [
@@ -492,10 +537,10 @@ it('should sort name column correctly', () => {
   );
 
   //second click
-  userEvent.click(nameHeader);
+  await userEvent.click(nameHeader);
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(nameHeader.classList).toContain('iui-sorted');
-  assertRowsData(rows, [...sortedByName].reverse());
+  await assertRowsData(rows, [...sortedByName].reverse());
   expect(onSort).toHaveBeenCalledWith(
     expect.objectContaining({
       sortBy: [
@@ -508,10 +553,10 @@ it('should sort name column correctly', () => {
   );
 
   //third click resets it
-  userEvent.click(nameHeader);
+  await userEvent.click(nameHeader);
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(nameHeader.classList).not.toContain('iui-sorted');
-  assertRowsData(rows, mocked);
+  await assertRowsData(rows, mocked);
   expect(onSort).toHaveBeenCalledWith(
     expect.objectContaining({
       sortBy: [],
@@ -558,7 +603,7 @@ it('should trigger onBottomReached', () => {
   expect(onBottomReached).toHaveBeenCalledTimes(1);
 });
 
-it('should trigger onBottomReached with filter applied', () => {
+it('should trigger onBottomReached with filter applied', async () => {
   const onBottomReached = jest.fn();
   const mockedColumns = [
     {
@@ -583,7 +628,7 @@ it('should trigger onBottomReached with filter applied', () => {
   let rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(50);
 
-  setFilter(container, '1');
+  await setFilter(container, '1');
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(14);
 
@@ -612,7 +657,7 @@ it('should trigger onRowInViewport', () => {
   expect(onRowInViewport).toHaveBeenCalledTimes(10);
 });
 
-it('should filter table', () => {
+it('should filter table', async () => {
   const onFilter = jest.fn();
   const mockedColumns = [
     {
@@ -634,7 +679,7 @@ it('should filter table', () => {
   let rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
 
-  setFilter(container, '2');
+  await setFilter(container, '2');
 
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(1);
@@ -644,7 +689,89 @@ it('should filter table', () => {
   );
 });
 
-it('should clear filter', () => {
+it('should filter false values', async () => {
+  const columns = [
+    {
+      Header: 'Header',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'booleanValue',
+          Header: 'Bool Value',
+          accessor: 'booleanValue',
+          Filter: BooleanFilter,
+          filter: 'equals',
+        },
+      ],
+    },
+  ];
+
+  const data = [
+    { name: 'Name1', description: 'Description1', booleanValue: true },
+    { name: 'Name2', description: 'Description2', booleanValue: false },
+  ] as TestDataType[];
+
+  const { container } = renderComponent({ columns, onFilter: jest.fn(), data });
+
+  const filterIcon = container.querySelector(
+    '.iui-filter-button .iui-button-icon',
+  ) as HTMLElement;
+
+  await userEvent.click(filterIcon);
+  await userEvent.click(screen.getByText('False'));
+  await userEvent.click(screen.getByText('Filter'));
+
+  expect(screen.queryByText('Name1')).not.toBeInTheDocument();
+  screen.getByText('Name2');
+});
+
+it('should not filter undefined values', async () => {
+  const columns = [
+    {
+      Header: 'Header',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'booleanValue',
+          Header: 'Bool Value',
+          accessor: 'booleanValue',
+          Filter: BooleanFilter,
+          filter: 'equals',
+        },
+      ],
+    },
+  ];
+
+  const data = [
+    { name: 'Name1', description: 'Description1', booleanValue: true },
+    { name: 'Name2', description: 'Description2', booleanValue: false },
+    { name: 'Name3', description: 'Description2' },
+  ] as TestDataType[];
+
+  const { container } = renderComponent({ columns, onFilter: jest.fn(), data });
+
+  const filterIcon = container.querySelector(
+    '.iui-filter-button .iui-button-icon',
+  ) as HTMLElement;
+
+  await userEvent.click(filterIcon);
+  await userEvent.click(screen.getByText('False'));
+  await userEvent.click(screen.getByText('Filter'));
+
+  expect(screen.queryByText('Name1')).not.toBeInTheDocument();
+  screen.getByText('Name2');
+  expect(screen.queryByText('Name3')).not.toBeInTheDocument();
+});
+
+it('should clear filter', async () => {
   const onFilter = jest.fn();
   const mockedColumns = [
     {
@@ -674,7 +801,7 @@ it('should clear filter', () => {
     '.iui-filter-button .iui-button-icon',
   ) as HTMLElement;
   expect(filterIcon).toBeTruthy();
-  userEvent.click(filterIcon);
+  await userEvent.click(filterIcon);
 
   const filterInput = document.querySelector(
     '.iui-column-filter input',
@@ -683,7 +810,7 @@ it('should clear filter', () => {
   expect(filterInput).toBeVisible();
   expect(filterInput.value).toEqual('2');
 
-  screen.getByText('Clear').click();
+  await userEvent.click(screen.getByText('Clear'));
   expect(filterInput).not.toBeVisible();
 
   rows = container.querySelectorAll('.iui-table-body .iui-row');
@@ -694,7 +821,7 @@ it('should clear filter', () => {
   );
 });
 
-it('should not filter table when manualFilters flag is on', () => {
+it('should not filter table when manualFilters flag is on', async () => {
   const onFilter = jest.fn();
   const mockedColumns = [
     {
@@ -720,7 +847,7 @@ it('should not filter table when manualFilters flag is on', () => {
   let rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
 
-  setFilter(container, '2');
+  await setFilter(container, '2');
 
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
@@ -757,7 +884,7 @@ it('should not show filter icon when filter component is not set', () => {
   expect(filterIcon).toBeFalsy();
 });
 
-it('should show active filter icon when more data is loading', () => {
+it('should show active filter icon when more data is loading', async () => {
   const mockedColumns = [
     {
       Header: 'Header name',
@@ -776,7 +903,7 @@ it('should show active filter icon when more data is loading', () => {
     isLoading: true,
   });
 
-  setFilter(container, '2');
+  await setFilter(container, '2');
 
   const filterIcon = container.querySelector(
     '.iui-filter-button.iui-active .iui-button-icon',
@@ -784,7 +911,7 @@ it('should show active filter icon when more data is loading', () => {
   expect(filterIcon).toBeTruthy();
 });
 
-it('should show message and active filter icon when there is no data after filtering', () => {
+it('should show message and active filter icon when there is no data after filtering', async () => {
   const mockedColumns = [
     {
       Header: 'Header name',
@@ -805,7 +932,7 @@ it('should show message and active filter icon when there is no data after filte
   let rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
 
-  setFilter(container, 'invalid value');
+  await setFilter(container, 'invalid value');
 
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(0);
@@ -816,7 +943,7 @@ it('should show message and active filter icon when there is no data after filte
   expect(filterIcon).toBeTruthy();
 });
 
-it('should show message and active filter icon when there is no data after manual filtering', () => {
+it('should show message and active filter icon when there is no data after manual filtering', async () => {
   const mockedColumns = [
     {
       Header: 'Header name',
@@ -845,7 +972,7 @@ it('should show message and active filter icon when there is no data after manua
   let rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
 
-  setFilter(container, 'invalid value');
+  await setFilter(container, 'invalid value');
 
   rerender(
     <Table
@@ -866,7 +993,7 @@ it('should show message and active filter icon when there is no data after manua
   expect(filterIcon).toBeTruthy();
 });
 
-it('should not trigger sorting when filter is clicked', () => {
+it('should not trigger sorting when filter is clicked', async () => {
   const onFilter = jest.fn();
   const onSort = jest.fn();
   const mockedColumns = [
@@ -890,19 +1017,16 @@ it('should not trigger sorting when filter is clicked', () => {
     isSortable: true,
   });
 
-  setFilter(container, '2');
+  await setFilter(container, '2');
 
   expect(onFilter).toHaveBeenCalled();
   expect(onSort).not.toHaveBeenCalled();
 });
 
-it('should render filter dropdown in the correct document', () => {
-  const mockDocument = new DOMParser().parseFromString(
-    `<!DOCTYPE html><html><body><div></div></body></html>`,
-    'text/html',
-  );
-  const mockContainer = mockDocument.querySelector('div') as HTMLDivElement;
-
+it('should render filter dropdown in the correct document', async () => {
+  const mockDocument = document.implementation.createHTMLDocument();
+  const div = mockDocument.createElement('div');
+  const mockContainer = mockDocument.body.appendChild(div);
   const onFilter = jest.fn();
   const mockedColumns = [
     {
@@ -929,13 +1053,15 @@ it('should render filter dropdown in the correct document', () => {
     '.iui-filter-button',
   ) as HTMLElement;
   expect(filterToggle).toBeTruthy();
-  filterToggle.click();
+  act(() => filterToggle.click());
 
-  expect(mockDocument.querySelector('.iui-column-filter')).toBeTruthy();
+  await waitFor(() =>
+    expect(mockDocument.querySelector('.iui-column-filter')).toBeTruthy(),
+  );
   expect(document.querySelector('.iui-column-filter')).toBeFalsy();
 });
 
-it('should rerender table when columns change', () => {
+it('should rerender table when columns change', async () => {
   const data = mockedData();
   const { rerender } = render(
     <Table
@@ -946,7 +1072,7 @@ it('should rerender table when columns change', () => {
             {
               id: 'name',
               Header: 'Name',
-              Cell: () => 'test1',
+              Cell: () => <>test1</>,
             },
           ],
         },
@@ -966,7 +1092,7 @@ it('should rerender table when columns change', () => {
             {
               id: 'name',
               Header: 'Name',
-              Cell: () => 'test2',
+              Cell: () => <>test2</>,
             },
           ],
         },
@@ -978,7 +1104,7 @@ it('should rerender table when columns change', () => {
   expect(screen.getAllByText('test2').length).toBe(3);
 });
 
-it('should expand correctly', () => {
+it('should expand correctly', async () => {
   const onExpandMock = jest.fn();
   const { container, getByText } = renderComponent({
     subComponent: (row) => (
@@ -996,8 +1122,8 @@ it('should expand correctly', () => {
     )[0],
   ).toEqual(expanderIcon);
 
-  act(() => {
-    userEvent.click(container.querySelectorAll('.iui-button')[0]);
+  await act(async () => {
+    await userEvent.click(container.querySelectorAll('.iui-button')[0]);
   });
 
   getByText('Expanded component, name: Name1');
@@ -1026,17 +1152,17 @@ it('should expand correctly with a custom expander cell', async () => {
   expect(queryByText('Expanded component, name: Name1')).toBeNull();
   expect(queryByText('Expanded component, name: Name3')).toBeNull();
 
-  act(() => {
-    userEvent.click(getByText('Expand Name1'));
-    userEvent.click(getByText('Expand Name2'));
+  await act(async () => {
+    await userEvent.click(getByText('Expand Name1'));
+    await userEvent.click(getByText('Expand Name2'));
   });
 
   getByText('Expanded component, name: Name1');
   getByText('Expanded component, name: Name2');
 
-  act(() => {
-    userEvent.click(getByText('Expand Name1'));
-    userEvent.click(getByText('Expand Name3'));
+  await act(async () => {
+    await userEvent.click(getByText('Expand Name1'));
+    await userEvent.click(getByText('Expand Name3'));
   });
   await waitFor(() =>
     expect(queryByText('Expanded component, name: Name1')).toBeNull(),
@@ -1046,7 +1172,7 @@ it('should expand correctly with a custom expander cell', async () => {
   expect(onExpandMock).toHaveBeenCalledTimes(4);
 });
 
-it('should disable row and handle expansion accordingly', () => {
+it('should disable row and handle expansion accordingly', async () => {
   const onExpand = jest.fn();
   const { container } = renderComponent({
     onExpand,
@@ -1077,14 +1203,14 @@ it('should disable row and handle expansion accordingly', () => {
   expect(expansionCells[1].disabled).toBe(true);
   expect(expansionCells[2].disabled).toBe(false);
 
-  userEvent.click(expansionCells[1]);
+  await userEvent.click(expansionCells[1]);
   expect(onExpand).not.toHaveBeenCalled();
 
-  userEvent.click(expansionCells[0]);
+  await userEvent.click(expansionCells[0]);
   expect(onExpand).toHaveBeenCalled();
 });
 
-it('should disable row and handle selection accordingly', () => {
+it('should disable row and handle selection accordingly', async () => {
   const onSelect = jest.fn();
   const onRowClick = jest.fn();
   const { container } = renderComponent({
@@ -1115,19 +1241,19 @@ it('should disable row and handle selection accordingly', () => {
   expect(checkboxCells[3]).not.toBeDisabled();
 
   // Select disabled row
-  userEvent.click(checkboxCells[2]);
+  await userEvent.click(checkboxCells[2]);
   expect(onSelect).not.toHaveBeenCalled();
   expect(onRowClick).not.toHaveBeenCalled();
 
   // Select first row
-  userEvent.click(checkboxCells[1]);
+  await userEvent.click(checkboxCells[1]);
   expect(onSelect).toHaveBeenCalledWith([mockedData()[0]], expect.any(Object));
   const headerCheckbox = checkboxCells[0] as HTMLInputElement;
   expect(headerCheckbox.indeterminate).toBe(true);
   expect(headerCheckbox.checked).toBe(false);
 
   // Select all
-  userEvent.click(checkboxCells[0]);
+  await userEvent.click(checkboxCells[0]);
   expect(onSelect).toHaveBeenCalledWith(
     [mockedData()[0], mockedData()[2]],
     expect.any(Object),
@@ -1136,13 +1262,13 @@ it('should disable row and handle selection accordingly', () => {
   expect(headerCheckbox.checked).toBe(true);
 
   // Deselect all
-  userEvent.click(checkboxCells[0]);
+  await userEvent.click(checkboxCells[0]);
   expect(onSelect).toHaveBeenCalledWith([], expect.any(Object));
   expect(headerCheckbox.indeterminate).toBe(false);
   expect(headerCheckbox.checked).toBe(false);
 });
 
-it('should select and filter rows', () => {
+it('should select and filter rows', async () => {
   const onSelect = jest.fn();
   const mockedColumns = [
     {
@@ -1171,20 +1297,20 @@ it('should select and filter rows', () => {
   expect(checkboxCells.length).toBe(4);
 
   // Select first row
-  userEvent.click(checkboxCells[1]);
+  await userEvent.click(checkboxCells[1]);
   expect(onSelect).toHaveBeenCalledWith([mockedData()[0]], expect.any(Object));
   const headerCheckbox = checkboxCells[0] as HTMLInputElement;
   expect(headerCheckbox.indeterminate).toBe(true);
 
   // Filter table
-  setFilter(container, '2');
+  await setFilter(container, '2');
   expect(headerCheckbox.indeterminate).toBe(true);
 
   checkboxCells = container.querySelectorAll('.iui-slot .iui-checkbox');
   expect(checkboxCells.length).toBe(2);
 
   // Select second row
-  userEvent.click(checkboxCells[1]);
+  await userEvent.click(checkboxCells[1]);
   expect(onSelect).toHaveBeenCalledWith(
     [mockedData()[0], mockedData()[1]],
     expect.any(Object),
@@ -1192,7 +1318,7 @@ it('should select and filter rows', () => {
   expect(headerCheckbox.indeterminate).toBe(true);
 
   // Clear filter
-  clearFilter(container);
+  await clearFilter(container);
   const checkboxInputs = container.querySelectorAll<HTMLInputElement>(
     '.iui-slot .iui-checkbox',
   );
@@ -1232,18 +1358,18 @@ it.each(['condensed', 'extra-condensed'] as const)(
   },
 );
 
-it('should render sub-rows and handle expansions', () => {
+it('should render sub-rows and handle expansions', async () => {
   const onExpand = jest.fn();
   const data = mockedSubRowsData();
   const { container } = renderComponent({ data, onExpand });
 
   let rows = container.querySelectorAll('.iui-table-body .iui-row');
-  assertRowsData(rows, data);
+  await assertRowsData(rows, data);
 
-  expandAll(container);
+  await expandAll(container);
 
   rows = container.querySelectorAll('.iui-table-body .iui-row');
-  assertRowsData(rows, flattenData(data));
+  await assertRowsData(rows, flattenData(data));
 
   expect(onExpand).toHaveBeenNthCalledWith(1, [data[0]], expect.any(Object));
   expect(onExpand).toHaveBeenNthCalledWith(
@@ -1258,7 +1384,7 @@ it('should render sub-rows and handle expansions', () => {
   );
 });
 
-it('should render filtered sub-rows', () => {
+it('should render filtered sub-rows', async () => {
   const data = mockedSubRowsData();
   const columns = [
     {
@@ -1287,14 +1413,14 @@ it('should render filtered sub-rows', () => {
   ];
   const { container } = renderComponent({ data, columns });
 
-  expandAll(container);
+  await expandAll(container);
 
   let rows = container.querySelectorAll('.iui-table-body .iui-row');
-  assertRowsData(rows, flattenData(data));
+  await assertRowsData(rows, flattenData(data));
 
-  setFilter(container, '2');
+  await setFilter(container, '2');
   rows = container.querySelectorAll('.iui-table-body .iui-row');
-  assertRowsData(rows, [
+  await assertRowsData(rows, [
     { name: 'Row 1', description: 'Description 1' },
     { name: 'Row 1.2', description: 'Description 1.2' },
     { name: 'Row 1.2.1', description: 'Description 1.2.1' },
@@ -1304,12 +1430,12 @@ it('should render filtered sub-rows', () => {
     { name: 'Row 2.2', description: 'Description 2.2' },
   ]);
 
-  clearFilter(container);
+  await clearFilter(container);
   rows = container.querySelectorAll('.iui-table-body .iui-row');
-  assertRowsData(rows, flattenData(data));
+  await assertRowsData(rows, flattenData(data));
 });
 
-it('should handle sub-rows selection', () => {
+it('should handle sub-rows selection', async () => {
   const onSelect = jest.fn();
   const data = mockedSubRowsData();
   const { container } = renderComponent({
@@ -1325,9 +1451,9 @@ it('should handle sub-rows selection', () => {
     '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(3);
-  checkboxes[0].click();
+  await userEvent.click(checkboxes[0]);
 
-  expandAll(container);
+  await expandAll(container);
 
   checkboxes = container.querySelectorAll<HTMLInputElement>(
     '.iui-table-body .iui-checkbox',
@@ -1343,7 +1469,7 @@ it('should handle sub-rows selection', () => {
   );
 });
 
-it('should show indeterminate checkbox when some sub-rows are selected', () => {
+it('should show indeterminate checkbox when some sub-rows are selected', async () => {
   const onSelect = jest.fn();
   const data = mockedSubRowsData();
   const { container } = renderComponent({
@@ -1355,14 +1481,14 @@ it('should show indeterminate checkbox when some sub-rows are selected', () => {
   const rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
 
-  expandAll(container);
+  await expandAll(container);
 
   let checkboxes = container.querySelectorAll<HTMLInputElement>(
     '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(10);
   // Click row 1.2 checkbox
-  checkboxes[2].click();
+  await userEvent.click(checkboxes[2]);
 
   checkboxes = container.querySelectorAll<HTMLInputElement>(
     '.iui-table-body .iui-checkbox',
@@ -1379,7 +1505,7 @@ it('should show indeterminate checkbox when some sub-rows are selected', () => {
   );
 });
 
-it('should show indeterminate checkbox when a sub-row of a sub-row is selected', () => {
+it('should show indeterminate checkbox when a sub-row of a sub-row is selected', async () => {
   const onSelect = jest.fn();
   const data = mockedSubRowsData();
   const { container } = renderComponent({
@@ -1391,14 +1517,14 @@ it('should show indeterminate checkbox when a sub-row of a sub-row is selected',
   const rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
 
-  expandAll(container);
+  await expandAll(container);
 
   let checkboxes = container.querySelectorAll<HTMLInputElement>(
     '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(10);
   // Click row 1.2.1 checkbox
-  checkboxes[3].click();
+  await userEvent.click(checkboxes[3]);
 
   checkboxes = container.querySelectorAll<HTMLInputElement>(
     '.iui-table-body .iui-checkbox',
@@ -1418,7 +1544,7 @@ it('should show indeterminate checkbox when a sub-row of a sub-row is selected',
   );
 });
 
-it('should show indeterminate checkbox when sub-row selected after filtering', () => {
+it('should show indeterminate checkbox when sub-row selected after filtering', async () => {
   const onSelect = jest.fn();
   const data = mockedSubRowsData();
   const columns = [
@@ -1456,15 +1582,15 @@ it('should show indeterminate checkbox when sub-row selected after filtering', (
   const rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
 
-  setFilter(container, '2');
-  expandAll(container);
+  await setFilter(container, '2');
+  await expandAll(container);
 
   let checkboxes = container.querySelectorAll<HTMLInputElement>(
     '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(7);
   // Click row 1.2 checkbox
-  checkboxes[1].click();
+  await userEvent.click(checkboxes[1]);
 
   checkboxes = container.querySelectorAll<HTMLInputElement>(
     '.iui-table-body .iui-checkbox',
@@ -1481,7 +1607,7 @@ it('should show indeterminate checkbox when sub-row selected after filtering', (
   );
 });
 
-it('should show indeterminate checkbox when clicking on a row itself after filtering', () => {
+it('should show indeterminate checkbox when clicking on a row itself after filtering', async () => {
   const onSelect = jest.fn();
   const data = mockedSubRowsData();
   const columns = [
@@ -1519,13 +1645,13 @@ it('should show indeterminate checkbox when clicking on a row itself after filte
   let rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
 
-  setFilter(container, '2');
-  expandAll(container);
+  await setFilter(container, '2');
+  await expandAll(container);
 
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(7);
   // Click row 1
-  userEvent.click(rows[0]);
+  await userEvent.click(rows[0]);
 
   const checkboxes = container.querySelectorAll<HTMLInputElement>(
     '.iui-table-body .iui-checkbox',
@@ -1542,7 +1668,7 @@ it('should show indeterminate checkbox when clicking on a row itself after filte
   );
 });
 
-it('should only select one row even if it has sub-rows when selectSubRows is false', () => {
+it('should only select one row even if it has sub-rows when selectSubRows is false', async () => {
   const onSelect = jest.fn();
   const data = mockedSubRowsData();
   const { container } = renderComponent({
@@ -1559,9 +1685,9 @@ it('should only select one row even if it has sub-rows when selectSubRows is fal
     '.iui-table-body .iui-checkbox',
   );
   expect(checkboxes.length).toBe(3);
-  checkboxes[0].click();
+  await userEvent.click(checkboxes[0]);
 
-  expandAll(container);
+  await expandAll(container);
 
   checkboxes = container.querySelectorAll<HTMLInputElement>(
     '.iui-table-body .iui-checkbox',
@@ -1574,7 +1700,7 @@ it('should only select one row even if it has sub-rows when selectSubRows is fal
   expect(onSelect).toHaveBeenCalledWith([data[0]], expect.any(Object));
 });
 
-it('should render sub-rows with custom expander', () => {
+it('should render sub-rows with custom expander', async () => {
   const data = mockedSubRowsData();
   const { container } = renderComponent({
     data,
@@ -1594,15 +1720,15 @@ it('should render sub-rows with custom expander', () => {
   let rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
 
-  userEvent.click(screen.getByText('Expand Row 1'));
-  userEvent.click(screen.getByText('Expand Row 1.2'));
-  userEvent.click(screen.getByText('Expand Row 2'));
+  await userEvent.click(screen.getByText('Expand Row 1'));
+  await userEvent.click(screen.getByText('Expand Row 1.2'));
+  await userEvent.click(screen.getByText('Expand Row 2'));
 
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(10);
 });
 
-it('should edit cell data', () => {
+it('should edit cell data', async () => {
   const onCellEdit = jest.fn();
   const columns: Column<TestDataType>[] = [
     {
@@ -1636,7 +1762,7 @@ it('should edit cell data', () => {
   });
 
   const rows = container.querySelectorAll('.iui-table-body .iui-row');
-  assertRowsData(rows);
+  await assertRowsData(rows);
 
   const editableCells = container.querySelectorAll(
     '.iui-cell[contenteditable]',
@@ -1650,7 +1776,7 @@ it('should edit cell data', () => {
   expect(onCellEdit).toHaveBeenCalledWith('name', 'test data', mockedData()[1]);
 });
 
-it('should handle unwanted actions on editable cell', () => {
+it('should handle unwanted actions on editable cell', async () => {
   const onCellEdit = jest.fn();
   const onSelect = jest.fn();
   const columns: Column<TestDataType>[] = [
@@ -1710,11 +1836,11 @@ it('should handle unwanted actions on editable cell', () => {
     mockedData()[1],
   );
 
-  userEvent.click(editableCells[1]);
+  await userEvent.click(editableCells[1]);
   expect(onSelect).not.toHaveBeenCalled();
 });
 
-it('should render data in pages', () => {
+it('should render data in pages', async () => {
   jest
     .spyOn(UseOverflow, 'useOverflow')
     .mockImplementation((items) => [jest.fn(), items.length]);
@@ -1733,14 +1859,14 @@ it('should render data in pages', () => {
     '.iui-paginator .iui-paginator-page-button',
   );
   expect(pages).toHaveLength(10);
-  pages[3].click();
+  await userEvent.click(pages[3]);
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows).toHaveLength(10);
   expect(rows[0].querySelector('.iui-cell')?.textContent).toEqual('Name31');
   expect(rows[9].querySelector('.iui-cell')?.textContent).toEqual('Name40');
 });
 
-it('should change page size', () => {
+it('should change page size', async () => {
   const { container } = renderComponent({
     data: mockedData(100),
     paginatorRenderer: (props) => (
@@ -1757,9 +1883,9 @@ it('should change page size', () => {
     '.iui-dropdown',
   ) as HTMLButtonElement;
   expect(pageSizeSelector).toBeTruthy();
-  pageSizeSelector.click();
+  await userEvent.click(pageSizeSelector);
 
-  screen.getByText('50 per page').click();
+  await userEvent.click(screen.getByText('50 per page'));
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows).toHaveLength(50);
   expect(rows[0].querySelector('.iui-cell')?.textContent).toEqual('Name1');
@@ -1787,7 +1913,7 @@ it('should handle resize by increasing width of current column and decreasing th
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
       ],
     },
@@ -1838,7 +1964,7 @@ it('should handle resize with touch', () => {
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
       ],
     },
@@ -1889,7 +2015,7 @@ it('should prevent from resizing past 1px width', () => {
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
       ],
     },
@@ -1943,7 +2069,7 @@ it('should prevent from resizing past max-width', () => {
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
       ],
     },
@@ -2008,7 +2134,7 @@ it('should prevent from resizing past min-width', () => {
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
       ],
     },
@@ -2072,13 +2198,13 @@ it('should not resize column with disabled resize but resize closest ones', () =
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
           disableResizing: true,
         },
         {
           id: 'edit',
           Header: 'edit',
-          Cell: () => 'Edit',
+          Cell: () => <>Edit</>,
         },
       ],
     },
@@ -2153,7 +2279,7 @@ it('should not show resizer when there are no next resizable columns', () => {
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
           disableResizing: true,
         },
       ],
@@ -2195,7 +2321,7 @@ it('should not trigger sort when resizing', () => {
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
       ],
     },
@@ -2253,7 +2379,7 @@ it('should handle table resize only when some columns were resized', () => {
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
       ],
     },
@@ -2306,7 +2432,9 @@ it('should render zebra striped table', () => {
 it('should sync body horizontal scroll with header scroll', () => {
   const { container } = renderComponent();
 
-  const header = container.querySelector('.iui-table-header') as HTMLDivElement;
+  const header = container.querySelector(
+    '.iui-table-header-wrapper',
+  ) as HTMLDivElement;
   const body = container.querySelector('.iui-table-body') as HTMLDivElement;
 
   expect(header.scrollLeft).toBe(0);
@@ -2436,7 +2564,7 @@ it('should not have `draggable` attribute on columns with `disableReordering` en
         {
           id: 'view',
           Header: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
           disableReordering: true,
         },
       ],
@@ -2484,7 +2612,7 @@ it('should render empty action column', () => {
         {
           id: 'view',
           Header: 'View',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
         ActionColumn(),
       ],
@@ -2503,7 +2631,7 @@ it('should render empty action column', () => {
   expect(headerCells[3].firstElementChild).toBeNull();
 });
 
-it('should render empty action column with column manager', () => {
+it('should render empty action column with column manager', async () => {
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Header name',
@@ -2521,7 +2649,7 @@ it('should render empty action column with column manager', () => {
         {
           id: 'view',
           Header: 'View',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
         ActionColumn({ columnManager: true }),
       ],
@@ -2541,7 +2669,7 @@ it('should render empty action column with column manager', () => {
     columnManager.className.includes('iui-button iui-borderless'),
   ).toBeTruthy();
 
-  userEvent.click(columnManager);
+  await userEvent.click(columnManager);
 
   expect(document.querySelector('.iui-menu')).toBeTruthy();
 
@@ -2569,7 +2697,7 @@ it('should render action column with column manager', () => {
         {
           ...ActionColumn({ columnManager: true }),
           id: 'view',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
       ],
     },
@@ -2592,7 +2720,7 @@ it('should render action column with column manager', () => {
   expect(actionColumn[3].textContent).toBe('View');
 });
 
-it('should hide column when deselected in column manager', () => {
+it('should hide column when deselected in column manager', async () => {
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Header name',
@@ -2610,7 +2738,7 @@ it('should hide column when deselected in column manager', () => {
         {
           id: 'view',
           Header: 'View',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
         ActionColumn({ columnManager: true }),
       ],
@@ -2630,11 +2758,11 @@ it('should hide column when deselected in column manager', () => {
   expect(headerCells[2].textContent).toBe('View');
 
   const columnManager = container.querySelector('.iui-button') as HTMLElement;
-  userEvent.click(columnManager);
+  await userEvent.click(columnManager);
   const columnManagerColumns = document.querySelectorAll<HTMLLIElement>(
     '.iui-menu-item',
   );
-  userEvent.click(columnManagerColumns[1]);
+  await userEvent.click(columnManagerColumns[1]);
 
   headerCells = container.querySelectorAll<HTMLDivElement>(
     '.iui-table-header .iui-cell',
@@ -2645,7 +2773,7 @@ it('should hide column when deselected in column manager', () => {
   expect(headerCells[1].textContent).toBe('View');
 });
 
-it('should be disabled in column manager if `disableToggleVisibility` is true', () => {
+it('should be disabled in column manager if `disableToggleVisibility` is true', async () => {
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Header name',
@@ -2664,7 +2792,7 @@ it('should be disabled in column manager if `disableToggleVisibility` is true', 
         {
           id: 'view',
           Header: 'View',
-          Cell: () => 'View',
+          Cell: () => <>View</>,
         },
         ActionColumn({ columnManager: true }),
       ],
@@ -2676,7 +2804,7 @@ it('should be disabled in column manager if `disableToggleVisibility` is true', 
 
   const columnManager = container.querySelector('.iui-button') as HTMLElement;
 
-  userEvent.click(columnManager);
+  await userEvent.click(columnManager);
   const columnManagerColumns = document.querySelectorAll<HTMLLIElement>(
     '.iui-menu-item',
   );
@@ -2852,7 +2980,7 @@ it('should show column enabled when whole row is disabled', () => {
   expect(rowCells[1].classList).toContain('iui-disabled');
 });
 
-it('should render selectable rows without select column', () => {
+it('should render selectable rows without select column', async () => {
   const onRowClick = jest.fn();
   const { container, getByText } = renderComponent({
     isSelectable: true,
@@ -2865,18 +2993,41 @@ it('should render selectable rows without select column', () => {
 
   expect(container.querySelectorAll('.iui-slot .iui-checkbox').length).toBe(0);
 
-  userEvent.click(getByText(mockedData()[1].name));
+  await userEvent.click(getByText(mockedData()[1].name));
   expect(rows[1].classList).toContain('iui-selected');
   expect(onRowClick).toHaveBeenCalledTimes(1);
 
-  userEvent.click(getByText(mockedData()[2].name));
+  await userEvent.click(getByText(mockedData()[2].name));
   expect(rows[1].classList).not.toContain('iui-selected');
   expect(rows[2].classList).toContain('iui-selected');
   expect(onRowClick).toHaveBeenCalledTimes(2);
 
   //Test that ctrl clicking doesn't highlight more than one row
-  userEvent.click(getByText(mockedData()[1].name), { ctrlKey: true });
+  const user = userEvent.setup();
+  await user.keyboard('[ControlLeft>]'); // Press Control (without releasing it)
+  await user.click(getByText(mockedData()[1].name)); // Perform a click with `ctrlKey: true`
   expect(rows[1].classList).toContain('iui-selected');
   expect(rows[2].classList).not.toContain('iui-selected');
   expect(onRowClick).toHaveBeenCalledTimes(3);
+});
+
+it('should not throw on headless table', () => {
+  const columns: Column<TestDataType>[] = [
+    {
+      id: 'name',
+      Header: 'Name',
+      accessor: 'name',
+    },
+    {
+      id: 'description',
+      Header: 'Description',
+      accessor: 'description',
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+  });
+
+  expect(container.querySelector('.iui-table-header .iui-row')).toBeFalsy();
+  expect(container.querySelector('.iui-table-body')).toBeTruthy();
 });
