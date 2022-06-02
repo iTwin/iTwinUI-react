@@ -1,6 +1,4 @@
 ---
-import TableOfContents from './TableOfContents.tsx';
-
 const { content } = Astro.props;
 const title = content.title;
 const headers = content.astro.headers;
@@ -9,9 +7,7 @@ const headers = content.astro.headers;
 <article id='article' class='content'>
   <section class='main-section'>
     <h1 class='content-title' id='overview'>{title}</h1>
-    <nav>
-      <TableOfContents client:media='(max-width: 50em)' {headers} />
-    </nav>
+    <!-- TODO: Add table of contents here -->
     <slot></slot>
   </section>
 </article>
@@ -25,16 +21,25 @@ const headers = content.astro.headers;
     display: flex;
     flex-direction: column;
   }
+
+  .content-title {
+    font-size: 2.5rem;
+  }
+
   .content > section {
     margin-bottom: 4rem;
   }
+
   .block {
     display: block;
   }
 
-  @media (min-width: 50em) {
-    nav {
-      display: none;
+  .main-section {
+    display: grid;
+    gap: 1rem;
+    
+    & > :global(:is(h1, h2, h3, h4):not(:first-child)) {
+      margin-top: 1rem;
     }
   }
 </style>

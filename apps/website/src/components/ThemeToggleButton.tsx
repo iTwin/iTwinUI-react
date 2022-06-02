@@ -27,7 +27,7 @@ const ThemeToggle = () => {
       className="theme-toggle"
       onClick={() => setTheme((t) => (t === "light" ? "dark" : "light"))}
     >
-      <span className="sr-only">Toggle theme</span>
+      <span className="visually-hidden">Toggle theme</span>
       <svg aria-hidden viewBox="0 0 15 15">
         <path
           fill="currentColor"

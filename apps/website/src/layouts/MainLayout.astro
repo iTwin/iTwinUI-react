@@ -4,22 +4,45 @@ import HeadSEO from '../components/HeadSEO.astro';
 import Header from '../components/Header.astro';
 import PageContent from '../components/PageContent.astro';
 import LeftSidebar from '../components/LeftSidebar.astro';
-import RightSidebar from '../components/RightSidebar.astro';
 import * as CONFIG from '../config';
 
 const { content = {} } = Astro.props;
 const currentPage = new URL(Astro.request.url).pathname;
-const currentFile = `src/pages${currentPage.replace(/\/$/, '')}.md`;
 ---
 <html dir={content.dir ?? 'ltr'} lang={content.lang ?? 'en-us'} class='initial'>
   <head>
     <HeadCommon />
     <HeadSEO content={content} canonicalURL={Astro.canonicalURL} />
     <title>{content.title ? `${content.title} | ${CONFIG.SITE.title}` : CONFIG.SITE.title}</title>
+    <style is:global>
+      * {
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        color-scheme: dark light;
+        font-family: system-ui, sans-serif;
+      }
+
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+      }
+    </style>
     <style>
       body {
-        width: 100%;
+        max-width: min(100%, 1200px);
+        margin: 0 auto;
         display: grid;
+        line-height: 1.5;
         grid-template-rows: var(--theme-navbar-height) 1fr;
         --gutter: 0.5rem;
         --doc-padding: 2rem;
@@ -29,8 +52,7 @@ const currentFile = `src/pages${currentPage.replace(/\/$/, '')}.md`;
         grid-auto-flow: column;
         grid-template-columns:
           minmax(var(--gutter), 1fr)
-          minmax(0, var(--max-width))
-          minmax(var(--gutter), 1fr);
+          minmax(0, var(--max-width));
         overflow-x: hidden;
       }
       .layout :global(> *) {
@@ -50,14 +72,10 @@ const currentFile = `src/pages${currentPage.replace(/\/$/, '')}.md`;
         display: none;
       }
       #grid-main {
-        padding: var(--doc-padding) var(--gutter);
         grid-column: 2;
         display: flex;
         flex-direction: column;
         height: 100%;
-      }
-      #grid-right {
-        display: none;
       }
       :global(.mobile-sidebar-toggle) {
         overflow: hidden;
@@ -72,29 +90,13 @@ const currentFile = `src/pages${currentPage.replace(/\/$/, '')}.md`;
           grid-template-columns:
             20rem
             minmax(0, var(--max-width));
-          gap: 1em;
+          gap: 2rem;
         }
         #grid-left {
           display: flex;
           padding-left: 2rem;
           position: sticky;
           grid-column: 1;
-        }
-      }
-
-      @media (min-width: 72em) {
-        .layout {
-          grid-template-columns:
-            20rem
-            minmax(0, var(--max-width))
-            18rem;
-          padding-left: 0;
-          padding-right: 0;
-          margin: 0 auto;
-        }
-        #grid-right {
-          grid-column: 3;
-          display: flex;
         }
       }
     </style>
@@ -111,9 +113,6 @@ const currentFile = `src/pages${currentPage.replace(/\/$/, '')}.md`;
           <slot></slot>
         </PageContent>
       </div>
-      <aside id='grid-right' class='grid-sidebar' title='Table of Contents'>
-        <RightSidebar content={content} />
-      </aside>
     </main>
   </body>
 </html>
