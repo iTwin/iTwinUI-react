@@ -17,6 +17,7 @@ describe('Table', () => {
     'Expandable Subrows',
     'Filters',
     'Full',
+    'Full 2',
     'Horizontal Scroll',
     'Loading',
     'No Data',
