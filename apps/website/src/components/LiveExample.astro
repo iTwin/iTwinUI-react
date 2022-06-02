@@ -9,48 +9,21 @@ export interface Props {
   path: string;
 }
 
+const { path: examplePath } = Astro.props;
+
 const require = createRequire(import.meta.url);
-const component = (await import(Astro.props.path)).default;
+const component = (await import(examplePath)).default;
 
 const markup = ReactDOMServer.renderToString(component());
-
-const styles = `
-  ${await fs.promises.readFile(require.resolve('@itwin/itwinui-css/css/all.css'))}
-`;
+const styles = `${await fs.promises.readFile(require.resolve('@itwin/itwinui-css/css/all.css'))}`;
 const code = await fs.promises.readFile(require.resolve(Astro.props.path), 'utf8');
 
-const iframeSrcDoc = `
-  <!DOCTYPE html>
-    <html>
-      <head>
-        <style>
-          ${styles}
-        </style>
-        <style>
-          * {
-            margin: 0;
-            box-sizing: border-box;
-          }
-          body {
-            height: 100vh;
-            width: 100vw;
-            display: grid;
-            place-items: center;
-            background: linear-gradient(225deg, #4e5d6e 0%, #363944 100%);
-          }
-        </style>
-      </head>
-      <body class="iui-body">
-        ${markup}
-      </body>
-    </html>
-`;
 ---
 
 <div class='wrapper'>
-  <iframe srcdoc={iframeSrcDoc}></iframe>
+  <iframe></iframe>
   <button class='code-button' data-shown='false'>Show code</button>
-  <Code class='code' lang='js' code={code} theme='one-dark-pro' />
+  <Code lang='js' code={code} theme='one-dark-pro' />
 </div>
 
 
@@ -92,13 +65,40 @@ const iframeSrcDoc = `
       display: none;
     }
   }
-
-  .code {
-    scrollbar-gutter: stable;
-  }
 </style>
 
-<script is:inline>
+<script define:vars={{ styles, markup }}>
+  const iframe = document.querySelector('iframe');
+
+  const stylesUrl = URL.createObjectURL(new Blob([styles], { type: 'text/css'}));
+
+  iframe.src = URL.createObjectURL(new Blob([`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          * {
+            margin: 0;
+            box-sizing: border-box;
+          }
+          #root {
+            height: 100vh;
+            width: 100vw;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(225deg, #4e5d6e 0%, #363944 100%);
+          }
+        <\/style>
+        <link rel='stylesheet' href='${stylesUrl}' type='text/css' />
+      </head>
+      <body class="iui-body">
+        <div id='root'>${markup}</div>
+      </body>
+      </html>
+    `],
+    { type: 'text/html' })
+  );
+
   const codeButton = document.querySelector('.code-button');
   codeButton.addEventListener('click', () => {
     codeButton.dataset.shown = codeButton.dataset.shown == 'false' ? 'true' : 'false';
