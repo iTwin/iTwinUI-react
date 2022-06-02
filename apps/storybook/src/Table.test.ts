@@ -24,10 +24,10 @@ describe('Table', () => {
     'Selectable Multi',
     'Selectable Single',
     'Sortable',
+    'Sticky Columns',
     'With Manual Paginator',
     'With Paginator',
     'Zebra Striped Rows',
-    'Sticky Columns',
   ];
 
   tests.forEach((testName) => {
