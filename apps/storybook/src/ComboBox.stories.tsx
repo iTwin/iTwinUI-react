@@ -546,8 +546,8 @@ export const Loading: Story<Partial<ComboBoxProps<string>>> = (args) => {
         if (!isLoading) {
           return;
         }
-        setIsLoading(false);
         setOptions(await fetchOptions());
+        setIsLoading(false);
       }, [isLoading])}
     />
   );
