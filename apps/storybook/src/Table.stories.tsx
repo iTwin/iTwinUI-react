@@ -1393,13 +1393,13 @@ export const Full2: Story<Partial<TableProps>> = (args) => {
 
   const generateItem = useCallback(
     (index: number, parentRow = '', depth = 0): TableStoryDataType => {
-      const keyValue = parentRow ? `${parentRow}.${index}` : `${index}`;
+      const keyValue = parentRow ? `${parentRow}.${index + 1}` : `${index + 1}`;
       return {
         product: `Product ${keyValue}`,
-        price: Math.round(Math.random() * 100),
-        quantity: Math.round(Math.random() * 1000),
-        rating: Math.round((Math.random() * 10) % 4) + 1,
-        deliveryTime: Math.round(Math.random() * 10),
+        price: ((index % 10) + 1) * 15,
+        quantity: ((index % 10) + 1) * 150,
+        rating: (index % 4) + 1,
+        deliveryTime: (index % 15) + 1,
         subRows:
           depth < 2
             ? Array(Math.round(index % 5))
