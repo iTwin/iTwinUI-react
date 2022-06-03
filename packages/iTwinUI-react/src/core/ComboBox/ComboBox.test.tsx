@@ -500,20 +500,20 @@ it('should call onExpand and onCollapse when dropdown is opened and closed', () 
   expect(onCollapse).toHaveBeenCalled();
 });
 
-it('should render custom empty message element', () => {
+it('should render custom empty message element', async () => {
   const { container } = renderComponent({
     emptyStateMessage: <div className='test-class'>Custom message</div>,
   });
 
   const input = assertBaseElement(container);
-  input.focus();
-  fireEvent.change(input, { target: { value: 'Invalid value' } });
+  await userEvent.tab();
+  await userEvent.type(input, 'Invalid input');
 
   const emptyMessage = document.querySelector(
     '.iui-menu .test-class',
   ) as HTMLElement;
-  expect(emptyMessage).toHaveClass('test-class');
   expect(emptyMessage).toHaveTextContent('Custom message');
 
+  // Should not wrap with MenuExtraContent
   expect(document.querySelector('.iui-menu .iui-menu-content')).toBeFalsy();
 });
