@@ -2389,6 +2389,7 @@ export const ScrollToItem: Story<Partial<TableProps>> = (args) => {
     const arr = new Array(size);
     for (let i = 0; i < size; ++i) {
       arr[i] = {
+        id: i,
         name: `Name${i}`,
         description: `Description${i}`,
       };
@@ -2404,6 +2405,7 @@ export const ScrollToItem: Story<Partial<TableProps>> = (args) => {
       {...args}
       style={{ maxHeight: '90vh' }}
       data={data}
+      getRowId={(row) => row.id}
       scrollToItem={data[12345]}
     />
   );

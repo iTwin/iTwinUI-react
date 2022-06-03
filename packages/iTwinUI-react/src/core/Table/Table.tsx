@@ -50,6 +50,7 @@ import {
 } from './actionHandlers';
 import VirtualScroll from '../utils/components/VirtualScroll';
 import { SELECTION_CELL_ID } from './columns';
+import { useScrollToRow } from './hooks/useScrollToRow';
 
 const singleRowSelectedAction = 'singleRowSelected';
 export const tableResizeStartAction = 'tableResizeStart';
@@ -238,10 +239,13 @@ export type TableProps<
    */
   enableVirtualization?: boolean;
   /**
-   * When using virtualized table, initialize the table scrolled to this item
-   * Does not support non-virtualized tables or tables with pagination
+   * Initialize the table scrolled to this item.
+   *
+   * Must be used in conjunction with `getRowId` prop.
+   *
+   * Does not support tables with pagination.
    */
-  scrollToItem?: T;
+  scrollToItem: T;
   /**
    * Flag whether columns can be reordered.
    * @default false
@@ -349,7 +353,6 @@ export const Table = <
     styleType = 'default',
     enableVirtualization = false,
     enableColumnReordering = false,
-    scrollToItem,
     ...rest
   } = props;
 
@@ -574,17 +577,7 @@ export const Table = <
     ],
   );
 
-  const scrollToIndex = React.useMemo((): number | undefined => {
-    if (!enableVirtualization || paginatorRenderer) {
-      return undefined;
-    }
-    const index = rows.findIndex((row) => row.original == scrollToItem);
-    if (index < 0) {
-      return undefined;
-    }
-    return index;
-  }, [enableVirtualization, paginatorRenderer, rows, scrollToItem]);
-
+  const { scrollToIndex, tableRowRef } = useScrollToRow({ ...props });
   const columnRefs = React.useRef<Record<string, HTMLDivElement>>({});
   const previousTableWidth = React.useRef(0);
   const onTableResize = React.useCallback(
@@ -652,6 +645,7 @@ export const Table = <
           tableHasSubRows={hasAnySubRows}
           tableInstance={instance}
           expanderCell={expanderCell}
+          tableRowRef={tableRowRef(row)}
         />
       );
     },
@@ -667,6 +661,7 @@ export const Table = <
       rowProps,
       state,
       subComponent,
+      tableRowRef,
     ],
   );
 

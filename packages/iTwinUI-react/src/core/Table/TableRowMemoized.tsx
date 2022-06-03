@@ -28,6 +28,7 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
   tableHasSubRows: boolean;
   tableInstance: TableInstance<T>;
   expanderCell?: (cellProps: CellProps<T>) => React.ReactNode;
+  tableRowRef?: React.Ref<HTMLDivElement>;
 }) => {
   const {
     row,
@@ -42,6 +43,7 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
     tableHasSubRows,
     tableInstance,
     expanderCell,
+    tableRowRef,
   } = props;
 
   const onIntersect = React.useCallback(() => {
@@ -70,7 +72,7 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
     },
   };
 
-  const refs = useMergedRefs(rowRef, mergedProps.ref);
+  const refs = useMergedRefs(rowRef, mergedProps.ref, tableRowRef);
 
   return (
     <>
