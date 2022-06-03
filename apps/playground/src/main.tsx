@@ -1,5 +1,9 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import './main.css';
 import { styled } from 'linaria/react';
 import { useTheme } from '@itwin/itwinui-react';
@@ -61,9 +65,8 @@ const ThemeButton = styled.button`
   }
 `;
 
-ReactDOM.render(
+createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Shell />
   </React.StrictMode>,
-  document.getElementById('root'),
 );

@@ -1,3 +1,7 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { Popover, PopoverProps, useSafeContext } from '../utils';
 import {
@@ -5,6 +9,7 @@ import {
   ComboBoxActionContext,
   ComboBoxRefsContext,
 } from './helpers';
+import type { Instance, Props } from 'tippy.js';
 
 type ComboBoxDropdownProps = PopoverProps & { children: JSX.Element };
 
@@ -27,7 +32,7 @@ export const ComboBoxDropdown = React.forwardRef(
         placement='bottom-start'
         visible={isOpen}
         onClickOutside={React.useCallback(
-          (_, { target }) => {
+          (_: Instance<Props>, { target }: Event) => {
             if (!toggleButtonRef.current?.contains(target as Element)) {
               dispatch(['close']);
             }
