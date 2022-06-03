@@ -667,7 +667,7 @@ export const Table = <
     [getPreparedRow],
   );
 
-  const setStickyState = () => {
+  const updateStickyState = () => {
     if (!bodyRef.current || flatHeaders.every((header) => !header.sticky)) {
       return;
     }
@@ -690,7 +690,7 @@ export const Table = <
   };
 
   React.useEffect(() => {
-    setStickyState();
+    updateStickyState();
     // Call only on init
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -822,7 +822,7 @@ export const Table = <
           onScroll={() => {
             if (headerRef.current && bodyRef.current) {
               headerRef.current.scrollLeft = bodyRef.current.scrollLeft;
-              setStickyState();
+              updateStickyState();
             }
           }}
           tabIndex={-1}
