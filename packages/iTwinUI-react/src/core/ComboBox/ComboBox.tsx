@@ -67,7 +67,7 @@ export type ComboBoxProps<T> = {
    * Message shown when no options are available.
    * @default 'No options found'
    */
-  emptyStateMessage?: string;
+  emptyStateMessage?: React.ReactNode;
   /**
    * A custom item renderer can be specified to control the rendering.
    *
@@ -84,6 +84,14 @@ export type ComboBoxProps<T> = {
       index: number;
     },
   ) => JSX.Element;
+  /**
+   * Callback fired when dropdown menu is opened.
+   */
+  onExpand?: () => void;
+  /**
+   * Callback fired when dropdown menu is closed.
+   */
+  onCollapse?: () => void;
 } & Pick<InputContainerProps, 'status'> &
   Omit<CommonProps, 'title'>;
 
@@ -115,6 +123,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     dropdownMenuProps,
     emptyStateMessage = 'No options found',
     itemRenderer,
+    onExpand,
+    onCollapse,
     ...rest
   } = props;
 
@@ -265,6 +275,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
         React.cloneElement(customItem, {
           onClick: (e: unknown) => {
             dispatch(['select', __originalIndex]);
+            dispatch(['close']);
             customItem.props.onClick?.(e);
           },
           // ComboBox.MenuItem handles scrollIntoView, data-iui-index and iui-focused through context
@@ -286,7 +297,10 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           id={optionId}
           {...option}
           isSelected={selectedIndex === __originalIndex}
-          onClick={() => dispatch(['select', __originalIndex])}
+          onClick={() => {
+            dispatch(['select', __originalIndex]);
+            dispatch(['close']);
+          }}
           index={__originalIndex}
         >
           {option.label}
@@ -294,6 +308,18 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       );
     },
     [focusedIndex, id, itemRenderer, selectedIndex],
+  );
+
+  const emptyContent = (
+    <>
+      {React.isValidElement(emptyStateMessage) ? (
+        emptyStateMessage
+      ) : (
+        <MenuExtraContent>
+          <Text isMuted>{emptyStateMessage}</Text>
+        </MenuExtraContent>
+      )}
+    </>
   );
 
   return (
@@ -312,15 +338,15 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             />
             <ComboBoxEndIcon disabled={inputProps?.disabled} isOpen={isOpen} />
           </ComboBoxInputContainer>
-          <ComboBoxDropdown {...dropdownMenuProps}>
+          <ComboBoxDropdown
+            {...dropdownMenuProps}
+            onShow={onExpand}
+            onHide={onCollapse}
+          >
             <ComboBoxMenu>
-              {filteredOptions.length > 0 ? (
-                filteredOptions.map(getMenuItem)
-              ) : (
-                <MenuExtraContent>
-                  <Text isMuted>{emptyStateMessage}</Text>
-                </MenuExtraContent>
-              )}
+              {filteredOptions.length > 0
+                ? filteredOptions.map(getMenuItem)
+                : emptyContent}
             </ComboBoxMenu>
           </ComboBoxDropdown>
         </ComboBoxStateContext.Provider>

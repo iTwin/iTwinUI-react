@@ -480,3 +480,40 @@ it('should use the latest onChange prop', () => {
   expect(mockOnChange2).toHaveBeenNthCalledWith(1, 2);
   expect(mockOnChange1).toHaveBeenCalledTimes(1);
 });
+
+it('should call onExpand and onCollapse when dropdown is opened and closed', () => {
+  const onExpand = jest.fn();
+  const onCollapse = jest.fn();
+  const { container } = renderComponent({
+    onExpand,
+    onCollapse,
+  });
+
+  const icon = container.querySelector('.iui-end-icon svg') as HTMLElement;
+  fireEvent.click(icon);
+  const list = document.querySelector('.iui-menu') as HTMLUListElement;
+  expect(list).toBeVisible();
+  expect(onExpand).toHaveBeenCalled();
+
+  fireEvent.click(icon);
+  expect(list).not.toBeVisible();
+  expect(onCollapse).toHaveBeenCalled();
+});
+
+it('should render custom empty message element', () => {
+  const { container } = renderComponent({
+    emptyStateMessage: <div className='test-class'>Custom message</div>,
+  });
+
+  const input = assertBaseElement(container);
+  input.focus();
+  fireEvent.change(input, { target: { value: 'Invalid value' } });
+
+  const emptyMessage = document.querySelector(
+    '.iui-menu .test-class',
+  ) as HTMLElement;
+  expect(emptyMessage).toHaveClass('test-class');
+  expect(emptyMessage).toHaveTextContent('Custom message');
+
+  expect(document.querySelector('.iui-menu .iui-menu-content')).toBeFalsy();
+});

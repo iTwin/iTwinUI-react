@@ -500,11 +500,7 @@ WithCustomMessageIcon.args = {
 };
 
 export const Loading: Story<Partial<ComboBoxProps<string>>> = (args) => {
-  const [options, setOptions] = React.useState(
-    new Array(6)
-      .fill(null)
-      .map((_, index) => ({ label: 'Loading...', value: `${index}` })),
-  );
+  const [options, setOptions] = React.useState<SelectOption<string>[]>([]);
   const [selectedValue, setSelectedValue] = React.useState<string>();
   const [isLoading, setIsLoading] = React.useState(true);
 
@@ -513,133 +509,67 @@ export const Loading: Story<Partial<ComboBoxProps<string>>> = (args) => {
     setSelectedValue(value);
   }, []);
 
-  const itemRenderer = React.useCallback(({ value }) => {
-    // This makes skeletons to have different widths
-    const normalizedIndex = (Number.parseInt(value) % 2) + 1;
-    const randomValue = normalizedIndex * Math.random() * 60;
-    const boundedWidth = Math.min(Math.max(randomValue, 25), 60);
-    return <MenuItemSkeleton hasIcon hasSublabel contentWidth={boundedWidth} />;
-  }, []) as NonNullable<ComboBoxProps<string>['itemRenderer']>;
+  const emptyContent = React.useMemo(() => {
+    return isLoading ? (
+      <>
+        {new Array(6).fill(null).map((_, index) => {
+          // Randomize skeletons width
+          const normalizedIndex = (index % 2) + 1;
+          const randomValue = normalizedIndex * Math.random() * 60;
+          const boundedWidth = Math.min(Math.max(randomValue, 25), 60);
+          return (
+            <MenuItemSkeleton
+              key={index}
+              hasIcon
+              hasSublabel
+              contentWidth={boundedWidth}
+            />
+          );
+        })}
+      </>
+    ) : (
+      'No options found'
+    );
+  }, [isLoading]);
 
   return (
     <ComboBox
       inputProps={{ placeholder: 'Select a country' }}
       value={selectedValue}
       onChange={onChange}
-      itemRenderer={isLoading ? itemRenderer : undefined}
       {...args}
-      dropdownMenuProps={{
-        onShown: () => {
-          if (!isLoading) {
-            return;
-          }
-          // Mock API request
-          setTimeout(() => {
-            setIsLoading(false);
-            setOptions(
-              countriesList.map(
-                (country) =>
-                  ({
-                    ...country,
-                    sublabel: country.value,
-                    icon: (
-                      <img
-                        loading='lazy'
-                        style={{ width: 20, height: 15 }}
-                        src={`https://flagcdn.com/w20/${country.value.toLowerCase()}.png`}
-                        srcSet={`https://flagcdn.com/w40/${country.value.toLowerCase()}.png 2x`}
-                        alt=''
-                      />
-                    ),
-                  } as SelectOption<string>),
-              ),
-            );
-          }, 1000);
-        },
-      }}
+      emptyStateMessage={emptyContent}
       options={options}
+      onExpand={React.useCallback(() => {
+        if (!isLoading) {
+          return;
+        }
+        // Mock API request
+        setTimeout(() => {
+          setIsLoading(false);
+          setOptions(
+            countriesList.map(
+              (country) =>
+                ({
+                  ...country,
+                  sublabel: country.value,
+                  icon: (
+                    <img
+                      loading='lazy'
+                      style={{ width: 20, height: 15 }}
+                      src={`https://flagcdn.com/w20/${country.value.toLowerCase()}.png`}
+                      srcSet={`https://flagcdn.com/w40/${country.value.toLowerCase()}.png 2x`}
+                      alt=''
+                    />
+                  ),
+                } as SelectOption<string>),
+            ),
+          );
+        }, 2000);
+      }, [isLoading])}
     />
   );
 };
 Loading.args = {
-  inputProps: { placeholder: 'Select a country' },
-};
-
-export const Loading2: Story<Partial<ComboBoxProps<string>>> = (args) => {
-  const [options, setOptions] = React.useState(
-    new Array(6)
-      .fill(null)
-      .map((_, index) => ({ label: 'Loading...', value: `${index}` })),
-  );
-  const [selectedValue, setSelectedValue] = React.useState<string>();
-  const [isLoading, setIsLoading] = React.useState(true);
-
-  const onChange = React.useCallback((value: string) => {
-    action(value ?? '')();
-    setSelectedValue(value);
-  }, []);
-
-  const itemRenderer = React.useCallback(
-    (option, states) => {
-      if (!isLoading) {
-        return (
-          <MenuItem {...option} {...states}>
-            {option.label}
-          </MenuItem>
-        );
-      }
-
-      // This makes skeletons to have different widths
-      const normalizedIndex = (Number.parseInt(option.value) % 2) + 1;
-      const randomValue = normalizedIndex * Math.random() * 60;
-      const boundedWidth = Math.min(Math.max(randomValue, 25), 60);
-      return (
-        <MenuItemSkeleton hasIcon hasSublabel contentWidth={boundedWidth} />
-      );
-    },
-    [isLoading],
-  ) as NonNullable<ComboBoxProps<string>['itemRenderer']>;
-
-  return (
-    <ComboBox
-      inputProps={{ placeholder: 'Select a country' }}
-      value={selectedValue}
-      onChange={onChange}
-      itemRenderer={itemRenderer}
-      {...args}
-      dropdownMenuProps={{
-        onShown: () => {
-          if (!isLoading) {
-            return;
-          }
-          // Mock API request
-          setTimeout(() => {
-            setIsLoading(false);
-            setOptions(
-              countriesList.map(
-                (country) =>
-                  ({
-                    ...country,
-                    sublabel: country.value,
-                    icon: (
-                      <img
-                        loading='lazy'
-                        style={{ width: 20, height: 15 }}
-                        src={`https://flagcdn.com/w20/${country.value.toLowerCase()}.png`}
-                        srcSet={`https://flagcdn.com/w40/${country.value.toLowerCase()}.png 2x`}
-                        alt=''
-                      />
-                    ),
-                  } as SelectOption<string>),
-              ),
-            );
-          }, 1000);
-        },
-      }}
-      options={options}
-    />
-  );
-};
-Loading2.args = {
   inputProps: { placeholder: 'Select a country' },
 };
