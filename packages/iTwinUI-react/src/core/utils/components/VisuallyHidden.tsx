@@ -2,11 +2,15 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-export * from './Popover';
-export * from './FocusTrap';
-export * from './InputContainer';
-export * from './icons';
-export * from './WithCSSTransition';
-export * from './MiddleTextTruncation';
-export * from './VirtualScroll';
-export * from './VisuallyHidden';
+import React from 'react';
+import cx from 'classnames';
+
+export type VisuallyHiddenProps = React.ComponentPropsWithRef<'div'>;
+
+export const VisuallyHidden = (props: VisuallyHiddenProps) => {
+  const { className, ...rest } = props;
+
+  return <div className={cx('iui-visually-hidden', className)} {...rest} />;
+};
+
+export default VisuallyHidden;

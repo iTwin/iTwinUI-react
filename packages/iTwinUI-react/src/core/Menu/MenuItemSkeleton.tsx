@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { CommonProps, useTheme } from '../utils';
+import { CommonProps, useTheme, VisuallyHidden } from '../utils';
 import '@itwin/itwinui-css/css/menu.css';
 
 export type MenuItemSkeletonProps = {
@@ -65,16 +65,16 @@ export const MenuItemSkeleton = (props: MenuItemSkeletonProps) => {
       }}
       {...rest}
     >
-      {hasIcon && <div className='iui-icon iui-skeleton' aria-hidden='true' />}
+      {hasIcon && <div className='iui-icon iui-skeleton' aria-hidden />}
       <span className='iui-content'>
-        <div className='iui-menu-label iui-skeleton' aria-hidden='true' />
+        <div className='iui-menu-label iui-skeleton' aria-hidden />
         {hasSublabel && (
           <div
             className='iui-menu-description iui-skeleton'
             aria-hidden='true'
           />
         )}
-        <div className='iui-visually-hidden'>{translatedStrings.loading}</div>
+        <VisuallyHidden>{translatedStrings.loading}</VisuallyHidden>
       </span>
     </li>
   );

@@ -284,6 +284,28 @@ const countriesList = [
   { label: 'Zimbabwe', value: 'ZW' },
 ];
 
+const fetchOptions = async (): Promise<SelectOption<string>[]> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(
+        countriesList.map((country) => ({
+          ...country,
+          sublabel: country.value,
+          icon: (
+            <img
+              loading='lazy'
+              style={{ width: 20, height: 15 }}
+              src={`https://flagcdn.com/w20/${country.value.toLowerCase()}.png`}
+              srcSet={`https://flagcdn.com/w40/${country.value.toLowerCase()}.png 2x`}
+              alt=''
+            />
+          ),
+        })),
+      );
+    }, 2000);
+  });
+};
+
 export const Basic: Story<Partial<ComboBoxProps<string>>> = (args) => {
   const options = React.useMemo(() => countriesList, []);
 
@@ -520,32 +542,12 @@ export const Loading: Story<Partial<ComboBoxProps<string>>> = (args) => {
       {...args}
       emptyStateMessage={emptyContent}
       options={options}
-      onExpand={React.useCallback(() => {
+      onShow={React.useCallback(async () => {
         if (!isLoading) {
           return;
         }
-        // Mock API request
-        setTimeout(() => {
-          setIsLoading(false);
-          setOptions(
-            countriesList.map(
-              (country) =>
-                ({
-                  ...country,
-                  sublabel: country.value,
-                  icon: (
-                    <img
-                      loading='lazy'
-                      style={{ width: 20, height: 15 }}
-                      src={`https://flagcdn.com/w20/${country.value.toLowerCase()}.png`}
-                      srcSet={`https://flagcdn.com/w40/${country.value.toLowerCase()}.png 2x`}
-                      alt=''
-                    />
-                  ),
-                } as SelectOption<string>),
-            ),
-          );
-        }, 2000);
+        setIsLoading(false);
+        setOptions(await fetchOptions());
       }, [isLoading])}
     />
   );

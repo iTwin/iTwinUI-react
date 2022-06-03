@@ -485,8 +485,8 @@ it('should call onExpand and onCollapse when dropdown is opened and closed', () 
   const onExpand = jest.fn();
   const onCollapse = jest.fn();
   const { container } = renderComponent({
-    onExpand,
-    onCollapse,
+    onShow: onExpand,
+    onHide: onCollapse,
   });
 
   const icon = container.querySelector('.iui-end-icon svg') as HTMLElement;
@@ -500,7 +500,7 @@ it('should call onExpand and onCollapse when dropdown is opened and closed', () 
   expect(onCollapse).toHaveBeenCalled();
 });
 
-it('should render custom empty message element', async () => {
+it('should accept ReactNode in emptyStateMessage', async () => {
   const { container } = renderComponent({
     emptyStateMessage: <div className='test-class'>Custom message</div>,
   });

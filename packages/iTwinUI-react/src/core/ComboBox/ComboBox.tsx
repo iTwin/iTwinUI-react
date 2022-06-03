@@ -65,6 +65,7 @@ export type ComboBoxProps<T> = {
   dropdownMenuProps?: PopoverProps;
   /**
    * Message shown when no options are available.
+   * If `React.ReactNode` is provided, it will be rendered as is and won't be wrapped with `MenuExtraContent`.
    * @default 'No options found'
    */
   emptyStateMessage?: React.ReactNode;
@@ -94,11 +95,11 @@ export type ComboBoxProps<T> = {
   /**
    * Callback fired when dropdown menu is opened.
    */
-  onExpand?: () => void;
+  onShow?: () => void;
   /**
    * Callback fired when dropdown menu is closed.
    */
-  onCollapse?: () => void;
+  onHide?: () => void;
 } & Pick<InputContainerProps, 'status'> &
   Omit<CommonProps, 'title'>;
 
@@ -131,8 +132,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     emptyStateMessage = 'No options found',
     itemRenderer,
     enableVirtualization = false,
-    onExpand,
-    onCollapse,
+    onShow,
+    onHide,
     ...rest
   } = props;
 
@@ -355,8 +356,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           </ComboBoxInputContainer>
           <ComboBoxDropdown
             {...dropdownMenuProps}
-            onShow={onExpand}
-            onHide={onCollapse}
+            onShow={onShow}
+            onHide={onHide}
           >
             <ComboBoxMenu>
               {filteredOptions.length > 0 && !enableVirtualization
