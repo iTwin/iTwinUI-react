@@ -2,17 +2,14 @@
 
 ## [1.39.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.38.0...v1.39.0) (2022-06-03)
 
-
 ### What's new
 
 * Add support of react 18 ([#656](https://www.github.com/iTwin/iTwinUI-react/issues/656)) ([b7a4c7b](https://www.github.com/iTwin/iTwinUI-react/commit/b7a4c7ba1e26445308dcb7f1fd5a374743de4e6f))
 * **Combobox:** Virtualization ([#539](https://www.github.com/iTwin/iTwinUI-react/issues/539)) ([9e93871](https://www.github.com/iTwin/iTwinUI-react/commit/9e93871c59935a39f6ee1d633d96df04b78f33a1))
 
-
 ### Fixes
 
 * **Carousel:** Use event handler instead of useEffect for scroll ([#683](https://www.github.com/iTwin/iTwinUI-react/issues/683)) ([bcf125b](https://www.github.com/iTwin/iTwinUI-react/commit/bcf125be76495352a06c063bc7a0d5d2a884c860))
-* **ComboBox:** Fix keyboard navigation in virtualized list ([#698](https://www.github.com/iTwin/iTwinUI-react/issues/698)) ([d4b51e3](https://www.github.com/iTwin/iTwinUI-react/commit/d4b51e3403804bea7bacd88dd14774abe4b3de83))
 * **Toaster:** Fix inital position setting ([#687](https://www.github.com/iTwin/iTwinUI-react/issues/687)) ([c58b747](https://www.github.com/iTwin/iTwinUI-react/commit/c58b74786bf90a165993afb2eec926f74b37a1eb))
 
 ### [1.38.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.38.0...v1.38.1) (2022-05-23)
