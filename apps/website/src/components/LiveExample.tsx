@@ -2,7 +2,12 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Sandpack } from "@codesandbox/sandpack-react";
+import {
+  SandpackProvider,
+  SandpackThemeProvider,
+  SandpackCodeEditor,
+  SandpackPreview,
+} from "@codesandbox/sandpack-react";
 
 const indexJs = `
 import { createRoot } from 'react-dom/client';
@@ -23,16 +28,16 @@ html { color-scheme: dark; }
   width: 100vw;
   display: grid;
   place-items: center;
-  background: linear-gradient(225deg, #4e5d6e 0%, #363944 100%);
+  background: linear-gradient(-135deg, #415e74, #172129);
 }
 `;
+// background: linear-gradient(225deg, #4e5d6e 0%, #363944 100%);
 
 export const LiveExample = ({ code = "", ...rest }) => {
   // TODO: replace this with composition to have more control over the layout and styling
   return (
-    <Sandpack
+    <SandpackProvider
       template="react"
-      theme="dark"
       files={{
         "/App.js": code.trim(),
         "/index.js": { code: indexJs.trim(), hidden: true },
@@ -44,7 +49,12 @@ export const LiveExample = ({ code = "", ...rest }) => {
         },
       }}
       {...rest}
-    />
+    >
+      <SandpackThemeProvider theme="dark">
+        <SandpackPreview />
+        <SandpackCodeEditor showTabs={false} />
+      </SandpackThemeProvider>
+    </SandpackProvider>
   );
 };
 

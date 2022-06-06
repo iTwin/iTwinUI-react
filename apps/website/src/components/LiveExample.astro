@@ -1,5 +1,5 @@
 ---
-import LiveExample from './LiveExample.tsx';
+import LiveExample from './LiveExample';
 import { getSandpackCssText } from '@codesandbox/sandpack-react';
 
 export type Props = {
@@ -16,10 +16,23 @@ const staticSandpackCss = getSandpackCssText();
   .sp-wrapper {
     color-scheme: dark !important;
   }
+
+  .sp-preview-container {
+    min-height: 350px;
+    background: transparent !important;
+  }
+
+  .sp-preview-container {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+  }
+
+  .sp-code-editor {
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+  }
 </style>
 <style id='sandpack' set:html={staticSandpackCss} />
-
-
 
 <!--
 ⬇️ All my past efforts to prerender the component while JS loads.

@@ -50,11 +50,16 @@ const props = docs.props;
 
   th,
   td {
-    padding: 0.75rem;
+    padding: 1rem;
 
     &:first-child {
       padding-left: 0;
     }
+  }
+
+  table {
+    border-spacing: 0;
+    border-collapse: collapse;
   }
 
   th {
@@ -65,6 +70,10 @@ const props = docs.props;
   td:first-child,
   td:last-child {
     display: flex;
+  }
+
+  tr + tr {
+    border-top: 1px solid var(--color-line-2);
   }
 
   .md {

@@ -1,7 +1,7 @@
 ---
-import * as CONFIG from '../config.ts';
+import * as CONFIG from '../config';
 import SkipToContent from './SkipToContent.astro';
-import SidebarToggle from './SidebarToggle.tsx';
+import SidebarToggle from './SidebarToggle';
 import ThemeToggleButton from './ThemeToggleButton.astro';
 ---
 
@@ -31,7 +31,7 @@ import ThemeToggleButton from './ThemeToggleButton.astro';
     z-index: 11;
     height: var(--theme-navbar-height);
     width: 100%;
-    background-color: var(--theme-navbar-bg);
+    background-color: var(--color-background-2);
     display: flex;
     align-items: center;
     justify-content: center;

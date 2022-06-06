@@ -23,6 +23,7 @@ const currentPage = new URL(Astro.request.url).pathname;
       html {
         color-scheme: dark light;
         font-family: system-ui, sans-serif;
+        background-color: var(--color-background-2);
       }
 
       .visually-hidden {
@@ -39,7 +40,8 @@ const currentPage = new URL(Astro.request.url).pathname;
     </style>
     <style>
       body {
-        max-width: min(100%, 1200px);
+        --max-width: min(100%, 1000px);
+        max-width: var(--max-width);
         margin: 0 auto;
         display: grid;
         line-height: 1.5;
@@ -67,7 +69,7 @@ const currentPage = new URL(Astro.request.url).pathname;
       }
       #grid-left {
         position: fixed;
-        background-color: var(--theme-bg);
+        background-color: var(--color-background-2);
         z-index: 10;
         display: none;
       }
@@ -76,6 +78,7 @@ const currentPage = new URL(Astro.request.url).pathname;
         display: flex;
         flex-direction: column;
         height: 100%;
+        pading: 0 1rem;
       }
       :global(.mobile-sidebar-toggle) {
         overflow: hidden;
@@ -88,7 +91,7 @@ const currentPage = new URL(Astro.request.url).pathname;
         .layout {
           overflow: initial;
           grid-template-columns:
-            20rem
+            16rem
             minmax(0, var(--max-width));
           gap: 2rem;
         }
