@@ -320,6 +320,8 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
 
   const [containerRef, visibleCount] = useOverflow(selectedItemsArray, !multi);
 
+  console.log(visibleCount, '------------------');
+
   return (
     <div
       className={cx('iui-input-with-icon', className)}
@@ -375,11 +377,15 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
                     className='iui-multi-select-tag-container'
                     ref={containerRef}
                   >
-                    {selectedItemsArray.slice(0, visibleCount)}
-                    {visibleCount < selectedItemsArray.length && (
-                      <SelectTag>
-                        +{selectedItemsArray.length - visibleCount} item(s)
-                      </SelectTag>
+                    {visibleCount < selectedItemsArray.length ? (
+                      <>
+                        {selectedItemsArray.slice(0, visibleCount)}
+                        {/* <SelectTag>
+                          +{selectedItemsArray.length - visibleCount} item(s)
+                        </SelectTag> */}
+                      </>
+                    ) : (
+                      selectedItemsArray
                     )}
                   </div>
                 </span>
