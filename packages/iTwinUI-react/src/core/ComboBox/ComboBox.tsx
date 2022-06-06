@@ -190,7 +190,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     },
   );
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     // When the dropdown opens
     if (isOpen) {
       inputRef.current?.focus(); // Focus the input
@@ -218,29 +218,34 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     }
   }, [isOpen]);
 
-  // Initialize filtered options to the latest value options
-  const [filteredOptions, setFilteredOptions] = React.useState(options);
-  React.useEffect(() => {
-    setFilteredOptions(options);
-  }, [options]);
-
   // Filter options based on input value
-  const [inputValue, setInputValue] = React.useState(inputProps?.value ?? '');
+  const [inputValue, setInputValue] = React.useState<string>(
+    inputProps?.value?.toString() ?? '',
+  );
   const handleOnInput = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = event.currentTarget;
       setInputValue(value);
       dispatch(['open']); // reopen when typing
-      setFilteredOptions(
-        filterFunction?.(options, value) ??
-          options.filter((option) =>
-            option.label.toLowerCase().includes(value.toLowerCase()),
-          ),
-      );
       inputProps?.onChange?.(event);
     },
-    [filterFunction, inputProps, options],
+    [inputProps],
   );
+
+  // Initialize filtered options to the latest value options
+  const [filteredOptions, setFilteredOptions] = React.useState(options);
+  React.useEffect(() => {
+    if (inputValue) {
+      setFilteredOptions(
+        filterFunction?.(options, inputValue) ??
+          options.filter((option) =>
+            option.label.toLowerCase().includes(inputValue.toLowerCase()),
+          ),
+      );
+    } else {
+      setFilteredOptions(options);
+    }
+  }, [filterFunction, inputValue, options]);
 
   // Reset focused item when filteredOptions change
   React.useEffect(() => {
