@@ -195,6 +195,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     if (isOpen) {
       inputRef.current?.focus(); // Focus the input
       setFilteredOptions(options); // Reset the filtered list
+      dispatch(['focus']);
     }
     // When the dropdown closes
     else {
@@ -227,9 +228,12 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       const { value } = event.currentTarget;
       setInputValue(value);
       dispatch(['open']); // reopen when typing
+      if (focusedIndex != -1) {
+        dispatch(['focus', -1]);
+      }
       inputProps?.onChange?.(event);
     },
-    [inputProps],
+    [focusedIndex, inputProps],
   );
 
   // Initialize filtered options to the latest value options
@@ -246,11 +250,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       setFilteredOptions(options);
     }
   }, [filterFunction, inputValue, options]);
-
-  // Reset focused item when filteredOptions change
-  React.useEffect(() => {
-    dispatch(['focus']);
-  }, [filteredOptions]);
 
   // When the value prop changes, update the selectedIndex
   React.useEffect(() => {
@@ -272,7 +271,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   }, [options, selectedIndex, valueProp]);
 
   const getMenuItem = React.useCallback(
-    (option: SelectOption<T>) => {
+    (option: SelectOption<T>, filteredIndex?: number) => {
       const optionId = getOptionId(option, id);
       const { __originalIndex } = optionsExtraInfoRef.current[optionId];
 
@@ -298,6 +297,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             'iui-focused': focusedIndex === __originalIndex,
           }),
           'data-iui-index': __originalIndex,
+          'data-iui-filtered-index': filteredIndex,
           ref: mergeRefs(customItem.props.ref, (el: HTMLLIElement | null) => {
             if (!enableVirtualization && focusedIndex === __originalIndex) {
               el?.scrollIntoView({ block: 'nearest' });
@@ -315,6 +315,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             dispatch(['close']);
           }}
           index={__originalIndex}
+          data-iui-filtered-index={filteredIndex}
         >
           {option.label}
         </ComboBoxMenuItem>
