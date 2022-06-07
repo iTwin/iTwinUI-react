@@ -245,7 +245,7 @@ export type TableProps<
    *
    * Does not support tables with pagination.
    */
-  scrollToItem: T;
+  scrollToItem?: T;
   /**
    * Flag whether columns can be reordered.
    * @default false

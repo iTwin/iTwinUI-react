@@ -53,7 +53,7 @@ export function useScrollToRow<T extends Record<string, unknown>>({
     }
 
     rowRefs.current[index]?.scrollIntoView();
-  }, []);
+  }, [enableVirtualization, index]);
 
   const tableRowRef = React.useCallback((row: Row<T>) => {
     function addReference(element: HTMLDivElement): HTMLDivElement {
