@@ -4,13 +4,24 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
+import { useTheme } from '../hooks';
 
 export type VisuallyHiddenProps = React.ComponentPropsWithRef<'div'>;
 
-export const VisuallyHidden = (props: VisuallyHiddenProps) => {
+/**
+ * Hides content visually but is still accessible to screen readers.
+ */
+export const VisuallyHidden = React.forwardRef<
+  HTMLDivElement,
+  VisuallyHiddenProps
+>((props, ref) => {
   const { className, ...rest } = props;
 
-  return <div className={cx('iui-visually-hidden', className)} {...rest} />;
-};
+  useTheme();
+
+  return (
+    <div className={cx('iui-visually-hidden', className)} ref={ref} {...rest} />
+  );
+});
 
 export default VisuallyHidden;
