@@ -515,16 +515,12 @@ export const Loading: Story<Partial<ComboBoxProps<string>>> = (args) => {
     return isLoading ? (
       <>
         {new Array(6).fill(null).map((_, index) => {
-          // Randomize skeletons width
-          const normalizedIndex = (index % 2) + 1;
-          const randomValue = normalizedIndex * Math.random() * 60;
-          const boundedWidth = Math.min(Math.max(randomValue, 25), 60);
           return (
             <MenuItemSkeleton
               key={index}
               hasIcon
               hasSublabel
-              contentWidth={boundedWidth}
+              contentWidth={Math.min(Math.max(Math.random() * 100, 25), 60)}
             />
           );
         })}
