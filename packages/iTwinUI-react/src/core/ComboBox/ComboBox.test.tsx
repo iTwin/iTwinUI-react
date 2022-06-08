@@ -628,7 +628,7 @@ it('should use the latest onChange prop', async () => {
   expect(mockOnChange1).toHaveBeenCalledTimes(1);
 });
 
-it('should call onExpand and onCollapse when dropdown is opened and closed', () => {
+it('should call onExpand and onCollapse when dropdown is opened and closed', async () => {
   const onExpand = jest.fn();
   const onCollapse = jest.fn();
   const { container } = renderComponent({
@@ -637,12 +637,12 @@ it('should call onExpand and onCollapse when dropdown is opened and closed', () 
   });
 
   const icon = container.querySelector('.iui-end-icon svg') as HTMLElement;
-  fireEvent.click(icon);
+  await userEvent.click(icon);
   const list = document.querySelector('.iui-menu') as HTMLUListElement;
   expect(list).toBeVisible();
   expect(onExpand).toHaveBeenCalled();
 
-  fireEvent.click(icon);
+  await userEvent.click(icon);
   expect(list).not.toBeVisible();
   expect(onCollapse).toHaveBeenCalled();
 });

@@ -219,7 +219,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     }
   }, [isOpen]);
 
-  // Filter options based on input value
   const [inputValue, setInputValue] = React.useState<string>(
     inputProps?.value?.toString() ?? '',
   );
@@ -236,7 +235,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     [focusedIndex, inputProps],
   );
 
-  // Initialize filtered options to the latest value options
+  // Update filtered options according to input value
   const [filteredOptions, setFilteredOptions] = React.useState(options);
   React.useEffect(() => {
     if (inputValue) {
@@ -273,6 +272,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   const getMenuItem = React.useCallback(
     (option: SelectOption<T>, filteredIndex?: number) => {
       const optionId = getOptionId(option, id);
+      console.log(optionId, option);
       const { __originalIndex } = optionsExtraInfoRef.current[optionId];
 
       const customItem = itemRenderer
@@ -324,16 +324,19 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     [enableVirtualization, focusedIndex, id, itemRenderer, selectedIndex],
   );
 
-  const emptyContent = (
-    <>
-      {React.isValidElement(emptyStateMessage) ? (
-        emptyStateMessage
-      ) : (
-        <MenuExtraContent>
-          <Text isMuted>{emptyStateMessage}</Text>
-        </MenuExtraContent>
-      )}
-    </>
+  const emptyContent = React.useMemo(
+    () => (
+      <>
+        {React.isValidElement(emptyStateMessage) ? (
+          emptyStateMessage
+        ) : (
+          <MenuExtraContent>
+            <Text isMuted>{emptyStateMessage}</Text>
+          </MenuExtraContent>
+        )}
+      </>
+    ),
+    [emptyStateMessage],
   );
 
   return (

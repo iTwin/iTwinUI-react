@@ -26,13 +26,14 @@ export type MenuItemSkeletonProps = {
   translatedStrings?: {
     /**
      * Label for loading state. Defaults to "Loading…".
+     * It is only visible for the screen readers.
      */
     loading: string;
   };
 } & CommonProps;
 
 /**
- * Loading skeleton menu item.
+ * Menu item that uses skeletons to indicate loading state.
  */
 export const MenuItemSkeleton = (props: MenuItemSkeletonProps) => {
   const {
@@ -69,10 +70,7 @@ export const MenuItemSkeleton = (props: MenuItemSkeletonProps) => {
       <span className='iui-content'>
         <div className='iui-menu-label iui-skeleton' aria-hidden />
         {hasSublabel && (
-          <div
-            className='iui-menu-description iui-skeleton'
-            aria-hidden='true'
-          />
+          <div className='iui-menu-description iui-skeleton' aria-hidden />
         )}
         <VisuallyHidden>{translatedStrings.loading}</VisuallyHidden>
       </span>
