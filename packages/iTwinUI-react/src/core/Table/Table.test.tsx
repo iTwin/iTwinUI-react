@@ -16,7 +16,7 @@ import {
   BaseFilter,
   FilterButtonBar,
   TableFilterProps,
-  tableFilters
+  tableFilters,
 } from './filters';
 import { CellProps, Column, Row } from 'react-table';
 import { InputGroup } from '../InputGroup';
@@ -3020,4 +3020,56 @@ it('should not throw on headless table', () => {
 
   expect(container.querySelector('.iui-table-header .iui-row')).toBeFalsy();
   expect(container.querySelector('.iui-table-body')).toBeTruthy();
+});
+
+it('should scroll to selected item in virtualized table', async () => {
+  let triggerResize: (size: DOMRectReadOnly) => void = jest.fn();
+
+  jest
+    .spyOn(HTMLElement.prototype, 'scrollTo')
+    .mockImplementation(function (this: HTMLElement, options) {
+      console.log('scroll to');
+      this.scrollTop = (options as ScrollToOptions).top ?? 0;
+      fireEvent.scroll(this, {
+        target: { scrollTop: (options as ScrollToOptions).top ?? 0 },
+      });
+    });
+  jest
+    .spyOn(UseResizeObserver, 'useResizeObserver')
+    .mockImplementation((onResize) => {
+      triggerResize = onResize;
+      return [
+        jest.fn(),
+        ({ disconnect: jest.fn() } as unknown) as ResizeObserver,
+      ];
+    });
+
+  const data = mockedData(20);
+
+  renderComponent({
+    data,
+    enableVirtualization: true,
+    getRowId: (item) => item.name,
+    scrollToItem: data[19],
+    style: { overflow: 'auto', height: 400 },
+  });
+
+  act(() => triggerResize({ height: 100 } as DOMRectReadOnly));
+
+  screen.getByText('Name20');
+});
+
+it('should scroll to selected item in non-virtualized table', async () => {
+  const data = mockedData(20);
+
+  renderComponent({
+    data,
+    enableVirtualization: false,
+    getRowId: (item) => item.name,
+    scrollToItem: data[19],
+    style: { overflow: 'auto', height: 400 },
+  });
+
+  screen.getByText('Name20');
+  screen.debug(undefined, 100000000);
 });

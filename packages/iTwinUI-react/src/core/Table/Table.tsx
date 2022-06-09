@@ -645,7 +645,7 @@ export const Table = <
           tableHasSubRows={hasAnySubRows}
           tableInstance={instance}
           expanderCell={expanderCell}
-          tableRowRef={tableRowRef(row)}
+          tableRowRef={enableVirtualization ? undefined : tableRowRef(row)}
         />
       );
     },
@@ -661,6 +661,7 @@ export const Table = <
       rowProps,
       state,
       subComponent,
+      enableVirtualization,
       tableRowRef,
     ],
   );
