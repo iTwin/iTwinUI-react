@@ -65,7 +65,7 @@ export type ComboBoxProps<T> = {
   dropdownMenuProps?: PopoverProps;
   /**
    * Message shown when no options are available.
-   * If `React.ReactNode` is provided, it will be rendered as is and won't be wrapped with `MenuExtraContent`.
+   * If `JSX.Element` is provided, it will be rendered as is and won't be wrapped with `MenuExtraContent`.
    * @default 'No options found'
    */
   emptyStateMessage?: React.ReactNode;
@@ -219,23 +219,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     }
   }, [isOpen]);
 
-  const [inputValue, setInputValue] = React.useState<string>(
-    inputProps?.value?.toString() ?? '',
-  );
-  const handleOnInput = React.useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { value } = event.currentTarget;
-      setInputValue(value);
-      dispatch(['open']); // reopen when typing
-      if (focusedIndex != -1) {
-        dispatch(['focus', -1]);
-      }
-      inputProps?.onChange?.(event);
-    },
-    [focusedIndex, inputProps],
-  );
-
-  // Update filtered options according to input value
+  // Update filtered options to the latest value options according to input value
   const [filteredOptions, setFilteredOptions] = React.useState(options);
   React.useEffect(() => {
     if (inputValue) {
@@ -248,7 +232,33 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     } else {
       setFilteredOptions(options);
     }
-  }, [filterFunction, inputValue, options]);
+    dispatch(['focus']);
+    // Only need to call on options update
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [options]);
+
+  // Filter options based on input value
+  const [inputValue, setInputValue] = React.useState<string>(
+    inputProps?.value?.toString() ?? '',
+  );
+  const handleOnInput = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { value } = event.currentTarget;
+      setInputValue(value);
+      dispatch(['open']); // reopen when typing
+      setFilteredOptions(
+        filterFunction?.(options, value) ??
+          options.filter((option) =>
+            option.label.toLowerCase().includes(value.toLowerCase()),
+          ),
+      );
+      if (focusedIndex != -1) {
+        dispatch(['focus', -1]);
+      }
+      inputProps?.onChange?.(event);
+    },
+    [filterFunction, focusedIndex, inputProps, options],
+  );
 
   // When the value prop changes, update the selectedIndex
   React.useEffect(() => {
@@ -272,7 +282,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   const getMenuItem = React.useCallback(
     (option: SelectOption<T>, filteredIndex?: number) => {
       const optionId = getOptionId(option, id);
-      console.log(optionId, option);
       const { __originalIndex } = optionsExtraInfoRef.current[optionId];
 
       const customItem = itemRenderer
