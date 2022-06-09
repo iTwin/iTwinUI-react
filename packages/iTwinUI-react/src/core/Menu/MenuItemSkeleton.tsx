@@ -19,7 +19,7 @@ export type MenuItemSkeletonProps = {
   /**
    * Skeleton content width in percentage.
    */
-  contentWidth?: number;
+  contentWidth?: string;
   /**
    * Translated strings used for accessibility.
    */
@@ -58,9 +58,7 @@ export const MenuItemSkeleton = (props: MenuItemSkeletonProps) => {
       )}
       style={{
         ...{
-          '--iui-menu-item-content-skeleton-max-width': contentWidth
-            ? `${contentWidth}%`
-            : undefined,
+          '--iui-menu-item-content-skeleton-max-width': contentWidth,
         },
         ...style,
       }}

@@ -67,7 +67,7 @@ it('should render skeleton menu item with custom loading string', () => {
 });
 
 it('should render skeleton menu item with custom width', () => {
-  const { container } = render(<MenuItemSkeleton contentWidth={50} />);
+  const { container } = render(<MenuItemSkeleton contentWidth='50%' />);
 
   const menuItem = container.querySelector(
     '.iui-menu-item-skeleton',

@@ -520,7 +520,10 @@ export const Loading: Story<Partial<ComboBoxProps<string>>> = (args) => {
               key={index}
               hasIcon
               hasSublabel
-              contentWidth={Math.min(Math.max(Math.random() * 100, 25), 60)}
+              contentWidth={`${Math.min(
+                Math.max(Math.random() * 100, 25),
+                60,
+              )}%`}
             />
           );
         })}
