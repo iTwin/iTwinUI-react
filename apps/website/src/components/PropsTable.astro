@@ -13,33 +13,47 @@ const [docs] = parse(path);
 const props = docs.props;
 ---
 
-<table>
-  <thead>
-    <tr>
-      <th>Prop</th>
-      <th>Description</th>
-      <th>Default</th>
-    </tr>
-  </thead>
-  <tbody>
-    {Object.values(props).map((value) => {
-      return (
-        <tr>
-          <td>{value.name}</td>
-          <td>
-            <div class='md'>
-              <Markdown>{value.description}</Markdown>
-            </div>
-            <div>{value.type.name}</div>
-          </td>
-          <td>{value.defaultValue?.value ?? ''}</td>
-        </tr>
-      )
-    })}
-  </tbody>
-</table>
+<div class='wrapper'>
+  <table>
+    <thead>
+      <tr>
+        <th>Prop</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+      {Object.values(props).map((value) => {
+        return (
+          <tr>
+            <td class='mono'>{value.name}</td>
+            <td>
+              <div class='md'>
+                <Markdown>{value.description}</Markdown>
+              </div>
+              <div class='types'>{value.type.name}</div>
+            </td>
+            <td class='mono'>{value.defaultValue?.value ?? ''}</td>
+          </tr>
+        )
+      })}
+    </tbody>
+  </table>
+</div>
 
 <style>
+  .wrapper {
+    display: flex;
+    overflow: auto;
+  }
+
+  table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    font-size: var(--type--1);
+    width: 100%;
+  }
+
   tr {
     background: transparent;
 
@@ -50,26 +64,21 @@ const props = docs.props;
 
   th,
   td {
-    padding: 1rem;
+    padding: var(--space-3) var(--space-2);
+    max-width: 35ch;
 
     &:first-child {
       padding-left: 0;
     }
-  }
 
-  table {
-    border-spacing: 0;
-    border-collapse: collapse;
+    &:last-child {
+      padding-right: 0;
+    }
   }
 
   th {
     text-align: left;
     font-family: var(--font-body);
-  }
-
-  td:first-child,
-  td:last-child {
-    display: flex;
   }
 
   tr + tr {
@@ -78,14 +87,19 @@ const props = docs.props;
 
   .md {
     font-family: var(--font-body);
-    margin-bottom: 0.5rem;
-
-    & > * {
-      white-space: pre-line;
-    }
+    margin-bottom: var(--space-2);
 
     & code {
       font-family: var(--font-mono);
     }
+  }
+
+  .mono {
+    font-family: var(--font-mono);
+  }
+
+  .types {
+    font-family: var(--font-mono);
+    font-size: var(--type--2);
   }
 </style>

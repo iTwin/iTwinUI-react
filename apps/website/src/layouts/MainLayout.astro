@@ -38,22 +38,21 @@ const currentPage = new URL(Astro.request.url).pathname;
         border-width: 0;
       }
     </style>
+
     <style>
       body {
-        --max-width: min(100%, 1000px);
+        --max-width: min(100%, 1200px);
         max-width: var(--max-width);
         margin: 0 auto;
         display: grid;
         line-height: 1.5;
         grid-template-rows: var(--theme-navbar-height) 1fr;
-        --gutter: 0.5rem;
-        --doc-padding: 2rem;
       }
       .layout {
         display: grid;
         grid-auto-flow: column;
         grid-template-columns:
-          minmax(var(--gutter), 1fr)
+          minmax(var(--space-2), 1fr)
           minmax(0, var(--max-width));
         overflow-x: hidden;
       }
@@ -78,26 +77,25 @@ const currentPage = new URL(Astro.request.url).pathname;
         display: flex;
         flex-direction: column;
         height: 100%;
-        pading: 0 1rem;
+        padding: 0 var(--space-7);
       }
       :global(.mobile-sidebar-toggle) {
         overflow: hidden;
       }
       :global(.mobile-sidebar-toggle) #grid-left {
         display: block;
-        top: 2rem;
+        top: var(--space-5);
       }
       @media (min-width: 50em) {
         .layout {
           overflow: initial;
           grid-template-columns:
-            16rem
+            var(--space-4) * 16
             minmax(0, var(--max-width));
-          gap: 2rem;
         }
         #grid-left {
           display: flex;
-          padding-left: 2rem;
+          padding-left: var(--space-5);
           position: sticky;
           grid-column: 1;
         }

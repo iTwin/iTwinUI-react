@@ -2,8 +2,8 @@
   all: unset;
   display: inline-grid;
   place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: var(--space-7);
+  height: var(--space-7);
   cursor: pointer;
   border-radius: 50%;
 }
@@ -13,6 +13,6 @@
 }
 
 .theme-toggle > svg {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: var(--space-5);
+  height: var(--space-5);
 }
