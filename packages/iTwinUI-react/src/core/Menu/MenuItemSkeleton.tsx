@@ -17,7 +17,7 @@ export type MenuItemSkeletonProps = {
    */
   hasIcon?: boolean;
   /**
-   * Skeleton content width in percentage.
+   * Skeleton content width.
    */
   contentWidth?: string;
   /**
