@@ -5,7 +5,12 @@
 import React from 'react';
 import cx from 'classnames';
 import { CellProps, Row, TableInstance, TableState } from 'react-table';
-import { useIntersection, useMergedRefs, WithCSSTransition } from '../utils';
+import {
+  getScrollableParent,
+  useIntersection,
+  useMergedRefs,
+  WithCSSTransition,
+} from '../utils';
 import { TableCell } from './TableCell';
 
 /**
@@ -49,8 +54,30 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
     isLast && onBottomReached.current?.();
   }, [isLast, onBottomReached, onRowInViewport, row.original]);
 
-  const rowRef = useIntersection(onIntersect, {
+  const [rowRef, setRowRef] = React.useState<HTMLElement | null>();
+  const getIntersectionRoot = () => {
+    const isTableBodyScrollable =
+      (rowRef?.parentElement?.scrollHeight ?? 0) >
+      (rowRef?.parentElement?.offsetHeight ?? 0);
+    // If table body is scrollable, make it the intersection root
+    if (isTableBodyScrollable) {
+      return rowRef?.parentElement;
+    }
+
+    const scrollableParent = getScrollableParent(
+      rowRef?.closest('.iui-table'),
+      rowRef?.ownerDocument,
+    );
+    // If there is no scrollable parent besides body, then return undefined to make viewport as a root
+    if (scrollableParent === rowRef?.ownerDocument.body) {
+      return undefined;
+    }
+    return scrollableParent;
+  };
+
+  const intersectionRef = useIntersection(onIntersect, {
     rootMargin: `${intersectionMargin}px`,
+    root: getIntersectionRoot(),
   });
 
   const userRowProps = rowProps?.(row);
@@ -70,7 +97,7 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
     },
   };
 
-  const refs = useMergedRefs(rowRef, mergedProps.ref);
+  const refs = useMergedRefs(intersectionRef, mergedProps.ref, setRowRef);
 
   return (
     <>
