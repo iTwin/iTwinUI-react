@@ -14,6 +14,8 @@ const headers = content.astro.headers;
 
 <style>
   .content {
+    --max-width: min(100%, 1200px);
+    max-width: var(--max-width);
     padding: 0;
     /* max-width: 75ch; */
     width: 100%;
@@ -26,7 +28,7 @@ const headers = content.astro.headers;
     font-size: var(--type-4);
   }
 
-  .content > section {
+  .content>section {
     margin-bottom: var(--space-6);
   }
 
@@ -37,8 +39,8 @@ const headers = content.astro.headers;
   .main-section {
     display: grid;
     gap: 1rem;
-    
-    & > :global(:is(h1, h2, h3, h4):not(:first-child)) {
+
+    &> :global(:is(h1, h2, h3, h4):not(:first-child)) {
       margin-top: 1rem;
     }
   }

@@ -28,7 +28,7 @@ html { color-scheme: dark; }
   width: 100vw;
   display: grid;
   place-items: center;
-  background: linear-gradient(-135deg, #415e74, #172129);
+  background: linear-gradient(300deg, #415e74, #172129);
 }
 `;
 // background: linear-gradient(225deg, #4e5d6e 0%, #363944 100%);
