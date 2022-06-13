@@ -3,58 +3,69 @@ import * as CONFIG from '../config';
 import SkipLink from './utils/SkipLink.astro';
 import SidebarToggle from './SidebarToggle';
 import ThemeToggleButton from './ThemeToggleButton.astro';
+
+export type Props = { class?: string; }
+
 ---
 
-<header>
+<header class={Astro.props.class}>
   <SkipLink />
-  <nav class='nav-wrapper' title='Top Navigation'>
-    <div class='menu-toggle'>
-      <SidebarToggle client:idle />
-    </div>
-    <div class='logo flex'>
-      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'>
-        <path
-          d='M8,1.0002a1.00413,1.00413,0,0,1,.51376.13829L13.52436,4.119A.95115.95115,0,0,1,14,4.93885v6.0975a1.00386,1.00386,0,0,1-.48626.85077l-5,2.9744a1.02348,1.02348,0,0,1-1.02748,0l-4.98453-2.965A1.03179,1.03179,0,0,1,2,11.03635V4.96365a1.004,1.004,0,0,1,.48624-.85086l5-2.97431A1.00412,1.00412,0,0,1,8,1.0002m0-1A2.00636,2.00636,0,0,0,6.975.27905l-5,2.9743A1.9939,1.9939,0,0,0,1,4.96365v6.0727a2.025,2.025,0,0,0,.975,1.7102l5,2.9744a2.02328,2.02328,0,0,0,2.05,0l5-2.9744A1.99376,1.99376,0,0,0,15,11.03635V4.93885a1.95338,1.95338,0,0,0-.975-1.6855l-5-2.9743A2.00636,2.00636,0,0,0,8,.0002ZM8,3.25005a1.0625,1.0625,0,1,1-1.0625,1.0625h0A1.0625,1.0625,0,0,1,8,3.25005Zm3,9.1894a.25006.25006,0,0,1-.1221.2148l-2.725,1.6229a.24974.24974,0,0,1-.255.0004L5.1229,12.639A.24992.24992,0,0,1,5,12.42365v-1.4408a.24991.24991,0,0,1,.3778-.2148L7,11.66667V8.23635l-.8778-.5593A.25.25,0,0,1,6,7.46215V6.01635a.25.25,0,0,1,.3783-.2146l2.5,1.3831A.24988.24988,0,0,1,9,7.39935v4.26732l1.6222-.89862a.25.25,0,0,1,.3778.2148Z'>
-        </path>
-      </svg>
 
-      <a href='/'>
-        <h1>{CONFIG.SITE.title ?? 'Documentation'}</h1>
-      </a>
-    </div>
+  <!-- TODO: improve this mobile navbar -->
+  <div class='menu-toggle'>
+    <SidebarToggle client:idle />
+  </div>
+
+  <!-- TODO: replace this with full iTwinUI logo -->
+  <div class='logo'>
+    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'>
+      <path
+        d='M8,1.0002a1.00413,1.00413,0,0,1,.51376.13829L13.52436,4.119A.95115.95115,0,0,1,14,4.93885v6.0975a1.00386,1.00386,0,0,1-.48626.85077l-5,2.9744a1.02348,1.02348,0,0,1-1.02748,0l-4.98453-2.965A1.03179,1.03179,0,0,1,2,11.03635V4.96365a1.004,1.004,0,0,1,.48624-.85086l5-2.97431A1.00412,1.00412,0,0,1,8,1.0002m0-1A2.00636,2.00636,0,0,0,6.975.27905l-5,2.9743A1.9939,1.9939,0,0,0,1,4.96365v6.0727a2.025,2.025,0,0,0,.975,1.7102l5,2.9744a2.02328,2.02328,0,0,0,2.05,0l5-2.9744A1.99376,1.99376,0,0,0,15,11.03635V4.93885a1.95338,1.95338,0,0,0-.975-1.6855l-5-2.9743A2.00636,2.00636,0,0,0,8,.0002ZM8,3.25005a1.0625,1.0625,0,1,1-1.0625,1.0625h0A1.0625,1.0625,0,0,1,8,3.25005Zm3,9.1894a.25006.25006,0,0,1-.1221.2148l-2.725,1.6229a.24974.24974,0,0,1-.255.0004L5.1229,12.639A.24992.24992,0,0,1,5,12.42365v-1.4408a.24991.24991,0,0,1,.3778-.2148L7,11.66667V8.23635l-.8778-.5593A.25.25,0,0,1,6,7.46215V6.01635a.25.25,0,0,1,.3783-.2146l2.5,1.3831A.24988.24988,0,0,1,9,7.39935v4.26732l1.6222-.89862a.25.25,0,0,1,.3778.2148Z'>
+      </path>
+    </svg>
+
+    <a href='/'>
+      <h1>{CONFIG.SITE.title ?? 'iTwinUI home'}</h1>
+    </a>
+  </div>
+
+  <nav aria-label='Global site'>
+    <a href='/docs/introduction'>Documentation</a>
   </nav>
-  <div class='header-button'><a href="docs/introduction">Documentation</a></div>
+
   <ThemeToggleButton />
 </header>
 
 <style>
   header {
     z-index: 11;
-    height: var(--theme-navbar-height);
     width: 100%;
+    height: calc(5 * var(--space-3));
+    padding: 0 var(--space-5);
     background-color: var(--color-background-2);
     display: flex;
+    gap: 1rem;
     align-items: center;
-    justify-content: space-between;
-    overflow: hidden;
-    position: sticky;
-    top: 0;
-    padding: 0 var(--space-5);
     border-bottom: 1px solid var(--color-line-2);
   }
 
   .logo {
     display: flex;
     align-items: center;
-    overflow: hidden;
-    width: 30px;
     font-size: var(--type-3);
     flex-shrink: 0;
-    font-weight: 600;
-    line-height: 1;
-    color: hsla(var(--color-base-white), 100%, 1);
     gap: 0.25em;
-    z-index: -1;
+    margin-right: auto;
+
+    & a {
+      text-decoration: none;
+      color: var(--color-text);
+      outline-offset: -1px;
+    }
+
+    & h1 {
+      font: inherit;
+    }
 
     & svg {
       width: var(--space-7);
@@ -67,7 +78,11 @@ import ThemeToggleButton from './ThemeToggleButton.astro';
       --_svg-fill: #a5d7f5;
     }
 
-    &[data-theme='dark'] {
+    @nest [data-theme='dark'] & {
+      --_svg-fill: var(--color-text);
+    }
+
+    @nest [data-theme='dark'] & {
       --_svg-fill: #a5d7f5;
     }
 
@@ -76,72 +91,29 @@ import ThemeToggleButton from './ThemeToggleButton.astro';
     }
   }
 
-  .header-button {
+  nav {
     height: 100%;
-    margin: 0 var(--space-2);
-    padding: 0 var(--space-2);
     display: flex;
     align-items: center;
-  }
 
-  .header-button a {
-    color: var(--color-text);
-    text-decoration: none;
-  }
+    & a {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      margin-left: auto;
+      padding: 0 var(--space-2);
+      color: var(--color-text);
+      text-decoration: none;
 
-  .header-button:hover {
-    background-color: var(--color-active);
-  }
-
-  .logo a {
-    padding: 0.5em 0.25em;
-    margin: -0.5em -0.25em;
-    text-decoration: none;
-    font-weight: bold;
-  }
-
-  .logo a {
-    transition: color 100ms ease-out;
-    color: var(--theme-text);
-  }
-
-  .logo a:hover,
-  .logo a:focus {
-    color: var(--theme-text-accent);
-  }
-
-  .logo h1 {
-    font: inherit;
-    color: inherit;
-    margin: 0;
-  }
-
-  .nav-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 1em;
-    width: 100%;
-    max-width: 82em;
+      &:hover {
+        background-color: var(--color-active);
+      }
+    }
   }
 
   @media (min-width: 50em) {
-    header {
-      position: static;
-      padding: var(--space-5);
-    }
-
-    .logo {
-      width: auto;
-      margin: 0;
-      z-index: 0;
-    }
-
     .menu-toggle {
       display: none;
-    }
-
-    .logo {
-      width: auto;
     }
   }
 </style>

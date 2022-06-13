@@ -23,7 +23,7 @@ exampleCode1: |
   }
 ---
 
-<div>{frontmatter.description}</div>
+<p>{frontmatter.description}</p>
 
 <LiveExample code={frontmatter.exampleCode1} />
 
