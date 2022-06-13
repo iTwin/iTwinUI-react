@@ -23,6 +23,7 @@ import ThemeToggleButton from './ThemeToggleButton.astro';
       </a>
     </div>
   </nav>
+  <div class='header-button'><a href="docs/introduction">Documentation</a></div>
   <ThemeToggleButton />
 </header>
 
@@ -73,6 +74,23 @@ import ThemeToggleButton from './ThemeToggleButton.astro';
     & path {
       fill: var(--_svg-fill);
     }
+  }
+
+  .header-button {
+    height: 100%;
+    margin: 0 var(--space-2);
+    padding: 0 var(--space-2);
+    display: flex;
+    align-items: center;
+  }
+
+  .header-button a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .header-button:hover {
+    background-color: var(--color-active);
   }
 
   .logo a {
