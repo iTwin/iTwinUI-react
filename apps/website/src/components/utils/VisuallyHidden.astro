@@ -1,8 +1,14 @@
-<span class='visually-hidden'>
+---
+export type Props = { unhide?: boolean; }
+
+const { unhide = false } = Astro.props;
+---
+
+<span class:list={['visually-hidden', { 'not-visually-hidden' : unhide }]}>
   <slot />
 </span>
 
-<style is:global>
+<style>
   .visually-hidden {
     position: absolute;
     width: 1px;
@@ -10,8 +16,22 @@
     padding: 0;
     margin: -1px;
     overflow: hidden;
-    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
     white-space: nowrap;
     border-width: 0;
+  }
+
+  .visually-hidden:focus,
+  .visually-hidden:focus-within,
+  .not-visually-hidden {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    clip-path: revert;
+    white-space: normal;
+    border-width: revert;
   }
 </style>

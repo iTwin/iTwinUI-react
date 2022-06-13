@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 const MenuToggle = () => {
   const [sidebarShown, setSidebarShown] = useState(false);
 
+  // TODO: make this work without useEffect. Move into Astro file for better styling?
   useEffect(() => {
     const body = document.getElementsByTagName("body")[0];
     if (sidebarShown) {
@@ -22,6 +23,7 @@ const MenuToggle = () => {
       aria-pressed={sidebarShown ? "true" : "false"}
       id="menu-toggle"
       onClick={() => setSidebarShown(!sidebarShown)}
+      aria-label="Toggle sidebar"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -38,7 +40,6 @@ const MenuToggle = () => {
           d="M4 6h16M4 12h16M4 18h16"
         />
       </svg>
-      <span className="visually-hidden">Toggle sidebar</span>
     </button>
   );
 };

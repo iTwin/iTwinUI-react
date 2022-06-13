@@ -1,0 +1,130 @@
+---
+// This file should contain all the global styles and markup shared between layouts.
+
+import HeadSEO from '../components/HeadSEO.astro';
+import * as CONFIG from '../config';
+
+const { content = {} } = Astro.props;
+---
+
+<html dir={content.dir ?? 'ltr' } lang={content.lang ?? 'en-us' } class='initial'>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width' />
+
+    <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
+    <link rel='alternate icon' href='/favicon.ico' sizes='any' />
+    <link rel='sitemap' href='/sitemap.xml' />
+
+    <!--
+      This is intentionally inlined to avoid FOUC
+      TODO: investigate if this is possible to remove.
+    -->
+    <script is:inline>
+      const theme = localStorage.getItem('theme');
+      if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.dataset.theme = 'dark';
+      } else {
+        document.documentElement.dataset.theme = 'light';
+      }
+    </script>
+
+    <HeadSEO content={content} canonicalURL={Astro.canonicalURL} />
+    <title>{content.title ? `${content.title} | ${CONFIG.SITE.title}` : CONFIG.SITE.title}</title>
+
+    <style is:global>
+      * {
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --color-background-1--light: white;
+        --color-background-2--light: white;
+        --color-background-3--light: white;
+
+        --color-background-1--dark: hsl(206deg 38% 18%);
+        --color-background-2--dark: hsl(206deg 80% 10%);
+        --color-background-3--dark: white;
+        --color-text--dark: hsl(210deg 6% 93%);
+        --color-subtext--dark: hsl(212deg 11% 74%);
+        --color-gradient-1--dark: hsl(206deg 28% 35%);
+        --color-gradient-2--dark: hsl(207deg 28% 13%);
+        --color-gradient--dark: linear-gradient(45deg, var(--color-gradient-1--dark), var(--color-gradient-2--dark));
+        --color-active--dark: hsl(206deg 38% 25%);
+        --color-line-1--dark: hsl(205deg 13% 54%);
+        --color-line-2--dark: hsl(205deg 13% 35%);
+
+        --color-background-1: var(--color-background-1--dark);
+        --color-background-2: var(--color-background-2--dark);
+        --color-background-3: var(--color-background-3--dark);
+        --color-text: var(--color-text--dark);
+        --color-subtext: var(--color-subtext--dark);
+        --color-gradient-1: var(--color-gradient-1--dark);
+        --color-gradient-2: var(--color-gradient-2--dark);
+        --color-gradient: var(--color-gradient--dark);
+        --color-active: var(--color-active--dark);
+        --color-line-1: var(--color-line-1--dark);
+        --color-line-2: var(--color-line-2--dark);
+
+        --font-body: system-ui, sans-serif;
+        --font-mono: ui-monospace, monospace;
+
+        /* TODO: rename these? ⬇️  */
+
+        /* @link https://utopia.fyi/type/calculator?c=320,14,1.125,1200,18,1.2,4,3,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l */
+        --type--3: clamp(0.61rem, calc(0.6rem + 0.07vw), 0.65rem);
+        --type--2: clamp(0.69rem, calc(0.66rem + 0.16vw), 0.78rem);
+        --type--1: clamp(0.78rem, calc(0.72rem + 0.29vw), 0.94rem);
+        --type-0: clamp(0.88rem, calc(0.78rem + 0.45vw), 1.13rem);
+        --type-1: clamp(0.98rem, calc(0.85rem + 0.66vw), 1.35rem);
+        --type-2: clamp(1.11rem, calc(0.92rem + 0.93vw), 1.62rem);
+        --type-3: clamp(1.25rem, calc(0.99rem + 1.27vw), 1.94rem);
+        --type-4: clamp(1.4rem, calc(1.06rem + 1.69vw), 2.33rem);
+
+        /* @link https://utopia.fyi/space/calculator?c=320,14,1.2,1200,18,1.25,5,2,&s=0.75|0.5|0.25|0.125,1.25|1.5|2,s-l */
+        --space-0: clamp(0.13rem, calc(0.13rem + 0vw), 0.13rem);
+        --space-1: clamp(0.25rem, calc(0.23rem + 0.11vw), 0.31rem);
+        --space-2: clamp(0.44rem, calc(0.39rem + 0.23vw), 0.56rem);
+        --space-3: clamp(0.69rem, calc(0.62rem + 0.34vw), 0.88rem);
+        --space-4: clamp(0.88rem, calc(0.78rem + 0.45vw), 1.13rem);
+        --space-5: clamp(1.13rem, calc(1.01rem + 0.57vw), 1.44rem);
+        --space-6: clamp(1.31rem, calc(1.18rem + 0.68vw), 1.69rem);
+        --space-7: clamp(1.75rem, calc(1.57rem + 0.91vw), 2.25rem);
+      }
+
+      html {
+        background-color: var(--color-background-2);
+        color: var(--color-text);
+        color-scheme: dark light;
+        height: 100%;
+
+        &[data-theme=light] {
+          color-scheme: light;
+        }
+
+        &[data-theme=dark] {
+          color-scheme: dark;
+        }
+      }
+
+      body {
+        height: 100%;
+        font-family: var(--font-body);
+        font-size: var(--type-0);
+      }
+    </style>
+  </head>
+
+  <body>
+    <slot />
+
+    <!--
+      Scrollable a11y code helper.
+      TODO: remove the need for this script by creating a CodeBlock component.
+    -->
+    <script src='/make-scrollable-code-focusable.js' is:inline></script>
+  </body>
+
+</html>

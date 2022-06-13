@@ -1,12 +1,12 @@
 ---
 import * as CONFIG from '../config';
-import SkipToContent from './SkipToContent.astro';
+import SkipLink from './utils/SkipLink.astro';
 import SidebarToggle from './SidebarToggle';
 import ThemeToggleButton from './ThemeToggleButton.astro';
 ---
 
 <header>
-  <SkipToContent />
+  <SkipLink />
   <nav class='nav-wrapper' title='Top Navigation'>
     <div class='menu-toggle'>
       <SidebarToggle client:idle />
