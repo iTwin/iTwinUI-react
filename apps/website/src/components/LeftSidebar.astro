@@ -25,23 +25,21 @@ const sidebarSections = SIDEBAR.reduce((col, item, i) => {
 <nav aria-labelledby='grid-left'>
   <ul class='nav-groups'>
     {sidebarSections.map((section) => (
-      <li>
-        <div class='nav-group'>
-          <h2 class='nav-group-title'>{section.text}</h2>
-          <ul>
-            {section.children.map((child) => (
-              <li class='nav-link'>
-                <a
-                  href={`${Astro.site.pathname}${child.link}`}
-                  aria-current={`${currentPageMatch === child.link ? 'page' : 'false'}`}
-                >
-                  {child.text}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </li>
+    <li>
+      <div class='nav-group'>
+        <h2 class='nav-group-title'>{section.text}</h2>
+        <ul>
+          {section.children.map((child) => (
+          <li class='nav-link'>
+            <a href={`${Astro.site.pathname}${child.link}`} aria-current={`${currentPageMatch===child.link ? 'page'
+              : 'false' }`}>
+              {child.text}
+            </a>
+          </li>
+          ))}
+        </ul>
+      </div>
+    </li>
     ))}
   </ul>
 </nav>
@@ -64,6 +62,7 @@ const sidebarSections = SIDEBAR.reduce((col, item, i) => {
       padding: 0;
     }
   }
+
   .nav-groups {
     height: 100%;
     padding: 2rem 0;
@@ -74,7 +73,7 @@ const sidebarSections = SIDEBAR.reduce((col, item, i) => {
     border-right: 1px solid var(--color-line-2);
   }
 
-  .nav-groups > li + li {
+  .nav-groups>li+li {
     margin-top: 2rem;
   }
 
@@ -97,6 +96,7 @@ const sidebarSections = SIDEBAR.reduce((col, item, i) => {
     border-top-left-radius: 2px;
     border-bottom-left-radius: 2px;
   }
+
   .nav-link a:hover,
   .nav-link a:focus {
     background-color: var(--color-active);

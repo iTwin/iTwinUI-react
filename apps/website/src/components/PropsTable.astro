@@ -23,20 +23,18 @@ const props = docs.props;
       </tr>
     </thead>
     <tbody>
-      {Object.values(props).map((value) => {
-        return (
-          <tr>
-            <td class='mono'>{value.name}</td>
-            <td>
-              <div class='md'>
-                <Markdown>{value.description}</Markdown>
-              </div>
-              <div class='types'>{value.type.name}</div>
-            </td>
-            <td class='mono'>{value.defaultValue?.value ?? ''}</td>
-          </tr>
-        )
-      })}
+      {Object.values(props).map((value) => (
+      <tr>
+        <td class='mono'>{value.name}</td>
+        <td>
+          <div class='md'>
+            <Markdown>{value.description}</Markdown>
+          </div>
+          <div class='types'>{value.type.name}</div>
+        </td>
+        <td class='mono'>{value.defaultValue?.value ?? ''}</td>
+      </tr>
+      ))}
     </tbody>
   </table>
 </div>
@@ -57,7 +55,7 @@ const props = docs.props;
   tr {
     background: transparent;
 
-    & + & {
+    &+& {
       border-top: 0.5px solid hsl(0 0% 0% / 0.2);
     }
   }
@@ -78,10 +76,9 @@ const props = docs.props;
 
   th {
     text-align: left;
-    font-family: var(--font-body);
   }
 
-  tr + tr {
+  tr+tr {
     border-top: 1px solid var(--color-line-2);
   }
 
