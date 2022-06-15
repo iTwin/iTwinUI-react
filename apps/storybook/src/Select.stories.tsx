@@ -362,7 +362,7 @@ export const Multi: Story<SelectProps<number>> = (args) => {
           )
         }
         placeholder={placeholder}
-        multi
+        multiple
       />
     </div>
   );
@@ -397,7 +397,7 @@ export const MultiCustomRenderer: Story<SelectProps<number>> = (args) => {
           )
         }
         placeholder={placeholder}
-        multi
+        multiple
         selectedItemsRenderer={(options) => (
           <>{options.map((option) => option.label).join(', ')}</>
         )}

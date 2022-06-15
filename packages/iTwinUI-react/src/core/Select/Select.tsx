@@ -17,6 +17,33 @@ import '@itwin/itwinui-css/css/inputs.css';
 import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
 import SelectTag from './SelectTag';
 
+const isMultipleEnabled = <T,>(
+  selectedItems: SelectOption<T> | SelectOption<T>[] | undefined,
+  multiple: boolean,
+): selectedItems is SelectOption<T>[] | undefined => {
+  return multiple;
+};
+
+const multipleSelectedItemRendererType = <T,>(
+  selectedItemRenderer:
+    | ((option: SelectOption<T>) => JSX.Element)
+    | ((options: SelectOption<T>[]) => JSX.Element)
+    | undefined,
+  multiple: boolean,
+): selectedItemRenderer is (options: SelectOption<T>[]) => JSX.Element => {
+  return multiple && !!selectedItemRenderer;
+};
+
+const singleSelectedItemRendererType = <T,>(
+  selectedItemRenderer:
+    | ((option: SelectOption<T>) => JSX.Element)
+    | ((options: SelectOption<T>[]) => JSX.Element)
+    | undefined,
+  multiple: boolean,
+): selectedItemRenderer is (option: SelectOption<T>) => JSX.Element => {
+  return !multiple && !!selectedItemRenderer;
+};
+
 export type ItemRendererProps = {
   /**
    * Close handler that closes the dropdown.
@@ -62,15 +89,47 @@ export type SelectOption<T> = {
   [key: string]: unknown;
 } & CommonProps;
 
+type MultipleType<T> =
+  | {
+      /**
+       * Enable multiple selection.
+       * @default false
+       */
+      multiple?: false;
+      /**
+       * Custom renderer for the selected item in select.
+       * If `multiple` is enabled, it will give array of options to render.
+       */
+      selectedItemRenderer?: (option: SelectOption<T>) => JSX.Element;
+      /**
+       * Selected option value.
+       * If `multiple` is enabled, it is an array of values.
+       */
+      value?: T;
+    }
+  | {
+      /**
+       * Enable multiple selection.
+       * @default false
+       */
+      multiple: true;
+      /**
+       * Custom renderer for the selected item in select.
+       * If `multiple` is enabled, it will give array of options to render.
+       */
+      selectedItemRenderer?: (options: SelectOption<T>[]) => JSX.Element;
+      /**
+       * Selected option value.
+       * If `multiple` is enabled, it is an array of values.
+       */
+      value?: T[];
+    };
+
 export type SelectProps<T> = {
   /**
    * Array of options that populates the select menu.
    */
   options: SelectOption<T>[];
-  /**
-   * Selected option value.
-   */
-  value?: T | T[];
   /**
    * Callback function handling change event on select.
    */
@@ -101,10 +160,6 @@ export type SelectProps<T> = {
     itemProps: ItemRendererProps,
   ) => JSX.Element;
   /**
-   * Custom renderer for the selected item in select.
-   */
-  selectedItemRenderer?: (option: SelectOption<T>) => JSX.Element;
-  /**
    * Custom class for menu.
    */
   menuClassName?: string;
@@ -117,16 +172,8 @@ export type SelectProps<T> = {
    * @see [tippy.js props](https://atomiks.github.io/tippyjs/v6/all-props/)
    */
   popoverProps?: Omit<PopoverProps, 'onShow' | 'onHide' | 'disabled'>;
-  /**
-   * Enable multiple selection.
-   * @default false
-   */
-  multi?: boolean;
-  /**
-   * Custom renderer for the selected items in select.
-   */
-  selectedItemsRenderer?: (options: SelectOption<T>[]) => JSX.Element;
-} & Pick<PopoverProps, 'onShow' | 'onHide'> &
+} & MultipleType<T> &
+  Pick<PopoverProps, 'onShow' | 'onHide'> &
   Omit<
     React.ComponentPropsWithoutRef<'div'>,
     'size' | 'disabled' | 'placeholder' | 'onChange'
@@ -199,8 +246,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
     onShow,
     onHide,
     popoverProps,
-    multi = false,
-    selectedItemsRenderer,
+    multiple = false,
     ...rest
   } = props;
 
@@ -234,10 +280,10 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
   );
 
   React.useEffect(() => {
-    if (selectRef.current && !disabled && setFocus && !multi) {
+    if (selectRef.current && !disabled && setFocus) {
       selectRef.current.focus();
     }
-  }, [setFocus, disabled, multi]);
+  }, [setFocus, disabled]);
 
   React.useEffect(() => {
     if (selectRef.current) {
@@ -250,7 +296,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
       case 'Enter':
       case ' ':
       case 'Spacebar':
-        !multi && toggle();
+        toggle();
         event.preventDefault();
         break;
       default:
@@ -275,10 +321,10 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
           isSelected,
           onClick: () => {
             !option.disabled && onChange?.(option.value);
-            !multi && close();
+            !multiple && close();
           },
           ref: (el: HTMLElement) => {
-            if (isSelected && !multi) {
+            if (isSelected && !multiple) {
               el?.scrollIntoView();
             }
           },
@@ -288,7 +334,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
         });
       });
     },
-    [itemRenderer, multi, onChange, options, value],
+    [itemRenderer, multiple, onChange, options, value],
   );
 
   const selectedItems = React.useMemo(() => {
@@ -318,7 +364,10 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
     ));
   }, [onChange, selectedItems]);
 
-  const [containerRef, visibleCount] = useOverflow(selectedItemsArray, !multi);
+  const [containerRef, visibleCount] = useOverflow(
+    selectedItemsArray,
+    !multiple,
+  );
 
   console.log(visibleCount, '------------------');
 
@@ -351,7 +400,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
             setIsOpen(false);
           }
         }}
-        setFocus={!multi}
+        setFocus={!multiple}
       >
         <div
           ref={selectRef}
@@ -368,10 +417,15 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
           {(!selectedItems || selectedItems.length === 0) && (
             <span className='iui-content'>{placeholder}</span>
           )}
-          {Array.isArray(selectedItems) ? (
+          {isMultipleEnabled(selectedItems, multiple) ? (
             <>
-              {selectedItemsRenderer && selectedItemsRenderer(selectedItems)}
-              {!selectedItemsRenderer && (
+              {multipleSelectedItemRendererType(
+                selectedItemRenderer,
+                multiple,
+              ) &&
+                selectedItems &&
+                selectedItemRenderer(selectedItems)}
+              {!selectedItemRenderer && (
                 <span className='iui-content'>
                   <div
                     className='iui-multi-select-tag-container'
@@ -393,8 +447,8 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
             </>
           ) : (
             <>
-              {selectedItems &&
-                selectedItemRenderer &&
+              {singleSelectedItemRendererType(selectedItemRenderer, multiple) &&
+                selectedItems &&
                 selectedItemRenderer(selectedItems)}
               {selectedItems && !selectedItemRenderer && (
                 <>
