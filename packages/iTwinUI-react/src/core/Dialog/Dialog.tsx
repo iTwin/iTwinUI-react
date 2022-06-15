@@ -6,11 +6,21 @@ import React from 'react';
 import cx from 'classnames';
 import { useTheme } from '../utils';
 import '@itwin/itwinui-css/css/dialog.css';
-import { DialogBackdrop } from './DialogBackdrop';
 import { DialogTitleBar } from './DialogTitleBar';
 import { DialogContent } from './DialogContent';
+import { CSSTransition } from 'react-transition-group';
 
 export type DialogProps = {
+  /**
+   * Flag whether dialog should be shown.
+   * @default false
+   */
+  isOpen?: boolean;
+  /**
+   * Type of the dialog.
+   * @default 'default'
+   */
+  styleType?: 'default' | 'fullPage';
   /**
    * Content of the dialog.
    */
@@ -39,23 +49,37 @@ export type DialogProps = {
  */
 export const Dialog = Object.assign(
   React.forwardRef<HTMLDivElement, DialogProps>((props, ref) => {
-    const { className, children, ...rest } = props;
+    const { className, children, styleType, isOpen = false, ...rest } = props;
 
     useTheme();
 
     return (
-      <div
-        className={cx('iui-dialog', className)}
-        role='dialog'
-        ref={ref}
-        {...rest}
+      <CSSTransition
+        in={isOpen}
+        classNames='iui-dialog-animation'
+        timeout={{ exit: 600 }}
+        unmountOnExit={true}
       >
-        {children}
-      </div>
+        <div
+          className={cx(
+            'iui-dialog',
+            {
+              'iui-dialog-default': styleType === 'default',
+              'iui-dialog-full-page': styleType === 'fullPage',
+              'iui-dialog-visible': isOpen,
+            },
+            className,
+          )}
+          role='dialog'
+          ref={ref}
+          {...rest}
+        >
+          {children}
+        </div>
+      </CSSTransition>
     );
   }),
   {
-    Backdrop: DialogBackdrop,
     TitleBar: DialogTitleBar,
     Content: DialogContent,
   },

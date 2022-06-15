@@ -7,13 +7,11 @@ import React from 'react';
 
 import { Modal, ModalProps } from './Modal';
 
-function assertBaseElement(
-  overlay: HTMLElement,
-  { isDismissible = true } = {},
-) {
-  expect(overlay).toBeTruthy();
-  const dialog = overlay.querySelector('.iui-dialog') as HTMLElement;
+function assertBaseElement(dialog: HTMLElement, { isDismissible = true } = {}) {
   expect(dialog).toBeTruthy();
+
+  const overlay = document.querySelector('.iui-backdrop') as HTMLElement;
+  expect(overlay).toBeTruthy();
 
   const title = dialog.querySelector('.iui-dialog-title-bar') as HTMLElement;
   expect(title).toBeTruthy();
@@ -40,63 +38,54 @@ beforeEach(() => {
 it('should render in basic form', () => {
   renderComponent();
 
-  const overlay = document.querySelector(
-    '.iui-dialog-backdrop.iui-dialog-visible',
+  const dialog = document.querySelector(
+    '.iui-dialog.iui-dialog-visible',
   ) as HTMLElement;
-  assertBaseElement(overlay);
+  assertBaseElement(dialog);
 });
 
 it('should render in full page form', () => {
   renderComponent({ styleType: 'fullPage' });
 
-  const overlay = document.querySelector(
-    '.iui-dialog-backdrop.iui-dialog-full-page.iui-dialog-visible',
+  const dialog = document.querySelector(
+    '.iui-dialog.iui-dialog-full-page.iui-dialog-visible',
   ) as HTMLElement;
-  assertBaseElement(overlay);
+  assertBaseElement(dialog);
 });
 
 it('should not render dialog when closed', () => {
   renderComponent({ isOpen: false });
 
-  const overlay = document.querySelector(
-    '.iui-dialog-backdrop.iui-dialog-visible',
-  );
-  expect(overlay).toBeFalsy();
+  const dialog = document.querySelector('.iui-dialog.iui-dialog-visible');
+  expect(dialog).toBeFalsy();
 });
 
 it('should close on overlay mouse down', () => {
   const onClose = jest.fn();
   renderComponent({ onClose });
 
-  let overlay = document.querySelector(
-    '.iui-dialog-backdrop.iui-dialog-visible',
+  const dialog = document.querySelector(
+    '.iui-dialog.iui-dialog-visible',
   ) as HTMLElement;
-  assertBaseElement(overlay);
+  assertBaseElement(dialog);
 
+  const overlay = document.querySelector('.iui-backdrop') as HTMLElement;
   fireEvent.mouseDown(overlay);
   expect(onClose).toHaveBeenCalled();
-  overlay = document.querySelector(
-    '.iui-dialog-backdrop.iui-dialog-visible',
-  ) as HTMLElement;
-  assertBaseElement(overlay);
 });
 
 it('should not close on overlay mouse down when closeOnExternalClick is false', () => {
   const onClose = jest.fn();
   renderComponent({ onClose, closeOnExternalClick: false });
 
-  let overlay = document.querySelector(
-    '.iui-dialog-backdrop.iui-dialog-visible',
+  const dialog = document.querySelector(
+    '.iui-dialog.iui-dialog-visible',
   ) as HTMLElement;
-  assertBaseElement(overlay);
+  assertBaseElement(dialog);
 
+  const overlay = document.querySelector('.iui-backdrop') as HTMLElement;
   fireEvent.mouseDown(overlay);
   expect(onClose).not.toHaveBeenCalled();
-
-  overlay = document.querySelector(
-    '.iui-dialog-backdrop.iui-dialog-visible',
-  ) as HTMLElement;
-  assertBaseElement(overlay);
 });
 
 it('should close on Esc click and move focus back', () => {
@@ -107,19 +96,20 @@ it('should close on Esc click and move focus back', () => {
   const onClose = jest.fn();
   const { rerender } = renderComponent({ onClose });
 
-  let overlay = document.querySelector(
-    '.iui-dialog-backdrop.iui-dialog-visible',
+  let dialog = document.querySelector(
+    '.iui-dialog.iui-dialog-visible',
   ) as HTMLElement;
-  assertBaseElement(overlay);
+  assertBaseElement(dialog);
+  const overlay = document.querySelector('.iui-backdrop') as HTMLElement;
   expect(document.activeElement).toEqual(overlay);
 
   fireEvent.keyDown(overlay, { key: 'Escape' });
   expect(onClose).toHaveBeenCalled();
 
-  overlay = document.querySelector(
-    '.iui-dialog-backdrop.iui-dialog-visible',
+  dialog = document.querySelector(
+    '.iui-dialog.iui-dialog-visible',
   ) as HTMLElement;
-  assertBaseElement(overlay);
+  assertBaseElement(dialog);
   rerender(
     <Modal isOpen={false} title='Modal Title'>
       Body
@@ -132,49 +122,42 @@ it('should not close on Esc click when closeOnEsc is false', () => {
   const onClose = jest.fn();
   renderComponent({ onClose, closeOnEsc: false });
 
-  let overlay = document.querySelector(
-    '.iui-dialog-backdrop.iui-dialog-visible',
+  const dialog = document.querySelector(
+    '.iui-dialog.iui-dialog-visible',
   ) as HTMLElement;
-  assertBaseElement(overlay);
+  assertBaseElement(dialog);
 
+  const overlay = document.querySelector('.iui-backdrop') as HTMLElement;
   fireEvent.keyDown(overlay, { key: 'Escape' });
   expect(onClose).not.toHaveBeenCalled();
-
-  overlay = document.querySelector(
-    '.iui-dialog-backdrop.iui-dialog-visible',
-  ) as HTMLElement;
-  assertBaseElement(overlay);
 });
 
 it('should not close when isDismissible is false', () => {
   const onClose = jest.fn();
   renderComponent({ onClose, isDismissible: false });
 
-  let overlay = document.querySelector(
-    '.iui-dialog-backdrop.iui-dialog-visible',
+  const dialog = document.querySelector(
+    '.iui-dialog.iui-dialog-visible',
   ) as HTMLElement;
-  assertBaseElement(overlay, { isDismissible: false });
+  assertBaseElement(dialog, { isDismissible: false });
 
+  const overlay = document.querySelector('.iui-backdrop') as HTMLElement;
   fireEvent.keyDown(overlay, { key: 'Escape' });
   expect(onClose).not.toHaveBeenCalled();
   fireEvent.mouseDown(overlay);
   expect(onClose).not.toHaveBeenCalled();
-
-  overlay = document.querySelector(
-    '.iui-dialog-backdrop.iui-dialog-visible',
-  ) as HTMLElement;
-  assertBaseElement(overlay, { isDismissible: false });
 });
 
 it('should call onKeyDown when pressed any key inside dialog', () => {
   const onKeyDown = jest.fn();
   renderComponent({ onKeyDown });
 
-  const overlay = document.querySelector(
-    '.iui-dialog-backdrop.iui-dialog-visible',
+  const dialog = document.querySelector(
+    '.iui-dialog.iui-dialog-visible',
   ) as HTMLElement;
-  assertBaseElement(overlay);
+  assertBaseElement(dialog);
 
+  const overlay = document.querySelector('.iui-backdrop') as HTMLElement;
   fireEvent.keyDown(overlay, {
     key: 'Enter',
   });
@@ -189,11 +172,11 @@ it('should work with portal container properly', () => {
 
   let container = document.querySelector('body > #test-id') as HTMLElement;
   expect(container).toBeTruthy();
-  expect(container.children.length).toBe(1);
+  expect(container.children.length).toBe(2); // Backdrop and dialog
 
   renderComponent({ modalRootId: 'test-id' });
   container = document.querySelector('body > #test-id') as HTMLElement;
-  expect(container.children.length).toBe(2);
+  expect(container.children.length).toBe(4); // 2 x Backdrop and dialog
 });
 
 it('should reset body overflow on closing and unmounting', () => {
