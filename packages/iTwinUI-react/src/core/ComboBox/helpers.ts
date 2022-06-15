@@ -1,4 +1,9 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import React from 'react';
+import { SelectOption } from '../Select/Select';
 
 type ComboBoxAction = 'open' | 'close' | 'select' | 'focus';
 
@@ -16,7 +21,6 @@ export const comboBoxReducer = (
     case 'select': {
       return {
         ...state,
-        isOpen: false,
         selectedIndex: value ?? state.selectedIndex,
         focusedIndex: value ?? state.focusedIndex,
       };
@@ -43,14 +47,18 @@ export const ComboBoxRefsContext = React.createContext<
 >(undefined);
 ComboBoxRefsContext.displayName = 'ComboBoxRefsContext';
 
+type ComboBoxStateContextProps<T = unknown> = {
+  isOpen: boolean;
+  id: string;
+  minWidth: number;
+  enableVirtualization: boolean;
+  filteredOptions: SelectOption<T>[];
+  getMenuItem: (option: SelectOption<T>, filteredIndex?: number) => JSX.Element;
+  focusedIndex?: number;
+};
+
 export const ComboBoxStateContext = React.createContext<
-  | {
-      isOpen: boolean;
-      id: string;
-      minWidth: number;
-      focusedIndex?: number;
-    }
-  | undefined
+  ComboBoxStateContextProps | undefined
 >(undefined);
 ComboBoxStateContext.displayName = 'ComboBoxStateContext';
 

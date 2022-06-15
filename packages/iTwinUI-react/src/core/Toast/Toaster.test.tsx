@@ -2,10 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { act } from '@testing-library/react';
-import toaster from '.';
+import { act, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { ToastCategory, ToastProps } from './Toast';
-import { ToastOptions } from './Toaster';
+import Toaster, { ToastOptions } from './Toaster';
 
 const mockOnClick = jest.fn();
 
@@ -57,64 +56,66 @@ function assertRemovedToast(
   );
 }
 
+let toaster: Toaster;
+
+beforeEach(() => {
+  toaster = new Toaster();
+});
+
 afterEach(() => {
   toaster['toasts'] = [];
   toaster['lastId'] = 0;
   jest.clearAllMocks();
+  // This is the only thing I found to help with
+  // warning for calling `createRoot` on element, which already had it.
+  // Something is not fully reset in tests (this happens between multiple tests, not in single one)
+  const container = document.querySelector('#iui-toasts-container');
+  if (!!container) {
+    container.remove();
+  }
 });
 
-it('should add toast with success', () => {
-  act(() => {
-    toaster.positive('mockContent', mockedOptions());
-  });
-  expect(toaster['toasts'].length).toBe(1);
-  assertAddedToast(toaster['toasts'][0], 'positive', 'mockContent', 1);
-});
+it.each(['positive', 'negative', 'informational', 'warning'] as const)(
+  'should add toast with %s',
+  async (status) => {
+    act(() => {
+      toaster[status]('mockContent', mockedOptions());
+    });
+    expect(await screen.findByText('mockContent')).toBeInTheDocument();
+    expect(toaster['toasts'].length).toBe(1);
+    assertAddedToast(toaster['toasts'][0], status, 'mockContent', 1);
+  },
+);
 
-it('should add toast with negative', () => {
-  act(() => {
-    toaster.negative('mockContent', mockedOptions());
-  });
-  assertAddedToast(toaster['toasts'][0], 'negative', 'mockContent', 1);
-});
-
-it('should add toast with informational', () => {
+it('should add toasts and remove all', async () => {
   act(() => {
     toaster.informational('mockContent', mockedOptions());
   });
-  assertAddedToast(toaster['toasts'][0], 'informational', 'mockContent', 1);
-});
-
-it('should add toast with warning', () => {
-  act(() => {
-    toaster.warning('mockContent', mockedOptions());
-  });
-  assertAddedToast(toaster['toasts'][0], 'warning', 'mockContent', 1);
-});
-
-it('should add toasts and remove all', () => {
-  act(() => {
-    toaster.informational('mockContent', mockedOptions());
-  });
+  expect(await screen.findByText('mockContent')).toBeInTheDocument();
   assertAddedToast(toaster['toasts'][0], 'informational', 'mockContent', 1);
 
   act(() => {
-    toaster.positive('mockContent', mockedOptions());
+    toaster.positive('mockContentPositive', mockedOptions());
   });
-  assertAddedToast(toaster['toasts'][0], 'positive', 'mockContent', 2);
+  expect(await screen.findByText('mockContentPositive')).toBeInTheDocument();
+  assertAddedToast(toaster['toasts'][0], 'positive', 'mockContentPositive', 2);
 
-  act(() => {
-    toaster.closeAll();
-  });
+  toaster.closeAll();
+  waitForElementToBeRemoved(screen.queryByText('mockContent'));
   assertRemovedToast(toaster['toasts'][1], 'informational', 'mockContent', 1);
-  assertRemovedToast(toaster['toasts'][0], 'positive', 'mockContent', 2);
+  assertRemovedToast(
+    toaster['toasts'][0],
+    'positive',
+    'mockContentPositive',
+    2,
+  );
 
   expect(
     document.querySelector('.iui-toast-wrapper.iui-placement-top'),
   ).toBeTruthy();
 });
 
-it('should add toast and remove using return function', () => {
+it('should add toast and remove using return function', async () => {
   let close: () => void = () => {};
   act(() => {
     ({ close } = toaster.informational('mockContent', {
@@ -122,6 +123,7 @@ it('should add toast and remove using return function', () => {
       type: 'persisting',
     }));
   });
+  expect(await screen.findByText('mockContent')).toBeInTheDocument();
   assertAddedToast(
     toaster['toasts'][0],
     'informational',
@@ -134,9 +136,8 @@ it('should add toast and remove using return function', () => {
     },
   );
 
-  act(() => {
-    close();
-  });
+  close();
+  waitForElementToBeRemoved(screen.queryByText('mockContent'));
   assertRemovedToast(
     toaster['toasts'][0],
     'informational',
@@ -154,17 +155,21 @@ it('should add toast and remove using return function', () => {
   ).toBeTruthy();
 });
 
-it('should change order to bottom to top', () => {
+it('should change order to bottom to top', async () => {
   act(() => {
     toaster.setSettings({ placement: 'top', order: 'ascending' });
+  });
+  act(() => {
     toaster.informational('mockContent', mockedOptions());
   });
+  expect(await screen.findByText('mockContent')).toBeInTheDocument();
   assertAddedToast(toaster['toasts'][0], 'informational', 'mockContent', 1);
 
   act(() => {
-    toaster.positive('mockContent', mockedOptions());
+    toaster.positive('mockContentPositive', mockedOptions());
   });
-  assertAddedToast(toaster['toasts'][1], 'positive', 'mockContent', 2);
+  expect(await screen.findByText('mockContentPositive')).toBeInTheDocument();
+  assertAddedToast(toaster['toasts'][1], 'positive', 'mockContentPositive', 2);
 });
 
 it.each([
@@ -174,13 +179,16 @@ it.each([
   'bottom-start',
   'bottom',
   'bottom-end',
-] as const)('should change placement to %s', (placement) => {
+] as const)('should change placement to %s', async (placement) => {
   act(() => {
     toaster.setSettings({
       placement: placement,
     });
+  });
+  act(() => {
     toaster.informational('mockContent', mockedOptions());
   });
+  expect(await screen.findByText('mockContent'));
   expect(document.querySelector('.iui-toast-wrapper')).toHaveClass(
     `iui-placement-${placement}`,
   );
