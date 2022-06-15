@@ -3,7 +3,12 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { CommonProps, useTheme, getFocusableElements } from '../utils';
+import {
+  CommonProps,
+  useTheme,
+  getFocusableElements,
+  VirtualScroll,
+} from '../utils';
 import '@itwin/itwinui-css/css/tree.css';
 import cx from 'classnames';
 import { TreeContext } from './TreeContext';
@@ -85,6 +90,12 @@ export type TreeProps<T> = {
    * }, [expandedNodes]);
    */
   getNode: (node: T) => NodeData<T>;
+  /**
+   * Virtualization is used to have a better perfomance with a lot of nodes.
+   * @default false
+   * @beta
+   */
+  enableVirtualization?: boolean;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -139,7 +150,14 @@ export type TreeProps<T> = {
  */
 
 export const Tree = <T,>(props: TreeProps<T>) => {
-  const { data, className, nodeRenderer, getNode, ...rest } = props;
+  const {
+    data,
+    className,
+    nodeRenderer,
+    getNode,
+    enableVirtualization = false,
+    ...rest
+  } = props;
   useTheme();
 
   const treeRef = React.useRef<HTMLUListElement>(null);
@@ -224,39 +242,77 @@ export const Tree = <T,>(props: TreeProps<T>) => {
     return [flatList, firstLevelNodes];
   }, [data, getNode]);
 
-  return (
-    <ul
-      className={cx('iui-tree', className)}
-      role='tree'
-      onKeyDown={handleKeyDown}
-      ref={treeRef}
-      tabIndex={0}
-      onFocus={() => {
-        const items = getFocusableNodes();
-        if (items.length > 0) {
-          items[focusedIndex.current]?.focus();
-        }
-      }}
-      {...rest}
-    >
-      {flatNodesList.map((flatNode) => (
+  const virtualizedItemRenderer = React.useCallback(
+    (index: number) => {
+      const node = flatNodesList[index];
+      return (
         <TreeContext.Provider
-          key={flatNode.nodeProps.nodeId}
+          key={node.nodeProps.nodeId}
           value={{
-            nodeDepth: flatNode.depth,
-            subNodeIds: flatNode.subNodeIds,
+            nodeDepth: node.depth,
+            subNodeIds: node.subNodeIds,
             groupSize:
-              flatNode.depth === 0
+              node.depth === 0
                 ? firstLevelNodesList.length
-                : flatNode.parentNode?.subNodeIds?.length ?? 0,
-            indexInGroup: flatNode.indexInGroup,
-            parentNodeId: flatNode.parentNode?.nodeProps.nodeId,
+                : node.parentNode?.subNodeIds?.length ?? 0,
+            indexInGroup: node.indexInGroup,
+            parentNodeId: node.parentNode?.nodeProps.nodeId,
           }}
         >
-          {nodeRenderer(flatNode.nodeProps)}
+          {nodeRenderer(node.nodeProps)}
         </TreeContext.Provider>
-      ))}
-    </ul>
+      );
+    },
+    [firstLevelNodesList.length, flatNodesList, nodeRenderer],
+  );
+
+  // const { outerProps, innerProps, visibleChildren } = useVirtualization({
+  //   itemsLength: flatNodesList.length,
+  //   itemRenderer: virtualizedItemRenderer,
+  // });
+
+  return (
+    <div>
+      <ul
+        className={cx('iui-tree', className)}
+        role='tree'
+        onKeyDown={handleKeyDown}
+        ref={treeRef}
+        tabIndex={0}
+        onFocus={() => {
+          const items = getFocusableNodes();
+          if (items.length > 0) {
+            items[focusedIndex.current]?.focus();
+          }
+        }}
+        {...rest}
+      >
+        {enableVirtualization && (
+          <VirtualScroll
+            itemsLength={flatNodesList.length}
+            itemRenderer={virtualizedItemRenderer}
+          />
+        )}
+        {!enableVirtualization &&
+          flatNodesList.map((flatNode) => (
+            <TreeContext.Provider
+              key={flatNode.nodeProps.nodeId}
+              value={{
+                nodeDepth: flatNode.depth,
+                subNodeIds: flatNode.subNodeIds,
+                groupSize:
+                  flatNode.depth === 0
+                    ? firstLevelNodesList.length
+                    : flatNode.parentNode?.subNodeIds?.length ?? 0,
+                indexInGroup: flatNode.indexInGroup,
+                parentNodeId: flatNode.parentNode?.nodeProps.nodeId,
+              }}
+            >
+              {nodeRenderer(flatNode.nodeProps)}
+            </TreeContext.Provider>
+          ))}
+      </ul>
+    </div>
   );
 };
 
