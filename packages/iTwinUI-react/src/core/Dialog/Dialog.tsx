@@ -49,7 +49,13 @@ export type DialogProps = {
  */
 export const Dialog = Object.assign(
   React.forwardRef<HTMLDivElement, DialogProps>((props, ref) => {
-    const { className, children, styleType, isOpen = false, ...rest } = props;
+    const {
+      className,
+      children,
+      styleType = 'default',
+      isOpen = false,
+      ...rest
+    } = props;
 
     useTheme();
 
