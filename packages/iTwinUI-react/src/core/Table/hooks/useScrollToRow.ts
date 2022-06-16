@@ -8,7 +8,7 @@ import { TableProps } from '../Table';
 
 type ScrollToRow<T extends Record<string, unknown>> = {
   scrollToIndex: number | undefined;
-  tableRowRef: (row: Row<T>) => (element: HTMLDivElement) => HTMLDivElement;
+  tableRowRef: (row: Row<T>) => (element: HTMLDivElement) => void;
 };
 
 type ScrollToRowProps<T extends Record<string, unknown>> = Pick<
@@ -56,9 +56,8 @@ export function useScrollToRow<T extends Record<string, unknown>>({
   }, [enableVirtualization, index]);
 
   const tableRowRef = React.useCallback((row: Row<T>) => {
-    function addReference(element: HTMLDivElement): HTMLDivElement {
+    function addReference(element: HTMLDivElement): void {
       rowRefs.current[row.index] = element;
-      return element;
     }
 
     return addReference;

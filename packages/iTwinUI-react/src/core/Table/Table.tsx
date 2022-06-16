@@ -39,6 +39,7 @@ import {
   useSubRowSelection,
   useResizeColumns,
   useColumnDragAndDrop,
+  useScrollToRow
 } from './hooks';
 import {
   onExpandHandler,
@@ -50,7 +51,6 @@ import {
 } from './actionHandlers';
 import VirtualScroll from '../utils/components/VirtualScroll';
 import { SELECTION_CELL_ID } from './columns';
-import { useScrollToRow } from './hooks/useScrollToRow';
 
 const singleRowSelectedAction = 'singleRowSelected';
 export const tableResizeStartAction = 'tableResizeStart';

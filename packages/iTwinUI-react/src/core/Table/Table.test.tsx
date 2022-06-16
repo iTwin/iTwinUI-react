@@ -16,7 +16,7 @@ import {
   BaseFilter,
   FilterButtonBar,
   TableFilterProps,
-  tableFilters,
+  tableFilters
 } from './filters';
 import { CellProps, Column, Row } from 'react-table';
 import { InputGroup } from '../InputGroup';
@@ -3044,7 +3044,7 @@ it('should scroll to selected item in virtualized table', async () => {
       ];
     });
 
-  const data = mockedData(20);
+  const data = mockedData(40);
 
   renderComponent({
     data,
@@ -3071,5 +3071,4 @@ it('should scroll to selected item in non-virtualized table', async () => {
   });
 
   screen.getByText('Name20');
-  screen.debug(undefined, 100000000);
 });
