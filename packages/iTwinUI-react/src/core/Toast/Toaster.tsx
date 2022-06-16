@@ -3,8 +3,8 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { getContainer } from '../utils';
+import * as ReactDOM from 'react-dom';
+import { getContainer, getDocument } from '../utils';
 import { ToastCategory, ToastProps } from './Toast';
 import { ToastWrapper, ToastWrapperHandle } from './ToastWrapper';
 
@@ -47,6 +47,45 @@ export default class Toaster {
   private toastsRef = React.createRef<ToastWrapperHandle>();
   private isInitialized = false;
 
+  // Create container on demand.
+  // Cannot do it in constructor, because SSG/SSR apps would fail.
+  private asyncInit = async () => {
+    if (this.isInitialized) {
+      return;
+    }
+
+    const container = getContainer(TOASTS_CONTAINER_ID) ?? getDocument()?.body;
+    if (!container) {
+      return;
+    }
+    this.isInitialized = true;
+
+    const toastWrapper = <ToastWrapper ref={this.toastsRef} />;
+
+    const _ReactDOM = ReactDOM as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+
+    // v18 mode
+    if (_ReactDOM.createRoot) {
+      const _ReactDOMInternals =
+        _ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+
+      // suppress warning about importing createRoot from react-dom/client
+      if (_ReactDOMInternals) {
+        _ReactDOMInternals.usingClientEntryPoint = true;
+      }
+
+      const root = _ReactDOM.createRoot(container);
+      root.render(toastWrapper);
+      // revert suppression, not to influence users app
+      if (_ReactDOMInternals) {
+        _ReactDOMInternals.usingClientEntryPoint = false;
+      }
+    } else {
+      // v17 and before
+      ReactDOM.render(toastWrapper, container);
+    }
+  };
+
   /**
    * Set global Toaster settings for toasts order and placement.
    * Settings will be applied to new toasts on the page.
@@ -57,7 +96,9 @@ export default class Toaster {
       ? 'ascending'
       : 'descending';
     this.settings = newSettings;
-    this.toastsRef.current?.setPlacement(this.settings.placement ?? 'top');
+    this.asyncInit().then(() => {
+      this.toastsRef.current?.setPlacement(this.settings.placement ?? 'top');
+    });
   }
 
   public positive(content: React.ReactNode, options?: ToastOptions) {
@@ -107,26 +148,10 @@ export default class Toaster {
     this.updateView();
   }
 
-  // Create container on demand.
-  // Cannot do it in constructor, because SSG/SSR apps would fail.
-  private async createContainer() {
-    const container = getContainer(TOASTS_CONTAINER_ID);
-    if (!container) {
-      return;
-    }
-
-    ReactDOM.render(<ToastWrapper ref={this.toastsRef} />, container);
-  }
-
   private updateView() {
-    if (!this.isInitialized) {
-      this.createContainer().then(() => {
-        this.isInitialized = true;
-        this.toastsRef.current?.setToasts(this.toasts);
-      });
-    } else {
+    this.asyncInit().then(() => {
       this.toastsRef.current?.setToasts(this.toasts);
-    }
+    });
   }
 
   private closeToast(toastId: number): void {

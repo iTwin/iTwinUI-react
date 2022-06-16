@@ -65,9 +65,10 @@ export type ComboBoxProps<T> = {
   dropdownMenuProps?: PopoverProps;
   /**
    * Message shown when no options are available.
+   * If `JSX.Element` is provided, it will be rendered as is and won't be wrapped with `MenuExtraContent`.
    * @default 'No options found'
    */
-  emptyStateMessage?: string;
+  emptyStateMessage?: React.ReactNode;
   /**
    * A custom item renderer can be specified to control the rendering.
    *
@@ -91,6 +92,14 @@ export type ComboBoxProps<T> = {
    * @beta
    */
   enableVirtualization?: boolean;
+  /**
+   * Callback fired when dropdown menu is opened.
+   */
+  onShow?: () => void;
+  /**
+   * Callback fired when dropdown menu is closed.
+   */
+  onHide?: () => void;
 } & Pick<InputContainerProps, 'status'> &
   Omit<CommonProps, 'title'>;
 
@@ -123,6 +132,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     emptyStateMessage = 'No options found',
     itemRenderer,
     enableVirtualization = false,
+    onShow,
+    onHide,
     ...rest
   } = props;
 
@@ -179,11 +190,12 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     },
   );
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     // When the dropdown opens
     if (isOpen) {
       inputRef.current?.focus(); // Focus the input
       setFilteredOptions(options); // Reset the filtered list
+      dispatch(['focus']);
     }
     // When the dropdown closes
     else {
@@ -207,14 +219,28 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     }
   }, [isOpen]);
 
-  // Initialize filtered options to the latest value options
+  // Update filtered options to the latest value options according to input value
   const [filteredOptions, setFilteredOptions] = React.useState(options);
   React.useEffect(() => {
-    setFilteredOptions(options);
+    if (inputValue) {
+      setFilteredOptions(
+        filterFunction?.(options, inputValue) ??
+          options.filter((option) =>
+            option.label.toLowerCase().includes(inputValue.toLowerCase()),
+          ),
+      );
+    } else {
+      setFilteredOptions(options);
+    }
+    dispatch(['focus']);
+    // Only need to call on options update
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [options]);
 
   // Filter options based on input value
-  const [inputValue, setInputValue] = React.useState(inputProps?.value ?? '');
+  const [inputValue, setInputValue] = React.useState<string>(
+    inputProps?.value?.toString() ?? '',
+  );
   const handleOnInput = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = event.currentTarget;
@@ -226,15 +252,13 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             option.label.toLowerCase().includes(value.toLowerCase()),
           ),
       );
+      if (focusedIndex != -1) {
+        dispatch(['focus', -1]);
+      }
       inputProps?.onChange?.(event);
     },
-    [filterFunction, inputProps, options],
+    [filterFunction, focusedIndex, inputProps, options],
   );
-
-  // Reset focused item when filteredOptions change
-  React.useEffect(() => {
-    dispatch(['focus']);
-  }, [filteredOptions]);
 
   // When the value prop changes, update the selectedIndex
   React.useEffect(() => {
@@ -256,7 +280,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   }, [options, selectedIndex, valueProp]);
 
   const getMenuItem = React.useCallback(
-    (option: SelectOption<T>) => {
+    (option: SelectOption<T>, filteredIndex?: number) => {
       const optionId = getOptionId(option, id);
       const { __originalIndex } = optionsExtraInfoRef.current[optionId];
 
@@ -273,6 +297,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
         React.cloneElement(customItem, {
           onClick: (e: unknown) => {
             dispatch(['select', __originalIndex]);
+            dispatch(['close']);
             customItem.props.onClick?.(e);
           },
           // ComboBox.MenuItem handles scrollIntoView, data-iui-index and iui-focused through context
@@ -281,6 +306,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             'iui-focused': focusedIndex === __originalIndex,
           }),
           'data-iui-index': __originalIndex,
+          'data-iui-filtered-index': filteredIndex,
           ref: mergeRefs(customItem.props.ref, (el: HTMLLIElement | null) => {
             if (!enableVirtualization && focusedIndex === __originalIndex) {
               el?.scrollIntoView({ block: 'nearest' });
@@ -293,14 +319,33 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           id={optionId}
           {...option}
           isSelected={selectedIndex === __originalIndex}
-          onClick={() => dispatch(['select', __originalIndex])}
+          onClick={() => {
+            dispatch(['select', __originalIndex]);
+            dispatch(['close']);
+          }}
           index={__originalIndex}
+          data-iui-filtered-index={filteredIndex}
         >
           {option.label}
         </ComboBoxMenuItem>
       );
     },
     [enableVirtualization, focusedIndex, id, itemRenderer, selectedIndex],
+  );
+
+  const emptyContent = React.useMemo(
+    () => (
+      <>
+        {React.isValidElement(emptyStateMessage) ? (
+          emptyStateMessage
+        ) : (
+          <MenuExtraContent>
+            <Text isMuted>{emptyStateMessage}</Text>
+          </MenuExtraContent>
+        )}
+      </>
+    ),
+    [emptyStateMessage],
   );
 
   return (
@@ -327,15 +372,15 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             />
             <ComboBoxEndIcon disabled={inputProps?.disabled} isOpen={isOpen} />
           </ComboBoxInputContainer>
-          <ComboBoxDropdown {...dropdownMenuProps}>
+          <ComboBoxDropdown
+            {...dropdownMenuProps}
+            onShow={onShow}
+            onHide={onHide}
+          >
             <ComboBoxMenu>
-              {filteredOptions.length > 0 && !enableVirtualization ? (
-                filteredOptions.map(getMenuItem)
-              ) : (
-                <MenuExtraContent>
-                  <Text isMuted>{emptyStateMessage}</Text>
-                </MenuExtraContent>
-              )}
+              {filteredOptions.length > 0 && !enableVirtualization
+                ? filteredOptions.map(getMenuItem)
+                : emptyContent}
             </ComboBoxMenu>
           </ComboBoxDropdown>
         </ComboBoxStateContext.Provider>
