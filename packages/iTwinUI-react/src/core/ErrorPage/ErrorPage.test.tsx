@@ -12,9 +12,18 @@ import Svg500 from '@itwin/itwinui-illustrations-react/cjs/illustrations/500';
 import Svg502 from '@itwin/itwinui-illustrations-react/cjs/illustrations/502';
 import Svg503 from '@itwin/itwinui-illustrations-react/cjs/illustrations/503';
 import SvgError from '@itwin/itwinui-illustrations-react/cjs/illustrations/Error';
+import SvgRedirect from '@itwin/itwinui-illustrations-react/cjs/illustrations/Redirect';
+import SvgTimedOut from '@itwin/itwinui-illustrations-react/cjs/illustrations/TimedOut';
 
 describe(ErrorPage, () => {
   const defaultTests = [
+    {
+      errorType: '301',
+      errorName: 'Redirect',
+      illustration: (
+        <SvgRedirect className='iui-non-ideal-state-illustration' />
+      ),
+    },
     {
       errorType: '401',
       errorName: 'Unauthorized',
@@ -29,6 +38,13 @@ describe(ErrorPage, () => {
       errorType: '404',
       errorName: 'Page not found',
       illustration: <Svg404 className='iui-non-ideal-state-illustration' />,
+    },
+    {
+      errorType: '408',
+      errorName: 'Timed out',
+      illustration: (
+        <SvgTimedOut className='iui-non-ideal-state-illustration' />
+      ),
     },
     {
       errorType: '500',
@@ -71,6 +87,11 @@ describe(ErrorPage, () => {
 
   const customTests = [
     {
+      errorType: '301',
+      errorName: '301 error',
+      errorMessage: 'Page moved permanently',
+    },
+    {
       errorType: '401',
       errorName: '401 error',
       errorMessage: 'You do not have permission.',
@@ -84,6 +105,11 @@ describe(ErrorPage, () => {
       errorType: '404',
       errorName: 'You encountered a 404 error',
       errorMessage: 'Page does not exist here.',
+    },
+    {
+      errorType: '408',
+      errorName: 'You encountered a 408 error',
+      errorMessage: 'Request timeout.',
     },
     {
       errorType: '500',
@@ -159,8 +185,10 @@ describe(ErrorPage, () => {
           forbidden: 'a forbidden request',
           internalServerError: 'an internal server error',
           pageNotFound: 'the page was not found',
+          redirect: 'a redirect',
           serviceUnavailable: 'the service is not available',
           unauthorized: 'you shall not pass',
+          timedOut: 'the request timed out',
         }}
       />,
     );

@@ -9,6 +9,8 @@ import Svg500 from '@itwin/itwinui-illustrations-react/cjs/illustrations/500';
 import Svg502 from '@itwin/itwinui-illustrations-react/cjs/illustrations/502';
 import Svg503 from '@itwin/itwinui-illustrations-react/cjs/illustrations/503';
 import SvgError from '@itwin/itwinui-illustrations-react/cjs/illustrations/Error';
+import SvgRedirect from '@itwin/itwinui-illustrations-react/cjs/illustrations/Redirect';
+import SvgTimedOut from '@itwin/itwinui-illustrations-react/cjs/illustrations/TimedOut';
 import React from 'react';
 import { Button } from '../Buttons/Button';
 import { CommonProps, useTheme } from '../utils';
@@ -16,9 +18,11 @@ import cx from 'classnames';
 import '@itwin/itwinui-css/css/non-ideal-state.css';
 
 export type ErrorPageType =
+  | '301'
   | '401'
   | '403'
   | '404'
+  | '408'
   | '500'
   | '502'
   | '503'
@@ -29,8 +33,10 @@ export type ErrorTypeTranslations = {
   error: string;
   forbidden: string;
   internalServerError: string;
+  redirect?: string;
   pageNotFound: string;
   serviceUnavailable: string;
+  timedOut?: string;
   unauthorized: string;
 };
 
@@ -104,14 +110,19 @@ export const ErrorPage = (props: ErrorPageProps): JSX.Element => {
     error: 'Error',
     forbidden: 'Forbidden',
     internalServerError: 'Internal server error',
+    redirect: 'Redirect',
     pageNotFound: 'Page not found',
     serviceUnavailable: 'Service unavailable',
+    timedOut: 'Timed out',
     unauthorized: 'Unauthorized',
     ...translatedErrorMessages,
   } as ErrorTypeTranslations;
 
   function getErrorIcon(): JSX.Element {
     switch (errorType) {
+      case '301': {
+        return <SvgRedirect className='iui-non-ideal-state-illustration' />;
+      }
       case '401': {
         return <Svg401 className='iui-non-ideal-state-illustration' />;
       }
@@ -120,6 +131,9 @@ export const ErrorPage = (props: ErrorPageProps): JSX.Element => {
       }
       case '404': {
         return <Svg404 className='iui-non-ideal-state-illustration' />;
+      }
+      case '408': {
+        return <SvgTimedOut className='iui-non-ideal-state-illustration' />;
       }
       case '500': {
         return <Svg500 className='iui-non-ideal-state-illustration' />;
@@ -143,6 +157,9 @@ export const ErrorPage = (props: ErrorPageProps): JSX.Element => {
     }
 
     switch (errorType) {
+      case '301': {
+        return defaultErrorMessages.redirect || '';
+      }
       case '401': {
         return defaultErrorMessages.unauthorized;
       }
@@ -151,6 +168,9 @@ export const ErrorPage = (props: ErrorPageProps): JSX.Element => {
       }
       case '404': {
         return defaultErrorMessages.pageNotFound;
+      }
+      case '408': {
+        return defaultErrorMessages.timedOut || '';
       }
       case '500': {
         return defaultErrorMessages.internalServerError;
