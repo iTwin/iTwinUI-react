@@ -5,12 +5,7 @@
 import React from 'react';
 import cx from 'classnames';
 import { CellProps, Row, TableInstance, TableState } from 'react-table';
-import {
-  getScrollableParent,
-  useIntersection,
-  useMergedRefs,
-  WithCSSTransition,
-} from '../utils';
+import { useIntersection, useMergedRefs, WithCSSTransition } from '../utils';
 import { TableCell } from './TableCell';
 
 /**
@@ -64,15 +59,8 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
       return rowRef?.parentElement;
     }
 
-    const scrollableParent = getScrollableParent(
-      rowRef?.closest('.iui-table'),
-      rowRef?.ownerDocument,
-    );
-    // If there is no scrollable parent besides body, then return undefined to make viewport as a root
-    if (scrollableParent === rowRef?.ownerDocument.body) {
-      return undefined;
-    }
-    return scrollableParent;
+    // Otherwise, make the viewport the intersection root
+    return undefined;
   };
 
   const intersectionRef = useIntersection(onIntersect, {

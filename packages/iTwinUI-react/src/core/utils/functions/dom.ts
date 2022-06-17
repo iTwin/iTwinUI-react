@@ -38,27 +38,3 @@ export const getDocument = () => {
 export const getWindow = () => {
   return typeof window === 'undefined' ? undefined : window;
 };
-
-export const getScrollableParent = (
-  element: HTMLElement | undefined | null,
-  ownerDocument: Document = document,
-): HTMLElement => {
-  if (!element || element === ownerDocument.body) {
-    return ownerDocument.body;
-  }
-
-  return isElementScrollable(element)
-    ? element
-    : getScrollableParent(element.parentElement, ownerDocument);
-};
-
-export const isElementScrollable = (element: HTMLElement) => {
-  return /(auto|scroll|overlay)/.test(
-    getElementStyle(element, 'overflow') +
-      getElementStyle(element, 'overflow-y'),
-  );
-};
-
-export const getElementStyle = (element: HTMLElement, prop: string) => {
-  return getComputedStyle(element, null).getPropertyValue(prop);
-};

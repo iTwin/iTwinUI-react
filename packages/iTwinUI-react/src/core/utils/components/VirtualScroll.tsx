@@ -3,9 +3,32 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { getElementStyle, getScrollableParent } from '../functions';
 import { mergeRefs } from '../hooks';
 import { useResizeObserver } from '../hooks/useResizeObserver';
+
+const getScrollableParent = (
+  element: HTMLElement | null,
+  ownerDocument: Document = document,
+): HTMLElement => {
+  if (!element || element === ownerDocument.body) {
+    return ownerDocument.body;
+  }
+
+  return isElementScrollable(element)
+    ? element
+    : getScrollableParent(element.parentElement, ownerDocument);
+};
+
+const isElementScrollable = (element: HTMLElement) => {
+  return /(auto|scroll|overlay)/.test(
+    getElementStyle(element, 'overflow') +
+      getElementStyle(element, 'overflow-y'),
+  );
+};
+
+const getElementStyle = (element: HTMLElement, prop: string) => {
+  return getComputedStyle(element, null).getPropertyValue(prop);
+};
 
 const getElementHeight = (element: HTMLElement | undefined) => {
   return element?.getBoundingClientRect().height ?? 0;
