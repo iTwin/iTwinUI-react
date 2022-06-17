@@ -4,6 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 export { Dialog } from './Dialog';
 export type { DialogProps } from './Dialog';
+export { DialogMain } from './DialogMain';
+export type { DialogMainProps } from './DialogMain';
 export type { DialogTitleBarProps } from './DialogTitleBar';
 export type { DialogContentProps } from './DialogContent';
 export type { DialogButtonBarProps } from './DialogButtonBar';

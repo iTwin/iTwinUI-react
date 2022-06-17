@@ -1,0 +1,47 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import React from 'react';
+
+export type DialogContextProps = {
+  /**
+   * Flag whether dialog should be shown.
+   * @default false
+   */
+  isOpen?: boolean;
+  /**
+   * Handler that is called when dialog is closed.
+   */
+  onClose?: (event?: React.SyntheticEvent) => void;
+  /**
+   * Flag whether dialog is dismissible. If false, you can't close it.
+   * @default true
+   */
+  isDismissible?: boolean;
+  /**
+   * Flag whether dialog should be closed on background overlay press.
+   * @default true
+   */
+  closeOnExternalClick?: boolean;
+  /**
+   * Flag whether dialog should be closed on Escape key press.
+   * @default true
+   */
+  closeOnEsc?: boolean;
+};
+
+export const DialogContext = React.createContext<
+  DialogContextProps | undefined
+>(undefined);
+
+export const useDialogContext = () => {
+  const context = React.useContext(DialogContext);
+  return {
+    isOpen: false,
+    isDismissible: true,
+    closeOnEsc: true,
+    closeOnExternalClick: true,
+    ...context,
+  };
+};

@@ -3,91 +3,58 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import cx from 'classnames';
-import { useTheme } from '../utils';
-import '@itwin/itwinui-css/css/dialog.css';
-import { DialogTitleBar } from './DialogTitleBar';
-import { DialogContent } from './DialogContent';
 import { CSSTransition } from 'react-transition-group';
+import '@itwin/itwinui-css/css/dialog.css';
+import DialogTitleBar from './DialogTitleBar';
+import DialogContent from './DialogContent';
+import DialogMain from './DialogMain';
+import DialogBackdrop from './DialogBackdrop';
+import { DialogContext, DialogContextProps } from './DialogContext';
+import DialogButtonBar from './DialogButtonBar';
 
 export type DialogProps = {
   /**
-   * Flag whether dialog should be shown.
-   * @default false
-   */
-  isOpen?: boolean;
-  /**
-   * Type of the dialog.
-   * @default 'default'
-   */
-  styleType?: 'default' | 'fullPage';
-  /**
-   * Content of the dialog.
+   * Dialog content.
+   * @example
+   * <Dialog isOpen={true} onClose={() => setIsOpen(false)}>
+   *   <Dialog.Backdrop />
+   *   <Dialog.Main>
+   *     <Dialog.TitleBar>My dialog title</Dialog.TitleBar>
+   *     <Dialog.Content>
+   *      Here is my dialog content
+   *    </Dialog.Content>
+   *     <Dialog.ButtonBar>
+   *       <Button styleType='high-visibility'>Confirm</Button>
+   *       <Button>Close</Button>
+   *     </Dialog.ButtonBar>
+   *   </Dialog.Main>
+   * </Dialog>
    */
   children: React.ReactNode;
-} & React.ComponentPropsWithRef<'div'>;
+} & DialogContextProps;
 
-/**
- * Dialog component which can wrap any content.
- * @example
- * <Dialog>
- *   <Dialog.TitleBar>
- *     My dialog title
- *   </Dialog.TitleBar>
- *   <Dialog.Content>
- *     Here is my dialog content
- *   </Dialog.Content>
- *   <Dialog.ButtonBar>
- *     <Button styleType='high-visibility'>
- *       Primary button
- *     </Button>
- *     <Button>
- *       Secondary button
- *     </Button>
- *   </Dialog.ButtonBar>
- * </Dialog>
- */
 export const Dialog = Object.assign(
-  React.forwardRef<HTMLDivElement, DialogProps>((props, ref) => {
-    const {
-      className,
-      children,
-      styleType = 'default',
-      isOpen = false,
-      ...rest
-    } = props;
-
-    useTheme();
-
+  (props: DialogProps) => {
+    const { children, isOpen = false, ...rest } = props;
     return (
-      <CSSTransition
-        in={isOpen}
-        classNames='iui-dialog-animation'
-        timeout={{ exit: 600 }}
-        unmountOnExit={true}
-      >
-        <div
-          className={cx(
-            'iui-dialog',
-            {
-              'iui-dialog-default': styleType === 'default',
-              'iui-dialog-full-page': styleType === 'fullPage',
-              'iui-dialog-visible': isOpen,
-            },
-            className,
-          )}
-          role='dialog'
-          ref={ref}
-          {...rest}
+      <DialogContext.Provider value={{ isOpen, ...rest }}>
+        <CSSTransition
+          in={isOpen}
+          classNames='iui-dialog-animation'
+          timeout={{ exit: 600 }}
+          unmountOnExit={true}
         >
-          {children}
-        </div>
-      </CSSTransition>
+          <>{children}</>
+        </CSSTransition>
+      </DialogContext.Provider>
     );
-  }),
+  },
   {
+    Backdrop: DialogBackdrop,
+    Main: DialogMain,
     TitleBar: DialogTitleBar,
     Content: DialogContent,
+    ButtonBar: DialogButtonBar,
   },
 );
 
