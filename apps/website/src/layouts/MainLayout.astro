@@ -36,6 +36,9 @@ const currentPage = new URL(Astro.request.url).pathname;
 
     .sidebar {
       grid-area: sidebar;
+      overflow-y: auto;
+      overflow-y: overlay;
+      border-right: 1px solid var(--color-line-2);
 
       @media (max-width: 50em) {
         display: none;
