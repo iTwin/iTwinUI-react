@@ -21,7 +21,6 @@ export const comboBoxReducer = (
     case 'select': {
       return {
         ...state,
-        isOpen: false,
         selectedIndex: value ?? state.selectedIndex,
         focusedIndex: value ?? state.focusedIndex,
       };
@@ -54,7 +53,7 @@ type ComboBoxStateContextProps<T = unknown> = {
   minWidth: number;
   enableVirtualization: boolean;
   filteredOptions: SelectOption<T>[];
-  getMenuItem: (option: SelectOption<T>) => JSX.Element;
+  getMenuItem: (option: SelectOption<T>, filteredIndex?: number) => JSX.Element;
   focusedIndex?: number;
 };
 
