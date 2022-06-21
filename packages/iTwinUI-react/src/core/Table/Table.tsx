@@ -90,6 +90,23 @@ export type TablePaginatorRendererProps = {
   isLoading?: boolean;
 };
 
+type ScrollToItemProps<T extends Record<string, unknown>> =
+  | {
+      /**
+       * Initialize the table scrolled to this item.
+       *
+       * Must be used in conjunction with `getRowId` prop.
+       *
+       * Does not support tables with pagination.
+       */
+      scrollToItem: T;
+      getRowId: TableOptions['getRowId'];
+    }
+  | {
+      scrollToItem?: never;
+      getRowId?: TableOptions['getRowId'];
+    };
+
 /**
  * Table props.
  * columns and data must be memoized.
@@ -240,19 +257,12 @@ export type TableProps<
    */
   enableVirtualization?: boolean;
   /**
-   * Initialize the table scrolled to this item.
-   *
-   * Must be used in conjunction with `getRowId` prop.
-   *
-   * Does not support tables with pagination.
-   */
-  scrollToItem?: T;
-  /**
    * Flag whether columns can be reordered.
    * @default false
    */
   enableColumnReordering?: boolean;
-} & Omit<CommonProps, 'title'>;
+} & ScrollToItemProps<T> &
+  Omit<CommonProps, 'title'>;
 
 // Original type for some reason is missing sub-columns
 type ColumnType<
@@ -586,7 +596,7 @@ export const Table = <
     ],
   );
 
-  const { scrollToIndex, tableRowRef } = useScrollToRow({ ...props });
+  const { scrollToIndex, tableRowRef } = useScrollToRow<T>({ ...props });
   const columnRefs = React.useRef<Record<string, HTMLDivElement>>({});
   const previousTableWidth = React.useRef(0);
   const onTableResize = React.useCallback(
