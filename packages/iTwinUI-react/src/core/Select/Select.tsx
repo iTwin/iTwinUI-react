@@ -427,10 +427,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
                 selectedItemRenderer(selectedItems)}
               {!selectedItemRenderer && (
                 <span className='iui-content'>
-                  <div
-                    className='iui-multi-select-tag-container'
-                    ref={containerRef}
-                  >
+                  <div className='iui-select-tag-container' ref={containerRef}>
                     {visibleCount < selectedItemsArray.length ? (
                       <>
                         {selectedItemsArray.slice(0, visibleCount)}

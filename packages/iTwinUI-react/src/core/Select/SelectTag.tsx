@@ -23,6 +23,7 @@ export type SelectTagProps = {
 
 /**
  * Tag for showing selected value in `Select`.
+ * @private
  */
 export const SelectTag = (props: SelectTagProps) => {
   const { className, children, onRemove, ...rest } = props;
@@ -30,21 +31,18 @@ export const SelectTag = (props: SelectTagProps) => {
 
   return (
     <span
-      className={cx('iui-multi-select-tag', className)}
+      className={cx('iui-select-tag', className)}
       onClick={(e) => e.stopPropagation()}
       {...rest}
     >
-      <span className='iui-multi-select-tag-label'>{children}</span>
+      <span className='iui-select-tag-label'>{children}</span>
       {onRemove && (
         <button
           onClick={onRemove}
           aria-label='Delete tag'
-          className='iui-multi-select-tag-button'
+          className='iui-select-tag-button'
         >
-          <SvgCloseSmall
-            className='iui-multi-select-tag-button-icon'
-            aria-hidden
-          />
+          <SvgCloseSmall className='iui-select-tag-button-icon' aria-hidden />
         </button>
       )}
     </span>
