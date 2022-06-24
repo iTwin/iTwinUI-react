@@ -35,7 +35,6 @@
     "clean:coverage": "rimraf coverage",
     "test": "jest",
     "test:watch": "jest --watch",
-    "createComponent": "node scripts/createComponent.js",
     "format": "prettier --config .prettierrc **/*.{tsx,ts,js} --ignore-path .gitignore --write",
     "lint": "eslint \"**/*.{js,ts,tsx}\" --max-warnings=0",
     "lint:fix": "yarn lint --fix && node ../configs/copyrightLinter.js --fix \"*/**/*.{js,ts,tsx}\"",
