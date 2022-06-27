@@ -21,6 +21,11 @@
     "postcss-preset-env": "^7.7.1",
     "react-docgen-typescript": "^2.2.2"
   },
+  "prettier": {
+    "printWidth": 100,
+    "jsxSingleQuote": true,
+    "singleQuote": true
+  },
   "postcss": {
     "plugins": {
       "postcss-preset-env": {

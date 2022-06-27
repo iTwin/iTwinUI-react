@@ -7,7 +7,7 @@ import {
   SandpackThemeProvider,
   SandpackCodeEditor,
   SandpackPreview,
-} from "@codesandbox/sandpack-react";
+} from '@codesandbox/sandpack-react';
 
 const indexJs = `
 import { createRoot } from 'react-dom/client';
@@ -33,24 +33,24 @@ html { color-scheme: dark; }
 `;
 // background: linear-gradient(225deg, #4e5d6e 0%, #363944 100%);
 
-export const LiveExample = ({ code = "", ...rest }) => {
+export const LiveExample = ({ code = '', ...rest }) => {
   // TODO: replace this with composition to have more control over the layout and styling
   return (
     <SandpackProvider
-      template="react"
+      template='react'
       files={{
-        "/App.js": code.trim(),
-        "/index.js": { code: indexJs.trim(), hidden: true },
-        "/styles.css": { code: indexCss.trim(), hidden: true },
+        '/App.js': code.trim(),
+        '/index.js': { code: indexJs.trim(), hidden: true },
+        '/styles.css': { code: indexCss.trim(), hidden: true },
       }}
       customSetup={{
         dependencies: {
-          "@itwin/itwinui-react": "latest",
+          '@itwin/itwinui-react': 'latest',
         },
       }}
       {...rest}
     >
-      <SandpackThemeProvider theme="dark">
+      <SandpackThemeProvider theme='dark'>
         <SandpackPreview />
         <SandpackCodeEditor showTabs={false} />
       </SandpackThemeProvider>
