@@ -10,12 +10,14 @@ import {
   ButtonProps,
   DropdownButton,
   DropdownButtonProps,
-  SplitButton,
-  SplitButtonProps,
 } from '../Buttons';
 
 import { PolymorphicForwardRefComponent, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/header.css';
+import {
+  HeaderBreadcrumbsSplitButton,
+  HeaderBreadcrumbsSplitButtonProps,
+} from './HeaderBreadcrumbsSplitButton';
 
 export type HeaderButtonProps = {
   /**
@@ -35,8 +37,8 @@ export type HeaderButtonProps = {
   Pick<ButtonProps, 'startIcon' | 'endIcon'>;
 
 const isSplitButton = (
-  props: Omit<Partial<SplitButtonProps>, 'name'>,
-): props is SplitButtonProps => {
+  props: Omit<Partial<HeaderBreadcrumbsSplitButtonProps>, 'name'>,
+): props is HeaderBreadcrumbsSplitButtonProps => {
   return !!props.menuItems && !!props.onClick;
 };
 
@@ -79,27 +81,21 @@ export const HeaderButton: HeaderButtonComponent = React.forwardRef(
       startIcon: React.isValidElement(startIcon)
         ? React.cloneElement(startIcon as JSX.Element, {
             className: cx(
-              'iui-header-button-icon',
+              'iui-header-breadcrumb-button-icon',
               (startIcon as JSX.Element).props.className,
             ),
           })
         : undefined,
       styleType: 'borderless',
-      className: cx(
-        {
-          'iui-header-button': !isSplitButton(props),
-          'iui-header-split-button': isSplitButton(props),
-          'iui-header-dropdown-button':
-            !isSplitButton(props) && isDropdownButton(props),
-          'iui-active': isActive,
-        },
-        className,
-      ),
-      'aria-current': isActive ? 'location' : undefined,
+      className: cx(className, 'iui-header-breadcrumb-button'),
       children: (
         <>
-          <div>{name}</div>
-          {description && <div className='iui-description'>{description}</div>}
+          <div className='iui-header-breadcrumb-button-text-label'>{name}</div>
+          {description && (
+            <div className='iui-header-breadcrumb-button-text-sublabel'>
+              {description}
+            </div>
+          )}
         </>
       ),
       ref: ref,
@@ -108,12 +104,34 @@ export const HeaderButton: HeaderButtonComponent = React.forwardRef(
     } as const;
 
     if (isSplitButton(buttonProps)) {
-      return <SplitButton {...buttonProps} />;
+      return (
+        <li
+          className='iui-header-breadcrumb-button-wrapper'
+          aria-current={isActive ? 'location' : undefined}
+        >
+          <Button {...buttonProps} />
+          <HeaderBreadcrumbsSplitButton {...buttonProps} />
+        </li>
+      );
     }
     if (isDropdownButton(buttonProps)) {
-      return <DropdownButton {...buttonProps} />;
+      return (
+        <li
+          className='iui-header-breadcrumb-button-wrapper'
+          aria-current={isActive ? 'location' : undefined}
+        >
+          <DropdownButton {...buttonProps} />
+        </li>
+      );
     }
-    return <Button {...buttonProps} />;
+    return (
+      <li
+        className='iui-header-breadcrumb-button-wrapper'
+        aria-current={isActive ? 'location' : undefined}
+      >
+        <Button {...buttonProps} />
+      </li>
+    );
   },
 );
 
