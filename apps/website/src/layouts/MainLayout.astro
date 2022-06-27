@@ -56,6 +56,10 @@ const currentPage = new URL(Astro.request.url).pathname;
       scrollbar-gutter: stable;
       display: grid;
       justify-items: center;
+
+      @media (prefers-reduced-motion: no-preference) {
+        scroll-behavior: smooth;
+      }
     }
   </style>
 </Global>

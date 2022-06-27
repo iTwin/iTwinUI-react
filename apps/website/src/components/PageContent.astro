@@ -7,7 +7,7 @@ const headers = content.astro.headers;
 <article id='article' class='content'>
   <section class='main-section'>
     <h1 class='content-title' id='overview'>{title}</h1>
-    <!-- TODO: Add table of contents here -->
+    <!-- TODO: Style the table-of-contents -->
     <slot></slot>
   </section>
 </article>
@@ -38,8 +38,30 @@ const headers = content.astro.headers;
     display: grid;
     gap: 1rem;
 
-    &> :global(:is(h1, h2, h3, h4):not(:first-child)) {
-      margin-top: 1rem;
+    &> :global(:is(h1, h2, h3, h4)) {
+      text-decoration: none;
+
+      &> :global(a) {
+        color: inherit;
+        text-decoration: none;
+        position: relative;
+
+        &:is(:hover, :focus) {
+          text-decoration: underline;
+
+          &::before {
+            content: '\#';
+            position: absolute;
+            right: 100%;
+            margin-left: 0.25rem;
+            margin-right: 0.25rem;
+          }
+        }
+      }
+
+      &:global(:not(:first-child)) {
+        margin-top: 1rem;
+      }
     }
 
     &> :global(h1 + p) {
