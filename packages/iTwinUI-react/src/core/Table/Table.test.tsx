@@ -3059,7 +3059,7 @@ it('should scroll to selected item in virtualized table', async () => {
   renderComponent({
     data,
     enableVirtualization: true,
-    getRowId: (item) => item.name,
+    getRowId: (item: TestDataType) => item.name,
     scrollToItem: data[19],
     style: { overflow: 'auto', height: 400 },
   });
@@ -3075,7 +3075,7 @@ it('should scroll to selected item in non-virtualized table', async () => {
   renderComponent({
     data,
     enableVirtualization: false,
-    getRowId: (item) => item.name,
+    getRowId: (item: TestDataType) => item.name,
     scrollToItem: data[19],
     style: { overflow: 'auto', height: 400 },
   });

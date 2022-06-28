@@ -100,11 +100,10 @@ type ScrollToItemProps<T extends Record<string, unknown>> =
        * Does not support tables with pagination.
        */
       scrollToItem: T;
-      getRowId: TableOptions['getRowId'];
+      getRowId: TableOptions<T>['getRowId'] | ((originalRow: T) => string);
     }
   | {
-      scrollToItem?: never;
-      getRowId?: TableOptions['getRowId'];
+      getRowId?: TableOptions<T>['getRowId'];
     };
 
 /**
