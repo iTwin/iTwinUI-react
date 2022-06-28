@@ -14,7 +14,7 @@
     "prepare": "husky install",
     "format": "turbo run format",
     "test": "turbo run test",
-    "createComponent": "node packages/iTwinUI-react/scripts/createComponent.js"
+    "createComponent": "node createComponent.js"
   },
   "dependencies": {},
   "devDependencies": {
