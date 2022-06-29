@@ -46,7 +46,7 @@ it('should render in basic form', () => {
   renderComponent();
 
   const backdrop = document.querySelector('.iui-backdrop') as HTMLElement;
-  const dialog = backdrop.nextElementSibling as HTMLElement;
+  const dialog = document.querySelector('.iui-dialog') as HTMLElement;
   assertBaseElement(backdrop, dialog);
 });
 
@@ -55,7 +55,7 @@ it('should render in full page form', () => {
 
   const backdrop = document.querySelector('.iui-backdrop') as HTMLElement;
   expect(backdrop).toBeTruthy();
-  const dialog = backdrop.nextElementSibling as HTMLElement;
+  const dialog = document.querySelector('.iui-dialog') as HTMLElement;
   assertBaseElement(backdrop, dialog, { styleType: 'full-page' });
 });
 
@@ -73,7 +73,10 @@ it('should close on overlay mouse down', () => {
   renderComponent({ onClose });
 
   const backdrop = document.querySelector('.iui-backdrop') as HTMLElement;
-  assertBaseElement(backdrop, backdrop.nextElementSibling as HTMLElement);
+  assertBaseElement(
+    backdrop,
+    document.querySelector('.iui-dialog') as HTMLElement,
+  );
 
   fireEvent.mouseDown(backdrop);
   expect(onClose).toHaveBeenCalled();
@@ -84,13 +87,19 @@ it('should not close on overlay mouse down when closeOnExternalClick is false', 
   renderComponent({ onClose, closeOnExternalClick: false });
 
   let backdrop = document.querySelector('.iui-backdrop') as HTMLElement;
-  assertBaseElement(backdrop, backdrop.nextElementSibling as HTMLElement);
+  assertBaseElement(
+    backdrop,
+    document.querySelector('.iui-dialog') as HTMLElement,
+  );
 
   fireEvent.mouseDown(backdrop);
   expect(onClose).not.toHaveBeenCalled();
 
   backdrop = document.querySelector('.iui-backdrop') as HTMLElement;
-  assertBaseElement(backdrop, backdrop.nextElementSibling as HTMLElement);
+  assertBaseElement(
+    backdrop,
+    document.querySelector('.iui-dialog') as HTMLElement,
+  );
 });
 
 it('should close on Esc click and move focus back', () => {
@@ -102,7 +111,10 @@ it('should close on Esc click and move focus back', () => {
   const { rerender } = renderComponent({ onClose });
 
   const backdrop = document.querySelector('.iui-backdrop') as HTMLElement;
-  assertBaseElement(backdrop, backdrop.nextElementSibling as HTMLElement);
+  assertBaseElement(
+    backdrop,
+    document.querySelector('.iui-dialog') as HTMLElement,
+  );
   expect(document.activeElement).toEqual(backdrop);
 
   fireEvent.keyDown(backdrop, { key: 'Escape' });
@@ -121,13 +133,19 @@ it('should not close on Esc click when closeOnEsc is false', () => {
   renderComponent({ onClose, closeOnEsc: false });
 
   let backdrop = document.querySelector('.iui-backdrop') as HTMLElement;
-  assertBaseElement(backdrop, backdrop.nextElementSibling as HTMLElement);
+  assertBaseElement(
+    backdrop,
+    document.querySelector('.iui-dialog') as HTMLElement,
+  );
 
   fireEvent.keyDown(backdrop, { key: 'Escape' });
   expect(onClose).not.toHaveBeenCalled();
 
   backdrop = document.querySelector('.iui-backdrop') as HTMLElement;
-  assertBaseElement(backdrop, backdrop.nextElementSibling as HTMLElement);
+  assertBaseElement(
+    backdrop,
+    document.querySelector('.iui-dialog') as HTMLElement,
+  );
 });
 
 it('should not close when isDismissible is false', () => {
@@ -135,9 +153,13 @@ it('should not close when isDismissible is false', () => {
   renderComponent({ onClose, isDismissible: false });
 
   let backdrop = document.querySelector('.iui-backdrop') as HTMLElement;
-  assertBaseElement(backdrop, backdrop.nextElementSibling as HTMLElement, {
-    isDismissible: false,
-  });
+  assertBaseElement(
+    backdrop,
+    document.querySelector('.iui-dialog') as HTMLElement,
+    {
+      isDismissible: false,
+    },
+  );
 
   fireEvent.keyDown(backdrop, { key: 'Escape' });
   expect(onClose).not.toHaveBeenCalled();
@@ -145,9 +167,13 @@ it('should not close when isDismissible is false', () => {
   expect(onClose).not.toHaveBeenCalled();
 
   backdrop = document.querySelector('.iui-backdrop') as HTMLElement;
-  assertBaseElement(backdrop, backdrop.nextElementSibling as HTMLElement, {
-    isDismissible: false,
-  });
+  assertBaseElement(
+    backdrop,
+    document.querySelector('.iui-dialog') as HTMLElement,
+    {
+      isDismissible: false,
+    },
+  );
 });
 
 it('should call onKeyDown when pressed any key inside modal', () => {
@@ -155,7 +181,10 @@ it('should call onKeyDown when pressed any key inside modal', () => {
   renderComponent({ onKeyDown });
 
   const backdrop = document.querySelector('.iui-backdrop') as HTMLElement;
-  assertBaseElement(backdrop, backdrop.nextElementSibling as HTMLElement);
+  assertBaseElement(
+    backdrop,
+    document.querySelector('.iui-dialog') as HTMLElement,
+  );
 
   fireEvent.keyDown(backdrop, {
     key: 'Enter',
@@ -171,11 +200,12 @@ it('should work with portal container properly', () => {
 
   let container = document.querySelector('body > #test-id') as HTMLElement;
   expect(container).toBeTruthy();
-  expect(container.children.length).toBe(1);
+  // Backdrop and dialog
+  expect(container.children.length).toBe(2);
 
   renderComponent({ modalRootId: 'test-id' });
   container = document.querySelector('body > #test-id') as HTMLElement;
-  expect(container.children.length).toBe(2);
+  expect(container.children.length).toBe(4);
 });
 
 it('should reset body overflow on closing and unmounting', () => {

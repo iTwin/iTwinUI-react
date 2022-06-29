@@ -178,53 +178,55 @@ export const Modal = (props: ModalProps) => {
 
   return !!container ? (
     ReactDOM.createPortal(
-      <CSSTransition
-        in={isOpen}
-        classNames='iui-dialog-animation'
-        timeout={{ exit: 600 }}
-        unmountOnExit={true}
-      >
+      <>
+        <div
+          className={cx('iui-backdrop', { 'iui-backdrop-visible': isOpen })}
+          tabIndex={-1}
+          onKeyDown={handleKeyDown}
+          ref={overlayRef}
+          onMouseDown={handleMouseDown}
+        />
         <FocusTrap>
           <div>
-            <div
-              className={cx('iui-backdrop', { 'iui-backdrop-visible': isOpen })}
-              tabIndex={-1}
-              onKeyDown={handleKeyDown}
-              ref={overlayRef}
-              onMouseDown={handleMouseDown}
-            />
-            <div
-              className={cx(
-                'iui-dialog',
-                { 'iui-dialog-default': styleType === 'default' },
-                { 'iui-dialog-full-page': styleType === 'fullPage' },
-                { 'iui-dialog-visible': isOpen },
-                className,
-              )}
-              id={id}
-              style={style}
-              role='dialog'
-              aria-modal='true'
-              {...rest}
+            <CSSTransition
+              in={isOpen}
+              classNames='iui-dialog-animation'
+              timeout={{ exit: 600 }}
+              unmountOnExit={true}
             >
-              <div className='iui-dialog-title-bar'>
-                <div className='iui-dialog-title'>{title}</div>
-                {isDismissible && (
-                  <IconButton
-                    size='small'
-                    styleType='borderless'
-                    onClick={onClose}
-                    aria-label='Close'
-                  >
-                    <SvgClose />
-                  </IconButton>
+              <div
+                className={cx(
+                  'iui-dialog',
+                  { 'iui-dialog-default': styleType === 'default' },
+                  { 'iui-dialog-full-page': styleType === 'fullPage' },
+                  { 'iui-dialog-visible': isOpen },
+                  className,
                 )}
+                id={id}
+                style={style}
+                role='dialog'
+                aria-modal='true'
+                {...rest}
+              >
+                <div className='iui-dialog-title-bar'>
+                  <div className='iui-dialog-title'>{title}</div>
+                  {isDismissible && (
+                    <IconButton
+                      size='small'
+                      styleType='borderless'
+                      onClick={onClose}
+                      aria-label='Close'
+                    >
+                      <SvgClose />
+                    </IconButton>
+                  )}
+                </div>
+                {children}
               </div>
-              {children}
-            </div>
+            </CSSTransition>
           </div>
         </FocusTrap>
-      </CSSTransition>,
+      </>,
       container,
     )
   ) : (
