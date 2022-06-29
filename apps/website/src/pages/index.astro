@@ -1,14 +1,32 @@
 ---
 import Global from '../layouts/Global.astro';
 import Header from '../components/Header.astro';
-
+import { Button } from '@itwin/itwinui-react';
 const currentPage = new URL(Astro.request.url).pathname;
 ---
 
 <Global currentPage={currentPage}>
   <Header class='header' />
   <main>
-    <div />
+    <div class='title-box'>
+      <h1>for a <span class="highlight-text">Unified</span> experience</h1>
+      <h4>By documenting and assembling a reference site of iTwin components and patterns, we were able to speed up our
+        process and solve some internal communication problems.</h4>
+      <div class='button-area'>
+        <a class='main-button' href="/docs/introduction">
+          Documentation
+        </a>
+        <a class='secondary-button' href="/docs/introduction">
+          Get started
+        </a>
+      </div>
+    </div>
+    <div class="code-blocks">
+      <div class='code-sample'><Button styleType='high-visibility'>High visibility button</Button></div>
+      <div class='code-sample'><Button styleType='cta'>Call-to-action button</Button>
+      </div>
+      <div class='code-sample'><Button styleType='cta'>Call-to-action button</Button></div>
+    </div>
   </main>
 
   <style>
@@ -19,6 +37,75 @@ const currentPage = new URL(Astro.request.url).pathname;
 
     .header {
       grid-area: header;
+    }
+
+    .code-blocks {
+      max-width: 1000px;
+      justify-self: center;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+    }
+
+    .code-sample {
+      width: 300px;
+      height: 300px;
+      background: linear-gradient(245deg, #f2cfea50 0%, #3e415850 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .title-box {
+      margin-top: 128px;
+      justify-self: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 580px;
+    }
+
+    .button-area {
+      display: flex;
+      gap: 22px;
+    }
+
+    .main-button {
+      padding: 8px 12px;
+      border-radius: 4px;
+      text-decoration: none;
+      background: linear-gradient(45deg, #f2cfea 0%, #ABB5F5 100%);
+      color: var(--color-background-1);
+    }
+
+    .secondary-button {
+      padding: 8px 12px;
+      border-radius: 4px;
+      text-decoration: none;
+      background: transparent;
+      color: var(--color-text);
+      border: 1px solid var(--color-text);
+    }
+
+    .main-button:hover,
+    .secondary-button:hover {
+      box-shadow: 0 1px 10px var(--color-text);
+    }
+
+    h1 {
+      margin-bottom: 16px;
+
+    }
+
+    .highlight-text {
+      background: linear-gradient(45deg, #f2cfea 0%, #ABB5F5 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    h4 {
+      text-align: center;
+      padding-bottom: 32px;
     }
 
     main {
