@@ -1,16 +1,19 @@
 ---
 import Global from '../layouts/Global.astro';
 import Header from '../components/Header.astro';
-import { Button } from '@itwin/itwinui-react';
+import { Button, Headline, Title, Text } from '@itwin/itwinui-react';
+
 const currentPage = new URL(Astro.request.url).pathname;
 ---
 
 <Global currentPage={currentPage}>
+  <div class='background' />
   <Header class='header' />
   <main>
     <div class='title-box'>
       <h1>for a <span class="highlight-text">Unified</span> experience</h1>
-      <h4>By documenting and assembling a reference site of iTwin components and patterns, we were able to speed up our
+      <h4>By documenting and assembling a reference site of iTwin components and patterns, we were able to speed up
+        our
         process and solve some internal communication problems.</h4>
       <div class='button-area'>
         <a class='main-button' href="/docs/introduction">
@@ -27,6 +30,55 @@ const currentPage = new URL(Astro.request.url).pathname;
       </div>
       <div class='code-sample'><Button styleType='cta'>Call-to-action button</Button></div>
     </div>
+    <div class='centered-content'>
+      <Headline>Why iTwin UI?</Headline>
+      <div class='column-content'>
+        <div class="text-with-icon">
+          <div class='consistent-icon' />
+          <div>
+            <Title>Consistent</Title>
+
+            <Text variant='body'>Our components and layouts library was designed specifically for apps within the
+              iTwin
+              space. It allows creating seamless front-end environments consistent with the iTwin experience.</Text>
+          </div>
+        </div>
+        <div class="text-with-icon">
+          <div class='accessible-icon' />
+          <div>
+            <Title>Accessible</Title>
+
+            <Text variant='body'>The web is for everyone. All our components were designed with accessibility in mind
+              for an inclusive,
+              comfortable experience that leaves no one behind. </Text>
+          </div>
+        </div>
+        <div class="text-with-icon">
+          <div class='no-fuss-icon' />
+          <div>
+            <Title>No fuss</Title>
+
+            <Text variant='body'>Skip the brainstorming sessions. Our components and layouts are entirely
+              ready-to-use,
+              so you can
+              focus
+              on
+              getting things done. </Text>
+          </div>
+        </div>
+        <div class="text-with-icon">
+          <div class='evolving-icon' />
+          <div>
+            <Title>Evolving</Title>
+
+            <Text variant='body'>iTwin UI is maintained daily and frequently updated by its supporting team, so you
+              always have access
+              to
+              the latest version of our assets. </Text>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 
   <style>
@@ -35,16 +87,28 @@ const currentPage = new URL(Astro.request.url).pathname;
       grid-template: 'header' auto 'main' 1fr / 100%;
     }
 
+    .background {
+      z-index: -1;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: url('public/backgroundImage.svg') no-repeat center;
+      background-size: cover;
+    }
+
     .header {
       grid-area: header;
     }
 
     .code-blocks {
       max-width: 1000px;
-      justify-self: center;
       display: flex;
+      justify-self: center;
+      justify-content: center;
+      align-items: center;
       flex-wrap: wrap;
       gap: 22px;
+      margin: 126px 0;
     }
 
     .code-sample {
@@ -103,6 +167,31 @@ const currentPage = new URL(Astro.request.url).pathname;
       -webkit-text-fill-color: transparent;
     }
 
+    .centered-content {
+      display: flex;
+      flex-direction: column;
+      justify-self: center;
+      align-items: center;
+      margin: 33px 0;
+    }
+
+    .column-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 66px;
+
+      @media (max-width: 50em) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .text-with-icon {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 22px;
+      align-items: center;
+    }
+
     h4 {
       text-align: center;
       padding-bottom: 32px;
@@ -111,6 +200,35 @@ const currentPage = new URL(Astro.request.url).pathname;
     main {
       grid-area: main;
       display: grid;
+      padding: 33px;
+    }
+
+    main>* {
+      max-width: 1000px;
+    }
+
+    .accessible-icon {
+      background-color: var(--color-text);
+      mask: url('public/homePageIcons/accessibleIcon.svg') no-repeat center;
+      height: 96px;
+    }
+
+    .consistent-icon {
+      background-color: var(--color-text);
+      mask: url('public/homePageIcons/consistentIcon.svg') no-repeat center;
+      height: 96px;
+    }
+
+    .evolving-icon {
+      background-color: var(--color-text);
+      mask: url('public/homePageIcons/evolvingIcon.svg') no-repeat center;
+      height: 96px;
+    }
+
+    .no-fuss-icon {
+      background-color: var(--color-text);
+      mask: url('public/homePageIcons/noFussIcon.svg') no-repeat center;
+      height: 96px;
     }
   </style>
 </Global>
