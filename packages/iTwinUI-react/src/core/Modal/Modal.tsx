@@ -14,6 +14,7 @@ import {
   FocusTrap,
 } from '../utils';
 import '@itwin/itwinui-css/css/dialog.css';
+import '@itwin/itwinui-css/css/backdrop.css';
 import { IconButton } from '../Buttons/IconButton';
 import { CSSTransition } from 'react-transition-group';
 
@@ -184,26 +185,27 @@ export const Modal = (props: ModalProps) => {
         unmountOnExit={true}
       >
         <FocusTrap>
-          <div
-            className={cx(
-              'iui-dialog-backdrop',
-              { 'iui-dialog-default': styleType === 'default' },
-              { 'iui-dialog-full-page': styleType === 'fullPage' },
-              { 'iui-dialog-visible': isOpen },
-              className,
-            )}
-            tabIndex={-1}
-            onKeyDown={handleKeyDown}
-            ref={overlayRef}
-            onMouseDown={handleMouseDown}
-            {...rest}
-          >
+          <div>
             <div
-              className='iui-dialog'
+              className={cx('iui-backdrop', { 'iui-backdrop-visible': isOpen })}
+              tabIndex={-1}
+              onKeyDown={handleKeyDown}
+              ref={overlayRef}
+              onMouseDown={handleMouseDown}
+            />
+            <div
+              className={cx(
+                'iui-dialog',
+                { 'iui-dialog-default': styleType === 'default' },
+                { 'iui-dialog-full-page': styleType === 'fullPage' },
+                { 'iui-dialog-visible': isOpen },
+                className,
+              )}
               id={id}
               style={style}
               role='dialog'
               aria-modal='true'
+              {...rest}
             >
               <div className='iui-dialog-title-bar'>
                 <div className='iui-dialog-title'>{title}</div>
