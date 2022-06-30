@@ -270,13 +270,15 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   // Call user-defined onChange when the value actually changes
   React.useEffect(() => {
-    if (selectedIndex != undefined && selectedIndex >= 0) {
-      const value = options[selectedIndex]?.value;
-      if (value === valueProp) {
-        return;
-      }
-      onChangeProp.current?.(value);
+    console.log('select index');
+    console.log(valueProp);
+    //if (selectedIndex != undefined && selectedIndex >= 0) {
+    const value = options[selectedIndex]?.value;
+    if (value === valueProp) {
+      return;
     }
+    onChangeProp.current?.(value);
+    //}
   }, [options, selectedIndex, valueProp]);
 
   const getMenuItem = React.useCallback(

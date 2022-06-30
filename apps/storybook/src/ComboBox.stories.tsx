@@ -13,6 +13,7 @@ import {
   StatusMessage,
   SelectOption,
   MenuItemSkeleton,
+  Button,
 } from '@itwin/itwinui-react';
 import { SvgCamera } from '@itwin/itwinui-icons-react';
 
@@ -308,14 +309,20 @@ const fetchOptions = async (): Promise<SelectOption<string>[]> => {
 
 export const Basic: Story<Partial<ComboBoxProps<string>>> = (args) => {
   const options = React.useMemo(() => countriesList, []);
+  const [newValue, setNewValue] = React.useState<string | undefined>('NU');
 
   return (
-    <ComboBox
-      options={options}
-      inputProps={{ placeholder: 'Select a country' }}
-      onChange={(value: string) => action(value ?? '')()}
-      {...args}
-    />
+    <>
+      <ComboBox
+        options={options}
+        value={newValue}
+        inputProps={{ placeholder: 'Select a country' }}
+        onChange={(value: string) => setNewValue(value)}
+        {...args}
+      />
+      <Button onClick={() => setNewValue('TJ')}>click</Button>
+      <Button onClick={() => setNewValue(undefined)}>reset</Button>
+    </>
   );
 };
 Basic.args = {
