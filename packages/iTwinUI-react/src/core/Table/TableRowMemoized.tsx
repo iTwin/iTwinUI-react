@@ -28,6 +28,7 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
   tableHasSubRows: boolean;
   tableInstance: TableInstance<T>;
   expanderCell?: (cellProps: CellProps<T>) => React.ReactNode;
+  enableVirtualization: boolean;
 }) => {
   const {
     row,
@@ -42,6 +43,7 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
     tableHasSubRows,
     tableInstance,
     expanderCell,
+    enableVirtualization,
   } = props;
 
   const onIntersect = React.useCallback(() => {
@@ -50,22 +52,24 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
   }, [isLast, onBottomReached, onRowInViewport, row.original]);
 
   const [rowRef, setRowRef] = React.useState<HTMLElement | null>();
-  const getIntersectionRoot = () => {
+  const intersectionRoot = React.useMemo(() => {
+    const rowParent = enableVirtualization
+      ? rowRef?.parentElement?.parentElement?.parentElement
+      : rowRef?.parentElement;
     const isTableBodyScrollable =
-      (rowRef?.parentElement?.scrollHeight ?? 0) >
-      (rowRef?.parentElement?.offsetHeight ?? 0);
+      (rowParent?.scrollHeight ?? 0) > (rowParent?.offsetHeight ?? 0);
     // If table body is scrollable, make it the intersection root
     if (isTableBodyScrollable) {
-      return rowRef?.parentElement;
+      return rowParent;
     }
 
     // Otherwise, make the viewport the intersection root
     return undefined;
-  };
+  }, [enableVirtualization, rowRef]);
 
   const intersectionRef = useIntersection(onIntersect, {
     rootMargin: `${intersectionMargin}px`,
-    root: getIntersectionRoot(),
+    root: intersectionRoot,
   });
 
   const userRowProps = rowProps?.(row);
@@ -170,6 +174,7 @@ export const TableRowMemoized = React.memo(
     prevProp.rowProps === nextProp.rowProps &&
     prevProp.expanderCell === nextProp.expanderCell &&
     prevProp.tableHasSubRows === nextProp.tableHasSubRows &&
+    prevProp.enableVirtualization === nextProp.enableVirtualization &&
     prevProp.state.columnOrder === nextProp.state.columnOrder &&
     !nextProp.state.columnResizing.isResizingColumn &&
     prevProp.state.isTableResizing === nextProp.state.isTableResizing &&

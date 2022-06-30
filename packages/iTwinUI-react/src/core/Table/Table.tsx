@@ -644,21 +644,23 @@ export const Table = <
           tableHasSubRows={hasAnySubRows}
           tableInstance={instance}
           expanderCell={expanderCell}
+          enableVirtualization={enableVirtualization}
         />
       );
     },
     [
       page,
-      expanderCell,
-      hasAnySubRows,
-      instance,
-      intersectionMargin,
-      isRowDisabled,
-      onRowClickHandler,
       prepareRow,
       rowProps,
+      intersectionMargin,
       state,
+      onRowClickHandler,
       subComponent,
+      isRowDisabled,
+      hasAnySubRows,
+      instance,
+      expanderCell,
+      enableVirtualization,
     ],
   );
 
