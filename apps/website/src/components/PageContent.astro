@@ -68,5 +68,52 @@ const headers = content.astro.headers;
       color: var(--color-subtext);
       font-size: var(--type-1);
     }
+
+    &> :global(.toc) {
+      /* TODO: make this responsive */
+      position: fixed;
+      right: 2rem;
+
+      & :global(ol) {
+        padding-left: 1rem;
+        list-style-type: none;
+      }
+
+      & :global(a) {
+        text-decoration: none;
+        color: var(--color-subtext);
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      & :global(li) {
+        padding: 0;
+        margin: 0;
+      }
+
+      & :global(li[data-active=true] > a:first-of-type) {
+        font-weight: bold;
+      }
+    }
   }
 </style>
+
+<script>
+  // adds data-active to the headings that are currently in viewport
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const id = entry.target.getAttribute('id');
+      if (entry.intersectionRatio > 0) {
+        document.querySelector(`nav li a[href='#${id}']`).parentElement.dataset.active = 'true';
+      } else {
+        document.querySelector(`nav li a[href='#${id}']`).parentElement.dataset.active = 'false';
+      }
+    });
+  });
+
+  document.querySelectorAll(':is(h1,h2,h3,h4)').forEach((section) => {
+    observer.observe(section);
+  });
+</script>
