@@ -185,7 +185,9 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     comboBoxReducer,
     {
       isOpen: false,
-      selectedIndex: -1,
+      selectedIndex: valueProp
+        ? options.findIndex((option) => option.value === valueProp)
+        : -1,
       focusedIndex: -1,
     },
   );
@@ -270,16 +272,9 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   // Call user-defined onChange when the value actually changes
   React.useEffect(() => {
-    console.log('select index');
-    console.log(valueProp);
-    //if (selectedIndex != undefined && selectedIndex >= 0) {
     const value = options[selectedIndex]?.value;
-    if (value === valueProp) {
-      return;
-    }
     onChangeProp.current?.(value);
-    //}
-  }, [options, selectedIndex, valueProp]);
+  }, [options, selectedIndex]);
 
   const getMenuItem = React.useCallback(
     (option: SelectOption<T>, filteredIndex?: number) => {
