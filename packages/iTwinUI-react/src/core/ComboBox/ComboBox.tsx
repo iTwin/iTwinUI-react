@@ -151,6 +151,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const menuRef = React.useRef<HTMLUListElement>(null);
   const toggleButtonRef = React.useRef<HTMLSpanElement>(null);
+  const firstRenderRef = React.useRef(true);
 
   // Latest value of the onChange prop
   const onChangeProp = React.useRef(onChange);
@@ -264,14 +265,21 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   // When the value prop changes, update the selectedIndex
   React.useEffect(() => {
-    dispatch([
-      'select',
-      options.findIndex((option) => option.value === valueProp),
-    ]);
+    console.log('dispatch select');
+    const newSelectedIndex = options.findIndex(
+      (option) => option.value === valueProp,
+    );
+    dispatch(['select', newSelectedIndex]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [options, valueProp]);
 
   // Call user-defined onChange when the value actually changes
   React.useEffect(() => {
+    console.log('user onChange');
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false;
+      return;
+    }
     const value = options[selectedIndex]?.value;
     onChangeProp.current?.(value);
   }, [options, selectedIndex]);
@@ -296,6 +304,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             dispatch(['select', __originalIndex]);
             dispatch(['close']);
             customItem.props.onClick?.(e);
+            //onChangeProp.current?.(option.value);
           },
           // ComboBox.MenuItem handles scrollIntoView, data-iui-index and iui-focused through context
           // but we still need to pass them here for backwards compatibility with MenuItem
@@ -319,6 +328,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           onClick={() => {
             dispatch(['select', __originalIndex]);
             dispatch(['close']);
+            //onChangeProp.current?.(option.value);
           }}
           index={__originalIndex}
           data-iui-filtered-index={filteredIndex}
