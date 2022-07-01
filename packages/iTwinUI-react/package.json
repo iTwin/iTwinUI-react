@@ -39,7 +39,8 @@
     "lint": "eslint \"**/*.{js,ts,tsx}\" --max-warnings=0",
     "lint:fix": "yarn lint --fix && node ../configs/copyrightLinter.js --fix \"*/**/*.{js,ts,tsx}\"",
     "copy-files": "cpy \"../../{README,LICENSE}.md\" .",
-    "dev": "yarn build:watch"
+    "dev": "yarn build:watch",
+    "createComponent": "node ../../scripts/createComponent.js"
   },
   "dependencies": {
     "@itwin/itwinui-css": "^0.59.2",
