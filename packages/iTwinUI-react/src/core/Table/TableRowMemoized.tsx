@@ -28,7 +28,7 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
   tableHasSubRows: boolean;
   tableInstance: TableInstance<T>;
   expanderCell?: (cellProps: CellProps<T>) => React.ReactNode;
-  enableVirtualization: boolean;
+  bodyRef: HTMLDivElement | null;
 }) => {
   const {
     row,
@@ -43,7 +43,7 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
     tableHasSubRows,
     tableInstance,
     expanderCell,
-    enableVirtualization,
+    bodyRef,
   } = props;
 
   const onIntersect = React.useCallback(() => {
@@ -51,21 +51,17 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
     isLast && onBottomReached.current?.();
   }, [isLast, onBottomReached, onRowInViewport, row.original]);
 
-  const [rowRef, setRowRef] = React.useState<HTMLElement | null>();
   const intersectionRoot = React.useMemo(() => {
-    const rowParent = enableVirtualization
-      ? rowRef?.parentElement?.parentElement?.parentElement
-      : rowRef?.parentElement;
     const isTableBodyScrollable =
-      (rowParent?.scrollHeight ?? 0) > (rowParent?.offsetHeight ?? 0);
+      (bodyRef?.scrollHeight ?? 0) > (bodyRef?.offsetHeight ?? 0);
     // If table body is scrollable, make it the intersection root
     if (isTableBodyScrollable) {
-      return rowParent;
+      return bodyRef;
     }
 
     // Otherwise, make the viewport the intersection root
     return undefined;
-  }, [enableVirtualization, rowRef]);
+  }, [bodyRef]);
 
   const intersectionRef = useIntersection(onIntersect, {
     rootMargin: `${intersectionMargin}px`,
@@ -89,7 +85,7 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
     },
   };
 
-  const refs = useMergedRefs(intersectionRef, mergedProps.ref, setRowRef);
+  const refs = useMergedRefs(intersectionRef, mergedProps.ref);
 
   return (
     <>
@@ -174,7 +170,7 @@ export const TableRowMemoized = React.memo(
     prevProp.rowProps === nextProp.rowProps &&
     prevProp.expanderCell === nextProp.expanderCell &&
     prevProp.tableHasSubRows === nextProp.tableHasSubRows &&
-    prevProp.enableVirtualization === nextProp.enableVirtualization &&
+    prevProp.bodyRef === nextProp.bodyRef &&
     prevProp.state.columnOrder === nextProp.state.columnOrder &&
     !nextProp.state.columnResizing.isResizingColumn &&
     prevProp.state.isTableResizing === nextProp.state.isTableResizing &&
