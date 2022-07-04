@@ -398,7 +398,7 @@ export const MultiCustomRenderer: Story<SelectProps<number>> = (args) => {
         }
         placeholder={placeholder}
         multiple
-        selectedItemsRenderer={(options) => (
+        selectedItemRenderer={(options) => (
           <>{options.map((option) => option.label).join(', ')}</>
         )}
       />
