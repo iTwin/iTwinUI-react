@@ -108,20 +108,8 @@ type MultipleType<T> =
       value?: T;
     }
   | {
-      /**
-       * Enable multiple selection.
-       * @default false
-       */
       multiple: true;
-      /**
-       * Custom renderer for the selected item in select.
-       * If `multiple` is enabled, it will give array of options to render.
-       */
       selectedItemRenderer?: (options: SelectOption<T>[]) => JSX.Element;
-      /**
-       * Selected option value.
-       * If `multiple` is enabled, it is an array of values.
-       */
       value?: T[];
     };
 
