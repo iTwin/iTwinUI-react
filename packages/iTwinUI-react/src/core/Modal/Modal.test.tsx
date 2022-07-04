@@ -9,6 +9,9 @@ import { Modal, ModalProps } from './Modal';
 
 function assertBaseElement(dialog: HTMLElement, { isDismissible = true } = {}) {
   expect(dialog).toBeTruthy();
+  expect(dialog.className).toContain('iui-dialog');
+  expect(dialog.className).toContain('iui-dialog-visible');
+  expect(dialog.className).toContain(`iui-dialog-${styleType}`);
 
   const overlay = document.querySelector('.iui-backdrop') as HTMLElement;
   expect(overlay).toBeTruthy();
@@ -103,7 +106,7 @@ it('should close on Esc click and move focus back', () => {
   const overlay = document.querySelector('.iui-backdrop') as HTMLElement;
   expect(document.activeElement).toEqual(overlay);
 
-  fireEvent.keyDown(overlay, { key: 'Escape' });
+  fireEvent.keyDown(backdrop, { key: 'Escape' });
   expect(onClose).toHaveBeenCalled();
 
   dialog = document.querySelector(
@@ -144,7 +147,7 @@ it('should not close when isDismissible is false', () => {
   const overlay = document.querySelector('.iui-backdrop') as HTMLElement;
   fireEvent.keyDown(overlay, { key: 'Escape' });
   expect(onClose).not.toHaveBeenCalled();
-  fireEvent.mouseDown(overlay);
+  fireEvent.mouseDown(backdrop);
   expect(onClose).not.toHaveBeenCalled();
 });
 
