@@ -357,8 +357,6 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
     !multiple,
   );
 
-  console.log(visibleCount, '------------------');
-
   return (
     <div
       className={cx('iui-input-with-icon', className)}
@@ -419,9 +417,9 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
                     {visibleCount < selectedItemsArray.length ? (
                       <>
                         {selectedItemsArray.slice(0, visibleCount)}
-                        {/* <SelectTag>
+                        <SelectTag>
                           +{selectedItemsArray.length - visibleCount} item(s)
-                        </SelectTag> */}
+                        </SelectTag>
                       </>
                     ) : (
                       selectedItemsArray

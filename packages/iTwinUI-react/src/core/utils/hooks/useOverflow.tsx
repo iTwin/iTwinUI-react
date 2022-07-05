@@ -57,7 +57,9 @@ export const useOverflow = <T extends HTMLElement>(
     if (disabled) {
       setVisibleCount(items.length);
     } else {
-      setVisibleCount(Math.min(items.length, STARTING_MAX_ITEMS_COUNT));
+      queueMicrotask(() =>
+        setVisibleCount(Math.min(items.length, STARTING_MAX_ITEMS_COUNT)),
+      );
       needsFullRerender.current = true;
     }
   }, [containerSize, disabled, items]);
