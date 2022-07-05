@@ -151,7 +151,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const menuRef = React.useRef<HTMLUListElement>(null);
   const toggleButtonRef = React.useRef<HTMLSpanElement>(null);
-  const firstRenderRef = React.useRef(true);
+  const mounted = React.useRef(false);
 
   // Latest value of the onChange prop
   const onChangeProp = React.useRef(onChange);
@@ -273,8 +273,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   // Call user-defined onChange when the value actually changes
   React.useEffect(() => {
-    if (firstRenderRef.current) {
-      firstRenderRef.current = false;
+    if (!mounted.current) {
+      mounted.current = true;
       return;
     }
     const value = options[selectedIndex]?.value;
