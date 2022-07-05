@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react';
-import Select, { SelectProps } from './Select';
+import Select, { SelectProps, MultipleType } from './Select';
 import SvgSmileyHappy from '@itwin/itwinui-icons-react/cjs/icons/SmileyHappy';
 import { MenuItem } from '../Menu';
 import userEvent from '@testing-library/user-event';
@@ -51,7 +51,9 @@ function assertMenu(
   });
 }
 
-function renderComponent(props?: Partial<SelectProps<number>>) {
+function renderComponent(
+  props?: Partial<SelectProps<number>> & MultipleType<number>,
+) {
   return render(
     <Select<number>
       options={[...new Array(3)].map((_, index) => ({

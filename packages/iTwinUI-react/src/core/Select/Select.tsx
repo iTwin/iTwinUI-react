@@ -89,7 +89,7 @@ export type SelectOption<T> = {
   [key: string]: unknown;
 } & CommonProps;
 
-type MultipleType<T> =
+export type MultipleType<T> =
   | {
       /**
        * Enable multiple selection.
