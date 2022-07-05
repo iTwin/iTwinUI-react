@@ -14,12 +14,9 @@ import {
 
 import { PolymorphicForwardRefComponent, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/header.css';
-import {
-  HeaderBreadcrumbsSplitButton,
-  HeaderBreadcrumbsSplitButtonProps,
-} from './HeaderBreadcrumbsSplitButton';
+import { HeaderSplitButton, HeaderSplitButtonProps } from './HeaderSplitButton';
 
-export type HeaderButtonProps = {
+export type HeaderButtonCustomProps = {
   /**
    * Main label of the header button.
    */
@@ -33,12 +30,15 @@ export type HeaderButtonProps = {
    * @default false
    */
   isActive?: boolean;
-} & Partial<Pick<DropdownButtonProps, 'menuItems'>> &
+};
+
+export type HeaderButtonProps = HeaderButtonCustomProps &
+  Partial<Pick<DropdownButtonProps, 'menuItems'>> &
   Pick<ButtonProps, 'startIcon' | 'endIcon'>;
 
 const isSplitButton = (
-  props: Omit<Partial<HeaderBreadcrumbsSplitButtonProps>, 'name'>,
-): props is HeaderBreadcrumbsSplitButtonProps => {
+  props: Omit<Partial<HeaderSplitButtonProps>, 'name'>,
+): props is HeaderSplitButtonProps => {
   return !!props.menuItems && !!props.onClick;
 };
 
@@ -86,17 +86,17 @@ export const HeaderButton: HeaderButtonComponent = React.forwardRef(
             ),
           })
         : undefined,
+      className: className,
       styleType: 'borderless',
-      className: cx(className, 'iui-header-breadcrumb-button'),
       children: (
-        <>
+        <span className='iui-header-breadcrumb-button-text'>
           <div className='iui-header-breadcrumb-button-text-label'>{name}</div>
           {description && (
             <div className='iui-header-breadcrumb-button-text-sublabel'>
               {description}
             </div>
           )}
-        </>
+        </span>
       ),
       ref: ref,
       ...(!!menuItems && { menuItems }),
@@ -104,15 +104,7 @@ export const HeaderButton: HeaderButtonComponent = React.forwardRef(
     } as const;
 
     if (isSplitButton(buttonProps)) {
-      return (
-        <li
-          className='iui-header-breadcrumb-button-wrapper'
-          aria-current={isActive ? 'location' : undefined}
-        >
-          <Button {...buttonProps} />
-          <HeaderBreadcrumbsSplitButton {...buttonProps} />
-        </li>
-      );
+      return <HeaderSplitButton {...buttonProps} />;
     }
     if (isDropdownButton(buttonProps)) {
       return (
