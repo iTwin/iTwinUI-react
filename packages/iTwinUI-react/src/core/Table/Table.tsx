@@ -595,7 +595,7 @@ export const Table = <
     ],
   );
 
-  const { scrollToIndex, tableRowRef } = useScrollToRow<T>({ ...props });
+  const { scrollToIndex, tableRowRef } = useScrollToRow<T>({ ...props, page });
   const columnRefs = React.useRef<Record<string, HTMLDivElement>>({});
   const previousTableWidth = React.useRef(0);
   const onTableResize = React.useCallback(

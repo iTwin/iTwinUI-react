@@ -13,55 +13,67 @@ type ScrollToRow<T extends Record<string, unknown>> = {
 
 type ScrollToRowProps<T extends Record<string, unknown>> = Pick<
   TableProps<T>,
-  'data' | 'enableVirtualization' | 'getRowId' | 'paginatorRenderer'
-> & { scrollToItem?: T };
+  'enableVirtualization' | 'getRowId' | 'paginatorRenderer'
+> & { page: Row<T>[]; scrollToItem?: T };
 
 export function useScrollToRow<T extends Record<string, unknown>>({
-  data,
   enableVirtualization,
   scrollToItem,
+  page,
   getRowId,
   paginatorRenderer,
 }: ScrollToRowProps<T>): ScrollToRow<T> {
-  const rowRefs = React.useRef<Record<number, HTMLDivElement>>({});
-
-  const index = React.useMemo((): number => {
-    if (!scrollToItem || !getRowId || paginatorRenderer) {
-      return -1;
-    }
-
-    return data.findIndex(
-      (item) => getRowId(item, 0) == getRowId(scrollToItem, 0),
-    );
-  }, [data, getRowId, paginatorRenderer, scrollToItem]);
+  const rowRefs = React.useRef<Record<string, HTMLDivElement>>({});
 
   // For virtualized tables, all we need to do is pass the index of the item
   // to the VirtualScroll component
   const scrollToIndex = React.useMemo((): number | undefined => {
-    if (!enableVirtualization || index < 0) {
+    if (
+      !enableVirtualization ||
+      !getRowId ||
+      !scrollToItem ||
+      paginatorRenderer
+    ) {
+      return undefined;
+    }
+
+    const index = page.findIndex(
+      (row) => getRowId(row.original, 0) == getRowId(scrollToItem, 0),
+    );
+
+    if (index < 0) {
       return undefined;
     }
 
     return index;
-  }, [enableVirtualization, index]);
+  }, [enableVirtualization, getRowId, page, paginatorRenderer, scrollToItem]);
 
   // For non-virtualized tables, we need to add a ref to each row
   // and scroll to the element
   React.useEffect(() => {
-    if (enableVirtualization || index < 0) {
+    if (enableVirtualization || !scrollToItem || !getRowId) {
       return;
     }
 
-    rowRefs.current[index]?.scrollIntoView();
-  }, [enableVirtualization, index]);
+    const itemId = getRowId(scrollToItem, 0);
 
-  const tableRowRef = React.useCallback((row: Row<T>) => {
-    function addReference(element: HTMLDivElement): void {
-      rowRefs.current[row.index] = element;
-    }
+    rowRefs.current[itemId]?.scrollIntoView();
+  }, [enableVirtualization, getRowId, scrollToItem]);
 
-    return addReference;
-  }, []);
+  const tableRowRef = React.useCallback(
+    (row: Row<T>) => {
+      function addReference(element: HTMLDivElement): void {
+        if (!getRowId) {
+          return;
+        }
+        const itemId = getRowId(row.original, 0);
+        rowRefs.current[itemId] = element;
+      }
+
+      return addReference;
+    },
+    [getRowId],
+  );
 
   return { scrollToIndex, tableRowRef };
 }
