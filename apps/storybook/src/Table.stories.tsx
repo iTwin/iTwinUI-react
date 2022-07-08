@@ -2463,8 +2463,10 @@ export const ScrollToItem: Story<Partial<TableProps>> = (args) => {
     for (let i = 0; i < size; ++i) {
       arr[i] = {
         id: i,
-        name: `Name${i}`,
-        description: `Description${i}`,
+        name: `Name${i}${i === 12345 ? ' - Scrolled to me!' : ''}`,
+        description: `Description${i}${
+          i === 12345 ? ' - Scrolled to me!' : ''
+        }`,
       };
     }
     return arr;
@@ -2479,7 +2481,7 @@ export const ScrollToItem: Story<Partial<TableProps>> = (args) => {
       style={{ maxHeight: '90vh' }}
       data={data}
       getRowId={(row) => row.id}
-      scrollToItem={data[12345]}
+      scrollToRow={(rows) => rows.findIndex((row) => row.id === data[12345].id)}
     />
   );
 };

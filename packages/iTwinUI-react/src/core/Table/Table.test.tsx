@@ -3032,56 +3032,28 @@ it('should not throw on headless table', () => {
   expect(container.querySelector('.iui-table-body')).toBeTruthy();
 });
 
-it('should scroll to selected item in virtualized table', async () => {
-  let triggerResize: (size: DOMRectReadOnly) => void = jest.fn();
-
-  jest
-    .spyOn(HTMLElement.prototype, 'scrollTo')
-    .mockImplementation(function (this: HTMLElement, options) {
-      console.log('scroll to');
-      this.scrollTop = (options as ScrollToOptions).top ?? 0;
-      fireEvent.scroll(this, {
-        target: { scrollTop: (options as ScrollToOptions).top ?? 0 },
-      });
-    });
-  jest
-    .spyOn(UseResizeObserver, 'useResizeObserver')
-    .mockImplementation((onResize) => {
-      triggerResize = onResize;
-      return [
-        jest.fn(),
-        ({ disconnect: jest.fn() } as unknown) as ResizeObserver,
-      ];
-    });
-
-  const data = mockedData(40);
-
-  renderComponent({
-    data,
-    enableVirtualization: true,
-    getRowId: (item: TestDataType) => item.name,
-    scrollToItem: data[19],
-    style: { overflow: 'auto', height: 400 },
-  });
-
-  act(() => triggerResize({ height: 100 } as DOMRectReadOnly));
-
-  screen.getByText('Name20');
-});
-
 it('should scroll to selected item in non-virtualized table', async () => {
-  const data = mockedData(20);
+  let scrolledElement: HTMLElement | null = null;
+  jest
+    .spyOn(HTMLElement.prototype, 'scrollIntoView')
+    .mockImplementation(function (this: HTMLElement) {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      scrolledElement = this;
+    });
 
+  const data = mockedData(50);
   renderComponent({
     data,
-    enableVirtualization: false,
-    getRowId: (item: TestDataType) => item.name,
-    scrollToItem: data[19],
-    style: { overflow: 'auto', height: 400 },
+    scrollToRow: (rows) => rows.findIndex((row) => row.original === data[25]),
   });
 
-  screen.getByText('Name20');
+  expect(scrolledElement).toBeTruthy();
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  expect(scrolledElement!.querySelector('.iui-cell')?.textContent).toBe(
+    data[25].name,
+  );
 });
+
 it('should render sticky columns correctly', () => {
   jest
     .spyOn(HTMLDivElement.prototype, 'scrollWidth', 'get')

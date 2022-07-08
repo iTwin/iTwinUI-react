@@ -90,22 +90,6 @@ export type TablePaginatorRendererProps = {
   isLoading?: boolean;
 };
 
-type ScrollToItemProps<T extends Record<string, unknown>> =
-  | {
-      /**
-       * Initialize the table scrolled to this item.
-       *
-       * Must be used in conjunction with `getRowId` prop.
-       *
-       * Does not support tables with pagination.
-       */
-      scrollToItem: T;
-      getRowId: TableOptions<T>['getRowId'] | ((originalRow: T) => string);
-    }
-  | {
-      getRowId?: TableOptions<T>['getRowId'];
-    };
-
 /**
  * Table props.
  * columns and data must be memoized.
@@ -260,8 +244,25 @@ export type TableProps<
    * @default false
    */
   enableColumnReordering?: boolean;
-} & ScrollToItemProps<T> &
-  Omit<CommonProps, 'title'>;
+  /**
+   * Function that returns index of the row that you want to scroll to.
+   *
+   * It doesn't work with paginated tables.
+   * @example
+   * <Table
+   *   data={data}
+   *   scrollToRow={(rows) => rows.findIndex((row) => row.original === data[250])}
+   *   {...restProps}
+   * />
+   * @example
+   * <Table
+   *   scrollToRow={(rows) => rows.findIndex((row) => row.id === item.id)}
+   *   getRowId={(rowData) => row.original.id}
+   *   {...restProps}
+   * />
+   */
+  scrollToRow?: (rows: Row<T>[]) => number;
+} & Omit<CommonProps, 'title'>;
 
 // Original type for some reason is missing sub-columns
 type ColumnType<
