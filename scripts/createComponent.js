@@ -2,14 +2,14 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-const inquirer = require("inquirer");
-const fs = require("fs");
+const inquirer = require('inquirer');
+const fs = require('fs');
 
 const copyrightHeader =
-  "/*---------------------------------------------------------------------------------------------\n " +
-  "* Copyright (c) Bentley Systems, Incorporated. All rights reserved.\n " +
-  "* See LICENSE.md in the project root for license terms and full copyright notice.\n " +
-  "*--------------------------------------------------------------------------------------------*/";
+  '/*---------------------------------------------------------------------------------------------\n ' +
+  '* Copyright (c) Bentley Systems, Incorporated. All rights reserved.\n ' +
+  '* See LICENSE.md in the project root for license terms and full copyright notice.\n ' +
+  '*--------------------------------------------------------------------------------------------*/';
 
 const makeDir = (path) => {
   if (!fs.existsSync(path)) {
@@ -23,18 +23,18 @@ const writeFile = (obj) => {
       if (error) {
         throw new Error(error.message);
       }
-      console.log("Successfully wrote", obj.path);
+      console.log('Successfully wrote', obj.path);
     });
   }
 };
 
 const appendFile = (obj) => {
   if (fs.existsSync(obj.path)) {
-    let file = fs.readFileSync(obj.path, "utf-8");
+    let file = fs.readFileSync(obj.path, 'utf-8');
     let tester = new RegExp(`.*${obj.template}.*`);
     let count = 0;
 
-    for (const line of file.split("\n")) {
+    for (const line of file.split('\n')) {
       if (tester.test(line)) {
         throw new Error(`Duplicate line in ${obj.path}: ${count}`);
       }
@@ -45,7 +45,7 @@ const appendFile = (obj) => {
       if (error) {
         throw new Error(error.message);
       }
-      console.log("Successfully appended", obj.path);
+      console.log('Successfully appended', obj.path);
     });
   } else {
     writeFile(obj);
@@ -53,7 +53,7 @@ const appendFile = (obj) => {
 };
 
 const functionalTemplate = (
-  name
+  name,
 ) => `export const ${name} = (props: ${name}Props) => {
   const { ...rest } = props;
   useTheme();
@@ -162,7 +162,7 @@ it('should be improved', () => {
 
 const indexAppendFactory = (directory, name) => {
   return {
-    path: `${directory.split("/").slice(0, -1).join("/")}/index.ts`,
+    path: `${directory.split('/').slice(0, -1).join('/')}/index.ts`,
     template: `
 export { ${name} } from './${name}';
 export type { ${name}Props } from './${name}';
@@ -173,25 +173,25 @@ export type { ${name}Props } from './${name}';
 inquirer
   .prompt([
     {
-      name: "component",
-      type: "input",
-      message: "What is the name of the component?",
+      name: 'component',
+      type: 'input',
+      message: 'What is the name of the component?',
     },
   ])
   .then(({ component }) => {
     const currentDirectory = process.cwd();
-    const isInPackage = currentDirectory.includes("packages");
+    const isInPackage = currentDirectory.includes('packages');
 
-    let directory = "";
-    let storyDirectory = "";
+    let directory = '';
+    let storyDirectory = '';
     let levels = [];
 
     if (isInPackage) {
       directory = `src/core/${component}`;
-      storyDirectory = "../../apps/storybook/src";
+      storyDirectory = '../../apps/storybook/src';
     } else {
       directory = `packages/iTwinUI-react/src/core/${component}`;
-      storyDirectory = "apps/storybook/src";
+      storyDirectory = 'apps/storybook/src';
     }
     levels.push(directory);
 
