@@ -2423,9 +2423,15 @@ Virtualized.argTypes = {
 };
 
 export const ScrollToItem: Story<Partial<TableProps>> = (args) => {
-  const onClickHandler = (
-    props: CellProps<{ name: string; description: string }>,
-  ) => action(props.row.original.name)();
+  type TableStoryDataType = {
+    id: string;
+    name: string;
+    description: string;
+  };
+  const onClickHandler = React.useCallback(
+    (props: CellProps<TableStoryDataType>) => action(props.row.original.name)(),
+    [],
+  );
 
   const columns = useMemo(
     () => [
@@ -2446,7 +2452,7 @@ export const ScrollToItem: Story<Partial<TableProps>> = (args) => {
             id: 'click-me',
             Header: 'Click',
             width: 100,
-            Cell: (props: CellProps<{ name: string; description: string }>) => {
+            Cell: (props: CellProps<TableStoryDataType>) => {
               const onClick = () => onClickHandler(props);
               return <Anchor onClick={onClick}>Click me!</Anchor>;
             },
@@ -2454,15 +2460,15 @@ export const ScrollToItem: Story<Partial<TableProps>> = (args) => {
         ],
       },
     ],
-    [],
+    [onClickHandler],
   );
 
-  const data = useMemo(() => {
+  const data: TableStoryDataType[] = useMemo(() => {
     const size = 100000;
     const arr = new Array(size);
     for (let i = 0; i < size; ++i) {
       arr[i] = {
-        id: i,
+        id: i.toString(),
         name: `Name${i}${i === 12345 ? ' - Scrolled to me!' : ''}`,
         description: `Description${i}${
           i === 12345 ? ' - Scrolled to me!' : ''
@@ -2480,8 +2486,15 @@ export const ScrollToItem: Story<Partial<TableProps>> = (args) => {
       {...args}
       style={{ maxHeight: '90vh' }}
       data={data}
-      getRowId={(row) => row.id}
-      scrollToRow={(rows) => rows.findIndex((row) => row.id === data[12345].id)}
+      getRowId={React.useCallback(
+        (rowData: TableStoryDataType) => rowData.id,
+        [],
+      )}
+      scrollToRow={React.useCallback(
+        (rows: Row<TableStoryDataType>[]) =>
+          rows.findIndex((row) => row.id === data[12345].id),
+        [data],
+      )}
     />
   );
 };
