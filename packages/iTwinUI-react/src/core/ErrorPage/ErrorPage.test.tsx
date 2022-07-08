@@ -175,7 +175,7 @@ describe(ErrorPage, () => {
     {
       errorType: '307',
       errorName: '307 error',
-      errorMessage: 'Page moved permanently',
+      errorMessage: 'Page moved temporarily',
     },
     {
       errorType: '308',
