@@ -18,7 +18,14 @@ import cx from 'classnames';
 import '@itwin/itwinui-css/css/non-ideal-state.css';
 
 export type ErrorPageType =
+  | '300'
   | '301'
+  | '302'
+  | '303'
+  | '304'
+  | '305'
+  | '307'
+  | '308'
   | '401'
   | '403'
   | '404'
@@ -26,6 +33,7 @@ export type ErrorPageType =
   | '500'
   | '502'
   | '503'
+  | '504'
   | 'generic';
 
 export type ErrorTypeTranslations = {
@@ -120,7 +128,14 @@ export const ErrorPage = (props: ErrorPageProps): JSX.Element => {
 
   function getErrorIcon(): JSX.Element {
     switch (errorType) {
-      case '301': {
+      case '300':
+      case '301':
+      case '302':
+      case '303':
+      case '304':
+      case '305':
+      case '307':
+      case '308': {
         return <SvgRedirect className='iui-non-ideal-state-illustration' />;
       }
       case '401': {
@@ -132,7 +147,8 @@ export const ErrorPage = (props: ErrorPageProps): JSX.Element => {
       case '404': {
         return <Svg404 className='iui-non-ideal-state-illustration' />;
       }
-      case '408': {
+      case '408':
+      case '504': {
         return <SvgTimedOut className='iui-non-ideal-state-illustration' />;
       }
       case '500': {
@@ -157,7 +173,14 @@ export const ErrorPage = (props: ErrorPageProps): JSX.Element => {
     }
 
     switch (errorType) {
-      case '301': {
+      case '300':
+      case '301':
+      case '302':
+      case '303':
+      case '304':
+      case '305':
+      case '307':
+      case '308': {
         return defaultErrorMessages.redirect || '';
       }
       case '401': {
@@ -169,7 +192,8 @@ export const ErrorPage = (props: ErrorPageProps): JSX.Element => {
       case '404': {
         return defaultErrorMessages.pageNotFound;
       }
-      case '408': {
+      case '408':
+      case '504': {
         return defaultErrorMessages.timedOut || '';
       }
       case '500': {

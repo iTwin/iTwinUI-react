@@ -18,7 +18,56 @@ import SvgTimedOut from '@itwin/itwinui-illustrations-react/cjs/illustrations/Ti
 describe(ErrorPage, () => {
   const defaultTests = [
     {
+      errorType: '300',
+      errorName: 'Redirect',
+      illustration: (
+        <SvgRedirect className='iui-non-ideal-state-illustration' />
+      ),
+    },
+    {
       errorType: '301',
+      errorName: 'Redirect',
+      illustration: (
+        <SvgRedirect className='iui-non-ideal-state-illustration' />
+      ),
+    },
+    {
+      errorType: '302',
+      errorName: 'Redirect',
+      illustration: (
+        <SvgRedirect className='iui-non-ideal-state-illustration' />
+      ),
+    },
+    {
+      errorType: '303',
+      errorName: 'Redirect',
+      illustration: (
+        <SvgRedirect className='iui-non-ideal-state-illustration' />
+      ),
+    },
+    {
+      errorType: '304',
+      errorName: 'Redirect',
+      illustration: (
+        <SvgRedirect className='iui-non-ideal-state-illustration' />
+      ),
+    },
+    {
+      errorType: '305',
+      errorName: 'Redirect',
+      illustration: (
+        <SvgRedirect className='iui-non-ideal-state-illustration' />
+      ),
+    },
+    {
+      errorType: '307',
+      errorName: 'Redirect',
+      illustration: (
+        <SvgRedirect className='iui-non-ideal-state-illustration' />
+      ),
+    },
+    {
+      errorType: '308',
       errorName: 'Redirect',
       illustration: (
         <SvgRedirect className='iui-non-ideal-state-illustration' />
@@ -62,6 +111,13 @@ describe(ErrorPage, () => {
       illustration: <Svg503 className='iui-non-ideal-state-illustration' />,
     },
     {
+      errorType: '504',
+      errorName: 'Timed out',
+      illustration: (
+        <SvgTimedOut className='iui-non-ideal-state-illustration' />
+      ),
+    },
+    {
       errorType: 'generic',
       errorName: 'Error',
       illustration: <SvgError className='iui-non-ideal-state-illustration' />,
@@ -87,8 +143,43 @@ describe(ErrorPage, () => {
 
   const customTests = [
     {
+      errorType: '300',
+      errorName: '300 error',
+      errorMessage: 'Page has multiple choices',
+    },
+    {
       errorType: '301',
       errorName: '301 error',
+      errorMessage: 'Page moved permanently',
+    },
+    {
+      errorType: '302',
+      errorName: '302 error',
+      errorMessage: 'Page not found',
+    },
+    {
+      errorType: '303',
+      errorName: '303 error',
+      errorMessage: 'Page moved temporarily',
+    },
+    {
+      errorType: '304',
+      errorName: '304 error',
+      errorMessage: 'Page not modified',
+    },
+    {
+      errorType: '305',
+      errorName: '305 error',
+      errorMessage: 'Page use proxy',
+    },
+    {
+      errorType: '307',
+      errorName: '307 error',
+      errorMessage: 'Page moved permanently',
+    },
+    {
+      errorType: '308',
+      errorName: '308 error',
       errorMessage: 'Page moved permanently',
     },
     {
@@ -125,6 +216,11 @@ describe(ErrorPage, () => {
       errorType: '503',
       errorName: 'You encountered a 503 error',
       errorMessage: 'The service may be unavailable.',
+    },
+    {
+      errorType: '504',
+      errorName: 'You encountered a 504 error',
+      errorMessage: 'Gateway timeout.',
     },
     {
       errorType: 'generic',

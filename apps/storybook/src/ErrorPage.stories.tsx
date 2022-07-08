@@ -30,7 +30,7 @@ Redirect.args = {
   errorType: '301',
   errorMessage: (
     <>
-      Requested page has been moved permanantly.
+      Requested page has been moved permanently.
       <br />
       Unable to fulfill request.
     </>
