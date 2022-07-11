@@ -4,58 +4,60 @@
  *--------------------------------------------------------------------------------------------*/
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
+import { findHeadings } from '@jsdevtools/rehype-toc/lib/fiind-headings';
+import { createTOC } from '@jsdevtools/rehype-toc/lib/create-toc';
 
 // https://astro.build/config
 export default defineConfig({
   integrations: [react()],
   markdown: {
-    rehypePlugins: [
-      'rehype-slug',
-      ['rehype-autolink-headings', { behavior: 'wrap' }],
-      [
-        'rehype-toc',
-        {
-          headings: ['h1', 'h2', 'h3'],
-          customizeTOC: addOverviewToTOC,
-        },
-      ],
-    ],
+    rehypePlugins: ['rehype-slug', ['rehype-autolink-headings', { behavior: 'wrap' }], rehypeToc],
   },
 });
 
 /**
- * Adds "Overview" link at the top of the table of contents.
- * This is useful for scrolling to the introduction section
- * that is not under any heading.
+ * Customized version of rehype-toc to place table-of-contents as a sibling of main content.
  */
-function addOverviewToTOC(nav) {
-  const ol = nav.children[0];
-  if (ol.children.length === 0) {
-    return false;
-  }
+function rehypeToc() {
+  const tocOptions = {
+    nav: true,
+    headings: ['h2', 'h3', 'h4'],
+    position: 'afterbegin',
+    cssClasses: {},
+  } as any;
 
-  return {
-    ...nav,
-    children: [
-      {
-        ...ol,
-        children: [
-          {
-            type: 'element',
-            tagName: 'li',
-            properties: { className: 'toc-item toc-item-h2' },
-            children: [
-              {
-                type: 'element',
-                tagName: 'a',
-                properties: { href: '#overview', className: 'toc-link toc-link-h1' },
-                children: [{ type: 'text', value: 'Overview' }],
-              },
-            ],
-          },
-          ...ol.children,
-        ],
-      },
-    ],
+  return (tree) => {
+    const headings = findHeadings(tree, tocOptions);
+    if (!headings.length) return tree;
+    const toc = createTOC(
+      [
+        {
+          type: 'element',
+          tagName: 'h2',
+          properties: { id: 'overview' },
+          children: [{ type: 'text', value: 'Overview' } as any],
+        },
+        ...headings,
+      ],
+      tocOptions
+    );
+    return {
+      type: 'root',
+      children: [
+        // <aside> element with toc
+        {
+          type: 'element',
+          tagName: 'aside',
+          children: [toc],
+          properties: { className: 'toc-wrapper', 'aria-label': 'Table of contents' },
+        },
+        // <main> element for the actual page content
+        {
+          type: 'element',
+          tagName: 'main',
+          children: tree.children,
+        },
+      ] as any[],
+    };
   };
 }
