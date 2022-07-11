@@ -5,7 +5,7 @@
 import cx from 'classnames';
 import React from 'react';
 import { useTheme } from '../utils';
-import '@itwin/itwinui-css/css/wizard.css';
+import '@itwin/itwinui-css/css/stepper.css';
 import { Step } from './Step';
 
 export type WizardLocalization = {
