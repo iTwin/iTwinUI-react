@@ -405,12 +405,14 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
           )}
           {isMultipleEnabled(selectedItems, multiple) ? (
             <>
+              {/* Either render custom multiple selected items provided by user */}
               {multipleSelectedItemRendererType(
                 selectedItemRenderer,
                 multiple,
               ) &&
                 selectedItems &&
                 selectedItemRenderer(selectedItems)}
+              {/* Or render multiple selected items using `SelectTag` and handling overflow */}
               {!selectedItemRenderer && (
                 <span className='iui-content'>
                   <div className='iui-select-tag-container' ref={containerRef}>
@@ -430,9 +432,11 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
             </>
           ) : (
             <>
+              {/* Either render custom selected item provided by user */}
               {singleSelectedItemRendererType(selectedItemRenderer, multiple) &&
                 selectedItems &&
                 selectedItemRenderer(selectedItems)}
+              {/* Or render selected item's label */}
               {selectedItems && !selectedItemRenderer && (
                 <>
                   {selectedItems.icon &&
