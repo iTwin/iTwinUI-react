@@ -273,6 +273,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   // Call user-defined onChange when the value actually changes
   React.useEffect(() => {
+    // Prevent user-defined onChange to be called on mount
     if (!mounted.current) {
       mounted.current = true;
       return;
