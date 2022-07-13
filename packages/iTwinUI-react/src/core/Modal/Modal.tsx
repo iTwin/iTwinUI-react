@@ -4,13 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {
-  CommonProps,
-  useTheme,
-  getContainer,
-  getDocument,
-  FocusTrap,
-} from '../utils';
+import { CommonProps, useTheme, getContainer, getDocument } from '../utils';
 import '@itwin/itwinui-css/css/dialog.css';
 import { Dialog, DialogMainProps } from '../Dialog';
 
@@ -89,7 +83,6 @@ export const Modal = (props: ModalProps) => {
     closeOnExternalClick = true,
     onClose,
     title,
-    onKeyDown,
     children,
     modalRootId = 'iui-react-portal-container',
     ownerDocument = getDocument(),
@@ -108,14 +101,15 @@ export const Modal = (props: ModalProps) => {
         closeOnExternalClick={closeOnExternalClick}
         isDismissible={isDismissible}
         onClose={onClose}
+        ownerDocument={ownerDocument}
+        preventBodyScroll
+        trapFocus
       >
-        <Dialog.Backdrop onKeyDown={onKeyDown} ownerDocument={ownerDocument} />
-        <FocusTrap>
-          <Dialog.Main aria-modal {...rest}>
-            <Dialog.TitleBar>{title}</Dialog.TitleBar>
-            {children}
-          </Dialog.Main>
-        </FocusTrap>
+        <Dialog.Backdrop />
+        <Dialog.Main aria-modal {...rest}>
+          <Dialog.TitleBar>{title}</Dialog.TitleBar>
+          {children}
+        </Dialog.Main>
       </Dialog>,
       container,
     )

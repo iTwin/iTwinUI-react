@@ -4,9 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { useTheme } from '../utils';
+import { useMergedRefs, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/dialog.css';
 import { DialogContextProps, useDialogContext } from './DialogContext';
+import { CSSTransition } from 'react-transition-group';
 
 export type DialogMainProps = {
   /**
@@ -18,7 +19,7 @@ export type DialogMainProps = {
    * Content of the dialog.
    */
   children: React.ReactNode;
-} & Pick<DialogContextProps, 'isOpen'> &
+} & Omit<DialogContextProps, 'closeOnExternalClick'> &
   React.ComponentPropsWithRef<'div'>;
 
 /**
@@ -49,28 +50,70 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
       children,
       styleType = 'default',
       isOpen = dialogContext.isOpen,
+      isDismissible = dialogContext.isDismissible,
+      onClose = dialogContext.onClose,
+      closeOnEsc = dialogContext.closeOnEsc,
+      onKeyDown,
+      style,
       ...rest
     } = props;
 
     useTheme();
 
+    const dialogRef = React.useRef<HTMLDivElement>(null);
+    const refs = useMergedRefs(dialogRef, ref);
+
+    const previousFocusedElement = React.useRef<HTMLElement | null>();
+    React.useLayoutEffect(() => {
+      if (isOpen) {
+        previousFocusedElement.current = document.activeElement as HTMLElement;
+        dialogRef.current?.focus();
+      } else {
+        previousFocusedElement.current?.focus();
+      }
+      const modalOverlayRef = dialogRef.current;
+      return () => {
+        modalOverlayRef?.contains(document.activeElement) &&
+          previousFocusedElement.current?.focus();
+      };
+    }, [isOpen]);
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+      // Prevents React from resetting its properties
+      event.persist();
+      if (isDismissible && closeOnEsc && event.key === 'Escape' && onClose) {
+        onClose(event);
+      }
+      onKeyDown?.(event);
+    };
+
     return (
-      <div
-        className={cx(
-          'iui-dialog',
-          {
-            'iui-dialog-default': styleType === 'default',
-            'iui-dialog-full-page': styleType === 'fullPage',
-            'iui-dialog-visible': isOpen,
-          },
-          className,
-        )}
-        role='dialog'
-        ref={ref}
-        {...rest}
+      <CSSTransition
+        in={isOpen}
+        classNames='iui-dialog-animation'
+        timeout={{ exit: 600 }}
+        unmountOnExit={true}
       >
-        {children}
-      </div>
+        <div
+          className={cx(
+            'iui-dialog',
+            {
+              'iui-dialog-default': styleType === 'default',
+              'iui-dialog-full-page': styleType === 'fullPage',
+              'iui-dialog-visible': isOpen,
+            },
+            className,
+          )}
+          role='dialog'
+          ref={refs}
+          onKeyDown={handleKeyDown}
+          tabIndex={-1}
+          style={{ outline: 0, ...style }}
+          {...rest}
+        >
+          {children}
+        </div>
+      </CSSTransition>
     );
   },
 );
