@@ -23,6 +23,17 @@ const isSameDay = (a: Date | undefined, b: Date | undefined) => {
   );
 };
 
+const isInDateRange = (
+  a: Date | undefined,
+  b: Date | undefined,
+  c: Date | undefined,
+) => {
+  a && a.setHours(0, 0, 0, 0);
+  b && b.setHours(0, 0, 0, 0);
+  c && c.setHours(0, 0, 0, 0);
+  return a && b && c && a > b && a < c;
+};
+
 const defaultMonths = [
   'January',
   'February',
@@ -136,6 +147,14 @@ export type DatePickerProps = {
    * @default false
    */
   showYearSelection?: boolean;
+  /**
+   * Selected end-date (only for date-range support.)
+   */
+  endDate?: Date;
+  /**
+   * Selected start-date (only for date-range support.)
+   */
+  startDate?: Date;
 } & Omit<TimePickerProps, 'date' | 'onChange' | 'setFocusHour'>;
 
 /**
@@ -158,6 +177,8 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
     minuteStep,
     secondStep,
     showYearSelection = false,
+    startDate,
+    endDate,
     ...rest
   } = props;
 
@@ -168,6 +189,8 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
   const longDays = localizedNames?.days ?? defaultLongDays;
 
   const [selectedDay, setSelectedDay] = React.useState(date);
+  const [selectedStartDay, setSelectedStartDay] = React.useState(startDate);
+  const [selectedEndDay, setSelectedEndDay] = React.useState(endDate);
   const [focusedDay, setFocusedDay] = React.useState(selectedDay ?? new Date());
   const [displayedMonthIndex, setDisplayedMonthIndex] = React.useState(
     selectedDay ? selectedDay.getMonth() : new Date().getMonth(),
@@ -196,12 +219,14 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
   React.useEffect(() => {
     const currentDate = new Date();
     setSelectedDay(date);
+    setSelectedStartDay(startDate);
+    setSelectedEndDay(endDate);
     setFocusedDay(date ?? currentDate);
     setMonthAndYear(
       date ? date.getMonth() : currentDate.getMonth(),
       date ? date.getFullYear() : currentDate.getFullYear(),
     );
-  }, [date, setMonthAndYear]);
+  }, [date, setMonthAndYear, startDate, endDate]);
 
   const days = React.useMemo(() => {
     let offsetToFirst = new Date(
@@ -356,6 +381,18 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
 
     if (isSameDay(day, selectedDay)) {
       dayClass += '-selected';
+    }
+
+    if (isSameDay(day, selectedStartDay)) {
+      dayClass += '-range-start';
+    }
+
+    if (isSameDay(day, selectedEndDay)) {
+      dayClass += '-range-end';
+    }
+
+    if (isInDateRange(day, selectedStartDay, selectedEndDay)) {
+      dayClass += '-range';
     }
 
     if (isSameDay(day, new Date())) {
