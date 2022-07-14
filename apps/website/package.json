@@ -19,20 +19,12 @@
     "@jsdevtools/rehype-toc": "3.0.2",
     "@types/react": "^18.0.0",
     "astro": "1.0.0-beta.70",
+    "postcss-preset-env": "^7.7.1",
     "prettier": "2.7.1",
     "prettier-plugin-astro": "^0.1.1",
-    "postcss-preset-env": "^7.7.1",
     "react-docgen-typescript": "^2.2.2",
     "rehype-autolink-headings": "^6.1.1",
-    "rehype-slug": "^5.0.1"
-  },
-  "postcss": {
-    "plugins": {
-      "postcss-preset-env": {
-        "features": {
-          "nesting-rules": "true"
-        }
-      }
-    }
+    "rehype-slug": "^5.0.1",
+    "sass": "^1.53.0"
   }
 }

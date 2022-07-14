@@ -1,14 +1,14 @@
 ---
-export type Props = { unhide?: boolean; }
+export type Props = { unhide?: boolean };
 
 const { unhide = false } = Astro.props;
 ---
 
-<span class:list={['visually-hidden', { 'not-visually-hidden' : unhide }]}>
-  <slot />
+<span class:list={['visually-hidden', { 'not-visually-hidden': unhide }]}>
+  <slot></slot>
 </span>
 
-<style>
+<style lang='scss'>
   .visually-hidden {
     position: absolute;
     width: 1px;

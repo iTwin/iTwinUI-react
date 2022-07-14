@@ -37,7 +37,7 @@ const { content = {} } = Astro.props;
       {content.title ? `${content.title} | ${CONFIG.SITE.title}` : CONFIG.SITE.title}
     </title>
 
-    <style is:global>
+    <style is:global lang='scss'>
       * {
         margin: 0;
         box-sizing: border-box;
@@ -45,10 +45,31 @@ const { content = {} } = Astro.props;
       }
 
       :root {
+        // #region LIGHT
         --color-background-1--light: white;
         --color-background-2--light: white;
         --color-background-3--light: white;
+        // #endregion
 
+        // #region DARK
+        --color-background-1--dark: hsl(221, 26%, 22%);
+        --color-background-2--dark: hsl(224, 30%, 17%);
+        --color-background-3--dark: white;
+        --color-text--dark: hsl(210deg 6% 85%);
+        --color-subtext--dark: hsl(212deg 11% 68%);
+        --color-gradient-1--dark: hsl(206deg 28% 35%);
+        --color-gradient-2--dark: hsl(207deg 28% 13%);
+        --color-gradient--dark: linear-gradient(
+          45deg,
+          var(--color-gradient-1--dark),
+          var(--color-gradient-2--dark)
+        );
+        --color-active--dark: hsl(206deg 38% 25%);
+        --color-line-1--dark: hsl(205deg 13% 54%);
+        --color-line-2--dark: hsl(205deg 13% 35%);
+        // #endregion
+
+        // #region Current
         --color-highlight-1: hsl(314, 57%, 88%);
         --color-highlight-2: hsl(232, 79%, 82%);
         --color-highlight-3: hsl(186, 78%, 79%);
@@ -67,23 +88,6 @@ const { content = {} } = Astro.props;
           var(--color-highlight-3),
           var(--color-highlight-1)
         );
-
-        --color-background-1--dark: hsl(221, 26%, 22%);
-        --color-background-2--dark: hsl(224, 30%, 17%);
-        --color-background-3--dark: white;
-        --color-text--dark: hsl(210deg 6% 85%);
-        --color-subtext--dark: hsl(212deg 11% 68%);
-        --color-gradient-1--dark: hsl(206deg 28% 35%);
-        --color-gradient-2--dark: hsl(207deg 28% 13%);
-        --color-gradient--dark: linear-gradient(
-          45deg,
-          var(--color-gradient-1--dark),
-          var(--color-gradient-2--dark)
-        );
-        --color-active--dark: hsl(206deg 38% 25%);
-        --color-line-1--dark: hsl(205deg 13% 54%);
-        --color-line-2--dark: hsl(205deg 13% 35%);
-
         --color-background-1: var(--color-background-1--dark);
         --color-background-2: var(--color-background-2--dark);
         --color-background-3: var(--color-background-3--dark);
@@ -96,6 +100,7 @@ const { content = {} } = Astro.props;
         --color-active: var(--color-active--dark);
         --color-line-1: var(--color-line-1--dark);
         --color-line-2: var(--color-line-2--dark);
+        // #endregion
 
         --font-body: system-ui, sans-serif;
         --font-mono: ui-monospace, monospace;

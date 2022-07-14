@@ -115,7 +115,7 @@ const currentPage = new URL(Astro.request.url).pathname;
     </div>
   </main>
 
-  <style>
+  <style lang='scss'>
     body {
       display: grid;
       grid-template: 'header' auto 'main' 1fr / 100%;
@@ -300,7 +300,7 @@ const currentPage = new URL(Astro.request.url).pathname;
       padding: var(--space-7);
     }
 
-    main > * {
+    main>* {
       max-width: 1200px;
     }
 
