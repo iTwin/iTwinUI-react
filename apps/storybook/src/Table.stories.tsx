@@ -2422,7 +2422,7 @@ Virtualized.argTypes = {
   data: { control: { disable: true } },
 };
 
-export const ScrollToItem: Story<Partial<TableProps>> = (args) => {
+export const ScrollToRow: Story<Partial<TableProps>> = (args) => {
   type TableStoryDataType = {
     id: string;
     name: string;
@@ -2442,11 +2442,13 @@ export const ScrollToItem: Story<Partial<TableProps>> = (args) => {
             id: 'name',
             Header: 'Name',
             accessor: 'name',
+            Filter: tableFilters.TextFilter(),
           },
           {
             id: 'description',
             Header: 'Description',
             accessor: 'description',
+            Filter: tableFilters.TextFilter(),
           },
           {
             id: 'click-me',
@@ -2483,23 +2485,20 @@ export const ScrollToItem: Story<Partial<TableProps>> = (args) => {
       enableVirtualization
       columns={columns}
       emptyTableContent='No data.'
+      isSortable
       {...args}
       style={{ maxHeight: '90vh' }}
       data={data}
-      getRowId={React.useCallback(
-        (rowData: TableStoryDataType) => rowData.id,
-        [],
-      )}
       scrollToRow={React.useCallback(
         (rows: Row<TableStoryDataType>[]) =>
-          rows.findIndex((row) => row.id === data[12345].id),
+          rows.findIndex((row) => row.original.id === data[12345].id),
         [data],
       )}
     />
   );
 };
 
-ScrollToItem.argTypes = {
+ScrollToRow.argTypes = {
   isLoading: { control: { disable: true } },
   data: { control: { disable: true } },
 };
