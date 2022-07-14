@@ -37,6 +37,7 @@ const { content = {} } = Astro.props;
       {content.title ? `${content.title} | ${CONFIG.SITE.title}` : CONFIG.SITE.title}
     </title>
 
+    <!-- Resets -->
     <style is:global lang='scss'>
       * {
         margin: 0;
@@ -44,14 +45,29 @@ const { content = {} } = Astro.props;
         line-height: calc(1em + 0.5rem);
       }
 
+      p,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-weight: normal;
+        padding: 0;
+        max-width: 75ch;
+      }
+    </style>
+
+    <!-- Variables -->
+    <style is:global lang='scss'>
       :root {
-        // #region LIGHT
+        // #region Light
         --color-background-1--light: white;
         --color-background-2--light: white;
         --color-background-3--light: white;
         // #endregion
 
-        // #region DARK
+        // #region Dark
         --color-background-1--dark: hsl(221, 26%, 22%);
         --color-background-2--dark: hsl(224, 30%, 17%);
         --color-background-3--dark: white;
@@ -107,7 +123,7 @@ const { content = {} } = Astro.props;
 
         /* TODO: rename these? ⬇️  */
 
-        /* @link https://utopia.fyi/type/calculator?c=320,14,1.125,1200,18,1.2,4,3,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l */
+        // #region Typography: https://utopia.fyi/type/calculator?c=320,14,1.125,1200,18,1.2,4,3,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l
         --type--3: clamp(0.61rem, calc(0.6rem + 0.07vw), 0.65rem);
         --type--2: clamp(0.69rem, calc(0.66rem + 0.16vw), 0.78rem);
         --type--1: clamp(0.78rem, calc(0.72rem + 0.29vw), 0.94rem);
@@ -116,8 +132,9 @@ const { content = {} } = Astro.props;
         --type-2: clamp(1.11rem, calc(0.92rem + 0.93vw), 1.62rem);
         --type-3: clamp(1.25rem, calc(0.99rem + 1.27vw), 1.94rem);
         --type-4: clamp(1.4rem, calc(1.06rem + 1.69vw), 2.33rem);
+        // #endregion
 
-        /* @link https://utopia.fyi/space/calculator?c=320,14,1.2,1200,18,1.25,5,2,&s=0.75|0.5|0.25|0.125,1.25|1.5|2,s-l */
+        // #region Spacing: https://utopia.fyi/space/calculator?c=320,14,1.2,1200,18,1.25,5,2,&s=0.75|0.5|0.25|0.125,1.25|1.5|2,s-l
         --space-0: clamp(0.13rem, calc(0.13rem + 0vw), 0.13rem);
         --space-1: clamp(0.25rem, calc(0.23rem + 0.11vw), 0.31rem);
         --space-2: clamp(0.44rem, calc(0.39rem + 0.23vw), 0.56rem);
@@ -126,8 +143,12 @@ const { content = {} } = Astro.props;
         --space-5: clamp(1.13rem, calc(1.01rem + 0.57vw), 1.44rem);
         --space-6: clamp(1.31rem, calc(1.18rem + 0.68vw), 1.69rem);
         --space-7: clamp(1.75rem, calc(1.57rem + 0.91vw), 2.25rem);
+        // #endregion
       }
+    </style>
 
+    <!-- Page layout, etc -->
+    <style lang='scss'>
       html {
         background-color: var(--color-background-2);
         color: var(--color-text);
