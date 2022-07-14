@@ -155,7 +155,8 @@ const currentPage = new URL(Astro.request.url).pathname;
       align-items: center;
       gap: var(--space-6);
       margin: 96px 0;
-      overflow-x: hidden;
+      overflow-x: auto;
+      max-width: 90vw;
     }
 
     .code-sample {
@@ -255,13 +256,13 @@ const currentPage = new URL(Astro.request.url).pathname;
     }
 
     .library-list {
-      display: flex;
+      max-width: 90vw;
+      display: grid;
       gap: var(--space-6);
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
     }
 
     .library-item {
-      width: 414px;
-      height: 222px;
       padding: var(--space-5);
       text-align: start;
       border: 1px solid var(--color-text);
@@ -269,6 +270,7 @@ const currentPage = new URL(Astro.request.url).pathname;
     }
 
     .subheading {
+      color: var(--color-subtext);
       padding-bottom: var(--space-7);
     }
 
