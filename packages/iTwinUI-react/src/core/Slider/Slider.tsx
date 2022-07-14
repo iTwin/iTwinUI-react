@@ -10,7 +10,8 @@ import {
   getBoundedValue,
   useEventListener,
 } from '../utils';
-import '@itwin/itwinui-css/css/slider.css';
+// import '@itwin/itwinui-css/css/slider.css';
+import './slider.css';
 import { TooltipProps } from '../Tooltip';
 import { Track } from './Track';
 import { Thumb } from './Thumb';
@@ -24,9 +25,22 @@ export type TrackDisplayMode =
   | 'odd-segments'
   | 'even-segments';
 
-const getPercentageOfRectangle = (rect: DOMRect, pointer: number) => {
-  const position = getBoundedValue(pointer, rect.left, rect.right);
-  return (position - rect.left) / rect.width;
+export enum Orientation {
+  horizontal,
+  vertical,
+}
+
+const getPercentageOfRectangle = (
+  rect: DOMRect,
+  pointer: number,
+  orientation: Orientation,
+) => {
+  if (orientation === Orientation.horizontal) {
+    const position = getBoundedValue(pointer, rect.left, rect.right);
+    return (position - rect.left) / rect.width;
+  }
+  const position = getBoundedValue(pointer, rect.top, rect.bottom);
+  return (rect.bottom - position) / rect.height;
 };
 
 const getClosestValueIndex = (values: number[], pointerValue: number) => {
@@ -174,6 +188,13 @@ export type SliderProps = {
    * high-volume of updates will occur when dragging.
    */
   onUpdate?: (values: ReadonlyArray<number>) => void;
+  /**
+   * The orientation of slider. Possible values:
+   * 'horizontal' - Slider is horizontal and fills from left to right. Default.
+   * 'vertical'- Slider is vertical and fills from bottom to top.
+   * @default 'horizontal'
+   */
+  orientation?: Orientation;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -204,6 +225,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       thumbProps,
       className,
       railContainerProps,
+      orientation = Orientation.horizontal,
       ...rest
     } = props;
 
@@ -272,7 +294,8 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         if (containerRef.current && undefined !== activeThumbIndex) {
           const percent = getPercentageOfRectangle(
             containerRef.current.getBoundingClientRect(),
-            event.clientX,
+            event.clientY,
+            orientation,
           );
           let pointerValue = min + (max - min) * percent;
           pointerValue = roundValueToClosestStep(pointerValue, step, min);
@@ -299,6 +322,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         currentValues,
         onUpdate,
         onChange,
+        orientation,
       ],
     );
 
@@ -307,6 +331,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         if (activeThumbIndex === undefined) {
           return;
         }
+        console.log('handlePointerMove is called');
         event.preventDefault();
         event.stopPropagation();
         updateThumbValue(event, 'onUpdate');
@@ -351,6 +376,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
           const percent = getPercentageOfRectangle(
             containerRef.current.getBoundingClientRect(),
             event.clientX,
+            orientation,
           );
           let pointerValue = min + (max - min) * percent;
           pointerValue = roundValueToClosestStep(pointerValue, step, min);
@@ -382,6 +408,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         getAllowableThumbRange,
         onChange,
         onUpdate,
+        orientation,
       ],
     );
 
@@ -437,6 +464,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         ref={ref}
         className={cx(
           'iui-slider-component-container',
+          { 'iui-vertical': orientation === Orientation.vertical },
           { 'iui-disabled': disabled },
           className,
         )}
@@ -473,6 +501,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
                 step={step}
                 sliderMin={min}
                 sliderMax={max}
+                orientation={orientation}
               />
             );
           })}

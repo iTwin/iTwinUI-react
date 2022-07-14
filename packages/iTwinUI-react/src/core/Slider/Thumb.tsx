@@ -5,6 +5,7 @@
 import React from 'react';
 import cx from 'classnames';
 import { Tooltip, TooltipProps } from '../Tooltip';
+import { Orientation } from './Slider';
 
 export type ThumbProps = {
   /**
@@ -59,6 +60,13 @@ export type ThumbProps = {
    * Additional props for Thumb.
    */
   thumbProps?: React.HTMLAttributes<HTMLDivElement>;
+  /**
+   * The orientation of slider to which this Thumb is attached to. Possible values:
+   * 'horizontal' - Slider is horizontal and fills from left to right. Default.
+   * 'vertical'- Slider is vertical and fills from bottom to top.
+   * @default 'horizontal'
+   */
+  orientation?: Orientation;
 };
 
 /**
@@ -81,6 +89,7 @@ export const Thumb = (props: ThumbProps) => {
     tooltipProps,
     thumbProps,
     disabled,
+    orientation,
   } = props;
   const thumbRef = React.useRef<HTMLDivElement>(null);
   const handleOnKeyDown = React.useCallback(
@@ -144,7 +153,14 @@ export const Thumb = (props: ThumbProps) => {
         {...rest}
         data-index={index}
         ref={thumbRef}
-        style={{ ...style, left: `${leftPercent}%` }}
+        style={{
+          ...style,
+          left:
+            orientation === Orientation.horizontal
+              ? `${leftPercent}%`
+              : undefined,
+          bottom: `${leftPercent}%`,
+        }}
         className={cx(
           'iui-slider-thumb',
           { 'iui-active': isActive },
