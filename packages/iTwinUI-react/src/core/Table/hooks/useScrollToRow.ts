@@ -20,19 +20,23 @@ export function useScrollToRow<T extends Record<string, unknown>>({
   page,
   paginatorRenderer,
   scrollToRow,
+  onBottomReached,
 }: ScrollToRowProps<T>): ScrollToRow<T> {
   const rowRefs = React.useRef<Record<string, HTMLDivElement>>({});
+
+  const pageRef = React.useRef<Row<T>[]>(page);
+  pageRef.current = page;
 
   // For virtualized tables, all we need to do is pass the index of the item
   // to the VirtualScroll component
   const scrollToIndex = React.useMemo((): number | undefined => {
-    if (!scrollToRow || paginatorRenderer) {
+    if (!scrollToRow || paginatorRenderer || onBottomReached) {
       return undefined;
     }
 
-    const index = scrollToRow(page);
+    const index = scrollToRow(pageRef.current);
     return index < 0 ? undefined : index;
-  }, [page, paginatorRenderer, scrollToRow]);
+  }, [onBottomReached, paginatorRenderer, scrollToRow]);
 
   // For non-virtualized tables, we need to add a ref to each row
   // and scroll to the element
@@ -46,8 +50,8 @@ export function useScrollToRow<T extends Record<string, unknown>>({
       return;
     }
 
-    rowRefs.current[page[scrollToIndex].id]?.scrollIntoView();
-  }, [enableVirtualization, page, scrollToIndex]);
+    rowRefs.current[pageRef.current[scrollToIndex].id]?.scrollIntoView();
+  }, [enableVirtualization, scrollToIndex]);
 
   const tableRowRef = React.useCallback((row: Row<T>) => {
     return (element: HTMLDivElement) => {
