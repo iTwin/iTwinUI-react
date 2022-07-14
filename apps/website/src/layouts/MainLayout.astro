@@ -135,7 +135,7 @@ const currentPage = new URL(Astro.request.url).pathname;
           }
         }
 
-        & > :global(h1 + p) {
+        > :global(:is(p, ul)) {
           color: var(--color-subtext);
           font-size: var(--type-1);
         }
