@@ -44,7 +44,12 @@ exampleCode1: |
             onClose={onClose}
           >
             <ModalContent>
-              A dialog informs users about a task and can contain critical information, require decisions, or involve multiple tasks. Dialogs appear in front of app content to provide critical information or ask for a decision. Dialogs disable all app functionality when they appear, and remain on screen until confirmed, dismissed, or a required action has been taken.
+              A dialog informs users about a task and can contain critical 
+              information, require decisions, or involve multiple tasks. 
+              Dialogs appear in front of app content to provide critical information 
+              or ask for a decision. Dialogs disable all app functionality when 
+              they appear, and remain on screen until confirmed, dismissed, 
+              or a required action has been taken.
             </ModalContent>
             <ModalButtonBar>
               <Button styleType='high-visibility' onClick={primaryButtonHandle}>
@@ -79,9 +84,20 @@ The dialog should be located in the upper half of the screen, because on smaller
 
 When the 400px minimum width conflicts with the 50% maximum of the screen width, then the dialog spans the entire width of the device. This mobile dialog can span the entire height of the screen but should not use scroll bars.
 
-### Informational
+## Types
 
-Default style when there is no defined status for the alert. Inform users about events that they should be aware of, but that are not disruptive to their work.
+### Dismissible dialogs
+
+A dismissible dialog contains information that is not required. The dialog can be dismissed multiple different ways:
+
+- Clicking one of the action buttons.
+- Clicking on “X” button.
+- Pressing the ESC key on your keyboard.
+- Clicking elsewhere outside the dialog window.
+
+The “X” icon bears the borderless button style which appears on cursor hover.
+
+## User guidelines
 
 ## Props
 
