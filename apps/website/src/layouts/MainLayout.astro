@@ -1,11 +1,10 @@
 ---
-import Global from './Global.astro';
+import Global from './GlobalLayout.astro';
 import Header from '../components/Header.astro';
 import LeftSidebar from '../components/LeftSidebar.astro';
 
 const { content = {} } = Astro.props;
 const currentPage = new URL(Astro.request.url).pathname;
-
 ---
 
 <Global content={content} currentPage={currentPage}>
@@ -18,7 +17,7 @@ const currentPage = new URL(Astro.request.url).pathname;
       <h1 class='content-title' id='overview'>{content.title}</h1>
     </div>
     <div>
-      <slot />
+      <slot></slot>
     </div>
   </div>
 
@@ -61,7 +60,7 @@ const currentPage = new URL(Astro.request.url).pathname;
       align-items: start;
       grid-template-rows: auto 1fr;
 
-      &> :global(*) {
+      & > :global(*) {
         width: 100%;
         max-width: min(100%, 65ch);
         padding: 0.5rem 0;
@@ -97,7 +96,7 @@ const currentPage = new URL(Astro.request.url).pathname;
           margin: 0;
         }
 
-        & :global(li[data-active=true] > a:first-of-type) {
+        & :global(li[data-active='true'] > a:first-of-type) {
           font-weight: bold;
         }
       }
@@ -110,10 +109,10 @@ const currentPage = new URL(Astro.request.url).pathname;
         display: grid;
         gap: 0.5rem;
 
-        &> :global(:is(h1, h2, h3, h4)) {
+        & > :global(:is(h1, h2, h3, h4)) {
           text-decoration: none;
 
-          &> :global(a) {
+          & > :global(a) {
             color: inherit;
             text-decoration: none;
             position: relative;
@@ -136,7 +135,7 @@ const currentPage = new URL(Astro.request.url).pathname;
           }
         }
 
-        &> :global(h1 + p) {
+        & > :global(h1 + p) {
           color: var(--color-subtext);
           font-size: var(--type-1);
         }
@@ -147,8 +146,8 @@ const currentPage = new URL(Astro.request.url).pathname;
 
 <script>
   // adds data-active to the headings that are currently in viewport
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
       const id = entry.target.getAttribute('id');
       if (entry.intersectionRatio > 0) {
         document.querySelector(`nav li a[href='#${id}']`).parentElement.dataset.active = 'true';

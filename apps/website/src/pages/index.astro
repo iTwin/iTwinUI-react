@@ -1,37 +1,31 @@
 ---
-import Global from '../layouts/Global.astro';
+import Global from '../layouts/GlobalLayout.astro';
 import Header from '../components/Header.astro';
 
 const currentPage = new URL(Astro.request.url).pathname;
 ---
 
 <Global currentPage={currentPage}>
-  <div class="background-wrapper">
-    <div class='background' />
+  <div class='background-wrapper'>
+    <div class='background'></div>
   </div>
 
   <Header class='header' />
   <main>
     <div class='title-box'>
-      <h1>For a <span class="highlight-text">UNIFIED</span> experience</h1>
-      <h4 class="subheading">By documenting and assembling a reference site of iTwin components and patterns, we were
-        able to speed up
-        our
-        process and solve some internal communication problems.</h4>
+      <h1>For a <span class='highlight-text'>UNIFIED</span> experience</h1>
+      <h4 class='subheading'>
+        By documenting and assembling a reference site of iTwin components and patterns, we were
+        able to speed up our process and solve some internal communication problems.
+      </h4>
       <div class='button-area'>
-        <a class='main-button' href="/docs/introduction">
-          Documentation
-        </a>
-        <a class='secondary-button' href="/docs/introduction">
-          Get started
-        </a>
+        <a class='main-button' href='/docs/introduction'> Documentation</a>
+        <a class='secondary-button' href='/docs/introduction'> Get started</a>
       </div>
 
-      <div class="code-blocks">
-        <div class='code-sample code-sample-1'>
-        </div>
-        <div class='code-sample code-sample-2'>
-        </div>
+      <div class='code-blocks'>
+        <div class='code-sample code-sample-1'></div>
+        <div class='code-sample code-sample-2'></div>
         <div class='code-sample code-sample-3'></div>
         <div class='code-sample code-sample-1'></div>
         <div class='code-sample code-sample-2'></div>
@@ -40,48 +34,49 @@ const currentPage = new URL(Astro.request.url).pathname;
     <div class='centered-content'>
       <h1 class='highlight-text'>Why iTwinUI?</h1>
       <div class='column-content'>
-        <div class="text-with-icon">
-          <div class='consistent-icon' />
+        <div class='text-with-icon'>
+          <div class='consistent-icon'></div>
           <div>
             <h2 class='colored-text'>Consistent</h2>
 
-            <p>Our components and layouts library was designed specifically for apps within the
-              iTwin
-              space. It allows creating seamless front-end environments consistent with the iTwin experience.</p>
+            <p>
+              Our components and layouts library was designed specifically for apps within the iTwin
+              space. It allows creating seamless front-end environments consistent with the iTwin
+              experience.
+            </p>
           </div>
         </div>
-        <div class="text-with-icon">
-          <div class='accessible-icon' />
+        <div class='text-with-icon'>
+          <div class='accessible-icon'></div>
           <div>
             <h2 class='colored-text'>Accessible</h2>
 
-            <p>The web is for everyone. All our components were designed with accessibility in mind
-              for an inclusive,
-              comfortable experience that leaves no one behind. </p>
+            <p>
+              The web is for everyone. All our components were designed with accessibility in mind
+              for an inclusive, comfortable experience that leaves no one behind.
+            </p>
           </div>
         </div>
-        <div class="text-with-icon">
-          <div class='no-fuss-icon' />
+        <div class='text-with-icon'>
+          <div class='no-fuss-icon'></div>
           <div>
             <h2 class='colored-text'>No fuss</h2>
 
-            <p>Skip the brainstorming sessions. Our components and layouts are entirely
-              ready-to-use,
-              so you can
-              focus
-              on
-              getting things done. </p>
+            <p>
+              Skip the brainstorming sessions. Our components and layouts are entirely ready-to-use,
+              so you can focus on getting things done.
+            </p>
           </div>
         </div>
-        <div class="text-with-icon">
-          <div class='evolving-icon' />
+        <div class='text-with-icon'>
+          <div class='evolving-icon'></div>
           <div>
             <h2 class='colored-text'>Evolving</h2>
 
-            <p>iTwin UI is maintained daily and frequently updated by its supporting team, so you
-              always have access
-              to
-              the latest version of our assets. </p>
+            <p>
+              iTwin UI is maintained daily and frequently updated by its supporting team, so you
+              always have access to the latest version of our assets.
+            </p>
           </div>
         </div>
       </div>
@@ -89,27 +84,28 @@ const currentPage = new URL(Astro.request.url).pathname;
     <div class='centered-content'>
       <h1 class='highlight-text'>Our library</h1>
       <div class='library-list'>
-        <a class='library-item' href="/docs/introduction">
+        <a class='library-item' href='/docs/introduction'>
           <div>
-            <h3>Components
-            </h3>
-            <p>See our extensive library of pre-coded components.
-              You can view live demos of how they behave in their
-              environment to determine if they are the right fit.</p>
+            <h3>Components</h3>
+            <p>
+              See our extensive library of pre-coded components. You can view live demos of how they
+              behave in their environment to determine if they are the right fit.
+            </p>
           </div>
         </a>
-        <a class='library-item' href="https://itwin.github.io/iTwinUI-layouts/" target="_blank">
+        <a class='library-item' href='https://itwin.github.io/iTwinUI-layouts/' target='_blank'>
           <div>
             <h3>Layouts</h3>
-            <p>Full-page layouts built for maximizing your efficiency
-              when you need it the most.</p>
+            <p>Full-page layouts built for maximizing your efficiency when you need it the most.</p>
           </div>
         </a>
-        <a class='library-item' href="https://itwin.github.io/iTwinUI-icons/" target="_blank">
+        <a class='library-item' href='https://itwin.github.io/iTwinUI-icons/' target='_blank'>
           <div>
             <h3>Icons</h3>
-            <p>Hundreds of flexible, flat-styled icons in SVG format,
-              allowing for infinite scalability with zero quality loss.</p>
+            <p>
+              Hundreds of flexible, flat-styled icons in SVG format, allowing for infinite
+              scalability with zero quality loss.
+            </p>
           </div>
         </a>
       </div>
@@ -165,7 +161,6 @@ const currentPage = new URL(Astro.request.url).pathname;
       display: flex;
       justify-content: center;
       align-items: center;
-
     }
 
     .code-sample-1 {
@@ -305,7 +300,7 @@ const currentPage = new URL(Astro.request.url).pathname;
       padding: var(--space-7);
     }
 
-    main>* {
+    main > * {
       max-width: 1200px;
     }
 

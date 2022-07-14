@@ -8,8 +8,9 @@
     "editor.defaultFormatter": "vscode.markdown-language-features"
   },
   "[astro]": {
-    "editor.defaultFormatter": "astro-build.astro-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "prettier.documentSelectors": ["**/*.astro"],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },

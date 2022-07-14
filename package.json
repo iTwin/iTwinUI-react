@@ -2,10 +2,15 @@
   "name": "itwinui-monorepo",
   "version": "0.0.0",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*"
+    ],
+    "nohoist": [
+      "prettier-plugin-astro"
+    ]
+  },
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
@@ -30,7 +35,6 @@
     "ansi-regex": "^5.0.1",
     "postcss": "8",
     "nanoid": "^3.1.31",
-    "prettier": "2.2.1",
     "trim-newlines": "^3.0.1"
   },
   "lint-staged": {

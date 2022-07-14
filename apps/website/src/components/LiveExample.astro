@@ -4,7 +4,7 @@ import { getSandpackCssText } from '@codesandbox/sandpack-react';
 
 export type Props = {
   code: string;
-}
+};
 
 const { code } = Astro.props;
 const staticSandpackCss = getSandpackCssText();
@@ -32,7 +32,9 @@ const staticSandpackCss = getSandpackCssText();
     border-bottom-right-radius: 0.5rem;
   }
 </style>
-<style id='sandpack' set:html={staticSandpackCss} />
+<style id='sandpack' set:html={staticSandpackCss}>
+
+</style>
 
 <!--
 ⬇️ All my past efforts to prerender the component while JS loads.

@@ -25,21 +25,23 @@ const sidebarSections = SIDEBAR.reduce((col, item, i) => {
 <nav aria-labelledby='grid-left'>
   <ul class='nav-groups'>
     {sidebarSections.map((section) => (
-    <li>
-      <div class='nav-group'>
-        <h2 class='nav-group-title'>{section.text}</h2>
-        <ul>
-          {section.children.map((child) => (
-          <li class='nav-link'>
-            <a href={`${Astro.site.pathname}${child.link}`} aria-current={`${currentPageMatch===child.link ? 'page'
-              : 'false' }`}>
-              {child.text}
-            </a>
-          </li>
-          ))}
-        </ul>
-      </div>
-    </li>
+      <li>
+        <div class='nav-group'>
+          <h2 class='nav-group-title'>{section.text}</h2>
+          <ul>
+            {section.children.map((child) => (
+              <li class='nav-link'>
+                <a
+                  href={`${Astro.site.pathname}${child.link}`}
+                  aria-current={`${currentPageMatch === child.link ? 'page' : 'false'}`}
+                >
+                  {child.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </li>
     ))}
   </ul>
 </nav>
@@ -70,7 +72,7 @@ const sidebarSections = SIDEBAR.reduce((col, item, i) => {
     max-height: 100vh;
   }
 
-  .nav-groups>li+li {
+  .nav-groups > li + li {
     margin-top: 2rem;
   }
 
