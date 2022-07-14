@@ -13,7 +13,7 @@ const currentPage = new URL(Astro.request.url).pathname;
   <Header class='header' />
   <main>
     <div class='title-box'>
-      <h1>For a <span class="highlight-text">Unified</span> experience</h1>
+      <h1>For a <span class="highlight-text">UNIFIED</span> experience</h1>
       <h4 class="subheading">By documenting and assembling a reference site of iTwin components and patterns, we were
         able to speed up
         our
@@ -26,15 +26,16 @@ const currentPage = new URL(Astro.request.url).pathname;
           Get started
         </a>
       </div>
-    </div>
-    <div class="code-blocks">
-      <div class='code-sample code-sample-1'>
+
+      <div class="code-blocks">
+        <div class='code-sample code-sample-1'>
+        </div>
+        <div class='code-sample code-sample-2'>
+        </div>
+        <div class='code-sample code-sample-3'></div>
+        <div class='code-sample code-sample-1'></div>
+        <div class='code-sample code-sample-2'></div>
       </div>
-      <div class='code-sample code-sample-2'>
-      </div>
-      <div class='code-sample code-sample-3'></div>
-      <div class='code-sample code-sample-1'></div>
-      <div class='code-sample code-sample-2'></div>
     </div>
     <div class='centered-content'>
       <h1 class='highlight-text'>Why iTwinUI?</h1>
@@ -42,7 +43,7 @@ const currentPage = new URL(Astro.request.url).pathname;
         <div class="text-with-icon">
           <div class='consistent-icon' />
           <div>
-            <h3 class='colored-text'>Consistent</h3>
+            <h2 class='colored-text'>Consistent</h2>
 
             <p>Our components and layouts library was designed specifically for apps within the
               iTwin
@@ -52,7 +53,7 @@ const currentPage = new URL(Astro.request.url).pathname;
         <div class="text-with-icon">
           <div class='accessible-icon' />
           <div>
-            <h3 class='colored-text'>Accessible</h3>
+            <h2 class='colored-text'>Accessible</h2>
 
             <p>The web is for everyone. All our components were designed with accessibility in mind
               for an inclusive,
@@ -62,7 +63,7 @@ const currentPage = new URL(Astro.request.url).pathname;
         <div class="text-with-icon">
           <div class='no-fuss-icon' />
           <div>
-            <h3 class='colored-text'>No fuss</h3>
+            <h2 class='colored-text'>No fuss</h2>
 
             <p>Skip the brainstorming sessions. Our components and layouts are entirely
               ready-to-use,
@@ -75,7 +76,7 @@ const currentPage = new URL(Astro.request.url).pathname;
         <div class="text-with-icon">
           <div class='evolving-icon' />
           <div>
-            <h3 class='colored-text'>Evolving</h3>
+            <h2 class='colored-text'>Evolving</h2>
 
             <p>iTwin UI is maintained daily and frequently updated by its supporting team, so you
               always have access
@@ -149,18 +150,16 @@ const currentPage = new URL(Astro.request.url).pathname;
     }
 
     .code-blocks {
-      max-width: 1000px;
       display: flex;
       justify-self: center;
-      justify-content: center;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 22px;
-      margin: 126px 0;
+      gap: var(--space-6);
+      margin: 96px 0;
+      overflow-x: hidden;
     }
 
     .code-sample {
-      padding: 126p;
+      padding: var(--space-7);
       min-width: 300px;
       min-height: 300px;
       display: flex;
@@ -186,7 +185,7 @@ const currentPage = new URL(Astro.request.url).pathname;
     }
 
     .title-box {
-      margin-top: 128px;
+      margin-top: calc(var(--space-7) * 4);
       justify-self: center;
       display: flex;
       flex-direction: column;
@@ -196,7 +195,7 @@ const currentPage = new URL(Astro.request.url).pathname;
 
     .button-area {
       display: flex;
-      gap: 22px;
+      gap: var(--space-5);
     }
 
     .main-button {
@@ -237,13 +236,13 @@ const currentPage = new URL(Astro.request.url).pathname;
       flex-direction: column;
       justify-self: center;
       align-items: center;
-      margin: 126px 0;
+      margin: calc(var(--space-7) * 3) 0;
     }
 
     .column-content {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 66px;
+      gap: var(--space-7);
 
       @media (max-width: 50em) {
         grid-template-columns: 1fr;
@@ -253,26 +252,25 @@ const currentPage = new URL(Astro.request.url).pathname;
     .text-with-icon {
       display: grid;
       grid-template-columns: 100px 1fr;
-      gap: 22px;
-      align-items: center;
+      gap: var(--space-6);
     }
 
     .library-list {
       display: flex;
-      gap: 32px;
+      gap: var(--space-6);
     }
 
     .library-item {
       width: 414px;
       height: 222px;
-      padding: 32px;
+      padding: var(--space-5);
       text-align: start;
       border: 1px solid var(--color-text);
       border-radius: 4px;
     }
 
     .subheading {
-      padding-bottom: 64px;
+      padding-bottom: var(--space-7);
     }
 
     p {
@@ -282,29 +280,29 @@ const currentPage = new URL(Astro.request.url).pathname;
     h4 {
       font-size: var(--type-1);
       text-align: center;
-      padding-bottom: 18px;
+      padding-bottom: var(--space-4);
     }
 
     h3 {
       font-size: var(--type-2);
       text-align: left;
-      padding-bottom: 22px;
+      padding-bottom: var(--space-5);
     }
 
     h2 {
       font-size: var(--type-3);
-      padding-bottom: 32px;
+      padding-bottom: var(--space-6);
     }
 
     h1 {
       font-size: var(--type-4);
-      padding-bottom: 64px;
+      padding-bottom: var(--space-7);
     }
 
     main {
       grid-area: main;
       display: grid;
-      padding: 33px;
+      padding: var(--space-7);
     }
 
     main>* {
@@ -312,24 +310,28 @@ const currentPage = new URL(Astro.request.url).pathname;
     }
 
     .accessible-icon {
+      align-self: center;
       background-color: var(--color-highlight-1);
       mask: url('homePageIcons/accessibleIcon.svg') no-repeat center;
       height: 96px;
     }
 
     .consistent-icon {
+      align-self: center;
       background-color: var(--color-highlight-1);
       mask: url('homePageIcons/consistentIcon.svg') no-repeat center;
       height: 96px;
     }
 
     .evolving-icon {
+      align-self: center;
       background-color: var(--color-highlight-1);
       mask: url('homePageIcons/evolvingIcon.svg') no-repeat center;
       height: 96px;
     }
 
     .no-fuss-icon {
+      align-self: center;
       background-color: var(--color-highlight-1);
       mask: url('homePageIcons/noFussIcon.svg') no-repeat center;
       height: 96px;
