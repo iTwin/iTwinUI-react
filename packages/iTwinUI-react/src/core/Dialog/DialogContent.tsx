@@ -15,7 +15,11 @@ export type DialogContentProps = {
 } & React.ComponentPropsWithRef<'div'>;
 
 /**
- * Container for content in `Dialog`.
+ * Container for content in `Dialog`. Recommended to be used as a child of `Dialog`.
+ * @example
+ * <Dialog.Content>
+ *   My dialog content
+ * </Dialog.Content>
  */
 export const DialogContent = React.forwardRef<
   HTMLDivElement,

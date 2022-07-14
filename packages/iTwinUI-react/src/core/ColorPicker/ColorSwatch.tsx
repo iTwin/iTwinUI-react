@@ -17,7 +17,7 @@ export type ColorSwatchProps = {
    * Is color selected.
    */
   isActive?: boolean;
-} & Omit<React.ComponentPropsWithoutRef<'div'>, 'color'>;
+} & Omit<React.ComponentPropsWithRef<'div'>, 'color'>;
 
 /**
  * ColorSwatch component to display within a color palette.

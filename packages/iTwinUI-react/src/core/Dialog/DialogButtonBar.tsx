@@ -15,7 +15,12 @@ export type DialogButtonBarProps = {
 } & React.ComponentPropsWithRef<'div'>;
 
 /**
- * Container for Buttons in dialog.
+ * Container for Buttons in `Dialog`. Recommended to be used as a child of `Dialog`.
+ * @example
+ * <Dialog.ButtonBar>
+ *   <Button styleType='high-visibility'>Confirm</Button>
+ *   <Button>Close</Button>
+ * </Dialog.ButtonBar>
  */
 export const DialogButtonBar = React.forwardRef<
   HTMLDivElement,

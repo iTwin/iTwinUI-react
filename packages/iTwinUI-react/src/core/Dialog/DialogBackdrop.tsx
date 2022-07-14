@@ -8,6 +8,11 @@ import { useDialogContext } from './DialogContext';
 
 export type DialogBackdropProps = BackdropProps;
 
+/**
+ * Backdrop component for dialog. Recommended to be used as a child of `Dialog`.
+ * @example
+ * <Dialog.Backdrop />
+ */
 export const DialogBackdrop = React.forwardRef<
   HTMLDivElement,
   DialogBackdropProps

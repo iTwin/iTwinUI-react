@@ -19,9 +19,9 @@ export type DialogTitleBarProps = {
   React.ComponentPropsWithRef<'div'>;
 
 /**
- * Dialog title bar.
+ * Dialog title bar. Recommended to be used as a child of `Dialog`.
  * @example
- * <Dialog.TitleBar isDismissible={true} onClose={onClose}>My dialog title</Dialog.TitleBar>
+ * <Dialog.TitleBar>My dialog title</Dialog.TitleBar>
  */
 export const DialogTitleBar = React.forwardRef<
   HTMLDivElement,

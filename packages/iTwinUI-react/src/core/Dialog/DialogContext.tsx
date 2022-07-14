@@ -20,8 +20,8 @@ export type DialogContextProps = {
    */
   isDismissible?: boolean;
   /**
-   * Flag whether dialog should be closed on background overlay press.
-   * @default true
+   * Flag whether dialog should be closed on backdrop press.
+   * @default false
    */
   closeOnExternalClick?: boolean;
   /**
@@ -41,7 +41,7 @@ export const useDialogContext = () => {
     isOpen: false,
     isDismissible: true,
     closeOnEsc: true,
-    closeOnExternalClick: true,
+    closeOnExternalClick: false,
     ...context,
   };
 };
