@@ -154,6 +154,7 @@ const { content = {} } = Astro.props;
         color: var(--color-text);
         color-scheme: dark light;
         height: 100%;
+        overflow: auto;
 
         &[data-theme='light'] {
           color-scheme: light;
@@ -166,6 +167,7 @@ const { content = {} } = Astro.props;
 
       body {
         height: 100%;
+        overflow: auto;
         font-family: var(--font-body);
         font-size: var(--type-0);
       }
