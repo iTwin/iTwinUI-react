@@ -218,22 +218,23 @@ export const BasicRange: Story<DatePickerProps> = (args) => {
     ...rest
   } = args;
   const [opened, setOpened] = React.useState(false);
-  //const [currentDate, setCurrentDate] = React.useState(new Date(date));
-  // const onChange = (date: Date) => {
-  //   setCurrentDate(date);
-  //   action(`New date value: ${date}`, { clearOnStoryChange: false })();
+  // const [currentDate, setCurrentDate] = React.useState(new Date(startDate));
+  // const onChange = (startDate: Date) => {
+  //   setCurrentDate(startDate);
+  //   action(`New date value: ${startDate}`, { clearOnStoryChange: false })();
   // };
 
   // React.useEffect(() => {
-  //   setCurrentDate(new Date(date));
+  //   setCurrentDate(new Date(startDate));
   //   return () => action('', { clearOnStoryChange: true })();
-  // }, [date]);
+  // }, [startDate]);
   return (
     <>
       <IconButton onClick={() => setOpened(!opened)} id='picker-button'>
         <SvgCalendar />
       </IconButton>
-      {/* <span style={{ marginLeft: 16 }}>{currentDate.toString()}</span> */}
+      <span style={{ marginLeft: 16 }}>Start Date:{startDate.toString()}</span>
+      <span style={{ marginLeft: 16 }}>End Date:{endDate.toString()}</span>
       {opened && (
         <div style={{ marginTop: 4 }}>
           <DatePicker
