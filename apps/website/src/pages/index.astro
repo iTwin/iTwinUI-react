@@ -1,6 +1,10 @@
 ---
 import Global from '../layouts/GlobalLayout.astro';
 import Header from '../components/Header.astro';
+import AccessibleIcon from 'src/icons/AccessibleIcon.astro';
+import NoFussIcon from 'src/icons/NoFussIcon.astro';
+import EvolvingIcon from 'src/icons/EvolvingIcon.astro';
+import ConsistentIcon from 'src/icons/ConsistentIcon.astro';
 
 const currentPage = new URL(Astro.request.url).pathname;
 ---
@@ -35,7 +39,7 @@ const currentPage = new URL(Astro.request.url).pathname;
       <h2 class='highlight-text'>Why iTwinUI?</h2>
       <div class='column-content'>
         <div class='text-with-icon'>
-          <div class='consistent-icon'></div>
+          <ConsistentIcon class='icon' />
           <div>
             <h3 class='colored-text'>Consistent</h3>
 
@@ -47,7 +51,7 @@ const currentPage = new URL(Astro.request.url).pathname;
           </div>
         </div>
         <div class='text-with-icon'>
-          <div class='accessible-icon'></div>
+          <AccessibleIcon class='icon' />
           <div>
             <h3 class='colored-text'>Accessible</h3>
 
@@ -58,7 +62,7 @@ const currentPage = new URL(Astro.request.url).pathname;
           </div>
         </div>
         <div class='text-with-icon'>
-          <div class='no-fuss-icon'></div>
+          <NoFussIcon class='icon' />
           <div>
             <h3 class='colored-text'>No fuss</h3>
 
@@ -69,7 +73,7 @@ const currentPage = new URL(Astro.request.url).pathname;
           </div>
         </div>
         <div class='text-with-icon'>
-          <div class='evolving-icon'></div>
+          <EvolvingIcon class='icon' />
           <div>
             <h3 class='colored-text'>Evolving</h3>
 
@@ -303,31 +307,9 @@ const currentPage = new URL(Astro.request.url).pathname;
       max-width: 1200px;
     }
 
-    .accessible-icon {
+    .icon {
       align-self: center;
-      background-color: var(--color-highlight-1);
-      mask: url('homePageIcons/accessibleIcon.svg') no-repeat center;
-      height: 96px;
-    }
-
-    .consistent-icon {
-      align-self: center;
-      background-color: var(--color-highlight-1);
-      mask: url('homePageIcons/consistentIcon.svg') no-repeat center;
-      height: 96px;
-    }
-
-    .evolving-icon {
-      align-self: center;
-      background-color: var(--color-highlight-1);
-      mask: url('homePageIcons/evolvingIcon.svg') no-repeat center;
-      height: 96px;
-    }
-
-    .no-fuss-icon {
-      align-self: center;
-      background-color: var(--color-highlight-1);
-      mask: url('homePageIcons/noFussIcon.svg') no-repeat center;
+      fill: var(--color-highlight-1);
       height: 96px;
     }
   </style>
