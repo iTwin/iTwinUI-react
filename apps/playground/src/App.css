@@ -1,3 +1,7 @@
-.slider-container {
+.App .title {
+  margin-bottom: 20px;
+}
+
+.App .slider-container {
   height: 500px;
 }

@@ -32,14 +32,20 @@ export enum Orientation {
 
 const getPercentageOfRectangle = (
   rect: DOMRect,
-  pointer: number,
+  pointerX: number,
+  pointerY: number,
   orientation: Orientation,
 ) => {
+  console.log(
+    `getPercentageOfRectangle called : ${
+      orientation === Orientation.horizontal
+    }`,
+  );
   if (orientation === Orientation.horizontal) {
-    const position = getBoundedValue(pointer, rect.left, rect.right);
+    const position = getBoundedValue(pointerX, rect.left, rect.right);
     return (position - rect.left) / rect.width;
   }
-  const position = getBoundedValue(pointer, rect.top, rect.bottom);
+  const position = getBoundedValue(pointerY, rect.top, rect.bottom);
   return (rect.bottom - position) / rect.height;
 };
 
@@ -294,6 +300,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         if (containerRef.current && undefined !== activeThumbIndex) {
           const percent = getPercentageOfRectangle(
             containerRef.current.getBoundingClientRect(),
+            event.clientX,
             event.clientY,
             orientation,
           );
@@ -376,6 +383,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
           const percent = getPercentageOfRectangle(
             containerRef.current.getBoundingClientRect(),
             event.clientX,
+            event.clientY,
             orientation,
           );
           let pointerValue = min + (max - min) * percent;
