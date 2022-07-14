@@ -2,11 +2,6 @@
   "name": "website",
   "version": "0.0.1",
   "private": true,
-  "workspaces": {
-    "nohoist": [
-      "*prettier-plugin-astro*"
-    ]
-  },
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
