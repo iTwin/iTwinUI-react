@@ -510,6 +510,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
             sliderMin={min}
             sliderMax={max}
             values={currentValues}
+            orientation={orientation}
           />
           {tickMarkArea}
         </div>

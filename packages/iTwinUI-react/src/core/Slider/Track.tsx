@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { TrackDisplayMode } from './Slider';
+import { Orientation, TrackDisplayMode } from './Slider';
 
 function shouldDisplaySegment(segmentIndex: number, mode: TrackDisplayMode) {
   if ('odd-segments' === mode && 0 === (segmentIndex + 1) % 2) {
@@ -46,6 +46,7 @@ export type TrackProps = {
   sliderMin: number;
   sliderMax: number;
   values: number[];
+  orientation: Orientation; // TODO: Confirm if need documentation for this line
 };
 
 /**
@@ -53,7 +54,7 @@ export type TrackProps = {
  * colorized is based on `trackDisplayMode`.
  */
 export const Track = (props: TrackProps) => {
-  const { trackDisplayMode, sliderMin, sliderMax, values } = props;
+  const { trackDisplayMode, sliderMin, sliderMax, values, orientation } = props;
   const [segments, setSegments] = React.useState(() =>
     generateSegments(values, sliderMin, sliderMax),
   );
@@ -80,7 +81,24 @@ export const Track = (props: TrackProps) => {
               {shouldDisplaySegment(index, trackDisplayMode) ? (
                 <div
                   className='iui-slider-track'
-                  style={{ left: `${leftPercent}%`, right: `${rightPercent}%` }}
+                  style={{
+                    left:
+                      orientation === Orientation.horizontal
+                        ? `${leftPercent}%`
+                        : undefined,
+                    right:
+                      orientation === Orientation.horizontal
+                        ? `${rightPercent}%`
+                        : undefined,
+                    top:
+                      orientation === Orientation.vertical
+                        ? `${rightPercent}%`
+                        : undefined,
+                    bottom:
+                      orientation === Orientation.vertical
+                        ? `${leftPercent}%`
+                        : undefined,
+                  }}
                 />
               ) : null}
             </React.Fragment>
