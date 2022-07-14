@@ -1,18 +1,21 @@
 ---
 import Global from '../layouts/Global.astro';
 import Header from '../components/Header.astro';
-import { Button, Headline, Title, Text } from '@itwin/itwinui-react';
 
 const currentPage = new URL(Astro.request.url).pathname;
 ---
 
 <Global currentPage={currentPage}>
-  <div class='background' />
+  <div class="background-wrapper">
+    <div class='background' />
+  </div>
+
   <Header class='header' />
   <main>
     <div class='title-box'>
       <h1>For a <span class="highlight-text">Unified</span> experience</h1>
-      <h4>By documenting and assembling a reference site of iTwin components and patterns, we were able to speed up
+      <h4 class="subheading">By documenting and assembling a reference site of iTwin components and patterns, we were
+        able to speed up
         our
         process and solve some internal communication problems.</h4>
       <div class='button-area'>
@@ -25,59 +28,93 @@ const currentPage = new URL(Astro.request.url).pathname;
       </div>
     </div>
     <div class="code-blocks">
-      <div class='code-sample'><Button styleType='high-visibility'>High visibility button</Button></div>
-      <div class='code-sample'><Button styleType='cta'>Call-to-action button</Button>
+      <div class='code-sample code-sample-1'>
       </div>
-      <div class='code-sample'><Button styleType='cta'>Call-to-action button</Button></div>
+      <div class='code-sample code-sample-2'>
+      </div>
+      <div class='code-sample code-sample-3'></div>
+      <div class='code-sample code-sample-1'></div>
+      <div class='code-sample code-sample-2'></div>
     </div>
     <div class='centered-content'>
-      <Headline>Why iTwinUI?</Headline>
+      <h1 class='highlight-text'>Why iTwinUI?</h1>
       <div class='column-content'>
         <div class="text-with-icon">
           <div class='consistent-icon' />
           <div>
-            <Title>Consistent</Title>
+            <h3 class='colored-text'>Consistent</h3>
 
-            <Text variant='body'>Our components and layouts library was designed specifically for apps within the
+            <p>Our components and layouts library was designed specifically for apps within the
               iTwin
-              space. It allows creating seamless front-end environments consistent with the iTwin experience.</Text>
+              space. It allows creating seamless front-end environments consistent with the iTwin experience.</p>
           </div>
         </div>
         <div class="text-with-icon">
           <div class='accessible-icon' />
           <div>
-            <Title>Accessible</Title>
+            <h3 class='colored-text'>Accessible</h3>
 
-            <Text variant='body'>The web is for everyone. All our components were designed with accessibility in mind
+            <p>The web is for everyone. All our components were designed with accessibility in mind
               for an inclusive,
-              comfortable experience that leaves no one behind. </Text>
+              comfortable experience that leaves no one behind. </p>
           </div>
         </div>
         <div class="text-with-icon">
           <div class='no-fuss-icon' />
           <div>
-            <Title>No fuss</Title>
+            <h3 class='colored-text'>No fuss</h3>
 
-            <Text variant='body'>Skip the brainstorming sessions. Our components and layouts are entirely
+            <p>Skip the brainstorming sessions. Our components and layouts are entirely
               ready-to-use,
               so you can
               focus
               on
-              getting things done. </Text>
+              getting things done. </p>
           </div>
         </div>
         <div class="text-with-icon">
           <div class='evolving-icon' />
           <div>
-            <Title>Evolving</Title>
+            <h3 class='colored-text'>Evolving</h3>
 
-            <Text variant='body'>iTwin UI is maintained daily and frequently updated by its supporting team, so you
+            <p>iTwin UI is maintained daily and frequently updated by its supporting team, so you
               always have access
               to
-              the latest version of our assets. </Text>
+              the latest version of our assets. </p>
           </div>
         </div>
       </div>
+    </div>
+    <div class='centered-content'>
+      <h1 class='highlight-text'>Our library</h1>
+      <div class='library-list'>
+        <a class='library-item' href="/docs/introduction">
+          <div>
+            <h3>Components
+            </h3>
+            <p>See our extensive library of pre-coded components.
+              You can view live demos of how they behave in their
+              environment to determine if they are the right fit.</p>
+          </div>
+        </a>
+        <a class='library-item' href="https://itwin.github.io/iTwinUI-layouts/" target="_blank">
+          <div>
+            <h3>Layouts</h3>
+            <p>Full-page layouts built for maximizing your efficiency
+              when you need it the most.</p>
+          </div>
+        </a>
+        <a class='library-item' href="https://itwin.github.io/iTwinUI-icons/" target="_blank">
+          <div>
+            <h3>Icons</h3>
+            <p>Hundreds of flexible, flat-styled icons in SVG format,
+              allowing for infinite scalability with zero quality loss.</p>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class='centered-content'>
+      <h1 class='highlight-text'>Join us</h1>
     </div>
   </main>
 
@@ -87,13 +124,24 @@ const currentPage = new URL(Astro.request.url).pathname;
       grid-template: 'header' auto 'main' 1fr / 100%;
     }
 
-    .background {
+    a {
+      text-decoration: none;
+      color: unset;
+    }
+
+    .background-wrapper {
       z-index: -1;
       position: absolute;
+      height: 80vw;
+      width: 100%;
+    }
+
+    .background {
+      margin-top: -20%;
       width: 100%;
       height: 100%;
-      background: url('public/backgroundImage.svg') no-repeat center;
-      background-size: cover;
+      background: url('backgroundImage.svg') no-repeat center;
+      object-fit: cover;
     }
 
     .header {
@@ -112,12 +160,29 @@ const currentPage = new URL(Astro.request.url).pathname;
     }
 
     .code-sample {
-      width: 300px;
-      height: 300px;
-      background: linear-gradient(245deg, #f2cfea50 0%, #3e415850 100%);
+      padding: 126p;
+      min-width: 300px;
+      min-height: 300px;
       display: flex;
       justify-content: center;
       align-items: center;
+      opacity: 0.75;
+    }
+
+    .code-sample-1 {
+      background: var(--color-highlight-gradient);
+    }
+
+    .code-sample-2 {
+      background: var(--color-highlight-gradient-2);
+    }
+
+    .code-sample-3 {
+      background: var(--color-highlight-gradient-3);
+    }
+
+    .colored-text {
+      color: var(--color-highlight-1);
     }
 
     .title-box {
@@ -138,7 +203,7 @@ const currentPage = new URL(Astro.request.url).pathname;
       padding: 8px 12px;
       border-radius: 4px;
       text-decoration: none;
-      background: linear-gradient(45deg, #f2cfea 0%, #ABB5F5 100%);
+      background: var(--color-highlight-gradient);
       color: var(--color-background-1);
     }
 
@@ -152,19 +217,19 @@ const currentPage = new URL(Astro.request.url).pathname;
     }
 
     .main-button:hover,
-    .secondary-button:hover {
-      box-shadow: 0 1px 10px var(--color-text);
-    }
-
-    h1 {
-      margin-bottom: 16px;
-
+    .secondary-button:hover,
+    .library-item:hover {
+      box-shadow: 0 0 10px var(--color-highlight-1), 0 0 20px var(--color-highlight-2);
     }
 
     .highlight-text {
-      background: linear-gradient(45deg, #f2cfea 0%, #ABB5F5 100%);
+      background: var(--color-highlight-gradient);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+    }
+
+    .glow {
+      box-shadow: 0 0 10px var(--color-highlight-1), 0 0 20px var(--color-highlight-2);
     }
 
     .centered-content {
@@ -172,7 +237,7 @@ const currentPage = new URL(Astro.request.url).pathname;
       flex-direction: column;
       justify-self: center;
       align-items: center;
-      margin: 33px 0;
+      margin: 126px 0;
     }
 
     .column-content {
@@ -192,9 +257,48 @@ const currentPage = new URL(Astro.request.url).pathname;
       align-items: center;
     }
 
+    .library-list {
+      display: flex;
+      gap: 32px;
+    }
+
+    .library-item {
+      width: 414px;
+      height: 222px;
+      padding: 32px;
+      text-align: start;
+      border: 1px solid var(--color-text);
+      border-radius: 4px;
+    }
+
+    .subheading {
+      padding-bottom: 64px;
+    }
+
+    p {
+      font-size: var(--type-0);
+    }
+
     h4 {
+      font-size: var(--type-1);
       text-align: center;
+      padding-bottom: 18px;
+    }
+
+    h3 {
+      font-size: var(--type-2);
+      text-align: left;
+      padding-bottom: 22px;
+    }
+
+    h2 {
+      font-size: var(--type-3);
       padding-bottom: 32px;
+    }
+
+    h1 {
+      font-size: var(--type-4);
+      padding-bottom: 64px;
     }
 
     main {
@@ -204,30 +308,30 @@ const currentPage = new URL(Astro.request.url).pathname;
     }
 
     main>* {
-      max-width: 1000px;
+      max-width: 1200px;
     }
 
     .accessible-icon {
-      background-color: var(--color-text);
-      mask: url('public/homePageIcons/accessibleIcon.svg') no-repeat center;
+      background-color: var(--color-highlight-1);
+      mask: url('homePageIcons/accessibleIcon.svg') no-repeat center;
       height: 96px;
     }
 
     .consistent-icon {
-      background-color: var(--color-text);
-      mask: url('public/homePageIcons/consistentIcon.svg') no-repeat center;
+      background-color: var(--color-highlight-1);
+      mask: url('homePageIcons/consistentIcon.svg') no-repeat center;
       height: 96px;
     }
 
     .evolving-icon {
-      background-color: var(--color-text);
-      mask: url('public/homePageIcons/evolvingIcon.svg') no-repeat center;
+      background-color: var(--color-highlight-1);
+      mask: url('homePageIcons/evolvingIcon.svg') no-repeat center;
       height: 96px;
     }
 
     .no-fuss-icon {
-      background-color: var(--color-text);
-      mask: url('public/homePageIcons/noFussIcon.svg') no-repeat center;
+      background-color: var(--color-highlight-1);
+      mask: url('homePageIcons/noFussIcon.svg') no-repeat center;
       height: 96px;
     }
   </style>
