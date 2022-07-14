@@ -379,19 +379,32 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
 
     let dayClass = 'iui-calendar-day';
 
-    if (isSameDay(day, selectedDay)) {
+    if (
+      isSameDay(day, selectedDay) &&
+      !isInDateRange(selectedDay, selectedStartDay, selectedEndDay)
+    ) {
       dayClass += '-selected';
     }
 
-    if (isSameDay(day, selectedStartDay)) {
+    if (
+      isSameDay(day, selectedStartDay) &&
+      dayClass != 'iui-calendar-day-selected'
+    ) {
       dayClass += '-range-start';
     }
 
-    if (isSameDay(day, selectedEndDay)) {
+    if (
+      isSameDay(day, selectedEndDay) &&
+      dayClass != 'iui-calendar-day-selected'
+    ) {
       dayClass += '-range-end';
     }
 
-    if (isInDateRange(day, selectedStartDay, selectedEndDay)) {
+    if (
+      selectedStartDay &&
+      selectedEndDay &&
+      isInDateRange(day, selectedStartDay, selectedEndDay)
+    ) {
       dayClass += '-range';
     }
 
