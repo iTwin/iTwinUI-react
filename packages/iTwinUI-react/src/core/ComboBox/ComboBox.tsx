@@ -283,9 +283,9 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   React.useEffect(() => {
     dispatch([
       'select',
-      optionsProp.current.findIndex((option) => option.value === valueProp),
+      options.findIndex((option) => option.value === valueProp),
     ]);
-  }, [optionsProp, valueProp]);
+  }, [options, valueProp]);
 
   // Call user-defined onChange when the value actually changes
   React.useEffect(() => {
