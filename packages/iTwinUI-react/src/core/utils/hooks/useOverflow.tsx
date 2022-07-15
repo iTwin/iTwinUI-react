@@ -57,9 +57,7 @@ export const useOverflow = <T extends HTMLElement>(
     if (disabled) {
       setVisibleCount(items.length);
     } else {
-      queueMicrotask(() =>
-        setVisibleCount(Math.min(items.length, STARTING_MAX_ITEMS_COUNT)),
-      );
+      setVisibleCount(Math.min(items.length, STARTING_MAX_ITEMS_COUNT));
       needsFullRerender.current = true;
     }
   }, [containerSize, disabled, items]);
@@ -85,7 +83,11 @@ export const useOverflow = <T extends HTMLElement>(
         (sum: number, child: HTMLElement) => sum + child[`offset${dimension}`],
         0,
       );
-      const avgItemSize = childrenSize / visibleCount;
+      // Previous `useEffect` might have updated visible count, but we still have old one
+      // If it is 0, lets try to update it with items length.
+      const currentVisibleCount =
+        visibleCount || Math.min(items.length, STARTING_MAX_ITEMS_COUNT);
+      const avgItemSize = childrenSize / currentVisibleCount;
       const visibleItems = Math.floor(availableSize / avgItemSize);
 
       if (!isNaN(visibleItems)) {
