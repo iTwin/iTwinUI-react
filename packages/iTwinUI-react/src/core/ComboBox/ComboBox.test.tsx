@@ -682,3 +682,40 @@ it('should programmatically clear value', async () => {
   );
   expect(mockOnChange).toHaveBeenCalledWith(undefined);
 });
+
+it('should update options', async () => {
+  const mockOnChange = jest.fn();
+  const options = [0, 1, 2].map((value) => ({ value, label: `Item ${value}` }));
+
+  const { container, rerender } = render(
+    <ComboBox options={options} onChange={mockOnChange} />,
+  );
+
+  const input = container.querySelector('.iui-input') as HTMLInputElement;
+  await userEvent.tab();
+  await userEvent.click(screen.getByText('Item 2'));
+  expect(mockOnChange).toHaveBeenCalledWith(2);
+  expect(input).toHaveValue('Item 2');
+
+  const options2 = [2, 3, 4, 5].map((value) => ({
+    value,
+    label: `Item ${value}`,
+  }));
+
+  rerender(<ComboBox options={options2} onChange={mockOnChange} />);
+  fireEvent.focus(input);
+  const list = document.querySelector('.iui-menu') as HTMLUListElement;
+  expect(list).toBeVisible();
+  expect(list.children).toHaveLength(4);
+  expect(mockOnChange).toHaveBeenCalledWith(2);
+  expect(input).toHaveValue('Item 2');
+
+  const options3 = [6, 7, 8].map((value) => ({
+    value,
+    label: `Item ${value}`,
+  }));
+
+  rerender(<ComboBox options={options3} onChange={mockOnChange} />);
+  expect(mockOnChange).toHaveBeenCalledWith(undefined);
+  expect(input).toHaveValue('');
+});
