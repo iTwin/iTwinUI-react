@@ -7,7 +7,8 @@ import {
   CommonProps,
   useTheme,
   getFocusableElements,
-  VirtualScroll,
+  useVirtualization,
+  mergeRefs,
 } from '../utils';
 import '@itwin/itwinui-css/css/tree.css';
 import cx from 'classnames';
@@ -91,7 +92,7 @@ export type TreeProps<T> = {
    */
   getNode: (node: T) => NodeData<T>;
   /**
-   * Virtualization is used to have a better perfomance with a lot of nodes.
+   * Virtualization is used to have a better performance with a lot of nodes.
    * @default false
    * @beta
    */
@@ -156,6 +157,7 @@ export const Tree = <T,>(props: TreeProps<T>) => {
     nodeRenderer,
     getNode,
     enableVirtualization = false,
+    style,
     ...rest
   } = props;
   useTheme();
@@ -242,7 +244,7 @@ export const Tree = <T,>(props: TreeProps<T>) => {
     return [flatList, firstLevelNodes];
   }, [data, getNode]);
 
-  const virtualizedItemRenderer = React.useCallback(
+  const itemRenderer = React.useCallback(
     (index: number) => {
       const node = flatNodesList[index];
       return (
@@ -257,6 +259,15 @@ export const Tree = <T,>(props: TreeProps<T>) => {
                 : node.parentNode?.subNodeIds?.length ?? 0,
             indexInGroup: node.indexInGroup,
             parentNodeId: node.parentNode?.nodeProps.nodeId,
+            scrollToParent: node.parentNode
+              ? () => {
+                  const parentNodeId = node.parentNode?.nodeProps.nodeId;
+                  const parentNodeIndex = flatNodesList.findIndex(
+                    (n) => n.nodeProps.nodeId === parentNodeId,
+                  );
+                  setScrollToIndex(parentNodeIndex);
+                }
+              : undefined,
           }}
         >
           {nodeRenderer(node.nodeProps)}
@@ -266,54 +277,105 @@ export const Tree = <T,>(props: TreeProps<T>) => {
     [firstLevelNodesList.length, flatNodesList, nodeRenderer],
   );
 
-  // const { outerProps, innerProps, visibleChildren } = useVirtualization({
-  //   itemsLength: flatNodesList.length,
-  //   itemRenderer: virtualizedItemRenderer,
-  // });
+  const [scrollToIndex, setScrollToIndex] = React.useState<number>();
+  const flatNodesListRef = React.useRef<FlatNode<T>[]>(flatNodesList);
+  flatNodesListRef.current = flatNodesList;
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      if (scrollToIndex !== undefined) {
+        const nodeId = flatNodesListRef.current[scrollToIndex].nodeProps.nodeId;
+        const nodeElement = treeRef.current?.ownerDocument.querySelector(
+          `#${nodeId}`,
+        ) as HTMLElement;
+        nodeElement?.focus();
+        setScrollToIndex(undefined);
+      }
+    });
+  }, [scrollToIndex]);
+
+  const { outerProps, innerProps, visibleChildren } = useVirtualization({
+    itemsLength: flatNodesList.length,
+    itemRenderer: itemRenderer,
+    scrollToIndex,
+  });
+
+  const handleFocus = (event: React.FocusEvent) => {
+    if (treeRef.current?.contains(event.relatedTarget)) {
+      return;
+    }
+
+    const items = getFocusableNodes();
+    if (items.length > 0) {
+      items[focusedIndex.current]?.focus();
+    }
+  };
 
   return (
-    <div>
+    <>
+      {enableVirtualization && (
+        <div
+          {...{
+            ...outerProps,
+            className: cx(className, outerProps.className),
+            style: { ...style, ...outerProps.style },
+          }}
+        >
+          <TreeElement
+            {...{ ...innerProps, ...rest }}
+            onKeyDown={handleKeyDown}
+            onFocus={handleFocus}
+            ref={mergeRefs(treeRef, innerProps.ref)}
+          >
+            {visibleChildren}
+          </TreeElement>
+        </div>
+      )}
+      {!enableVirtualization && (
+        <TreeElement
+          onKeyDown={handleKeyDown}
+          onFocus={handleFocus}
+          className={className}
+          style={style}
+          ref={mergeRefs(treeRef, innerProps.ref)}
+          {...rest}
+        >
+          {!enableVirtualization &&
+            flatNodesList.map((_, i) => itemRenderer(i))}
+        </TreeElement>
+      )}
+    </>
+  );
+};
+
+const TreeElement = React.forwardRef(
+  (
+    {
+      children,
+      className,
+      ...rest
+    }: {
+      children: React.ReactNode;
+      onKeyDown: React.KeyboardEventHandler<HTMLUListElement>;
+      onFocus: React.FocusEventHandler<HTMLUListElement>;
+      className?: string;
+      style?: React.CSSProperties;
+      id?: string;
+    },
+    ref: React.ForwardedRef<HTMLUListElement>,
+  ) => {
+    return (
       <ul
         className={cx('iui-tree', className)}
         role='tree'
-        onKeyDown={handleKeyDown}
-        ref={treeRef}
+        ref={ref}
         tabIndex={0}
-        onFocus={() => {
-          const items = getFocusableNodes();
-          if (items.length > 0) {
-            items[focusedIndex.current]?.focus();
-          }
-        }}
         {...rest}
       >
-        {enableVirtualization && (
-          <VirtualScroll
-            itemsLength={flatNodesList.length}
-            itemRenderer={virtualizedItemRenderer}
-          />
-        )}
-        {!enableVirtualization &&
-          flatNodesList.map((flatNode) => (
-            <TreeContext.Provider
-              key={flatNode.nodeProps.nodeId}
-              value={{
-                nodeDepth: flatNode.depth,
-                subNodeIds: flatNode.subNodeIds,
-                groupSize:
-                  flatNode.depth === 0
-                    ? firstLevelNodesList.length
-                    : flatNode.parentNode?.subNodeIds?.length ?? 0,
-                indexInGroup: flatNode.indexInGroup,
-                parentNodeId: flatNode.parentNode?.nodeProps.nodeId,
-              }}
-            >
-              {nodeRenderer(flatNode.nodeProps)}
-            </TreeContext.Provider>
-          ))}
+        {children}
       </ul>
-    </div>
-  );
-};
+    );
+  },
+);
 
 export default Tree;

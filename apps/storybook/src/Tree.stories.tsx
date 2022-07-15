@@ -616,7 +616,7 @@ export const Virtualized: Story<TreeProps<unknown>> = () => {
   );
 
   return (
-    <div style={{ height: 400, overflow: 'auto' }}>
+    <div style={{ height: 'min(400px, 90vh)', overflow: 'auto' }}>
       <Tree<StoryData>
         data={data}
         getNode={getNode}
