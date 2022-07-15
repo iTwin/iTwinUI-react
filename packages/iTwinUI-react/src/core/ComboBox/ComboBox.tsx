@@ -153,24 +153,10 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   const toggleButtonRef = React.useRef<HTMLSpanElement>(null);
   const mounted = React.useRef(false);
 
-  // Latest value of the onChange prop
-  const onChangeProp = React.useRef(onChange);
-  React.useEffect(() => {
-    onChangeProp.current = onChange;
-  }, [onChange]);
-
-  // Latest value of the options prop
-  const optionsProp = React.useRef(options);
-
   // Record to store all extra information (e.g. original indexes), where the key is the id of the option
   const optionsExtraInfoRef = React.useRef<
     Record<string, { __originalIndex: number }>
   >({});
-
-  // Clear the extra info when the options change so that it can be reinitialized below
-  React.useEffect(() => {
-    optionsExtraInfoRef.current = {};
-  }, [optionsProp]);
 
   // Function to initialize extra info
   const initializeExtraInfo = React.useCallback(() => {
@@ -181,11 +167,24 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     });
   }, [id]);
 
+  // Latest value of the onChange prop
+  const onChangeProp = React.useRef(onChange);
+  React.useEffect(() => {
+    onChangeProp.current = onChange;
+  }, [onChange]);
+
+  // Latest value of the options prop
+  const optionsProp = React.useRef(options);
+
+  // Clear the extra info when the options change so that it can be reinitialized below
+  React.useEffect(() => {
+    optionsExtraInfoRef.current = {};
+  }, [optionsProp]);
+
   // Change options ref on options change
   React.useEffect(() => {
     optionsProp.current = options;
     initializeExtraInfo();
-    dispatch(['select', -1]);
   }, [options, initializeExtraInfo]);
 
   // Initialize the extra info only if it is not already initialized
