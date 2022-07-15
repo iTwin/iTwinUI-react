@@ -159,6 +159,9 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     onChangeProp.current = onChange;
   }, [onChange]);
 
+  // Latest value of the options prop
+  const optionsProp = React.useRef(options);
+
   // Record to store all extra information (e.g. original indexes), where the key is the id of the option
   const optionsExtraInfoRef = React.useRef<
     Record<string, { __originalIndex: number }>
@@ -167,18 +170,30 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   // Clear the extra info when the options change so that it can be reinitialized below
   React.useEffect(() => {
     optionsExtraInfoRef.current = {};
-  }, [options]);
+  }, [optionsProp]);
 
-  // Initialize the extra info only if it is not already initialized
-  if (
-    options.length > 0 &&
-    Object.keys(optionsExtraInfoRef.current).length === 0
-  ) {
-    options.forEach((option, index) => {
+  // Function to initialize extra info
+  const initializeExtraInfo = React.useCallback(() => {
+    optionsProp.current.forEach((option, index) => {
       optionsExtraInfoRef.current[getOptionId(option, id)] = {
         __originalIndex: index,
       };
     });
+  }, [id]);
+
+  // Change options ref on options change
+  React.useEffect(() => {
+    optionsProp.current = options;
+    initializeExtraInfo();
+    dispatch(['select', -1]);
+  }, [options, initializeExtraInfo]);
+
+  // Initialize the extra info only if it is not already initialized
+  if (
+    optionsProp.current.length > 0 &&
+    Object.keys(optionsExtraInfoRef.current).length === 0
+  ) {
+    initializeExtraInfo();
   }
 
   // Reducer where all the component-wide state is stored
@@ -187,7 +202,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     {
       isOpen: false,
       selectedIndex: valueProp
-        ? options.findIndex((option) => option.value === valueProp)
+        ? optionsProp.current.findIndex((option) => option.value === valueProp)
         : -1,
       focusedIndex: -1,
     },
@@ -197,7 +212,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     // When the dropdown opens
     if (isOpen) {
       inputRef.current?.focus(); // Focus the input
-      setFilteredOptions(options); // Reset the filtered list
+      setFilteredOptions(optionsProp.current); // Reset the filtered list
       dispatch(['focus']);
     }
     // When the dropdown closes
@@ -208,11 +223,11 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       // Reset the input value
       setInputValue(
         selectedIndex != undefined && selectedIndex >= 0
-          ? options[selectedIndex]?.label
+          ? optionsProp.current[selectedIndex]?.label
           : '',
       );
     }
-  }, [isOpen, options, selectedIndex]);
+  }, [isOpen, optionsProp, selectedIndex]);
 
   // Set min-width of menu to be same as input
   const [minWidth, setMinWidth] = React.useState(0);
@@ -223,17 +238,19 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   }, [isOpen]);
 
   // Update filtered options to the latest value options according to input value
-  const [filteredOptions, setFilteredOptions] = React.useState(options);
+  const [filteredOptions, setFilteredOptions] = React.useState(
+    optionsProp.current,
+  );
   React.useEffect(() => {
     if (inputValue) {
       setFilteredOptions(
-        filterFunction?.(options, inputValue) ??
+        filterFunction?.(optionsProp.current, inputValue) ??
           options.filter((option) =>
             option.label.toLowerCase().includes(inputValue.toLowerCase()),
           ),
       );
     } else {
-      setFilteredOptions(options);
+      setFilteredOptions(optionsProp.current);
     }
     dispatch(['focus']);
     // Only need to call on options update
@@ -250,8 +267,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       setInputValue(value);
       dispatch(['open']); // reopen when typing
       setFilteredOptions(
-        filterFunction?.(options, value) ??
-          options.filter((option) =>
+        filterFunction?.(optionsProp.current, value) ??
+          optionsProp.current.filter((option) =>
             option.label.toLowerCase().includes(value.toLowerCase()),
           ),
       );
@@ -260,16 +277,16 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       }
       inputProps?.onChange?.(event);
     },
-    [filterFunction, focusedIndex, inputProps, options],
+    [filterFunction, focusedIndex, inputProps, optionsProp],
   );
 
   // When the value prop changes, update the selectedIndex
   React.useEffect(() => {
     dispatch([
       'select',
-      options.findIndex((option) => option.value === valueProp),
+      optionsProp.current.findIndex((option) => option.value === valueProp),
     ]);
-  }, [options, valueProp]);
+  }, [optionsProp, valueProp]);
 
   // Call user-defined onChange when the value actually changes
   React.useEffect(() => {
@@ -278,13 +295,14 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       mounted.current = true;
       return;
     }
-    const value = options[selectedIndex]?.value;
+    const value = optionsProp.current[selectedIndex]?.value;
     onChangeProp.current?.(value);
-  }, [options, selectedIndex]);
+  }, [optionsProp, selectedIndex]);
 
   const getMenuItem = React.useCallback(
     (option: SelectOption<T>, filteredIndex?: number) => {
       const optionId = getOptionId(option, id);
+
       const { __originalIndex } = optionsExtraInfoRef.current[optionId];
 
       const customItem = itemRenderer
