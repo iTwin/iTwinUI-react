@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import Select, { SelectProps, MultipleType, ChangeEvent } from './Select';
+import Select, { SelectProps, MultipleType } from './Select';
 import SvgSmileyHappy from '@itwin/itwinui-icons-react/cjs/icons/SmileyHappy';
 import { MenuItem } from '../Menu';
 import userEvent from '@testing-library/user-event';
@@ -315,7 +315,7 @@ it('should call onChange on item click', () => {
   const menuItem = menu.querySelectorAll('li');
   expect(menuItem.length).toBe(3);
   fireEvent.click(menuItem[1]);
-  expect(onChange).toHaveBeenCalledWith(1, ChangeEvent.Added);
+  expect(onChange).toHaveBeenCalledWith(1, 'Added');
 });
 
 it('should render menu with custom className', () => {
@@ -466,9 +466,9 @@ it('should select multiple items', () => {
   let menuItems = menu.querySelectorAll('.iui-menu-item');
   expect(menuItems.length).toBe(3);
   fireEvent.click(menuItems[1]);
-  expect(onChange).toHaveBeenCalledWith(1, ChangeEvent.Added);
+  expect(onChange).toHaveBeenCalledWith(1, 'Added');
   fireEvent.click(menuItems[2]);
-  expect(onChange).toHaveBeenCalledWith(2, ChangeEvent.Added);
+  expect(onChange).toHaveBeenCalledWith(2, 'Added');
 
   rerender(
     <Select<number>
@@ -488,7 +488,7 @@ it('should select multiple items', () => {
   const tagContainer = select.querySelector('.iui-select-tag-container');
   expect(tagContainer?.childNodes.length).toBe(2);
   fireEvent.click(menuItems[2]);
-  expect(onChange).toHaveBeenCalledWith(2, ChangeEvent.Removed);
+  expect(onChange).toHaveBeenCalledWith(2, 'Removed');
 });
 
 it('should use custom render for selected item (multiple)', async () => {
@@ -531,5 +531,5 @@ it('should call onChange if tag is removed', () => {
 
   const closeButton = screen.getByLabelText('Delete tag');
   fireEvent.click(closeButton);
-  expect(onChange).toHaveBeenCalledWith(2, ChangeEvent.Removed);
+  expect(onChange).toHaveBeenCalledWith(2, 'Removed');
 });

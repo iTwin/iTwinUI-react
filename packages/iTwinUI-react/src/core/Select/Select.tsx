@@ -89,10 +89,7 @@ export type SelectOption<T> = {
   [key: string]: unknown;
 } & CommonProps;
 
-export const enum ChangeEvent {
-  Added = 'Added',
-  Removed = 'Removed',
-}
+export type SelectValueChangeEvent = 'Added' | 'Removed';
 
 export type MultipleType<T> =
   | {
@@ -120,7 +117,7 @@ export type MultipleType<T> =
       multiple: true;
       selectedItemRenderer?: (options: SelectOption<T>[]) => JSX.Element;
       value?: T[];
-      onChange?: (value: T, event: ChangeEvent) => void;
+      onChange?: (value: T, event: SelectValueChangeEvent) => void;
     };
 
 export type SelectProps<T> = {
@@ -318,8 +315,8 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
               onChange?.(
                 option.value,
                 Array.isArray(value) && value.includes(option.value)
-                  ? ChangeEvent.Removed
-                  : ChangeEvent.Added,
+                  ? 'Removed'
+                  : 'Added',
               );
             !multiple && close();
           },
@@ -356,7 +353,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
         key={item.label}
         onRemove={(e) => {
           e.stopPropagation();
-          onChange?.(item.value, ChangeEvent.Removed);
+          onChange?.(item.value, 'Removed');
         }}
       >
         {item.label}

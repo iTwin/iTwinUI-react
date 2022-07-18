@@ -9,7 +9,6 @@ import {
   Select,
   MiddleTextTruncation,
   SelectProps,
-  ChangeEvent,
 } from '@itwin/itwinui-react';
 import { useState } from '@storybook/addons';
 import SvgSmileyHappy from '@itwin/itwinui-icons-react/cjs/icons/SmileyHappy';
@@ -357,7 +356,7 @@ export const Multi: Story<SelectProps<number>> = (args) => {
         value={value}
         onChange={(val, event) =>
           setValue((prev) =>
-            event === ChangeEvent.Removed
+            event === 'Removed'
               ? prev.filter((value) => val !== value)
               : [...prev, val],
           )
@@ -392,7 +391,7 @@ export const MultiCustomRenderer: Story<SelectProps<number>> = (args) => {
         value={value}
         onChange={(val, event) =>
           setValue((prev) =>
-            event === ChangeEvent.Removed
+            event === 'Removed'
               ? prev.filter((value) => val !== value)
               : [...(prev ?? []), val],
           )
