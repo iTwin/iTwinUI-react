@@ -10,8 +10,8 @@ import {
   getBoundedValue,
   useEventListener,
 } from '../utils';
-// import '@itwin/itwinui-css/css/slider.css';
-import './slider.css';
+import '@itwin/itwinui-css/css/slider.css';
+// import './slider.css';
 import { TooltipProps } from '../Tooltip';
 import { Track } from './Track';
 import { Thumb } from './Thumb';
