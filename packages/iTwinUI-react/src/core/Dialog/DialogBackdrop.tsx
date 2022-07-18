@@ -9,7 +9,8 @@ import { useDialogContext } from './DialogContext';
 export type DialogBackdropProps = BackdropProps;
 
 /**
- * Backdrop component for dialog. Recommended to be used as a child of `Dialog`.
+ * Backdrop component for dialog. Recommended to be used with `Dialog`
+ * then its visibility is being controlled by dialog's `isOpen` prop.
  * @example
  * <Dialog.Backdrop />
  */

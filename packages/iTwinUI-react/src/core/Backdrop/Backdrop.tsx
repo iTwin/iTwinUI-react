@@ -10,14 +10,14 @@ import '@itwin/itwinui-css/css/backdrop.css';
 export type BackdropProps = {
   /**
    * Flag whether backdrop should be shown.
-   * @default false
+   * @default true
    */
   isVisible?: boolean;
 } & React.ComponentPropsWithRef<'div'>;
 
 export const Backdrop = React.forwardRef<HTMLDivElement, BackdropProps>(
   (props, ref) => {
-    const { isVisible = false, className, ...rest } = props;
+    const { isVisible = true, className, ...rest } = props;
     useTheme();
     return (
       <div

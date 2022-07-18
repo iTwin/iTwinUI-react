@@ -191,7 +191,7 @@ it('should call onKeyDown when pressed any key inside dialog', () => {
 
 it('should reset body overflow on closing and unmounting', () => {
   const { rerender, unmount } = render(
-    <Dialog isOpen preventBodyScroll>
+    <Dialog isOpen preventDocumentScroll>
       Here is my dialog content
     </Dialog>,
   );
@@ -199,14 +199,14 @@ it('should reset body overflow on closing and unmounting', () => {
 
   // Closing by setting isOpen to false
   rerender(
-    <Dialog isOpen={false} preventBodyScroll>
+    <Dialog isOpen={false} preventDocumentScroll>
       Here is my dialog content
     </Dialog>,
   );
   expect(document.body.style.overflow).not.toEqual('hidden');
 
   rerender(
-    <Dialog isOpen preventBodyScroll>
+    <Dialog isOpen preventDocumentScroll>
       Here is my dialog content
     </Dialog>,
   );

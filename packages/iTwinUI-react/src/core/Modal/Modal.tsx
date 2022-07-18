@@ -101,9 +101,8 @@ export const Modal = (props: ModalProps) => {
         closeOnExternalClick={closeOnExternalClick}
         isDismissible={isDismissible}
         onClose={onClose}
-        ownerDocument={ownerDocument}
         backdrop={<Dialog.Backdrop />}
-        preventBodyScroll
+        preventDocumentScroll
         trapFocus
         aria-modal
         {...rest}

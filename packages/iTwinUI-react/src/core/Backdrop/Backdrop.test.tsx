@@ -7,7 +7,7 @@ import { render } from '@testing-library/react';
 import { Backdrop } from './Backdrop';
 
 it('should render in most basic form', () => {
-  const { container } = render(<Backdrop isVisible />);
+  const { container } = render(<Backdrop />);
 
   const backdrop = container.querySelector(
     '.iui-backdrop.iui-backdrop-visible',
@@ -17,7 +17,7 @@ it('should render in most basic form', () => {
 
 it('should render with custom style and className', () => {
   const { container } = render(
-    <Backdrop isVisible style={{ color: 'red' }} className='test-class' />,
+    <Backdrop style={{ color: 'red' }} className='test-class' />,
   );
 
   const backdrop = container.querySelector(

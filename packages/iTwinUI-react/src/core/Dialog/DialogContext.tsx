@@ -36,12 +36,5 @@ export const DialogContext = React.createContext<
 >(undefined);
 
 export const useDialogContext = () => {
-  const context = React.useContext(DialogContext);
-  return {
-    isOpen: false,
-    isDismissible: true,
-    closeOnEsc: true,
-    closeOnExternalClick: false,
-    ...context,
-  };
+  return React.useContext(DialogContext) || {};
 };
