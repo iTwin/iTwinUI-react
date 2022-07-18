@@ -36,11 +36,11 @@ const getPercentageOfRectangle = (
   pointerY: number,
   orientation: Orientation,
 ) => {
-  console.log(
-    `getPercentageOfRectangle called : ${
-      orientation === Orientation.horizontal
-    }`,
-  );
+  // console.log(
+  //   `getPercentageOfRectangle called : ${
+  //     orientation === Orientation.horizontal
+  //   }`,
+  // );
   if (orientation === Orientation.horizontal) {
     const position = getBoundedValue(pointerX, rect.left, rect.right);
     return (position - rect.left) / rect.width;
@@ -338,7 +338,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         if (activeThumbIndex === undefined) {
           return;
         }
-        console.log('handlePointerMove is called');
+        // console.log('handlePointerMove is called');
         event.preventDefault();
         event.stopPropagation();
         updateThumbValue(event, 'onUpdate');
