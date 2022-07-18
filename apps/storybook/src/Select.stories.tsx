@@ -9,6 +9,7 @@ import {
   Select,
   MiddleTextTruncation,
   SelectProps,
+  ChangeEvent,
 } from '@itwin/itwinui-react';
 import { useState } from '@storybook/addons';
 import SvgSmileyHappy from '@itwin/itwinui-icons-react/cjs/icons/SmileyHappy';
@@ -344,7 +345,7 @@ export const TruncateMiddleText: Story<SelectProps<string>> = (args) => {
 
 export const Multi: Story<SelectProps<number>> = (args) => {
   const { placeholder = 'Placeholder text', ...rest } = args;
-  const [value, setValue] = useState<number[] | undefined>(undefined);
+  const [value, setValue] = useState<number[]>([]);
   return (
     <div style={{ minHeight: 350 }}>
       <Select<number>
@@ -354,11 +355,11 @@ export const Multi: Story<SelectProps<number>> = (args) => {
           value: index,
         }))}
         value={value}
-        onChange={(val) =>
+        onChange={(val, event) =>
           setValue((prev) =>
-            prev?.includes(val)
+            event === ChangeEvent.Removed
               ? prev.filter((value) => val !== value)
-              : [...(prev ?? []), val],
+              : [...prev, val],
           )
         }
         placeholder={placeholder}
@@ -378,7 +379,7 @@ Multi.argTypes = {
 
 export const MultiCustomRenderer: Story<SelectProps<number>> = (args) => {
   const { placeholder = 'Placeholder text', ...rest } = args;
-  const [value, setValue] = useState<number[] | undefined>(undefined);
+  const [value, setValue] = useState<number[]>([]);
 
   return (
     <div style={{ minHeight: 350 }}>
@@ -389,9 +390,9 @@ export const MultiCustomRenderer: Story<SelectProps<number>> = (args) => {
           value: index,
         }))}
         value={value}
-        onChange={(val) =>
+        onChange={(val, event) =>
           setValue((prev) =>
-            prev?.includes(val)
+            event === ChangeEvent.Removed
               ? prev.filter((value) => val !== value)
               : [...(prev ?? []), val],
           )

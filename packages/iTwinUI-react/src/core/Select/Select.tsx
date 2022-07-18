@@ -89,6 +89,11 @@ export type SelectOption<T> = {
   [key: string]: unknown;
 } & CommonProps;
 
+export const enum ChangeEvent {
+  Added = 'Added',
+  Removed = 'Removed',
+}
+
 export type MultipleType<T> =
   | {
       /**
@@ -106,11 +111,16 @@ export type MultipleType<T> =
        * If `multiple` is enabled, it is an array of values.
        */
       value?: T;
+      /**
+       * Callback function handling change event on select.
+       */
+      onChange?: (value: T) => void;
     }
   | {
       multiple: true;
       selectedItemRenderer?: (options: SelectOption<T>[]) => JSX.Element;
       value?: T[];
+      onChange?: (value: T, event: ChangeEvent) => void;
     };
 
 export type SelectProps<T> = {
@@ -118,10 +128,6 @@ export type SelectProps<T> = {
    * Array of options that populates the select menu.
    */
   options: SelectOption<T>[];
-  /**
-   * Callback function handling change event on select.
-   */
-  onChange?: (value: T) => void;
   /**
    * Placeholder when no item is selected.
    */
@@ -308,7 +314,13 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
           key: `${option.label}-${index}`,
           isSelected,
           onClick: () => {
-            !option.disabled && onChange?.(option.value);
+            !option.disabled &&
+              onChange?.(
+                option.value,
+                Array.isArray(value) && value.includes(option.value)
+                  ? ChangeEvent.Removed
+                  : ChangeEvent.Added,
+              );
             !multiple && close();
           },
           ref: (el: HTMLElement) => {
@@ -344,7 +356,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
         key={item.label}
         onRemove={(e) => {
           e.stopPropagation();
-          onChange?.(item.value);
+          onChange?.(item.value, ChangeEvent.Removed);
         }}
       >
         {item.label}

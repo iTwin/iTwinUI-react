@@ -161,7 +161,7 @@ export type { RadioProps } from './Radio';
 export { RadioTile, RadioTileGroup } from './RadioTiles';
 export type { RadioTileGroupProps, RadioTileProps } from './RadioTiles';
 
-export { Select } from './Select';
+export { Select, ChangeEvent } from './Select';
 export type { SelectProps, SelectOption, ItemRendererProps } from './Select';
 
 export {
