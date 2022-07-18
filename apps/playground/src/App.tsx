@@ -220,7 +220,7 @@ const CustomTickNoTooltip = (args: any) => {
 };
 
 CustomTickNoTooltip.args = {
-  style: { width: '50%' },
+  // style: { width: '50%' },
   min: 1,
   max: 365,
   values: [0],

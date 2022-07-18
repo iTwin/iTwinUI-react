@@ -14,4 +14,9 @@
 .App .slider-container-vertical {
   height: 500px;
   width: fit-content;
+
+  display: flex;
+  justify-content: space-evenly;
+  gap: 7rem;
+  flex-wrap: wrap;
 }
