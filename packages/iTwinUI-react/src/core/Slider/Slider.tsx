@@ -440,9 +440,11 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         return (
           <div className='iui-slider-ticks'>
             {tickLabels.map((label, index) => (
-              <span key={index} className='iui-slider-tick'>
-                {label}
-              </span>
+              // TODO: Is passing index alright to pass as a key? I guess it is since there's nothing better, but just confirming.
+              <div key={index} className='iui-slider-tick'>
+                <span className='iui-slider-tick-mark' />
+                <span className='iui-slider-tick-number'>{label}</span>
+              </div>
             ))}
           </div>
         );
