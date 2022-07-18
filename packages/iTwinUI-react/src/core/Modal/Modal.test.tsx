@@ -200,13 +200,13 @@ it('should work with portal container properly', () => {
 
   let container = document.querySelector('body > #test-id') as HTMLElement;
   expect(container).toBeTruthy();
-  // 3 elements of FocusTrap
-  expect(container.children.length).toBe(3);
+  // 3 elements of FocusTrap and 1 backdrop
+  expect(container.children.length).toBe(4);
 
   renderComponent({ modalRootId: 'test-id' });
   container = document.querySelector('body > #test-id') as HTMLElement;
   // 2 modals under the same container
-  expect(container.children.length).toBe(6);
+  expect(container.children.length).toBe(8);
 });
 
 it('should reset body overflow on closing and unmounting', () => {

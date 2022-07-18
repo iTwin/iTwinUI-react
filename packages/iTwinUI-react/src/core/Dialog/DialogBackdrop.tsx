@@ -4,9 +4,14 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { Backdrop, BackdropProps } from '../Backdrop';
-import { useDialogContext } from './DialogContext';
+import { useMergedRefs } from '../utils';
+import { DialogContextProps, useDialogContext } from './DialogContext';
 
-export type DialogBackdropProps = BackdropProps;
+export type DialogBackdropProps = BackdropProps &
+  Pick<
+    DialogContextProps,
+    'onClose' | 'isDismissible' | 'closeOnExternalClick'
+  >;
 
 /**
  * Backdrop component for dialog. Recommended to be used with `Dialog`
@@ -19,8 +24,38 @@ export const DialogBackdrop = React.forwardRef<
   DialogBackdropProps
 >((props, ref) => {
   const dialogContext = useDialogContext();
-  const { isVisible = dialogContext.isOpen, ...rest } = props;
-  return <Backdrop isVisible={isVisible} ref={ref} {...rest} />;
+  const {
+    isVisible = dialogContext.isOpen,
+    isDismissible = dialogContext.isDismissible,
+    onClose = dialogContext.onClose,
+    closeOnExternalClick = dialogContext.closeOnExternalClick,
+    onMouseDown,
+    ...rest
+  } = props;
+
+  const backdropRef = React.useRef<HTMLDivElement>(null);
+  const refs = useMergedRefs(backdropRef, ref);
+
+  const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
+    // Prevents React from resetting its properties
+    event.persist();
+    if (event.target !== backdropRef.current) {
+      return;
+    }
+    if (isDismissible && closeOnExternalClick && onClose) {
+      onClose(event);
+    }
+    onMouseDown?.(event);
+  };
+
+  return (
+    <Backdrop
+      isVisible={isVisible}
+      ref={refs}
+      onMouseDown={handleMouseDown}
+      {...rest}
+    />
+  );
 });
 
 export default DialogBackdrop;

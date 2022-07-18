@@ -6,7 +6,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { CommonProps, useTheme, getContainer, getDocument } from '../utils';
 import '@itwin/itwinui-css/css/dialog.css';
-import { Dialog, DialogProps } from '../Dialog';
+import { Dialog, DialogMainProps } from '../Dialog';
 
 export type ModalProps = {
   /**
@@ -51,7 +51,7 @@ export type ModalProps = {
    * Content of the modal.
    */
   children: React.ReactNode;
-} & Pick<DialogProps, 'isOpen' | 'styleType'> &
+} & Pick<DialogMainProps, 'isOpen' | 'styleType'> &
   Omit<CommonProps, 'title'>;
 
 /**
@@ -101,14 +101,14 @@ export const Modal = (props: ModalProps) => {
         closeOnExternalClick={closeOnExternalClick}
         isDismissible={isDismissible}
         onClose={onClose}
-        backdrop={<Dialog.Backdrop />}
         preventDocumentScroll
         trapFocus
-        aria-modal
-        {...rest}
       >
-        <Dialog.TitleBar>{title}</Dialog.TitleBar>
-        {children}
+        <Dialog.Backdrop />
+        <Dialog.Main aria-modal {...rest}>
+          <Dialog.TitleBar>{title}</Dialog.TitleBar>
+          {children}
+        </Dialog.Main>
       </Dialog>,
       container,
     )

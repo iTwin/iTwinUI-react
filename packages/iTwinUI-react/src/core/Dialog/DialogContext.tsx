@@ -29,6 +29,16 @@ export type DialogContextProps = {
    * @default true
    */
   closeOnEsc?: boolean;
+  /**
+   * Traps the focus inside the dialog. This is useful when the dialog is modal.
+   * @default false
+   */
+  trapFocus?: boolean;
+  /**
+   * Prevents body from being scrollable. This is useful when the dialog is modal.
+   * @default false
+   */
+  preventDocumentScroll?: boolean;
 };
 
 export const DialogContext = React.createContext<
