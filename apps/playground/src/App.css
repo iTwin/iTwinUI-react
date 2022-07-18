@@ -2,6 +2,16 @@
   margin-bottom: 20px;
 }
 
+/* #demo-default {
+  display: flex;
+  
+} */
+
 .App .slider-container {
+  /* height: 500px; */
+}
+
+.App .slider-container-vertical {
   height: 500px;
+  width: fit-content;
 }

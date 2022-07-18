@@ -19,7 +19,7 @@ const App = () => {
     <div className='App'>
       {/* <Button>Hello world</Button> */}
       <h1 className='title'>Trial React for Vertical Slider</h1>
-      <div className='slider-container'>
+      <section id='demo-default'>
         <RadioTileGroup>
           <RadioTile
             label='Horizontal'
@@ -35,8 +35,16 @@ const App = () => {
             onClick={() => setOrientation(Orientation.vertical)}
           />
         </RadioTileGroup>
-        <Slider values={[50]} orientation={orientation} />
-      </div>
+        <div
+          className={`slider-container ${
+            orientation == Orientation.vertical
+              ? 'slider-container-vertical'
+              : ''
+          }`}
+        >
+          <Slider values={[50]} orientation={orientation} />
+        </div>
+      </section>
     </div>
   );
 };
