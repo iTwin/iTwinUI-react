@@ -289,6 +289,9 @@ export const Tree = <T,>(props: TreeProps<T>) => {
           `#${nodeId}`,
         ) as HTMLElement;
         nodeElement?.focus();
+        // Need to reset that if navigating with mouse and keyboard,
+        // e.g. going to the previous node with keyboard
+        // and then clicking the next node with mouse.
         setScrollToIndex(undefined);
       }
     });
