@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { act, fireEvent, render } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import Select, { SelectProps, MultipleType } from './Select';
 import SvgSmileyHappy from '@itwin/itwinui-icons-react/cjs/icons/SmileyHappy';
 import { MenuItem } from '../Menu';
@@ -447,4 +447,86 @@ it('should pass custom props to menu item', () => {
     '.iui-menu-item.test-class',
   ) as HTMLElement;
   expect(menuItem.getAttribute('data-value')).toBe('Test one');
+});
+
+it('should select multiple items', () => {
+  const onChange = jest.fn();
+  const { container, rerender } = renderComponent({
+    onChange,
+    multiple: true,
+  });
+
+  const select = container.querySelector('.iui-input-with-icon') as HTMLElement;
+  expect(select).toBeTruthy();
+
+  fireEvent.click(select.querySelector('.iui-select-button') as HTMLElement);
+  const menu = document.querySelector('.iui-menu') as HTMLUListElement;
+  assertMenu(menu);
+
+  let menuItems = menu.querySelectorAll('.iui-menu-item');
+  expect(menuItems.length).toBe(3);
+  fireEvent.click(menuItems[1]);
+  expect(onChange).toHaveBeenCalledWith(1);
+  fireEvent.click(menuItems[2]);
+  expect(onChange).toHaveBeenCalledWith(2);
+
+  rerender(
+    <Select<number>
+      options={[...new Array(3)].map((_, index) => ({
+        label: `Test${index}`,
+        value: index,
+      }))}
+      value={[1, 2]}
+      multiple
+    />,
+  );
+  menuItems = menu.querySelectorAll('.iui-menu-item');
+  expect(menuItems[1].classList).toContain('iui-active');
+  expect(menuItems[2].classList).toContain('iui-active');
+
+  const tagContainer = select.querySelector('.iui-select-tag-container');
+  expect(tagContainer?.childNodes.length).toBe(2);
+});
+
+it('should use custom render for selected item (multiple)', async () => {
+  const { container } = render(
+    <Select
+      value={['green', 'red']}
+      selectedItemRenderer={(options) => (
+        <>
+          {options.map((option) => (
+            <span key={option.label} style={{ color: option?.value }}>
+              {option.label}
+            </span>
+          ))}
+        </>
+      )}
+      options={[
+        { value: 'yellow', label: 'Yellow' },
+        { value: 'green', label: 'Green' },
+        { value: 'red', label: 'Red' },
+      ]}
+      multiple
+    />,
+  );
+
+  const selectedValues = container.querySelectorAll(
+    '.iui-select-button > span',
+  );
+  expect(selectedValues.length).toBe(2);
+  expect((selectedValues[0] as HTMLElement).style.color).toEqual('green');
+  expect((selectedValues[1] as HTMLElement).style.color).toEqual('red');
+});
+
+it('should call onChange if tag is removed', () => {
+  const onChange = jest.fn();
+  renderComponent({
+    onChange,
+    multiple: true,
+    value: [2],
+  });
+
+  const closeButton = screen.getByLabelText('Delete tag');
+  fireEvent.click(closeButton);
+  expect(onChange).toHaveBeenCalledWith(2);
 });

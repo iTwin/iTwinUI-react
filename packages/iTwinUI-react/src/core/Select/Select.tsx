@@ -442,7 +442,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
                   {selectedItems.icon &&
                     React.cloneElement(selectedItems.icon, {
                       className: cx(
-                        selectedItems?.icon.props.className,
+                        selectedItems.icon.props.className,
                         'iui-icon',
                       ),
                     })}
