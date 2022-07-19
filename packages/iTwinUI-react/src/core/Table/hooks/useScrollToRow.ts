@@ -16,6 +16,7 @@ type ScrollToRowProps<T extends Record<string, unknown>> = TableProps<T> & {
 };
 
 export function useScrollToRow<T extends Record<string, unknown>>({
+  data,
   enableVirtualization,
   page,
   paginatorRenderer,
@@ -24,8 +25,12 @@ export function useScrollToRow<T extends Record<string, unknown>>({
 }: ScrollToRowProps<T>): ScrollToRow<T> {
   const rowRefs = React.useRef<Record<string, HTMLDivElement>>({});
 
+  // Refs prevents from having `page` and `data` as dependencies
+  // therefore we avoid unnecessary scroll to row.
   const pageRef = React.useRef<Row<T>[]>(page);
   pageRef.current = page;
+  const dataRef = React.useRef<T[]>(data);
+  dataRef.current = data;
 
   // For virtualized tables, all we need to do is pass the index of the item
   // to the VirtualScroll component
@@ -34,7 +39,7 @@ export function useScrollToRow<T extends Record<string, unknown>>({
       return undefined;
     }
 
-    const index = scrollToRow(pageRef.current);
+    const index = scrollToRow(pageRef.current, dataRef.current);
     return index < 0 ? undefined : index;
   }, [onBottomReached, paginatorRenderer, scrollToRow]);
 

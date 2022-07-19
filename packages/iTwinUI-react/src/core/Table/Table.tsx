@@ -250,18 +250,22 @@ export type TableProps<
    * It doesn't work with paginated tables and with lazy-loading.
    * @example
    * <Table
-   *   data={data}
-   *   scrollToRow={(rows) => rows.findIndex((row) => row.original === data[250])}
+   *   scrollToRow={React.useCallback(
+   *     (rows, data) => rows.findIndex((row) => row.original === data[250]),
+   *     []
+   *   )}
    *   {...restProps}
    * />
    * @example
    * <Table
-   *   scrollToRow={(rows) => rows.findIndex((row) => row.id === item.id)}
-   *   getRowId={(rowData) => row.original.id}
+   *   scrollToRow={React.useCallback(
+   *     (rows, data) => rows.findIndex((row) => row.original.id === data[250].id),
+   *     []
+   *   )}
    *   {...restProps}
    * />
    */
-  scrollToRow?: (rows: Row<T>[]) => number;
+  scrollToRow?: (rows: Row<T>[], data: T[]) => number;
 } & Omit<CommonProps, 'title'>;
 
 // Original type for some reason is missing sub-columns

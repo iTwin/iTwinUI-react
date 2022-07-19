@@ -2490,9 +2490,9 @@ export const ScrollToRow: Story<Partial<TableProps>> = (args) => {
       style={{ maxHeight: '90vh' }}
       data={data}
       scrollToRow={React.useCallback(
-        (rows: Row<TableStoryDataType>[]) =>
+        (rows: Row<TableStoryDataType>[], data: TableStoryDataType[]) =>
           rows.findIndex((row) => row.original.id === data[12345].id),
-        [data],
+        [],
       )}
     />
   );
