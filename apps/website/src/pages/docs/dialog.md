@@ -1,71 +1,17 @@
 ---
 title: Dialog
 description: Dialogs inform users about a task and can contain critical information, require decisions, or involve multiple tasks.
-layout: ../../layouts/MainLayout.astro
+layout: ~/layouts/MainLayout.astro
 setup: |
-  import PropsTable from '/src/components/PropsTable.astro';
-  import LiveExample from '/src/components/LiveExample.astro';
+  import PropsTable from '~/components/PropsTable.astro';
+  import LiveExample from '~/components/LiveExample.astro';
 propsPath: '@itwin/itwinui-react/esm/core/Modal/Modal.d.ts'
-exampleCode1: |
-  import * as React from 'react'; 
-  import { Modal, Button, ModalContent, ModalButtonBar } from '@itwin/itwinui-react';
-
-  export default function App() {
-    const [isModalOpen, setIsModalOpen] = React.useState(false);
-
-      const closeModal = () => {
-        setIsModalOpen(false);
-      };
-
-      const onClose = (event: React.SyntheticEvent<Element, Event>) => {
-        closeModal();
-      };
-
-      const primaryButtonHandle = (
-        event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-      ) => {
-        closeModal();
-      };
-
-      const secondaryButtonHandle = (
-        event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-      ) => {
-        closeModal();
-      };
-
-      return (
-        <>
-          <Button styleType='high-visibility' onClick={() => setIsModalOpen(true)}>
-            Open Modal
-          </Button>
-          <Modal
-            isOpen={isModalOpen}
-            title={"Dialog"}
-            onClose={onClose}
-          >
-            <ModalContent>
-              A dialog informs users about a task and can contain critical 
-              information, require decisions, or involve multiple tasks. 
-              Dialogs appear in front of app content to provide critical information 
-              or ask for a decision. Dialogs disable all app functionality when 
-              they appear, and remain on screen until confirmed, dismissed, 
-              or a required action has been taken.
-            </ModalContent>
-            <ModalButtonBar>
-              <Button styleType='high-visibility' onClick={primaryButtonHandle}>
-                Primary
-              </Button>
-              <Button onClick={secondaryButtonHandle}>Secondary</Button>
-            </ModalButtonBar>
-          </Modal>
-        </>
-      );
-      }
+exampleCodeFile1: Dialog.example.tsx
 ---
 
 <p>{frontmatter.description}</p>
 
-<LiveExample code={frontmatter.exampleCode1} />
+<LiveExample src={frontmatter.exampleCodeFile1} />
 
 A dialog informs users about a task and can contain critical information, require decisions, or involve multiple tasks. Dialogs appear in front of app content to provide critical information or ask for a decision. Dialogs disable all app functionality when they appear, and remain on screen until confirmed, dismissed, or a required action has been taken.
 

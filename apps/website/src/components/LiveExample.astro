@@ -1,13 +1,25 @@
 ---
 import LiveExample from './LiveExample';
-import { getSandpackCssText } from '@codesandbox/sandpack-react';
+import fs from 'fs';
+import { createRequire } from 'module';
 
 export type Props = {
-  code: string;
+  /** name of the file to read code example from, should be located in ~/examples folder */
+  src: string;
 };
 
-const { code } = Astro.props;
-const staticSandpackCss = getSandpackCssText();
+const { src } = Astro.props;
+
+// baseUrl refers to project root
+const baseUrl = import.meta.env.PROD
+  ? new URL('..', import.meta.url).href
+  : new URL('../../', import.meta.url);
+const require = createRequire(baseUrl);
+
+const codePath = new URL(`./src/examples/${src}`, baseUrl);
+const code = await fs.promises.readFile(codePath, 'utf8');
+
+// const staticSandpackCss = getSandpackCssText();
 ---
 
 <LiveExample code={code} client:load />
@@ -32,9 +44,7 @@ const staticSandpackCss = getSandpackCssText();
     border-bottom-right-radius: 0.5rem;
   }
 </style>
-<style id='sandpack' set:html={staticSandpackCss}>
-
-</style>
+<!-- <style id='sandpack' set:html={staticSandpackCss}> -->
 
 <!--
 ⬇️ All my past efforts to prerender the component while JS loads.
