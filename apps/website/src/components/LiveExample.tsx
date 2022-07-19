@@ -2,12 +2,14 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import {
+import * as SandpackReact from '@codesandbox/sandpack-react';
+
+const {
   SandpackProvider,
   SandpackThemeProvider,
   SandpackCodeEditor,
   SandpackPreview,
-} from '@codesandbox/sandpack-react';
+} = SandpackReact;
 
 const indexJs = `
 import { createRoot } from 'react-dom/client';

@@ -1,31 +1,17 @@
 ---
 title: Alert
 description: A small box to quickly grab user attention and communicate a brief message
-layout: ../../layouts/MainLayout.astro
+layout: ~/layouts/MainLayout.astro
 setup: |
-  import PropsTable from '/src/components/PropsTable.astro';
-  import LiveExample from '/src/components/LiveExample.astro';
+  import PropsTable from '~/components/PropsTable.astro';
+  import LiveExample from '~/components/LiveExample.astro';
 propsPath: '@itwin/itwinui-react/esm/core/Alert/Alert.d.ts'
-exampleCode1: |
-  import { Alert } from '@itwin/itwinui-react';
-  
-  export default function App() {
-    return (
-      <Alert
-        type='positive'
-        onClose={() => console.log('CLOSED')}
-        clickableText='Learn more'
-        style={{ minWidth: 350 }}
-      >
-        This is an alert
-      </Alert>
-    );
-  }
+exampleCodeFile1: Alert.example.tsx
 ---
 
 <p>{frontmatter.description}</p>
 
-<LiveExample code={frontmatter.exampleCode1} />
+<LiveExample src={frontmatter.exampleCodeFile1} />
 
 An alert is an element that notifies the user of something important that is not user initiated. If you need to alert the user because of something they did, consider using a toast notification or an inline message. Instead, an alert is used to notify the user of something unrelated to what they just did. Examples of this might be announcing a new feature within the product, or alerting the user of scheduled server maintenance and downtime.
 
