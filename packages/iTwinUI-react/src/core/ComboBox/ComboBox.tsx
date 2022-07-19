@@ -179,7 +179,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   // Clear the extra info when the options change so that it can be reinitialized below
   React.useEffect(() => {
     optionsExtraInfoRef.current = {};
-  }, [optionsProp]);
+  }, [options]);
 
   // Change options ref on options change
   React.useEffect(() => {
@@ -226,7 +226,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           : '',
       );
     }
-  }, [isOpen, optionsProp, selectedIndex]);
+  }, [isOpen, selectedIndex]);
 
   // Set min-width of menu to be same as input
   const [minWidth, setMinWidth] = React.useState(0);
@@ -276,7 +276,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       }
       inputProps?.onChange?.(event);
     },
-    [filterFunction, focusedIndex, inputProps, optionsProp],
+    [filterFunction, focusedIndex, inputProps],
   );
 
   // When the value prop changes, update the selectedIndex
@@ -296,7 +296,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     }
     const value = optionsProp.current[selectedIndex]?.value;
     onChangeProp.current?.(value);
-  }, [optionsProp, selectedIndex]);
+  }, [selectedIndex]);
 
   const getMenuItem = React.useCallback(
     (option: SelectOption<T>, filteredIndex?: number) => {
