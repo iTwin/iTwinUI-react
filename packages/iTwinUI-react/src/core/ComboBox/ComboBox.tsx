@@ -158,6 +158,11 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     Record<string, { __originalIndex: number }>
   >({});
 
+  // Clear the extra info when the options change so that it can be reinitialized below
+  React.useEffect(() => {
+    optionsExtraInfoRef.current = {};
+  }, [options]);
+
   // Function to initialize extra info
   const initializeExtraInfo = React.useCallback(() => {
     optionsProp.current.forEach((option, index) => {
@@ -175,12 +180,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   // Latest value of the options prop
   const optionsProp = React.useRef(options);
-
-  // Clear the extra info when the options change so that it can be reinitialized below
-  React.useEffect(() => {
-    optionsExtraInfoRef.current = {};
-  }, [options]);
-
   // Change options ref on options change
   React.useEffect(() => {
     optionsProp.current = options;
