@@ -24,7 +24,7 @@ const isMultipleEnabled = <T,>(
   return multiple;
 };
 
-const multipleSelectedItemRendererType = <T,>(
+const isMultipleSelectedItemRenderer = <T,>(
   selectedItemRenderer:
     | ((option: SelectOption<T>) => JSX.Element)
     | ((options: SelectOption<T>[]) => JSX.Element)
@@ -34,7 +34,7 @@ const multipleSelectedItemRendererType = <T,>(
   return multiple && !!selectedItemRenderer;
 };
 
-const singleSelectedItemRendererType = <T,>(
+const isSingleSelectedItemRenderer = <T,>(
   selectedItemRenderer:
     | ((option: SelectOption<T>) => JSX.Element)
     | ((options: SelectOption<T>[]) => JSX.Element)
@@ -89,9 +89,9 @@ export type SelectOption<T> = {
   [key: string]: unknown;
 } & CommonProps;
 
-export type SelectValueChangeEvent = 'Added' | 'Removed';
+export type SelectValueChangeEvent = 'added' | 'removed';
 
-export type MultipleType<T> =
+export type SelectMultipleTypeProps<T> =
   | {
       /**
        * Enable multiple selection.
@@ -163,7 +163,7 @@ export type SelectProps<T> = {
    * @see [tippy.js props](https://atomiks.github.io/tippyjs/v6/all-props/)
    */
   popoverProps?: Omit<PopoverProps, 'onShow' | 'onHide' | 'disabled'>;
-} & MultipleType<T> &
+} & SelectMultipleTypeProps<T> &
   Pick<PopoverProps, 'onShow' | 'onHide'> &
   Omit<
     React.ComponentPropsWithoutRef<'div'>,
@@ -315,8 +315,8 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
               onChange?.(
                 option.value,
                 Array.isArray(value) && value.includes(option.value)
-                  ? 'Removed'
-                  : 'Added',
+                  ? 'removed'
+                  : 'added',
               );
             !multiple && close();
           },
@@ -343,7 +343,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
       : options.find((option) => option.value === value);
   }, [options, value]);
 
-  const selectedItemsArray = React.useMemo(() => {
+  const selectedItemsElements = React.useMemo(() => {
     if (!selectedItems || !Array.isArray(selectedItems)) {
       return [];
     }
@@ -353,7 +353,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
         key={item.label}
         onRemove={(e) => {
           e.stopPropagation();
-          onChange?.(item.value, 'Removed');
+          onChange?.(item.value, 'removed');
         }}
       >
         {item.label}
@@ -362,7 +362,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
   }, [onChange, selectedItems]);
 
   const [containerRef, visibleCount] = useOverflow(
-    selectedItemsArray,
+    selectedItemsElements,
     !multiple,
   );
 
@@ -415,25 +415,22 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
           {isMultipleEnabled(selectedItems, multiple) ? (
             <>
               {/* Either render custom multiple selected items provided by user */}
-              {multipleSelectedItemRendererType(
-                selectedItemRenderer,
-                multiple,
-              ) &&
+              {isMultipleSelectedItemRenderer(selectedItemRenderer, multiple) &&
                 selectedItems &&
                 selectedItemRenderer(selectedItems)}
               {/* Or render multiple selected items using `SelectTag` and handling overflow */}
               {!selectedItemRenderer && (
                 <span className='iui-content'>
                   <div className='iui-select-tag-container' ref={containerRef}>
-                    {visibleCount < selectedItemsArray.length ? (
+                    {visibleCount < selectedItemsElements.length ? (
                       <>
-                        {selectedItemsArray.slice(0, visibleCount)}
+                        {selectedItemsElements.slice(0, visibleCount)}
                         <SelectTag>
-                          +{selectedItemsArray.length - visibleCount} item(s)
+                          +{selectedItemsElements.length - visibleCount} item(s)
                         </SelectTag>
                       </>
                     ) : (
-                      selectedItemsArray
+                      selectedItemsElements
                     )}
                   </div>
                 </span>
@@ -442,7 +439,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
           ) : (
             <>
               {/* Either render custom selected item provided by user */}
-              {singleSelectedItemRendererType(selectedItemRenderer, multiple) &&
+              {isSingleSelectedItemRenderer(selectedItemRenderer, multiple) &&
                 selectedItems &&
                 selectedItemRenderer(selectedItems)}
               {/* Or render selected item's label */}

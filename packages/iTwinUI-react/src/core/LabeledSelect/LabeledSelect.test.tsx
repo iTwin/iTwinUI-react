@@ -5,7 +5,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { LabeledSelect, LabeledSelectProps } from './LabeledSelect';
-import { MultipleType } from '../Select/Select';
+import { SelectMultipleTypeProps } from '../Select/Select';
 
 const assertBaseElement = (inputContainer: HTMLElement) => {
   expect(inputContainer).toBeTruthy();
@@ -19,7 +19,7 @@ const assertBaseElement = (inputContainer: HTMLElement) => {
 };
 
 function renderComponent(
-  props?: Partial<LabeledSelectProps<number>> & MultipleType<number>,
+  props?: Partial<LabeledSelectProps<number>> & SelectMultipleTypeProps<number>,
 ) {
   return render(
     <LabeledSelect<number>

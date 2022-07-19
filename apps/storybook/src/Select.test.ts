@@ -45,7 +45,7 @@ describe('Select', () => {
         cy.compareSnapshot(`${testName} (Multi selected)`);
       }
 
-      if (testName.includes('Custom') && !testName.includes('Multi')) {
+      if (testName === 'Custom') {
         cy.get('.iui-menu-item').first().click();
         cy.compareSnapshot(`${testName} (Closed With Value)`);
       }
