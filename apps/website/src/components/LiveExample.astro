@@ -1,7 +1,6 @@
 ---
 import LiveExample from './LiveExample';
 import fs from 'fs';
-import { createRequire } from 'module';
 
 export type Props = {
   /** name of the file to read code example from, should be located in ~/examples folder */
@@ -14,10 +13,14 @@ const { src } = Astro.props;
 const baseUrl = import.meta.env.PROD
   ? new URL('..', import.meta.url).href
   : new URL('../../', import.meta.url);
-const require = createRequire(baseUrl);
 
 const codePath = new URL(`./src/examples/${src}`, baseUrl);
-const code = await fs.promises.readFile(codePath, 'utf8');
+let code = await fs.promises.readFile(codePath, 'utf8');
+
+// strip copyright header (first 4 lines)
+if (code.includes('Copyright (c) Bentley Systems')) {
+  code = code.split('\n').slice(4).join('\n');
+}
 
 // const staticSandpackCss = getSandpackCssText();
 ---
