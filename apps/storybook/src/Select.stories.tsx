@@ -356,7 +356,7 @@ export const Multi: Story<SelectProps<number>> = (args) => {
         value={value}
         onChange={(val, event) =>
           setValue((prev) =>
-            event === 'Removed'
+            event === 'removed'
               ? prev.filter((value) => val !== value)
               : [...prev, val],
           )
@@ -391,7 +391,7 @@ export const MultiCustomRenderer: Story<SelectProps<number>> = (args) => {
         value={value}
         onChange={(val, event) =>
           setValue((prev) =>
-            event === 'Removed'
+            event === 'removed'
               ? prev.filter((value) => val !== value)
               : [...(prev ?? []), val],
           )
