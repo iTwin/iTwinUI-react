@@ -379,6 +379,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
 
     let dayClass = 'iui-calendar-day';
 
+    // if the selected date is not in the range, it will be selected
     if (
       isSameDay(day, selectedDay) &&
       !isInDateRange(selectedDay, selectedStartDay, selectedEndDay)
@@ -386,6 +387,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
       dayClass += '-selected';
     }
 
+    // if the start date is not selected, it will be the range-start
     if (
       isSameDay(day, selectedStartDay) &&
       dayClass != 'iui-calendar-day-selected'
@@ -393,6 +395,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
       dayClass += '-range-start';
     }
 
+    // if the end date is not selected, it will be the range-end
     if (
       isSameDay(day, selectedEndDay) &&
       dayClass != 'iui-calendar-day-selected'
@@ -400,12 +403,17 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
       dayClass += '-range-end';
     }
 
+    // adds range class to dates between start and end date
     if (
       selectedStartDay &&
       selectedEndDay &&
       isInDateRange(day, selectedStartDay, selectedEndDay)
     ) {
       dayClass += '-range';
+    }
+
+    // if there is a start date, and it matches with the selected day, get rid of the start date
+    if (selectedStartDay && selectedDay === selectedStartDay) {
     }
 
     if (isSameDay(day, new Date())) {
