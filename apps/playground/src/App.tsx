@@ -115,37 +115,46 @@ const WithCustomThumb = (args: any) => {
   return <Slider {...args} />;
 };
 
-WithCustomThumb.args = {
-  thumbProps: () => {
-    return {
-      style: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#999',
-        width: '36px',
-        height: '26px',
-        borderRadius: '4px',
-        transform: 'translateX(-19.2px)',
-        // top: 0,
-        // top: orientation == Orientation.horizontal ? 0 : 'unset', // TODO: Confirm if this works and doesn't break anything
-      },
-      children: (
-        <span
-          style={{
-            pointerEvents: 'none',
-            marginBottom: '4px',
-          }}
-        >
-          |||
-        </span>
-      ),
-    };
-  },
-  values: [50],
-  minLabel: <SvgSmileyHappy />,
-  maxLabel: <SvgSmileySad />,
-  railContainerProps: { style: { margin: '0 8px' } },
+WithCustomThumb.args = (orientation: Orientation) => {
+  return {
+    thumbProps: () => {
+      return {
+        style: {
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: '#999',
+          width: '36px',
+          height: '26px',
+          borderRadius: '4px',
+          transform:
+            orientation == Orientation.horizontal
+              ? // ? 'translateX(-19.2px)'
+                'translateX(-19.2px)'
+              : 'translate(-25%, 50%)',
+          // transform: 'translateX(-19.2px)',
+          // transform: 'translateX(-50%)',
+          // top: 0,
+          top: orientation == Orientation.horizontal ? 0 : 'unset', // TODO: Confirm if this works and doesn't break anything
+        },
+        children: (
+          <span
+            style={{
+              pointerEvents: 'none',
+              marginBottom: '4px',
+              // transform: 'transformX(400%)',
+            }}
+          >
+            |||
+          </span>
+        ),
+      };
+    },
+    values: [50],
+    minLabel: <SvgSmileyHappy />,
+    maxLabel: <SvgSmileySad />,
+    // railContainerProps: { style: { margin: '0 8px' } },
+  };
 };
 
 const Disabled = (args: any) => {
@@ -297,8 +306,21 @@ const App = () => {
             orientation: orientation,
           })}
           {WithCustomThumb({
-            ...WithCustomThumb.args,
+            ...WithCustomThumb.args(orientation),
             orientation: orientation,
+            tickLabels: [
+              '0',
+              '10',
+              '20',
+              '30',
+              '40',
+              '50',
+              '60',
+              '70',
+              '80',
+              '90',
+              '100',
+            ],
           })}
           {Disabled({ ...Disabled.args, orientation: orientation })}
           {CustomTooltip({ ...CustomTooltip.args, orientation: orientation })}
