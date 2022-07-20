@@ -172,6 +172,12 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     });
   }, [id]);
 
+  // Latest value of the valueProp prop
+  const localValueProp = React.useRef(valueProp);
+  React.useEffect(() => {
+    localValueProp.current = valueProp;
+  }, [valueProp]);
+
   // Latest value of the onChange prop
   const onChangeProp = React.useRef(onChange);
   React.useEffect(() => {
@@ -217,7 +223,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     else {
       // Reset the focused index
       dispatch(['focus']);
-
       // Reset the input value
       setInputValue(
         selectedIndex != undefined && selectedIndex >= 0
@@ -293,8 +298,13 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       mounted.current = true;
       return;
     }
-    const value = optionsProp.current[selectedIndex]?.value;
-    onChangeProp.current?.(value);
+    const currentValue = optionsProp.current[selectedIndex]?.value;
+
+    // If current value is the same as selected value, do not call user defined onChange
+    if (currentValue === localValueProp.current || selectedIndex === -1) {
+      return;
+    }
+    onChangeProp.current?.(currentValue);
   }, [selectedIndex]);
 
   const getMenuItem = React.useCallback(

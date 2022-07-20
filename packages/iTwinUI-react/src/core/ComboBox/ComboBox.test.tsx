@@ -669,21 +669,24 @@ it('should programmatically clear value', async () => {
   const mockOnChange = jest.fn();
   const options = [0, 1, 2].map((value) => ({ value, label: `Item ${value}` }));
 
-  const { rerender } = render(
+  const { container, rerender } = render(
     <ComboBox options={options} onChange={mockOnChange} value={1} />,
   );
 
   await userEvent.tab();
   await userEvent.click(screen.getByText('Item 2'));
+  const input = container.querySelector('.iui-input') as HTMLInputElement;
   expect(mockOnChange).toHaveBeenCalledWith(2);
+  expect(input).toHaveValue('Item 2');
 
   rerender(
     <ComboBox options={options} onChange={mockOnChange} value={undefined} />,
   );
-  expect(mockOnChange).toHaveBeenCalledWith(undefined);
+  expect(mockOnChange).not.toHaveBeenCalledTimes(2);
+  expect(input).toHaveValue('');
 });
 
-it('should update options', async () => {
+it('should update options (have selected option in new options list)', async () => {
   const mockOnChange = jest.fn();
   const options = [0, 1, 2].map((value) => ({ value, label: `Item ${value}` }));
 
@@ -702,20 +705,34 @@ it('should update options', async () => {
     label: `Item ${value}`,
   }));
 
-  rerender(<ComboBox options={options2} onChange={mockOnChange} />);
+  rerender(<ComboBox options={options2} onChange={mockOnChange} value={2} />);
   fireEvent.focus(input);
   const list = document.querySelector('.iui-menu') as HTMLUListElement;
   expect(list).toBeVisible();
   expect(list.children).toHaveLength(4);
+  expect(mockOnChange).not.toHaveBeenCalledTimes(2);
+  expect(input).toHaveValue('Item 2');
+});
+
+it('should update options (does not have selected option in new options list)', async () => {
+  const mockOnChange = jest.fn();
+  const options = [0, 1, 2].map((value) => ({ value, label: `Item ${value}` }));
+
+  const { container, rerender } = render(
+    <ComboBox options={options} onChange={mockOnChange} />,
+  );
+
+  const input = container.querySelector('.iui-input') as HTMLInputElement;
+  await userEvent.tab();
+  await userEvent.click(screen.getByText('Item 2'));
   expect(mockOnChange).toHaveBeenCalledWith(2);
   expect(input).toHaveValue('Item 2');
 
-  const options3 = [6, 7, 8].map((value) => ({
+  const options2 = [6, 7, 8].map((value) => ({
     value,
     label: `Item ${value}`,
   }));
 
-  rerender(<ComboBox options={options3} onChange={mockOnChange} />);
-  expect(mockOnChange).toHaveBeenCalledWith(undefined);
+  rerender(<ComboBox options={options2} onChange={mockOnChange} value={2} />);
   expect(input).toHaveValue('');
 });
