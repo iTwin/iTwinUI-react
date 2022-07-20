@@ -34,6 +34,13 @@ const isInDateRange = (
   return a && b && c && a > b && a < c;
 };
 
+// compares to see if one date is earlier than another
+const dateCompare = (a: Date | undefined, b: Date | undefined) => {
+  a && a.setHours(0, 0, 0, 0);
+  b && b.setHours(0, 0, 0, 0);
+  return a && b && a < b;
+};
+
 const defaultMonths = [
   'January',
   'February',
@@ -125,8 +132,9 @@ export type DatePickerProps = {
   date?: Date;
   /**
    * Callback when date is changed.
+   * Optional parameter is only used for date range support
    */
-  onChange?: (date: Date) => void;
+  onChange?: (date: Date, endDate?: Date) => void;
   /**
    * Pass localized week days (start from sunday) and months.
    * Use helper function `generateLocalizedStrings` to generate strings using `Intl.DateTimeFormat`.
@@ -304,6 +312,40 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
   const onDayClick = (day: Date) => {
     if (day.getMonth() !== selectedDay?.getMonth()) {
       setMonthAndYear(day.getMonth(), day.getFullYear());
+    }
+    // changes start date if clicked before start date
+    if (dateCompare(day, startDate)) {
+      setSelectedStartDay(day);
+
+      const currentStartDate = startDate ?? new Date();
+      const newStartDate = new Date(
+        day.getFullYear(),
+        day.getMonth(),
+        day.getDate(),
+        currentStartDate.getHours(),
+        currentStartDate.getMinutes(),
+        currentStartDate.getSeconds(),
+      );
+
+      endDate && onChange?.(newStartDate, endDate);
+      return;
+    }
+
+    // changes end date if clicked after end date
+    if (dateCompare(endDate, day)) {
+      setSelectedEndDay(day);
+      const currentEndDate = endDate ?? new Date();
+      const newEndDate = new Date(
+        day.getFullYear(),
+        day.getMonth(),
+        day.getDate(),
+        currentEndDate.getHours(),
+        currentEndDate.getMinutes(),
+        currentEndDate.getSeconds(),
+      );
+
+      startDate && onChange?.(startDate, newEndDate);
+      return;
     }
     const currentDate = selectedDay ?? new Date();
     const newDate = new Date(

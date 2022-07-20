@@ -213,35 +213,47 @@ export const BasicRange: Story<DatePickerProps> = (args) => {
   const {
     setFocus = true,
     localizedNames,
-    startDate = new Date(2021, 4, 13, 14, 55, 22),
-    endDate = new Date(2021, 4, 27, 14, 55, 22),
+    startDate = new Date(2022, 6, 13, 14, 55, 22),
+    endDate = new Date(2022, 6, 27, 14, 55, 22),
     ...rest
   } = args;
   const [opened, setOpened] = React.useState(false);
-  // const [currentDate, setCurrentDate] = React.useState(new Date(startDate));
-  // const onChange = (startDate: Date) => {
-  //   setCurrentDate(startDate);
-  //   action(`New date value: ${startDate}`, { clearOnStoryChange: false })();
-  // };
+  const [currentStartDate, setCurrentStartDate] = React.useState(
+    new Date(startDate),
+  );
+  const [currentEndDate, setCurrentEndDate] = React.useState(new Date(endDate));
+  const onChange = (startDate: Date, endDate?: Date) => {
+    setCurrentStartDate(startDate);
+    endDate && setCurrentEndDate(endDate);
+    action(`New start date value: ${startDate}`, {
+      clearOnStoryChange: false,
+    })();
+    action(`New end date value: ${endDate}`, { clearOnStoryChange: false })();
+  };
 
-  // React.useEffect(() => {
-  //   setCurrentDate(new Date(startDate));
-  //   return () => action('', { clearOnStoryChange: true })();
-  // }, [startDate]);
+  React.useEffect(() => {
+    setCurrentStartDate(new Date(startDate));
+    setCurrentEndDate(new Date(endDate));
+    return () => action('', { clearOnStoryChange: true })();
+  }, [startDate, endDate]);
   return (
     <>
       <IconButton onClick={() => setOpened(!opened)} id='picker-button'>
         <SvgCalendar />
       </IconButton>
-      <span style={{ marginLeft: 16 }}>Start Date:{startDate.toString()}</span>
-      <span style={{ marginLeft: 16 }}>End Date:{endDate.toString()}</span>
+      <span style={{ marginLeft: 16 }}>
+        Start Date: {currentStartDate.toString()}
+      </span>
+      <span style={{ marginLeft: 16 }}>
+        End Date: {currentEndDate.toString()}
+      </span>
       {opened && (
         <div style={{ marginTop: 4 }}>
           <DatePicker
             {...rest}
-            startDate={startDate}
-            endDate={endDate}
-            // onChange={onChange}
+            startDate={currentStartDate}
+            endDate={currentEndDate}
+            onChange={onChange}
             localizedNames={localizedNames}
             setFocus={setFocus}
           />
@@ -252,6 +264,6 @@ export const BasicRange: Story<DatePickerProps> = (args) => {
 };
 
 BasicRange.args = {
-  startDate: new Date(2021, 4, 13, 14, 55, 22),
-  endDate: new Date(2021, 4, 27, 14, 55, 22),
+  startDate: new Date(2022, 6, 13, 14, 55, 22),
+  endDate: new Date(2022, 6, 27, 14, 55, 22),
 };
