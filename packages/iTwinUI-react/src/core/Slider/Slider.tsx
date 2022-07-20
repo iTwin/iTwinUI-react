@@ -474,7 +474,8 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         ref={ref}
         className={cx(
           'iui-slider-component-container',
-          { 'iui-vertical': orientation === Orientation.vertical },
+          { 'iui-slider-vertical': orientation === Orientation.vertical },
+          { 'iui-slider-horizontal': orientation === Orientation.horizontal }, // TODO: Is a ternary operator possible to select only horizontal or vertical?
           { 'iui-disabled': disabled },
           className,
         )}
