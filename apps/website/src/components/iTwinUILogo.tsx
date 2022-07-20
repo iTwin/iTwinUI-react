@@ -46,7 +46,7 @@ export const ITwinUILogo = () => {
         transform: `rotateY(${rotateDeg.x}deg) rotateX(${rotateDeg.y}deg)`,
         borderRadius: '25%',
         transformStyle: 'preserve-3d',
-        boxShadow: `0 10px 20px hsl(232, 79%, 90%), 0 0 30px hsla(186, 78%, 95%,75%)`,
+        boxShadow: `rgba(255, 255, 255,0.5) 0px 5px 5px inset, rgba(0, 0, 0,0.5) 0px -1px 6px inset`,
         transition: `${animation}`,
       }}
       onMouseMove={handleMouseMove}
