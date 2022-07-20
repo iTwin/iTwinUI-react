@@ -127,7 +127,8 @@ WithCustomThumb.args = {
         height: '26px',
         borderRadius: '4px',
         transform: 'translateX(-19.2px)',
-        top: 0,
+        // top: 0,
+        // top: orientation == Orientation.horizontal ? 0 : 'unset', // TODO: Confirm if this works and doesn't break anything
       },
       children: (
         <span

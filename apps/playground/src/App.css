@@ -9,6 +9,10 @@
 
 .App .slider-container {
   /* height: 500px; */
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-evenly; */
+  gap: 3rem;
 }
 
 .App .slider-container-vertical {
