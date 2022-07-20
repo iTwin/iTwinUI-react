@@ -8,11 +8,13 @@ import NoFussIcon from 'src/icons/NoFussIcon.astro';
 import EvolvingIcon from 'src/icons/EvolvingIcon.astro';
 import ConsistentIcon from 'src/icons/ConsistentIcon.astro';
 import HexagonBackground from 'src/icons/HexagonBackground.astro';
+import NorthernLights from 'src/components/NorthernLights.astro';
 
 const currentPage = new URL(Astro.request.url).pathname;
 ---
 
 <Global currentPage={currentPage}>
+  <NorthernLights />
   <HexagonBackground class='hexagon-bg' aria-hidden='true' />
   <Header class='header' />
   <main>
