@@ -9,6 +9,7 @@ import {
   getFocusableElements,
   useVirtualization,
   mergeRefs,
+  StylingProps,
 } from '../utils';
 import '@itwin/itwinui-css/css/tree.css';
 import cx from 'classnames';
@@ -369,9 +370,7 @@ type VirtualizedTreeProps<T> = {
   scrollToIndex?: number;
   onKeyDown: React.KeyboardEventHandler<HTMLUListElement>;
   onFocus: React.FocusEventHandler<HTMLUListElement>;
-  className?: string;
-  style?: React.CSSProperties;
-};
+} & StylingProps;
 
 // Having virtualized tree separately prevents from running all virtualization logic
 const VirtualizedTree = React.forwardRef(
