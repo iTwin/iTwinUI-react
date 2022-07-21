@@ -63,7 +63,7 @@ As specified earlier, full-page dialogs will house various settings options as s
 
 ### Dos & Don'ts
 
-#### Do
+Do:
 
 - Use dialogs for important warnings, as a way to prevent or correct critical errors.
 - Simplify the workflow. Use dialogs to ask for information that, when provided, could significantly lessen users’ work or effort.
@@ -71,7 +71,7 @@ As specified earlier, full-page dialogs will house various settings options as s
 - Keep it short. Be brief and concise in your content.
 - Try displaying your information in a different way. See alternatives for more information.
 
-#### Don't
+Don't:
 
 - Open a dialog from a dialog.
 - Have multiple steps within a dialog.
