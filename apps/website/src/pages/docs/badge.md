@@ -1,6 +1,6 @@
 ---
 title: Badge
-description: A colorful visual indicator for categorizing items.
+description: Badges are easily scannable visual identifiers that help categorize items of a same nature on a page.
 layout: ~/layouts/MainLayout.astro
 setup: |
   import PropsTable from '~/components/PropsTable.astro';
@@ -13,16 +13,39 @@ exampleCodeFile1: Badge.example.tsx
 
 <LiveExample src={frontmatter.exampleCodeFile1} />
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Badges are visual identifiers that use data-visualization colors and a label to categorize certain components, such as project tiles. They are similar to tags in shape but they are not interchangeable, as they fulfill different roles. Unlike tags which are user-generated, badges are provided by the system.
 
-Sed flavum. Stridore nato, Alcandrumque desint ostendit derat, longoque, eadem
-iunxit miserum pedum pectora. Liberat sine pignus cupit, ferit mihi venias
-amores, et quod, maduere haec _gravi_ contentusque heros. Qui suae attonitas.
+## Appearance
 
-_Acta caelo_ ego, hoc illi ferroque, qui fluitque Achillis deiecerat erat
-inhospita arasque ad sume et aquis summo. Fugerat ipse iam. Funeris Iuno Danaos
-est inroravere aurum foret nati aeque tetigisset! Esse ad tibi queritur Sol sub
-est pugno solitoque movet coercuit solent caput te?
+Badges are colorful rectangles with rounded corners, with a label in white, all caps font on top. They are available in one size only; the length is flexible to accommodate different labels, but the height or font size cannot be increased. The font type and color remains the same no matter what.
+
+For the background color, prioritize data-visualization colors.
+
+## Usage
+
+Use badges as a way to highlight certain items that must be easily told apart from other similar components in the same UI. For example, on a page where users can view project tiles, badges can be overlaid on projects that are from external sources, thus needing different permissions than internal projects.
+
+Badges are not tags, so they should not be considered the same as keywords for helping users bring items up with queries.
+
+The quantity of badges per component, unlike tags, is finite. Ideally, there should only be one badge per item. There may be up to three if necessary, though it is not recommended. Remember that badges are meant to be easy to spot and read; the more visual noise there is around one, the harder is it to identify it.
+
+### Label
+
+Badge labels should be kept short. They are meant to be easily scannable by the user, so using long labels is strongly discouraged. Keep badge labels to one word if possible, three being the maximum if it is absolutely necessary. Do not use sentences for labels; they are too complex and defeat the purpose of a badge. If you are tempted to use a badge bearing a label that may be too long, consider breaking it up in different badges if possible.
+
+### Numerical labels
+
+It is possible for badges to bear numerical labels instead of words. It’s the case for badges on video tiles; they are used to display the media’s duration, so the user knows what to expect before playing it.
+
+### Background
+
+Background color should not be used haphazardly. It is contextual and not just for aesthetics; when using several badges with different colors on the same page, make it so each color has a meaning and belongs to a specific category or context. For example, use color for representing a status, or context-sensitive information.
+
+## Interactivity
+
+Because they are read-only components, badges are devoid of state changes. This means that they should not have on-hover, on-click or any other interaction triggered by the user.
+
+Badges cannot be edited, added or removed by the user. They are entirely managed by the system.
 
 ## Props
 
