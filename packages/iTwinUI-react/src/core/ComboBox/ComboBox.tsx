@@ -158,11 +158,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     Record<string, { __originalIndex: number }>
   >({});
 
-  // Clear the extra info when the options change so that it can be reinitialized below
-  React.useEffect(() => {
-    optionsExtraInfoRef.current = {};
-  }, [options]);
-
   // Function to initialize extra info
   const initializeExtraInfo = React.useCallback(() => {
     optionsProp.current.forEach((option, index) => {
@@ -189,6 +184,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   // Change options ref on options change
   React.useEffect(() => {
     optionsProp.current = options;
+    // Clear the extra info when the options change so that it can be reinitialized below
+    optionsExtraInfoRef.current = {};
     initializeExtraInfo();
   }, [options, initializeExtraInfo]);
 
@@ -241,19 +238,17 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   }, [isOpen]);
 
   // Update filtered options to the latest value options according to input value
-  const [filteredOptions, setFilteredOptions] = React.useState(
-    optionsProp.current,
-  );
+  const [filteredOptions, setFilteredOptions] = React.useState(options);
   React.useEffect(() => {
     if (inputValue) {
       setFilteredOptions(
-        filterFunction?.(optionsProp.current, inputValue) ??
+        filterFunction?.(options, inputValue) ??
           options.filter((option) =>
             option.label.toLowerCase().includes(inputValue.toLowerCase()),
           ),
       );
     } else {
-      setFilteredOptions(optionsProp.current);
+      setFilteredOptions(options);
     }
     dispatch(['focus']);
     // Only need to call on options update
@@ -310,7 +305,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   const getMenuItem = React.useCallback(
     (option: SelectOption<T>, filteredIndex?: number) => {
       const optionId = getOptionId(option, id);
-
       const { __originalIndex } = optionsExtraInfoRef.current[optionId];
 
       const customItem = itemRenderer
