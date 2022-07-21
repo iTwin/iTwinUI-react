@@ -1,6 +1,6 @@
 ---
 title: Badge
-description: A colorful visual indicator for categorizing items
+description: A colorful visual indicator for categorizing items.
 layout: ~/layouts/MainLayout.astro
 setup: |
   import PropsTable from '~/components/PropsTable.astro';

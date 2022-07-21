@@ -6,6 +6,11 @@ import NoFussIcon from 'src/icons/NoFussIcon.astro';
 import EvolvingIcon from 'src/icons/EvolvingIcon.astro';
 import ConsistentIcon from 'src/icons/ConsistentIcon.astro';
 import HexagonBackground from 'src/icons/HexagonBackground.astro';
+import BadgeExample from 'src/examples/Badge.example';
+import AlertExample from 'src/examples/Alert.example';
+import AvatarExample from 'src/examples/Avatar.example';
+import BreadcrumbsExample from 'src/examples/Breadcrumbs.example';
+import ExpandableBlockExample from 'src/examples/ExpandableBlock.example';
 
 const currentPage = new URL(Astro.request.url).pathname;
 ---
@@ -26,11 +31,36 @@ const currentPage = new URL(Astro.request.url).pathname;
       </div>
 
       <div class='code-blocks'>
-        <div class='code-sample code-sample-1'></div>
-        <div class='code-sample code-sample-2'></div>
-        <div class='code-sample code-sample-3'></div>
-        <div class='code-sample code-sample-1'></div>
-        <div class='code-sample code-sample-2'></div>
+        <div class='code-wrapper'>
+          <div class='code-sample code-sample-1'><BadgeExample /></div>
+          <h3>Badge</h3>
+          <p>A colorful visual indicator for categorizing items</p>
+        </div>
+        <div class='code-wrapper'>
+          <div class='code-sample code-sample-2'>
+            <AlertExample />
+          </div>
+          <h3>Alert</h3>
+          <p>A small box to quickly grab user attention and communicate a brief message</p>
+        </div>
+        <div class='code-wrapper'>
+          <div class='code-sample code-sample-3'><AvatarExample /></div>
+          <h3>Avatar</h3>
+          <p>
+            A circular identifier that displays the user's custom set photo or the user's first and
+            last name initials.
+          </p>
+        </div>
+        <div class='code-wrapper'>
+          <div class='code-sample code-sample-1'><BreadcrumbsExample /></div>
+          <h3>Breadcumbs</h3>
+          <p>Navigate a folder hierarchy quickly with a table and breadcrumbs.</p>
+        </div>
+        <div class='code-wrapper'>
+          <div class='code-sample code-sample-2'><ExpandableBlockExample /></div>
+          <h3>Expandable block</h3>
+          <p>A pattern for progressive disclosure of information.</p>
+        </div>
       </div>
     </div>
     <div class='centered-content'>
@@ -143,16 +173,20 @@ const currentPage = new URL(Astro.request.url).pathname;
     .code-blocks {
       display: flex;
       justify-self: center;
-      align-items: center;
       gap: var(--space-6);
       margin: 96px 0;
       overflow-x: auto;
       max-width: 90vw;
     }
 
-    .code-sample {
-      padding: var(--space-7);
+    .code-wrapper {
       min-width: 300px;
+    }
+
+    .code-sample {
+      color-scheme: dark !important;
+      padding: var(--space-7);
+      width: 100%;
       min-height: 300px;
       display: flex;
       justify-content: center;
@@ -227,7 +261,7 @@ const currentPage = new URL(Astro.request.url).pathname;
       flex-direction: column;
       justify-self: center;
       align-items: center;
-      margin: calc(var(--space-7) * 3) 0;
+      margin: calc(var(--space-7)) 0 calc(var(--space-7) * 3) 0;
     }
 
     .column-content {
