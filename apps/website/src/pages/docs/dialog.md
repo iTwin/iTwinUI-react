@@ -43,7 +43,58 @@ A dismissible dialog contains information that is not required. The dialog can b
 
 The “X” icon bears the borderless button style which appears on cursor hover.
 
-## User guidelines
+### Non dismissible dialogs
+
+A non dismissible dialog contains important information that must be completed. The only way to dismiss a non dismissible dialog is by completing the action.
+
+### Drag-enabled dialogs
+
+These dialogs have a definite header that can be clicked and moved around the screen at the user’s leisure, just like a browser window.
+
+### Full page dialogs
+
+A full page dialog appears on top of the content and occupy the entire page’s space. It is used primarily for pages where users will customize settings.
+
+The two buttons at the bottom right are always pinned in that same area, regardless of content. If there is more content than there is available space in the content area, a scrollbar can be included to make the content area scrollable.
+
+As specified earlier, full-page dialogs will house various settings options as shown in the example below.
+
+## Usage guidelines
+
+### Dos & Don'ts
+
+#### Do
+
+- Use dialogs for important warnings, as a way to prevent or correct critical errors.
+- Simplify the workflow. Use dialogs to ask for information that, when provided, could significantly lessen users’ work or effort.
+- Limit the dialog to a single purpose. Limit the interaction to one, straightforward task.
+- Keep it short. Be brief and concise in your content.
+- Try displaying your information in a different way. See alternatives for more information.
+
+#### Don't
+
+- Open a dialog from a dialog.
+- Have multiple steps within a dialog.
+- Present dialogs unless prompted by the user.
+- Use a login within a dialog windows. You can’t link to them and some password managers can’t pre-fill them because the dialogs are hidden.
+
+
+### Alternative ways to display the information
+
+Here are other ways to display information if a dialog is deemed inadequate for the context, but an important message still needs to be passed onto the user.
+
+#### Inline
+
+Present your content inline to be less disruptive. You can read more about inline errors within the Text Field standard.
+
+#### Expanding elements
+Use expanding elements such as the expandable block, toolbars, tooltips, or a side bar such as the information panel.
+
+#### New page
+Lead the user to a different page to isolate the interaction without losing access to functionality such as navigation.
+
+#### Undo patterns
+Instead of using a confirmation dialog, consider using toast notifications to speed up the user’s interaction. Toast notifications are less intrusive and are preferred to a dialog for interactions such as undoing an action.
 
 ## Props
 
