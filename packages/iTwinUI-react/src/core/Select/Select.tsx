@@ -6,9 +6,43 @@ import React from 'react';
 import cx from 'classnames';
 import { DropdownMenu } from '../DropdownMenu';
 import { MenuItem } from '../Menu/MenuItem';
-import { PopoverProps, PopoverInstance, CommonProps, useTheme } from '../utils';
+import {
+  PopoverProps,
+  PopoverInstance,
+  CommonProps,
+  useTheme,
+  useOverflow,
+} from '../utils';
 import '@itwin/itwinui-css/css/inputs.css';
 import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
+import SelectTag from './SelectTag';
+
+const isMultipleEnabled = <T,>(
+  selectedItems: SelectOption<T> | SelectOption<T>[] | undefined,
+  multiple: boolean,
+): selectedItems is SelectOption<T>[] | undefined => {
+  return multiple;
+};
+
+const isMultipleSelectedItemRenderer = <T,>(
+  selectedItemRenderer:
+    | ((option: SelectOption<T>) => JSX.Element)
+    | ((options: SelectOption<T>[]) => JSX.Element)
+    | undefined,
+  multiple: boolean,
+): selectedItemRenderer is (options: SelectOption<T>[]) => JSX.Element => {
+  return multiple && !!selectedItemRenderer;
+};
+
+const isSingleSelectedItemRenderer = <T,>(
+  selectedItemRenderer:
+    | ((option: SelectOption<T>) => JSX.Element)
+    | ((options: SelectOption<T>[]) => JSX.Element)
+    | undefined,
+  multiple: boolean,
+): selectedItemRenderer is (option: SelectOption<T>) => JSX.Element => {
+  return !multiple && !!selectedItemRenderer;
+};
 
 export type ItemRendererProps = {
   /**
@@ -55,19 +89,42 @@ export type SelectOption<T> = {
   [key: string]: unknown;
 } & CommonProps;
 
+export type SelectValueChangeEvent = 'added' | 'removed';
+
+export type SelectMultipleTypeProps<T> =
+  | {
+      /**
+       * Enable multiple selection.
+       * @default false
+       */
+      multiple?: false;
+      /**
+       * Custom renderer for the selected item in select.
+       * If `multiple` is enabled, it will give array of options to render.
+       */
+      selectedItemRenderer?: (option: SelectOption<T>) => JSX.Element;
+      /**
+       * Selected option value.
+       * If `multiple` is enabled, it is an array of values.
+       */
+      value?: T;
+      /**
+       * Callback function handling change event on select.
+       */
+      onChange?: (value: T) => void;
+    }
+  | {
+      multiple: true;
+      selectedItemRenderer?: (options: SelectOption<T>[]) => JSX.Element;
+      value?: T[];
+      onChange?: (value: T, event: SelectValueChangeEvent) => void;
+    };
+
 export type SelectProps<T> = {
   /**
    * Array of options that populates the select menu.
    */
   options: SelectOption<T>[];
-  /**
-   * Selected option value.
-   */
-  value?: T;
-  /**
-   * Callback function handling change event on select.
-   */
-  onChange?: (value: T) => void;
   /**
    * Placeholder when no item is selected.
    */
@@ -94,10 +151,6 @@ export type SelectProps<T> = {
     itemProps: ItemRendererProps,
   ) => JSX.Element;
   /**
-   * Custom renderer for the selected item in select.
-   */
-  selectedItemRenderer?: (option: SelectOption<T>) => JSX.Element;
-  /**
    * Custom class for menu.
    */
   menuClassName?: string;
@@ -110,7 +163,8 @@ export type SelectProps<T> = {
    * @see [tippy.js props](https://atomiks.github.io/tippyjs/v6/all-props/)
    */
   popoverProps?: Omit<PopoverProps, 'onShow' | 'onHide' | 'disabled'>;
-} & Pick<PopoverProps, 'onShow' | 'onHide'> &
+} & SelectMultipleTypeProps<T> &
+  Pick<PopoverProps, 'onShow' | 'onHide'> &
   Omit<
     React.ComponentPropsWithoutRef<'div'>,
     'size' | 'disabled' | 'placeholder' | 'onChange'
@@ -183,6 +237,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
     onShow,
     onHide,
     popoverProps,
+    multiple = false,
     ...rest
   } = props;
 
@@ -243,7 +298,9 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
   const menuItems = React.useCallback(
     (close: () => void) => {
       return options.map((option, index) => {
-        const isSelected = value === option.value;
+        const isSelected = Array.isArray(value)
+          ? value.includes(option.value)
+          : value === option.value;
         const menuItem: JSX.Element = itemRenderer ? (
           itemRenderer(option, { close, isSelected })
         ) : (
@@ -254,25 +311,60 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
           key: `${option.label}-${index}`,
           isSelected,
           onClick: () => {
-            !option.disabled && onChange?.(option.value);
-            close();
+            !option.disabled &&
+              onChange?.(
+                option.value,
+                Array.isArray(value) && value.includes(option.value)
+                  ? 'removed'
+                  : 'added',
+              );
+            !multiple && close();
           },
-          ref: (el: HTMLElement) => isSelected && el?.scrollIntoView(),
+          ref: (el: HTMLElement) => {
+            if (isSelected && !multiple) {
+              el?.scrollIntoView();
+            }
+          },
           role: 'option',
           ...option,
           ...menuItem.props,
         });
       });
     },
-    [itemRenderer, onChange, options, value],
+    [itemRenderer, multiple, onChange, options, value],
   );
 
-  const selectedItem = React.useMemo(() => {
+  const selectedItems = React.useMemo(() => {
     if (value == null) {
       return undefined;
     }
-    return options.find((option) => option.value === value);
+    return Array.isArray(value)
+      ? options.filter((option) => value.some((val) => val === option.value))
+      : options.find((option) => option.value === value);
   }, [options, value]);
+
+  const selectedItemsElements = React.useMemo(() => {
+    if (!selectedItems || !Array.isArray(selectedItems)) {
+      return [];
+    }
+
+    return selectedItems.map((item) => (
+      <SelectTag
+        key={item.label}
+        onRemove={(e) => {
+          e.stopPropagation();
+          onChange?.(item.value, 'removed');
+        }}
+      >
+        {item.label}
+      </SelectTag>
+    ));
+  }, [onChange, selectedItems]);
+
+  const [containerRef, visibleCount] = useOverflow(
+    selectedItemsElements,
+    !multiple,
+  );
 
   return (
     <div
@@ -307,7 +399,8 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
         <div
           ref={selectRef}
           className={cx('iui-select-button', {
-            'iui-placeholder': !selectedItem && !!placeholder,
+            'iui-placeholder':
+              (!selectedItems || selectedItems.length === 0) && !!placeholder,
             'iui-disabled': disabled,
             [`iui-${size}`]: !!size,
           })}
@@ -315,17 +408,52 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
           onKeyDown={(e) => !disabled && onKeyDown(e, toggle)}
           tabIndex={!disabled ? 0 : undefined}
         >
-          {!selectedItem && <span className='iui-content'>{placeholder}</span>}
-          {selectedItem &&
-            selectedItemRenderer &&
-            selectedItemRenderer(selectedItem)}
-          {selectedItem && !selectedItemRenderer && (
+          {(!selectedItems || selectedItems.length === 0) && (
+            <span className='iui-content'>{placeholder}</span>
+          )}
+          {isMultipleEnabled(selectedItems, multiple) ? (
             <>
-              {selectedItem?.icon &&
-                React.cloneElement(selectedItem.icon, {
-                  className: cx(selectedItem?.icon.props.className, 'iui-icon'),
-                })}
-              <span className='iui-content'>{selectedItem.label}</span>
+              {/* Either render custom multiple selected items provided by user */}
+              {isMultipleSelectedItemRenderer(selectedItemRenderer, multiple) &&
+                selectedItems &&
+                selectedItemRenderer(selectedItems)}
+              {/* Or render multiple selected items using `SelectTag` and handling overflow */}
+              {!selectedItemRenderer && (
+                <span className='iui-content'>
+                  <div className='iui-select-tag-container' ref={containerRef}>
+                    {visibleCount < selectedItemsElements.length ? (
+                      <>
+                        {selectedItemsElements.slice(0, visibleCount)}
+                        <SelectTag>
+                          +{selectedItemsElements.length - visibleCount} item(s)
+                        </SelectTag>
+                      </>
+                    ) : (
+                      selectedItemsElements
+                    )}
+                  </div>
+                </span>
+              )}
+            </>
+          ) : (
+            <>
+              {/* Either render custom selected item provided by user */}
+              {isSingleSelectedItemRenderer(selectedItemRenderer, multiple) &&
+                selectedItems &&
+                selectedItemRenderer(selectedItems)}
+              {/* Or render selected item's label */}
+              {selectedItems && !selectedItemRenderer && (
+                <>
+                  {selectedItems.icon &&
+                    React.cloneElement(selectedItems.icon, {
+                      className: cx(
+                        selectedItems.icon.props.className,
+                        'iui-icon',
+                      ),
+                    })}
+                  <span className='iui-content'>{selectedItems.label}</span>
+                </>
+              )}
             </>
           )}
         </div>
