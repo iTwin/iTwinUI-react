@@ -17,6 +17,7 @@ export const OPEN_GRAPH = {
 
 export const SIDEBAR = [
   { text: 'Introduction', link: 'docs/introduction' },
+  { text: 'Getting started', link: 'docs/gettingstarted' },
   { text: 'Components', header: true },
   { text: 'Alert', link: 'docs/alert' },
   { text: 'Avatar', link: 'docs/avatar' },
