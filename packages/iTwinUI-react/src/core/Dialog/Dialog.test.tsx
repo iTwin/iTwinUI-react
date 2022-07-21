@@ -14,7 +14,7 @@ it('should pass down the props through DialogContext', async () => {
     <Dialog isOpen={true} onClose={onClose} closeOnExternalClick>
       <Dialog.Backdrop />
       <Dialog.Main>
-        <Dialog.TitleBar>Test title</Dialog.TitleBar>
+        <Dialog.TitleBar title='Test title' />
         <Dialog.Content>Here is my dialog content</Dialog.Content>
         <Dialog.ButtonBar>
           <Button styleType='high-visibility'>Confirm</Button>
@@ -48,7 +48,7 @@ it('should not allow to close the dialog when isDismissible false', async () => 
     <Dialog isOpen={true} onClose={onClose} isDismissible={false}>
       <Dialog.Backdrop />
       <Dialog.Main>
-        <Dialog.TitleBar>Test title</Dialog.TitleBar>
+        <Dialog.TitleBar title='Test title' />
         <Dialog.Content>Here is my dialog content</Dialog.Content>
         <Dialog.ButtonBar>
           <Button styleType='high-visibility'>Confirm</Button>
