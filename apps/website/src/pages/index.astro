@@ -162,219 +162,43 @@ const currentPage = new URL(Astro.request.url).pathname;
   </main>
 
   <style lang='scss'>
-    body {
-      display: grid;
-      grid-template: 'header' auto 'main' 1fr / 100%;
-    }
-
-    .hero-box {
-      display: grid;
-      grid-template-columns: 1fr 300px;
-      min-height: 300px;
-      width: 100%;
-      align-items: center;
-      gap: var(--space-6);
-      @media (max-width: 50em) {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .logo-box {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      perspective: 1000px;
-      @media (max-width: 50em) {
-        display: none;
-      }
-    }
-
-    .hexagon-bg {
-      min-height: 40vh;
-      max-height: 85vh;
-      position: absolute;
-      z-index: -2;
-      overflow: hidden;
-    }
-
-    a {
-      text-decoration: none;
-      color: unset;
-    }
-
-    .header {
-      grid-area: header;
-    }
-
-    .code-blocks {
-      display: flex;
-      justify-self: center;
-      gap: var(--space-6);
-      margin: 126px 0 96px 0;
-      overflow-x: auto;
-      max-width: 90vw;
-    }
-
-    .code-wrapper {
-      min-width: 300px;
-    }
-
-    .code-sample {
-      color-scheme: dark !important;
-      padding: var(--space-7);
-      width: 300px;
-      min-height: 300px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .code-sample-1 {
-      background: var(--color-highlight-gradient);
-    }
-
-    .code-sample-2 {
-      background: var(--color-highlight-gradient-2);
-    }
-
-    .code-sample-3 {
-      background: var(--color-highlight-gradient-3);
-    }
-
-    .colored-text {
-      color: var(--color-highlight-1);
-    }
-
-    .title-box {
-      margin-top: calc(var(--space-7) * 4);
-      justify-self: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      max-width: 580px;
-    }
-
-    .button-area {
-      display: flex;
-      gap: var(--space-5);
-    }
-
-    .main-button {
-      padding: 8px 12px;
-      border-radius: 4px;
-      text-decoration: none;
-      background: var(--color-highlight-gradient);
-      color: var(--color-background-1);
-    }
-
-    .secondary-button {
-      padding: 8px 12px;
-      border-radius: 4px;
-      text-decoration: none;
-      background: transparent;
-      color: var(--color-text);
-      border: 1px solid var(--color-text);
-    }
-
-    .main-button:hover,
-    .secondary-button:hover,
-    .library-item:hover {
-      box-shadow: 0 0 10px var(--color-highlight-1), 0 0 20px var(--color-highlight-2);
-    }
-
-    .highlight-text {
-      background: var(--color-highlight-gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .glow {
-      box-shadow: 0 0 10px var(--color-highlight-1), 0 0 20px var(--color-highlight-2);
-    }
-
-    .centered-content {
-      display: flex;
-      flex-direction: column;
-      justify-self: center;
-      align-items: center;
-      margin: calc(var(--space-7)) 0 calc(var(--space-7) * 3) 0;
-    }
-
-    .column-content {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-7);
-
-      @media (max-width: 50em) {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .text-with-icon {
-      display: grid;
-      grid-template-columns: 100px 1fr;
-      gap: var(--space-6);
-    }
-
-    .library-list {
-      max-width: 90vw;
-      display: grid;
-      gap: var(--space-6);
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-    }
-
-    .library-item {
-      padding: var(--space-5);
-      text-align: start;
-      border: 1px solid var(--color-text);
-      border-radius: 4px;
-    }
-
-    .subheading {
-      color: var(--color-subtext);
-      padding-bottom: var(--space-7);
-      max-width: 60ch;
-    }
-
-    p {
-      font-size: var(--type-0);
-    }
-
-    h1 {
-      margin-bottom: var(--space-2);
-    }
-
-    h2 {
-      font-size: var(--type-4);
-      padding-bottom: var(--space-7);
-    }
-
-    h4 {
-      font-size: var(--type-1);
-      text-align: center;
-      padding-bottom: var(--space-4);
-    }
-
-    h3 {
-      font-size: var(--type-2);
-      text-align: left;
-      padding-bottom: var(--space-5);
-    }
-
-    main {
-      grid-area: main;
-      display: grid;
-      padding: var(--space-7);
-    }
-
-    main > * {
-      max-width: 1200px;
-    }
-
-    .icon {
-      align-self: center;
-      fill: var(--color-highlight-1);
-      height: 96px;
-    }
+    body { display: grid; grid-template: 'header' auto 'main' 1fr / 100%; } .hero-box { display:
+    grid; grid-template-columns: 1fr 300px; min-height: 300px; width: 100%; align-items: center;
+    gap: var(--space-6); @media (max-width: 50em) { grid-template-columns: 1fr; } } .logo-box {
+    display: flex; justify-content: flex-end; align-items: center; perspective: 1000px; @media
+    (max-width: 50em) { display: none; } } .hexagon-bg { min-height: 40vh; max-height: 85vh;
+    position: absolute; z-index: -2; overflow: hidden; } a { text-decoration: none; color: unset; }
+    .header { grid-area: header; } .code-blocks { display: flex; justify-self: center; gap:
+    var(--space-6); margin: 126px 0 96px 0; overflow-x: auto; max-width: 90vw; } .code-wrapper {
+    min-width: 300px; } .code-sample { color-scheme: dark !important; padding: var(--space-7);
+    <<<<<<< HEAD width: 300px; ======= width: 100%; >>>>>>> d8e3329 (Added random examples to home
+    page) min-height: 300px; display: flex; justify-content: center; align-items: center; }
+    .code-sample-1 { background: var(--color-highlight-gradient); } .code-sample-2 { background:
+    var(--color-highlight-gradient-2); } .code-sample-3 { background:
+    var(--color-highlight-gradient-3); } .colored-text { color: var(--color-highlight-1); }
+    .title-box { margin-top: calc(var(--space-7) * 4); justify-self: center; display: flex;
+    flex-direction: column; align-items: center; max-width: 580px; } .button-area { display: flex;
+    gap: var(--space-5); } .main-button { padding: 8px 12px; border-radius: 4px; text-decoration:
+    none; background: var(--color-highlight-gradient); color: var(--color-background-1); }
+    .secondary-button { padding: 8px 12px; border-radius: 4px; text-decoration: none; background:
+    transparent; color: var(--color-text); border: 1px solid var(--color-text); }
+    .main-button:hover, .secondary-button:hover, .library-item:hover { box-shadow: 0 0 10px
+    var(--color-highlight-1), 0 0 20px var(--color-highlight-2); } .highlight-text { background:
+    var(--color-highlight-gradient); -webkit-background-clip: text; -webkit-text-fill-color:
+    transparent; } .glow { box-shadow: 0 0 10px var(--color-highlight-1), 0 0 20px
+    var(--color-highlight-2); } .centered-content { display: flex; flex-direction: column;
+    justify-self: center; align-items: center; margin: calc(var(--space-7)) 0 calc(var(--space-7) *
+    3) 0; } .column-content { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-7);
+    @media (max-width: 50em) { grid-template-columns: 1fr; } } .text-with-icon { display: grid;
+    grid-template-columns: 100px 1fr; gap: var(--space-6); } .library-list { max-width: 90vw;
+    display: grid; gap: var(--space-6); grid-template-columns: repeat(auto-fit, minmax(min(100%,
+    300px), 1fr)); } .library-item { padding: var(--space-5); text-align: start; border: 1px solid
+    var(--color-text); border-radius: 4px; } .subheading { color: var(--color-subtext);
+    padding-bottom: var(--space-7); max-width: 60ch; } p { font-size: var(--type-0); } h1 {
+    margin-bottom: var(--space-2); } h2 { font-size: var(--type-4); padding-bottom: var(--space-7);
+    } h4 { font-size: var(--type-1); text-align: center; padding-bottom: var(--space-4); } h3 {
+    font-size: var(--type-2); text-align: left; padding-bottom: var(--space-5); } main { grid-area:
+    main; display: grid; padding: var(--space-7); } main > * { max-width: 1200px; } .icon {
+    align-self: center; fill: var(--color-highlight-1); height: 96px; }
   </style>
 </Global>
