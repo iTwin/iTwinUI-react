@@ -28,11 +28,6 @@ export type DropdownMenuProps = {
    * Child element to wrap dropdown with.
    */
   children: React.ReactNode;
-  /**
-   * If true, the first selected or enabled menu item will be focused automatically.
-   * @default true
-   */
-  setFocus?: boolean;
 } & PopoverProps &
   Omit<CommonProps, 'title'>;
 
@@ -68,7 +63,6 @@ export const DropdownMenu = (props: DropdownMenuProps) => {
     onHide,
     trigger,
     id,
-    setFocus = true,
     ...rest
   } = props;
 
@@ -104,13 +98,7 @@ export const DropdownMenu = (props: DropdownMenuProps) => {
   return (
     <Popover
       content={
-        <Menu
-          className={className}
-          style={style}
-          role={role}
-          id={id}
-          setFocus={setFocus}
-        >
+        <Menu className={className} style={style} role={role} id={id}>
           {React.useMemo(() => menuItems(close), [menuItems, close])}
         </Menu>
       }

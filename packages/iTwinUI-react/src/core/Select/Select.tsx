@@ -395,7 +395,6 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
             setIsOpen(false);
           }
         }}
-        setFocus={!multiple}
       >
         <div
           ref={selectRef}
