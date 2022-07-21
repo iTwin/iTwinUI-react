@@ -338,20 +338,15 @@ export const Tree = <T,>(props: TreeProps<T>) => {
   );
 };
 
+type TreeElementProps = {
+  children: React.ReactNode;
+  onKeyDown: React.KeyboardEventHandler<HTMLUListElement>;
+  onFocus: React.FocusEventHandler<HTMLUListElement>;
+} & Omit<CommonProps, 'title'>;
+
 const TreeElement = React.forwardRef(
   (
-    {
-      children,
-      className,
-      ...rest
-    }: {
-      children: React.ReactNode;
-      onKeyDown: React.KeyboardEventHandler<HTMLUListElement>;
-      onFocus: React.FocusEventHandler<HTMLUListElement>;
-      className?: string;
-      style?: React.CSSProperties;
-      id?: string;
-    },
+    { children, className, ...rest }: TreeElementProps,
     ref: React.ForwardedRef<HTMLUListElement>,
   ) => {
     return (
@@ -368,6 +363,16 @@ const TreeElement = React.forwardRef(
   },
 );
 
+type VirtualizedTreeProps<T> = {
+  flatNodesList: FlatNode<T>[];
+  itemRenderer: (index: number) => JSX.Element;
+  scrollToIndex?: number;
+  onKeyDown: React.KeyboardEventHandler<HTMLUListElement>;
+  onFocus: React.FocusEventHandler<HTMLUListElement>;
+  className?: string;
+  style?: React.CSSProperties;
+};
+
 // Having virtualized tree separately prevents from running all virtualization logic
 const VirtualizedTree = React.forwardRef(
   <T,>(
@@ -380,15 +385,7 @@ const VirtualizedTree = React.forwardRef(
       className,
       style,
       ...rest
-    }: {
-      flatNodesList: FlatNode<T>[];
-      itemRenderer: (index: number) => JSX.Element;
-      scrollToIndex?: number;
-      onKeyDown: React.KeyboardEventHandler<HTMLUListElement>;
-      onFocus: React.FocusEventHandler<HTMLUListElement>;
-      className?: string;
-      style?: React.CSSProperties;
-    },
+    }: VirtualizedTreeProps<T>,
     ref: React.ForwardedRef<HTMLUListElement>,
   ) => {
     const { outerProps, innerProps, visibleChildren } = useVirtualization({
