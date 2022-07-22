@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.41.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.41.0...v1.41.1) (2022-07-21)
+
+
+### Fixes
+
+* **Small:** Use `small` element instead of `p` ([#735](https://www.github.com/iTwin/iTwinUI-react/issues/735)) ([c59f213](https://www.github.com/iTwin/iTwinUI-react/commit/c59f21326e049bce50e24c729a46482b74ef63c3))
+
 ## [1.41.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.40.1...v1.41.0) (2022-07-13)
 
 ### What's new
