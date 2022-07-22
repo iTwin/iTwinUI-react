@@ -182,7 +182,7 @@ CustomTooltip.args = {
   setFocus: true,
 };
 
-const CustomTickNoTooltip = (args: any) => {
+const CustomTickNoTooltip = (args: any, orientation: string) => {
   // const dateFormatter = useMemo(() => {
   //   return new Intl.DateTimeFormat('default', {
   //     month: 'short',
@@ -216,10 +216,18 @@ const CustomTickNoTooltip = (args: any) => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            marginTop: '20px',
+            ...(orientation === 'horizontal'
+              ? { marginTop: '20px' }
+              : { position: 'absolute', top: '50%', marginLeft: '20px' }),
           }}
         >
-          <Body style={{ width: '60px', marginRight: '6px' }}>
+          <Body
+            style={{
+              width: '60px',
+              marginRight: '6px',
+              ...(orientation === 'vertical' ? { lineHeight: '0px' } : {}),
+            }}
+          >
             {dateFormatter.format(currentDate)}
           </Body>
         </div>
@@ -323,10 +331,13 @@ const App = () => {
           })}
           {Disabled({ ...Disabled.args, orientation: orientation })}
           {CustomTooltip({ ...CustomTooltip.args, orientation: orientation })}
-          {CustomTickNoTooltip({
-            ...CustomTickNoTooltip.args,
-            orientation: orientation,
-          })}
+          {CustomTickNoTooltip(
+            {
+              ...CustomTickNoTooltip.args,
+              orientation: orientation,
+            },
+            orientation,
+          )}
           {DecimalIncrement({
             ...DecimalIncrement.args,
             orientation: orientation,
