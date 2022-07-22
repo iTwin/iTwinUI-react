@@ -17,7 +17,7 @@ import {
 export default () => {
   const [userType, setUserType] = React.useState('User');
 
-  const dropdownMenuItems = (close: () => void) => [
+  const dropdownMenuItems = (close) => [
     <MenuExtraContent key={0}>
       <>
         <Text variant='leading'>Terry Rivers</Text>
@@ -45,7 +45,9 @@ export default () => {
   ];
   return (
     <DropdownMenu menuItems={dropdownMenuItems}>
-      <IconButton>...</IconButton>
+      <IconButton>
+        <span>...</span>
+      </IconButton>
     </DropdownMenu>
   );
 };
