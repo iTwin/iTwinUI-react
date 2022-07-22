@@ -168,10 +168,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   }, [id]);
 
   // Latest value of the valueProp prop
-  const localValueProp = React.useRef(valueProp);
-  React.useEffect(() => {
-    localValueProp.current = valueProp;
-  }, [valueProp]);
+  const valuePropRef = React.useRef(valueProp);
+  valuePropRef.current = valueProp;
 
   // Latest value of the onChange prop
   const onChangeProp = React.useRef(onChange);
@@ -181,9 +179,10 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   // Latest value of the options prop
   const optionsProp = React.useRef(options);
+  optionsProp.current = options;
+
   // Change options ref on options change
   React.useEffect(() => {
-    optionsProp.current = options;
     // Clear the extra info when the options change so that it can be reinitialized below
     optionsExtraInfoRef.current = {};
     initializeExtraInfo();
@@ -296,7 +295,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     const currentValue = optionsProp.current[selectedIndex]?.value;
 
     // If current value is the same as selected value, do not call user defined onChange
-    if (currentValue === localValueProp.current || selectedIndex === -1) {
+    if (currentValue === valuePropRef.current || selectedIndex === -1) {
       return;
     }
     onChangeProp.current?.(currentValue);
