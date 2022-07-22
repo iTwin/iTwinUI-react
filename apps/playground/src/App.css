@@ -7,7 +7,7 @@
   
 } */
 
-.App .slider-container {
+.App .slider-container-horizontal {
   /* height: 500px; */
   display: flex;
   flex-direction: column;

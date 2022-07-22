@@ -276,11 +276,11 @@ const App = () => {
           />
         </RadioTileGroup>
         <div
-          className={`slider-container ${
-            orientation == Orientation.vertical
-              ? 'slider-container-vertical'
-              : ''
-          }`}
+          className={
+            orientation == Orientation.horizontal
+              ? 'slider-container-horizontal'
+              : 'slider-container-vertical'
+          }
         >
           {/* <Slider
             values={[0, 25, 50, 100]}
