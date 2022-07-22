@@ -248,6 +248,7 @@ export type TableProps<
    * Function that returns index of the row that you want to scroll to.
    *
    * It doesn't work with paginated tables and with lazy-loading.
+   * @beta
    * @example
    * <Table
    *   scrollToRow={React.useCallback(
