@@ -6,7 +6,7 @@ import React from 'react';
 import { FileUpload, FileUploadTemplate } from '@itwin/itwinui-react';
 
 export default () => {
-  const [files, setFiles] = React.useState<Array<File>>([]);
+  const [files, setFiles] = React.useState([]);
 
   return (
     <FileUpload

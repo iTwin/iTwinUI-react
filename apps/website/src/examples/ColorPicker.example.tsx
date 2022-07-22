@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import React from 'react';
+import { useState } from 'react';
 
 import {
   ColorPicker,
@@ -13,16 +13,15 @@ import {
 } from '@itwin/itwinui-react';
 
 export default () => {
-  const [selectedColor, setSelectedColor] = React.useState<ColorValue>(
+  const [selectedColor, setSelectedColor] = useState(() =>
     ColorValue.create({ h: 0, s: 100, l: 50 })
   );
 
-  const onColorChanged = (color: ColorValue) => {
-    setSelectedColor(color);
-  };
-
   return (
-    <ColorPicker selectedColor={selectedColor} onChangeComplete={onColorChanged}>
+    <ColorPicker
+      selectedColor={selectedColor}
+      onChangeComplete={(color) => setSelectedColor(color)}
+    >
       <ColorBuilder />
       <ColorInputPanel defaultColorFormat={'hex'} />
       <ColorPalette
