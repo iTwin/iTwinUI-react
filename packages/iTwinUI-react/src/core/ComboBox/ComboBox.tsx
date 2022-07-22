@@ -160,7 +160,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   // Function to initialize extra info
   const initializeExtraInfo = React.useCallback(() => {
-    optionsProp.current.forEach((option, index) => {
+    optionsRef.current.forEach((option, index) => {
       optionsExtraInfoRef.current[getOptionId(option, id)] = {
         __originalIndex: index,
       };
@@ -178,8 +178,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   }, [onChange]);
 
   // Latest value of the options prop
-  const optionsProp = React.useRef(options);
-  optionsProp.current = options;
+  const optionsRef = React.useRef(options);
+  optionsRef.current = options;
 
   // Change options ref on options change
   React.useEffect(() => {
@@ -190,7 +190,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   // Initialize the extra info only if it is not already initialized
   if (
-    optionsProp.current.length > 0 &&
+    optionsRef.current.length > 0 &&
     Object.keys(optionsExtraInfoRef.current).length === 0
   ) {
     initializeExtraInfo();
@@ -202,7 +202,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     {
       isOpen: false,
       selectedIndex: valueProp
-        ? optionsProp.current.findIndex((option) => option.value === valueProp)
+        ? optionsRef.current.findIndex((option) => option.value === valueProp)
         : -1,
       focusedIndex: -1,
     },
@@ -212,7 +212,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     // When the dropdown opens
     if (isOpen) {
       inputRef.current?.focus(); // Focus the input
-      setFilteredOptions(optionsProp.current); // Reset the filtered list
+      setFilteredOptions(optionsRef.current); // Reset the filtered list
       dispatch(['focus']);
     }
     // When the dropdown closes
@@ -222,7 +222,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       // Reset the input value
       setInputValue(
         selectedIndex != undefined && selectedIndex >= 0
-          ? optionsProp.current[selectedIndex]?.label
+          ? optionsRef.current[selectedIndex]?.label
           : '',
       );
     }
@@ -264,8 +264,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       setInputValue(value);
       dispatch(['open']); // reopen when typing
       setFilteredOptions(
-        filterFunction?.(optionsProp.current, value) ??
-          optionsProp.current.filter((option) =>
+        filterFunction?.(optionsRef.current, value) ??
+          optionsRef.current.filter((option) =>
             option.label.toLowerCase().includes(value.toLowerCase()),
           ),
       );
@@ -292,7 +292,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       mounted.current = true;
       return;
     }
-    const currentValue = optionsProp.current[selectedIndex]?.value;
+    const currentValue = optionsRef.current[selectedIndex]?.value;
 
     // If current value is the same as selected value, do not call user defined onChange
     if (currentValue === valuePropRef.current || selectedIndex === -1) {
