@@ -83,19 +83,19 @@ export const Track = (props: TrackProps) => {
                   className='iui-slider-track'
                   style={{
                     left:
-                      orientation === Orientation.horizontal
+                      orientation === 'horizontal'
                         ? `${leftPercent}%`
                         : undefined,
                     right:
-                      orientation === Orientation.horizontal
+                      orientation === 'horizontal'
                         ? `${rightPercent}%`
                         : undefined,
                     top:
-                      orientation === Orientation.vertical
+                      orientation === 'vertical'
                         ? `${rightPercent}%`
                         : undefined,
                     bottom:
-                      orientation === Orientation.vertical
+                      orientation === 'vertical'
                         ? `${leftPercent}%`
                         : undefined,
                   }}

@@ -25,10 +25,10 @@ export type TrackDisplayMode =
   | 'odd-segments'
   | 'even-segments';
 
-export enum Orientation {
-  horizontal,
-  vertical,
-}
+/**
+ * Determines the orientation of the vertical slider.
+ */
+export type Orientation = 'horizontal' | 'vertical';
 
 const getPercentageOfRectangle = (
   rect: DOMRect,
@@ -41,7 +41,7 @@ const getPercentageOfRectangle = (
   //     orientation === Orientation.horizontal
   //   }`,
   // );
-  if (orientation === Orientation.horizontal) {
+  if (orientation === 'horizontal') {
     const position = getBoundedValue(pointerX, rect.left, rect.right);
     return (position - rect.left) / rect.width;
   }
@@ -195,7 +195,7 @@ export type SliderProps = {
    */
   onUpdate?: (values: ReadonlyArray<number>) => void;
   /**
-   * The orientation of slider. Possible values:
+   * The orientation of slider
    * 'horizontal' - Slider is horizontal and fills from left to right. Default.
    * 'vertical'- Slider is vertical and fills from bottom to top.
    * @default 'horizontal'
@@ -231,7 +231,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       thumbProps,
       className,
       railContainerProps,
-      orientation = Orientation.horizontal,
+      orientation = 'horizontal',
       ...rest
     } = props;
 
@@ -474,8 +474,8 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         ref={ref}
         className={cx(
           'iui-slider-component-container',
-          { 'iui-slider-vertical': orientation === Orientation.vertical },
-          { 'iui-slider-horizontal': orientation === Orientation.horizontal }, // TODO: Is a ternary operator possible to select only horizontal or vertical?
+          { 'iui-slider-vertical': orientation === 'vertical' },
+          { 'iui-slider-horizontal': orientation === 'horizontal' }, // TODO: Is a ternary operator possible to select only horizontal or vertical?
           { 'iui-disabled': disabled },
           className,
         )}

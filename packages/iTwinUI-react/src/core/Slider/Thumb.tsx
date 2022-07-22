@@ -155,10 +155,7 @@ export const Thumb = (props: ThumbProps) => {
         ref={thumbRef}
         style={{
           ...style,
-          left:
-            orientation === Orientation.horizontal
-              ? `${leftPercent}%`
-              : undefined,
+          left: orientation === 'horizontal' ? `${leftPercent}%` : undefined,
           bottom: `${leftPercent}%`,
         }}
         className={cx(

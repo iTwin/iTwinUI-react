@@ -10,7 +10,6 @@ import {
   Body,
   SliderProps,
 } from '@itwin/itwinui-react';
-import { Orientation } from '@itwin/itwinui-react/esm/core/Slider/Slider'; // TODO: This is pretty sure not recommended by the style guide. Reconfirm.
 import { useState } from 'react';
 import './App.css';
 
@@ -115,7 +114,7 @@ const WithCustomThumb = (args: any) => {
   return <Slider {...args} />;
 };
 
-WithCustomThumb.args = (orientation: Orientation) => {
+WithCustomThumb.args = (orientation: string) => {
   return {
     thumbProps: () => {
       return {
@@ -128,14 +127,14 @@ WithCustomThumb.args = (orientation: Orientation) => {
           height: '26px',
           borderRadius: '4px',
           transform:
-            orientation == Orientation.horizontal
+            orientation == 'horizontal'
               ? // ? 'translateX(-19.2px)'
                 'translateX(-19.2px)'
               : 'translate(-25%, 50%)',
           // transform: 'translateX(-19.2px)',
           // transform: 'translateX(-50%)',
           // top: 0,
-          top: orientation == Orientation.horizontal ? 0 : 'unset', // TODO: Confirm if this works and doesn't break anything
+          top: orientation == 'horizontal' ? 0 : 'unset',
         },
         children: (
           <span
@@ -253,7 +252,7 @@ DecimalIncrement.args = {
 };
 
 const App = () => {
-  const [orientation, setOrientation] = useState(Orientation.horizontal);
+  const [orientation, setOrientation] = useState('horizontal');
 
   return (
     <div className='App'>
@@ -265,19 +264,19 @@ const App = () => {
             label='Horizontal'
             name='map'
             value='Google Maps'
-            onClick={() => setOrientation(Orientation.horizontal)}
+            onClick={() => setOrientation('horizontal')}
             defaultChecked
           />
           <RadioTile
             label='Vertical'
             name='map'
             value='Bentley Blue'
-            onClick={() => setOrientation(Orientation.vertical)}
+            onClick={() => setOrientation('vertical')}
           />
         </RadioTileGroup>
         <div
           className={
-            orientation == Orientation.horizontal
+            orientation === 'horizontal'
               ? 'slider-container-horizontal'
               : 'slider-container-vertical'
           }
