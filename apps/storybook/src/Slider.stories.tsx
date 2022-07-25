@@ -3,11 +3,12 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { Meta, Story } from '@storybook/react';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { useMemo, useCallback, useState } from '@storybook/addons';
 import { Body, Slider, SliderProps } from '@itwin/itwinui-react';
 import SvgSmileyHappy from '@itwin/itwinui-icons-react/cjs/icons/SmileyHappy';
 import SvgSmileySad from '@itwin/itwinui-icons-react/cjs/icons/SmileySad';
+// import { Orientation } from '@itwin/itwinui-react/cjs/core/Slider/Slider';
 
 export default {
   title: 'Input/Slider',
@@ -20,11 +21,30 @@ export default {
   args: {
     thumbMode: 'inhibit-crossing',
     trackDisplayMode: 'auto',
+    // orientation: Orientation.horizontal,
+    orientation: 'horizontal',
   },
 } as Meta<SliderProps>;
 
+// TODO: Why does it give an unexpected any warning when args's data type is any? That's why changing the type to object
+const sliderWrapper = (element: ReactNode, args: object) => {
+  return (
+    // Is there a way to avoid the hardcoded height of 400px? height of 100% does not work
+    <div
+      className='slider-wrapper'
+      style={{
+        ...(args.orientation == 'vertical'
+          ? { height: '400px', width: 'fit-content' }
+          : {}),
+      }}
+    >
+      {element}
+    </div>
+  );
+};
+
 export const Basic: Story<SliderProps> = (args) => {
-  return <Slider {...args} />;
+  return sliderWrapper(<Slider {...args} />, args);
 };
 
 Basic.args = {
@@ -32,7 +52,7 @@ Basic.args = {
 };
 
 export const Range: Story<SliderProps> = (args) => {
-  return <Slider {...args} />;
+  return sliderWrapper(<Slider {...args} />, args);
 };
 
 Range.args = {
@@ -42,7 +62,7 @@ Range.args = {
 };
 
 export const MultiThumbsAllowCrossing: Story<SliderProps> = (args) => {
-  return <Slider {...args} />;
+  return sliderWrapper(<Slider {...args} />, args);
 };
 
 MultiThumbsAllowCrossing.args = {
@@ -65,34 +85,112 @@ MultiThumbsAllowCrossing.args = {
 };
 
 export const WithCustomThumb: Story<SliderProps> = (args) => {
-  return <Slider {...args} />;
+  // TODO: Why it doesn't work when we directly return args.thumbProps inside the function? Maybe something JS related that I need to learn
+
+  console.log('1.0', typeof args.thumbProps);
+  console.log('1.1', args.thumbProps);
+  // console.log('1.1', args.thumbProps());
+  const thumbProps = args.thumbProps;
+  // console.log(1, args);
+  console.log(1, args.thumbProps);
+  // const thumbProps = args.thumpProps;
+  args.thumbProps = () => {
+    // return thumbProps;
+    // return thumbProps;
+    // return { ...args.thumbProps };
+    return thumbProps;
+  };
+  console.log('2.0', typeof args.thumbProps);
+  console.log('2.1', args.thumbProps);
+  console.log('2.2', args.thumbProps());
+  console.log(2, args);
+
+  return sliderWrapper(
+    <Slider
+      {...args}
+      // {...{
+      //   thumbProps: () => {
+      //     return {
+      //       style: {
+      //         display: 'flex',
+      //         justifyContent: 'center',
+      //         alignItems: 'center',
+      //         backgroundColor: '#999',
+      //         width: '36px',
+      //         height: '26px',
+      //         borderRadius: '4px',
+      //         ...(args.orientation == 'horizontal' // TODO: Is there a way to get the args inside WithCustomThumb.args? Because just to gets args, I have to move those lines of code from WithCustomThumb.args to WithCustomThumb
+      //           ? { transform: 'translateX(-19.2px)', top: 0 }
+      //           : { transform: 'translate(-25%, 50%)' }),
+      //       },
+      //       children: (
+      //         <span
+      //           style={{
+      //             pointerEvents: 'none',
+      //             marginBottom: '4px',
+      //           }}
+      //         >
+      //           |||
+      //         </span>
+      //       ),
+      //     };
+      //   },
+      // }}
+    />,
+    args,
+  );
 };
 
 WithCustomThumb.args = {
-  thumbProps: () => {
-    return {
-      style: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#999',
-        width: '36px',
-        height: '26px',
-        borderRadius: '4px',
-        transform: 'translateX(-19.2px)',
-        top: 0,
-      },
-      children: (
-        <span
-          style={{
-            pointerEvents: 'none',
-            marginBottom: '4px',
-          }}
-        >
-          |||
-        </span>
-      ),
-    };
+  // thumbProps: () => {
+  //   return {
+  //     style: {
+  //       display: 'flex',
+  //       justifyContent: 'center',
+  //       alignItems: 'center',
+  //       backgroundColor: '#999',
+  //       width: '36px',
+  //       height: '26px',
+  //       borderRadius: '4px',
+  //       transform: 'translateX(-19.2px)',
+  //       top: 0,
+  //     },
+  //     children: (
+  //       <span
+  //         style={{
+  //           pointerEvents: 'none',
+  //           marginBottom: '4px',
+  //         }}
+  //       >
+  //         |||
+  //       </span>
+  //     ),
+  //   };
+  // },
+
+  // TODO: Removed it from the function since when it was in the function, it anyways could not be edited in storybook
+  thumbProps: {
+    style: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#999',
+      width: '36px',
+      height: '26px',
+      borderRadius: '4px',
+      transform: 'translateX(-19.2px)',
+      top: 0,
+    },
+    children: (
+      <span
+        style={{
+          pointerEvents: 'none',
+          marginBottom: '4px',
+        }}
+      >
+        |||
+      </span>
+    ),
   },
   values: [50],
   minLabel: <SvgSmileyHappy />,
@@ -101,7 +199,7 @@ WithCustomThumb.args = {
 };
 
 export const Disabled: Story<SliderProps> = (args) => {
-  return <Slider {...args} />;
+  return sliderWrapper(<Slider {...args} />, args);
 };
 
 Disabled.args = {
@@ -112,7 +210,7 @@ Disabled.args = {
 };
 
 export const CustomTooltip: Story<SliderProps> = (args) => {
-  return <Slider {...args} />;
+  return sliderWrapper(<Slider {...args} />, args);
 };
 
 CustomTooltip.args = {
@@ -144,7 +242,7 @@ export const CustomTickNoTooltip: Story<SliderProps> = (args) => {
     setCurrentDate(newDate);
   }, []);
 
-  return (
+  return sliderWrapper(
     <Slider
       {...args}
       onUpdate={updateDate}
@@ -152,18 +250,28 @@ export const CustomTickNoTooltip: Story<SliderProps> = (args) => {
       tickLabels={
         <div
           style={{
+            backgroundColor: 'purple',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            marginTop: '20px',
+            ...(args.orientation === 'horizontal'
+              ? { marginTop: '20px' }
+              : { position: 'absolute', top: '50%', marginLeft: '20px' }),
           }}
         >
-          <Body style={{ width: '60px', marginRight: '6px' }}>
+          <Body
+            style={{
+              width: '60px',
+              marginRight: '6px',
+              ...(args.orientation === 'vertical' ? { lineHeight: '0px' } : {}),
+            }}
+          >
             {dateFormatter.format(currentDate)}
           </Body>
         </div>
       }
-    />
+    />,
+    args,
   );
 };
 
@@ -180,7 +288,7 @@ CustomTickNoTooltip.args = {
 };
 
 export const DecimalIncrement: Story<SliderProps> = (args) => {
-  return <Slider {...args} />;
+  return sliderWrapper(<Slider {...args} />, args);
 };
 
 DecimalIncrement.args = {

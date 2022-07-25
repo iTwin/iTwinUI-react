@@ -126,15 +126,18 @@ WithCustomThumb.args = (orientation: string) => {
           width: '36px',
           height: '26px',
           borderRadius: '4px',
-          transform:
-            orientation == 'horizontal'
-              ? // ? 'translateX(-19.2px)'
-                'translateX(-19.2px)'
-              : 'translate(-25%, 50%)',
-          // transform: 'translateX(-19.2px)',
-          // transform: 'translateX(-50%)',
-          // top: 0,
-          top: orientation == 'horizontal' ? 0 : 'unset',
+          ...(orientation == 'horizontal'
+            ? { transform: 'translateX(-19.2px)', top: 0 }
+            : { transform: 'translate(-25%, 50%)' }),
+          // transform:
+          //   orientation == 'horizontal'
+          //     ? // ? 'translateX(-19.2px)'
+          //       'translateX(-19.2px)'
+          //     : 'translate(-25%, 50%)',
+          // // transform: 'translateX(-19.2px)',
+          // // transform: 'translateX(-50%)',
+          // // top: 0,
+          // top: orientation == 'horizontal' ? 0 : 'unset',
         },
         children: (
           <span
