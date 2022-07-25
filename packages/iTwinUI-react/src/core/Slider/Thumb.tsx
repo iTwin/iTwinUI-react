@@ -157,7 +157,7 @@ export const Thumb = (props: ThumbProps) => {
           ...style,
           ...(orientation === 'horizontal'
             ? { left: `${leftPercent}%` }
-            : { bottom: `${leftPercent}%` }),
+            : { bottom: `${leftPercent}%` }), // TODO: Confirm if when orientation=horizontal, only left is added
         }}
         className={cx(
           'iui-slider-thumb',
