@@ -124,8 +124,8 @@ WithCustomThumb.args = {
     ),
   },
   values: [50],
-  minLabel: <SvgSmileyHappy />,
-  maxLabel: <SvgSmileySad />,
+  minLabel: <SvgSmileySad />,
+  maxLabel: <SvgSmileyHappy />,
   railContainerProps: { style: { margin: '0 8px' } },
 };
 
