@@ -15,6 +15,7 @@ import {
   getRandomValue,
   InputContainerProps,
   mergeRefs,
+  useLatestRef,
 } from '../utils';
 import 'tippy.js/animations/shift-away.css';
 import {
@@ -154,18 +155,13 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   const mounted = React.useRef(false);
 
   // Latest value of the value prop
-  const valuePropRef = React.useRef(valueProp);
-  valuePropRef.current = valueProp;
+  const valuePropRef = useLatestRef(valueProp);
 
   // Latest value of the onChange prop
-  const onChangeProp = React.useRef(onChange);
-  React.useEffect(() => {
-    onChangeProp.current = onChange;
-  }, [onChange]);
+  const onChangeProp = useLatestRef(onChange);
 
   // Latest value of the options prop
-  const optionsRef = React.useRef(options);
-  optionsRef.current = options;
+  const optionsRef = useLatestRef(options);
 
   // Record to store all extra information (e.g. original indexes), where the key is the id of the option
   const optionsExtraInfoRef = React.useRef<
@@ -219,7 +215,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           : '',
       );
     }
-  }, [isOpen, selectedIndex]);
+  }, [isOpen, optionsRef, selectedIndex]);
 
   // Set min-width of menu to be same as input
   const [minWidth, setMinWidth] = React.useState(0);
@@ -267,7 +263,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       }
       inputProps?.onChange?.(event);
     },
-    [filterFunction, focusedIndex, inputProps],
+    [filterFunction, focusedIndex, inputProps, optionsRef],
   );
 
   // When the value prop changes, update the selectedIndex
@@ -291,7 +287,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       return;
     }
     onChangeProp.current?.(currentValue);
-  }, [selectedIndex]);
+  }, [onChangeProp, optionsRef, selectedIndex, valuePropRef]);
 
   const getMenuItem = React.useCallback(
     (option: SelectOption<T>, filteredIndex?: number) => {

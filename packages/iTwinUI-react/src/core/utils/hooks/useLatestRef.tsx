@@ -2,13 +2,20 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-export * from './useEventListener';
-export * from './useMergedRefs';
-export * from './useOverflow';
-export * from './useResizeObserver';
-export * from './useContainerWidth';
-export * from './useTheme';
-export * from './useIntersection';
-export * from './useMediaQuery';
-export * from './useSafeContext';
-export * from './useLatestRef';
+import React from 'react';
+
+/**
+ * Hook that updates ref value
+ * @example
+ * const { value } = props;
+ * const valueRef = useLatestRef(value);
+ */
+export const useLatestRef = <T,>(value: T) => {
+  const valueRef = React.useRef<T>(value);
+
+  React.useEffect(() => {
+    valueRef.current = value;
+  }, [value]);
+
+  return valueRef;
+};
