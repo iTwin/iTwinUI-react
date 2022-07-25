@@ -154,13 +154,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   const toggleButtonRef = React.useRef<HTMLSpanElement>(null);
   const mounted = React.useRef(false);
 
-  // Latest value of the value prop
   const valuePropRef = useLatestRef(valueProp);
-
-  // Latest value of the onChange prop
   const onChangeProp = useLatestRef(onChange);
-
-  // Latest value of the options prop
   const optionsRef = useLatestRef(options);
 
   // Record to store all extra information (e.g. original indexes), where the key is the id of the option

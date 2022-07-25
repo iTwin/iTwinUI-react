@@ -5,12 +5,12 @@
 import React from 'react';
 
 /**
- * Hook that updates ref value
+ * Hook that keeps track of the latest value in a ref.
  * @example
  * const { value } = props;
  * const valueRef = useLatestRef(value);
  */
-export const useLatestRef = <T,>(value: T) => {
+export const useLatestRef = <T>(value: T) => {
   const valueRef = React.useRef<T>(value);
 
   React.useEffect(() => {
