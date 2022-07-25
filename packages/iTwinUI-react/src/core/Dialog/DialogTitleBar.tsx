@@ -19,9 +19,9 @@ export type DialogTitleBarProps = {
   /**
    * Dialog title.
    */
-  title?: React.ReactNode;
+  titleText?: React.ReactNode;
 } & Pick<DialogContextProps, 'isDismissible' | 'onClose'> &
-  Omit<React.ComponentPropsWithRef<'div'>, 'title'>;
+  React.ComponentPropsWithRef<'div'>;
 
 /**
  * Dialog title bar. Recommended to be used as a child of `Dialog`.
@@ -45,7 +45,7 @@ export const DialogTitleBar = Object.assign(
     const dialogContext = useDialogContext();
     const {
       children,
-      title,
+      titleText,
       isDismissible = dialogContext.isDismissible,
       onClose = dialogContext.onClose,
       className,
@@ -62,7 +62,7 @@ export const DialogTitleBar = Object.assign(
           children
         ) : (
           <>
-            <DialogTitleBarTitle>{title}</DialogTitleBarTitle>
+            <DialogTitleBarTitle>{titleText}</DialogTitleBarTitle>
             {isDismissible && (
               <IconButton
                 size='small'

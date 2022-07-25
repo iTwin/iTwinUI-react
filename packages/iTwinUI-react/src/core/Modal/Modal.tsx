@@ -106,7 +106,7 @@ export const Modal = (props: ModalProps) => {
       >
         <Dialog.Backdrop />
         <Dialog.Main aria-modal {...rest}>
-          <Dialog.TitleBar title={title} />
+          <Dialog.TitleBar titleText={title} />
           {children}
         </Dialog.Main>
       </Dialog>,

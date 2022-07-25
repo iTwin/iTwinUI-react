@@ -8,7 +8,7 @@ import React from 'react';
 import { DialogTitleBar } from './DialogTitleBar';
 
 it('should render in its most basic state', () => {
-  const { container } = render(<DialogTitleBar title='test-title' />);
+  const { container } = render(<DialogTitleBar titleText='test-title' />);
   const titleBar = container.querySelector(
     '.iui-dialog-title-bar',
   ) as HTMLElement;
@@ -18,7 +18,7 @@ it('should render in its most basic state', () => {
 
 it('should render only render children while ignoring title prop', () => {
   const { container } = render(
-    <DialogTitleBar title='test-title1' isDismissible>
+    <DialogTitleBar titleText='test-title1' isDismissible>
       test-title2
     </DialogTitleBar>,
   );
@@ -37,7 +37,7 @@ it('should render only render children while ignoring title prop', () => {
 it('should render close button when isDismissible is true', () => {
   const onClose = jest.fn();
   const { container } = render(
-    <DialogTitleBar isDismissible onClose={onClose} title='test-title' />,
+    <DialogTitleBar isDismissible onClose={onClose} titleText='test-title' />,
   );
   const titleBar = container.querySelector(
     '.iui-dialog-title-bar',
@@ -59,7 +59,7 @@ it('should propagate miscellaneous props', () => {
       className='test-class'
       id='test-id'
       style={{ color: 'red' }}
-      title='test-title'
+      titleText='test-title'
     />,
   );
 
