@@ -1,5 +1,13 @@
 # Changelog
 
+### [1.41.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.41.0...v1.41.1) (2022-07-25)
+
+
+### Fixes
+
+* **ComboBox:** Prevent infinite loop when `options` change ([#738](https://www.github.com/iTwin/iTwinUI-react/issues/738)) ([7788f45](https://www.github.com/iTwin/iTwinUI-react/commit/7788f451fcbf9dd7959d3fa727c0cdee3485bbcd))
+* **Small:** Use `small` element instead of `p` ([#735](https://www.github.com/iTwin/iTwinUI-react/issues/735)) ([c59f213](https://www.github.com/iTwin/iTwinUI-react/commit/c59f21326e049bce50e24c729a46482b74ef63c3))
+
 ## [1.41.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.40.1...v1.41.0) (2022-07-13)
 
 ### What's new
