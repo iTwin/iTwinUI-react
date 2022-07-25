@@ -1,17 +1,12 @@
+/* TODO: Is it okay to add this file? */
+
 .App .title {
   margin-bottom: 20px;
 }
 
-/* #demo-default {
-  display: flex;
-  
-} */
-
 .App .slider-container-horizontal {
-  /* height: 500px; */
   display: flex;
   flex-direction: column;
-  /* justify-content: space-evenly; */
   gap: 3rem;
 }
 

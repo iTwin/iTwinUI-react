@@ -97,69 +97,10 @@ export const WithCustomThumb: Story<SliderProps> = (args) => {
   };
   args.thumbProps = () => thumbProps;
 
-  return sliderWrapper(
-    <Slider
-      {...args}
-      // {...{
-      //   thumbProps: () => {
-      //     return {
-      //       style: {
-      //         display: 'flex',
-      //         justifyContent: 'center',
-      //         alignItems: 'center',
-      //         backgroundColor: '#999',
-      //         width: '36px',
-      //         height: '26px',
-      //         borderRadius: '4px',
-      //         ...(args.orientation == 'horizontal' // TODO: Is there a way to get the args inside WithCustomThumb.args? Because just to gets args, I have to move those lines of code from WithCustomThumb.args to WithCustomThumb
-      //           ? { transform: 'translateX(-19.2px)', top: 0 }
-      //           : { transform: 'translate(-25%, 50%)' }),
-      //       },
-      //       children: (
-      //         <span
-      //           style={{
-      //             pointerEvents: 'none',
-      //             marginBottom: '4px',
-      //           }}
-      //         >
-      //           |||
-      //         </span>
-      //       ),
-      //     };
-      //   },
-      // }}
-    />,
-    args,
-  );
+  return sliderWrapper(<Slider {...args} />, args);
 };
 
 WithCustomThumb.args = {
-  // thumbProps: () => {
-  //   return {
-  //     style: {
-  //       display: 'flex',
-  //       justifyContent: 'center',
-  //       alignItems: 'center',
-  //       backgroundColor: '#999',
-  //       width: '36px',
-  //       height: '26px',
-  //       borderRadius: '4px',
-  //       transform: 'translateX(-19.2px)',
-  //       top: 0,
-  //     },
-  //     children: (
-  //       <span
-  //         style={{
-  //           pointerEvents: 'none',
-  //           marginBottom: '4px',
-  //         }}
-  //       >
-  //         |||
-  //       </span>
-  //     ),
-  //   };
-  // },
-
   // TODO: Removed it from the function since when it was in the function, it anyways could not be edited in storybook
   thumbProps: {
     style: {
@@ -170,8 +111,6 @@ WithCustomThumb.args = {
       width: '36px',
       height: '26px',
       borderRadius: '4px',
-      // transform: 'translateX(-19.2px)',
-      // top: 0,
     },
     children: (
       <span
