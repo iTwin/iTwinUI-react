@@ -153,20 +153,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   const toggleButtonRef = React.useRef<HTMLSpanElement>(null);
   const mounted = React.useRef(false);
 
-  // Record to store all extra information (e.g. original indexes), where the key is the id of the option
-  const optionsExtraInfoRef = React.useRef<
-    Record<string, { __originalIndex: number }>
-  >({});
-
-  // Function to initialize extra info
-  const initializeExtraInfo = React.useCallback(() => {
-    optionsRef.current.forEach((option, index) => {
-      optionsExtraInfoRef.current[getOptionId(option, id)] = {
-        __originalIndex: index,
-      };
-    });
-  }, [id]);
-
   // Latest value of the value prop
   const valuePropRef = React.useRef(valueProp);
   valuePropRef.current = valueProp;
@@ -181,19 +167,26 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   const optionsRef = React.useRef(options);
   optionsRef.current = options;
 
-  // Change options ref on options change
+  // Record to store all extra information (e.g. original indexes), where the key is the id of the option
+  const optionsExtraInfoRef = React.useRef<
+    Record<string, { __originalIndex: number }>
+  >({});
+
+  // Clear the extra info when the options change so that it can be reinitialized below
   React.useEffect(() => {
-    // Clear the extra info when the options change so that it can be reinitialized below
     optionsExtraInfoRef.current = {};
-    initializeExtraInfo();
-  }, [options, initializeExtraInfo]);
+  }, [options]);
 
   // Initialize the extra info only if it is not already initialized
   if (
-    optionsRef.current.length > 0 &&
+    options.length > 0 &&
     Object.keys(optionsExtraInfoRef.current).length === 0
   ) {
-    initializeExtraInfo();
+    options.forEach((option, index) => {
+      optionsExtraInfoRef.current[getOptionId(option, id)] = {
+        __originalIndex: index,
+      };
+    });
   }
 
   // Reducer where all the component-wide state is stored
@@ -294,7 +287,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     }
     const currentValue = optionsRef.current[selectedIndex]?.value;
 
-    // If current value is the same as selected value, do not call user defined onChange
     if (currentValue === valuePropRef.current || selectedIndex === -1) {
       return;
     }
