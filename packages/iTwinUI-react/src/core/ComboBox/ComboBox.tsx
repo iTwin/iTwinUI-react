@@ -167,7 +167,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     });
   }, [id]);
 
-  // Latest value of the valueProp prop
+  // Latest value of the value prop
   const valuePropRef = React.useRef(valueProp);
   valuePropRef.current = valueProp;
 
