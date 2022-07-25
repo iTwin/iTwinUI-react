@@ -24,7 +24,7 @@ export default {
   },
 } as Meta<SliderProps>;
 
-const sliderWrapper = (element: ReactNode, args: any) => {
+const sliderWrapper = (element: ReactNode, args: object) => {
   return (
     // TODO: Is there a way to avoid the hardcoded height of 400px? height of 100% does not work
     <div
