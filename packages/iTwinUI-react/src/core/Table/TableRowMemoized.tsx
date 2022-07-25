@@ -74,14 +74,14 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
     ...userRowProps,
     ...{
       className: cx(
-        'iui-row',
+        'iui-table-row',
         {
-          'iui-selected': row.isSelected,
-          'iui-row-expanded': row.isExpanded && subComponent,
-          'iui-disabled': isDisabled,
+          'iui-table-row-expanded': row.isExpanded && subComponent,
         },
         userRowProps?.className,
       ),
+      'aria-selected': row.isSelected,
+      'aria-disabled': isDisabled,
     },
   };
 
@@ -114,9 +114,8 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
       {subComponent && (
         <WithCSSTransition in={row.isExpanded}>
           <div
-            className={cx('iui-row', 'iui-expanded-content', {
-              'iui-disabled': isDisabled,
-            })}
+            className={cx('iui-table-row', 'iui-table-expanded-content', {})}
+            aria-disabled={isDisabled}
           >
             {subComponent(row)}
           </div>
