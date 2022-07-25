@@ -24,8 +24,7 @@ export default {
   },
 } as Meta<SliderProps>;
 
-// TODO: Why does it give an unexpected any warning when args's data type is any? That's why changing the type to object. Confirm if that's okay
-const sliderWrapper = (element: ReactNode, args: object) => {
+const sliderWrapper = (element: ReactNode, args: any) => {
   return (
     // TODO: Is there a way to avoid the hardcoded height of 400px? height of 100% does not work
     <div
