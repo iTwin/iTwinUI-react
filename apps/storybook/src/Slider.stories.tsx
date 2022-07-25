@@ -29,7 +29,7 @@ export default {
 // TODO: Why does it give an unexpected any warning when args's data type is any? That's why changing the type to object
 const sliderWrapper = (element: ReactNode, args: object) => {
   return (
-    // Is there a way to avoid the hardcoded height of 400px? height of 100% does not work
+    // TODO: Is there a way to avoid the hardcoded height of 400px? height of 100% does not work
     <div
       className='slider-wrapper'
       style={{
@@ -86,24 +86,28 @@ MultiThumbsAllowCrossing.args = {
 
 export const WithCustomThumb: Story<SliderProps> = (args) => {
   // TODO: Why it doesn't work when we directly return args.thumbProps inside the function? Maybe something JS related that I need to learn
+  // I think it is because when the function is actually called, args.thumbProps is the function. So it becomes a maximum call stack exceeded
 
-  console.log('1.0', typeof args.thumbProps);
-  console.log('1.1', args.thumbProps);
-  // console.log('1.1', args.thumbProps());
+  // console.log('1.0', typeof args.thumbProps);
+  // console.log('1.1', args.thumbProps);
+  // // console.log('1.1', args.thumbProps());
+  // const thumbProps = args.thumbProps;
+  // // console.log(1, args);
+  // console.log(1, args.thumbProps);
+  // // const thumbProps = args.thumpProps;
+  // args.thumbProps = () => {
+  //   // return thumbProps;
+  //   // return thumbProps;
+  //   // return { ...args.thumbProps };
+  //   return thumbProps;
+  // };
+  // console.log('2.0', typeof args.thumbProps);
+  // console.log('2.1', args.thumbProps);
+  // console.log('2.2', args.thumbProps());
+  // console.log(2, args);
+
   const thumbProps = args.thumbProps;
-  // console.log(1, args);
-  console.log(1, args.thumbProps);
-  // const thumbProps = args.thumpProps;
-  args.thumbProps = () => {
-    // return thumbProps;
-    // return thumbProps;
-    // return { ...args.thumbProps };
-    return thumbProps;
-  };
-  console.log('2.0', typeof args.thumbProps);
-  console.log('2.1', args.thumbProps);
-  console.log('2.2', args.thumbProps());
-  console.log(2, args);
+  args.thumbProps = () => thumbProps;
 
   return sliderWrapper(
     <Slider
