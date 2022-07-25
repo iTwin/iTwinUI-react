@@ -8,7 +8,6 @@ import { useMemo, useCallback, useState } from '@storybook/addons';
 import { Body, Slider, SliderProps } from '@itwin/itwinui-react';
 import SvgSmileyHappy from '@itwin/itwinui-icons-react/cjs/icons/SmileyHappy';
 import SvgSmileySad from '@itwin/itwinui-icons-react/cjs/icons/SmileySad';
-// import { Orientation } from '@itwin/itwinui-react/cjs/core/Slider/Slider';
 
 export default {
   title: 'Input/Slider',
@@ -21,12 +20,11 @@ export default {
   args: {
     thumbMode: 'inhibit-crossing',
     trackDisplayMode: 'auto',
-    // orientation: Orientation.horizontal,
     orientation: 'horizontal',
   },
 } as Meta<SliderProps>;
 
-// TODO: Why does it give an unexpected any warning when args's data type is any? That's why changing the type to object
+// TODO: Why does it give an unexpected any warning when args's data type is any? That's why changing the type to object. Confirm if that's okay
 const sliderWrapper = (element: ReactNode, args: object) => {
   return (
     // TODO: Is there a way to avoid the hardcoded height of 400px? height of 100% does not work
@@ -85,28 +83,18 @@ MultiThumbsAllowCrossing.args = {
 };
 
 export const WithCustomThumb: Story<SliderProps> = (args) => {
-  // TODO: Why it doesn't work when we directly return args.thumbProps inside the function? Maybe something JS related that I need to learn
-  // I think it is because when the function is actually called, args.thumbProps is the function. So it becomes a maximum call stack exceeded
+  // TODO: Why it doesn't work when we directly return args.thumbProps inside the function? Instead, I have to save it in a variable and then return the variable. Is there a better way?
 
-  // console.log('1.0', typeof args.thumbProps);
-  // console.log('1.1', args.thumbProps);
-  // // console.log('1.1', args.thumbProps());
-  // const thumbProps = args.thumbProps;
-  // // console.log(1, args);
-  // console.log(1, args.thumbProps);
-  // // const thumbProps = args.thumpProps;
-  // args.thumbProps = () => {
-  //   // return thumbProps;
-  //   // return thumbProps;
-  //   // return { ...args.thumbProps };
-  //   return thumbProps;
-  // };
-  // console.log('2.0', typeof args.thumbProps);
-  // console.log('2.1', args.thumbProps);
-  // console.log('2.2', args.thumbProps());
-  // console.log(2, args);
-
-  const thumbProps = args.thumbProps;
+  let thumbProps = args.thumbProps;
+  thumbProps = {
+    ...thumbProps,
+    style: {
+      ...thumbProps.style,
+      ...(args.orientation === 'horizontal' // TODO: Is there a way to get the args inside WithCustomThumb.args? Because just to gets args, I have to move those lines of code from WithCustomThumb.args to WithCustomThumb
+        ? { transform: 'translateX(-19.2px)', top: 0 }
+        : { transform: 'translate(-25%, 50%)' }),
+    },
+  };
   args.thumbProps = () => thumbProps;
 
   return sliderWrapper(
@@ -182,8 +170,8 @@ WithCustomThumb.args = {
       width: '36px',
       height: '26px',
       borderRadius: '4px',
-      transform: 'translateX(-19.2px)',
-      top: 0,
+      // transform: 'translateX(-19.2px)',
+      // top: 0,
     },
     children: (
       <span

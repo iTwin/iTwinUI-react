@@ -338,7 +338,6 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         if (activeThumbIndex === undefined) {
           return;
         }
-        // console.log('handlePointerMove is called');
         event.preventDefault();
         event.stopPropagation();
         updateThumbValue(event, 'onUpdate');
@@ -474,8 +473,8 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         ref={ref}
         className={cx(
           'iui-slider-component-container',
-          { 'iui-slider-vertical': orientation === 'vertical' },
           { 'iui-slider-horizontal': orientation === 'horizontal' }, // TODO: Is a ternary operator possible to select only horizontal or vertical?
+          { 'iui-slider-vertical': orientation === 'vertical' },
           { 'iui-disabled': disabled },
           className,
         )}
