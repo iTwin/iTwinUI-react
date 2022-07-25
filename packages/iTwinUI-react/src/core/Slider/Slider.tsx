@@ -11,7 +11,6 @@ import {
   useEventListener,
 } from '../utils';
 import '@itwin/itwinui-css/css/slider.css';
-// import './slider.css';
 import { TooltipProps } from '../Tooltip';
 import { Track } from './Track';
 import { Thumb } from './Thumb';
@@ -36,11 +35,6 @@ const getPercentageOfRectangle = (
   pointerY: number,
   orientation: Orientation,
 ) => {
-  // console.log(
-  //   `getPercentageOfRectangle called : ${
-  //     orientation === Orientation.horizontal
-  //   }`,
-  // );
   if (orientation === 'horizontal') {
     const position = getBoundedValue(pointerX, rect.left, rect.right);
     return (position - rect.left) / rect.width;
