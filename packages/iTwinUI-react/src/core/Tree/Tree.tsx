@@ -280,7 +280,9 @@ export const Tree = <T,>(props: TreeProps<T>) => {
 
   const [scrollToIndex, setScrollToIndex] = React.useState<number>();
   const flatNodesListRef = React.useRef<FlatNode<T>[]>(flatNodesList);
-  flatNodesListRef.current = flatNodesList;
+  React.useEffect(() => {
+    flatNodesListRef.current = flatNodesList;
+  }, [flatNodesList]);
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -291,8 +293,8 @@ export const Tree = <T,>(props: TreeProps<T>) => {
         ) as HTMLElement;
         nodeElement?.focus();
         // Need to reset that if navigating with mouse and keyboard,
-        // e.g. going to the previous node with keyboard
-        // and then clicking the next node with mouse.
+        // e.g. pressing arrow left to go to parent node and then with mouse
+        // clicking some other child node and then pressing arrow left
         setScrollToIndex(undefined);
       }
     });
@@ -379,8 +381,6 @@ const VirtualizedTree = React.forwardRef(
       flatNodesList,
       itemRenderer,
       scrollToIndex,
-      onKeyDown,
-      onFocus,
       className,
       style,
       ...rest
@@ -402,9 +402,8 @@ const VirtualizedTree = React.forwardRef(
         }}
       >
         <TreeElement
-          {...{ ...innerProps, ...rest }}
-          onKeyDown={onKeyDown}
-          onFocus={onFocus}
+          {...innerProps}
+          {...rest}
           ref={mergeRefs(ref, innerProps.ref)}
         >
           {visibleChildren}
