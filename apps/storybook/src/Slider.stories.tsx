@@ -83,50 +83,46 @@ MultiThumbsAllowCrossing.args = {
 };
 
 export const WithCustomThumb: Story<SliderProps> = (args) => {
-  // TODO: Why it doesn't work when we directly return args.thumbProps inside the function? Instead, I have to save it in a variable and then return the variable. Is there a better way?
-
-  let thumbProps = args.thumbProps;
-  thumbProps = {
-    ...thumbProps,
-    style: {
-      ...thumbProps.style,
-      ...(args.orientation === 'horizontal' // TODO: Is there a way to get the args inside WithCustomThumb.args? Because just to gets args, I have to move those lines of code from WithCustomThumb.args to WithCustomThumb
-        ? { transform: 'translateX(-19.2px)', top: 0 }
-        : { transform: 'translate(-25%, 50%)' }),
-    },
+  const thumbProps = args.thumbProps();
+  thumbProps.style = {
+    ...thumbProps.style,
+    ...(args.orientation === 'horizontal' // TODO: Is there a way to get the args inside WithCustomThumb.args? Because just to gets args, I have to move those lines of code from WithCustomThumb.args to WithCustomThumb
+      ? { transform: 'translateX(-19.2px)', top: 0 }
+      : { transform: 'translate(-25%, 50%)' }),
   };
   args.thumbProps = () => thumbProps;
-
   return sliderWrapper(<Slider {...args} />, args);
 };
 
 WithCustomThumb.args = {
-  // TODO: Removed it from the function since when it was in the function, it anyways could not be edited in storybook
-  thumbProps: {
-    style: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#999',
-      width: '36px',
-      height: '26px',
-      borderRadius: '4px',
-    },
-    children: (
-      <span
-        style={{
-          pointerEvents: 'none',
-          marginBottom: '4px',
-        }}
-      >
-        |||
-      </span>
-    ),
+  // TODO: Should we remove it from the function since it cannot be edited in storybook?
+  thumbProps: () => {
+    return {
+      style: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#999',
+        width: '36px',
+        height: '26px',
+        borderRadius: '4px',
+      },
+      children: (
+        <span
+          style={{
+            pointerEvents: 'none',
+            marginBottom: '4px',
+          }}
+        >
+          |||
+        </span>
+      ),
+    };
   },
   values: [50],
   minLabel: <SvgSmileySad />,
   maxLabel: <SvgSmileyHappy />,
-  railContainerProps: { style: { margin: '0 8px' } },
+  railContainerProps: { style: { margin: '0 8px' } }, // TODO: Do we need this for vertical? Confirm that the slightly right offset vertical slider is alright or not
 };
 
 export const Disabled: Story<SliderProps> = (args) => {
@@ -181,7 +177,6 @@ export const CustomTickNoTooltip: Story<SliderProps> = (args) => {
       tickLabels={
         <div
           style={{
-            backgroundColor: 'purple',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
