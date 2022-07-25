@@ -6,6 +6,7 @@ import React from 'react';
 
 /**
  * Hook that keeps track of the latest value in a ref.
+ * @private
  * @example
  * const { value } = props;
  * const valueRef = useLatestRef(value);
