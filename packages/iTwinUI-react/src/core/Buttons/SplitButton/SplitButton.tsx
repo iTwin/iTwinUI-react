@@ -81,7 +81,7 @@ export const SplitButton: SplitButtonComponent = React.forwardRef(
 
     return (
       <span
-        className={cx(className, 'iui-button-split-menu', {
+        className={cx(className, 'iui-button-split', {
           'iui-disabled': props.disabled,
         })}
         style={style}
