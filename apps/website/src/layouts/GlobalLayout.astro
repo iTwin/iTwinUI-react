@@ -3,6 +3,8 @@
 
 import HeadSEO from '../components/HeadSEO.astro';
 import * as CONFIG from '../config';
+import '@fontsource/noto-sans';
+import '@fontsource/noto-sans/600.css';
 
 const { content = {} } = Astro.props;
 ---
@@ -122,7 +124,7 @@ const { content = {} } = Astro.props;
         --color-line-2: var(--color-line-2--dark);
         // #endregion
 
-        --font-body: system-ui, sans-serif;
+        --font-body: 'Noto Sans', system-ui, sans-serif;
         --font-mono: ui-monospace, monospace;
 
         /* TODO: rename these? ⬇️  */
