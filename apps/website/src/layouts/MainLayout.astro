@@ -103,14 +103,14 @@ const currentPage = new URL(Astro.request.url).pathname;
       }
 
       /* this is the main page content */
-      & :global(main) {
+      & :global(:where(main)) {
         width: 100%;
         height: 100%;
         padding: 1rem 0;
         display: grid;
         gap: 0.5rem;
 
-        & > :global(:is(h1, h2, h3, h4)) {
+        & > :global(:is(h1, h2, h3, h4, strong)) {
           text-decoration: none;
 
           & > :global(a) {
@@ -136,7 +136,7 @@ const currentPage = new URL(Astro.request.url).pathname;
           }
         }
 
-        > :global(:is(p, ul)) {
+        :global(:where(:not(a, h1, h2, h3, h4):not(.live-example, .live-example *))) {
           color: var(--color-subtext);
           font-size: var(--type-1);
         }
