@@ -58,7 +58,7 @@ export default ({ code = '', ssr, staticComponent, ...rest }: Props) => {
 
   // TODO: replace this with composition to have more control over the layout and styling
   return (
-    <div className={!isExpanded ? 'sp-preview-container-collapsed' : undefined}>
+    <div className={`live-example ${!isExpanded ? 'sp-preview-container-collapsed' : ''}`}>
       {!isExpanded ? (
         <>
           {staticComponent}
