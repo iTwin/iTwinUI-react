@@ -2,7 +2,6 @@
 
 ## [1.42.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.41.0...v1.42.0) (2022-07-26)
 
-
 ### Fixes
 
 * **ComboBox:** Prevent infinite loop when `options` change ([#738](https://www.github.com/iTwin/iTwinUI-react/issues/738)) ([7788f45](https://www.github.com/iTwin/iTwinUI-react/commit/7788f451fcbf9dd7959d3fa727c0cdee3485bbcd))
