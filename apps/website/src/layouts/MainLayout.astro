@@ -13,12 +13,8 @@ const currentPage = new URL(Astro.request.url).pathname;
     <LeftSidebar currentPage={currentPage} />
   </aside>
   <div class='content-wrapper'>
-    <div>
-      <h1 class='content-title' id='overview'>{content.title}</h1>
-    </div>
-    <div>
-      <slot></slot>
-    </div>
+    <h1 id='overview'>{content.title}</h1>
+    <slot></slot>
   </div>
 
   <style lang='scss'>
@@ -56,14 +52,33 @@ const currentPage = new URL(Astro.request.url).pathname;
       overflow: overlay;
       scrollbar-gutter: stable;
       display: grid;
-      justify-items: center;
+      width: 100%;
       align-items: start;
-      grid-template-rows: auto 1fr;
-      padding: 1rem;
+      justify-content: center;
+      padding: var(--space-7);
+      grid-template: 'h1' auto 'toc' auto 'main' 1fr / min(100%, 65ch);
 
-      & > :global(*) {
-        width: 100%;
-        max-width: min(100%, 65ch);
+      @media (min-width: 1300px) {
+        column-gap: calc(var(--space-7) * 2);
+        grid-template: 'h1 toc' auto 'main toc' 1fr / min(100%, 65ch) auto;
+        position: relative;
+
+        > :global(.toc-wrapper) {
+          position: sticky;
+          top: 0;
+        }
+      }
+
+      h1 {
+        grid-area: h1;
+      }
+
+      > :global(.toc-wrapper) {
+        grid-area: toc;
+      }
+
+      > :global(main) {
+        grid-area: main;
         padding: 0.5rem 0;
       }
 
