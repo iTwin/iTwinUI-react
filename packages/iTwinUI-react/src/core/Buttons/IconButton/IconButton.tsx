@@ -51,10 +51,10 @@ export const IconButton: IconButtonComponent = React.forwardRef(
           `iui-${styleType}`,
           {
             [`iui-${size}`]: !!size,
-            'iui-active': isActive,
           },
           className,
         )}
+        data-iui-active={isActive}
         type={type}
         {...rest}
       >
