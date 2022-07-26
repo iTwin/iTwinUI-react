@@ -94,6 +94,9 @@ export type TreeProps<T> = {
   getNode: (node: T) => NodeData<T>;
   /**
    * Virtualization is used to have a better performance with a lot of nodes.
+   *
+   * When enabled, Tree DOM structure will change - it will have a wrapper div
+   * to which `className` and `style` will be applied.
    * @default false
    * @beta
    */
