@@ -1,4 +1,5 @@
 ---
+import * as AllExamples from '~/examples';
 import LiveExample from './LiveExample';
 import fs from 'fs';
 
@@ -22,29 +23,63 @@ if (code.includes('Copyright (c) Bentley Systems')) {
   code = code.split('\n').slice(4).join('\n');
 }
 
+const componentName = src.split('.')[0];
+const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+const StaticComponent = AllExamples[`${capitalize(componentName)}Example`];
+
 // const staticSandpackCss = getSandpackCssText();
 ---
 
-<LiveExample code={code} client:load />
+<LiveExample ssr={StaticComponent} code={code} client:load>
+  <StaticComponent slot='staticComponent' />
+</LiveExample>
 
-<style is:global>
+<style lang='scss' is:global>
   .sp-wrapper {
     color-scheme: dark !important;
+    display: grid !important;
+    gap: 0.5rem !important;
+  }
+
+  .sp-stack {
+    height: 350px;
+    overflow: auto;
   }
 
   .sp-preview-container {
-    min-height: 350px;
     background: transparent !important;
+
+    &-collapsed {
+      height: 350px;
+      font-size: 14px;
+      border-radius: 0.5rem;
+      position: relative;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(300deg, #415e74, #172129) !important;
+    }
   }
 
-  .sp-preview-container {
-    border-top-left-radius: 0.5rem;
-    border-top-right-radius: 0.5rem;
-  }
-
+  .sp-preview-container,
   .sp-code-editor {
-    border-bottom-left-radius: 0.5rem;
-    border-bottom-right-radius: 0.5rem;
+    border-radius: 0.5rem;
+  }
+
+  .show-code-button {
+    position: absolute;
+    bottom: 0.5rem;
+    right: 0.5rem;
+    z-index: 1;
+    background: transparent;
+    border-radius: 0.25rem;
+    border: 1px solid transparent;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    color: var(--text);
+
+    &:hover {
+      background: hsl(0 0% 0% / 0.2);
+    }
   }
 </style>
 <!-- <style id='sandpack' set:html={staticSandpackCss}> -->
