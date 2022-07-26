@@ -2,7 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import * as React from 'react';
 import * as SandpackReact from '@codesandbox/sandpack-react';
+import { nightOwl } from '@codesandbox/sandpack-themes';
 
 const {
   SandpackProvider,
@@ -33,31 +35,66 @@ html { color-scheme: dark; }
   background: linear-gradient(300deg, #415e74, #172129);
 }
 `;
-// background: linear-gradient(225deg, #4e5d6e 0%, #363944 100%);
 
-export const LiveExample = ({ code = '', ...rest }) => {
-  // TODO: replace this with composition to have more control over the layout and styling
-  return (
-    <SandpackProvider
-      template='react'
-      files={{
-        '/App.js': code.trim(),
-        '/index.js': { code: indexJs.trim(), hidden: true },
-        '/styles.css': { code: indexCss.trim(), hidden: true },
-      }}
-      customSetup={{
-        dependencies: {
-          '@itwin/itwinui-react': 'latest',
-        },
-      }}
-      {...rest}
-    >
-      <SandpackThemeProvider theme='dark'>
-        <SandpackPreview />
-        <SandpackCodeEditor showTabs={false} />
-      </SandpackThemeProvider>
-    </SandpackProvider>
-  );
+type Props = {
+  code: string;
+  ssr?: () => JSX.Element;
+  staticComponent?: React.ReactNode;
 };
 
-export default LiveExample;
+export default ({ code = '', ssr, staticComponent, ...rest }: Props) => {
+  const id = React.useId();
+  const isHydrated = React.useRef(false);
+
+  React.useEffect(() => {
+    if (isHydrated.current) {
+      return;
+    }
+
+    isHydrated.current = true;
+  }, [isHydrated]);
+
+  const [isExpanded, setIsExpanded] = React.useState(false);
+
+  // TODO: replace this with composition to have more control over the layout and styling
+  return (
+    <div className={!isExpanded ? 'sp-preview-container-collapsed' : undefined}>
+      {!isExpanded ? (
+        <>
+          {staticComponent}
+          <button
+            onClick={() => setIsExpanded(true)}
+            className='show-code-button'
+            aria-controls={id}
+            aria-expanded={isExpanded}
+          >
+            Show code
+          </button>
+        </>
+      ) : (
+        <div id={id}>
+          <SandpackProvider
+            template='react-ts'
+            files={{
+              '/App.tsx': code.trim(),
+              '/index.tsx': { code: indexJs.trim(), hidden: true },
+              '/styles.css': { code: indexCss.trim(), hidden: true },
+            }}
+            customSetup={{
+              dependencies: {
+                '@itwin/itwinui-react': 'latest',
+              },
+            }}
+            id={id}
+            {...rest}
+          >
+            <SandpackThemeProvider theme={nightOwl}>
+              <SandpackPreview />
+              <SandpackCodeEditor showTabs={false} />
+            </SandpackThemeProvider>
+          </SandpackProvider>
+        </div>
+      )}
+    </div>
+  );
+};
