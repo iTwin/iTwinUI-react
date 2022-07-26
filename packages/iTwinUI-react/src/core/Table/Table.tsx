@@ -718,7 +718,7 @@ export const Table = <
             ...style,
           },
         })}
-        data-iui-size={density}
+        data-iui-size={density === 'default' ? undefined : density}
         {...ariaDataAttributes}
       >
         <div className='iui-table-header-wrapper' ref={headerRef}>
@@ -832,7 +832,9 @@ export const Table = <
             }
           }}
           tabIndex={-1}
-          aria-multiselectable={isSelectable && selectionMode === 'multi'}
+          aria-multiselectable={
+            (isSelectable && selectionMode === 'multi') || undefined
+          }
         >
           {data.length !== 0 && (
             <>

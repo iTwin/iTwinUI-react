@@ -44,8 +44,8 @@ export const DefaultCell = <T extends Record<string, unknown>>(
     <div
       {...cellElementProps}
       {...rest}
-      className={cx(cellElementClassName, className, {})}
-      aria-disabled={isDisabled?.(cellProps.row.original)}
+      className={cx(cellElementClassName, className)}
+      aria-disabled={isDisabled?.(cellProps.row.original) || undefined}
       style={{ ...cellElementStyle, ...style }}
     >
       {children}
