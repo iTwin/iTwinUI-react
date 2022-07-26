@@ -14,20 +14,17 @@ import userEvent from '@testing-library/user-event';
 
 it('should render in its most basic state', () => {
   const { container } = render(<HeaderButton name='MockName' />);
-  expect(
-    container.querySelector('.iui-button-label > :first-child'),
-  ).toBeTruthy();
+  expect(container.querySelector('span > :first-child')).toBeTruthy();
 });
 
 it('should render default button correctly', () => {
   const { container } = render(<HeaderButton name={<div>MockName</div>} />);
 
-  const root = container.querySelector(
-    '.iui-header-button:not(.iui-dropdown).iui-borderless',
-  );
+  const root = container.querySelector('.iui-header-button:not(.iui-dropdown)');
   expect(root).toBeTruthy();
+  expect(root).toHaveAttribute('data-iui-variant', 'borderless');
 
-  const name = container.querySelector('.iui-button-label > div:only-child');
+  const name = container.querySelector('span > div:only-child');
   expect(name).toBeTruthy();
   expect(name?.textContent).toEqual('MockName');
 });
@@ -37,12 +34,12 @@ it('should render description correctly', () => {
     <HeaderButton name='MockName' description='MockDescription' />,
   );
 
-  const name = container.querySelector('.iui-button-label > :first-child');
+  const name = container.querySelector('span > :first-child');
   expect(name).toBeTruthy();
   expect(name?.textContent).toEqual('MockName');
 
   const description = container.querySelector(
-    '.iui-button-label > .iui-description:last-child',
+    'span > .iui-description:last-child',
   );
   expect(description).toBeTruthy();
   expect(description?.textContent).toEqual('MockDescription');
@@ -91,7 +88,9 @@ it('should render split button correctly', async () => {
   ) as HTMLButtonElement;
   expect(splitButton).toBeTruthy();
 
-  const innerButtons = splitButton.querySelectorAll('.iui-borderless');
+  const innerButtons = splitButton.querySelectorAll(
+    '[data-iui-variant="borderless"]',
+  );
   expect(innerButtons.length).toBe(2);
 
   await userEvent.click(innerButtons[0] as HTMLButtonElement);
