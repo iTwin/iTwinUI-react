@@ -73,7 +73,7 @@ export const Button: ButtonComponent = React.forwardRef((props, ref) => {
       ref={ref}
       className={cx('iui-button', className)}
       data-iui-variant={styleType}
-      data-iui-size={size || ''}
+      data-iui-size={size || undefined}
       style={style}
       type={type}
       {...rest}

@@ -46,14 +46,9 @@ export const IconButton: IconButtonComponent = React.forwardRef(
     return (
       <Element
         ref={ref}
-        className={cx(
-          'iui-button',
-          `iui-${styleType}`,
-          {
-            [`iui-${size}`]: !!size,
-          },
-          className,
-        )}
+        className={cx('iui-button', className)}
+        data-iui-variant={styleType}
+        data-iui-size={size || ''}
         data-iui-active={isActive}
         type={type}
         {...rest}
