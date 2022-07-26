@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { CellRendererProps } from 'react-table';
-import { getRandomValue } from '../../utils';
 
 export type EditableCellProps<
   T extends Record<string, unknown>
@@ -63,8 +62,6 @@ export const EditableCell = <T extends Record<string, unknown>>(
     setValue(sanitizeString(cellProps.value));
   }, [cellProps.value]);
 
-  const [key, setKey] = React.useState(getRandomValue(10));
-
   const [isDirty, setIsDirty] = React.useState(false);
 
   return (
@@ -72,7 +69,6 @@ export const EditableCell = <T extends Record<string, unknown>>(
       {...cellElementProps}
       contentEditable
       suppressContentEditableWarning
-      key={key}
       {...rest}
       onInput={(e) => {
         setValue(sanitizeString((e.target as HTMLElement).innerText));
@@ -84,9 +80,6 @@ export const EditableCell = <T extends Record<string, unknown>>(
           onCellEdit(cellProps.column.id, value, cellProps.row.original);
         }
         props.onBlur?.(e);
-        // Prevents error when text is cleared.
-        // New key makes React to reattach with the DOM so it won't complain about deleted text node.
-        setKey(getRandomValue(10));
       }}
       onKeyDown={(e) => {
         // Prevents from adding HTML elements (div, br) inside a cell on Enter press

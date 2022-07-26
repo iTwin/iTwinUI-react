@@ -28,7 +28,7 @@ export const Small = React.forwardRef<HTMLParagraphElement, SmallProps>(
     useTheme();
 
     return (
-      <small
+      <p
         ref={ref}
         className={cx(
           'iui-text-small',

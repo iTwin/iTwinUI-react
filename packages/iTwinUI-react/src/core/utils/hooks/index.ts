@@ -11,4 +11,3 @@ export * from './useTheme';
 export * from './useIntersection';
 export * from './useMediaQuery';
 export * from './useSafeContext';
-export * from './useLatestRef';
