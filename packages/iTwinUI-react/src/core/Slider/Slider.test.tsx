@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { act, fireEvent, render } from '@testing-library/react';
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { Slider } from './Slider';
 
 const createBoundingClientRect = (
@@ -23,25 +23,13 @@ const createBoundingClientRect = (
   toJSON: () => '',
 });
 
-// TODO: Is it needed to wrap all vertical aliders in this height: 500px <div>? Because without it, the slider has no height
-const verticalSliderWrapper = (verticalSlider: ReactNode) => {
-  return (
-    <div style={{ height: '1000px', width: 'fit-content' }}>
-      {verticalSlider}
-    </div>
-  );
-};
-
 /**
  * Setup default size for slider container to be used by all slider tests
  */
 const getBoundingClientRect = Element.prototype.getBoundingClientRect;
 const sliderContainerSize = createBoundingClientRect(10, 0, 1010, 60);
 const sliderContainerVerticalSize = createBoundingClientRect(10, 0, 70, 1000);
-// const random = createBoundingClientRect(9999, 9999, 9999, 9999);
-// Element.prototype.getBoundingClientRect = () => random;
-// Element.prototype.getBoundingClientRect = () => sliderContainerVerticalSize;
-// Element.prototype.getBoundingClientRect = () => sliderContainerSize;
+Element.prototype.getBoundingClientRect = () => sliderContainerSize;
 
 afterAll(() => {
   Element.prototype.getBoundingClientRect = getBoundingClientRect;
@@ -68,9 +56,7 @@ it('should render correctly in its most basic state', () => {
 
 it('should render correctly in its most basic state (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider values={defaultSingleValue} orientation='vertical' />,
-    ),
+    <Slider values={defaultSingleValue} orientation='vertical' />,
   );
   assertBaseElement(container);
   expect(container.querySelector('.iui-slider-track')).toBeTruthy();
@@ -89,9 +75,7 @@ it('should not render thumbs if no values are defined', () => {
 });
 
 it('should not render thumbs if no values are defined (vertical)', () => {
-  const { container } = render(
-    verticalSliderWrapper(<Slider values={[]} orientation='vertical' />),
-  );
+  const { container } = render(<Slider values={[]} orientation='vertical' />);
   expect(
     container.querySelector('.iui-slider-component-container'),
   ).toBeTruthy();
@@ -110,9 +94,7 @@ it('should not render track if min and max are same value', () => {
 
 it('should not render track if min and max are same value (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider values={[10]} min={20} max={20} orientation='vertical' />,
-    ),
+    <Slider values={[10]} min={20} max={20} orientation='vertical' />,
   );
   const element = container.querySelector('.iui-slider-thumb') as HTMLElement;
   expect(element).toBeTruthy();
@@ -130,9 +112,7 @@ it('should not render track if value is below specified min/max', () => {
 
 it('should not render track if value is below specified min/max (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider values={[10]} min={20} max={40} orientation='vertical' />,
-    ),
+    <Slider values={[10]} min={20} max={40} orientation='vertical' />,
   );
   const element = container.querySelector('.iui-slider-thumb') as HTMLElement;
   expect(element).toBeTruthy();
@@ -153,9 +133,7 @@ it('should not render track if value is above specified min/max', () => {
 
 it('should not render track if value is above specified min/max (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider values={[60]} min={20} max={40} orientation='vertical' />,
-    ),
+    <Slider values={[60]} min={20} max={40} orientation='vertical' />,
   );
   expect(
     container.querySelector('.iui-slider-component-container'),
@@ -178,9 +156,7 @@ it('should render disabled component', () => {
 
 it('should render disabled component (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider values={defaultSingleValue} orientation='vertical' disabled />,
-    ),
+    <Slider values={defaultSingleValue} orientation='vertical' disabled />,
   );
   assertBaseElement(container);
   expect(
@@ -199,9 +175,7 @@ it('should render min max labels by default', () => {
 
 it('should render min max labels by default (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider values={defaultSingleValue} orientation='vertical' />,
-    ),
+    <Slider values={defaultSingleValue} orientation='vertical' />,
   );
   assertBaseElement(container);
   expect(container.querySelector('.iui-slider-min')?.textContent).toBe('0');
@@ -219,14 +193,12 @@ it('should render specified min max labels', () => {
 
 it('should render specified min max labels (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider
-        values={defaultSingleValue}
-        min={5}
-        max={55}
-        orientation='vertical'
-      />,
-    ),
+    <Slider
+      values={defaultSingleValue}
+      min={5}
+      max={55}
+      orientation='vertical'
+    />,
   );
   assertBaseElement(container);
   expect(container.querySelector('.iui-slider-min')?.textContent).toBe('5');
@@ -244,14 +216,12 @@ it('should render provided min max labels', () => {
 
 it('should render provided min max labels (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider
-        values={defaultSingleValue}
-        maxLabel='big'
-        minLabel='small'
-        orientation='vertical'
-      />,
-    ),
+    <Slider
+      values={defaultSingleValue}
+      maxLabel='big'
+      minLabel='small'
+      orientation='vertical'
+    />,
   );
   assertBaseElement(container);
   expect(container.querySelector('.iui-slider-min')?.textContent).toBe('small');
@@ -273,14 +243,12 @@ it('should render provided min max label nodes', () => {
 
 it('should render provided min max label nodes (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider
-        values={defaultSingleValue}
-        maxLabel={<span className='span-max'>big</span>}
-        minLabel={<span className='span-min'>small</span>}
-        orientation='vertical'
-      />,
-    ),
+    <Slider
+      values={defaultSingleValue}
+      maxLabel={<span className='span-max'>big</span>}
+      minLabel={<span className='span-min'>small</span>}
+      orientation='vertical'
+    />,
   );
   assertBaseElement(container);
   expect(container.querySelector('.span-min')?.textContent).toBe('small');
@@ -308,14 +276,12 @@ it('should set focus (vertical)', () => {
     element = ref;
   };
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider
-        ref={onRef}
-        values={defaultSingleValue}
-        orientation='vertical'
-        setFocus
-      />,
-    ),
+    <Slider
+      ref={onRef}
+      values={defaultSingleValue}
+      orientation='vertical'
+      setFocus
+    />,
   );
   assertBaseElement(container);
   expect(element).toBeTruthy();
@@ -335,9 +301,7 @@ it('should show tooltip when focused', () => {
 
 it('should show tooltip when focused (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider values={defaultSingleValue} orientation='vertical' setFocus />,
-    ),
+    <Slider values={defaultSingleValue} orientation='vertical' setFocus />,
   );
   assertBaseElement(container);
   expect(document.activeElement).toEqual(
@@ -365,16 +329,14 @@ it('should not show tooltip if visibility is overridden', () => {
 
 it('should not show tooltip if visibility is overridden (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider
-        values={defaultSingleValue}
-        setFocus
-        tooltipProps={() => {
-          return { visible: false };
-        }}
-        orientation='vertical'
-      />,
-    ),
+    <Slider
+      values={defaultSingleValue}
+      setFocus
+      tooltipProps={() => {
+        return { visible: false };
+      }}
+      orientation='vertical'
+    />,
   );
   assertBaseElement(container);
   expect(document.activeElement).toEqual(
@@ -404,18 +366,16 @@ it('should show custom tooltip when focused', () => {
 
 it('should show custom tooltip when focused (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider
-        values={defaultSingleValue}
-        setFocus
-        tooltipProps={(index, val) => {
-          return {
-            content: `\$${val}.00`,
-          };
-        }}
-        orientation='vertical'
-      />,
-    ),
+    <Slider
+      values={defaultSingleValue}
+      setFocus
+      tooltipProps={(index, val) => {
+        return {
+          content: `\$${val}.00`,
+        };
+      }}
+      orientation='vertical'
+    />,
   );
   assertBaseElement(container);
   expect(document.activeElement).toEqual(
@@ -441,14 +401,12 @@ it('should take class and style', () => {
 
 it('should take class and style (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider
-        values={defaultSingleValue}
-        className='my-class'
-        style={{ width: '350px' }}
-        orientation='vertical'
-      />,
-    ),
+    <Slider
+      values={defaultSingleValue}
+      className='my-class'
+      style={{ width: '350px' }}
+      orientation='vertical'
+    />,
   );
   const slider = container.querySelector(
     '.iui-slider-component-container.my-class',
@@ -477,13 +435,11 @@ it('should take railContainerProps (vertical)', () => {
   // common use case is when custom thumb is bigger than default and we must change top/bottom margin
   const railContainerProps = { style: { margin: '8px 0' } };
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider
-        values={defaultSingleValue}
-        railContainerProps={railContainerProps}
-        orientation='vertical'
-      />,
-    ),
+    <Slider
+      values={defaultSingleValue}
+      railContainerProps={railContainerProps}
+      orientation='vertical'
+    />,
   );
   const railContainer = container.querySelector(
     '.iui-slider-container',
@@ -506,13 +462,11 @@ it('should render tick marks', () => {
 
 it('should render tick marks (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider
-        values={defaultSingleValue}
-        tickLabels={['0', '25', '50', '75', '100']}
-        orientation='vertical'
-      />,
-    ),
+    <Slider
+      values={defaultSingleValue}
+      tickLabels={['0', '25', '50', '75', '100']}
+      orientation='vertical'
+    />,
   );
   assertBaseElement(container);
   expect(container.querySelectorAll('.iui-slider-tick').length).toBe(5);
@@ -531,13 +485,11 @@ it('should render custom tick marks as defined by ReactNode', () => {
 
 it('should render custom tick marks as defined by ReactNode (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider
-        values={defaultSingleValue}
-        tickLabels={<span className='custom-tick-mark'>Custom</span>}
-        orientation='vertical'
-      />,
-    ),
+    <Slider
+      values={defaultSingleValue}
+      tickLabels={<span className='custom-tick-mark'>Custom</span>}
+      orientation='vertical'
+    />,
   );
   assertBaseElement(container);
   expect(container.querySelector('.custom-tick-mark')).toBeTruthy();
@@ -551,9 +503,7 @@ it('should render single track', () => {
 
 it('should render single track (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider values={defaultSingleValue} orientation='vertical' />,
-    ),
+    <Slider values={defaultSingleValue} orientation='vertical' />,
   );
   assertBaseElement(container);
   expect(container.querySelectorAll('.iui-slider-track').length).toBe(1);
@@ -568,9 +518,7 @@ it('should render odd tracks based on even number of values and `auto` trackDisp
 
 it('should render odd tracks based on even number of values and `auto` trackDisplayMode (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider values={[10, 20, 30, 40]} orientation='vertical' />,
-    ),
+    <Slider values={[10, 20, 30, 40]} orientation='vertical' />,
   );
   assertBaseElement(container);
   // segments 10-20, 30-40
@@ -587,13 +535,11 @@ it('should render 3 `even-segments` 0-10,20-30,40-100', () => {
 
 it('should render 3 `even-segments` 0-10,20-30,40-100 (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider
-        trackDisplayMode='even-segments'
-        values={[10, 20, 30, 40]}
-        orientation='vertical'
-      />,
-    ),
+    <Slider
+      trackDisplayMode='even-segments'
+      values={[10, 20, 30, 40]}
+      orientation='vertical'
+    />,
   );
   assertBaseElement(container);
   expect(container.querySelectorAll('.iui-slider-track').length).toBe(3);
@@ -609,13 +555,11 @@ it('should render 2 `odd-segments` 10-20, 30-40', () => {
 
 it('should render 2 `odd-segments` 10-20, 30-40 (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider
-        trackDisplayMode='odd-segments'
-        values={[10, 20, 30, 40]}
-        orientation='vertical'
-      />,
-    ),
+    <Slider
+      trackDisplayMode='odd-segments'
+      values={[10, 20, 30, 40]}
+      orientation='vertical'
+    />,
   );
   assertBaseElement(container);
   expect(container.querySelectorAll('.iui-slider-track').length).toBe(2);
@@ -631,13 +575,11 @@ it('should not render track', () => {
 
 it('should not render track (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider
-        trackDisplayMode='none'
-        values={defaultSingleValue}
-        orientation='vertical'
-      />,
-    ),
+    <Slider
+      trackDisplayMode='none'
+      values={defaultSingleValue}
+      orientation='vertical'
+    />,
   );
   assertBaseElement(container);
   expect(container.querySelectorAll('.iui-slider-track').length).toBe(0);
@@ -663,9 +605,7 @@ it('should activate thumb on pointerDown', () => {
 // TODO: Not sure why this is passing because I don't see the iui-active class upon clicking the thumb
 it('should activate thumb on pointerDown (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider values={defaultSingleValue} orientation='vertical' />,
-    ),
+    <Slider values={defaultSingleValue} orientation='vertical' />,
   );
   assertBaseElement(container);
   let thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
@@ -730,15 +670,13 @@ it('should process keystrokes when thumb has focus', () => {
 it('should process keystrokes when thumb has focus (vertical)', () => {
   const handleOnChange = jest.fn();
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider
-        values={[50]}
-        step={5}
-        setFocus
-        onChange={handleOnChange}
-        orientation='vertical'
-      />,
-    ),
+    <Slider
+      values={[50]}
+      step={5}
+      setFocus
+      onChange={handleOnChange}
+      orientation='vertical'
+    />,
   );
   assertBaseElement(container);
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
@@ -812,9 +750,7 @@ it('should limit keystrokes processing to adjacent points by default', () => {
 
 it('should limit keystrokes processing to adjacent points by default (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider values={[40, 80]} step={5} orientation='vertical' setFocus />,
-    ),
+    <Slider values={[40, 80]} step={5} orientation='vertical' setFocus />,
   );
   assertBaseElement(container);
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
@@ -893,15 +829,13 @@ it('should limit keystrokes processing by min max when allow-crossing is set', (
 it('should limit keystrokes processing by min max when allow-crossing is set (vertical)', () => {
   const handleOnChange = jest.fn();
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider
-        values={[40, 80]}
-        step={5}
-        setFocus
-        thumbMode='allow-crossing'
-        onChange={handleOnChange}
-      />,
-    ),
+    <Slider
+      values={[40, 80]}
+      step={5}
+      setFocus
+      thumbMode='allow-crossing'
+      onChange={handleOnChange}
+    />,
   );
   assertBaseElement(container);
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
@@ -953,9 +887,7 @@ it('should not process keystrokes when slider is disabled', () => {
 
 it('should not process keystrokes when slider is disabled (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider values={[50]} step={5} orientation='vertical' disabled />,
-    ),
+    <Slider values={[50]} step={5} orientation='vertical' disabled />,
   );
   assertBaseElement(container);
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
@@ -989,9 +921,7 @@ it('should show tooltip on thumb hover', () => {
 
 it('should show tooltip on thumb hover (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider values={defaultSingleValue} orientation='vertical' />,
-    ),
+    <Slider values={defaultSingleValue} orientation='vertical' />,
   );
   assertBaseElement(container);
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
@@ -1034,9 +964,7 @@ it('should show tooltip on thumb focus', () => {
 
 it('should show tooltip on thumb focus (vertical)', () => {
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider values={defaultSingleValue} orientation='vertical' />,
-    ),
+    <Slider values={defaultSingleValue} orientation='vertical' />,
   );
   assertBaseElement(container);
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
@@ -1081,13 +1009,11 @@ it('should apply thumb props (vertical)', () => {
     };
   };
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider
-        values={defaultSingleValue}
-        thumbProps={thumbProps}
-        orientation='vertical'
-      />,
-    ),
+    <Slider
+      values={defaultSingleValue}
+      thumbProps={thumbProps}
+      orientation='vertical'
+    />,
   );
   assertBaseElement(container);
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
@@ -1114,8 +1040,6 @@ it('should move thumb when pointer down on rail', () => {
   const sliderContainer = container.querySelector(
     '.iui-slider-container',
   ) as HTMLDivElement;
-
-  console.log(sliderContainer.getBoundingClientRect());
 
   expect(sliderContainer.getBoundingClientRect().left).toBe(10);
   expect(sliderContainer.getBoundingClientRect().right).toBe(1010);
@@ -1147,22 +1071,19 @@ it('should move thumb when pointer down on rail (vertical)', () => {
   const handleOnUpdate = jest.fn();
 
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider
-        values={defaultSingleValue}
-        tickLabels={<span className='custom-tick-mark'>Custom</span>}
-        onChange={handleOnChange}
-        onUpdate={handleOnUpdate}
-        orientation='vertical'
-      />,
-    ),
+    <Slider
+      values={defaultSingleValue}
+      tickLabels={<span className='custom-tick-mark'>Custom</span>}
+      onChange={handleOnChange}
+      onUpdate={handleOnUpdate}
+      orientation='vertical'
+    />,
   );
 
   assertBaseElement(container);
   const sliderContainer = container.querySelector(
     '.iui-slider-container',
   ) as HTMLDivElement;
-  console.log(12345, sliderContainer.getBoundingClientRect());
   expect(sliderContainer.getBoundingClientRect().left).toBe(10);
   expect(sliderContainer.getBoundingClientRect().top).toBe(0);
   expect(sliderContainer.getBoundingClientRect().right).toBe(70);
@@ -1239,8 +1160,6 @@ it('should move to closest step when pointer down on rail (vertical)', () => {
     '.iui-slider-container',
   ) as HTMLDivElement;
 
-  console.log('Dieses ist example', sliderContainer.getBoundingClientRect());
-
   /* fire a pointer down event 30% down the slider
    * 0 - .25 - .5 - .75 - 1 so closet to .3 is .25
    */
@@ -1290,16 +1209,12 @@ it('should move closest thumb when pointer down on rail (vertical)', () => {
   Element.prototype.getBoundingClientRect = () => sliderContainerVerticalSize;
 
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider
-        values={[10, 80]}
-        tickLabels={<span className='custom-tick-mark'>Custom</span>}
-        orientation='vertical'
-      />,
-    ),
+    <Slider
+      values={[10, 80]}
+      tickLabels={<span className='custom-tick-mark'>Custom</span>}
+      orientation='vertical'
+    />,
   );
-
-  // console.log(12345, container);
 
   assertBaseElement(container);
   const sliderContainer = container.querySelector(
@@ -1397,18 +1312,16 @@ it('should activate thumb on pointerDown and move to closest step on move (verti
   const handleOnChange = jest.fn();
 
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider
-        min={0}
-        max={100}
-        values={[20, 80]}
-        step={1}
-        tickLabels={<span className='custom-tick-mark'>Custom</span>}
-        onUpdate={handleOnUpdate}
-        onChange={handleOnChange}
-        orientation='vertical'
-      />,
-    ),
+    <Slider
+      min={0}
+      max={100}
+      values={[20, 80]}
+      step={1}
+      tickLabels={<span className='custom-tick-mark'>Custom</span>}
+      onUpdate={handleOnUpdate}
+      onChange={handleOnChange}
+      orientation='vertical'
+    />,
   );
 
   assertBaseElement(container);
@@ -1530,16 +1443,14 @@ it('should activate thumb on pointerDown and move to closest step on move/ no up
   Element.prototype.getBoundingClientRect = () => sliderContainerVerticalSize;
 
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider
-        min={0}
-        max={100}
-        values={[20, 80]}
-        step={1}
-        tickLabels={<span className='custom-tick-mark'>Custom</span>}
-        orientation='vertical'
-      />,
-    ),
+    <Slider
+      min={0}
+      max={100}
+      values={[20, 80]}
+      step={1}
+      tickLabels={<span className='custom-tick-mark'>Custom</span>}
+      orientation='vertical'
+    />,
   );
 
   assertBaseElement(container);
