@@ -26,7 +26,7 @@ const createBoundingClientRect = (
 // TODO: Is it needed to wrap all vertical aliders in this height: 500px <div>? Because without it, the slider has no height
 const verticalSliderWrapper = (verticalSlider: ReactNode) => {
   return (
-    <div style={{ height: '500px', width: 'fit-content' }}>
+    <div style={{ height: '1000px', width: 'fit-content' }}>
       {verticalSlider}
     </div>
   );
@@ -37,7 +37,11 @@ const verticalSliderWrapper = (verticalSlider: ReactNode) => {
  */
 const getBoundingClientRect = Element.prototype.getBoundingClientRect;
 const sliderContainerSize = createBoundingClientRect(10, 0, 1010, 60);
-Element.prototype.getBoundingClientRect = () => sliderContainerSize;
+const sliderContainerVerticalSize = createBoundingClientRect(10, 0, 70, 1000);
+// const random = createBoundingClientRect(9999, 9999, 9999, 9999);
+// Element.prototype.getBoundingClientRect = () => random;
+// Element.prototype.getBoundingClientRect = () => sliderContainerVerticalSize;
+// Element.prototype.getBoundingClientRect = () => sliderContainerSize;
 
 afterAll(() => {
   Element.prototype.getBoundingClientRect = getBoundingClientRect;
@@ -1092,6 +1096,8 @@ it('should apply thumb props (vertical)', () => {
 });
 
 it('should move thumb when pointer down on rail', () => {
+  Element.prototype.getBoundingClientRect = () => sliderContainerSize;
+
   const handleOnChange = jest.fn();
   const handleOnUpdate = jest.fn();
 
@@ -1109,7 +1115,7 @@ it('should move thumb when pointer down on rail', () => {
     '.iui-slider-container',
   ) as HTMLDivElement;
 
-  console.log('Ein halbe', sliderContainer.getBoundingClientRect());
+  console.log(sliderContainer.getBoundingClientRect());
 
   expect(sliderContainer.getBoundingClientRect().left).toBe(10);
   expect(sliderContainer.getBoundingClientRect().right).toBe(1010);
@@ -1135,6 +1141,8 @@ it('should move thumb when pointer down on rail', () => {
 // TODO: I added some unnecessary check conditions. Remove them
 // TODO: Don't know how to fix this test
 it('should move thumb when pointer down on rail (vertical)', () => {
+  Element.prototype.getBoundingClientRect = () => sliderContainerVerticalSize; // TODO: Confirm if we need this everywhere. Maybe we don't need it where we are not using sliderContainer.getBoundingClientRect
+
   const handleOnChange = jest.fn();
   const handleOnUpdate = jest.fn();
 
@@ -1156,18 +1164,18 @@ it('should move thumb when pointer down on rail (vertical)', () => {
   ) as HTMLDivElement;
   console.log(12345, sliderContainer.getBoundingClientRect());
   expect(sliderContainer.getBoundingClientRect().left).toBe(10);
-  expect(sliderContainer.getBoundingClientRect().right).toBe(1010);
   expect(sliderContainer.getBoundingClientRect().top).toBe(0);
-  expect(sliderContainer.getBoundingClientRect().bottom).toBe(60);
-  expect(sliderContainer.getBoundingClientRect().width).toBe(1000);
-  expect(sliderContainer.getBoundingClientRect().height).toBe(60);
+  expect(sliderContainer.getBoundingClientRect().right).toBe(70);
+  expect(sliderContainer.getBoundingClientRect().bottom).toBe(1000);
+  expect(sliderContainer.getBoundingClientRect().width).toBe(60);
+  expect(sliderContainer.getBoundingClientRect().height).toBe(1000);
 
   /* fire a pointer down event 30% down the slider */
   act(() => {
     fireEvent.pointerDown(sliderContainer, {
       pointerId: 5,
       buttons: 1,
-      clientY: 30,
+      clientY: 1000 - 300,
     });
   });
 
@@ -1179,6 +1187,7 @@ it('should move thumb when pointer down on rail (vertical)', () => {
 });
 
 it('should move to closest step when pointer down on rail', () => {
+  Element.prototype.getBoundingClientRect = () => sliderContainerSize;
   const { container } = render(
     <Slider
       min={0}
@@ -1210,23 +1219,27 @@ it('should move to closest step when pointer down on rail', () => {
 
 // TODO: Don't know how to fix this test
 it('should move to closest step when pointer down on rail (vertical)', () => {
+  Element.prototype.getBoundingClientRect = () => sliderContainerVerticalSize;
+
   const { container } = render(
-    verticalSliderWrapper(
-      <Slider
-        min={0}
-        max={1}
-        values={[0.5]}
-        step={0.25}
-        tickLabels={<span className='custom-tick-mark'>Custom</span>}
-        orientation='vertical'
-      />,
-    ),
+    // verticalSliderWrapper( // TODO: Remove all verticalSliderWrappers
+    <Slider
+      min={0}
+      max={1}
+      values={[0.5]}
+      step={0.25}
+      tickLabels={<span className='custom-tick-mark'>Custom</span>}
+      orientation='vertical'
+    />,
+    // ),
   );
 
   assertBaseElement(container);
   const sliderContainer = container.querySelector(
     '.iui-slider-container',
   ) as HTMLDivElement;
+
+  console.log('Dieses ist example', sliderContainer.getBoundingClientRect());
 
   /* fire a pointer down event 30% down the slider
    * 0 - .25 - .5 - .75 - 1 so closet to .3 is .25
@@ -1235,7 +1248,7 @@ it('should move to closest step when pointer down on rail (vertical)', () => {
     fireEvent.pointerDown(sliderContainer, {
       pointerId: 5,
       buttons: 1,
-      clientX: 310,
+      clientY: 1000 - 300,
     });
   });
 
@@ -1244,6 +1257,8 @@ it('should move to closest step when pointer down on rail (vertical)', () => {
 });
 
 it('should move closest thumb when pointer down on rail', () => {
+  Element.prototype.getBoundingClientRect = () => sliderContainerSize;
+
   const { container } = render(
     <Slider
       values={[10, 80]}
@@ -1272,6 +1287,8 @@ it('should move closest thumb when pointer down on rail', () => {
 
 // TODO: Don't know how to fix this test
 it('should move closest thumb when pointer down on rail (vertical)', () => {
+  Element.prototype.getBoundingClientRect = () => sliderContainerVerticalSize;
+
   const { container } = render(
     verticalSliderWrapper(
       <Slider
@@ -1282,7 +1299,7 @@ it('should move closest thumb when pointer down on rail (vertical)', () => {
     ),
   );
 
-  console.log(12345, container);
+  // console.log(12345, container);
 
   assertBaseElement(container);
   const sliderContainer = container.querySelector(
@@ -1293,7 +1310,7 @@ it('should move closest thumb when pointer down on rail (vertical)', () => {
     fireEvent.pointerDown(sliderContainer, {
       pointerId: 5,
       buttons: 1,
-      clientX: 710,
+      clientY: 1000 - 700,
     });
   });
 
@@ -1304,6 +1321,8 @@ it('should move closest thumb when pointer down on rail (vertical)', () => {
 });
 
 it('should activate thumb on pointerDown and move to closest step on move', () => {
+  Element.prototype.getBoundingClientRect = () => sliderContainerSize;
+
   const handleOnUpdate = jest.fn();
   const handleOnChange = jest.fn();
 
@@ -1372,6 +1391,8 @@ it('should activate thumb on pointerDown and move to closest step on move', () =
 
 // TODO: Don't know how to fix this test
 it('should activate thumb on pointerDown and move to closest step on move (vertical)', () => {
+  Element.prototype.getBoundingClientRect = () => sliderContainerVerticalSize; // TODO: Document why I am adding this line in the start of a few methods
+
   const handleOnUpdate = jest.fn();
   const handleOnChange = jest.fn();
 
@@ -1401,7 +1422,7 @@ it('should activate thumb on pointerDown and move to closest step on move (verti
     fireEvent.pointerDown(thumb, {
       pointerId: 5,
       buttons: 1,
-      clientY: 210,
+      clientY: 1000 - 200,
     });
   });
   expect(thumb.classList).toContain('iui-active');
@@ -1411,7 +1432,7 @@ it('should activate thumb on pointerDown and move to closest step on move (verti
     fireEvent.pointerMove(sliderContainer, {
       pointerId: 5,
       buttons: 1,
-      clientY: 210,
+      clientY: 1000 - 200,
     });
   });
 
@@ -1420,7 +1441,7 @@ it('should activate thumb on pointerDown and move to closest step on move (verti
     fireEvent.pointerMove(sliderContainer, {
       pointerId: 5,
       buttons: 1,
-      clientY: 410,
+      clientY: 1000 - 400,
     });
   });
   expect(handleOnUpdate).toHaveBeenCalledTimes(1);
@@ -1429,7 +1450,7 @@ it('should activate thumb on pointerDown and move to closest step on move (verti
     fireEvent.pointerUp(sliderContainer, {
       pointerId: 5,
       buttons: 1,
-      clientY: 410,
+      clientY: 1000 - 400,
     });
   });
 
@@ -1442,6 +1463,8 @@ it('should activate thumb on pointerDown and move to closest step on move (verti
 });
 
 it('should activate thumb on pointerDown and move to closest step on move/ no update handler', () => {
+  Element.prototype.getBoundingClientRect = () => sliderContainerSize;
+
   const { container } = render(
     <Slider
       min={0}
@@ -1504,6 +1527,8 @@ it('should activate thumb on pointerDown and move to closest step on move/ no up
 
 // TODO: Don't know how to fix this test
 it('should activate thumb on pointerDown and move to closest step on move/ no update handler (vertical)', () => {
+  Element.prototype.getBoundingClientRect = () => sliderContainerVerticalSize;
+
   const { container } = render(
     verticalSliderWrapper(
       <Slider
@@ -1529,7 +1554,7 @@ it('should activate thumb on pointerDown and move to closest step on move/ no up
     fireEvent.pointerDown(thumb, {
       pointerId: 5,
       buttons: 1,
-      clientY: 210,
+      clientY: 1000 - 200,
     });
   });
   expect(thumb.classList).toContain('iui-active');
@@ -1540,7 +1565,7 @@ it('should activate thumb on pointerDown and move to closest step on move/ no up
     fireEvent.pointerMove(sliderContainer, {
       pointerId: 5,
       buttons: 1,
-      clientY: 210,
+      clientY: 1000 - 200,
     });
   });
 
@@ -1549,7 +1574,7 @@ it('should activate thumb on pointerDown and move to closest step on move/ no up
     fireEvent.pointerMove(sliderContainer, {
       pointerId: 5,
       buttons: 1,
-      clientY: 410,
+      clientY: 1000 - 400,
     });
   });
 
@@ -1557,7 +1582,7 @@ it('should activate thumb on pointerDown and move to closest step on move/ no up
     fireEvent.pointerUp(sliderContainer, {
       pointerId: 5,
       buttons: 1,
-      clientY: 410,
+      clientY: 1000 - 400,
     });
   });
 
