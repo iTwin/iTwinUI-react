@@ -128,7 +128,7 @@ export const Thumb = (props: ThumbProps) => {
     }
     return value;
   }, [sliderMax, sliderMin, value]);
-  const leftPercent = React.useMemo(() => {
+  const lowPercent = React.useMemo(() => {
     if (sliderMax === sliderMin) {
       return 0;
     }
@@ -149,8 +149,8 @@ export const Thumb = (props: ThumbProps) => {
         style={{
           ...style,
           ...(orientation === 'horizontal'
-            ? { left: `${leftPercent}%` }
-            : { bottom: `${leftPercent}%` }),
+            ? { left: `${lowPercent}%` }
+            : { bottom: `${lowPercent}%` }),
         }}
         className={cx(
           'iui-slider-thumb',

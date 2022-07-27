@@ -67,11 +67,11 @@ export const Track = (props: TrackProps) => {
     <>
       {'none' !== trackDisplayMode &&
         segments.map((segment, index) => {
-          const leftPercent =
+          const lowPercent =
             segment.left >= sliderMin && sliderMax !== sliderMin
               ? (100.0 * (segment.left - sliderMin)) / (sliderMax - sliderMin)
               : 0;
-          const rightPercent =
+          const highPercent =
             segment.right >= sliderMin && sliderMax !== sliderMin
               ? 100.0 -
                 (100.0 * (segment.right - sliderMin)) / (sliderMax - sliderMin)
@@ -84,12 +84,12 @@ export const Track = (props: TrackProps) => {
                   style={{
                     ...(orientation === 'horizontal'
                       ? {
-                          left: `${leftPercent}%`,
-                          right: `${rightPercent}%`,
+                          left: `${lowPercent}%`,
+                          right: `${highPercent}%`,
                         }
                       : {
-                          top: `${rightPercent}%`,
-                          bottom: `${leftPercent}%`,
+                          top: `${highPercent}%`,
+                          bottom: `${lowPercent}%`,
                         }),
                   }}
                 />
