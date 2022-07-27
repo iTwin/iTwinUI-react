@@ -31,7 +31,7 @@ const sliderWrapper = (element: ReactNode, args: object) => {
       className='slider-wrapper'
       style={{
         ...(args.orientation == 'vertical'
-          ? { height: '400px', width: 'fit-content' }
+          ? { height: 'calc(100vh - 24px)', width: 'fit-content' }
           : {}),
       }}
     >
