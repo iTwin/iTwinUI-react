@@ -12,6 +12,7 @@ import {
   CommonProps,
   useTheme,
   useOverflow,
+  getFocusableElements,
 } from '../utils';
 import '@itwin/itwinui-css/css/inputs.css';
 import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
@@ -274,11 +275,35 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
 
   const onKeyDown = (event: React.KeyboardEvent, toggle: () => void) => {
     switch (event.key) {
+      case 'ArrowLeft': {
+        const focusableElements = getFocusableElements(selectRef.current);
+        const currentIndex = focusableElements.indexOf(
+          selectRef.current?.ownerDocument.activeElement as HTMLElement,
+        );
+        if (currentIndex === 0) {
+          selectRef.current?.focus();
+        } else {
+          (focusableElements[currentIndex - 1] as HTMLElement)?.focus();
+        }
+        break;
+      }
+      case 'ArrowRight': {
+        const focusableElements = getFocusableElements(selectRef.current);
+        const currentIndex = focusableElements.indexOf(
+          selectRef.current?.ownerDocument.activeElement as HTMLElement,
+        );
+        if (currentIndex < focusableElements.length - 1) {
+          (focusableElements[currentIndex + 1] as HTMLElement).focus();
+        }
+        break;
+      }
       case 'Enter':
       case ' ':
       case 'Spacebar':
-        toggle();
-        event.preventDefault();
+        if (event.target === selectRef.current) {
+          toggle();
+          event.preventDefault();
+        }
         break;
       default:
         break;

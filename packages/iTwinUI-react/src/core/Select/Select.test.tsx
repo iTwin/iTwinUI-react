@@ -533,3 +533,20 @@ it('should call onChange if tag is removed', () => {
   fireEvent.click(closeButton);
   expect(onChange).toHaveBeenCalledWith(2, 'removed');
 });
+
+it('should call onChange if tag is removed using keyboard', async () => {
+  const onChange = jest.fn();
+  renderComponent({
+    onChange,
+    multiple: true,
+    value: [1, 2],
+  });
+
+  userEvent.tab();
+  await userEvent.keyboard('[ArrowRight]');
+  await userEvent.keyboard('[ArrowRight]');
+  await userEvent.keyboard('[ArrowLeft]');
+  await userEvent.keyboard('[Enter]');
+
+  expect(onChange).toHaveBeenCalledWith(1, 'removed');
+});

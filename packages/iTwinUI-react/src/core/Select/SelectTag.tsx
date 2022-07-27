@@ -32,7 +32,6 @@ export const SelectTag = (props: SelectTagProps) => {
     <span
       className={cx('iui-select-tag', className)}
       onClick={(e) => e.stopPropagation()}
-      onKeyDown={(e) => e.stopPropagation()}
       {...rest}
     >
       <span className='iui-select-tag-label'>{children}</span>
@@ -41,6 +40,7 @@ export const SelectTag = (props: SelectTagProps) => {
           onClick={onRemove}
           aria-label='Delete tag'
           className='iui-select-tag-button'
+          tabIndex={-1}
         >
           <SvgCloseSmall className='iui-select-tag-button-icon' aria-hidden />
         </button>
