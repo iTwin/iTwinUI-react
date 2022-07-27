@@ -24,16 +24,11 @@ export type TrackDisplayMode =
   | 'odd-segments'
   | 'even-segments';
 
-/**
- * Determines the orientation of the vertical slider.
- */
-export type Orientation = 'horizontal' | 'vertical';
-
 const getPercentageOfRectangle = (
   rect: DOMRect,
   pointerX: number,
   pointerY: number,
-  orientation: Orientation,
+  orientation: SliderProps['orientation'], // TODO: Confirm if this usage is correct
 ) => {
   if (orientation === 'horizontal') {
     const position = getBoundedValue(pointerX, rect.left, rect.right);
@@ -194,7 +189,7 @@ export type SliderProps = {
    * 'vertical'- Slider is vertical and fills from bottom to top.
    * @default 'horizontal'
    */
-  orientation?: Orientation;
+  orientation?: 'horizontal' | 'vertical';
 } & Omit<CommonProps, 'title'>;
 
 /**

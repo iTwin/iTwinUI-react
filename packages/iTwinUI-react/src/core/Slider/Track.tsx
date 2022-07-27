@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { Orientation, TrackDisplayMode } from './Slider';
+import { SliderProps, TrackDisplayMode } from './Slider';
 
 function shouldDisplaySegment(segmentIndex: number, mode: TrackDisplayMode) {
   if ('odd-segments' === mode && 0 === (segmentIndex + 1) % 2) {
@@ -46,7 +46,7 @@ export type TrackProps = {
   sliderMin: number;
   sliderMax: number;
   values: number[];
-  orientation: Orientation; // TODO: Confirm if need documentation for this line
+  orientation: SliderProps['orientation'];
 };
 
 /**

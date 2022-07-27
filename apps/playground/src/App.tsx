@@ -4,6 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 import { Button, Slider } from '@itwin/itwinui-react';
 
+// TODO: Revert this file back
+
 const App = () => {
   // return <Button>Hello world</Button>;
 

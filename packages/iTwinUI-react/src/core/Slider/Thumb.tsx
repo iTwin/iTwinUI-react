@@ -5,7 +5,7 @@
 import React from 'react';
 import cx from 'classnames';
 import { Tooltip, TooltipProps } from '../Tooltip';
-import { Orientation } from './Slider';
+import { SliderProps } from './Slider';
 
 export type ThumbProps = {
   /**
@@ -60,14 +60,7 @@ export type ThumbProps = {
    * Additional props for Thumb.
    */
   thumbProps?: React.HTMLAttributes<HTMLDivElement>;
-  /**
-   * The orientation of slider to which this Thumb is attached to. Possible values:
-   * 'horizontal' - Slider is horizontal and fills from left to right. Default.
-   * 'vertical'- Slider is vertical and fills from bottom to top.
-   * @default 'horizontal'
-   */
-  orientation?: Orientation;
-};
+} & Pick<SliderProps, 'orientation'>;
 
 /**
  * Thumb is a local component used to show and modify the values maintained by the Slider.
