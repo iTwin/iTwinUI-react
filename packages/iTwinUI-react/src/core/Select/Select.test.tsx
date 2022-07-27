@@ -315,7 +315,7 @@ it('should call onChange on item click', () => {
   const menuItem = menu.querySelectorAll('li');
   expect(menuItem.length).toBe(3);
   fireEvent.click(menuItem[1]);
-  expect(onChange).toHaveBeenCalledWith(1, 'added');
+  expect(onChange).toHaveBeenCalledWith(1);
 });
 
 it('should render menu with custom className', () => {

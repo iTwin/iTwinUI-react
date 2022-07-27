@@ -13,7 +13,7 @@ export type SelectTagProps = {
    * Callback function that handles click on close icon.
    * Close icon is shown only when this function is passed.
    */
-  onRemove?: React.MouseEventHandler;
+  onRemove?: () => void;
   /**
    * Text inside the tag.
    */
@@ -32,6 +32,7 @@ export const SelectTag = (props: SelectTagProps) => {
     <span
       className={cx('iui-select-tag', className)}
       onClick={(e) => e.stopPropagation()}
+      onKeyDown={(e) => e.stopPropagation()}
       {...rest}
     >
       <span className='iui-select-tag-label'>{children}</span>
