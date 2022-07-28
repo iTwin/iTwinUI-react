@@ -27,13 +27,14 @@ export const HeaderBasicButton: HeaderBasicButtonComponent = React.forwardRef(
       style,
       type = 'button',
       startIcon,
+      as: Element = 'button',
       ...rest
     } = props;
 
     useTheme();
 
     return (
-      <button
+      <Element
         className={cx('iui-header-breadcrumb-button', className)}
         onClick={onClick}
         ref={ref}
@@ -46,7 +47,7 @@ export const HeaderBasicButton: HeaderBasicButtonComponent = React.forwardRef(
             className: startIcon.props.className,
           })}
         {children}
-      </button>
+      </Element>
     );
   },
 );

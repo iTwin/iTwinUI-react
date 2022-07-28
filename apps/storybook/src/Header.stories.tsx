@@ -224,6 +224,8 @@ export const Basic: Story<HeaderProps> = (args) => {
             <HeaderButton
               key='iModel'
               name='iModel B'
+              as='a'
+              href='www.google.com'
               startIcon={
                 <img
                   src='https://itwinplatformcdn.azureedge.net/iTwinUI/stadium.png'
