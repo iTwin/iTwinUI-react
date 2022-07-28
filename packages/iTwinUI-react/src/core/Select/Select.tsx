@@ -35,6 +35,22 @@ const isSingleOnChange = <T,>(
   return !multiple;
 };
 
+const focusPreviousElement = (parent: HTMLElement | null) => {
+  if (!parent) {
+    return;
+  }
+
+  const focusableElements = getFocusableElements(parent);
+  const currentIndex = focusableElements.indexOf(
+    parent.ownerDocument.activeElement as HTMLElement,
+  );
+  if (currentIndex === 0) {
+    parent.focus();
+  } else {
+    (focusableElements[currentIndex - 1] as HTMLElement).focus();
+  }
+};
+
 export type ItemRendererProps = {
   /**
    * Close handler that closes the dropdown.
@@ -276,15 +292,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
   const onKeyDown = (event: React.KeyboardEvent, toggle: () => void) => {
     switch (event.key) {
       case 'ArrowLeft': {
-        const focusableElements = getFocusableElements(selectRef.current);
-        const currentIndex = focusableElements.indexOf(
-          selectRef.current?.ownerDocument.activeElement as HTMLElement,
-        );
-        if (currentIndex === 0) {
-          selectRef.current?.focus();
-        } else {
-          (focusableElements[currentIndex - 1] as HTMLElement)?.focus();
-        }
+        focusPreviousElement(selectRef.current);
         break;
       }
       case 'ArrowRight': {
@@ -412,9 +420,12 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
                   options: SelectOption<T>[],
                 ) => JSX.Element
               }
-              onChange={
-                onChange as (value: T, event: SelectValueChangeEvent) => void
-              }
+              onChange={(value, event, isKeyboard) => {
+                if (isKeyboard) {
+                  focusPreviousElement(selectRef.current);
+                }
+                onChange?.(value, event);
+              }}
             />
           ) : (
             <SingleSelectButton
@@ -471,7 +482,11 @@ const SingleSelectButton = <T,>({
 type MultipleSelectButtonProps<T> = {
   selectedItems?: SelectOption<T>[];
   selectedItemsRenderer?: (options: SelectOption<T>[]) => JSX.Element;
-  onChange: (value: T, event: SelectValueChangeEvent) => void;
+  onChange: (
+    value: T,
+    event: SelectValueChangeEvent,
+    isKeyboard: boolean,
+  ) => void;
 };
 
 const MultipleSelectButton = <T,>({
@@ -487,8 +502,9 @@ const MultipleSelectButton = <T,>({
     return selectedItems.map((item) => (
       <SelectTag
         key={item.label}
-        onRemove={() => {
-          onChange?.(item.value, 'removed');
+        onRemove={(e) => {
+          // assume if coords are zero, keyboard was used to remove tag
+          onChange?.(item.value, 'removed', e.screenX === 0 && e.screenY === 0);
         }}
       >
         {item.label}

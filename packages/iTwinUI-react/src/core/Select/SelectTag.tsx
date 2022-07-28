@@ -13,7 +13,7 @@ export type SelectTagProps = {
    * Callback function that handles click on close icon.
    * Close icon is shown only when this function is passed.
    */
-  onRemove?: () => void;
+  onRemove?: (e: React.MouseEvent) => void;
   /**
    * Text inside the tag.
    */
