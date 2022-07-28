@@ -104,12 +104,19 @@ export const HeaderButton: HeaderButtonComponent = React.forwardRef(
     } as const;
 
     if (isSplitButton(buttonProps)) {
-      return <HeaderSplitButton {...buttonProps} />;
+      return (
+        <li
+          className='iui-header-breadcrumb-item'
+          aria-current={isActive ? 'location' : undefined}
+        >
+          <HeaderSplitButton {...buttonProps} />
+        </li>
+      );
     }
     if (isDropdownButton(buttonProps)) {
       return (
         <li
-          className='iui-header-breadcrumb-button-wrapper'
+          className='iui-header-breadcrumb-item'
           aria-current={isActive ? 'location' : undefined}
         >
           <DropdownButton {...buttonProps} />
@@ -118,7 +125,7 @@ export const HeaderButton: HeaderButtonComponent = React.forwardRef(
     }
     return (
       <li
-        className='iui-header-breadcrumb-button-wrapper'
+        className='iui-header-breadcrumb-item'
         aria-current={isActive ? 'location' : undefined}
       >
         <Button {...buttonProps} />

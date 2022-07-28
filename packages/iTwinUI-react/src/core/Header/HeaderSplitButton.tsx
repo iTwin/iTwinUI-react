@@ -35,7 +35,6 @@ export const HeaderSplitButton: HeaderSplitButtonComponent = React.forwardRef(
       style,
       title,
       type = 'button',
-      isActive = false,
       startIcon,
       ...rest
     } = props;
@@ -54,9 +53,8 @@ export const HeaderSplitButton: HeaderSplitButtonComponent = React.forwardRef(
     }, [children, size]);
 
     return (
-      <li
+      <span
         className={cx('iui-header-breadcrumb-button-wrapper', className)}
-        aria-current={isActive ? 'location' : undefined}
         style={style}
         title={title}
         ref={ref}
@@ -95,7 +93,7 @@ export const HeaderSplitButton: HeaderSplitButtonComponent = React.forwardRef(
             )}
           </button>
         </DropdownMenu>
-      </li>
+      </span>
     );
   },
 );
