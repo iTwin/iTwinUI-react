@@ -36,6 +36,7 @@ const ACTION_CELL_ID = 'iui-table-action';
  */
 export const ActionColumn = <T extends Record<string, unknown>>({
   columnManager = false,
+  className = undefined,
 } = {}) => {
   return {
     id: ACTION_CELL_ID,
@@ -99,6 +100,7 @@ export const ActionColumn = <T extends Record<string, unknown>>({
           menuItems={headerCheckBoxes}
           onHide={() => setIsOpen(false)}
           onShow={() => setIsOpen(true)}
+          className={className}
         >
           <IconButton styleType='borderless' isActive={isOpen}>
             <SvgColumnManager />
