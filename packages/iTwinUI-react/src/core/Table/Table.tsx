@@ -24,7 +24,7 @@ import {
   Column,
 } from 'react-table';
 import { ProgressRadial } from '../ProgressIndicators';
-import { useTheme, CommonProps, useResizeObserver } from '../utils';
+import { useTheme, CommonProps, useResizeObserver, mergeRefs } from '../utils';
 import '@itwin/itwinui-css/css/table.css';
 import SvgSortDown from '@itwin/itwinui-icons-react/cjs/icons/SortDown';
 import SvgSortUp from '@itwin/itwinui-icons-react/cjs/icons/SortUp';
@@ -39,6 +39,7 @@ import {
   useSubRowSelection,
   useResizeColumns,
   useColumnDragAndDrop,
+  useScrollToRow,
   useStickyColumns,
 } from './hooks';
 import {
@@ -243,6 +244,29 @@ export type TableProps<
    * @default false
    */
   enableColumnReordering?: boolean;
+  /**
+   * Function that returns index of the row that you want to scroll to.
+   *
+   * It doesn't work with paginated tables and with lazy-loading.
+   * @beta
+   * @example
+   * <Table
+   *   scrollToRow={React.useCallback(
+   *     (rows, data) => rows.findIndex((row) => row.original === data[250]),
+   *     []
+   *   )}
+   *   {...restProps}
+   * />
+   * @example
+   * <Table
+   *   scrollToRow={React.useCallback(
+   *     (rows, data) => rows.findIndex((row) => row.original.id === data[250].id),
+   *     []
+   *   )}
+   *   {...restProps}
+   * />
+   */
+  scrollToRow?: (rows: Row<T>[], data: T[]) => number;
 } & Omit<CommonProps, 'title'>;
 
 // Original type for some reason is missing sub-columns
@@ -577,6 +601,7 @@ export const Table = <
     ],
   );
 
+  const { scrollToIndex, tableRowRef } = useScrollToRow<T>({ ...props, page });
   const columnRefs = React.useRef<Record<string, HTMLDivElement>>({});
   const previousTableWidth = React.useRef(0);
   const onTableResize = React.useCallback(
@@ -623,6 +648,10 @@ export const Table = <
 
   const headerRef = React.useRef<HTMLDivElement>(null);
   const bodyRef = React.useRef<HTMLDivElement>(null);
+  // Using `useState` to rerender rows when table body ref is available
+  const [bodyRefState, setBodyRefState] = React.useState<HTMLDivElement | null>(
+    null,
+  );
 
   const getPreparedRow = React.useCallback(
     (index: number) => {
@@ -644,21 +673,26 @@ export const Table = <
           tableHasSubRows={hasAnySubRows}
           tableInstance={instance}
           expanderCell={expanderCell}
+          bodyRef={bodyRefState}
+          tableRowRef={enableVirtualization ? undefined : tableRowRef(row)}
         />
       );
     },
     [
       page,
-      expanderCell,
-      hasAnySubRows,
-      instance,
-      intersectionMargin,
-      isRowDisabled,
-      onRowClickHandler,
       prepareRow,
       rowProps,
+      intersectionMargin,
       state,
+      onRowClickHandler,
       subComponent,
+      isRowDisabled,
+      hasAnySubRows,
+      instance,
+      expanderCell,
+      bodyRefState,
+      enableVirtualization,
+      tableRowRef,
     ],
   );
 
@@ -821,7 +855,7 @@ export const Table = <
             }),
             style: { outline: 0 },
           })}
-          ref={bodyRef}
+          ref={mergeRefs(bodyRef, setBodyRefState)}
           onScroll={() => {
             if (headerRef.current && bodyRef.current) {
               headerRef.current.scrollLeft = bodyRef.current.scrollLeft;
@@ -836,6 +870,7 @@ export const Table = <
                 <VirtualScroll
                   itemsLength={page.length}
                   itemRenderer={virtualizedItemRenderer}
+                  scrollToIndex={scrollToIndex}
                 />
               ) : (
                 page.map((_, index) => getPreparedRow(index))
