@@ -38,7 +38,9 @@ const currentPage = new URL(Astro.request.url).pathname;
         </div>
         <div class='code-wrapper'>
           <div class='code-sample code-sample-2'>
-            <AlertExample />
+            <div style='transform: scale(0.75);'>
+              <AlertExample />
+            </div>
           </div>
           <h3>Alert</h3>
           <p>A small box to quickly grab user attention and communicate a brief message</p>
@@ -186,7 +188,7 @@ const currentPage = new URL(Astro.request.url).pathname;
     .code-sample {
       color-scheme: dark !important;
       padding: var(--space-7);
-      width: 100%;
+      width: 300px;
       min-height: 300px;
       display: flex;
       justify-content: center;
