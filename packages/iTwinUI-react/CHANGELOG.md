@@ -1,5 +1,33 @@
 # Changelog
 
+## [1.42.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.41.0...v1.42.0) (2022-07-26)
+
+### Fixes
+
+* **ComboBox:** Prevent infinite loop when `options` change ([#738](https://www.github.com/iTwin/iTwinUI-react/issues/738)) ([7788f45](https://www.github.com/iTwin/iTwinUI-react/commit/7788f451fcbf9dd7959d3fa727c0cdee3485bbcd))
+* **Small:** Use `small` element instead of `p` ([#735](https://www.github.com/iTwin/iTwinUI-react/issues/735)) ([c59f213](https://www.github.com/iTwin/iTwinUI-react/commit/c59f21326e049bce50e24c729a46482b74ef63c3))
+
+
+### What's new
+
+* **Table:** Scroll table to selected item ([#689](https://www.github.com/iTwin/iTwinUI-react/issues/689)) ([afa947b](https://www.github.com/iTwin/iTwinUI-react/commit/afa947b15411305c1bfc57b239d916fc599acfbe))
+* **Tree:** Virtualization ([#713](https://www.github.com/iTwin/iTwinUI-react/issues/713)) ([d4d3575](https://www.github.com/iTwin/iTwinUI-react/commit/d4d35758fa0c8f00811f387cc8453b82e9773c85))
+
+## [1.41.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.40.1...v1.41.0) (2022-07-13)
+
+### What's new
+
+* **ErrorPage:** Add time-out and redirect status codes ([#715](https://www.github.com/iTwin/iTwinUI-react/issues/715)) ([a5fb85f](https://www.github.com/iTwin/iTwinUI-react/commit/a5fb85f1f0ef9517a065db02384875d7c5d87f95))
+* **Modal:** Update classes through the css package update ([#724](https://www.github.com/iTwin/iTwinUI-react/issues/724)) ([d13e0bf](https://www.github.com/iTwin/iTwinUI-react/commit/d13e0bf7941581a3b8d275b744bf77ebd7ae95d4))
+  - Now `style` and `className` props are applied on the dialog element itself.
+* Border radius was changed from `3px` to `4px` through the css package update in all elements ([#724](https://www.github.com/iTwin/iTwinUI-react/issues/724)) ([d13e0bf](https://www.github.com/iTwin/iTwinUI-react/commit/d13e0bf7941581a3b8d275b744bf77ebd7ae95d4))
+
+### Fixes
+
+* **Combobox:** Allow users to reset the value ([#728](https://www.github.com/iTwin/iTwinUI-react/issues/728)) ([f6c0b0d](https://www.github.com/iTwin/iTwinUI-react/commit/f6c0b0d66ac9ac725a23e07980c9dd7298084ae4))
+* **Table:** Prevent crashing when clearing editable cell ([#732](https://www.github.com/iTwin/iTwinUI-react/issues/732)) ([0dedd3b](https://www.github.com/iTwin/iTwinUI-react/commit/0dedd3b8804ce98ce836d4bbbf58db83a4f9bfde))
+* **Table:** Set correct intersection root for margin to work ([#708](https://www.github.com/iTwin/iTwinUI-react/issues/708)) ([55e4848](https://www.github.com/iTwin/iTwinUI-react/commit/55e48481f95c3351c127d495bd3c20134fd4a77f))
+
 ### [1.40.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.40.0...v1.40.1) (2022-06-17)
 
 ### Fixes
