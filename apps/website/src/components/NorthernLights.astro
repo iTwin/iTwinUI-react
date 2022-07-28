@@ -106,13 +106,12 @@ const randomInRange = (min: number, max: number) => {
     background-size: 100% 40vmax;
     background-position: center bottom;
     background-repeat: no-repeat;
-    top: var(--top-position, 3);
     transform: translateY(var(--y));
     animation: shift calc(var(--duration, 20) * 1s) calc(var(--delay, 0) * -1s) infinite ease;
   }
   @keyframes shift {
     50% {
-      transform: translateY(calc(var(--y) - 250px)) scale(0.5);
+      transform: translateY(calc(var(--y) - 250px)) scale(0.75);
     }
   }
   @media (min-width: 50em) {
