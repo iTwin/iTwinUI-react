@@ -31,7 +31,8 @@ export type FooterProps = {
    */
   translatedTitles?: TitleTranslations;
   /**
-   * Custom footer content. If function provided, it should accept an array of default footer elements and return `React.ReactNode`.
+   * Custom footer content. If provided, it will render only what you passed.
+   * If function provided, it should accept an array of default footer elements and return `React.ReactNode`.
    */
   children?: React.ReactNode | ((elements: FooterElement[]) => React.ReactNode);
 } & StylingProps;
