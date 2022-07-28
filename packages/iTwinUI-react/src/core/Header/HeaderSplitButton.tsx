@@ -10,9 +10,8 @@ import SvgCaretUpSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretUpSmall';
 
 import { PolymorphicForwardRefComponent, useTheme } from '../utils';
 import { SplitButtonProps } from '../Buttons';
-import { HeaderButtonCustomProps } from './HeaderButton';
 
-export type HeaderSplitButtonProps = SplitButtonProps & HeaderButtonCustomProps;
+export type HeaderSplitButtonProps = SplitButtonProps;
 
 type HeaderSplitButtonComponent = PolymorphicForwardRefComponent<
   'button',

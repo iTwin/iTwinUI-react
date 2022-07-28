@@ -5,18 +5,18 @@
 
 import cx from 'classnames';
 import React from 'react';
-import {
-  Button,
-  ButtonProps,
-  DropdownButton,
-  DropdownButtonProps,
-} from '../Buttons';
+import { ButtonProps } from '../Buttons';
 
 import { PolymorphicForwardRefComponent, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/header.css';
 import { HeaderSplitButton, HeaderSplitButtonProps } from './HeaderSplitButton';
+import {
+  HeaderDropdownButton,
+  HeaderDropdownButtonProps,
+} from './HeaderDropdownButton';
+import { HeaderBasicButton } from './HeaderBasicButton';
 
-export type HeaderButtonCustomProps = {
+export type HeaderButtonProps = {
   /**
    * Main label of the header button.
    */
@@ -30,10 +30,7 @@ export type HeaderButtonCustomProps = {
    * @default false
    */
   isActive?: boolean;
-};
-
-export type HeaderButtonProps = HeaderButtonCustomProps &
-  Partial<Pick<DropdownButtonProps, 'menuItems'>> &
+} & Partial<Pick<HeaderDropdownButtonProps, 'menuItems'>> &
   Pick<ButtonProps, 'startIcon' | 'endIcon'>;
 
 const isSplitButton = (
@@ -43,8 +40,8 @@ const isSplitButton = (
 };
 
 const isDropdownButton = (
-  props: Omit<Partial<DropdownButtonProps>, 'name'>,
-): props is DropdownButtonProps => {
+  props: Omit<Partial<HeaderDropdownButtonProps>, 'name'>,
+): props is HeaderDropdownButtonProps => {
   return !!props.menuItems;
 };
 
@@ -119,7 +116,7 @@ export const HeaderButton: HeaderButtonComponent = React.forwardRef(
           className='iui-header-breadcrumb-item'
           aria-current={isActive ? 'location' : undefined}
         >
-          <DropdownButton {...buttonProps} />
+          <HeaderDropdownButton {...buttonProps} />
         </li>
       );
     }
@@ -128,7 +125,7 @@ export const HeaderButton: HeaderButtonComponent = React.forwardRef(
         className='iui-header-breadcrumb-item'
         aria-current={isActive ? 'location' : undefined}
       >
-        <Button {...buttonProps} />
+        <HeaderBasicButton {...buttonProps} />
       </li>
     );
   },
