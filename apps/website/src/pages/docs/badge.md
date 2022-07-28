@@ -1,7 +1,7 @@
 ---
 title: Badge
 description: Badges are easily scannable visual identifiers that help categorize items of a same nature on a page.
-layout: ~/layouts/MainLayout.astro
+layout: ./_layout.astro
 setup: |
   import PropsTable from '~/components/PropsTable.astro';
   import LiveExample from '~/components/LiveExample.astro';

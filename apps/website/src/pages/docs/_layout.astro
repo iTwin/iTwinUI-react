@@ -1,7 +1,7 @@
 ---
-import Global from './GlobalLayout.astro';
-import Header from '../components/Header.astro';
-import LeftSidebar from '../components/LeftSidebar.astro';
+import Global from '~/pages/_global.astro';
+import Header from '~/components/Header.astro';
+import LeftSidebar from '~/components/LeftSidebar.astro';
 
 const { content = {} } = Astro.props;
 const currentPage = new URL(Astro.request.url).pathname;
