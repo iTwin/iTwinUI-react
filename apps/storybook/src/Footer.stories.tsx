@@ -5,6 +5,7 @@
 import { Story, Meta } from '@storybook/react';
 import React from 'react';
 import { Footer, FooterElement, FooterProps } from '@itwin/itwinui-react';
+import { SvgSmileyHappyHollow } from '@itwin/itwinui-icons-react';
 
 export default {
   title: 'Core/Footer',
@@ -106,4 +107,35 @@ export const BottomFixed: Story<FooterProps> = ({ ...rest }: FooterProps) => {
 
 BottomFixed.parameters = {
   docs: { inlineStories: false },
+};
+
+export const CustomContent: Story<FooterProps> = ({ ...rest }: FooterProps) => {
+  const customItem = (
+    <Footer.Item key='copyright'>
+      <SvgSmileyHappyHollow style={{ width: 12, height: 12, marginRight: 4 }} />
+      <span>Powered by Happiness © {new Date().getFullYear()}</span>
+    </Footer.Item>
+  );
+  return (
+    <Footer {...rest}>
+      {(elements) => {
+        return [
+          customItem,
+          ...elements
+            .filter((el) => el.key !== 'copyright')
+            .map((element, index) => {
+              return (
+                <React.Fragment
+                  key={element.key || `${element.title}-${index}`}
+                >
+                  <Footer.Separator />
+                  <Footer.Item url={element.url} title={element.title} />
+                </React.Fragment>
+              );
+            }),
+          ,
+        ];
+      }}
+    </Footer>
+  );
 };

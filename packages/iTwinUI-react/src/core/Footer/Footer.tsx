@@ -6,6 +6,8 @@ import React from 'react';
 import cx from 'classnames';
 import { useTheme, StylingProps } from '../utils';
 import '@itwin/itwinui-css/css/footer.css';
+import { FooterItem } from './FooterItem';
+import { FooterSeparator } from './FooterSeparator';
 
 export type TitleTranslations = {
   termsOfService: string;
@@ -28,6 +30,10 @@ export type FooterProps = {
    * Provide localized strings.
    */
   translatedTitles?: TitleTranslations;
+  /**
+   * Custom footer content. If function provided, it should accept an array of default footer elements and return `React.ReactNode`.
+   */
+  children?: React.ReactNode | ((elements: FooterElement[]) => React.ReactNode);
 } & StylingProps;
 
 export type FooterElement = {
@@ -67,74 +73,87 @@ const footerTranslations: TitleTranslations = {
  * @example <caption>Changing a url</caption>
  * <Footer customElements={(defaultElements) => defaultElements.map(element => ({ ...element, url: element.key === 'privacy' ? customPrivacyUrl : element.url }))} />
  */
-export const Footer = (props: FooterProps) => {
-  const { customElements, translatedTitles, className, ...rest } = props;
+export const Footer = Object.assign(
+  (props: FooterProps) => {
+    const {
+      children,
+      customElements,
+      translatedTitles,
+      className,
+      ...rest
+    } = props;
 
-  useTheme();
+    useTheme();
 
-  const titles = { ...footerTranslations, ...translatedTitles };
-  const defaultElements: FooterElement[] = [
-    {
-      key: 'copyright',
-      title: `© ${new Date().getFullYear()} Bentley Systems, Incorporated`,
-    },
-    {
-      key: 'termsOfService',
-      title: titles.termsOfService,
-      url:
-        'https://connect-agreementportal.bentley.com/AgreementApp/Home/Eula/view/readonly/BentleyConnect',
-    },
-    {
-      key: 'privacy',
-      title: titles.privacy,
-      url: 'https://www.bentley.com/en/privacy-policy',
-    },
-    {
-      key: 'termsOfUse',
-      title: titles.termsOfUse,
-      url:
-        'https://www.bentley.com/en/terms-of-use-and-select-online-agreement',
-    },
-    {
-      key: 'cookies',
-      title: titles.cookies,
-      url: 'https://www.bentley.com/en/cookie-policy',
-    },
-    {
-      key: 'legalNotices',
-      title: titles.legalNotices,
-      url: 'https://connect.bentley.com/Legal',
-    },
-  ];
+    const titles = { ...footerTranslations, ...translatedTitles };
+    const defaultElements: FooterElement[] = [
+      {
+        key: 'copyright',
+        title: `© ${new Date().getFullYear()} Bentley Systems, Incorporated`,
+      },
+      {
+        key: 'termsOfService',
+        title: titles.termsOfService,
+        url:
+          'https://connect-agreementportal.bentley.com/AgreementApp/Home/Eula/view/readonly/BentleyConnect',
+      },
+      {
+        key: 'privacy',
+        title: titles.privacy,
+        url: 'https://www.bentley.com/en/privacy-policy',
+      },
+      {
+        key: 'termsOfUse',
+        title: titles.termsOfUse,
+        url:
+          'https://www.bentley.com/en/terms-of-use-and-select-online-agreement',
+      },
+      {
+        key: 'cookies',
+        title: titles.cookies,
+        url: 'https://www.bentley.com/en/cookie-policy',
+      },
+      {
+        key: 'legalNotices',
+        title: titles.legalNotices,
+        url: 'https://connect.bentley.com/Legal',
+      },
+    ];
 
-  let elements: FooterElement[] = defaultElements;
-  if (customElements) {
-    elements =
-      typeof customElements === 'function'
-        ? customElements(defaultElements)
-        : [...defaultElements, ...customElements];
-  }
+    let elements: FooterElement[] = defaultElements;
+    if (customElements) {
+      elements =
+        typeof customElements === 'function'
+          ? customElements(defaultElements)
+          : [...defaultElements, ...customElements];
+    }
 
-  return (
-    <footer className={cx('iui-legal-footer', className)} {...rest}>
-      <ul>
-        {elements.map((element, index) => {
-          return (
-            <li key={element.key || `${element.title}-${index}`}>
-              {index > 0 && <span className='iui-separator' />}
-              {element.url ? (
-                <a href={element.url} target='_blank' rel='noreferrer'>
-                  {element.title}
-                </a>
-              ) : (
-                element.title
-              )}
-            </li>
-          );
-        })}
-      </ul>
-    </footer>
-  );
-};
+    const childrenContent =
+      typeof children === 'function' ? children(elements) : children;
+
+    return (
+      <footer className={cx('iui-legal-footer', className)} {...rest}>
+        <ul className='iui-legal-footer-list'>
+          {children
+            ? childrenContent
+            : elements.map((element, index) => {
+                return (
+                  <React.Fragment
+                    key={element.key || `${element.title}-${index}`}
+                  >
+                    {index > 0 && <FooterSeparator />}
+                    <FooterItem url={element.url} title={element.title} />
+                  </React.Fragment>
+                );
+              })}
+        </ul>
+      </footer>
+    );
+  },
+  {
+    Item: FooterItem,
+    Separator: FooterSeparator,
+  },
+);
 
 export default Footer;
