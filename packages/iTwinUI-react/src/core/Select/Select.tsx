@@ -7,7 +7,7 @@ import cx from 'classnames';
 import { DropdownMenu } from '../DropdownMenu';
 import { MenuItem } from '../Menu/MenuItem';
 import { PopoverProps, PopoverInstance, CommonProps, useTheme } from '../utils';
-// import '@itwin/itwinui-css/css/inputs.css';
+import '@itwin/itwinui-css/css/select.css';
 import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
 
 export type ItemRendererProps = {
