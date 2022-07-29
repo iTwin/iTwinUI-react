@@ -521,7 +521,7 @@ it('should use custom render for selected item (multiple)', async () => {
   expect((selectedValues[1] as HTMLElement).style.color).toEqual('red');
 });
 
-it('should call onChange if tag is removed', () => {
+it('should call onChange if tag is removed', async () => {
   const onChange = jest.fn();
   renderComponent({
     onChange,
@@ -530,7 +530,7 @@ it('should call onChange if tag is removed', () => {
   });
 
   const closeButton = screen.getByLabelText('Delete tag');
-  fireEvent.click(closeButton);
+  await userEvent.click(closeButton);
   expect(onChange).toHaveBeenCalledWith(2, 'removed');
 });
 
