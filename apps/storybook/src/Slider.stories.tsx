@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { Meta, Story } from '@storybook/react';
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { useMemo, useCallback, useState } from '@storybook/addons';
 import { Body, Slider, SliderProps } from '@itwin/itwinui-react';
 import SvgSmileyHappy from '@itwin/itwinui-icons-react/cjs/icons/SmileyHappy';
@@ -23,24 +23,24 @@ export default {
     trackDisplayMode: 'auto',
     orientation: 'horizontal',
   },
+  decorators: [
+    (Story, context) => (
+      <div
+        style={{
+          height: 'calc(100vh - 24px)',
+          ...(context.args.orientation == 'vertical'
+            ? { width: 'fit-content' }
+            : {}),
+        }}
+      >
+        <Story />
+      </div>
+    ),
+  ],
 } as Meta<SliderProps>;
 
-const sliderWrapper = (element: ReactNode, args: SliderProps) => {
-  return (
-    <div
-      style={{
-        ...(args.orientation === 'vertical'
-          ? { height: 'calc(100vh - 24px)', width: 'fit-content' }
-          : {}),
-      }}
-    >
-      {element}
-    </div>
-  );
-};
-
 export const Basic: Story<SliderProps> = (args) => {
-  return sliderWrapper(<Slider {...args} />, args);
+  return <Slider {...args} />;
 };
 
 Basic.args = {
@@ -48,7 +48,7 @@ Basic.args = {
 };
 
 export const Range: Story<SliderProps> = (args) => {
-  return sliderWrapper(<Slider {...args} />, args);
+  return <Slider {...args} />;
 };
 
 Range.args = {
@@ -58,7 +58,7 @@ Range.args = {
 };
 
 export const MultiThumbsAllowCrossing: Story<SliderProps> = (args) => {
-  return sliderWrapper(<Slider {...args} />, args);
+  return <Slider {...args} />;
 };
 
 MultiThumbsAllowCrossing.args = {
@@ -89,7 +89,7 @@ export const WithCustomThumb: Story<SliderProps> = (args) => {
       : { transform: 'translate(-25%, 50%)' }),
   };
   args.thumbProps = () => thumbProps;
-  return sliderWrapper(<Slider {...args} />, args);
+  return <Slider {...args} />;
 };
 
 WithCustomThumb.args = {
@@ -123,7 +123,7 @@ WithCustomThumb.args = {
 };
 
 export const Disabled: Story<SliderProps> = (args) => {
-  return sliderWrapper(<Slider {...args} />, args);
+  return <Slider {...args} />;
 };
 
 Disabled.args = {
@@ -134,7 +134,7 @@ Disabled.args = {
 };
 
 export const CustomTooltip: Story<SliderProps> = (args) => {
-  return sliderWrapper(<Slider {...args} />, args);
+  return <Slider {...args} />;
 };
 
 CustomTooltip.args = {
@@ -166,7 +166,7 @@ export const CustomTickNoTooltip: Story<SliderProps> = (args) => {
     setCurrentDate(newDate);
   }, []);
 
-  return sliderWrapper(
+  return (
     <Slider
       {...args}
       onUpdate={updateDate}
@@ -193,8 +193,7 @@ export const CustomTickNoTooltip: Story<SliderProps> = (args) => {
           </Body>
         </div>
       }
-    />,
-    args,
+    />
   );
 };
 
@@ -211,7 +210,7 @@ CustomTickNoTooltip.args = {
 };
 
 export const DecimalIncrement: Story<SliderProps> = (args) => {
-  return sliderWrapper(<Slider {...args} />, args);
+  return <Slider {...args} />;
 };
 
 DecimalIncrement.args = {
@@ -224,13 +223,12 @@ DecimalIncrement.args = {
 // These are just a few vertical slider examples.
 // But all the slider stories can be made vertical by passing the orientation: vertical prop
 export const SomeVerticalExamples: Story<SliderProps> = (args) => {
-  return sliderWrapper(
+  return (
     <div style={{ display: 'flex', gap: '50px', height: '100%' }}>
       <Slider orientation='vertical' {...Basic.args} {...args} />
       <Slider orientation='vertical' {...Disabled.args} {...args} />
       <Slider orientation='vertical' {...CustomTooltip.args} {...args} />
-    </div>,
-    args,
+    </div>
   );
 };
 
