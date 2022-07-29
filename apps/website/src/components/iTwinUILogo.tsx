@@ -29,19 +29,50 @@ export const ITwinUILogo = () => {
       y: -(event.clientY - rect.top - rect.height / 2) / 20,
     });
 
-    // TODO: figure out how to calculate degrees based on mouse location.
-    setDegrees(
-      Math.abs(
+    // Get degrees based on mouse location
+    const x = event.clientX - rect.left - rect.width / 2;
+    const y = -(event.clientY - rect.top - rect.height / 2);
+    if (x > 0 && y > 0) {
+      setDegrees(
         // Using archtangents to calculate angle.
         Math.atan(
-          (event.clientX - rect.left - rect.width / 2) /
-            -(event.clientY - rect.top - rect.height / 2)
+          Math.abs(event.clientX - rect.left - rect.width / 2) /
+            Math.abs(event.clientY - rect.top - rect.height / 2)
         ) *
           // Converting from radians to degrees
           (180 / Math.PI)
-      )
-    );
-    console.log(degrees);
+      );
+    }
+    if (x > 0 && y < 0) {
+      setDegrees(
+        180 -
+          Math.atan(
+            Math.abs(event.clientX - rect.left - rect.width / 2) /
+              Math.abs(event.clientY - rect.top - rect.height / 2)
+          ) *
+            (180 / Math.PI)
+      );
+    }
+    if (x < 0 && y < 0) {
+      setDegrees(
+        180 +
+          Math.atan(
+            Math.abs(event.clientX - rect.left - rect.width / 2) /
+              Math.abs(event.clientY - rect.top - rect.height / 2)
+          ) *
+            (180 / Math.PI)
+      );
+    }
+    if (x < 0 && y > 0) {
+      setDegrees(
+        360 -
+          Math.atan(
+            Math.abs(event.clientX - rect.left - rect.width / 2) /
+              Math.abs(event.clientY - rect.top - rect.height / 2)
+          ) *
+            (180 / Math.PI)
+      );
+    }
   };
 
   const handleMouseEnter = () => {
@@ -77,11 +108,11 @@ export const ITwinUILogo = () => {
       <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 291.42 333' style={{ height: '90%' }}>
         <defs>
           {/** Move gradients into css classes, this one does not allow more than 90deg rotation.*/}
-          <linearGradient id='grad1' gradientTransform={`rotate(45)`}>
+          <linearGradient id='grad1' gradientTransform={`rotate(${degrees})`}>
             <stop offset='0%' style={{ stopColor: '#ffb6fc', stopOpacity: '1' }} />
             <stop offset='100%' style={{ stopColor: '#83a4ff', stopOpacity: '1' }} />
           </linearGradient>
-          <linearGradient id='gra2' gradientTransform={`rotate(90)`}>
+          <linearGradient id='gra2' gradientTransform={`rotate(${degrees})`}>
             <stop offset='0%' style={{ stopColor: '#fff', stopOpacity: '1' }} />
             <stop offset='50%' style={{ stopColor: '#fff', stopOpacity: '0.2' }} />
             <stop offset='100%' style={{ stopColor: '#fff', stopOpacity: '1' }} />
