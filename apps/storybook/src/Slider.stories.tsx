@@ -52,9 +52,9 @@ Basic.args = {
 export const SomeVerticalExamples: Story<SliderProps> = (args) => {
   return sliderWrapper(
     <div style={{ display: 'flex', gap: '50px', height: '100%' }}>
-      <Slider orientation='vertical' {...args} {...Basic.args} />
-      <Slider orientation='vertical' {...args} {...Disabled.args} />
-      <Slider orientation='vertical' {...args} {...CustomTooltip.args} />
+      <Slider orientation='vertical' {...Basic.args} {...args} />
+      <Slider orientation='vertical' {...Disabled.args} {...args} />
+      <Slider orientation='vertical' {...CustomTooltip.args} {...args} />
     </div>,
     args,
   );
@@ -67,9 +67,7 @@ SomeVerticalExamples.args = {
 
 SomeVerticalExamples.argTypes = {
   orientation: {
-    table: {
-      disable: true,
-    },
+    control: false,
   },
 };
 
@@ -113,8 +111,6 @@ export const WithCustomThumb: Story<SliderProps> = (args) => {
     ...(args.orientation === 'horizontal'
       ? { transform: 'translateX(-19.2px)', top: 0 }
       : { transform: 'translate(-25%, 50%)' }),
-
-    // railContainerProps: { style: { margin: '0 8px' } }, // TODO: Do we need this for vertical? Confirm that the slightly right offset vertical slider is alright or not
   };
   args.thumbProps = () => thumbProps;
   return sliderWrapper(<Slider {...args} />, args);
