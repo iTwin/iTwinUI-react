@@ -47,30 +47,6 @@ Basic.args = {
   values: [50],
 };
 
-// These are just a few vertical slider examples.
-// But all the slider stories can be made vertical by passing the orientation: vertical prop
-export const SomeVerticalExamples: Story<SliderProps> = (args) => {
-  return sliderWrapper(
-    <div style={{ display: 'flex', gap: '50px', height: '100%' }}>
-      <Slider orientation='vertical' {...Basic.args} {...args} />
-      <Slider orientation='vertical' {...Disabled.args} {...args} />
-      <Slider orientation='vertical' {...CustomTooltip.args} {...args} />
-    </div>,
-    args,
-  );
-};
-
-SomeVerticalExamples.args = {
-  values: [50],
-  orientation: 'vertical',
-};
-
-SomeVerticalExamples.argTypes = {
-  orientation: {
-    control: false,
-  },
-};
-
 export const Range: Story<SliderProps> = (args) => {
   return sliderWrapper(<Slider {...args} />, args);
 };
@@ -243,4 +219,28 @@ DecimalIncrement.args = {
   max: 50,
   step: 2.5,
   values: [25],
+};
+
+// These are just a few vertical slider examples.
+// But all the slider stories can be made vertical by passing the orientation: vertical prop
+export const SomeVerticalExamples: Story<SliderProps> = (args) => {
+  return sliderWrapper(
+    <div style={{ display: 'flex', gap: '50px', height: '100%' }}>
+      <Slider orientation='vertical' {...Basic.args} {...args} />
+      <Slider orientation='vertical' {...Disabled.args} {...args} />
+      <Slider orientation='vertical' {...CustomTooltip.args} {...args} />
+    </div>,
+    args,
+  );
+};
+
+SomeVerticalExamples.args = {
+  values: [50],
+  orientation: 'vertical',
+};
+
+SomeVerticalExamples.argTypes = {
+  orientation: {
+    control: false,
+  },
 };
