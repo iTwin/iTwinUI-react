@@ -12,7 +12,7 @@ export const ITwinUILogo = () => {
   const [coords, setCoords] = React.useState({ x: 0, y: 0 });
   const [rotateDeg, setRotateDeg] = React.useState({ x: 0, y: 0 });
   const [animation, setAnimation] = React.useState('none');
-  const [degrees, setDegrees] = React.useState(0);
+  const [degrees, setDegrees] = React.useState(90);
 
   const handleMouseMove = (event) => {
     const rect = event.target.getBoundingClientRect();
@@ -85,6 +85,7 @@ export const ITwinUILogo = () => {
     setAnimation('transform 1s ease');
     setRotateDeg({ x: 0, y: 0 });
     setCoords({ x: 0, y: 0 });
+    setDegrees(90);
   };
 
   return (
