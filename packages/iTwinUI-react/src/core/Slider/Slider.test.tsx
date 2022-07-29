@@ -987,7 +987,6 @@ it('should move thumb when pointer down on rail', () => {
   const sliderContainer = container.querySelector(
     '.iui-slider-container',
   ) as HTMLDivElement;
-
   expect(sliderContainer.getBoundingClientRect().left).toBe(10);
   expect(sliderContainer.getBoundingClientRect().right).toBe(1010);
   expect(sliderContainer.getBoundingClientRect().width).toBe(1000);
