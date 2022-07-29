@@ -26,13 +26,19 @@ const createBoundingClientRect = (
 /**
  * Setup default size for slider container to be used by all slider tests
  */
-const getBoundingClientRect = Element.prototype.getBoundingClientRect;
-const sliderContainerSize = createBoundingClientRect(10, 0, 1010, 60);
+const getBoundingClientRectMock = jest.spyOn(
+  HTMLElement.prototype,
+  'getBoundingClientRect',
+);
+const sliderContainerHorizontalSize = createBoundingClientRect(10, 0, 1010, 60);
 const sliderContainerVerticalSize = createBoundingClientRect(10, 0, 70, 1000);
-Element.prototype.getBoundingClientRect = () => sliderContainerSize;
+
+beforeEach(() => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerHorizontalSize);
+});
 
 afterAll(() => {
-  Element.prototype.getBoundingClientRect = getBoundingClientRect;
+  jest.clearAllMocks();
 });
 
 const defaultSingleValue = [50];
@@ -55,6 +61,8 @@ it('should render correctly in its most basic state', () => {
 });
 
 it('should render correctly in its most basic state (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const { container } = render(
     <Slider values={defaultSingleValue} orientation='vertical' />,
   );
@@ -75,6 +83,8 @@ it('should not render thumbs if no values are defined', () => {
 });
 
 it('should not render thumbs if no values are defined (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const { container } = render(<Slider values={[]} orientation='vertical' />);
   expect(
     container.querySelector('.iui-slider-component-container'),
@@ -93,6 +103,8 @@ it('should not render track if min and max are same value', () => {
 });
 
 it('should not render track if min and max are same value (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const { container } = render(
     <Slider values={[10]} min={20} max={20} orientation='vertical' />,
   );
@@ -111,6 +123,8 @@ it('should not render track if value is below specified min/max', () => {
 });
 
 it('should not render track if value is below specified min/max (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const { container } = render(
     <Slider values={[10]} min={20} max={40} orientation='vertical' />,
   );
@@ -132,6 +146,8 @@ it('should not render track if value is above specified min/max', () => {
 });
 
 it('should not render track if value is above specified min/max (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const { container } = render(
     <Slider values={[60]} min={20} max={40} orientation='vertical' />,
   );
@@ -155,6 +171,8 @@ it('should render disabled component', () => {
 });
 
 it('should render disabled component (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const { container } = render(
     <Slider values={defaultSingleValue} orientation='vertical' disabled />,
   );
@@ -174,6 +192,8 @@ it('should render min max labels by default', () => {
 });
 
 it('should render min max labels by default (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const { container } = render(
     <Slider values={defaultSingleValue} orientation='vertical' />,
   );
@@ -192,6 +212,8 @@ it('should render specified min max labels', () => {
 });
 
 it('should render specified min max labels (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const { container } = render(
     <Slider
       values={defaultSingleValue}
@@ -215,6 +237,8 @@ it('should render provided min max labels', () => {
 });
 
 it('should render provided min max labels (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const { container } = render(
     <Slider
       values={defaultSingleValue}
@@ -242,6 +266,8 @@ it('should render provided min max label nodes', () => {
 });
 
 it('should render provided min max label nodes (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const { container } = render(
     <Slider
       values={defaultSingleValue}
@@ -271,6 +297,8 @@ it('should set focus', () => {
 });
 
 it('should set focus (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   let element: HTMLDivElement | null = null;
   const onRef = (ref: HTMLDivElement) => {
     element = ref;
@@ -300,6 +328,8 @@ it('should show tooltip when focused', () => {
 });
 
 it('should show tooltip when focused (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const { container } = render(
     <Slider values={defaultSingleValue} orientation='vertical' setFocus />,
   );
@@ -328,6 +358,8 @@ it('should not show tooltip if visibility is overridden', () => {
 });
 
 it('should not show tooltip if visibility is overridden (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const { container } = render(
     <Slider
       values={defaultSingleValue}
@@ -365,6 +397,8 @@ it('should show custom tooltip when focused', () => {
 });
 
 it('should show custom tooltip when focused (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const { container } = render(
     <Slider
       values={defaultSingleValue}
@@ -427,7 +461,7 @@ it('should render tick marks', () => {
   expect(container.querySelectorAll('.iui-slider-tick').length).toBe(5);
 });
 
-it('should render custom tick marks as defined by ReactNode', () => {
+it('should render custom tick marks as defined by ReactNode.', () => {
   const { container } = render(
     <Slider
       values={defaultSingleValue}
@@ -439,6 +473,8 @@ it('should render custom tick marks as defined by ReactNode', () => {
 });
 
 it('should render custom tick marks as defined by ReactNode (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const { container } = render(
     <Slider
       values={defaultSingleValue}
@@ -464,6 +500,8 @@ it('should render odd tracks based on even number of values and `auto` trackDisp
 });
 
 it('should render odd tracks based on even number of values and `auto` trackDisplayMode (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const { container } = render(
     <Slider values={[10, 20, 30, 40]} orientation='vertical' />,
   );
@@ -481,6 +519,8 @@ it('should render 3 `even-segments` 0-10,20-30,40-100', () => {
 });
 
 it('should render 3 `even-segments` 0-10,20-30,40-100 (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const { container } = render(
     <Slider
       trackDisplayMode='even-segments'
@@ -501,6 +541,8 @@ it('should render 2 `odd-segments` 10-20, 30-40', () => {
 });
 
 it('should render 2 `odd-segments` 10-20, 30-40 (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const { container } = render(
     <Slider
       trackDisplayMode='odd-segments'
@@ -521,6 +563,8 @@ it('should not render track', () => {
 });
 
 it('should not render track (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const { container } = render(
     <Slider
       trackDisplayMode='none'
@@ -551,6 +595,8 @@ it('should activate thumb on pointerDown', () => {
 
 // TODO: Not sure why this is passing because I don't see the iui-active class upon clicking the thumb
 it('should activate thumb on pointerDown (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const { container } = render(
     <Slider values={defaultSingleValue} orientation='vertical' />,
   );
@@ -615,6 +661,8 @@ it('should process keystrokes when thumb has focus', () => {
 });
 
 it('should process keystrokes when thumb has focus (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const handleOnChange = jest.fn();
   const { container } = render(
     <Slider
@@ -696,6 +744,8 @@ it('should limit keystrokes processing to adjacent points by default', () => {
 });
 
 it('should limit keystrokes processing to adjacent points by default (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const { container } = render(
     <Slider values={[40, 80]} step={5} orientation='vertical' setFocus />,
   );
@@ -774,6 +824,8 @@ it('should limit keystrokes processing by min max when allow-crossing is set', (
 });
 
 it('should limit keystrokes processing by min max when allow-crossing is set (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const handleOnChange = jest.fn();
   const { container } = render(
     <Slider
@@ -833,6 +885,8 @@ it('should not process keystrokes when slider is disabled', () => {
 });
 
 it('should not process keystrokes when slider is disabled (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const { container } = render(
     <Slider values={[50]} step={5} orientation='vertical' disabled />,
   );
@@ -867,6 +921,8 @@ it('should show tooltip on thumb hover', () => {
 });
 
 it('should show tooltip on thumb hover (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const { container } = render(
     <Slider values={defaultSingleValue} orientation='vertical' />,
   );
@@ -880,7 +936,6 @@ it('should show tooltip on thumb hover (vertical)', () => {
   });
   expect(document.querySelector('.iui-tooltip')?.textContent).toBe('50');
 
-  // TODO: What is data-tippy-root? What is the square bracket notation?
   const tippy = document.querySelector('[data-tippy-root]') as HTMLElement;
   act(() => {
     fireEvent.mouseLeave(thumb);
@@ -910,6 +965,8 @@ it('should show tooltip on thumb focus', () => {
 });
 
 it('should show tooltip on thumb focus (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const { container } = render(
     <Slider values={defaultSingleValue} orientation='vertical' />,
   );
@@ -949,6 +1006,8 @@ it('should apply thumb props', () => {
 });
 
 it('should apply thumb props (vertical)', () => {
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
+
   const thumbProps = () => {
     return {
       className: 'thumb-test-class',
@@ -969,8 +1028,6 @@ it('should apply thumb props (vertical)', () => {
 });
 
 it('should move thumb when pointer down on rail', () => {
-  Element.prototype.getBoundingClientRect = () => sliderContainerSize;
-
   const handleOnChange = jest.fn();
   const handleOnUpdate = jest.fn();
 
@@ -1009,7 +1066,7 @@ it('should move thumb when pointer down on rail', () => {
 
 // TODO: I added some unnecessary check conditions. Remove them
 it('should move thumb when pointer down on rail (vertical)', () => {
-  Element.prototype.getBoundingClientRect = () => sliderContainerVerticalSize; // TODO: Confirm if we need this everywhere. Maybe we don't need it where we are not using sliderContainer.getBoundingClientRect
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize); // TODO: Confirm if we need this everywhere. Maybe we don't need it where we are not using sliderContainer.getBoundingClientRect
 
   const handleOnChange = jest.fn();
   const handleOnUpdate = jest.fn();
@@ -1052,7 +1109,6 @@ it('should move thumb when pointer down on rail (vertical)', () => {
 });
 
 it('should move to closest step when pointer down on rail', () => {
-  Element.prototype.getBoundingClientRect = () => sliderContainerSize;
   const { container } = render(
     <Slider
       min={0}
@@ -1083,7 +1139,7 @@ it('should move to closest step when pointer down on rail', () => {
 });
 
 it('should move to closest step when pointer down on rail (vertical)', () => {
-  Element.prototype.getBoundingClientRect = () => sliderContainerVerticalSize;
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
 
   const { container } = render(
     <Slider
@@ -1117,8 +1173,6 @@ it('should move to closest step when pointer down on rail (vertical)', () => {
 });
 
 it('should move closest thumb when pointer down on rail', () => {
-  Element.prototype.getBoundingClientRect = () => sliderContainerSize;
-
   const { container } = render(
     <Slider
       values={[10, 80]}
@@ -1146,7 +1200,7 @@ it('should move closest thumb when pointer down on rail', () => {
 });
 
 it('should move closest thumb when pointer down on rail (vertical)', () => {
-  Element.prototype.getBoundingClientRect = () => sliderContainerVerticalSize;
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
 
   const { container } = render(
     <Slider
@@ -1176,8 +1230,6 @@ it('should move closest thumb when pointer down on rail (vertical)', () => {
 });
 
 it('should activate thumb on pointerDown and move to closest step on move', () => {
-  Element.prototype.getBoundingClientRect = () => sliderContainerSize;
-
   const handleOnUpdate = jest.fn();
   const handleOnChange = jest.fn();
 
@@ -1245,7 +1297,7 @@ it('should activate thumb on pointerDown and move to closest step on move', () =
 });
 
 it('should activate thumb on pointerDown and move to closest step on move (vertical)', () => {
-  Element.prototype.getBoundingClientRect = () => sliderContainerVerticalSize; // TODO: Document why I am adding this line in the start of a few methods
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize); // TODO: Document why I am adding this line in the start of a few methods
 
   const handleOnUpdate = jest.fn();
   const handleOnChange = jest.fn();
@@ -1315,8 +1367,6 @@ it('should activate thumb on pointerDown and move to closest step on move (verti
 });
 
 it('should activate thumb on pointerDown and move to closest step on move/ no update handler', () => {
-  Element.prototype.getBoundingClientRect = () => sliderContainerSize;
-
   const { container } = render(
     <Slider
       min={0}
@@ -1379,6 +1429,7 @@ it('should activate thumb on pointerDown and move to closest step on move/ no up
 
 it('should activate thumb on pointerDown and move to closest step on move/ no update handler (vertical)', () => {
   Element.prototype.getBoundingClientRect = () => sliderContainerVerticalSize;
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
 
   const { container } = render(
     <Slider
