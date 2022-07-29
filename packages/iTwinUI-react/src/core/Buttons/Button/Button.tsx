@@ -68,7 +68,6 @@ export const Button: ButtonComponent = React.forwardRef((props, ref) => {
 
   useTheme();
 
-  //random change
   return (
     <Element
       ref={ref}
