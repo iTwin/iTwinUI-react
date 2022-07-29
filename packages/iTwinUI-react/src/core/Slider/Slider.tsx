@@ -185,8 +185,6 @@ export type SliderProps = {
   onUpdate?: (values: ReadonlyArray<number>) => void;
   /**
    * The orientation of slider
-   * 'horizontal' - Slider is horizontal and fills from left to right. Default.
-   * 'vertical'- Slider is vertical and fills from bottom to top.
    * @default 'horizontal'
    */
   orientation?: 'horizontal' | 'vertical';
