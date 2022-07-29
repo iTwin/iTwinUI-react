@@ -426,10 +426,9 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         return (
           <div className='iui-slider-ticks'>
             {tickLabels.map((label, index) => (
-              <div key={index} className='iui-slider-tick'>
-                <span className='iui-slider-tick-mark' />
-                <span className='iui-slider-tick-number'>{label}</span>
-              </div>
+              <span key={index} className='iui-slider-tick'>
+                {label}
+              </span>
             ))}
           </div>
         );
