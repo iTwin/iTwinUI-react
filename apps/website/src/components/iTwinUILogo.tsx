@@ -4,6 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import * as React from 'react';
 
+/**
+ * This could be moved into astro file. Rewrite handlers with js event listeners.
+ */
+
 export const ITwinUILogo = () => {
   const [coords, setCoords] = React.useState({ x: 0, y: 0 });
   const [rotateDeg, setRotateDeg] = React.useState({ x: 0, y: 0 });
@@ -12,22 +16,28 @@ export const ITwinUILogo = () => {
 
   const handleMouseMove = (event) => {
     const rect = event.target.getBoundingClientRect();
+
+    // Mouse coords inside container
     setCoords({
       x: event.clientX - rect.left,
       y: event.clientY - rect.top,
     });
+
+    // Reset mouse coords to 0,0 at center of container. Division to make movement smaller.
     setRotateDeg({
       x: (event.clientX - rect.left - rect.width / 2) / 20,
       y: -(event.clientY - rect.top - rect.height / 2) / 20,
     });
 
-    // TODO: figure out how to calculate degrees based on mouse location
+    // TODO: figure out how to calculate degrees based on mouse location.
     setDegrees(
       Math.abs(
+        // Using archtangents to calculate angle.
         Math.atan(
           (event.clientX - rect.left - rect.width / 2) /
             -(event.clientY - rect.top - rect.height / 2)
         ) *
+          // Converting from radians to degrees
           (180 / Math.PI)
       )
     );
@@ -35,17 +45,19 @@ export const ITwinUILogo = () => {
   };
 
   const handleMouseEnter = () => {
+    // Remove animation delay, makes rotating smooth
     setAnimation('none');
   };
 
   const handleMouseLeave = () => {
+    // Reset position
     setAnimation('transform 1s ease');
     setRotateDeg({ x: 0, y: 0 });
     setCoords({ x: 0, y: 0 });
   };
 
-  // TODO: figure out how to style in css files, not inline
   return (
+    // 3D effect rectangle. Must be a bit bigger than logo.
     <div
       style={{
         width: '350px',
@@ -62,14 +74,9 @@ export const ITwinUILogo = () => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <svg
-        id='Layer_2'
-        xmlns='http://www.w3.org/2000/svg'
-        viewBox='0 0 291.42 333'
-        style={{ height: '90%' }}
-      >
+      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 291.42 333' style={{ height: '90%' }}>
         <defs>
-          {/** Move grandients into css, this one does not allow more than 90deg rotation. Maybe move into astro file? */}
+          {/** Move gradients into css classes, this one does not allow more than 90deg rotation.*/}
           <linearGradient id='grad1' gradientTransform={`rotate(45)`}>
             <stop offset='0%' style={{ stopColor: '#ffb6fc', stopOpacity: '1' }} />
             <stop offset='100%' style={{ stopColor: '#83a4ff', stopOpacity: '1' }} />
