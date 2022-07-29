@@ -26,9 +26,7 @@ export default {
 
 const sliderWrapper = (element: ReactNode, args: SliderProps) => {
   return (
-    // TODO: Is there a way to avoid the hardcoded height of 400px? height of 100% does not work
     <div
-      className='slider-wrapper'
       style={{
         ...(args.orientation == 'vertical'
           ? { height: 'calc(100vh - 24px)', width: 'fit-content' }
