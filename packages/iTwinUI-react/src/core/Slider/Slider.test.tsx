@@ -615,7 +615,7 @@ it('should activate thumb on pointerDown (vertical)', () => {
     fireEvent.pointerDown(thumb, {
       pointerId: 5,
       buttons: 1,
-      clientX: 510, // TODO: Will this become clientY?
+      clientY: 500,
     });
   });
   thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
@@ -1061,9 +1061,7 @@ it('should move thumb when pointer down on rail', () => {
   expect(handleOnUpdate).toHaveBeenCalledWith([30]);
 });
 
-// TODO: I don't know what this test does and how to transition it for the vertical slider version
 // TODO: I added some unnecessary check conditions. Remove them
-// TODO: Don't know how to fix this test
 it('should move thumb when pointer down on rail (vertical)', () => {
   Element.prototype.getBoundingClientRect = () => sliderContainerVerticalSize; // TODO: Confirm if we need this everywhere. Maybe we don't need it where we are not using sliderContainer.getBoundingClientRect
 
@@ -1138,12 +1136,10 @@ it('should move to closest step when pointer down on rail', () => {
   expect(thumb.getAttribute('aria-valuenow')).toEqual('0.25');
 });
 
-// TODO: Don't know how to fix this test
 it('should move to closest step when pointer down on rail (vertical)', () => {
   Element.prototype.getBoundingClientRect = () => sliderContainerVerticalSize;
 
   const { container } = render(
-    // verticalSliderWrapper( // TODO: Remove all verticalSliderWrappers
     <Slider
       min={0}
       max={1}
@@ -1152,7 +1148,6 @@ it('should move to closest step when pointer down on rail (vertical)', () => {
       tickLabels={<span className='custom-tick-mark'>Custom</span>}
       orientation='vertical'
     />,
-    // ),
   );
 
   assertBaseElement(container);
@@ -1204,7 +1199,6 @@ it('should move closest thumb when pointer down on rail', () => {
   expect(thumbs[1].getAttribute('aria-valuenow')).toEqual('70');
 });
 
-// TODO: Don't know how to fix this test
 it('should move closest thumb when pointer down on rail (vertical)', () => {
   Element.prototype.getBoundingClientRect = () => sliderContainerVerticalSize;
 
@@ -1304,7 +1298,6 @@ it('should activate thumb on pointerDown and move to closest step on move', () =
   expect(thumbs[1].getAttribute('aria-valuenow')).toEqual('80');
 });
 
-// TODO: Don't know how to fix this test
 it('should activate thumb on pointerDown and move to closest step on move (vertical)', () => {
   Element.prototype.getBoundingClientRect = () => sliderContainerVerticalSize; // TODO: Document why I am adding this line in the start of a few methods
 
@@ -1438,7 +1431,6 @@ it('should activate thumb on pointerDown and move to closest step on move/ no up
   expect(thumbs[1].getAttribute('aria-valuenow')).toEqual('80');
 });
 
-// TODO: Don't know how to fix this test
 it('should activate thumb on pointerDown and move to closest step on move/ no update handler (vertical)', () => {
   Element.prototype.getBoundingClientRect = () => sliderContainerVerticalSize;
 
