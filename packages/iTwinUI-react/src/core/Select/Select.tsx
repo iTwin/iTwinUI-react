@@ -51,6 +51,22 @@ const focusPreviousElement = (parent: HTMLElement | null) => {
   }
 };
 
+const focusNextElement = (parent: HTMLElement | null, onFail?: () => void) => {
+  if (!parent) {
+    return;
+  }
+
+  const focusableElements = getFocusableElements(parent);
+  const currentIndex = focusableElements.indexOf(
+    parent.ownerDocument.activeElement as HTMLElement,
+  );
+  if (currentIndex < focusableElements.length - 1) {
+    (focusableElements[currentIndex + 1] as HTMLElement).focus();
+  } else {
+    onFail?.();
+  }
+};
+
 export type ItemRendererProps = {
   /**
    * Close handler that closes the dropdown.
@@ -296,13 +312,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
         break;
       }
       case 'ArrowRight': {
-        const focusableElements = getFocusableElements(selectRef.current);
-        const currentIndex = focusableElements.indexOf(
-          selectRef.current?.ownerDocument.activeElement as HTMLElement,
-        );
-        if (currentIndex < focusableElements.length - 1) {
-          (focusableElements[currentIndex + 1] as HTMLElement).focus();
-        }
+        focusNextElement(selectRef.current);
         break;
       }
       case 'Enter':
@@ -367,6 +377,39 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
       : options.find((option) => option.value === value);
   }, [multiple, options, value]);
 
+  const tagRenderer = React.useCallback(
+    (item: SelectOption<T>) => {
+      const onCloseKeyDown = (e: React.KeyboardEvent) => {
+        switch (e.key) {
+          case 'Enter':
+          case ' ':
+          case 'Spacebar':
+            focusNextElement(selectRef.current, () =>
+              focusPreviousElement(selectRef.current),
+            );
+            onChange?.(item.value, 'removed');
+            e.preventDefault();
+            break;
+          default:
+            break;
+        }
+      };
+      return (
+        <SelectTag
+          key={item.label}
+          isRemovable
+          onCloseKeyDown={onCloseKeyDown}
+          onCloseClick={() => {
+            onChange?.(item.value, 'removed');
+          }}
+        >
+          {item.label}
+        </SelectTag>
+      );
+    },
+    [onChange],
+  );
+
   return (
     <div
       className={cx('iui-input-with-icon', className)}
@@ -420,12 +463,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
                   options: SelectOption<T>[],
                 ) => JSX.Element
               }
-              onChange={(value, event, isKeyboard) => {
-                if (isKeyboard) {
-                  focusPreviousElement(selectRef.current);
-                }
-                onChange?.(value, event);
-              }}
+              tagRenderer={tagRenderer}
             />
           ) : (
             <SingleSelectButton
@@ -482,35 +520,21 @@ const SingleSelectButton = <T,>({
 type MultipleSelectButtonProps<T> = {
   selectedItems?: SelectOption<T>[];
   selectedItemsRenderer?: (options: SelectOption<T>[]) => JSX.Element;
-  onChange: (
-    value: T,
-    event: SelectValueChangeEvent,
-    isKeyboard: boolean,
-  ) => void;
+  tagRenderer: (item: SelectOption<T>) => JSX.Element;
 };
 
 const MultipleSelectButton = <T,>({
   selectedItems,
   selectedItemsRenderer,
-  onChange,
+  tagRenderer,
 }: MultipleSelectButtonProps<T>) => {
   const selectedItemsElements = React.useMemo(() => {
     if (!selectedItems) {
       return [];
     }
 
-    return selectedItems.map((item) => (
-      <SelectTag
-        key={item.label}
-        onRemove={(e) => {
-          // assume if coords are zero, keyboard was used to remove tag
-          onChange?.(item.value, 'removed', e.screenX === 0 && e.screenY === 0);
-        }}
-      >
-        {item.label}
-      </SelectTag>
-    ));
-  }, [onChange, selectedItems]);
+    return selectedItems.map((item) => tagRenderer(item));
+  }, [selectedItems, tagRenderer]);
 
   const [containerRef, visibleCount] = useOverflow(selectedItemsElements);
 

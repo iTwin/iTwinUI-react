@@ -11,9 +11,16 @@ import '@itwin/itwinui-css/css/inputs.css';
 export type SelectTagProps = {
   /**
    * Callback function that handles click on close icon.
-   * Close icon is shown only when this function is passed.
    */
-  onRemove?: (e: React.MouseEvent) => void;
+  onCloseClick?: React.MouseEventHandler;
+  /**
+   * Callback function that handles kayboard click on close icon.
+   */
+  onCloseKeyDown?: React.KeyboardEventHandler;
+  /**
+   * Show close icon.
+   */
+  isRemovable?: boolean;
   /**
    * Text inside the tag.
    */
@@ -25,7 +32,14 @@ export type SelectTagProps = {
  * @private
  */
 export const SelectTag = (props: SelectTagProps) => {
-  const { className, children, onRemove, ...rest } = props;
+  const {
+    className,
+    children,
+    isRemovable,
+    onCloseClick,
+    onCloseKeyDown,
+    ...rest
+  } = props;
   useTheme();
 
   return (
@@ -35,9 +49,10 @@ export const SelectTag = (props: SelectTagProps) => {
       {...rest}
     >
       <span className='iui-select-tag-label'>{children}</span>
-      {onRemove && (
+      {isRemovable && (
         <button
-          onClick={onRemove}
+          onClick={onCloseClick}
+          onKeyDown={onCloseKeyDown}
           aria-label='Delete tag'
           className='iui-select-tag-button'
           tabIndex={-1}
