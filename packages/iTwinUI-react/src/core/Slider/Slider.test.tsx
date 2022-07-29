@@ -399,22 +399,6 @@ it('should take class and style', () => {
   expect(slider.style.width).toBe('350px');
 });
 
-it('should take class and style (vertical)', () => {
-  const { container } = render(
-    <Slider
-      values={defaultSingleValue}
-      className='my-class'
-      style={{ width: '350px' }}
-      orientation='vertical'
-    />,
-  );
-  const slider = container.querySelector(
-    '.iui-slider-component-container.my-class',
-  ) as HTMLDivElement;
-  expect(slider).toBeTruthy();
-  expect(slider.style.width).toBe('350px');
-});
-
 it('should take railContainerProps', () => {
   // common use case is when custom thumb is bigger than default and we must change left/right margin
   const railContainerProps = { style: { margin: '0 8px' } };
@@ -431,23 +415,6 @@ it('should take railContainerProps', () => {
   expect(railContainer.style.marginRight).toBe('8px');
 });
 
-it('should take railContainerProps (vertical)', () => {
-  // common use case is when custom thumb is bigger than default and we must change top/bottom margin
-  const railContainerProps = { style: { margin: '8px 0' } };
-  const { container } = render(
-    <Slider
-      values={defaultSingleValue}
-      railContainerProps={railContainerProps}
-      orientation='vertical'
-    />,
-  );
-  const railContainer = container.querySelector(
-    '.iui-slider-container',
-  ) as HTMLDivElement;
-  expect(railContainer.style.marginTop).toBe('8px');
-  expect(railContainer.style.marginBottom).toBe('8px');
-});
-
 it('should render tick marks', () => {
   const { container } = render(
     <Slider
@@ -457,18 +424,6 @@ it('should render tick marks', () => {
   );
   assertBaseElement(container);
   // TODO: Do we also need to check the content of the slider ticks?
-  expect(container.querySelectorAll('.iui-slider-tick').length).toBe(5);
-});
-
-it('should render tick marks (vertical)', () => {
-  const { container } = render(
-    <Slider
-      values={defaultSingleValue}
-      tickLabels={['0', '25', '50', '75', '100']}
-      orientation='vertical'
-    />,
-  );
-  assertBaseElement(container);
   expect(container.querySelectorAll('.iui-slider-tick').length).toBe(5);
 });
 
@@ -497,14 +452,6 @@ it('should render custom tick marks as defined by ReactNode (vertical)', () => {
 
 it('should render single track', () => {
   const { container } = render(<Slider values={defaultSingleValue} />);
-  assertBaseElement(container);
-  expect(container.querySelectorAll('.iui-slider-track').length).toBe(1);
-});
-
-it('should render single track (vertical)', () => {
-  const { container } = render(
-    <Slider values={defaultSingleValue} orientation='vertical' />,
-  );
   assertBaseElement(container);
   expect(container.querySelectorAll('.iui-slider-track').length).toBe(1);
 });
