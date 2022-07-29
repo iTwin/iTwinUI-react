@@ -16,6 +16,7 @@ export default {
     className: { control: { disable: true } },
     style: { control: { disable: true } },
     id: { control: { disable: true } },
+    orientation: { control: 'radio', options: ['horizontal', 'vertical'] },
   },
   args: {
     thumbMode: 'inhibit-crossing',
@@ -28,7 +29,7 @@ const sliderWrapper = (element: ReactNode, args: SliderProps) => {
   return (
     <div
       style={{
-        ...(args.orientation == 'vertical'
+        ...(args.orientation === 'vertical'
           ? { height: 'calc(100vh - 24px)', width: 'fit-content' }
           : {}),
       }}
@@ -44,6 +45,32 @@ export const Basic: Story<SliderProps> = (args) => {
 
 Basic.args = {
   values: [50],
+};
+
+// These are just a few vertical slider examples.
+// But all the slider stories can be made vertical by passing the orientation: vertical prop
+export const SomeVerticalExamples: Story<SliderProps> = (args) => {
+  return sliderWrapper(
+    <div style={{ display: 'flex', gap: '50px', height: '100%' }}>
+      <Slider orientation='vertical' {...args} {...Basic.args} />
+      <Slider orientation='vertical' {...args} {...Disabled.args} />
+      <Slider orientation='vertical' {...args} {...CustomTooltip.args} />
+    </div>,
+    args,
+  );
+};
+
+SomeVerticalExamples.args = {
+  values: [50],
+  orientation: 'vertical',
+};
+
+SomeVerticalExamples.argTypes = {
+  orientation: {
+    table: {
+      disable: true,
+    },
+  },
 };
 
 export const Range: Story<SliderProps> = (args) => {
@@ -83,16 +110,17 @@ export const WithCustomThumb: Story<SliderProps> = (args) => {
   const thumbProps = args.thumbProps();
   thumbProps.style = {
     ...thumbProps.style,
-    ...(args.orientation === 'horizontal' // TODO: Is there a way to get the args inside WithCustomThumb.args? Because just to gets args, I have to move those lines of code from WithCustomThumb.args to WithCustomThumb
+    ...(args.orientation === 'horizontal'
       ? { transform: 'translateX(-19.2px)', top: 0 }
       : { transform: 'translate(-25%, 50%)' }),
+
+    // railContainerProps: { style: { margin: '0 8px' } }, // TODO: Do we need this for vertical? Confirm that the slightly right offset vertical slider is alright or not
   };
   args.thumbProps = () => thumbProps;
   return sliderWrapper(<Slider {...args} />, args);
 };
 
 WithCustomThumb.args = {
-  // TODO: Should we remove it from the function since it cannot be edited in storybook?
   thumbProps: () => {
     return {
       style: {
@@ -119,7 +147,7 @@ WithCustomThumb.args = {
   values: [50],
   minLabel: <SvgSmileySad />,
   maxLabel: <SvgSmileyHappy />,
-  railContainerProps: { style: { margin: '0 8px' } }, // TODO: Do we need this for vertical? Confirm that the slightly right offset vertical slider is alright or not
+  railContainerProps: { style: { margin: '0px 0px' } },
 };
 
 export const Disabled: Story<SliderProps> = (args) => {
