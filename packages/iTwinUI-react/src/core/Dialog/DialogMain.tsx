@@ -136,6 +136,7 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
         classNames='iui-dialog-animation'
         timeout={{ exit: 600 }}
         unmountOnExit={true}
+        nodeRef={dialogRef}
       >
         <>
           {trapFocus && <FocusTrap>{content}</FocusTrap>}
