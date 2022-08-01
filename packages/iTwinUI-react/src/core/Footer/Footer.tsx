@@ -8,6 +8,7 @@ import { useTheme, StylingProps } from '../utils';
 import '@itwin/itwinui-css/css/footer.css';
 import { FooterItem } from './FooterItem';
 import { FooterSeparator } from './FooterSeparator';
+import { FooterList } from './FooterList';
 
 export type TitleTranslations = {
   termsOfService: string;
@@ -134,24 +135,27 @@ export const Footer = Object.assign(
 
     return (
       <footer className={cx('iui-legal-footer', className)} {...rest}>
-        <ul className='iui-legal-footer-list'>
-          {children
-            ? childrenContent
-            : elements.map((element, index) => {
-                return (
-                  <React.Fragment
-                    key={element.key || `${element.title}-${index}`}
-                  >
-                    {index > 0 && <FooterSeparator />}
-                    <FooterItem url={element.url} title={element.title} />
-                  </React.Fragment>
-                );
-              })}
-        </ul>
+        {children ? (
+          childrenContent
+        ) : (
+          <FooterList>
+            {elements.map((element, index) => {
+              return (
+                <React.Fragment
+                  key={element.key || `${element.title}-${index}`}
+                >
+                  {index > 0 && <FooterSeparator />}
+                  <FooterItem url={element.url} title={element.title} />
+                </React.Fragment>
+              );
+            })}
+          </FooterList>
+        )}
       </footer>
     );
   },
   {
+    List: FooterList,
     Item: FooterItem,
     Separator: FooterSeparator,
   },

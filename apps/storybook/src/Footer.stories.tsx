@@ -119,22 +119,26 @@ export const CustomContent: Story<FooterProps> = ({ ...rest }: FooterProps) => {
   return (
     <Footer {...rest}>
       {(elements) => {
-        return [
-          customItem,
-          ...elements
-            .filter((el) => el.key !== 'copyright')
-            .map((element, index) => {
-              return (
-                <React.Fragment
-                  key={element.key || `${element.title}-${index}`}
-                >
-                  <Footer.Separator />
-                  <Footer.Item url={element.url} title={element.title} />
-                </React.Fragment>
-              );
-            }),
-          ,
-        ];
+        return (
+          <Footer.List>
+            {[
+              customItem,
+              ...elements
+                .filter((el) => el.key !== 'copyright')
+                .map((element, index) => {
+                  return (
+                    <React.Fragment
+                      key={element.key || `${element.title}-${index}`}
+                    >
+                      <Footer.Separator />
+                      <Footer.Item url={element.url} title={element.title} />
+                    </React.Fragment>
+                  );
+                }),
+              ,
+            ]}
+          </Footer.List>
+        );
       }}
     </Footer>
   );

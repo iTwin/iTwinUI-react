@@ -107,19 +107,21 @@ it('should propagate className and style props correctly', () => {
 
 it('should render custom children items', () => {
   const { container } = renderComponent({
-    children: [
-      <Footer.Item
-        key='custom-1'
-        title='Custom link 1'
-        url='https://www.bentley.com/'
-      />,
-      <Footer.Separator key='separator-1' />,
-      <Footer.Item
-        key='custom-2'
-        title='Custom link 2'
-        url='https://itwin.github.io/iTwinUI-react/'
-      />,
-    ],
+    children: (
+      <Footer.List>
+        <Footer.Item
+          key='custom-1'
+          title='Custom link 1'
+          url='https://www.bentley.com/'
+        />
+        <Footer.Separator key='separator-1' />
+        <Footer.Item
+          key='custom-2'
+          title='Custom link 2'
+          url='https://itwin.github.io/iTwinUI-react/'
+        />
+      </Footer.List>
+    ),
   });
 
   const footer = container.querySelector('.iui-legal-footer') as HTMLElement;
@@ -135,7 +137,7 @@ it('should render custom children items', () => {
 it('should render default and custom children items', () => {
   const { container } = renderComponent({
     children: (elements) => (
-      <>
+      <Footer.List>
         <Footer.Item
           key='custom-1'
           title='Custom link 1'
@@ -147,7 +149,7 @@ it('should render default and custom children items', () => {
             <Footer.Item title={element.title} url={element.url} />
           </React.Fragment>
         ))}
-      </>
+      </Footer.List>
     ),
   });
 

@@ -23,7 +23,7 @@ export type FooterItemProps = {
 } & Omit<React.ComponentPropsWithRef<'li'>, 'children'>;
 
 /**
- * Footer item. Recommended to use with `Footer`.
+ * Footer item. Recommended to use inside `Footer.List`.
  */
 export const FooterItem = (props: FooterItemProps) => {
   const { url, title, children, className, ...rest } = props;
