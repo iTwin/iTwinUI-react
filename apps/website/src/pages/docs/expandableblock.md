@@ -1,7 +1,7 @@
 ---
 title: Expandable block
 description: A pattern for progressive disclosure of information.
-layout: ~/layouts/MainLayout.astro
+layout: ./_layout.astro
 setup: |
   import PropsTable from '~/components/PropsTable.astro';
   import LiveExample from '~/components/LiveExample.astro';

@@ -1,7 +1,7 @@
 ---
 title: Footer
 description: Legally required links that stick to the bottom of entry pages.
-layout: ~/layouts/MainLayout.astro
+layout: ./_layout.astro
 setup: |
   import PropsTable from '~/components/PropsTable.astro';
   import LiveExample from '~/components/LiveExample.astro';

@@ -1,7 +1,7 @@
 ---
 title: Alert
 description: A small box to quickly grab user attention and communicate a brief message
-layout: ~/layouts/MainLayout.astro
+layout: ./_layout.astro
 setup: |
   import PropsTable from '~/components/PropsTable.astro';
   import LiveExample from '~/components/LiveExample.astro';

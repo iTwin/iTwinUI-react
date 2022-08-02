@@ -1,7 +1,7 @@
 ---
 title: Breadcrumbs
 description: Navigate a folder hierarchy quickly with a table and breadcrumbs.
-layout: ~/layouts/MainLayout.astro
+layout: ./_layout.astro
 setup: |
   import PropsTable from '~/components/PropsTable.astro';
   import LiveExample from '~/components/LiveExample.astro';

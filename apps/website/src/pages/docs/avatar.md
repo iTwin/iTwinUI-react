@@ -1,7 +1,7 @@
 ---
 title: Avatar
 description: A circular identifier that displays the user’s custom set photo or the user’s first and last name initials.
-layout: ~/layouts/MainLayout.astro
+layout: ./_layout.astro
 setup: |
   import PropsTable from '~/components/PropsTable.astro';
   import LiveExample from '~/components/LiveExample.astro';

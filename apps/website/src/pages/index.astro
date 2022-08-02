@@ -1,5 +1,5 @@
 ---
-import Global from '../layouts/GlobalLayout.astro';
+import Global from './_global.astro';
 import Header from '../components/Header.astro';
 import { ITwinUILogo } from '../components/iTwinUILogo';
 import FieldsetDemo from 'src/components/demo/FieldSetDemo';
@@ -214,6 +214,7 @@ const currentPage = new URL(Astro.request.url).pathname;
     .code-wrapper {
       min-width: 300px;
     }
+
     .code-sample {
       color-scheme: dark !important;
       padding: var(--space-7);
