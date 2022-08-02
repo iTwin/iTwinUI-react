@@ -1,7 +1,7 @@
 ---
 import Global from './_global.astro';
 import Header from '../components/Header.astro';
-import { ITwinUILogo } from '../components/iTwinUILogo';
+import ITwinUILogo from '../components/iTwinUILogo';
 import FieldsetDemo from 'src/components/demo/FieldSetDemo';
 import AccessibleIcon from 'src/icons/AccessibleIcon.astro';
 import NoFussIcon from 'src/icons/NoFussIcon.astro';
@@ -37,8 +37,8 @@ const currentPage = new URL(Astro.request.url).pathname;
             <a class='secondary-button' href='/docs/introduction'> Get started</a>
           </div>
         </div>
-        <div class='logo-box'>
-          <ITwinUILogo client:only='react' />
+        <div class='animated-logo-wrapper'>
+          <ITwinUILogo client:idle />
         </div>
       </div>
 
@@ -180,13 +180,16 @@ const currentPage = new URL(Astro.request.url).pathname;
         grid-template-columns: 1fr;
       }
     }
-    .logo-box {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
+    .animated-logo-wrapper {
+      width: calc(var(--space-6) * 10);
       perspective: 1000px;
+      transform-style: preserve-3d;
       @media (max-width: 50em) {
         display: none;
+      }
+
+      :global(svg) {
+        overflow: visible;
       }
     }
     .hexagon-bg {
