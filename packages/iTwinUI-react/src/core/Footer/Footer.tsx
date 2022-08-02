@@ -35,7 +35,7 @@ export type FooterProps = {
    * Custom footer content. If provided, it will render only what you passed.
    * If function provided, it should accept an array of default footer elements and return `React.ReactNode`.
    */
-  children?: React.ReactNode | ((elements: FooterElement[]) => React.ReactNode);
+  children?: React.ReactNode;
 } & StylingProps;
 
 export type FooterElement = {
@@ -143,13 +143,10 @@ export const Footer = Object.assign(
           : [...translatedElements, ...customElements];
     }
 
-    const childrenContent =
-      typeof children === 'function' ? children(elements) : children;
-
     return (
       <footer className={cx('iui-legal-footer', className)} {...rest}>
         {children ? (
-          childrenContent
+          children
         ) : (
           <FooterList>
             {elements.map((element, index) => {

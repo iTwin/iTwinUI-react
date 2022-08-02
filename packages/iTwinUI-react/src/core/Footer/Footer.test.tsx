@@ -5,38 +5,16 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import { Footer, FooterProps, FooterElement } from './Footer';
+import {
+  Footer,
+  FooterProps,
+  FooterElement,
+  defaultFooterElements,
+} from './Footer';
 
 const renderComponent = (props?: Partial<FooterProps>) => {
   return render(<Footer {...props} />);
 };
-
-const urls: FooterElement[] = [
-  {
-    title: `© ${new Date().getFullYear()} Bentley Systems, Incorporated`,
-  },
-  {
-    title: 'Terms of service',
-    url:
-      'https://connect-agreementportal.bentley.com/AgreementApp/Home/Eula/view/readonly/BentleyConnect',
-  },
-  {
-    title: 'Privacy',
-    url: 'https://www.bentley.com/en/privacy-policy',
-  },
-  {
-    title: 'Terms of use',
-    url: 'https://www.bentley.com/en/terms-of-use-and-select-online-agreement',
-  },
-  {
-    title: 'Cookies',
-    url: 'https://www.bentley.com/en/cookie-policy',
-  },
-  {
-    title: 'Legal notices',
-    url: 'https://connect.bentley.com/Legal',
-  },
-];
 
 const customUrls: FooterElement[] = [
   {
@@ -72,12 +50,12 @@ const assertFooterItems = (
 it('should show all default footer elements', () => {
   const { container } = renderComponent();
   const allLi = container.querySelectorAll<HTMLLIElement>('li');
-  assertFooterItems(allLi, urls);
+  assertFooterItems(allLi, defaultFooterElements);
 });
 
 it('should show all default and custom footer elements', () => {
   const { container } = renderComponent({ customElements: customUrls });
-  const allData = [...urls, ...customUrls];
+  const allData = [...defaultFooterElements, ...customUrls];
   const allLi = container.querySelectorAll<HTMLLIElement>('li');
   assertFooterItems(allLi, allData);
 });
@@ -109,17 +87,13 @@ it('should render custom children items', () => {
   const { container } = renderComponent({
     children: (
       <Footer.List>
-        <Footer.Item
-          key='custom-1'
-          title='Custom link 1'
-          url='https://www.bentley.com/'
-        />
+        <Footer.Item key='custom-1'>
+          <a href='https://www.bentley.com/'>Custom link 1</a>
+        </Footer.Item>
         <Footer.Separator key='separator-1' />
-        <Footer.Item
-          key='custom-2'
-          title='Custom link 2'
-          url='https://itwin.github.io/iTwinUI-react/'
-        />
+        <Footer.Item key='custom-2'>
+          <a href='https://itwin.github.io/iTwinUI-react/'>Custom link 2</a>
+        </Footer.Item>
       </Footer.List>
     ),
   });
@@ -136,17 +110,21 @@ it('should render custom children items', () => {
 
 it('should render default and custom children items', () => {
   const { container } = renderComponent({
-    children: (elements) => (
+    children: (
       <Footer.List>
-        <Footer.Item
-          key='custom-1'
-          title='Custom link 1'
-          url='https://www.bentley.com/'
-        />
-        {elements.map((element, i) => (
+        <Footer.Item key='custom-1'>
+          <a href='https://www.bentley.com/'>Custom link 1</a>
+        </Footer.Item>
+        {defaultFooterElements.map((element, i) => (
           <React.Fragment key={i}>
             <Footer.Separator />
-            <Footer.Item title={element.title} url={element.url} />
+            <Footer.Item>
+              {element.url ? (
+                <a href={element.url}>{element.title}</a>
+              ) : (
+                element.title
+              )}
+            </Footer.Item>
           </React.Fragment>
         ))}
       </Footer.List>
@@ -159,6 +137,6 @@ it('should render default and custom children items', () => {
   const allLi = container.querySelectorAll<HTMLLIElement>('li');
   assertFooterItems(allLi, [
     { title: 'Custom link 1', url: 'https://www.bentley.com/' },
-    ...urls,
+    ...defaultFooterElements,
   ]);
 });
