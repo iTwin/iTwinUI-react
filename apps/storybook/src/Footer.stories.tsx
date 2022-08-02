@@ -131,7 +131,19 @@ export const CustomContent: Story<FooterProps> = ({ ...rest }: FooterProps) => {
                       key={element.key || `${element.title}-${index}`}
                     >
                       <Footer.Separator />
-                      <Footer.Item url={element.url} title={element.title} />
+                      <Footer.Item>
+                        {element.url ? (
+                          <a
+                            href={element.url}
+                            target='_blank'
+                            rel='noreferrer'
+                          >
+                            {element.title}
+                          </a>
+                        ) : (
+                          element.title
+                        )}
+                      </Footer.Item>
                     </React.Fragment>
                   );
                 }),

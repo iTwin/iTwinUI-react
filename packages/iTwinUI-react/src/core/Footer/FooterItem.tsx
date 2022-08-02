@@ -7,39 +7,18 @@ import { useTheme } from '../utils';
 import cx from 'classnames';
 import '@itwin/itwinui-css/css/footer.css';
 
-export type FooterItemProps = {
-  /**
-   * Url of the item.
-   */
-  url?: string;
-  /**
-   * Title of the item.
-   */
-  title?: string;
-  /**
-   * Content of the footer item. If provided, `title` and `url` props are ignored.
-   */
-  children?: React.ReactNode;
-} & Omit<React.ComponentPropsWithRef<'li'>, 'children'>;
+export type FooterItemProps = React.ComponentPropsWithRef<'li'>;
 
 /**
  * Footer item. Recommended to use inside `Footer.List`.
  */
 export const FooterItem = (props: FooterItemProps) => {
-  const { url, title, children, className, ...rest } = props;
+  const { children, className, ...rest } = props;
   useTheme();
 
   return (
     <li className={cx('iui-legal-footer-item', className)} {...rest}>
-      {children ? (
-        children
-      ) : url ? (
-        <a href={url} target='_blank' rel='noreferrer'>
-          {title}
-        </a>
-      ) : (
-        title
-      )}
+      {children}
     </li>
   );
 };

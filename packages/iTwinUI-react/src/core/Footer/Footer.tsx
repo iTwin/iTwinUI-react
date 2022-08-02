@@ -62,6 +62,39 @@ const footerTranslations: TitleTranslations = {
   termsOfUse: 'Terms of use',
 };
 
+export const defaultFooterElements: FooterElement[] = [
+  {
+    key: 'copyright',
+    title: `© ${new Date().getFullYear()} Bentley Systems, Incorporated`,
+  },
+  {
+    key: 'termsOfService',
+    title: footerTranslations.termsOfService,
+    url:
+      'https://connect-agreementportal.bentley.com/AgreementApp/Home/Eula/view/readonly/BentleyConnect',
+  },
+  {
+    key: 'privacy',
+    title: footerTranslations.privacy,
+    url: 'https://www.bentley.com/en/privacy-policy',
+  },
+  {
+    key: 'termsOfUse',
+    title: footerTranslations.termsOfUse,
+    url: 'https://www.bentley.com/en/terms-of-use-and-select-online-agreement',
+  },
+  {
+    key: 'cookies',
+    title: footerTranslations.cookies,
+    url: 'https://www.bentley.com/en/cookie-policy',
+  },
+  {
+    key: 'legalNotices',
+    title: footerTranslations.legalNotices,
+    url: 'https://connect.bentley.com/Legal',
+  },
+];
+
 /**
  * Footer element with all needed legal and info links.
  * Be sure to place it manually at the bottom of your page.
@@ -88,46 +121,26 @@ export const Footer = Object.assign(
     useTheme();
 
     const titles = { ...footerTranslations, ...translatedTitles };
-    const defaultElements: FooterElement[] = [
-      {
-        key: 'copyright',
-        title: `© ${new Date().getFullYear()} Bentley Systems, Incorporated`,
-      },
-      {
-        key: 'termsOfService',
-        title: titles.termsOfService,
-        url:
-          'https://connect-agreementportal.bentley.com/AgreementApp/Home/Eula/view/readonly/BentleyConnect',
-      },
-      {
-        key: 'privacy',
-        title: titles.privacy,
-        url: 'https://www.bentley.com/en/privacy-policy',
-      },
-      {
-        key: 'termsOfUse',
-        title: titles.termsOfUse,
-        url:
-          'https://www.bentley.com/en/terms-of-use-and-select-online-agreement',
-      },
-      {
-        key: 'cookies',
-        title: titles.cookies,
-        url: 'https://www.bentley.com/en/cookie-policy',
-      },
-      {
-        key: 'legalNotices',
-        title: titles.legalNotices,
-        url: 'https://connect.bentley.com/Legal',
-      },
-    ];
+    const translatedElements = defaultFooterElements.map((element) => {
+      if (element.key && titles.hasOwnProperty(element.key)) {
+        const key = element.key as keyof TitleTranslations;
+        return {
+          ...element,
+          title:
+            element.key && titles.hasOwnProperty(element.key)
+              ? titles[key]
+              : element.title,
+        };
+      }
+      return element;
+    });
 
-    let elements: FooterElement[] = defaultElements;
+    let elements: FooterElement[] = translatedElements;
     if (customElements) {
       elements =
         typeof customElements === 'function'
-          ? customElements(defaultElements)
-          : [...defaultElements, ...customElements];
+          ? customElements(translatedElements)
+          : [...translatedElements, ...customElements];
     }
 
     const childrenContent =
@@ -145,7 +158,15 @@ export const Footer = Object.assign(
                   key={element.key || `${element.title}-${index}`}
                 >
                   {index > 0 && <FooterSeparator />}
-                  <FooterItem url={element.url} title={element.title} />
+                  <FooterItem>
+                    {element.url ? (
+                      <a href={element.url} target='_blank' rel='noreferrer'>
+                        {element.title}
+                      </a>
+                    ) : (
+                      element.title
+                    )}
+                  </FooterItem>
                 </React.Fragment>
               );
             })}
