@@ -27,9 +27,8 @@ export default {
     (Story, context) => (
       <div
         style={{
-          height: 'calc(100vh - 24px)',
           ...(context.args.orientation == 'vertical'
-            ? { width: 'fit-content' }
+            ? { height: 'calc(100vh - 24px)', width: 'fit-content' }
             : {}),
         }}
       >
