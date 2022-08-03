@@ -177,16 +177,13 @@ export const CustomTickNoTooltip: Story<SliderProps> = (args) => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            ...(args.orientation === 'horizontal'
-              ? { marginTop: '20px' }
-              : { position: 'absolute', top: '50%', marginLeft: '20px' }),
+            marginTop: '20px',
           }}
         >
           <Body
             style={{
               width: '60px',
               marginRight: '6px',
-              ...(args.orientation === 'vertical' ? { lineHeight: '0px' } : {}),
             }}
           >
             {dateFormatter.format(currentDate)}
@@ -207,6 +204,13 @@ CustomTickNoTooltip.args = {
   },
   minLabel: 'Date',
   maxLabel: '',
+  orientation: 'horizontal',
+};
+
+CustomTickNoTooltip.argTypes = {
+  orientation: {
+    control: false,
+  },
 };
 
 export const DecimalIncrement: Story<SliderProps> = (args) => {
