@@ -44,7 +44,7 @@ export const HeaderBreadcrumbs = (props: HeaderBreadcrumbsProps) => {
             ...previous,
             current,
             index !== items.length - 1 && (
-              <li className='iui-breadcrumbs-separator'>
+              <li className='iui-breadcrumbs-separator' key={index}>
                 <SvgChevronRight
                   key={`chevron${index}`}
                   aria-hidden

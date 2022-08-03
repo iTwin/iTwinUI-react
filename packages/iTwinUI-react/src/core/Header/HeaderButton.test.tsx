@@ -14,11 +14,7 @@ import userEvent from '@testing-library/user-event';
 
 it('should render in its most basic state', () => {
   const { container } = render(<HeaderButton name='MockName' />);
-  expect(
-    container.querySelector(
-      '.iui-header-breadcrumb-button-text > :first-child',
-    ),
-  ).toBeTruthy();
+  expect(container.querySelector('span > :first-child')).toBeTruthy();
 });
 
 it('should render default button correctly', () => {
@@ -27,9 +23,7 @@ it('should render default button correctly', () => {
   const root = container.querySelector('.iui-header-breadcrumb-button');
   expect(root).toBeTruthy();
 
-  const name = container.querySelector(
-    '.iui-header-breadcrumb-button-text > div:only-child',
-  );
+  const name = container.querySelector('span > div:only-child');
   expect(name).toBeTruthy();
   expect(name?.textContent).toEqual('MockName');
 });
@@ -39,14 +33,12 @@ it('should render description correctly', () => {
     <HeaderButton name='MockName' description='MockDescription' />,
   );
 
-  const name = container.querySelector(
-    '.iui-header-breadcrumb-button-text > :first-child',
-  );
+  const name = container.querySelector('span > :first-child');
   expect(name).toBeTruthy();
   expect(name?.textContent).toEqual('MockName');
 
   const description = container.querySelector(
-    '.iui-header-breadcrumb-button-text > .iui-header-breadcrumb-button-text-sublabel:last-child',
+    'span > .iui-header-breadcrumb-button-text-sublabel:last-child',
   );
   expect(description).toBeTruthy();
   expect(description?.textContent).toEqual('MockDescription');

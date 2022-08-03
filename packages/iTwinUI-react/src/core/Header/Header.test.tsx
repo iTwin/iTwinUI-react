@@ -129,7 +129,7 @@ it('renders moreMenu alone correctly', async () => {
     />,
   );
   const button = container.querySelector(
-    '.iui-page-header-right > .iui-button.iui-borderless:last-child',
+    '.iui-page-header-right > .iui-button[data-iui-variant="borderless"]:last-child',
   ) as HTMLButtonElement;
   expect(button).toBeTruthy();
   expect(button.getAttribute('aria-label')).toEqual('More options');
@@ -167,7 +167,7 @@ it('renders translatedStrings correctly', () => {
   );
 
   const button = container.querySelector(
-    '.iui-page-header-right > .iui-button.iui-borderless:last-child',
+    '.iui-page-header-right > .iui-button[data-iui-variant="borderless"]:last-child',
   ) as HTMLButtonElement;
   expect(button).toBeTruthy();
   expect(button.getAttribute('aria-label')).toEqual('MockOptions');
@@ -193,7 +193,7 @@ it('renders multiple right items in the correct order', () => {
   expect(userIcon).toBeTruthy();
   expect(userIcon?.textContent).toEqual('UserIconContent');
   const moreMenu = container.querySelector(
-    '.iui-page-header-right > .iui-button.iui-borderless:last-child',
+    '.iui-page-header-right > .iui-button[data-iui-variant="borderless"]:last-child',
   ) as HTMLButtonElement;
   expect(moreMenu).toBeTruthy();
 });
