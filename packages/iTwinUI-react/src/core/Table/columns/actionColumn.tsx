@@ -102,8 +102,7 @@ export const ActionColumn = <T extends Record<string, unknown>>({
           onHide={() => setIsOpen(false)}
           onShow={() => setIsOpen(true)}
           className={className}
-          style={{ maxHeight: '300px', overflow: 'scroll', ...style }}
-          // style={style}
+          style={{ maxHeight: '300px', overflow: 'scroll', ...style }} // Default style that can be overridden
         >
           <IconButton styleType='borderless' isActive={isOpen}>
             <SvgColumnManager />
