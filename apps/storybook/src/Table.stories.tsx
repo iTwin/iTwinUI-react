@@ -2953,7 +2953,21 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
               );
             },
           },
-          ActionColumn({ columnManager: true }),
+          {
+            id: 'endDate1',
+            Header: 'End date1',
+            accessor: 'endDate',
+            Cell: (props: CellProps<TableStoryDataType>) => {
+              return (
+                <>{props.row.original.endDate.toLocaleDateString('en-US')}</>
+              );
+            },
+          },
+          ActionColumn({
+            columnManager: true,
+            className: 'test-action-column',
+            style: { maxHeight: '100px', overflow: 'scroll' },
+          }),
         ],
       },
     ],
