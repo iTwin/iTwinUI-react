@@ -4,7 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 import { Story, Meta } from '@storybook/react';
 import React from 'react';
-import { Footer, FooterElement, FooterProps } from '@itwin/itwinui-react';
+import {
+  defaultFooterElements,
+  Footer,
+  FooterElement,
+  FooterProps,
+} from '@itwin/itwinui-react';
 import { SvgSmileyHappyHollow } from '@itwin/itwinui-icons-react';
 
 export default {
@@ -118,40 +123,32 @@ export const CustomContent: Story<FooterProps> = ({ ...rest }: FooterProps) => {
   );
   return (
     <Footer {...rest}>
-      {(elements) => {
-        return (
-          <Footer.List>
-            {[
-              customItem,
-              ...elements
-                .filter((el) => el.key !== 'copyright')
-                .map((element, index) => {
-                  return (
-                    <React.Fragment
-                      key={element.key || `${element.title}-${index}`}
-                    >
-                      <Footer.Separator />
-                      <Footer.Item>
-                        {element.url ? (
-                          <a
-                            href={element.url}
-                            target='_blank'
-                            rel='noreferrer'
-                          >
-                            {element.title}
-                          </a>
-                        ) : (
-                          element.title
-                        )}
-                      </Footer.Item>
-                    </React.Fragment>
-                  );
-                }),
-              ,
-            ]}
-          </Footer.List>
-        );
-      }}
+      <Footer.List>
+        {[
+          customItem,
+          ...defaultFooterElements
+            .filter((el) => el.key !== 'copyright')
+            .flatMap((element, index) => {
+              return (
+                <React.Fragment
+                  key={element.key || `${element.title}-${index}`}
+                >
+                  <Footer.Separator />
+                  <Footer.Item>
+                    {element.url ? (
+                      <a href={element.url} target='_blank' rel='noreferrer'>
+                        {element.title}
+                      </a>
+                    ) : (
+                      element.title
+                    )}
+                  </Footer.Item>
+                </React.Fragment>
+              );
+            }),
+          ,
+        ]}
+      </Footer.List>
     </Footer>
   );
 };
