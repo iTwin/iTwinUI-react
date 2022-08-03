@@ -786,6 +786,7 @@ it('should limit keystrokes processing by min max when allow-crossing is set (ve
       setFocus
       thumbMode='allow-crossing'
       onChange={handleOnChange}
+      orientation='vertical'
     />,
   );
   assertBaseElement(container);
@@ -1029,11 +1030,8 @@ it('should move thumb when pointer down on rail (vertical)', () => {
   const sliderContainer = container.querySelector(
     '.iui-slider-container',
   ) as HTMLDivElement;
-  expect(sliderContainer.getBoundingClientRect().left).toBe(10);
   expect(sliderContainer.getBoundingClientRect().top).toBe(0);
-  expect(sliderContainer.getBoundingClientRect().right).toBe(70);
   expect(sliderContainer.getBoundingClientRect().bottom).toBe(1000);
-  expect(sliderContainer.getBoundingClientRect().width).toBe(60);
   expect(sliderContainer.getBoundingClientRect().height).toBe(1000);
 
   /* fire a pointer down event 30% down the slider */
@@ -1100,7 +1098,6 @@ it('should move to closest step when pointer down on rail (vertical)', () => {
   const sliderContainer = container.querySelector(
     '.iui-slider-container',
   ) as HTMLDivElement;
-
   /* fire a pointer down event 30% down the slider
    * 0 - .25 - .5 - .75 - 1 so closet to .3 is .25
    */
