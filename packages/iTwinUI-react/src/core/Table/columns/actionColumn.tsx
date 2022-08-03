@@ -102,7 +102,7 @@ export const ActionColumn = <T extends Record<string, unknown>>({
           onHide={() => setIsOpen(false)}
           onShow={() => setIsOpen(true)}
           className={className}
-          style={style}
+          style={{ maxHeight: '300px', overflow: 'scroll', ...style }}
           // style={style}
         >
           <IconButton styleType='borderless' isActive={isOpen}>
