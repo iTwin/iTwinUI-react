@@ -60,28 +60,8 @@ it('should render correctly in its most basic state', () => {
   expect(thumb.getAttribute('aria-disabled')).toEqual('false');
 });
 
-it('should render correctly in its most basic state (vertical)', () => {
-  const { container } = render(
-    <Slider values={defaultSingleValue} orientation='vertical' />,
-  );
-  assertBaseElement(container);
-  expect(container.querySelector('.iui-slider-track')).toBeTruthy();
-  const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
-  expect(thumb.getAttribute('aria-disabled')).toEqual('false');
-});
-
 it('should not render thumbs if no values are defined', () => {
   const { container } = render(<Slider values={[]} />);
-  expect(
-    container.querySelector('.iui-slider-component-container'),
-  ).toBeTruthy();
-  expect(container.querySelector('.iui-slider-container')).toBeTruthy();
-  expect(container.querySelector('.iui-slider-rail')).toBeTruthy();
-  expect(container.querySelector('.iui-slider-thumb')).toBeFalsy();
-});
-
-it('should not render thumbs if no values are defined (vertical)', () => {
-  const { container } = render(<Slider values={[]} orientation='vertical' />);
   expect(
     container.querySelector('.iui-slider-component-container'),
   ).toBeTruthy();
@@ -98,31 +78,11 @@ it('should not render track if min and max are same value', () => {
   expect(container.querySelector('.iui-slider-track')).toBeFalsy();
 });
 
-it('should not render track if min and max are same value (vertical)', () => {
-  const { container } = render(
-    <Slider values={[10]} min={20} max={20} orientation='vertical' />,
-  );
-  const element = container.querySelector('.iui-slider-thumb') as HTMLElement;
-  expect(element).toBeTruthy();
-  expect(element.style.bottom).toBe('0%');
-  expect(container.querySelector('.iui-slider-track')).toBeFalsy();
-});
-
 it('should not render track if value is below specified min/max', () => {
   const { container } = render(<Slider values={[10]} min={20} max={40} />);
   const element = container.querySelector('.iui-slider-thumb') as HTMLElement;
   expect(element).toBeTruthy();
   expect(element.style.left).toBe('0%');
-  expect(container.querySelector('.iui-slider-track')).toBeFalsy();
-});
-
-it('should not render track if value is below specified min/max (vertical)', () => {
-  const { container } = render(
-    <Slider values={[10]} min={20} max={40} orientation='vertical' />,
-  );
-  const element = container.querySelector('.iui-slider-thumb') as HTMLElement;
-  expect(element).toBeTruthy();
-  expect(element.style.bottom).toBe('0%');
   expect(container.querySelector('.iui-slider-track')).toBeFalsy();
 });
 
@@ -137,33 +97,8 @@ it('should not render track if value is above specified min/max', () => {
   expect(container.querySelector('.iui-slider-track')).toBeFalsy();
 });
 
-it('should not render track if value is above specified min/max (vertical)', () => {
-  const { container } = render(
-    <Slider values={[60]} min={20} max={40} orientation='vertical' />,
-  );
-  expect(
-    container.querySelector('.iui-slider-component-container'),
-  ).toBeTruthy();
-  const element = container.querySelector('.iui-slider-thumb') as HTMLElement;
-  expect(element).toBeTruthy();
-  expect(element.style.bottom).toBe('100%');
-  expect(container.querySelector('.iui-slider-track')).toBeFalsy();
-});
-
 it('should render disabled component', () => {
   const { container } = render(<Slider values={defaultSingleValue} disabled />);
-  assertBaseElement(container);
-  expect(
-    container.querySelector('.iui-slider-component-container.iui-disabled'),
-  ).toBeTruthy();
-  const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
-  expect(thumb.getAttribute('aria-disabled')).toEqual('true');
-});
-
-it('should render disabled component (vertical)', () => {
-  const { container } = render(
-    <Slider values={defaultSingleValue} orientation='vertical' disabled />,
-  );
   assertBaseElement(container);
   expect(
     container.querySelector('.iui-slider-component-container.iui-disabled'),
@@ -179,32 +114,9 @@ it('should render min max labels by default', () => {
   expect(container.querySelector('.iui-slider-max')?.textContent).toBe('100');
 });
 
-it('should render min max labels by default (vertical)', () => {
-  const { container } = render(
-    <Slider values={defaultSingleValue} orientation='vertical' />,
-  );
-  assertBaseElement(container);
-  expect(container.querySelector('.iui-slider-min')?.textContent).toBe('0');
-  expect(container.querySelector('.iui-slider-max')?.textContent).toBe('100');
-});
-
 it('should render specified min max labels', () => {
   const { container } = render(
     <Slider values={defaultSingleValue} min={5} max={55} />,
-  );
-  assertBaseElement(container);
-  expect(container.querySelector('.iui-slider-min')?.textContent).toBe('5');
-  expect(container.querySelector('.iui-slider-max')?.textContent).toBe('55');
-});
-
-it('should render specified min max labels (vertical)', () => {
-  const { container } = render(
-    <Slider
-      values={defaultSingleValue}
-      min={5}
-      max={55}
-      orientation='vertical'
-    />,
   );
   assertBaseElement(container);
   expect(container.querySelector('.iui-slider-min')?.textContent).toBe('5');
@@ -220,40 +132,12 @@ it('should render provided min max labels', () => {
   expect(container.querySelector('.iui-slider-max')?.textContent).toBe('big');
 });
 
-it('should render provided min max labels (vertical)', () => {
-  const { container } = render(
-    <Slider
-      values={defaultSingleValue}
-      maxLabel='big'
-      minLabel='small'
-      orientation='vertical'
-    />,
-  );
-  assertBaseElement(container);
-  expect(container.querySelector('.iui-slider-min')?.textContent).toBe('small');
-  expect(container.querySelector('.iui-slider-max')?.textContent).toBe('big');
-});
-
 it('should render provided min max label nodes', () => {
   const { container } = render(
     <Slider
       values={defaultSingleValue}
       maxLabel={<span className='span-max'>big</span>}
       minLabel={<span className='span-min'>small</span>}
-    />,
-  );
-  assertBaseElement(container);
-  expect(container.querySelector('.span-min')?.textContent).toBe('small');
-  expect(container.querySelector('.span-max')?.textContent).toBe('big');
-});
-
-it('should render provided min max label nodes (vertical)', () => {
-  const { container } = render(
-    <Slider
-      values={defaultSingleValue}
-      maxLabel={<span className='span-max'>big</span>}
-      minLabel={<span className='span-min'>small</span>}
-      orientation='vertical'
     />,
   );
   assertBaseElement(container);
@@ -276,39 +160,8 @@ it('should set focus', () => {
   );
 });
 
-it('should set focus (vertical)', () => {
-  let element: HTMLDivElement | null = null;
-  const onRef = (ref: HTMLDivElement) => {
-    element = ref;
-  };
-  const { container } = render(
-    <Slider
-      ref={onRef}
-      values={defaultSingleValue}
-      orientation='vertical'
-      setFocus
-    />,
-  );
-  assertBaseElement(container);
-  expect(element).toBeTruthy();
-  expect(document.activeElement).toEqual(
-    container.querySelector('.iui-slider-thumb'),
-  );
-});
-
 it('should show tooltip when focused', () => {
   const { container } = render(<Slider values={defaultSingleValue} setFocus />);
-  assertBaseElement(container);
-  expect(document.activeElement).toEqual(
-    container.querySelector('.iui-slider-thumb'),
-  );
-  expect(document.querySelector('.iui-tooltip')?.textContent).toBe('50');
-});
-
-it('should show tooltip when focused (vertical)', () => {
-  const { container } = render(
-    <Slider values={defaultSingleValue} orientation='vertical' setFocus />,
-  );
   assertBaseElement(container);
   expect(document.activeElement).toEqual(
     container.querySelector('.iui-slider-thumb'),
@@ -333,24 +186,6 @@ it('should not show tooltip if visibility is overridden', () => {
   expect(document.querySelector('.iui-tooltip')).toBeFalsy();
 });
 
-it('should not show tooltip if visibility is overridden (vertical)', () => {
-  const { container } = render(
-    <Slider
-      values={defaultSingleValue}
-      setFocus
-      tooltipProps={() => {
-        return { visible: false };
-      }}
-      orientation='vertical'
-    />,
-  );
-  assertBaseElement(container);
-  expect(document.activeElement).toEqual(
-    container.querySelector('.iui-slider-thumb'),
-  );
-  expect(document.querySelector('.iui-tooltip')).toBeFalsy();
-});
-
 it('should show custom tooltip when focused', () => {
   const { container } = render(
     <Slider
@@ -361,26 +196,6 @@ it('should show custom tooltip when focused', () => {
           content: `\$${val}.00`,
         };
       }}
-    />,
-  );
-  assertBaseElement(container);
-  expect(document.activeElement).toEqual(
-    container.querySelector('.iui-slider-thumb'),
-  );
-  expect(document.querySelector('.iui-tooltip')?.textContent).toBe('$50.00');
-});
-
-it('should show custom tooltip when focused (vertical)', () => {
-  const { container } = render(
-    <Slider
-      values={defaultSingleValue}
-      setFocus
-      tooltipProps={(index, val) => {
-        return {
-          content: `\$${val}.00`,
-        };
-      }}
-      orientation='vertical'
     />,
   );
   assertBaseElement(container);
@@ -443,18 +258,6 @@ it('should render custom tick marks as defined by ReactNode.', () => {
   expect(container.querySelector('.custom-tick-mark')).toBeTruthy();
 });
 
-it('should render custom tick marks as defined by ReactNode (vertical)', () => {
-  const { container } = render(
-    <Slider
-      values={defaultSingleValue}
-      tickLabels={<span className='custom-tick-mark'>Custom</span>}
-      orientation='vertical'
-    />,
-  );
-  assertBaseElement(container);
-  expect(container.querySelector('.custom-tick-mark')).toBeTruthy();
-});
-
 it('should render single track', () => {
   const { container } = render(<Slider values={defaultSingleValue} />);
   assertBaseElement(container);
@@ -468,30 +271,9 @@ it('should render odd tracks based on even number of values and `auto` trackDisp
   expect(container.querySelectorAll('.iui-slider-track').length).toBe(2);
 });
 
-it('should render odd tracks based on even number of values and `auto` trackDisplayMode (vertical)', () => {
-  const { container } = render(
-    <Slider values={[10, 20, 30, 40]} orientation='vertical' />,
-  );
-  assertBaseElement(container);
-  // segments 10-20, 30-40
-  expect(container.querySelectorAll('.iui-slider-track').length).toBe(2);
-});
-
 it('should render 3 `even-segments` 0-10,20-30,40-100', () => {
   const { container } = render(
     <Slider trackDisplayMode='even-segments' values={[10, 20, 30, 40]} />,
-  );
-  assertBaseElement(container);
-  expect(container.querySelectorAll('.iui-slider-track').length).toBe(3);
-});
-
-it('should render 3 `even-segments` 0-10,20-30,40-100 (vertical)', () => {
-  const { container } = render(
-    <Slider
-      trackDisplayMode='even-segments'
-      values={[10, 20, 30, 40]}
-      orientation='vertical'
-    />,
   );
   assertBaseElement(container);
   expect(container.querySelectorAll('.iui-slider-track').length).toBe(3);
@@ -505,33 +287,9 @@ it('should render 2 `odd-segments` 10-20, 30-40', () => {
   expect(container.querySelectorAll('.iui-slider-track').length).toBe(2);
 });
 
-it('should render 2 `odd-segments` 10-20, 30-40 (vertical)', () => {
-  const { container } = render(
-    <Slider
-      trackDisplayMode='odd-segments'
-      values={[10, 20, 30, 40]}
-      orientation='vertical'
-    />,
-  );
-  assertBaseElement(container);
-  expect(container.querySelectorAll('.iui-slider-track').length).toBe(2);
-});
-
 it('should not render track', () => {
   const { container } = render(
     <Slider trackDisplayMode='none' values={defaultSingleValue} />,
-  );
-  assertBaseElement(container);
-  expect(container.querySelectorAll('.iui-slider-track').length).toBe(0);
-});
-
-it('should not render track (vertical)', () => {
-  const { container } = render(
-    <Slider
-      trackDisplayMode='none'
-      values={defaultSingleValue}
-      orientation='vertical'
-    />,
   );
   assertBaseElement(container);
   expect(container.querySelectorAll('.iui-slider-track').length).toBe(0);
@@ -548,25 +306,6 @@ it('should activate thumb on pointerDown', () => {
       pointerId: 5,
       buttons: 1,
       clientX: 510,
-    });
-  });
-  thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
-  expect(thumb.classList).toContain('iui-active');
-});
-
-it('should activate thumb on pointerDown (vertical)', () => {
-  const { container } = render(
-    <Slider values={defaultSingleValue} orientation='vertical' />,
-  );
-  assertBaseElement(container);
-  let thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
-  expect(thumb.classList).not.toContain('iui-active');
-
-  act(() => {
-    fireEvent.pointerDown(thumb, {
-      pointerId: 5,
-      buttons: 1,
-      clientY: 500,
     });
   });
   thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
@@ -618,91 +357,8 @@ it('should process keystrokes when thumb has focus', () => {
   expect(document.activeElement).toEqual(thumb);
 });
 
-it('should process keystrokes when thumb has focus (vertical)', () => {
-  const handleOnChange = jest.fn();
-  const { container } = render(
-    <Slider
-      values={[50]}
-      step={5}
-      setFocus
-      onChange={handleOnChange}
-      orientation='vertical'
-    />,
-  );
-  assertBaseElement(container);
-  const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
-  expect(thumb.classList).not.toContain('iui-active');
-
-  expect(document.activeElement).toEqual(thumb);
-  expect(thumb.getAttribute('aria-valuenow')).toEqual('50');
-
-  act(() => {
-    fireEvent.keyDown(thumb, { key: 'ArrowLeft' });
-  });
-  expect(thumb.getAttribute('aria-valuenow')).toEqual('45');
-
-  act(() => {
-    fireEvent.keyDown(thumb, { key: 'ArrowDown' });
-  });
-  expect(thumb.getAttribute('aria-valuenow')).toEqual('40');
-
-  act(() => {
-    fireEvent.keyDown(thumb, { key: 'ArrowRight' });
-  });
-  expect(thumb.getAttribute('aria-valuenow')).toEqual('45');
-
-  act(() => {
-    fireEvent.keyDown(thumb, { key: 'ArrowUp' });
-  });
-  expect(thumb.getAttribute('aria-valuenow')).toEqual('50');
-
-  act(() => {
-    fireEvent.keyDown(thumb, { key: 'Home' });
-  });
-  expect(thumb.getAttribute('aria-valuenow')).toEqual('0');
-
-  act(() => {
-    fireEvent.keyDown(thumb, { key: 'End' });
-  });
-  expect(thumb.getAttribute('aria-valuenow')).toEqual('100');
-  expect(handleOnChange).toHaveBeenCalledTimes(6);
-  expect(document.activeElement).toEqual(thumb);
-});
-
 it('should limit keystrokes processing to adjacent points by default', () => {
   const { container } = render(<Slider values={[40, 80]} step={5} setFocus />);
-  assertBaseElement(container);
-  const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
-  expect(thumb.classList).not.toContain('iui-active');
-
-  expect(document.activeElement).toEqual(thumb);
-  expect(thumb.getAttribute('aria-valuenow')).toEqual('40');
-
-  act(() => {
-    fireEvent.keyDown(thumb, { key: 'ArrowLeft' });
-  });
-  expect(thumb.getAttribute('aria-valuenow')).toEqual('35');
-
-  act(() => {
-    fireEvent.keyDown(thumb, { key: 'ArrowRight' });
-  });
-  expect(thumb.getAttribute('aria-valuenow')).toEqual('40');
-
-  act(() => {
-    fireEvent.keyDown(thumb, { key: 'Home' });
-  });
-  expect(thumb.getAttribute('aria-valuenow')).toEqual('0');
-
-  act(() => {
-    fireEvent.keyDown(thumb, { key: 'End' });
-  });
-  expect(thumb.getAttribute('aria-valuenow')).toEqual('75');
-});
-
-it('should limit keystrokes processing to adjacent points by default (vertical)', () => {
-  const { container } = render(
-    <Slider values={[40, 80]} step={5} orientation='vertical' setFocus />,
-  );
   assertBaseElement(container);
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
   expect(thumb.classList).not.toContain('iui-active');
@@ -777,53 +433,6 @@ it('should limit keystrokes processing by min max when allow-crossing is set', (
   expect(handleOnChange).toHaveBeenCalledTimes(4);
 });
 
-it('should limit keystrokes processing by min max when allow-crossing is set (vertical)', () => {
-  const handleOnChange = jest.fn();
-  const { container } = render(
-    <Slider
-      values={[40, 80]}
-      step={5}
-      setFocus
-      thumbMode='allow-crossing'
-      onChange={handleOnChange}
-      orientation='vertical'
-    />,
-  );
-  assertBaseElement(container);
-  const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
-  expect(thumb.classList).not.toContain('iui-active');
-
-  expect(document.activeElement).toEqual(thumb);
-  expect(thumb.getAttribute('aria-valuenow')).toEqual('40');
-
-  act(() => {
-    fireEvent.keyDown(thumb, { key: 'ArrowLeft' });
-  });
-  expect(thumb.getAttribute('aria-valuenow')).toEqual('35');
-
-  act(() => {
-    fireEvent.keyDown(thumb, { key: 'ArrowRight' });
-  });
-  expect(thumb.getAttribute('aria-valuenow')).toEqual('40');
-
-  act(() => {
-    fireEvent.keyDown(thumb, { key: 'Home' });
-  });
-  expect(thumb.getAttribute('aria-valuenow')).toEqual('0');
-
-  act(() => {
-    fireEvent.keyDown(thumb, { key: 'End' });
-  });
-  expect(thumb.getAttribute('aria-valuenow')).toEqual('100');
-  expect(handleOnChange).toHaveBeenCalledTimes(4);
-
-  // triggering an update with same value should not trigger callback
-  act(() => {
-    fireEvent.keyDown(thumb, { key: 'End' });
-  });
-  expect(handleOnChange).toHaveBeenCalledTimes(4);
-});
-
 it('should not process keystrokes when slider is disabled', () => {
   const { container } = render(<Slider values={[50]} step={5} disabled />);
   assertBaseElement(container);
@@ -837,44 +446,8 @@ it('should not process keystrokes when slider is disabled', () => {
   expect(thumb.getAttribute('aria-valuenow')).toEqual('50');
 });
 
-it('should not process keystrokes when slider is disabled (vertical)', () => {
-  const { container } = render(
-    <Slider values={[50]} step={5} orientation='vertical' disabled />,
-  );
-  assertBaseElement(container);
-  const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
-  expect(thumb).toBeTruthy();
-  expect(thumb.classList).not.toContain('iui-active');
-
-  act(() => {
-    fireEvent.keyDown(thumb, { key: 'ArrowLeft' });
-  });
-  expect(thumb.getAttribute('aria-valuenow')).toEqual('50');
-});
-
 it('should show tooltip on thumb hover', () => {
   const { container } = render(<Slider values={defaultSingleValue} />);
-  assertBaseElement(container);
-  const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
-  expect(thumb.classList).not.toContain('iui-active');
-  expect(document.querySelector('.iui-tooltip')).toBeFalsy();
-
-  act(() => {
-    fireEvent.mouseEnter(thumb);
-  });
-  expect(document.querySelector('.iui-tooltip')?.textContent).toBe('50');
-
-  const tippy = document.querySelector('[data-tippy-root]') as HTMLElement;
-  act(() => {
-    fireEvent.mouseLeave(thumb);
-  });
-  expect(tippy).not.toBeVisible();
-});
-
-it('should show tooltip on thumb hover (vertical)', () => {
-  const { container } = render(
-    <Slider values={defaultSingleValue} orientation='vertical' />,
-  );
   assertBaseElement(container);
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
   expect(thumb.classList).not.toContain('iui-active');
@@ -913,29 +486,6 @@ it('should show tooltip on thumb focus', () => {
   expect(tippy).not.toBeVisible();
 });
 
-it('should show tooltip on thumb focus (vertical)', () => {
-  const { container } = render(
-    <Slider values={defaultSingleValue} orientation='vertical' />,
-  );
-  assertBaseElement(container);
-  const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
-  expect(thumb.classList).not.toContain('iui-active');
-  expect(document.querySelector('.iui-tooltip')).toBeFalsy();
-
-  act(() => {
-    thumb.focus();
-  });
-  expect(
-    (document.querySelector('.iui-tooltip') as HTMLDivElement).textContent,
-  ).toBe('50');
-
-  const tippy = document.querySelector('[data-tippy-root]') as HTMLElement;
-  act(() => {
-    thumb.blur();
-  });
-  expect(tippy).not.toBeVisible();
-});
-
 it('should apply thumb props', () => {
   const thumbProps = () => {
     return {
@@ -945,26 +495,6 @@ it('should apply thumb props', () => {
   };
   const { container } = render(
     <Slider values={defaultSingleValue} thumbProps={thumbProps} />,
-  );
-  assertBaseElement(container);
-  const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
-  expect(thumb.classList).toContain('thumb-test-class');
-  expect(thumb.style.backgroundColor).toEqual('red');
-});
-
-it('should apply thumb props (vertical)', () => {
-  const thumbProps = () => {
-    return {
-      className: 'thumb-test-class',
-      style: { backgroundColor: 'red' },
-    };
-  };
-  const { container } = render(
-    <Slider
-      values={defaultSingleValue}
-      thumbProps={thumbProps}
-      orientation='vertical'
-    />,
   );
   assertBaseElement(container);
   const thumb = container.querySelector('.iui-slider-thumb') as HTMLDivElement;
@@ -1009,7 +539,6 @@ it('should move thumb when pointer down on rail', () => {
   expect(handleOnUpdate).toHaveBeenCalledWith([30]);
 });
 
-// TODO: I added some unnecessary check conditions. Remove them
 it('should move thumb when pointer down on rail (vertical)', () => {
   getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize); // This is to make getBoundingClientRect() return the mocked vertical container dimensions
 
