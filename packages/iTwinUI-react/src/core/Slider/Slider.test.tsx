@@ -429,7 +429,6 @@ it('should render tick marks', () => {
     />,
   );
   assertBaseElement(container);
-  // TODO: Do we also need to check the content of the slider ticks?
   expect(container.querySelectorAll('.iui-slider-tick').length).toBe(5);
 });
 
@@ -555,7 +554,6 @@ it('should activate thumb on pointerDown', () => {
   expect(thumb.classList).toContain('iui-active');
 });
 
-// TODO: Not sure why this is passing because I don't see the iui-active class upon clicking the thumb
 it('should activate thumb on pointerDown (vertical)', () => {
   const { container } = render(
     <Slider values={defaultSingleValue} orientation='vertical' />,
@@ -1012,7 +1010,7 @@ it('should move thumb when pointer down on rail', () => {
 
 // TODO: I added some unnecessary check conditions. Remove them
 it('should move thumb when pointer down on rail (vertical)', () => {
-  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize); // TODO: Confirm if we need this everywhere. Maybe we don't need it where we are not using sliderContainer.getBoundingClientRect
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize); // This is to make getBoundingClientRect() return the mocked vertical container dimensions
 
   const handleOnChange = jest.fn();
   const handleOnUpdate = jest.fn();
@@ -1243,7 +1241,7 @@ it('should activate thumb on pointerDown and move to closest step on move', () =
 });
 
 it('should activate thumb on pointerDown and move to closest step on move (vertical)', () => {
-  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize); // TODO: Document why I am adding this line in the start of a few methods
+  getBoundingClientRectMock.mockReturnValue(sliderContainerVerticalSize);
 
   const handleOnUpdate = jest.fn();
   const handleOnChange = jest.fn();
