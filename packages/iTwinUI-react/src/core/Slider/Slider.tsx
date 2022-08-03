@@ -28,7 +28,7 @@ const getPercentageOfRectangle = (
   rect: DOMRect,
   pointerX: number,
   pointerY: number,
-  orientation: SliderProps['orientation'], // TODO: Confirm if this usage is correct
+  orientation: SliderProps['orientation'],
 ) => {
   if (orientation === 'horizontal') {
     const position = getBoundedValue(pointerX, rect.left, rect.right);
