@@ -33,7 +33,7 @@ export type FooterProps = {
   translatedTitles?: TitleTranslations;
   /**
    * Custom footer content. If provided, it will render only what you passed.
-   * If function provided, it should accept an array of default footer elements and return `React.ReactNode`.
+   * Use `defaultFooterElements` to get the default footer elements.
    */
   children?: React.ReactNode;
 } & StylingProps;
@@ -126,10 +126,7 @@ export const Footer = Object.assign(
         const key = element.key as keyof TitleTranslations;
         return {
           ...element,
-          title:
-            element.key && titles.hasOwnProperty(element.key)
-              ? titles[key]
-              : element.title,
+          title: titles[key],
         };
       }
       return element;
