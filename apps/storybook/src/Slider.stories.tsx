@@ -81,14 +81,6 @@ MultiThumbsAllowCrossing.args = {
 };
 
 export const WithCustomThumb: Story<SliderProps> = (args) => {
-  const thumbProps = args.thumbProps();
-  thumbProps.style = {
-    ...thumbProps.style,
-    ...(args.orientation === 'horizontal'
-      ? { transform: 'translateX(-19.2px)', top: 0 }
-      : { transform: 'translate(-25%, 50%)' }),
-  };
-  args.thumbProps = () => thumbProps;
   return <Slider {...args} />;
 };
 
@@ -103,6 +95,8 @@ WithCustomThumb.args = {
         width: '36px',
         height: '26px',
         borderRadius: '4px',
+        transform: 'translateX(-19.2px)',
+        top: 0,
       },
       children: (
         <span
@@ -119,7 +113,13 @@ WithCustomThumb.args = {
   values: [50],
   minLabel: <SvgSmileySad />,
   maxLabel: <SvgSmileyHappy />,
-  railContainerProps: { style: { margin: '0px 0px' } },
+  railContainerProps: { style: { margin: '0 8px' } },
+};
+
+WithCustomThumb.argTypes = {
+  orientation: {
+    control: false,
+  },
 };
 
 export const Disabled: Story<SliderProps> = (args) => {
