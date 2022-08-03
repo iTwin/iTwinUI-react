@@ -49,15 +49,7 @@ export const ActionColumn = <T extends Record<string, unknown>>({
     disableReordering: true,
     Header: ({ allColumns, dispatch, state }: HeaderProps<T>) => {
       const [isOpen, setIsOpen] = React.useState(false);
-
       const buttonRef = React.useRef<HTMLButtonElement>(null);
-      const hasToggledVisibility = React.useRef(false);
-      React.useEffect(() => {
-        if (hasToggledVisibility.current) {
-          buttonRef.current?.scrollIntoView();
-          hasToggledVisibility.current = false;
-        }
-      });
 
       if (!columnManager) {
         return null;
@@ -86,7 +78,9 @@ export const ActionColumn = <T extends Record<string, unknown>>({
               // If some columns were resized and some columns visibility was enabled, then horizontal scrollbar appears
               // and table is scrolled to the very left which means our visibility dropdown menu is not visible.
               // So for better UX we need to scroll to that dropdown menu.
-              hasToggledVisibility.current = true;
+              queueMicrotask(() => {
+                buttonRef.current?.scrollIntoView();
+              });
             };
             return (
               <MenuItem
