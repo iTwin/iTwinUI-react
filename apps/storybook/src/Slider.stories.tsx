@@ -225,7 +225,7 @@ export const Vertical: Story<SliderProps> = (args) => {
 };
 
 Vertical.args = {
-  ...Basic.args,
+  values: [50],
   orientation: 'vertical',
 };
 
