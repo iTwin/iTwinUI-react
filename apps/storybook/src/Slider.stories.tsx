@@ -220,24 +220,16 @@ DecimalIncrement.args = {
   values: [25],
 };
 
-// These are just a few vertical slider examples.
-// But all the slider stories can be made vertical by passing the orientation: vertical prop
-export const SomeVerticalExamples: Story<SliderProps> = (args) => {
-  return (
-    <div style={{ display: 'flex', gap: '50px', height: '100%' }}>
-      <Slider orientation='vertical' {...Basic.args} {...args} />
-      <Slider orientation='vertical' {...Disabled.args} {...args} />
-      <Slider orientation='vertical' {...CustomTooltip.args} {...args} />
-    </div>
-  );
+export const Vertical: Story<SliderProps> = (args) => {
+  return <Slider {...args} />;
 };
 
-SomeVerticalExamples.args = {
-  values: [50],
+Vertical.args = {
+  ...Basic.args,
   orientation: 'vertical',
 };
 
-SomeVerticalExamples.argTypes = {
+Vertical.argTypes = {
   orientation: {
     control: false,
   },
