@@ -5,18 +5,22 @@
 import { action } from '@storybook/addon-actions';
 import { Meta, Story } from '@storybook/react';
 import React from 'react';
-import { Wizard, WizardLocalization, WizardProps } from '@itwin/itwinui-react';
+import {
+  WorkflowDiagram,
+  WorkflowDiagramLocalization,
+  WorkflowDiagramProps,
+} from '@itwin/itwinui-react';
 
 export default {
-  title: 'Core/Wizard',
-  component: Wizard,
+  title: 'Core/WorkflowDiagram',
+  component: WorkflowDiagram,
   argTypes: {
     localization: { control: { disable: true } },
     onStepClick: { control: { disable: true } },
   },
-} as Meta<WizardProps>;
+} as Meta<WorkflowDiagramProps>;
 
-export const Basic: Story<WizardProps> = (args) => {
+export const Basic: Story<WorkflowDiagramProps> = (args) => {
   const {
     currentStep = 2,
     steps = [
@@ -32,7 +36,7 @@ export const Basic: Story<WizardProps> = (args) => {
     action(`Clicked index: ${index}`)();
   };
   return (
-    <Wizard
+    <WorkflowDiagram
       currentStep={currentStep}
       steps={steps}
       onStepClick={onStepClick}
@@ -52,7 +56,7 @@ Basic.args = {
   ],
 };
 
-export const Long: Story<WizardProps> = (args) => {
+export const Long: Story<WorkflowDiagramProps> = (args) => {
   const {
     currentStep = 2,
     steps = [
@@ -69,7 +73,7 @@ export const Long: Story<WizardProps> = (args) => {
     action(`Clicked index: ${index}`)();
   };
   return (
-    <Wizard
+    <WorkflowDiagram
       type={type}
       currentStep={currentStep}
       steps={steps}
@@ -91,7 +95,7 @@ Long.args = {
   type: 'long',
 };
 
-export const WorkflowDiagram: Story<WizardProps> = (args) => {
+export const WorkflowDiagram: Story<WorkflowDiagramProps> = (args) => {
   const {
     steps = [
       { name: 'Start' },
@@ -107,7 +111,12 @@ export const WorkflowDiagram: Story<WizardProps> = (args) => {
     action(`Clicked index: ${index}`)();
   };
   return (
-    <Wizard type={type} steps={steps} onStepClick={onStepClick} {...rest} />
+    <WorkflowDiagram
+      type={type}
+      steps={steps}
+      onStepClick={onStepClick}
+      {...rest}
+    />
   );
 };
 
@@ -122,7 +131,7 @@ WorkflowDiagram.args = {
   type: 'workflow',
 };
 
-export const LocalizedLong: Story<WizardProps> = (args) => {
+export const LocalizedLong: Story<WorkflowDiagramProps> = (args) => {
   const {
     currentStep = 2,
     steps = [
@@ -135,7 +144,7 @@ export const LocalizedLong: Story<WizardProps> = (args) => {
     type = 'long',
     ...rest
   } = args;
-  const localization: WizardLocalization = {
+  const localization: WorkflowDiagramLocalization = {
     stepsCountLabel: (currentStep, totalSteps) =>
       `Localized step ${currentStep} of ${totalSteps}:`,
   };
@@ -143,7 +152,7 @@ export const LocalizedLong: Story<WizardProps> = (args) => {
     action(`Clicked index: ${index}`)();
   };
   return (
-    <Wizard
+    <WorkflowDiagram
       type={type}
       currentStep={currentStep}
       steps={steps}
@@ -166,7 +175,7 @@ LocalizedLong.args = {
   type: 'long',
 };
 
-export const WithTooltips: Story<WizardProps> = (args) => {
+export const WithTooltips: Story<WorkflowDiagramProps> = (args) => {
   const {
     currentStep = 2,
     steps = [
@@ -182,7 +191,7 @@ export const WithTooltips: Story<WizardProps> = (args) => {
     action(`Clicked index: ${index}`)();
   };
   return (
-    <Wizard
+    <WorkflowDiagram
       currentStep={currentStep}
       steps={steps}
       onStepClick={onStepClick}

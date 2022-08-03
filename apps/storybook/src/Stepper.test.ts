@@ -2,8 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-describe('Wizard', () => {
-  const storyPath = 'Core/Wizard';
+describe('Stepper', () => {
+  const storyPath = 'Core/Stepper';
   const tests = [
     'Basic',
     'Long',
@@ -18,7 +18,7 @@ describe('Wizard', () => {
       cy.visit('iframe', { qs: { id } });
 
       if (testName.includes('Tooltip')) {
-        cy.get('.iui-wizard-step').first().trigger('mouseenter'); // trigger tooltip
+        cy.get('.iui-stepper-step').first().trigger('mouseenter'); // trigger tooltip
       }
 
       cy.compareSnapshot(testName);

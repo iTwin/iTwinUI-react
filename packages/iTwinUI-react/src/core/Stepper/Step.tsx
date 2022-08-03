@@ -6,7 +6,7 @@ import cx from 'classnames';
 import React from 'react';
 import { Tooltip } from '../Tooltip';
 import { StylingProps } from '../utils';
-import { WizardType } from './Wizard';
+import { StepperType } from './Stepper';
 
 export type StepProps = {
   /**
@@ -18,17 +18,17 @@ export type StepProps = {
    */
   index: number;
   /**
-   * the Wizard's current step number, 0-based.
+   * the Stepper's current step number, 0-based.
    */
   currentStepNumber: number;
   /**
-   * number of total steps in the wizard.
+   * number of total steps in the stepper.
    */
   totalSteps: number;
   /**
-   * Wizard type.
+   * Stepper type.
    */
-  type: WizardType;
+  type: StepperType;
   /**
    *  Click handler on completed step.
    */
@@ -76,7 +76,7 @@ export const Step = (props: StepProps) => {
   const stepShape = (
     <li
       className={cx(
-        'iui-wizard-step',
+        'iui-stepper-step',
         {
           'iui-current': isActive,
           'iui-clickable': isClickable,
@@ -93,13 +93,13 @@ export const Step = (props: StepProps) => {
       tabIndex={isClickable ? 0 : undefined}
       {...rest}
     >
-      <div className='iui-wizard-track-content'>
-        <span className='iui-wizard-circle'>
+      <div className='iui-stepper-track-content'>
+        <span className='iui-stepper-circle'>
           {type === 'workflow' ? title : index + 1}
         </span>
       </div>
       {type === 'default' && (
-        <span className='iui-wizard-step-name'>{title}</span>
+        <span className='iui-stepper-step-name'>{title}</span>
       )}
     </li>
   );

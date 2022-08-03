@@ -281,13 +281,21 @@ export type { UserIconProps, StatusTitles, UserIconStatus } from './UserIcon';
 export { UserIconGroup } from './UserIconGroup';
 export type { UserIconGroupProps } from './UserIconGroup';
 
-export { Wizard } from './Wizard';
+export { Stepper } from './Stepper';
 export type {
-  WizardProps,
+  StepperProps,
   StepProperties,
-  WizardType,
-  WizardLocalization,
-} from './Wizard';
+  StepperType,
+  StepperLocalization,
+} from './Stepper';
+
+export { WorkflowDiagram } from './WorkflowDiagram';
+export type {
+  WorkflowDiagramProps,
+  StepProperties,
+  WorkflowDiagramType,
+  WorkflowDiagramLocalization,
+} from './WorkflowDiagram';
 
 export {
   getUserColor,
@@ -296,3 +304,6 @@ export {
   MiddleTextTruncation,
 } from './utils';
 export type { ThemeType, MiddleTextTruncationProps } from './utils';
+
+export { WorkflowDiagram } from './WorkflowDiagram';
+export type { WorkflowDiagramProps } from './WorkflowDiagram';
