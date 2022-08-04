@@ -206,6 +206,8 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
   const [displayedYear, setDisplayedYear] = React.useState(
     selectedDay ? selectedDay.getFullYear() : new Date().getFullYear(),
   );
+  const [onStartDate, setOnStartDate] = React.useState(true);
+
   // Used to focus days only when days are changed
   // e.g. without this, when changing months day would be focused
   const needFocus = React.useRef(setFocus);
@@ -314,9 +316,13 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
       setMonthAndYear(day.getMonth(), day.getFullYear());
     }
     // changes start date if clicked before start date
-    if (dateCompare(day, startDate)) {
+    if (onStartDate) {
       setSelectedStartDay(day);
-
+      if (endDate && dateCompare(selectedEndDay, selectedStartDay)) {
+        const temp = selectedStartDay;
+        setSelectedStartDay(selectedEndDay);
+        setSelectedEndDay(temp);
+      }
       const currentStartDate = startDate ?? new Date();
       const newStartDate = new Date(
         day.getFullYear(),
@@ -328,12 +334,19 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
       );
 
       endDate && onChange?.(newStartDate, endDate);
+
+      setOnStartDate(false);
       return;
     }
 
     // changes end date if clicked after end date
-    if (dateCompare(endDate, day)) {
+    if (!onStartDate) {
       setSelectedEndDay(day);
+      if (endDate && dateCompare(selectedEndDay, selectedStartDay)) {
+        const temp = selectedStartDay;
+        setSelectedStartDay(selectedEndDay);
+        setSelectedEndDay(temp);
+      }
       const currentEndDate = endDate ?? new Date();
       const newEndDate = new Date(
         day.getFullYear(),
@@ -345,6 +358,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
       );
 
       startDate && onChange?.(startDate, newEndDate);
+      setOnStartDate(true);
       return;
     }
     const currentDate = selectedDay ?? new Date();
