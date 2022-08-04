@@ -162,11 +162,18 @@ const currentPage = new URL(Astro.request.url).pathname;
               text-decoration: underline;
 
               &::before {
-                content: '\#';
+                content: '';
+                --octothorp: url('data:image/svg+xml;utf8,<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><text fill="currentColor" x="50%" y="50%" dominant-baseline="mathematical" font-family="system-ui" text-anchor="middle">%23</text></svg>');
+                -webkit-mask-image: var(--octothorp);
+                mask: var(--octothorp) no-repeat center;
+                background-color: currentColor;
                 position: absolute;
                 right: 100%;
                 margin-left: 0.25rem;
                 margin-right: 0.25rem;
+                font-size: inherit;
+                width: 1em;
+                height: 1em;
               }
             }
           }
