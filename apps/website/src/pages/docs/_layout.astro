@@ -189,7 +189,7 @@ const currentPage = new URL(Astro.request.url).pathname;
   const allHeadings = [...document.querySelectorAll('.content-wrapper :is(h1,h2,h3,h4)')];
   const currentlyInteresecting = new Set<string>();
 
-  // adds data-active to the headings that are currently in viewport
+  // adds data-active to the first heading that is currently in viewport
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       const id = entry.target.getAttribute('id');
