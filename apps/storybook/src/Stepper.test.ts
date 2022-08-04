@@ -4,13 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 describe('Stepper', () => {
   const storyPath = 'Core/Stepper';
-  const tests = [
-    'Basic',
-    'Long',
-    'Localized Long',
-    'With Tooltips',
-    'Workflow Diagram',
-  ];
+  const tests = ['Basic', 'Long', 'Localized Long', 'With Tooltips'];
 
   tests.forEach((testName) => {
     it(testName, function () {

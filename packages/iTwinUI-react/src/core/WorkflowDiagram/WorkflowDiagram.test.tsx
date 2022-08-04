@@ -15,7 +15,6 @@ describe('<WorkflowDiagram />', () => {
   it('should display all step names in default workflow diagram', () => {
     const workflowDiagram = (
       <WorkflowDiagram
-        currentStep={2}
         steps={[
           {
             title: 'Step One',
@@ -46,7 +45,6 @@ describe('<WorkflowDiagram />', () => {
 
     const workflowDiagram = (
       <WorkflowDiagram
-        currentStep={1}
         steps={[
           {
             title: 'Step One',

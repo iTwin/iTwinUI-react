@@ -88,7 +88,7 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
         </ol>
         {type === 'long' && (
           <div className='iui-stepper-steps-label'>
-            <span className='iui-steps-count'>
+            <span className='iui-stepper-steps-label-count'>
               {localization.stepsCountLabel(
                 boundedCurrentStep + 1,
                 steps.length,

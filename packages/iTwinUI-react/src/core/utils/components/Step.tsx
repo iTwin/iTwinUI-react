@@ -55,9 +55,13 @@ export const Step = (props: StepProps) => {
   } = props;
 
   const isPast =
-    type !== 'workflow' && currentStepNumber && currentStepNumber > index;
+    type !== 'workflow' &&
+    currentStepNumber !== undefined &&
+    currentStepNumber > index;
   const isActive =
-    type !== 'workflow' && currentStepNumber && currentStepNumber === index;
+    type !== 'workflow' &&
+    currentStepNumber !== undefined &&
+    currentStepNumber === index;
   const isClickable = type !== 'workflow' && isPast && !!onClick;
 
   const onCompletedClick = () => {

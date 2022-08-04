@@ -24,11 +24,11 @@ export const Basic: Story<StepperProps> = (args) => {
   const {
     currentStep = 2,
     steps = [
-      { name: 'First Step' },
-      { name: 'Completed Step' },
-      { name: 'Current Step' },
-      { name: 'Next Step' },
-      { name: 'Last Step' },
+      { title: 'First Step' },
+      { title: 'Completed Step' },
+      { title: 'Current Step' },
+      { title: 'Next Step' },
+      { title: 'Last Step' },
     ],
     ...rest
   } = args;
@@ -48,11 +48,11 @@ export const Basic: Story<StepperProps> = (args) => {
 Basic.args = {
   currentStep: 2,
   steps: [
-    { name: 'First Step' },
-    { name: 'Completed Step' },
-    { name: 'Current Step' },
-    { name: 'Next Step' },
-    { name: 'Last Step' },
+    { title: 'First Step' },
+    { title: 'Completed Step' },
+    { title: 'Current Step' },
+    { title: 'Next Step' },
+    { title: 'Last Step' },
   ],
 };
 
@@ -60,11 +60,11 @@ export const Long: Story<StepperProps> = (args) => {
   const {
     currentStep = 2,
     steps = [
-      { name: 'First Step' },
-      { name: 'Completed Step' },
-      { name: 'Current Step' },
-      { name: 'Next Step' },
-      { name: 'Last Step' },
+      { title: 'First Step' },
+      { title: 'Completed Step' },
+      { title: 'Current Step' },
+      { title: 'Next Step' },
+      { title: 'Last Step' },
     ],
     type = 'long',
     ...rest
@@ -86,11 +86,11 @@ export const Long: Story<StepperProps> = (args) => {
 Long.args = {
   currentStep: 2,
   steps: [
-    { name: 'First Step' },
-    { name: 'Completed Step' },
-    { name: 'Current Step' },
-    { name: 'Next Step' },
-    { name: 'Last Step' },
+    { title: 'First Step' },
+    { title: 'Completed Step' },
+    { title: 'Current Step' },
+    { title: 'Next Step' },
+    { title: 'Last Step' },
   ],
   type: 'long',
 };
@@ -99,11 +99,11 @@ export const LocalizedLong: Story<StepperProps> = (args) => {
   const {
     currentStep = 2,
     steps = [
-      { name: 'First Step' },
-      { name: 'Completed Step' },
-      { name: 'Current Step' },
-      { name: 'Next Step' },
-      { name: 'Last Step' },
+      { title: 'First Step' },
+      { title: 'Completed Step' },
+      { title: 'Current Step' },
+      { title: 'Next Step' },
+      { title: 'Last Step' },
     ],
     type = 'long',
     ...rest
@@ -130,11 +130,11 @@ export const LocalizedLong: Story<StepperProps> = (args) => {
 LocalizedLong.args = {
   currentStep: 2,
   steps: [
-    { name: 'First Step' },
-    { name: 'Completed Step' },
-    { name: 'Current Step' },
-    { name: 'Next Step' },
-    { name: 'Last Step' },
+    { title: 'First Step' },
+    { title: 'Completed Step' },
+    { title: 'Current Step' },
+    { title: 'Next Step' },
+    { title: 'Last Step' },
   ],
   type: 'long',
 };
@@ -143,11 +143,11 @@ export const WithTooltips: Story<StepperProps> = (args) => {
   const {
     currentStep = 2,
     steps = [
-      { name: 'First Step', description: 'First Tooltip' },
-      { name: 'Completed Step', description: 'Completed Tooltip' },
-      { name: 'Current Step', description: 'Current Tooltip' },
-      { name: 'Next Step', description: 'Next Tooltip' },
-      { name: 'Last Step', description: 'Last Tooltip' },
+      { title: 'First Step', description: 'First Tooltip' },
+      { title: 'Completed Step', description: 'Completed Tooltip' },
+      { title: 'Current Step', description: 'Current Tooltip' },
+      { title: 'Next Step', description: 'Next Tooltip' },
+      { title: 'Last Step', description: 'Last Tooltip' },
     ],
     ...rest
   } = args;
@@ -167,10 +167,10 @@ export const WithTooltips: Story<StepperProps> = (args) => {
 WithTooltips.args = {
   currentStep: 2,
   steps: [
-    { name: 'First Step', description: 'First Step Description' },
-    { name: 'Completed Step', description: 'Completed Step Description' },
-    { name: 'Current Step', description: 'Current Step Description' },
-    { name: 'Next Step', description: 'Next Step Description' },
-    { name: 'Last Step', description: 'Last Step Description' },
+    { title: 'First Step', description: 'First Step Description' },
+    { title: 'Completed Step', description: 'Completed Step Description' },
+    { title: 'Current Step', description: 'Current Step Description' },
+    { title: 'Next Step', description: 'Next Step Description' },
+    { title: 'Last Step', description: 'Last Step Description' },
   ],
 };

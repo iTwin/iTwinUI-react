@@ -138,7 +138,9 @@ describe('<Stepper />', () => {
 
     const { getByText, queryByText } = render(stepper);
 
-    expect(getByText('Step 3 of 3:')).toHaveClass('iui-steps-count');
+    expect(getByText('Step 3 of 3:')).toHaveClass(
+      'iui-stepper-steps-label-count',
+    );
     expect(getByText('Step Three')).toHaveClass('iui-stepper-steps-label');
 
     getByText('1');
