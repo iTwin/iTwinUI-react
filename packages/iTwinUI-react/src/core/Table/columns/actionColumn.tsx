@@ -12,6 +12,7 @@ import { MenuItem } from '../../Menu';
 import { tableResizeStartAction } from '../Table';
 import { SELECTION_CELL_ID } from './selectionColumn';
 import { EXPANDER_CELL_ID } from './expanderColumn';
+import cx from 'classnames';
 
 const ACTION_CELL_ID = 'iui-table-action';
 
@@ -101,8 +102,8 @@ export const ActionColumn = <T extends Record<string, unknown>>({
           menuItems={headerCheckBoxes}
           onHide={() => setIsOpen(false)}
           onShow={() => setIsOpen(true)}
-          className={className}
-          style={{ maxHeight: '300px', overflow: 'scroll', ...style }} // Default style (max height) that can be overridden/unset
+          className={cx('iui-scroll', className)}
+          style={{ maxHeight: '300px', ...style }} // Default style (max height) that can be overridden/unset
         >
           <IconButton styleType='borderless' isActive={isOpen}>
             <SvgColumnManager />

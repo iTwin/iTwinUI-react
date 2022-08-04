@@ -2981,7 +2981,6 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
           ActionColumn({
             columnManager: true,
             className: '', // to customize appearance of DropdownMenu
-            style: {}, // to customize appearance of DropdownMenu
           }),
         ],
       },
