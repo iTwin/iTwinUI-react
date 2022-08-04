@@ -276,13 +276,6 @@ it('should render table with custom className', () => {
   expect(table).toBeTruthy();
 });
 
-it('should render actionColumn with custom className', () => {
-  const { container } = renderComponent({ className: 'test-className' });
-
-  const table = container.querySelector('.iui-table.test-className');
-  expect(table).toBeTruthy();
-});
-
 it('should render table with custom style', () => {
   const { container } = renderComponent({ style: { color: 'red' } });
 
@@ -2734,7 +2727,6 @@ it('should render action column with column manager', () => {
   expect(actionColumn[3].textContent).toBe('View');
 });
 
-// TODO: New test, rearrange
 it('should render dropdown menu with specified class and style in action column with column manager', async () => {
   const columns: Column<TestDataType>[] = [
     {
@@ -2785,8 +2777,7 @@ it('should render dropdown menu with specified class and style in action column 
   expect(dropdownMenu).toHaveStyle('background-color: red');
 });
 
-// TODO: New test, rearrange
-it('should render dropdown menu with with default styling if no custom style provided', async () => {
+it('should render dropdown menu with default styling if no custom style is provided', async () => {
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Header name',
@@ -2832,8 +2823,7 @@ it('should render dropdown menu with with default styling if no custom style pro
   expect(dropdownMenu).toHaveStyle('overflow: scroll');
 });
 
-// TODO: New test, rearrange
-it('should render dropdown menu with custom styling and override default styling if a custom style provided', async () => {
+it('should render dropdown menu with custom styling and override default styling if a custom style is provided', async () => {
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Header name',
