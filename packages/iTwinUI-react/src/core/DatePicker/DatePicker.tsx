@@ -317,13 +317,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
     }
     // changes start date if clicked before start date
     if (onStartDate) {
-      setSelectedStartDay(day);
-      if (endDate && dateCompare(selectedEndDay, selectedStartDay)) {
-        const temp = selectedStartDay;
-        setSelectedStartDay(selectedEndDay);
-        setSelectedEndDay(temp);
-      }
-      const currentStartDate = startDate ?? new Date();
+      const currentStartDate = selectedStartDay ?? new Date();
       const newStartDate = new Date(
         day.getFullYear(),
         day.getMonth(),
@@ -332,8 +326,27 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
         currentStartDate.getMinutes(),
         currentStartDate.getSeconds(),
       );
+      setSelectedStartDay(newStartDate);
 
-      endDate && onChange?.(newStartDate, endDate);
+      if (
+        selectedStartDay &&
+        selectedEndDay &&
+        dateCompare(selectedEndDay, newStartDate)
+      ) {
+        // console.log('Start If statement hit! Before Change');
+        // console.log(
+        //   `newStartDate ${newStartDate} selectedStartDay ${selectedStartDay} selectedEndDay ${selectedEndDay}`,
+        // );
+        setSelectedStartDay(selectedEndDay);
+        setSelectedEndDay(newStartDate);
+        // console.log('After Changes');
+        // console.log(
+        //   `newStartDate ${newStartDate} selectedStartDay ${selectedStartDay} selectedEndDay ${selectedEndDay}`,
+        // );
+      }
+      selectedEndDay &&
+        selectedStartDay &&
+        onChange?.(selectedStartDay, selectedEndDay);
 
       setOnStartDate(false);
       return;
@@ -342,12 +355,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
     // changes end date if clicked after end date
     if (!onStartDate) {
       setSelectedEndDay(day);
-      if (endDate && dateCompare(selectedEndDay, selectedStartDay)) {
-        const temp = selectedStartDay;
-        setSelectedStartDay(selectedEndDay);
-        setSelectedEndDay(temp);
-      }
-      const currentEndDate = endDate ?? new Date();
+      const currentEndDate = selectedEndDay ?? new Date();
       const newEndDate = new Date(
         day.getFullYear(),
         day.getMonth(),
@@ -356,8 +364,23 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
         currentEndDate.getMinutes(),
         currentEndDate.getSeconds(),
       );
+      if (
+        selectedStartDay &&
+        selectedEndDay &&
+        dateCompare(newEndDate, selectedStartDay)
+      ) {
+        // console.log('End If statement hit!');
+        const temp = selectedStartDay;
+        setSelectedStartDay(newEndDate);
+        setSelectedEndDay(temp);
+        // console.log(
+        //   `Start: ${selectedStartDay.toDateString()} End: ${selectedEndDay.toDateString()}`,
+        // );
+      }
+      selectedStartDay &&
+        selectedEndDay &&
+        onChange?.(selectedStartDay, selectedEndDay);
 
-      startDate && onChange?.(startDate, newEndDate);
       setOnStartDate(true);
       return;
     }
