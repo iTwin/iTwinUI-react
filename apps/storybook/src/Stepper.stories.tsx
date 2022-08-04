@@ -95,37 +95,6 @@ Long.args = {
   type: 'long',
 };
 
-export const WorkflowDiagram: Story<StepperProps> = (args) => {
-  const {
-    steps = [
-      { name: 'Start' },
-      { name: 'Set parameters' },
-      { name: 'Invite collaborators' },
-      { name: 'Review & Approve' },
-      { name: 'Complete' },
-    ],
-    type = 'workflow',
-    ...rest
-  } = args;
-  const onStepClick = (index: number) => {
-    action(`Clicked index: ${index}`)();
-  };
-  return (
-    <Stepper type={type} steps={steps} onStepClick={onStepClick} {...rest} />
-  );
-};
-
-WorkflowDiagram.args = {
-  steps: [
-    { name: 'Start' },
-    { name: 'Set parameters' },
-    { name: 'Invite collaborators' },
-    { name: 'Review & Approve' },
-    { name: 'Complete' },
-  ],
-  type: 'workflow',
-};
-
 export const LocalizedLong: Story<StepperProps> = (args) => {
   const {
     currentStep = 2,

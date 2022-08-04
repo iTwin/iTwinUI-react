@@ -12,188 +12,19 @@ import React from 'react';
 import { WorkflowDiagram } from './WorkflowDiagram';
 
 describe('<WorkflowDiagram />', () => {
-  it('should render all step names and numbers in default workflow diagram', () => {
-    const workflowDiagram = (
-      <WorkflowDiagram
-        currentStep={0}
-        steps={[
-          {
-            name: 'Step One',
-          },
-          {
-            name: 'Step Two',
-          },
-          {
-            name: 'Step Three',
-          },
-        ]}
-      />
-    );
-
-    const { getByText } = render(workflowDiagram);
-
-    getByText('1');
-    getByText('2');
-    getByText('3');
-
-    getByText('Step One');
-    getByText('Step Two');
-    getByText('Step Three');
-  });
-
-  it('should set the active step to the step provided and raises onClick event on completed steps', () => {
-    const mockedOnClick = jest.fn();
-    const workflowDiagram = (
-      <WorkflowDiagram
-        currentStep={1}
-        onStepClick={mockedOnClick}
-        steps={[
-          {
-            name: 'Step One',
-          },
-          {
-            name: 'Step Two',
-          },
-          {
-            name: 'Step Three',
-          },
-        ]}
-      />
-    );
-
-    const { getByText } = render(workflowDiagram);
-    const secondStep = getByText('Step Two');
-    expect(secondStep.parentElement?.className).toContain('iui-current');
-    const firstStep = getByText('Step One');
-    firstStep.click();
-    expect(mockedOnClick).toHaveBeenCalledWith(0);
-    secondStep.click();
-    expect(mockedOnClick).toHaveBeenCalledTimes(1);
-  });
-
-  it('should set the active step to the first step if step is less than 0', () => {
-    const workflowDiagram = (
-      <WorkflowDiagram
-        currentStep={-2}
-        steps={[
-          {
-            name: 'Step One',
-          },
-          {
-            name: 'Step Two',
-          },
-          {
-            name: 'Step Three',
-          },
-        ]}
-      />
-    );
-
-    const { getByText } = render(workflowDiagram);
-    const firstStep = getByText('Step One') as HTMLSpanElement;
-    expect(firstStep.parentElement?.className).toContain('iui-current');
-  });
-
-  it('should set the active step to the last step if the step is greater than number of steps', () => {
-    const workflowDiagram = (
-      <WorkflowDiagram
-        currentStep={42}
-        steps={[
-          {
-            name: 'Step One',
-          },
-          {
-            name: 'Step Two',
-          },
-          {
-            name: 'Step Three',
-          },
-        ]}
-      />
-    );
-
-    const { getByText } = render(workflowDiagram);
-    const thirdStep = getByText('Step Three') as HTMLSpanElement;
-    expect(thirdStep.parentElement?.className).toContain('iui-current');
-  });
-
-  it('should only display summary of current step name in long workflow diagram', () => {
+  it('should display all step names in default workflow diagram', () => {
     const workflowDiagram = (
       <WorkflowDiagram
         currentStep={2}
-        type='long'
         steps={[
           {
-            name: 'Step One',
+            title: 'Step One',
           },
           {
-            name: 'Step Two',
+            title: 'Step Two',
           },
           {
-            name: 'Step Three',
-          },
-        ]}
-      />
-    );
-
-    const { getByText, queryByText } = render(workflowDiagram);
-
-    expect(getByText('Step 3 of 3:')).toHaveClass('iui-steps-count');
-    expect(getByText('Step Three')).toHaveClass(
-      'iui-workflow-diagram-steps-label',
-    );
-
-    getByText('1');
-    getByText('2');
-    getByText('3');
-
-    expect(queryByText('Step One')).toBeNull();
-    expect(queryByText('Step Two')).toBeNull();
-  });
-
-  it('should display localized string in long workflow diagram', () => {
-    const workflowDiagram = (
-      <WorkflowDiagram
-        currentStep={1}
-        type='long'
-        localization={{
-          stepsCountLabel: (currentStep, totalSteps) =>
-            `This is ${currentStep} of great ${totalSteps}:`,
-        }}
-        steps={[
-          {
-            name: 'Step One',
-          },
-          {
-            name: 'Step Two',
-          },
-          {
-            name: 'Step Three',
-          },
-        ]}
-      />
-    );
-
-    const { getByText } = render(workflowDiagram);
-
-    getByText('This is 2 of great 3:');
-    getByText('Step Two');
-  });
-
-  it('should display all step names but no numbers in workflow diagram', () => {
-    const workflowDiagram = (
-      <WorkflowDiagram
-        currentStep={2}
-        type='workflow'
-        steps={[
-          {
-            name: 'Step One',
-          },
-          {
-            name: 'Step Two',
-          },
-          {
-            name: 'Step Three',
+            title: 'Step Three',
           },
         ]}
       />
@@ -218,15 +49,15 @@ describe('<WorkflowDiagram />', () => {
         currentStep={1}
         steps={[
           {
-            name: 'Step One',
+            title: 'Step One',
             description: 'Step one tooltip',
           },
           {
-            name: 'Step Two',
+            title: 'Step Two',
             description: 'Step two tooltip',
           },
           {
-            name: 'Step Three',
+            title: 'Step Three',
           },
         ]}
       />

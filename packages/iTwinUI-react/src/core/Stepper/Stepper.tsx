@@ -2,27 +2,12 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import cx from 'classnames';
 import React from 'react';
-import { useTheme } from '../utils';
+import { Step, StepCustomProps, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/stepper.css';
-import { Step } from './Step';
 
 export type StepperLocalization = {
   stepsCountLabel: (currentStep: number, totalSteps: number) => string;
-};
-
-export type StepperType = 'default' | 'long' | 'workflow';
-
-export type StepProperties = {
-  /**
-   * The title/label of the step.
-   */
-  name: string;
-  /**
-   * A tooltip giving detailed description to this step.
-   */
-  description?: string;
 };
 
 export type StepperProps = {
@@ -33,12 +18,12 @@ export type StepperProps = {
   /**
    * An array of step objects.
    */
-  steps: StepProperties[];
+  steps: StepCustomProps[];
   /**
    *  The type of Stepper to display.
    *  @default 'default'
    */
-  type?: StepperType;
+  type?: 'default' | 'long';
   /**
    *  Option to provide localized strings.
    */
@@ -86,20 +71,13 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
     useTheme();
 
     return (
-      <div
-        className={cx('iui-stepper', {
-          'iui-long': type === 'long',
-          'iui-workflow': type === 'workflow',
-        })}
-        ref={ref}
-        {...rest}
-      >
+      <div className={'iui-stepper'} ref={ref} {...rest}>
         <ol>
           {steps.map((s, index) => (
             <Step
               key={index}
               index={index}
-              title={type === 'long' ? '' : s.name}
+              title={type === 'long' ? '' : s.title}
               currentStepNumber={boundedCurrentStep}
               totalSteps={steps.length}
               type={type}
@@ -116,7 +94,7 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
                 steps.length,
               )}
             </span>
-            {steps[boundedCurrentStep].name}
+            {steps[boundedCurrentStep].title}
           </div>
         )}
       </div>

@@ -4,9 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 import cx from 'classnames';
 import React from 'react';
-import { Tooltip } from '../Tooltip';
-import { StylingProps } from '../utils';
-import { StepperType } from './Stepper';
+import { Tooltip } from '../../Tooltip';
+import { StylingProps } from '../';
 
 export type StepProps = {
   /**
@@ -20,7 +19,7 @@ export type StepProps = {
   /**
    * the Stepper's current step number, 0-based.
    */
-  currentStepNumber: number;
+  currentStepNumber?: number;
   /**
    * number of total steps in the stepper.
    */
@@ -28,7 +27,7 @@ export type StepProps = {
   /**
    * Stepper type.
    */
-  type: StepperType;
+  type: 'default' | 'long' | 'workflow';
   /**
    *  Click handler on completed step.
    */
@@ -38,6 +37,8 @@ export type StepProps = {
    */
   description?: string;
 } & StylingProps;
+
+export type StepCustomProps = Pick<StepProps, 'title' | 'description'>;
 
 export const Step = (props: StepProps) => {
   const {
@@ -53,8 +54,10 @@ export const Step = (props: StepProps) => {
     ...rest
   } = props;
 
-  const isPast = type !== 'workflow' && currentStepNumber > index;
-  const isActive = type !== 'workflow' && currentStepNumber === index;
+  const isPast =
+    type !== 'workflow' && currentStepNumber && currentStepNumber > index;
+  const isActive =
+    type !== 'workflow' && currentStepNumber && currentStepNumber === index;
   const isClickable = type !== 'workflow' && isPast && !!onClick;
 
   const onCompletedClick = () => {
@@ -73,10 +76,11 @@ export const Step = (props: StepProps) => {
     }
   };
 
+  const initClassName = type === 'workflow' ? 'workflow-diagram' : 'stepper';
   const stepShape = (
     <li
       className={cx(
-        'iui-stepper-step',
+        `iui-${initClassName}-step`,
         {
           'iui-current': isActive,
           'iui-clickable': isClickable,
@@ -93,11 +97,13 @@ export const Step = (props: StepProps) => {
       tabIndex={isClickable ? 0 : undefined}
       {...rest}
     >
-      <div className='iui-stepper-track-content'>
-        <span className='iui-stepper-circle'>
-          {type === 'workflow' ? title : index + 1}
-        </span>
-      </div>
+      {type === 'workflow' ? (
+        <span className='iui-workflow-diagram-content'>{title}</span>
+      ) : (
+        <div className='iui-stepper-track-content'>
+          <span className='iui-stepper-circle'>{index + 1}</span>
+        </div>
+      )}
       {type === 'default' && (
         <span className='iui-stepper-step-name'>{title}</span>
       )}

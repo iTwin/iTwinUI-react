@@ -3,10 +3,5 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 export { WorkflowDiagram } from './WorkflowDiagram';
-export type {
-  WorkflowDiagramProps,
-  StepProperties,
-  WorkflowDiagramType,
-  WorkflowDiagramLocalization,
-} from './WorkflowDiagram';
+export type { WorkflowDiagramProps } from './WorkflowDiagram';
 export default './WorkflowDiagram';

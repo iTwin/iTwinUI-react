@@ -4,13 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 describe('WorkflowDiagram', () => {
   const storyPath = 'Core/WorkflowDiagram';
-  const tests = [
-    'Basic',
-    'Long',
-    'Localized Long',
-    'With Tooltips',
-    'Workflow Diagram',
-  ];
+  const tests = ['Basic', 'With Tooltips'];
 
   tests.forEach((testName) => {
     it(testName, function () {

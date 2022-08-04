@@ -189,6 +189,9 @@ export type { SliderProps } from './Slider';
 export { StatusMessage } from './StatusMessage';
 export type { StatusMessageProps } from './StatusMessage';
 
+export { Stepper } from './Stepper';
+export type { StepperProps, StepperLocalization } from './Stepper';
+
 export { Surface } from './Surface';
 export type { SurfaceProps } from './Surface';
 
@@ -281,21 +284,8 @@ export type { UserIconProps, StatusTitles, UserIconStatus } from './UserIcon';
 export { UserIconGroup } from './UserIconGroup';
 export type { UserIconGroupProps } from './UserIconGroup';
 
-export { Stepper } from './Stepper';
-export type {
-  StepperProps,
-  StepProperties,
-  StepperType,
-  StepperLocalization,
-} from './Stepper';
-
 export { WorkflowDiagram } from './WorkflowDiagram';
-export type {
-  WorkflowDiagramProps,
-  StepProperties,
-  WorkflowDiagramType,
-  WorkflowDiagramLocalization,
-} from './WorkflowDiagram';
+export type { WorkflowDiagramProps } from './WorkflowDiagram';
 
 export {
   getUserColor,
@@ -304,6 +294,3 @@ export {
   MiddleTextTruncation,
 } from './utils';
 export type { ThemeType, MiddleTextTruncationProps } from './utils';
-
-export { WorkflowDiagram } from './WorkflowDiagram';
-export type { WorkflowDiagramProps } from './WorkflowDiagram';

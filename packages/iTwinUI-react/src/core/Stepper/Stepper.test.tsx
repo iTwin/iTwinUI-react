@@ -18,13 +18,13 @@ describe('<Stepper />', () => {
         currentStep={0}
         steps={[
           {
-            name: 'Step One',
+            title: 'Step One',
           },
           {
-            name: 'Step Two',
+            title: 'Step Two',
           },
           {
-            name: 'Step Three',
+            title: 'Step Three',
           },
         ]}
       />
@@ -49,13 +49,13 @@ describe('<Stepper />', () => {
         onStepClick={mockedOnClick}
         steps={[
           {
-            name: 'Step One',
+            title: 'Step One',
           },
           {
-            name: 'Step Two',
+            title: 'Step Two',
           },
           {
-            name: 'Step Three',
+            title: 'Step Three',
           },
         ]}
       />
@@ -77,13 +77,13 @@ describe('<Stepper />', () => {
         currentStep={-2}
         steps={[
           {
-            name: 'Step One',
+            title: 'Step One',
           },
           {
-            name: 'Step Two',
+            title: 'Step Two',
           },
           {
-            name: 'Step Three',
+            title: 'Step Three',
           },
         ]}
       />
@@ -100,13 +100,13 @@ describe('<Stepper />', () => {
         currentStep={42}
         steps={[
           {
-            name: 'Step One',
+            title: 'Step One',
           },
           {
-            name: 'Step Two',
+            title: 'Step Two',
           },
           {
-            name: 'Step Three',
+            title: 'Step Three',
           },
         ]}
       />
@@ -124,13 +124,13 @@ describe('<Stepper />', () => {
         type='long'
         steps={[
           {
-            name: 'Step One',
+            title: 'Step One',
           },
           {
-            name: 'Step Two',
+            title: 'Step Two',
           },
           {
-            name: 'Step Three',
+            title: 'Step Three',
           },
         ]}
       />
@@ -160,13 +160,13 @@ describe('<Stepper />', () => {
         }}
         steps={[
           {
-            name: 'Step One',
+            title: 'Step One',
           },
           {
-            name: 'Step Two',
+            title: 'Step Two',
           },
           {
-            name: 'Step Three',
+            title: 'Step Three',
           },
         ]}
       />
@@ -178,36 +178,6 @@ describe('<Stepper />', () => {
     getByText('Step Two');
   });
 
-  it('should display all step names but no numbers in workflow diagram', () => {
-    const stepper = (
-      <Stepper
-        currentStep={2}
-        type='workflow'
-        steps={[
-          {
-            name: 'Step One',
-          },
-          {
-            name: 'Step Two',
-          },
-          {
-            name: 'Step Three',
-          },
-        ]}
-      />
-    );
-
-    const { getByText, queryByText } = render(stepper);
-
-    getByText('Step One');
-    getByText('Step Two');
-    getByText('Step Three');
-
-    expect(queryByText('1')).toBeNull();
-    expect(queryByText('2')).toBeNull();
-    expect(queryByText('3')).toBeNull();
-  });
-
   it('should display tooltip upon hovering step if description provided', async () => {
     jest.useFakeTimers();
 
@@ -216,15 +186,15 @@ describe('<Stepper />', () => {
         currentStep={1}
         steps={[
           {
-            name: 'Step One',
+            title: 'Step One',
             description: 'Step one tooltip',
           },
           {
-            name: 'Step Two',
+            title: 'Step Two',
             description: 'Step two tooltip',
           },
           {
-            name: 'Step Three',
+            title: 'Step Three',
           },
         ]}
       />
