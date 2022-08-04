@@ -2832,6 +2832,61 @@ it('should render dropdown menu with with default styling if no custom style pro
   expect(dropdownMenu).toHaveStyle('overflow: scroll');
 });
 
+// TODO: New test, rearrange
+it('should render dropdown menu with custom styling and override default styling if a custom style provided', async () => {
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'View',
+          Cell: () => <>View</>,
+        },
+        ActionColumn({
+          columnManager: true,
+          style: {
+            maxHeight: 'unset',
+            overflow: 'unset',
+            backgroundColor: 'red',
+          },
+        }),
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+  });
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  const columnManager = headerCells[headerCells.length - 1]
+    .firstElementChild as Element;
+
+  expect(
+    columnManager.className.includes('iui-button iui-borderless'),
+  ).toBeTruthy();
+
+  await userEvent.click(columnManager);
+
+  const dropdownMenu = document.querySelector('.iui-menu') as HTMLDivElement;
+  expect(dropdownMenu).toBeTruthy();
+  expect(dropdownMenu).toHaveStyle('max-height: unset');
+  expect(dropdownMenu).toHaveStyle('overflow: unset');
+  expect(dropdownMenu).toHaveStyle('background-color: red');
+});
+
 it('should hide column when deselected in column manager', async () => {
   const columns: Column<TestDataType>[] = [
     {
