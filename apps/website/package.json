@@ -14,19 +14,21 @@
     "react-dom": "^18.0.0"
   },
   "devDependencies": {
-    "@astrojs/react": "^0.4.0",
+    "@astrojs/react": "^0.4.2",
+    "@astrojs/mdx": "0.6.0",
     "@codesandbox/sandpack-themes": "^1.0.0",
     "@fontsource/noto-sans": "^4.5.10",
     "@itwin/itwinui-react": "*",
     "@jsdevtools/rehype-toc": "3.0.2",
     "@types/react": "^18.0.0",
-    "astro": "1.0.0-beta.73",
+    "astro": "1.0.0-rc.5",
     "postcss-preset-env": "^7.7.1",
     "prettier": "2.7.1",
     "prettier-plugin-astro": "^0.1.1",
     "react-docgen-typescript": "^2.2.2",
     "rehype-autolink-headings": "^6.1.1",
     "rehype-slug": "^5.0.1",
-    "sass": "^1.53.0"
+    "sass": "^1.53.0",
+    "snarkdown": "2.0.0"
   }
 }

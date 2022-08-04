@@ -8,6 +8,7 @@
     "isolatedModules": true,
     "types": ["vite/client"],
     "jsx": "preserve",
+    "jsxImportSource": "react",
     "baseUrl": ".",
     "paths": {
       "~/*": ["src/*"]

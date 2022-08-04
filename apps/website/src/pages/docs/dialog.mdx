@@ -2,12 +2,12 @@
 title: Dialog
 description: Dialogs inform users about a task and can contain critical information, require decisions, or involve multiple tasks.
 layout: ./_layout.astro
-setup: |
-  import PropsTable from '~/components/PropsTable.astro';
-  import LiveExample from '~/components/LiveExample.astro';
 propsPath: '@itwin/itwinui-react/esm/core/Modal/Modal.d.ts'
 exampleCodeFile1: Dialog.example.tsx
 ---
+
+import PropsTable from '~/components/PropsTable.astro';
+import LiveExample from '~/components/LiveExample.astro';
 
 <p>{frontmatter.description}</p>
 
@@ -78,7 +78,6 @@ Don't:
 - Present dialogs unless prompted by the user.
 - Use a login within a dialog windows. You can’t link to them and some password managers can’t pre-fill them because the dialogs are hidden.
 
-
 ### Alternative ways to display the information
 
 Here are other ways to display information if a dialog is deemed inadequate for the context, but an important message still needs to be passed onto the user.
@@ -88,12 +87,15 @@ Here are other ways to display information if a dialog is deemed inadequate for 
 Present your content inline to be less disruptive. You can read more about inline errors within the Text Field standard.
 
 #### Expanding elements
+
 Use expanding elements such as the expandable block, toolbars, tooltips, or a side bar such as the information panel.
 
 #### New page
+
 Lead the user to a different page to isolate the interaction without losing access to functionality such as navigation.
 
 #### Undo patterns
+
 Instead of using a confirmation dialog, consider using toast notifications to speed up the user’s interaction. Toast notifications are less intrusive and are preferred to a dialog for interactions such as undoing an action.
 
 ## Props

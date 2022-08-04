@@ -2,7 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { UserIconGroup, UserIcon, useTheme } from '@itwin/itwinui-react';
+import * as React from 'react';
+import { UserIconGroup, UserIcon } from '@itwin/itwinui-react';
 
 export default () => {
   return (

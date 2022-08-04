@@ -2,12 +2,12 @@
 title: Breadcrumbs
 description: Navigate a folder hierarchy quickly with a table and breadcrumbs.
 layout: ./_layout.astro
-setup: |
-  import PropsTable from '~/components/PropsTable.astro';
-  import LiveExample from '~/components/LiveExample.astro';
 propsPath: '@itwin/itwinui-react/esm/core/Breadcrumbs/Breadcrumbs.d.ts'
 exampleCodeFile1: Breadcrumbs.example.tsx
 ---
+
+import PropsTable from '~/components/PropsTable.astro';
+import LiveExample from '~/components/LiveExample.astro';
 
 <p>{frontmatter.description}</p>
 
@@ -36,11 +36,13 @@ The breadcrumbs locations can be double-clicked to reveal an editable field with
 ## Usage
 
 ### Folder navigation
+
 When located at the root of a folder, the table breadcrumbs should display like the example below. To drill into a folder, the user must click on a folder name.
 
 After drilling into the folder, the breadcrumb above the table updates. The user can continue to drill deeper into the folders by clicking on the folder names, or they can return to a parent folder by selecting it within the breadcrumb or using the folder select menu.
 
 ### Web navigation
+
 When used for the web, breadcrumbs work similarly, however the folder button at its front is omitted. It is unnecessary outside of the folder navigation pattern.
 
 ## Breadcrumb anatomy
@@ -52,6 +54,7 @@ When used for the web, breadcrumbs work similarly, however the folder button at 
 5. Folder path will appear in a selectable field when clicking on the current folder label in the breadcrumb.
 
 ## Breadcrumb truncation
+
 ### No need to truncate
 
 Show as many previously accessed folders as possible so that users can quickly go back to an upper level. If all can be shown, show them all.

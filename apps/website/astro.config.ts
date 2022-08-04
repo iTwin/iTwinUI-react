@@ -4,14 +4,35 @@
  *--------------------------------------------------------------------------------------------*/
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
-import { findHeadings } from '@jsdevtools/rehype-toc/lib/fiind-headings';
-import { createTOC } from '@jsdevtools/rehype-toc/lib/create-toc';
+import { findHeadings } from '@jsdevtools/rehype-toc/lib/fiind-headings.js';
+import { createTOC } from '@jsdevtools/rehype-toc/lib/create-toc.js';
+import rehypeSlug from 'rehype-slug';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import mdx from '@astrojs/mdx';
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [react()],
-  markdown: {
-    rehypePlugins: ['rehype-slug', ['rehype-autolink-headings', { behavior: 'wrap' }], rehypeToc],
+  integrations: [
+    react(),
+    mdx({
+      rehypePlugins: {
+        extends: [rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }], rehypeToc],
+      },
+    }),
+  ],
+  // markdown: {
+  //   rehypePlugins: ['rehype-slug', ['rehype-autolink-headings', { behavior: 'wrap' }], rehypeToc],
+  // },
+  vite: {
+    legacy: {
+      buildSsrCjsExternalHeuristics: true,
+    },
+    ssr: {
+      noExternal: ['@fontsource/noto-sans'],
+    },
+  },
+  legacy: {
+    // astroFlavoredMarkdown: true,
   },
 });
 
@@ -55,9 +76,9 @@ function rehypeToc() {
         {
           type: 'element',
           tagName: 'main',
-          children: tree.children,
+          children: tree?.children,
         },
-      ] as any[],
+      ],
     };
   };
 }

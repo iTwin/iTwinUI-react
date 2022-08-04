@@ -1,7 +1,7 @@
 ---
 // This file should contain all the global styles and markup shared between layouts.
 
-import HeadSEO from '../components/HeadSEO.astro';
+// import HeadSEO from '../components/HeadSEO.astro';
 import * as CONFIG from '../config';
 import '@fontsource/noto-sans';
 import '@fontsource/noto-sans/600.css';
@@ -34,7 +34,7 @@ const { content = {} } = Astro.props;
       }
     </script>
 
-    <HeadSEO content={content} canonicalURL={Astro.canonicalURL} />
+    <!-- <HeadSEO content={content} /> -->
     <title>
       {content.title ? `${content.title} | ${CONFIG.SITE.title}` : CONFIG.SITE.title}
     </title>

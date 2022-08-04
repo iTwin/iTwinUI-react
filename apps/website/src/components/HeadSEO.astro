@@ -2,9 +2,8 @@
 import { SITE, OPEN_GRAPH } from '../config';
 export interface Props {
   content: any;
-  canonicalURL: URL | string;
 }
-const { content = {}, canonicalURL } = Astro.props;
+const { content = {} } = Astro.props;
 const formattedContentTitle = content.title ? `${content.title} | ${SITE.title}` : SITE.title;
 const imageSrc = content?.image?.src ?? OPEN_GRAPH.image.src;
 const canonicalImageSrc = new URL(imageSrc, Astro.site);
@@ -12,12 +11,12 @@ const imageAlt = content?.image?.alt ?? OPEN_GRAPH.image.alt;
 ---
 
 <!-- Page Metadata -->
-<link rel='canonical' href={canonicalURL} />
+<link rel='canonical' href={Astro.url} />
 
 <!-- OpenGraph Tags -->
 <meta property='og:title' content={formattedContentTitle} />
 <meta property='og:type' content='article' />
-<meta property='og:url' content={canonicalURL} />
+<meta property='og:url' content={Astro.url} />
 <meta property='og:locale' content={content.ogLocale ?? SITE.defaultLanguage} />
 <meta property='og:image' content={canonicalImageSrc} />
 <meta property='og:image:alt' content={imageAlt} />

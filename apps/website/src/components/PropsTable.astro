@@ -1,7 +1,7 @@
 ---
 import { createRequire } from 'module';
 import { parse } from 'react-docgen-typescript';
-import { Markdown } from 'astro/components';
+import snarkdown from 'snarkdown';
 
 export interface Props {
   path: string;
@@ -27,9 +27,7 @@ const props = docs.props;
         <tr>
           <td class='mono'>{value.name}</td>
           <td>
-            <div class='md'>
-              <Markdown>{value.description}</Markdown>
-            </div>
+            <div class='md' set:html={snarkdown(value.description)} />
             <div class='types'>{value.type.name}</div>
           </td>
           <td class='mono'>{value.defaultValue?.value ?? ''}</td>
