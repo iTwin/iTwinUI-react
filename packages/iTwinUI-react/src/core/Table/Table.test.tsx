@@ -276,6 +276,13 @@ it('should render table with custom className', () => {
   expect(table).toBeTruthy();
 });
 
+it('should render actionColumn with custom className', () => {
+  const { container } = renderComponent({ className: 'test-className' });
+
+  const table = container.querySelector('.iui-table.test-className');
+  expect(table).toBeTruthy();
+});
+
 it('should render table with custom style', () => {
   const { container } = renderComponent({ style: { color: 'red' } });
 
@@ -2725,6 +2732,57 @@ it('should render action column with column manager', () => {
   expect(actionColumn[1].textContent).toBe('View');
   expect(actionColumn[2].textContent).toBe('View');
   expect(actionColumn[3].textContent).toBe('View');
+});
+
+// TODO: New test, rearrange
+it('should render dropdown menu with specified class and style in action column with column manager', async () => {
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'View',
+          Cell: () => <>View</>,
+        },
+        ActionColumn({
+          columnManager: true,
+          className: 'testing-classname',
+          style: { backgroundColor: 'red' },
+        }),
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+  });
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  const columnManager = headerCells[headerCells.length - 1]
+    .firstElementChild as Element;
+
+  expect(
+    columnManager.className.includes('iui-button iui-borderless'),
+  ).toBeTruthy();
+
+  await userEvent.click(columnManager);
+
+  const dropdownMenu = document.querySelector('.iui-menu') as HTMLDivElement;
+  expect(dropdownMenu).toBeTruthy();
+  expect(dropdownMenu.classList.contains('testing-classname')).toBeTruthy();
+  expect(dropdownMenu).toHaveStyle('background-color: red');
 });
 
 it('should hide column when deselected in column manager', async () => {
