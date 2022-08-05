@@ -104,21 +104,24 @@ export const ActionColumn = <T extends Record<string, unknown>>({
               </MenuItem>
             );
           });
+      console.log(columnManager, typeof columnManager);
       return (
         <DropdownMenu
           menuItems={headerCheckBoxes}
           onHide={() => setIsOpen(false)}
           onShow={() => setIsOpen(true)}
-          style={{ maxHeight: '315px' }}
-          {...(typeof columnManager !== 'boolean'
-            ? {
-                ...columnManager.dropdownMenuProps,
-                className: cx(
-                  'iui-scroll',
-                  columnManager.dropdownMenuProps.className,
-                ),
-              }
-            : {})}
+          style={{
+            maxHeight: '315px',
+            ...(typeof columnManager !== 'boolean'
+              ? columnManager.dropdownMenuProps.style
+              : {}),
+          }}
+          className={cx(
+            'iui-scroll',
+            typeof columnManager !== 'boolean'
+              ? columnManager.dropdownMenuProps.className
+              : '',
+          )}
         >
           <IconButton styleType='borderless' isActive={isOpen}>
             <SvgColumnManager />
