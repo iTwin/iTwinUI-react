@@ -47,8 +47,6 @@ export const ActionColumn = <T extends Record<string, unknown>>({
     | boolean
     | { dropdownMenuProps: ActionColumnDropdownMenuProps };
 } = {}) => {
-  console.log(12345, columnManager, typeof columnManager);
-
   return {
     id: ACTION_CELL_ID,
     disableResizing: true,
@@ -111,8 +109,6 @@ export const ActionColumn = <T extends Record<string, unknown>>({
           menuItems={headerCheckBoxes}
           onHide={() => setIsOpen(false)}
           onShow={() => setIsOpen(true)}
-          // className={cx('iui-scroll', className)}
-          // className={columnManager.dropdownMenuProps.className}
           {...(typeof columnManager !== 'boolean'
             ? {
                 ...columnManager.dropdownMenuProps,
