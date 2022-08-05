@@ -16,9 +16,9 @@ import cx from 'classnames';
 
 const ACTION_CELL_ID = 'iui-table-action';
 
-export type ActionColumnDropdownMenuProps = Omit<
+type ActionColumnDropdownMenuProps = Omit<
   DropdownMenuProps,
-  'menuItems' | 'onHide' | 'onShow'
+  'menuItems' | 'onHide' | 'onShow' | 'children'
 >;
 
 /**
