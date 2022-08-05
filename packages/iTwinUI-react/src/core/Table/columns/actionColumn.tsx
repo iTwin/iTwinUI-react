@@ -109,6 +109,9 @@ export const ActionColumn = <T extends Record<string, unknown>>({
           menuItems={headerCheckBoxes}
           onHide={() => setIsOpen(false)}
           onShow={() => setIsOpen(true)}
+          {...(typeof columnManager !== 'boolean'
+            ? columnManager.dropdownMenuProps
+            : {})}
           style={{
             maxHeight: '315px',
             ...(typeof columnManager !== 'boolean'

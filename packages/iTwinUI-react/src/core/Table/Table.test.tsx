@@ -2883,6 +2883,66 @@ it('should render dropdown menu with custom styling and override default styling
   expect(dropdownMenu).toHaveStyle('background-color: red');
 });
 
+it('should have all props other than className and style be also passed from ActionColumn to DropdownMenu', async () => {
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'View',
+          Cell: () => <>View</>,
+        },
+        ActionColumn({
+          columnManager: {
+            dropdownMenuProps: {
+              className: 'testing-classname',
+              style: {
+                maxHeight: '500px',
+                backgroundColor: 'purple',
+              },
+              role: 'listbox', // Sample property other than className and style
+            },
+          },
+        }),
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+  });
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  const columnManager = headerCells[headerCells.length - 1]
+    .firstElementChild as Element;
+
+  expect(
+    columnManager.className.includes('iui-button iui-borderless'),
+  ).toBeTruthy();
+
+  await userEvent.click(columnManager);
+
+  const dropdownMenu = document.querySelector('.iui-menu') as HTMLDivElement;
+  expect(dropdownMenu).toBeTruthy();
+  expect(dropdownMenu.classList.contains('iui-scroll')).toBeTruthy();
+  expect(dropdownMenu.classList.contains('testing-classname')).toBeTruthy();
+  expect(dropdownMenu).toHaveStyle('max-height: 500px');
+  expect(dropdownMenu).toHaveStyle('background-color: purple');
+  expect(dropdownMenu).toHaveAttribute('role', 'listbox');
+});
+
 it('should hide column when deselected in column manager', async () => {
   const columns: Column<TestDataType>[] = [
     {
