@@ -2979,8 +2979,11 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
             accessor: 'location',
           },
           ActionColumn({
-            columnManager: true,
-            className: '', // to customize appearance of DropdownMenu
+            columnManager: {
+              dropdownMenuProps: {
+                className: 'testing-classname',
+              },
+            },
           }),
         ],
       },

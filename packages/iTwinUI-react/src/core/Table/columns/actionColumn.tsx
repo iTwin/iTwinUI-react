@@ -6,7 +6,7 @@ import React from 'react';
 import { HeaderProps } from 'react-table';
 import { Checkbox } from '../../Checkbox';
 import SvgColumnManager from '@itwin/itwinui-icons-react/cjs/icons/ColumnManager';
-import { DropdownMenu } from '../../DropdownMenu';
+import { DropdownMenu, DropdownMenuProps } from '../../DropdownMenu';
 import { IconButton } from '../../Buttons/IconButton';
 import { MenuItem } from '../../Menu';
 import { tableResizeStartAction } from '../Table';
@@ -15,6 +15,11 @@ import { EXPANDER_CELL_ID } from './expanderColumn';
 import cx from 'classnames';
 
 const ACTION_CELL_ID = 'iui-table-action';
+
+export type ActionColumnDropdownMenuProps = Omit<
+  DropdownMenuProps,
+  'menuItems' | 'onHide' | 'onShow'
+>;
 
 /**
  * Action column that adds column manager to the Table header.
@@ -37,9 +42,13 @@ const ACTION_CELL_ID = 'iui-table-action';
  */
 export const ActionColumn = <T extends Record<string, unknown>>({
   columnManager = false,
-  className = '',
-  style = {},
+}: {
+  columnManager?:
+    | boolean
+    | { dropdownMenuProps: ActionColumnDropdownMenuProps };
 } = {}) => {
+  console.log(12345, columnManager, typeof columnManager);
+
   return {
     id: ACTION_CELL_ID,
     disableResizing: true,
@@ -102,8 +111,17 @@ export const ActionColumn = <T extends Record<string, unknown>>({
           menuItems={headerCheckBoxes}
           onHide={() => setIsOpen(false)}
           onShow={() => setIsOpen(true)}
-          className={cx('iui-scroll', className)}
-          style={{ maxHeight: '300px', ...style }} // Default style (max height) that can be overridden/unset
+          // className={cx('iui-scroll', className)}
+          // className={columnManager.dropdownMenuProps.className}
+          {...(typeof columnManager !== 'boolean'
+            ? {
+                ...columnManager.dropdownMenuProps,
+                className: cx(
+                  'iui-scroll',
+                  columnManager.dropdownMenuProps.className,
+                ),
+              }
+            : {})}
         >
           <IconButton styleType='borderless' isActive={isOpen}>
             <SvgColumnManager />
