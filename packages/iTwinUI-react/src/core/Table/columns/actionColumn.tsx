@@ -104,7 +104,6 @@ export const ActionColumn = <T extends Record<string, unknown>>({
               </MenuItem>
             );
           });
-      console.log(columnManager, typeof columnManager);
       return (
         <DropdownMenu
           menuItems={headerCheckBoxes}
