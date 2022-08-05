@@ -2748,9 +2748,12 @@ it('should render dropdown menu with specified class and style in action column 
           Cell: () => <>View</>,
         },
         ActionColumn({
-          columnManager: true,
-          className: 'testing-classname',
-          style: { backgroundColor: 'red' },
+          columnManager: {
+            dropdownMenuProps: {
+              className: 'testing-classname',
+              style: { backgroundColor: 'red' },
+            },
+          },
         }),
       ],
     },
@@ -2773,7 +2776,9 @@ it('should render dropdown menu with specified class and style in action column 
 
   const dropdownMenu = document.querySelector('.iui-menu') as HTMLDivElement;
   expect(dropdownMenu).toBeTruthy();
+  expect(dropdownMenu.classList.contains('iui-scroll')).toBeTruthy();
   expect(dropdownMenu.classList.contains('testing-classname')).toBeTruthy();
+  expect(dropdownMenu).toHaveStyle('maxHeight: 315px'); // TODO: Confirm if we need these temporariliy hardcoded values in the tests
   expect(dropdownMenu).toHaveStyle('background-color: red');
 });
 
@@ -2819,8 +2824,8 @@ it('should render dropdown menu with default styling if no custom style is provi
 
   const dropdownMenu = document.querySelector('.iui-menu') as HTMLDivElement;
   expect(dropdownMenu).toBeTruthy();
-  expect(dropdownMenu).toHaveStyle('max-height: 300px');
-  expect(dropdownMenu).toHaveStyle('overflow: scroll');
+  expect(dropdownMenu.classList.contains('iui-scroll')).toBeTruthy();
+  expect(dropdownMenu).toHaveStyle('max-height: 315px');
 });
 
 it('should render dropdown menu with custom styling and override default styling if a custom style is provided', async () => {
@@ -2844,11 +2849,13 @@ it('should render dropdown menu with custom styling and override default styling
           Cell: () => <>View</>,
         },
         ActionColumn({
-          columnManager: true,
-          style: {
-            maxHeight: 'unset',
-            overflow: 'unset',
-            backgroundColor: 'red',
+          columnManager: {
+            dropdownMenuProps: {
+              style: {
+                maxHeight: 'unset',
+                backgroundColor: 'red',
+              },
+            },
           },
         }),
       ],
@@ -2873,7 +2880,6 @@ it('should render dropdown menu with custom styling and override default styling
   const dropdownMenu = document.querySelector('.iui-menu') as HTMLDivElement;
   expect(dropdownMenu).toBeTruthy();
   expect(dropdownMenu).toHaveStyle('max-height: unset');
-  expect(dropdownMenu).toHaveStyle('overflow: unset');
   expect(dropdownMenu).toHaveStyle('background-color: red');
 });
 
