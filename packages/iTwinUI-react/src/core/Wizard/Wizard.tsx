@@ -2,10 +2,10 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import cx from 'classnames';
 import React from 'react';
 import { useTheme } from '../utils';
 import '@itwin/itwinui-css/css/stepper.css';
+import '@itwin/itwinui-css/css/workflow-diagram.css';
 import { Step } from './Step';
 
 export type WizardLocalization = {
@@ -85,32 +85,29 @@ export const Wizard = React.forwardRef<HTMLDivElement, WizardProps>(
 
     useTheme();
 
-    return (
-      <div
-        className={cx('iui-wizard', {
-          'iui-long': type === 'long',
-          'iui-workflow': type === 'workflow',
-        })}
-        ref={ref}
-        {...rest}
-      >
-        <ol>
-          {steps.map((s, index) => (
-            <Step
-              key={index}
-              index={index}
-              title={type === 'long' ? '' : s.name}
-              currentStepNumber={boundedCurrentStep}
-              totalSteps={steps.length}
-              type={type}
-              onClick={onStepClick}
-              description={s.description}
-            />
-          ))}
-        </ol>
+    const allSteps = (
+      <ol className={type === 'workflow' ? 'iui-workflow-diagram' : undefined}>
+        {steps.map((s, index) => (
+          <Step
+            key={index}
+            index={index}
+            title={type === 'long' ? '' : s.name}
+            currentStepNumber={boundedCurrentStep}
+            totalSteps={steps.length}
+            type={type}
+            onClick={onStepClick}
+            description={s.description}
+          />
+        ))}
+      </ol>
+    );
+
+    return type !== 'workflow' ? (
+      <div className='iui-stepper' ref={ref} {...rest}>
+        {allSteps}
         {type === 'long' && (
-          <div className='iui-wizard-steps-label'>
-            <span className='iui-steps-count'>
+          <div className='iui-stepper-steps-label'>
+            <span className='iui-stepper-steps-label-count'>
               {localization.stepsCountLabel(
                 boundedCurrentStep + 1,
                 steps.length,
@@ -120,6 +117,8 @@ export const Wizard = React.forwardRef<HTMLDivElement, WizardProps>(
           </div>
         )}
       </div>
+    ) : (
+      allSteps
     );
   },
 );

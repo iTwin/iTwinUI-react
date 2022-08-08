@@ -72,11 +72,12 @@ export const Step = (props: StepProps) => {
       onCompletedClick();
     }
   };
+  const classNamePrefix = type === 'workflow' ? 'workflow-diagram' : 'stepper';
 
   const stepShape = (
     <li
       className={cx(
-        'iui-wizard-step',
+        `iui-${classNamePrefix}-step`,
         {
           'iui-current': isActive,
           'iui-clickable': isClickable,
@@ -93,13 +94,16 @@ export const Step = (props: StepProps) => {
       tabIndex={isClickable ? 0 : undefined}
       {...rest}
     >
-      <div className='iui-wizard-track-content'>
-        <span className='iui-wizard-circle'>
-          {type === 'workflow' ? title : index + 1}
-        </span>
-      </div>
+      {type === 'workflow' ? (
+        <span className='iui-workflow-diagram-content'>{title}</span>
+      ) : (
+        <div className='iui-stepper-track-content'>
+          <span className='iui-stepper-circle'>{index + 1}</span>
+        </div>
+      )}
+
       {type === 'default' && (
-        <span className='iui-wizard-step-name'>{title}</span>
+        <div className='iui-stepper-step-name'>{title}</div>
       )}
     </li>
   );
