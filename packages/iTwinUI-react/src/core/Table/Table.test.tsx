@@ -2749,10 +2749,8 @@ it('should render dropdown menu with specified class and style in action column 
         },
         ActionColumn({
           columnManager: {
-            dropdownMenuProps: {
-              className: 'testing-classname',
-              style: { backgroundColor: 'red' },
-            },
+            className: 'testing-classname',
+            style: { backgroundColor: 'red' },
           },
         }),
       ],
@@ -2850,11 +2848,9 @@ it('should render dropdown menu with custom styling and override default styling
         },
         ActionColumn({
           columnManager: {
-            dropdownMenuProps: {
-              style: {
-                maxHeight: 'unset',
-                backgroundColor: 'red',
-              },
+            style: {
+              maxHeight: 'unset',
+              backgroundColor: 'red',
             },
           },
         }),
@@ -2905,14 +2901,12 @@ it('should have all props other than className and style be also passed from Act
         },
         ActionColumn({
           columnManager: {
-            dropdownMenuProps: {
-              className: 'testing-classname',
-              style: {
-                maxHeight: '500px',
-                backgroundColor: 'purple',
-              },
-              role: 'listbox', // Sample property other than className and style
+            className: 'testing-classname',
+            style: {
+              maxHeight: '500px',
+              backgroundColor: 'purple',
             },
+            role: 'listbox', // Sample property other than className and style
           },
         }),
       ],

@@ -16,10 +16,11 @@ import cx from 'classnames';
 
 const ACTION_CELL_ID = 'iui-table-action';
 
-type ActionColumnDropdownMenuProps = Omit<
-  DropdownMenuProps,
-  'menuItems' | 'onHide' | 'onShow' | 'children'
->;
+type ActionColumnProps = {
+  columnManager:
+    | boolean
+    | Omit<DropdownMenuProps, 'menuItems' | 'onHide' | 'onShow' | 'children'>;
+};
 
 /**
  * Action column that adds column manager to the Table header.
@@ -40,13 +41,9 @@ type ActionColumnDropdownMenuProps = Omit<
  *   ),
  * },
  */
-export const ActionColumn = <T extends Record<string, unknown>>({
-  columnManager = false,
-}: {
-  columnManager?:
-    | boolean
-    | { dropdownMenuProps: ActionColumnDropdownMenuProps };
-} = {}) => {
+export const ActionColumn = <T extends Record<string, unknown>>(
+  actionColumnProps: ActionColumnProps = { columnManager: false },
+) => {
   return {
     id: ACTION_CELL_ID,
     disableResizing: true,
@@ -59,7 +56,7 @@ export const ActionColumn = <T extends Record<string, unknown>>({
     disableReordering: true,
     Header: ({ allColumns, dispatch, state }: HeaderProps<T>) => {
       const [isOpen, setIsOpen] = React.useState(false);
-      if (!columnManager) {
+      if (!actionColumnProps.columnManager) {
         return null;
       }
       const defaultColumnIds = [
@@ -106,8 +103,8 @@ export const ActionColumn = <T extends Record<string, unknown>>({
           });
 
       const dropdownMenuProps =
-        typeof columnManager !== 'boolean'
-          ? columnManager.dropdownMenuProps
+        typeof actionColumnProps.columnManager !== 'boolean'
+          ? actionColumnProps.columnManager
           : {};
 
       return (
