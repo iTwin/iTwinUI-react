@@ -2778,7 +2778,7 @@ it('should render dropdown menu with specified class and style in action column 
   expect(dropdownMenu).toBeTruthy();
   expect(dropdownMenu.classList.contains('iui-scroll')).toBeTruthy();
   expect(dropdownMenu.classList.contains('testing-classname')).toBeTruthy();
-  expect(dropdownMenu).toHaveStyle('maxHeight: 315px'); // TODO: Confirm if we need these temporariliy hardcoded values in the tests
+  expect(dropdownMenu).toHaveStyle('maxHeight: 315px');
   expect(dropdownMenu).toHaveStyle('background-color: red');
 });
 
