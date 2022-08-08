@@ -546,16 +546,14 @@ const MultipleSelectButton = <T,>({
       {selectedItems && !selectedItemsRenderer && (
         <span className='iui-content'>
           <div className='iui-select-tag-container' ref={containerRef}>
-            {visibleCount < selectedItemsElements.length ? (
-              <>
-                {selectedItemsElements.slice(0, visibleCount)}
+            <>
+              {selectedItemsElements.slice(0, visibleCount)}
+              {visibleCount < selectedItemsElements.length && (
                 <SelectTag>
                   +{selectedItemsElements.length - visibleCount} item(s)
                 </SelectTag>
-              </>
-            ) : (
-              selectedItemsElements
-            )}
+              )}
+            </>
           </div>
         </span>
       )}
