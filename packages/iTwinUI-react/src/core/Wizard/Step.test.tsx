@@ -200,7 +200,7 @@ describe.each(['long', 'workflow'] as const)('Wizard step (%s)', (type) => {
     ).toBeFalsy();
     // Circle
     const circle = container.querySelector(
-      `.iui-${classNamePrefix}-${type === 'long' ? 'circle' : 'content'}`,
+      `.iui-${classNamePrefix}-${type === 'long' ? 'circle' : 'content'}`, // iui-stepper-circle or iui-workflow-diagram-content
     ) as HTMLElement;
     expect(circle).toBeTruthy();
     expect(circle.textContent).toBe(type === 'long' ? '2' : 'Second step');
