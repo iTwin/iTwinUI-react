@@ -24,7 +24,7 @@ export type SelectTagProps = {
   /**
    * Text inside the tag.
    */
-  children: React.ReactNode;
+  label: string;
 } & CommonProps;
 
 /**
@@ -34,7 +34,7 @@ export type SelectTagProps = {
 export const SelectTag = (props: SelectTagProps) => {
   const {
     className,
-    children,
+    label,
     isRemovable,
     onCloseClick,
     onCloseKeyDown,
@@ -46,14 +46,15 @@ export const SelectTag = (props: SelectTagProps) => {
     <span
       className={cx('iui-select-tag', className)}
       onClick={(e) => e.stopPropagation()}
+      role='menuitem'
       {...rest}
     >
-      <span className='iui-select-tag-label'>{children}</span>
+      <span className='iui-select-tag-label'>{label}</span>
       {isRemovable && (
         <button
           onClick={onCloseClick}
           onKeyDown={onCloseKeyDown}
-          aria-label='Delete tag'
+          aria-label={`Remove ${label}`}
           className='iui-select-tag-button'
           tabIndex={-1}
         >

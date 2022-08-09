@@ -5,7 +5,7 @@
 import React from 'react';
 import cx from 'classnames';
 import { DropdownMenu } from '../DropdownMenu';
-import { MenuItem } from '../Menu/MenuItem';
+import { MenuItem, MenuItemProps } from '../Menu/MenuItem';
 import {
   PopoverProps,
   PopoverInstance,
@@ -340,8 +340,10 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
           <MenuItem>{option.label}</MenuItem>
         );
 
-        return React.cloneElement(menuItem, {
-          key: `${option.label}-${index}`,
+        const { label, ...restOption } = option;
+
+        return React.cloneElement<MenuItemProps>(menuItem, {
+          key: `${label}-${index}`,
           isSelected,
           onClick: () => {
             if (option.disabled) {
@@ -360,7 +362,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
             }
           },
           role: 'option',
-          ...option,
+          ...restOption,
           ...menuItem.props,
         });
       });
@@ -402,9 +404,8 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
           onCloseClick={() => {
             onChange?.(item.value, 'removed');
           }}
-        >
-          {item.label}
-        </SelectTag>
+          label={item.label}
+        />
       );
     },
     [onChange],
@@ -439,6 +440,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
             setIsOpen(false);
           }
         }}
+        aria-multiselectable={multiple}
       >
         <div
           ref={selectRef}
@@ -451,6 +453,7 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
           onClick={() => !disabled && toggle()}
           onKeyDown={(e) => !disabled && onKeyDown(e, toggle)}
           tabIndex={!disabled ? 0 : undefined}
+          role={multiple ? 'menubar' : undefined}
         >
           {(!selectedItems || selectedItems.length === 0) && (
             <span className='iui-content'>{placeholder}</span>
@@ -549,9 +552,11 @@ const MultipleSelectButton = <T,>({
             <>
               {selectedItemsElements.slice(0, visibleCount)}
               {visibleCount < selectedItemsElements.length && (
-                <SelectTag>
-                  +{selectedItemsElements.length - visibleCount} item(s)
-                </SelectTag>
+                <SelectTag
+                  label={`+${
+                    selectedItemsElements.length - visibleCount
+                  } item(s)`}
+                />
               )}
             </>
           </div>
