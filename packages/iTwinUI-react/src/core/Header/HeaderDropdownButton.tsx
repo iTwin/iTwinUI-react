@@ -17,10 +17,6 @@ type HeaderDropdownButtonComponent = PolymorphicForwardRefComponent<
   HeaderDropdownButtonProps
 >;
 
-/**
- * Dropdown button component for Header
- *
- */
 export const HeaderDropdownButton: HeaderDropdownButtonComponent = React.forwardRef(
   (props, ref) => {
     const { menuItems, className, size, children, startIcon, ...rest } = props;

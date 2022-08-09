@@ -18,10 +18,6 @@ type HeaderSplitButtonComponent = PolymorphicForwardRefComponent<
   HeaderSplitButtonProps
 >;
 
-/**
- * Split button component for Header
- *
- */
 export const HeaderSplitButton: HeaderSplitButtonComponent = React.forwardRef(
   (props, forwardedRef) => {
     const {

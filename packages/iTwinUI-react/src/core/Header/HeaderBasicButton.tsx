@@ -14,10 +14,6 @@ type HeaderBasicButtonComponent = PolymorphicForwardRefComponent<
   HeaderBasicButtonProps
 >;
 
-/**
- * Basic button component for Header
- *
- */
 export const HeaderBasicButton: HeaderBasicButtonComponent = React.forwardRef(
   (props, ref) => {
     const {
