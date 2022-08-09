@@ -40,7 +40,7 @@ type ActionColumnProps = {
  * },
  */
 export const ActionColumn = <T extends Record<string, unknown>>(
-  actionColumnProps: ActionColumnProps = { columnManager: false },
+  actionColumnProps: ActionColumnProps = { columnManager: false }, // TODO: Confirm if this is correct
 ) => {
   return {
     id: ACTION_CELL_ID,
@@ -114,22 +114,14 @@ export const ActionColumn = <T extends Record<string, unknown>>(
           ? actionColumnProps.columnManager
           : {};
 
-      // const dropdownMenuProps = {
-      //   onHide: () => null,
-      //   style: {},
-      //   className: '',
-      // };
-
       return (
         <DropdownMenu
           {...dropdownMenuProps}
           menuItems={headerCheckBoxes}
-          // onHide={() => setIsOpen(false)}
           onHide={(i) => {
             setIsOpen(false);
             dropdownMenuProps.onHide?.(i);
           }}
-          // onShow={() => setIsOpen(true)}
           onShow={(i) => {
             setIsOpen(true);
             dropdownMenuProps.onShow?.(i);
