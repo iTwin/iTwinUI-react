@@ -7,9 +7,10 @@ import '@fontsource/noto-sans';
 import '@fontsource/noto-sans/600.css';
 
 const { content = {} } = Astro.props;
+const { pathname } = new URL(Astro.request.url);
 ---
 
-<html dir={content.dir ?? 'ltr'} lang={content.lang ?? 'en-us'} class='initial'>
+<html dir={content.dir ?? 'ltr'} lang={content.lang ?? 'en-us'}>
   <head>
     <meta charset='utf-8' />
     <meta name='viewport' content='width=device-width' />
@@ -47,17 +48,11 @@ const { content = {} } = Astro.props;
         line-height: calc(1em + 0.5rem);
       }
 
-      a {
+      :where(a) {
         color: var(--color-highlight-2);
       }
 
-      p,
-      h1,
-      h2,
-      h3,
-      h4,
-      h5,
-      h6 {
+      :where(p, h1, h2, h3, h4, h5, h6) {
         font-weight: normal;
         padding: 0;
         max-width: 75ch;
