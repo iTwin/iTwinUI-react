@@ -7,10 +7,10 @@ import React from 'react';
 import { DropdownMenu } from '../DropdownMenu';
 import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
 import SvgCaretUpSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretUpSmall';
-
 import { PolymorphicForwardRefComponent, useTheme } from '../utils';
 import { DropdownButtonProps } from '../Buttons';
 import { useMergedRefs } from '../utils';
+
 export type HeaderDropdownButtonProps = DropdownButtonProps;
 type HeaderDropdownButtonComponent = PolymorphicForwardRefComponent<
   'button',
