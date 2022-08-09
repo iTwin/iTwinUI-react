@@ -17,9 +17,7 @@ import cx from 'classnames';
 const ACTION_CELL_ID = 'iui-table-action';
 
 type ActionColumnProps = {
-  columnManager:
-    | boolean
-    | Omit<DropdownMenuProps, 'menuItems' | 'onHide' | 'onShow' | 'children'>;
+  columnManager: boolean | Omit<DropdownMenuProps, 'menuItems' | 'children'>;
 };
 
 /**
@@ -107,12 +105,26 @@ export const ActionColumn = <T extends Record<string, unknown>>(
           ? actionColumnProps.columnManager
           : {};
 
+      // const dropdownMenuProps = {
+      //   onHide: () => null,
+      //   style: {},
+      //   className: '',
+      // };
+
       return (
         <DropdownMenu
-          menuItems={headerCheckBoxes}
-          onHide={() => setIsOpen(false)}
-          onShow={() => setIsOpen(true)}
           {...dropdownMenuProps}
+          menuItems={headerCheckBoxes}
+          // onHide={() => setIsOpen(false)}
+          onHide={(i) => {
+            setIsOpen(false);
+            dropdownMenuProps.onHide?.(i);
+          }}
+          // onShow={() => setIsOpen(true)}
+          onShow={(i) => {
+            setIsOpen(true);
+            dropdownMenuProps.onShow?.(i);
+          }}
           style={{
             maxHeight: '315px',
             ...dropdownMenuProps.style,
