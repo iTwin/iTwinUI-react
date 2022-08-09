@@ -529,7 +529,7 @@ it('should call onChange if tag is removed', async () => {
     value: [2],
   });
 
-  const closeButton = screen.getByLabelText('Delete tag');
+  const closeButton = screen.getByLabelText('Remove Test2');
   await userEvent.click(closeButton);
   expect(onChange).toHaveBeenCalledWith(2, 'removed');
 });
