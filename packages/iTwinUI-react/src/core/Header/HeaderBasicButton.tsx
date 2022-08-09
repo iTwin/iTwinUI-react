@@ -23,6 +23,7 @@ export const HeaderBasicButton: HeaderBasicButtonComponent = React.forwardRef(
       style,
       type = 'button',
       startIcon,
+      endIcon,
       as: Element = 'button',
       ...rest
     } = props;
@@ -43,6 +44,10 @@ export const HeaderBasicButton: HeaderBasicButtonComponent = React.forwardRef(
             className: startIcon.props.className,
           })}
         {children}
+        {endIcon &&
+          React.cloneElement(endIcon, {
+            className: endIcon.props.className,
+          })}
       </Element>
     );
   },

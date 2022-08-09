@@ -10,6 +10,7 @@ import SvgCaretUpSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretUpSmall';
 import { PolymorphicForwardRefComponent, useTheme } from '../utils';
 import { DropdownButtonProps } from '../Buttons';
 import { useMergedRefs } from '../utils';
+import { HeaderBasicButton } from './HeaderBasicButton';
 
 export type HeaderDropdownButtonProps = DropdownButtonProps;
 type HeaderDropdownButtonComponent = PolymorphicForwardRefComponent<
@@ -19,7 +20,7 @@ type HeaderDropdownButtonComponent = PolymorphicForwardRefComponent<
 
 export const HeaderDropdownButton: HeaderDropdownButtonComponent = React.forwardRef(
   (props, ref) => {
-    const { menuItems, className, size, children, startIcon, ...rest } = props;
+    const { menuItems, className, children, ...rest } = props;
 
     useTheme();
 
@@ -33,7 +34,7 @@ export const HeaderDropdownButton: HeaderDropdownButtonComponent = React.forward
       if (buttonRef.current) {
         setMenuWidth(buttonRef.current.offsetWidth);
       }
-    }, [children, size]);
+    }, [children]);
 
     return (
       <DropdownMenu
@@ -42,16 +43,12 @@ export const HeaderDropdownButton: HeaderDropdownButtonComponent = React.forward
         onShow={() => setIsMenuOpen(true)}
         onHide={() => setIsMenuOpen(false)}
       >
-        <button
+        <HeaderBasicButton
           className={cx('iui-header-breadcrumb-button', className)}
           ref={refs}
           aria-label='Dropdown'
           {...rest}
         >
-          {startIcon &&
-            React.cloneElement(startIcon, {
-              className: startIcon.props.className,
-            })}
           {children}
           {isMenuOpen ? (
             <SvgCaretUpSmall
@@ -64,7 +61,7 @@ export const HeaderDropdownButton: HeaderDropdownButtonComponent = React.forward
               aria-hidden
             />
           )}
-        </button>
+        </HeaderBasicButton>
       </DropdownMenu>
     );
   },

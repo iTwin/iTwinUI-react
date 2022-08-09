@@ -84,14 +84,15 @@ export const HeaderButton: HeaderButtonComponent = React.forwardRef(
           })
         : undefined,
       className: className,
-      styleType: 'borderless',
       children: (
         <span className='iui-header-breadcrumb-button-text'>
-          <div className='iui-header-breadcrumb-button-text-label'>{name}</div>
+          <span className='iui-header-breadcrumb-button-text-label'>
+            {name}
+          </span>
           {description && (
-            <div className='iui-header-breadcrumb-button-text-sublabel'>
+            <span className='iui-header-breadcrumb-button-text-sublabel'>
               {description}
-            </div>
+            </span>
           )}
         </span>
       ),

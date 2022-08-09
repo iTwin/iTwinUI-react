@@ -10,6 +10,7 @@ import SvgCaretUpSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretUpSmall';
 
 import { PolymorphicForwardRefComponent, useTheme } from '../utils';
 import { SplitButtonProps } from '../Buttons';
+import { HeaderBasicButton } from './HeaderBasicButton';
 
 export type HeaderSplitButtonProps = SplitButtonProps;
 
@@ -25,12 +26,11 @@ export const HeaderSplitButton: HeaderSplitButtonComponent = React.forwardRef(
       menuItems,
       className,
       menuPlacement = 'bottom-end',
-      size,
       children,
       style,
       title,
-      type = 'button',
-      startIcon,
+      styleType,
+      size,
       ...rest
     } = props;
 
@@ -45,7 +45,7 @@ export const HeaderSplitButton: HeaderSplitButtonComponent = React.forwardRef(
       if (ref.current) {
         setMenuWidth(ref.current.offsetWidth);
       }
-    }, [children, size]);
+    }, [children]);
 
     return (
       <span
@@ -54,19 +54,15 @@ export const HeaderSplitButton: HeaderSplitButtonComponent = React.forwardRef(
         title={title}
         ref={ref}
       >
-        <button
-          className='iui-header-breadcrumb-button'
+        <HeaderBasicButton
+          styleType={styleType}
+          size={size}
           onClick={onClick}
           ref={forwardedRef}
-          type={type}
           {...rest}
         >
-          {startIcon &&
-            React.cloneElement(startIcon, {
-              className: startIcon.props.className,
-            })}
           {children}
-        </button>
+        </HeaderBasicButton>
         <DropdownMenu
           placement={menuPlacement}
           menuItems={menuItems}
