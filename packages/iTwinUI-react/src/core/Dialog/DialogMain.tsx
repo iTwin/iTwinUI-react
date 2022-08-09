@@ -8,6 +8,8 @@ import { FocusTrap, useMergedRefs, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/dialog.css';
 import { DialogContextProps, useDialogContext } from './DialogContext';
 import { CSSTransition } from 'react-transition-group';
+import { DialogDragContext } from './DialogDragContext';
+import useDrag from '../utils/hooks/useDrag';
 
 export type DialogMainProps = {
   /**
@@ -19,7 +21,7 @@ export type DialogMainProps = {
    * Content of the dialog.
    */
   children: React.ReactNode;
-} & Omit<DialogContextProps, 'closeOnExternalClick'> &
+} & Omit<DialogContextProps, 'closeOnExternalClick' | 'dialogMainRef'> &
   React.ComponentPropsWithRef<'div'>;
 
 /**
@@ -56,6 +58,8 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
       trapFocus = dialogContext.trapFocus,
       preventDocumentScroll = dialogContext.preventDocumentScroll,
       onKeyDown,
+      isDraggable = dialogContext.isDraggable,
+      style,
       ...rest
     } = props;
 
@@ -109,6 +113,16 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
       onKeyDown?.(event);
     };
 
+    const { onPointerDown, transform } = useDrag(dialogRef);
+    const handlePointerDown = React.useCallback(
+      (event: React.PointerEvent<HTMLElement>) => {
+        if (isDraggable) {
+          onPointerDown(event);
+        }
+      },
+      [isDraggable, onPointerDown],
+    );
+
     const content = (
       <div
         className={cx(
@@ -117,6 +131,7 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
             'iui-dialog-default': styleType === 'default',
             'iui-dialog-full-page': styleType === 'fullPage',
             'iui-dialog-visible': isOpen,
+            'iui-dialog-draggable': isDraggable,
           },
           className,
         )}
@@ -124,6 +139,10 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
         ref={refs}
         onKeyDown={handleKeyDown}
         tabIndex={-1}
+        style={{
+          transform,
+          ...style,
+        }}
         {...rest}
       >
         {children}
@@ -138,10 +157,12 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
         unmountOnExit={true}
         nodeRef={dialogRef}
       >
-        <>
+        <DialogDragContext.Provider
+          value={{ onPointerDown: handlePointerDown }}
+        >
           {trapFocus && <FocusTrap>{content}</FocusTrap>}
           {!trapFocus && content}
-        </>
+        </DialogDragContext.Provider>
       </CSSTransition>
     );
   },

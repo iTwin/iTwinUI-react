@@ -4,6 +4,13 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 
+/**
+ * Helper hook that handles elements drag logic.
+ * @param elementRef Element ref that is draggable.
+ * @returns
+ * `onPointerDown` - handler that is called when pointer is down and handles all the dragging logic.
+ * `transform` - current transform of the element, it is used to preserve drag position when element visibility is being toggled.
+ */
 export const useDrag = (elementRef: React.RefObject<HTMLElement>) => {
   const grabOffsetX = React.useRef(0);
   const grabOffsetY = React.useRef(0);
@@ -12,11 +19,10 @@ export const useDrag = (elementRef: React.RefObject<HTMLElement>) => {
 
   const [transform, setTransform] = React.useState('');
 
-  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+  const onPointerDown = (e: React.PointerEvent<HTMLElement>) => {
     if (!elementRef.current || e.button !== 0) {
       return;
     }
-    console.log('onPointerDown');
     const transformValue = getComputedStyle(
       elementRef.current,
     ).getPropertyValue('transform');
@@ -36,11 +42,9 @@ export const useDrag = (elementRef: React.RefObject<HTMLElement>) => {
     elementRef.current.ownerDocument.addEventListener(
       'pointerup',
       () => {
-        if (elementRef.current) {
-          setTransform(
-            `translate(${translateX.current}px, ${translateY.current}px)`,
-          );
-        }
+        setTransform(
+          `translate(${translateX.current}px, ${translateY.current}px)`,
+        );
         document.removeEventListener('pointermove', onPointerMove);
       },
       { once: true },
@@ -50,7 +54,6 @@ export const useDrag = (elementRef: React.RefObject<HTMLElement>) => {
   const onPointerMove = React.useCallback(
     (event: PointerEvent) => {
       if (elementRef.current) {
-        console.log('onPointerMove');
         translateX.current = event.clientX - grabOffsetX.current;
         translateY.current = event.clientY - grabOffsetY.current;
         elementRef.current.style.transform = `translate(${translateX.current}px, ${translateY.current}px)`;

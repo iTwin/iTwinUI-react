@@ -51,6 +51,7 @@ export const Dialog = Object.assign(
       closeOnEsc = true,
       closeOnExternalClick = false,
       onClose,
+      isDraggable = false,
     } = props;
 
     return (
@@ -63,6 +64,7 @@ export const Dialog = Object.assign(
           isDismissible,
           preventDocumentScroll,
           trapFocus,
+          isDraggable,
         }}
       >
         {children}

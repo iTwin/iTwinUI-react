@@ -39,6 +39,11 @@ export type DialogContextProps = {
    * @default false
    */
   preventDocumentScroll?: boolean;
+  /**
+   * Flag whether dialog is draggable.
+   * @default false
+   */
+  isDraggable?: boolean;
 };
 
 export const DialogContext = React.createContext<

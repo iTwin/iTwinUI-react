@@ -59,6 +59,16 @@ export type { ComboBoxProps } from './ComboBox';
 export { DatePicker, generateLocalizedStrings } from './DatePicker';
 export type { DatePickerProps } from './DatePicker';
 
+export { Dialog, DialogWrapper } from './Dialog';
+export type {
+  DialogProps,
+  DialogButtonBarProps,
+  DialogContentProps,
+  DialogMainProps,
+  DialogTitleBarProps,
+  DialogWrapperProps,
+} from './Dialog';
+
 export { DropdownMenu } from './DropdownMenu';
 export type { DropdownMenuProps } from './DropdownMenu';
 
