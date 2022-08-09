@@ -39,9 +39,9 @@ type ActionColumnProps = {
  *   ),
  * },
  */
-export const ActionColumn = <T extends Record<string, unknown>>(
-  actionColumnProps: ActionColumnProps = { columnManager: false }, // TODO: Confirm if this is correct
-) => {
+export const ActionColumn = <T extends Record<string, unknown>>({
+  columnManager = false,
+}: ActionColumnProps) => {
   return {
     id: ACTION_CELL_ID,
     disableResizing: true,
@@ -56,7 +56,7 @@ export const ActionColumn = <T extends Record<string, unknown>>(
       const [isOpen, setIsOpen] = React.useState(false);
       const buttonRef = React.useRef<HTMLButtonElement>(null);
 
-      if (!actionColumnProps.columnManager) {
+      if (!columnManager) {
         return null;
       }
       const defaultColumnIds = [
@@ -110,9 +110,7 @@ export const ActionColumn = <T extends Record<string, unknown>>(
           });
 
       const dropdownMenuProps =
-        typeof actionColumnProps.columnManager !== 'boolean'
-          ? actionColumnProps.columnManager
-          : {};
+        typeof columnManager !== 'boolean' ? columnManager : {};
 
       return (
         <DropdownMenu
