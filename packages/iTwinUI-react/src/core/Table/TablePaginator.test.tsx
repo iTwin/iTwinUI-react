@@ -65,7 +65,7 @@ it('should render currently visible rows info and page size selector', async () 
   expect(pages[19].classList).toContain('iui-active');
 
   const pageSizeSelector = container.querySelector(
-    '.iui-dropdown',
+    '.iui-button-dropdown',
   ) as HTMLButtonElement;
   expect(pageSizeSelector).toBeTruthy();
   expect(pageSizeSelector.textContent).toEqual('191-195 of 195');
@@ -88,7 +88,7 @@ it('should render without page list', () => {
     pageSizeList: [10, 25, 50],
   });
   const pageSizeSelector = container.querySelector(
-    '.iui-dropdown',
+    '.iui-button-dropdown',
   ) as HTMLButtonElement;
 
   expect(pageSizeSelector).toBeTruthy();
@@ -128,7 +128,7 @@ it('should render loading state when there is data', () => {
   ) as HTMLButtonElement;
   expect(nextPageButton.disabled).toBe(true);
   const pageSizeSelector = container.querySelector(
-    '.iui-dropdown',
+    '.iui-button-dropdown',
   ) as HTMLButtonElement;
   expect(pageSizeSelector).toBeTruthy();
   expect(pageSizeSelector.textContent).toEqual('191-195…');
@@ -282,7 +282,9 @@ it('should render elements in small size', () => {
 
   const pageSwitchers = container.querySelectorAll('.iui-button');
   expect(
-    Array.from(pageSwitchers).every((p) => p.classList.contains('iui-small')),
+    Array.from(pageSwitchers).every(
+      (p) => p.getAttribute('data-iui-size') === 'small',
+    ),
   ).toBe(true);
 
   const pages = container.querySelectorAll(
@@ -316,7 +318,7 @@ it('should render with custom localization', async () => {
   });
 
   const pageSizeSelector = container.querySelector(
-    '.iui-dropdown',
+    '.iui-button-dropdown',
   ) as HTMLButtonElement;
   expect(pageSizeSelector).toBeTruthy();
   expect(pageSizeSelector.textContent).toEqual('1-10 of test 195');
