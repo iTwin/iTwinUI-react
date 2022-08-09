@@ -33,7 +33,8 @@ const intersectionCallbacks = new Map<Element, () => void>();
 jest
   .spyOn(IntersectionHooks, 'useIntersection')
   .mockImplementation((onIntersect) => {
-    return (el: HTMLElement) => intersectionCallbacks.set(el, onIntersect);
+    return (el: HTMLElement) =>
+      el && intersectionCallbacks.set(el, onIntersect);
   });
 
 const mockIntersection = (element: Element) => {
@@ -1774,6 +1775,12 @@ it('should edit cell data', async () => {
   });
   fireEvent.blur(editableCells[1]);
   expect(onCellEdit).toHaveBeenCalledWith('name', 'test data', mockedData()[1]);
+
+  fireEvent.input(editableCells[2], {
+    target: { innerText: '' },
+  });
+  fireEvent.blur(editableCells[2]);
+  expect(onCellEdit).toHaveBeenCalledWith('name', '', mockedData()[2]);
 });
 
 it('should handle unwanted actions on editable cell', async () => {
@@ -2440,12 +2447,19 @@ it('should sync body horizontal scroll with header scroll', () => {
   expect(header.scrollLeft).toBe(0);
   expect(body.scrollLeft).toBe(0);
 
+  // When body scrolls, header should scroll
   fireEvent.scroll(body, {
     target: { scrollLeft: 100 },
   });
-
   expect(header.scrollLeft).toBe(100);
   expect(body.scrollLeft).toBe(100);
+
+  // When header scrolls, body should scroll
+  fireEvent.scroll(header, {
+    target: { scrollLeft: 0 },
+  });
+  expect(header.scrollLeft).toBe(0);
+  expect(body.scrollLeft).toBe(0);
 });
 
 it.each([
@@ -3030,6 +3044,28 @@ it('should not throw on headless table', () => {
 
   expect(container.querySelector('.iui-table-header .iui-row')).toBeFalsy();
   expect(container.querySelector('.iui-table-body')).toBeTruthy();
+});
+
+it('should scroll to selected item in non-virtualized table', async () => {
+  let scrolledElement: HTMLElement | null = null;
+  jest
+    .spyOn(HTMLElement.prototype, 'scrollIntoView')
+    .mockImplementation(function (this: HTMLElement) {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      scrolledElement = this;
+    });
+
+  const data = mockedData(50);
+  renderComponent({
+    data,
+    scrollToRow: (rows) => rows.findIndex((row) => row.original === data[25]),
+  });
+
+  expect(scrolledElement).toBeTruthy();
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  expect(scrolledElement!.querySelector('.iui-cell')?.textContent).toBe(
+    data[25].name,
+  );
 });
 
 it('should render sticky columns correctly', () => {
