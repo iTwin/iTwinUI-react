@@ -54,6 +54,8 @@ export const ActionColumn = <T extends Record<string, unknown>>(
     disableReordering: true,
     Header: ({ allColumns, dispatch, state }: HeaderProps<T>) => {
       const [isOpen, setIsOpen] = React.useState(false);
+      const buttonRef = React.useRef<HTMLButtonElement>(null);
+
       if (!actionColumnProps.columnManager) {
         return null;
       }
@@ -77,6 +79,13 @@ export const ActionColumn = <T extends Record<string, unknown>>(
               }
               // Triggers an update to resize the widths of all visible columns
               dispatch({ type: tableResizeStartAction });
+
+              // If some columns were resized and some columns visibility was enabled, then horizontal scrollbar appears
+              // and table is scrolled to the very left which means our visibility dropdown menu is not visible.
+              // So for better UX we need to scroll to that dropdown menu.
+              queueMicrotask(() => {
+                buttonRef.current?.scrollIntoView();
+              });
             };
             return (
               <MenuItem
@@ -131,7 +140,7 @@ export const ActionColumn = <T extends Record<string, unknown>>(
           }}
           className={cx('iui-scroll', dropdownMenuProps.className)}
         >
-          <IconButton styleType='borderless' isActive={isOpen}>
+          <IconButton styleType='borderless' isActive={isOpen} ref={buttonRef}>
             <SvgColumnManager />
           </IconButton>
         </DropdownMenu>
