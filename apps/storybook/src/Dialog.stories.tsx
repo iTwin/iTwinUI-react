@@ -3,12 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import {
-  Button,
-  Dialog,
-  DialogProps,
-  DialogWrapper,
-} from '@itwin/itwinui-react';
+import { Button, Dialog, DialogWrapper } from '@itwin/itwinui-react';
 import { action } from '@storybook/addon-actions';
 import { Meta, Story } from '@storybook/react';
 export default {
@@ -17,9 +12,64 @@ export default {
   parameters: {
     controls: { hideNoControlsWarning: true },
   },
-} as Meta<DialogProps>;
+} as Meta;
 
-export const Basic: Story<DialogProps> = () => {
+export const Basic: Story = () => {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const closeDialog = () => {
+    setIsOpen(false);
+  };
+
+  const onClose = (event: React.SyntheticEvent<Element, Event>) => {
+    action('onClose', { depth: 1 })(event);
+    closeDialog();
+  };
+
+  const primaryButtonHandle = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
+    action('Primary button')(event);
+    closeDialog();
+  };
+
+  const secondaryButtonHandle = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
+    action('Secondary button')(event);
+    closeDialog();
+  };
+
+  return (
+    <>
+      <Button styleType='high-visibility' onClick={() => setIsOpen(true)}>
+        Open Dialog
+      </Button>
+      <Dialog isOpen={isOpen} onClose={onClose} closeOnEsc isDismissible>
+        <Dialog.Main>
+          <Dialog.TitleBar titleText='Best dialog ever' />
+          <Dialog.Content>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat. Duis aute irure dolor in
+            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+            culpa qui officia deserunt mollit anim id est laborum.
+          </Dialog.Content>
+          <Dialog.ButtonBar>
+            <Button styleType='high-visibility' onClick={primaryButtonHandle}>
+              Primary
+            </Button>
+            <Button onClick={secondaryButtonHandle}>Secondary</Button>
+          </Dialog.ButtonBar>
+        </Dialog.Main>
+      </Dialog>
+    </>
+  );
+};
+
+export const Modal: Story = () => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const closeDialog = () => {
@@ -83,7 +133,7 @@ export const Basic: Story<DialogProps> = () => {
   );
 };
 
-export const Draggable: Story<DialogProps> = () => {
+export const Draggable: Story = () => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const closeDialog = () => {
@@ -144,10 +194,7 @@ export const Draggable: Story<DialogProps> = () => {
   );
 };
 
-export const DraggableRelativeToContainer: Story<DialogProps> = ({
-  isOpen,
-  ...rest
-}) => {
+export const DraggableRelativeToContainer: Story = ({ isOpen, ...rest }) => {
   const [isDialogOpen, setIsDialogOpen] = React.useState(isOpen);
 
   React.useEffect(() => {

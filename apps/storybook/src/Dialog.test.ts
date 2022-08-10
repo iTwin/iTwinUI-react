@@ -4,7 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 describe('Dialog', () => {
   const storyPath = 'Core/Dialog';
-  const tests = ['Basic', 'Draggable', 'Draggable Relative To Container'];
+  const tests = [
+    'Basic',
+    'Modal',
+    'Draggable',
+    'Draggable Relative To Container',
+  ];
 
   tests.forEach((testName) => {
     it(testName, function () {
