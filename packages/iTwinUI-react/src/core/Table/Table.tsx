@@ -54,6 +54,8 @@ import VirtualScroll from '../utils/components/VirtualScroll';
 import { SELECTION_CELL_ID } from './columns';
 
 const singleRowSelectedAction = 'singleRowSelected';
+// const toggleAllRowsSelected = 'toggleAllRowsSelected';
+// const rangeRowSelectedAction = 'rangeRowSelected';
 export const tableResizeStartAction = 'tableResizeStart';
 const tableResizeEndAction = 'tableResizeEnd';
 
@@ -375,6 +377,8 @@ export const Table = <
   useTheme();
 
   const [ownerDocument, setOwnerDocument] = React.useState<Document>();
+  // const [selectedRows, setSelectedRows] = React.useState([]);
+  // const [firstSelected, setFirstSelected] = React.useState(null);
 
   const defaultColumn = React.useMemo(
     () => ({
@@ -417,6 +421,8 @@ export const Table = <
           onExpandHandler(newState, instance, onExpand);
           break;
         case singleRowSelectedAction: {
+          console.log('singleRowSelectedAction');
+
           newState = onSingleSelectHandler(
             newState,
             action,
@@ -430,6 +436,8 @@ export const Table = <
         case TableActions.toggleRowSelected:
         case TableActions.toggleAllRowsSelected:
         case TableActions.toggleAllPageRowsSelected: {
+          console.log('TableActions.toggleRowSelected');
+
           onSelectHandler(
             newState,
             instance,
@@ -546,6 +554,8 @@ export const Table = <
 
   const onRowClickHandler = React.useCallback(
     (event: React.MouseEvent, row: Row<T>) => {
+      // console.log(event, row, event.ctrlKey, event.shiftKey);
+
       const isDisabled = isRowDisabled?.(row.original);
       if (!isDisabled) {
         onRowClick?.(event, row);
@@ -556,14 +566,32 @@ export const Table = <
         selectRowOnClick &&
         !event.isDefaultPrevented()
       ) {
+        // dispatch({
+        //   type: toggleAllRowsSelected,
+        //   id: row.id,
+        // });
+        // console.log('HERE');
+        // rows.forEach((r) => {
+        //   // r.toggleRowSelected(true);
+        //   console.log(r);
+        // });
         if (!row.isSelected && (selectionMode === 'single' || !event.ctrlKey)) {
           dispatch({
             type: singleRowSelectedAction,
             id: row.id,
           });
+          // row.toggleRowSelected(!row.isSelected);
         } else {
+          //
           row.toggleRowSelected(!row.isSelected);
+          // row.toggle(!row.isSelected);
         }
+        // if (!row.isSelected && selectionMode === 'multi')
+        // dispatch({
+        //   type: singleRowSelectedAction,
+        //   id: row.id,
+        // });
+        // row.toggleRowSelected(!row.isSelected);
       }
     },
     [
