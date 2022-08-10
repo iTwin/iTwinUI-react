@@ -2693,7 +2693,7 @@ it('should render empty action column with column manager', async () => {
   expect(columnManagerColumns[2].textContent).toBe('View');
 });
 
-it('should render action column with column manager', async () => {
+it('should render action column with column manager (with default styling if no custom style is provided)', async () => {
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Header name',
@@ -2709,14 +2709,7 @@ it('should render action column with column manager', async () => {
           accessor: 'description',
         },
         {
-          ...ActionColumn({
-            columnManager: {
-              dropdownMenuProps: {
-                className: 'testing-classname',
-                style: { backgroundColor: 'red' },
-              },
-            },
-          }),
+          ...ActionColumn({ columnManager: true }),
           id: 'view',
           Cell: () => <>View</>,
         },
@@ -2751,57 +2744,10 @@ it('should render action column with column manager', async () => {
   const dropdownMenu = document.querySelector('.iui-menu') as HTMLDivElement;
   expect(dropdownMenu).toBeTruthy();
   expect(dropdownMenu.classList.contains('iui-scroll')).toBeTruthy();
-  expect(dropdownMenu.classList.contains('testing-classname')).toBeTruthy();
-  expect(dropdownMenu).toHaveStyle('background-color: red');
-});
-
-it('should render dropdown menu with default styling if no custom style is provided', async () => {
-  const columns: Column<TestDataType>[] = [
-    {
-      Header: 'Header name',
-      columns: [
-        {
-          id: 'name',
-          Header: 'Name',
-          accessor: 'name',
-        },
-        {
-          id: 'description',
-          Header: 'Description',
-          accessor: 'description',
-        },
-        {
-          id: 'view',
-          Header: 'View',
-          Cell: () => <>View</>,
-        },
-        ActionColumn({ columnManager: true }),
-      ],
-    },
-  ];
-  const { container } = renderComponent({
-    columns,
-  });
-
-  const headerCells = container.querySelectorAll<HTMLDivElement>(
-    '.iui-table-header .iui-cell',
-  );
-  const columnManager = headerCells[headerCells.length - 1]
-    .firstElementChild as Element;
-
-  expect(
-    columnManager.className.includes('iui-button iui-borderless'),
-  ).toBeTruthy();
-
-  await userEvent.click(columnManager);
-
-  const dropdownMenu = document.querySelector('.iui-menu') as HTMLDivElement;
-  expect(dropdownMenu).toBeTruthy();
-  expect(dropdownMenu.classList.contains('iui-scroll')).toBeTruthy();
   expect(dropdownMenu).toHaveStyle('max-height: 315px');
 });
 
-it('should have all props other than className and style be also passed from ActionColumn to DropdownMenu', async () => {
+it('should render dropdown menu with custom style (if provided) and override default style when applicable', async () => {
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Header name',
@@ -2824,8 +2770,12 @@ it('should have all props other than className and style be also passed from Act
         ActionColumn({
           columnManager: {
             dropdownMenuProps: {
-              role: 'listbox', // Sample property other than className and style
-              'data-testing-key': 'testing-value', // Sample property other than className and style
+              className: 'testing-classname',
+              style: {
+                maxHeight: '600px',
+                backgroundColor: 'red',
+              },
+              role: 'listbox',
             },
           },
         }),
@@ -2850,8 +2800,11 @@ it('should have all props other than className and style be also passed from Act
 
   const dropdownMenu = document.querySelector('.iui-menu') as HTMLDivElement;
   expect(dropdownMenu).toBeTruthy();
-  expect(dropdownMenu).toHaveAttribute('role', 'listbox');
-  expect(dropdownMenu).toHaveAttribute('data-testing-key', 'testing-value');
+  expect(dropdownMenu.classList.contains('iui-scroll')).toBeTruthy();
+  expect(dropdownMenu.classList.contains('testing-classname')).toBeTruthy();
+  expect(dropdownMenu).toHaveStyle('max-height: 600px');
+  expect(dropdownMenu).toHaveStyle('background-color: red');
+  expect(dropdownMenu).toHaveStyle('role: listbox');
 });
 
 it('should hide column when deselected in column manager', async () => {
