@@ -150,7 +150,7 @@ it.each([true, false])(
     ).toBe(isExpanded);
 
     const expanderButton = container.querySelector(
-      '.iui-button.iui-borderless.iui-small',
+      '.iui-button[data-iui-variant="borderless"][data-iui-size="small"]',
     ) as HTMLButtonElement;
     expect(expanderButton).toBeTruthy();
 
@@ -186,7 +186,7 @@ it('should render disabled node', () => {
   expect(container.querySelector('.iui-tree-node-checkbox')).toBeDisabled();
 
   const button = container.querySelector(
-    '.iui-button.iui-borderless.iui-small',
+    '.iui-button[data-iui-variant="borderless"][data-iui-size="small"]',
   ) as HTMLButtonElement;
   expect(button).toBeTruthy();
   expect(button.disabled).toBe(true);
