@@ -2804,7 +2804,7 @@ it('should render dropdown menu with custom style (if provided) and override def
   expect(dropdownMenu.classList.contains('testing-classname')).toBeTruthy();
   expect(dropdownMenu).toHaveStyle('max-height: 600px');
   expect(dropdownMenu).toHaveStyle('background-color: red');
-  expect(dropdownMenu).toHaveStyle('role: listbox');
+  expect(dropdownMenu).toHaveAttribute('role', 'listbox');
 });
 
 it('should hide column when deselected in column manager', async () => {

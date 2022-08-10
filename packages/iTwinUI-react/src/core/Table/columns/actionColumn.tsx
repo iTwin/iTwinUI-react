@@ -17,7 +17,7 @@ import cx from 'classnames';
 const ACTION_CELL_ID = 'iui-table-action';
 
 type ActionColumnProps = {
-  columnManager:
+  columnManager?:
     | boolean
     | { dropdownMenuProps: Omit<DropdownMenuProps, 'menuItems' | 'children'> };
 };
@@ -43,7 +43,7 @@ type ActionColumnProps = {
  */
 export const ActionColumn = <T extends Record<string, unknown>>({
   columnManager = false,
-}: ActionColumnProps) => {
+}: ActionColumnProps = {}) => {
   return {
     id: ACTION_CELL_ID,
     disableResizing: true,
