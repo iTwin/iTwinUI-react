@@ -2747,7 +2747,7 @@ it('should render action column with column manager (with default styling if no 
   expect(dropdownMenu).toHaveStyle('max-height: 315px');
 });
 
-it('should render dropdown menu with custom style (if provided) and override default style when applicable', async () => {
+it('should render dropdown menu with custom style and override default style', async () => {
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Header name',
