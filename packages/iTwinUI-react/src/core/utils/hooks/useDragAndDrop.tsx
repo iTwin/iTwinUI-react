@@ -19,38 +19,6 @@ export const useDragAndDrop = (elementRef: React.RefObject<HTMLElement>) => {
 
   const [transform, setTransform] = React.useState('');
 
-  const onPointerDown = (e: React.PointerEvent<HTMLElement>) => {
-    if (!elementRef.current || e.button !== 0) {
-      return;
-    }
-    const transformValue = getComputedStyle(
-      elementRef.current,
-    ).getPropertyValue('transform');
-    const matrix = new DOMMatrix(transformValue);
-
-    translateX.current = matrix.m41;
-    translateY.current = matrix.m42;
-
-    grabOffsetX.current = e.clientX - translateX.current;
-    grabOffsetY.current = e.clientY - translateY.current;
-
-    elementRef.current.ownerDocument.addEventListener(
-      'pointermove',
-      onPointerMove,
-      false,
-    );
-    elementRef.current.ownerDocument.addEventListener(
-      'pointerup',
-      () => {
-        setTransform(
-          `translate(${translateX.current}px, ${translateY.current}px)`,
-        );
-        document.removeEventListener('pointermove', onPointerMove);
-      },
-      { once: true },
-    );
-  };
-
   const onPointerMove = React.useCallback(
     (event: PointerEvent) => {
       if (elementRef.current) {
@@ -60,6 +28,41 @@ export const useDragAndDrop = (elementRef: React.RefObject<HTMLElement>) => {
       }
     },
     [elementRef],
+  );
+
+  const onPointerDown = React.useCallback(
+    (e: React.PointerEvent<HTMLElement>) => {
+      if (!elementRef.current || e.button !== 0) {
+        return;
+      }
+      const transformValue = getComputedStyle(
+        elementRef.current,
+      ).getPropertyValue('transform');
+      const matrix = new DOMMatrix(transformValue);
+
+      translateX.current = matrix.m41;
+      translateY.current = matrix.m42;
+
+      grabOffsetX.current = e.clientX - translateX.current;
+      grabOffsetY.current = e.clientY - translateY.current;
+
+      elementRef.current.ownerDocument.addEventListener(
+        'pointermove',
+        onPointerMove,
+        false,
+      );
+      elementRef.current.ownerDocument.addEventListener(
+        'pointerup',
+        () => {
+          setTransform(
+            `translate(${translateX.current}px, ${translateY.current}px)`,
+          );
+          document.removeEventListener('pointermove', onPointerMove);
+        },
+        { once: true },
+      );
+    },
+    [elementRef, onPointerMove],
   );
 
   return { onPointerDown, transform };
