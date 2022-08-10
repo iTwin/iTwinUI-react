@@ -19,11 +19,7 @@ const ACTION_CELL_ID = 'iui-table-action';
 type ActionColumnProps = {
   columnManager:
     | boolean
-    | {
-        dropdownMenuProps: Omit<DropdownMenuProps, 'menuItems' | 'children'> & {
-          [k: string]: unknown;
-        };
-      };
+    | { dropdownMenuProps: Omit<DropdownMenuProps, 'menuItems' | 'children'> };
 };
 
 /**
@@ -45,9 +41,9 @@ type ActionColumnProps = {
  *   ),
  * },
  */
-export const ActionColumn = <T extends Record<string, unknown>>(
-  { columnManager }: ActionColumnProps = { columnManager: false },
-) => {
+export const ActionColumn = <T extends Record<string, unknown>>({
+  columnManager = false,
+}: ActionColumnProps) => {
   return {
     id: ACTION_CELL_ID,
     disableResizing: true,
