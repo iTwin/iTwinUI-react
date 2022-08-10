@@ -46,9 +46,7 @@ it('should render in its most basic state', () => {
   mainItems.forEach((item, index) => {
     expect(item).toBeTruthy();
     expect(item.querySelector('.iui-button-icon')).toEqual(placeholderIcon);
-    expect(item.querySelector('.iui-button-label')?.textContent).toBe(
-      `mockbutton ${index}`,
-    );
+    expect(item.querySelector('span')?.textContent).toBe(`mockbutton ${index}`);
   });
 });
 
@@ -79,7 +77,7 @@ it('should render secondary items', () => {
   secondaryItems.forEach((item, index) => {
     expect(item).toBeTruthy();
     expect(item.querySelector('.iui-button-icon')).toEqual(placeholderIcon);
-    expect(item.querySelector('.iui-button-label')?.textContent).toBe(
+    expect(item.querySelector('span')?.textContent).toBe(
       `mock secondary ${index}`,
     );
   });

@@ -1729,7 +1729,7 @@ it('should expand correctly', async () => {
 
   expect(
     container.querySelectorAll(
-      '.iui-button.iui-borderless > .iui-button-icon',
+      '.iui-button[data-iui-variant="borderless"] > .iui-button-icon',
     )[0],
   ).toEqual(expanderIcon);
 
@@ -2511,7 +2511,7 @@ it('should change page size', async () => {
   );
 
   const pageSizeSelector = container.querySelector(
-    '.iui-dropdown',
+    '.iui-button-dropdown',
   ) as HTMLButtonElement;
   expect(pageSizeSelector).toBeTruthy();
   await userEvent.click(pageSizeSelector);
@@ -3325,10 +3325,8 @@ it('should render empty action column with column manager', async () => {
   const columnManager = headerCells[headerCells.length - 1]
     .firstElementChild as Element;
 
-  expect(
-    columnManager.className.includes('iui-button iui-borderless'),
-  ).toBeTruthy();
-
+  expect(columnManager.className.includes('iui-button')).toBeTruthy();
+  expect(columnManager).toHaveAttribute('data-iui-variant', 'borderless');
   await userEvent.click(columnManager);
 
   expect(document.querySelector('.iui-menu')).toBeTruthy();
@@ -3371,10 +3369,12 @@ it('should render action column with column manager', async () => {
     '.iui-slot',
   );
   expect(
-    actionColumn[0].firstElementChild?.className.includes(
-      'iui-button iui-borderless',
-    ),
+    actionColumn[0].firstElementChild?.className.includes('iui-button'),
   ).toBeTruthy();
+  expect(actionColumn[0].firstElementChild).toHaveAttribute(
+    'data-iui-variant',
+    'borderless',
+  );
   expect(actionColumn[1].textContent).toBe('View');
   expect(actionColumn[2].textContent).toBe('View');
   expect(actionColumn[3].textContent).toBe('View');
@@ -3784,7 +3784,7 @@ it('should scroll to selected item in non-virtualized table', async () => {
 
   expect(scrolledElement).toBeTruthy();
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  expect(scrolledElement!.querySelector('.iui-cell')?.textContent).toBe(
+  expect(scrolledElement!.querySelector('.iui-table-cell')?.textContent).toBe(
     data[25].name,
   );
 });
