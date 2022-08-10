@@ -17,10 +17,13 @@ import cx from 'classnames';
 const ACTION_CELL_ID = 'iui-table-action';
 
 type ActionColumnProps = {
-  [k: string]: unknown;
   columnManager:
     | boolean
-    | { dropdownMenuProps: Omit<DropdownMenuProps, 'menuItems' | 'children'> };
+    | {
+        dropdownMenuProps: Omit<DropdownMenuProps, 'menuItems' | 'children'> & {
+          [k: string]: unknown;
+        };
+      };
 };
 
 /**
