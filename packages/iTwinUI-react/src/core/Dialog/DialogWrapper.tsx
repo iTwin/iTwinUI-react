@@ -10,7 +10,7 @@ import '@itwin/itwinui-css/css/dialog.css';
 export type DialogWrapperProps = React.ComponentPropsWithRef<'div'>;
 
 /**
- * Dialog wrapper used for draggable dialogs.
+ * Dialog wrapper used for draggable dialogs in order to make them draggable relatively to this container.
  * @example
  * <DialogWrapper>
  *   <Dialog>

@@ -21,7 +21,7 @@ export type DialogMainProps = {
    * Content of the dialog.
    */
   children: React.ReactNode;
-} & Omit<DialogContextProps, 'closeOnExternalClick' | 'dialogMainRef'> &
+} & Omit<DialogContextProps, 'closeOnExternalClick'> &
   React.ComponentPropsWithRef<'div'>;
 
 /**
