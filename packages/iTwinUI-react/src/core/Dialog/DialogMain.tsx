@@ -9,7 +9,7 @@ import '@itwin/itwinui-css/css/dialog.css';
 import { DialogContextProps, useDialogContext } from './DialogContext';
 import { CSSTransition } from 'react-transition-group';
 import { DialogDragContext } from './DialogDragContext';
-import useDrag from '../utils/hooks/useDrag';
+import useDragAndDrop from '../utils/hooks/useDragAndDrop';
 
 export type DialogMainProps = {
   /**
@@ -113,7 +113,7 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
       onKeyDown?.(event);
     };
 
-    const { onPointerDown, transform } = useDrag(dialogRef);
+    const { onPointerDown, transform } = useDragAndDrop(dialogRef);
     const handlePointerDown = React.useCallback(
       (event: React.PointerEvent<HTMLElement>) => {
         if (isDraggable) {

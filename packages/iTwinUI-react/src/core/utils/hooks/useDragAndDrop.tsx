@@ -11,7 +11,7 @@ import React from 'react';
  * `onPointerDown` - handler that is called when pointer is down and handles all the dragging logic.
  * `transform` - current transform of the element, it is used to preserve drag position when element visibility is being toggled.
  */
-export const useDrag = (elementRef: React.RefObject<HTMLElement>) => {
+export const useDragAndDrop = (elementRef: React.RefObject<HTMLElement>) => {
   const grabOffsetX = React.useRef(0);
   const grabOffsetY = React.useRef(0);
   const translateX = React.useRef(0);
@@ -65,4 +65,4 @@ export const useDrag = (elementRef: React.RefObject<HTMLElement>) => {
   return { onPointerDown, transform };
 };
 
-export default useDrag;
+export default useDragAndDrop;
