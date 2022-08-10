@@ -32,6 +32,21 @@ it('should render full page dialog', () => {
   expect(dialog.getAttribute('role')).toEqual('dialog');
 });
 
+it('should render draggable dialog', () => {
+  const { container } = render(
+    <DialogMain isOpen isDraggable>
+      test-content
+    </DialogMain>,
+  );
+
+  const dialog = container.querySelector(
+    '.iui-dialog.iui-dialog-draggable.iui-dialog-visible',
+  ) as HTMLElement;
+  expect(dialog).toBeTruthy();
+  expect(dialog).toHaveTextContent('test-content');
+  expect(dialog.getAttribute('role')).toEqual('dialog');
+});
+
 it('should render with custom style and className', () => {
   const { container } = render(
     <DialogMain isOpen style={{ color: 'red' }} className='test-class'>
