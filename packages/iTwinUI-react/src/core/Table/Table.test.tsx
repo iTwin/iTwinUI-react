@@ -2693,7 +2693,7 @@ it('should render empty action column with column manager', async () => {
   expect(columnManagerColumns[2].textContent).toBe('View');
 });
 
-it('should render action column with column manager (with default styling if no custom style is provided)', async () => {
+it('should render action column with column manager', async () => {
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Header name',
