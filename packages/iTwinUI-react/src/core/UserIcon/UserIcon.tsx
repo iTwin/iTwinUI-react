@@ -87,7 +87,7 @@ export const UserIcon = (props: UserIconProps) => {
   return (
     <span
       className={cx(
-        'iui-user-icon',
+        'iui-avatar',
         { [`iui-${size}`]: size !== 'medium' },
         className,
       )}
