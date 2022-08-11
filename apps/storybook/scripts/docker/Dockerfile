@@ -35,6 +35,7 @@ WORKDIR /
 FROM node:16.13.0-bullseye
 
 ARG VERSION=9.6.0
+ARG BINARY_PATH=/tmp/cypress-build/linux/build/linux-unpacked
 
 ENV TERM=xterm \
     NPM_CONFIG_LOGLEVEL=warn \
@@ -65,12 +66,6 @@ RUN apt-get update && \
     echo 'pcm.!default {\n type hw\n card 0\n}\n\nctl.!default {\n type hw\n card 0\n}' > /root/.asoundrc
 
 # Copy cypress binary from intermediate container
-ARG TARGETPLATFORM
-ENV PLATFORM=$TARGETPLATFORM \
-    BINARY_PATH=/tmp/cypress-build/linux/build/linux-unpacked
-
-RUN if [ "$PLATFORM" = 'linux/amd64' ]; then BINARY_PATH=/tmp/cypress-build/linux/build/linux-arm64-unpacked ; fi
-
 COPY --from=builder ${BINARY_PATH} /root/.cache/Cypress/${CY_VERSION}/Cypress
 
 RUN npm install -g cypress@${CY_VERSION} && \ 
