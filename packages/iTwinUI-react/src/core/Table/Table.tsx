@@ -421,8 +421,6 @@ export const Table = <
           onExpandHandler(newState, instance, onExpand);
           break;
         case singleRowSelectedAction: {
-          console.log('singleRowSelectedAction');
-
           newState = onSingleSelectHandler(
             newState,
             action,
@@ -431,6 +429,7 @@ export const Table = <
             // If it has manual selection column, then we can't check whether row is disabled
             hasManualSelectionColumn ? undefined : isRowDisabled,
           );
+          console.log('singleRowSelectedAction', newState.lastSelectedRow);
           break;
         }
         case TableActions.toggleRowSelected:
@@ -554,7 +553,7 @@ export const Table = <
 
   const onRowClickHandler = React.useCallback(
     (event: React.MouseEvent, row: Row<T>) => {
-      // console.log(event, row, event.ctrlKey, event.shiftKey);
+      // console.log('123', event, row, event.ctrlKey, event.shiftKey);
 
       const isDisabled = isRowDisabled?.(row.original);
       if (!isDisabled) {

@@ -69,6 +69,8 @@ export const onSingleSelectHandler = <T extends Record<string, unknown>>(
   ) => void,
   isRowDisabled?: (rowData: T) => boolean,
 ) => {
+  console.log('HERE');
+
   const selectedRowIds = { [action.id]: true } as Record<string, boolean>;
   if (instance?.selectSubRows) {
     const handleRow = (row: Row<T>) => {
@@ -80,8 +82,12 @@ export const onSingleSelectHandler = <T extends Record<string, unknown>>(
 
   const newState = {
     ...state,
+    lastSelectedRow: action.id,
     selectedRowIds,
   };
+
+  // console.log('newState', newState);
+
   // Passing to `onSelectHandler` to handle filtered sub-rows
   onSelectHandler(newState, instance, onSelect, isRowDisabled);
 
