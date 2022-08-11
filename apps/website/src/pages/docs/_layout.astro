@@ -163,7 +163,7 @@ const currentPage = new URL(Astro.request.url).pathname;
 
               &::before {
                 content: '';
-                --octothorp: url('data:image/svg+xml;utf8,<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><text fill="currentColor" x="50%" y="50%" dominant-baseline="mathematical" font-family="system-ui" text-anchor="middle">%23</text></svg>');
+                --octothorp: url('data:image/svg+xml;utf8,<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><text fill="currentColor" x="50%" y="100%" font-family="system-ui" text-anchor="middle">%23</text></svg>');
                 -webkit-mask-image: var(--octothorp);
                 mask: var(--octothorp) no-repeat center;
                 background-color: currentColor;
