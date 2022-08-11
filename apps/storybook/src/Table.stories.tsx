@@ -2422,6 +2422,87 @@ Virtualized.argTypes = {
   data: { control: { disable: true } },
 };
 
+export const ScrollToRow: Story<Partial<TableProps>> = (args) => {
+  type TableStoryDataType = {
+    id: string;
+    name: string;
+    description: string;
+  };
+  const onClickHandler = React.useCallback(
+    (props: CellProps<TableStoryDataType>) => action(props.row.original.name)(),
+    [],
+  );
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+            Filter: tableFilters.TextFilter(),
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            Filter: tableFilters.TextFilter(),
+          },
+          {
+            id: 'click-me',
+            Header: 'Click',
+            width: 100,
+            Cell: (props: CellProps<TableStoryDataType>) => {
+              const onClick = () => onClickHandler(props);
+              return <Anchor onClick={onClick}>Click me!</Anchor>;
+            },
+          },
+        ],
+      },
+    ],
+    [onClickHandler],
+  );
+
+  const data: TableStoryDataType[] = useMemo(() => {
+    const size = 100000;
+    const arr = new Array(size);
+    for (let i = 0; i < size; ++i) {
+      arr[i] = {
+        id: i.toString(),
+        name: `Name${i}${i === 12345 ? ' - Scrolled to me!' : ''}`,
+        description: `Description${i}${
+          i === 12345 ? ' - Scrolled to me!' : ''
+        }`,
+      };
+    }
+    return arr;
+  }, []);
+
+  return (
+    <Table
+      enableVirtualization
+      columns={columns}
+      emptyTableContent='No data.'
+      isSortable
+      {...args}
+      style={{ maxHeight: '90vh' }}
+      data={data}
+      scrollToRow={React.useCallback(
+        (rows: Row<TableStoryDataType>[], data: TableStoryDataType[]) =>
+          rows.findIndex((row) => row.original.id === data[12345].id),
+        [],
+      )}
+    />
+  );
+};
+
+ScrollToRow.argTypes = {
+  isLoading: { control: { disable: true } },
+  data: { control: { disable: true } },
+};
+
 export const VirtualizedSubRows: Story<Partial<TableProps>> = (args) => {
   const columns = useMemo(
     () => [
@@ -2872,7 +2953,34 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
               );
             },
           },
-          ActionColumn({ columnManager: true }),
+          {
+            id: 'Price',
+            Header: 'Price',
+            accessor: 'price',
+          },
+          {
+            id: 'Color',
+            Header: 'Color',
+            accessor: 'color',
+          },
+          {
+            id: '# in stock',
+            Header: '# in stock',
+            accessor: 'stock',
+          },
+          {
+            id: 'Rating',
+            Header: 'Rating',
+            accessor: 'rating',
+          },
+          {
+            id: 'Location',
+            Header: 'Location',
+            accessor: 'location',
+          },
+          ActionColumn({
+            columnManager: true,
+          }),
         ],
       },
     ],
@@ -2887,6 +2995,11 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
         id: '111',
         startDate: new Date('May 1, 2021'),
         endDate: new Date('Jun 1, 2021'),
+        price: '$1.00',
+        color: 'Red',
+        stock: 10,
+        rating: '5/5',
+        location: 'Philadelphia, Pennsylvania',
       },
       {
         index: 2,
@@ -2895,6 +3008,11 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
         id: '222',
         startDate: new Date('May 2, 2021'),
         endDate: new Date('Jun 2, 2021'),
+        price: '$2.00',
+        color: 'Green',
+        stock: 20,
+        rating: '4/5',
+        location: 'Philadelphia, Pennsylvania',
       },
       {
         index: 3,
@@ -2903,6 +3021,11 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
         id: '333',
         startDate: new Date('May 3, 2021'),
         endDate: new Date('Jun 3, 2021'),
+        price: '$3.00',
+        color: 'Green',
+        stock: 30,
+        rating: '3/5',
+        location: 'Philadelphia, Pennsylvania',
       },
       {
         index: 4,
@@ -2911,6 +3034,11 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
         id: '444',
         startDate: new Date('May 4, 2021'),
         endDate: new Date('Jun 4, 2021'),
+        price: '$4.00',
+        color: 'Yellow',
+        stock: 40,
+        rating: '2/5',
+        location: 'Philadelphia, Pennsylvania',
       },
       {
         index: 5,
@@ -2919,6 +3047,11 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
         id: '555',
         startDate: new Date('May 5, 2021'),
         endDate: new Date('Jun 5, 2021'),
+        price: '$5.00',
+        color: 'Purple',
+        stock: 50,
+        rating: '1/5',
+        location: 'Philadelphia, Pennsylvania',
       },
     ],
     [],
@@ -2944,6 +3077,11 @@ ColumnManager.args = {
       id: '111',
       startDate: new Date('May 1, 2021'),
       endDate: new Date('Jun 1, 2021'),
+      price: '$1.00',
+      color: 'Red',
+      stock: 10,
+      rating: '5/5',
+      location: 'Philadelphia, Pennsylvania',
     },
     {
       index: 2,
@@ -2952,6 +3090,11 @@ ColumnManager.args = {
       id: '222',
       startDate: new Date('May 2, 2021'),
       endDate: new Date('Jun 2, 2021'),
+      price: '$2.00',
+      color: 'Green',
+      stock: 20,
+      rating: '4/5',
+      location: 'Philadelphia, Pennsylvania',
     },
     {
       index: 3,
@@ -2960,6 +3103,11 @@ ColumnManager.args = {
       id: '333',
       startDate: new Date('May 3, 2021'),
       endDate: new Date('Jun 3, 2021'),
+      price: '$3.00',
+      color: 'Green',
+      stock: 30,
+      rating: '3/5',
+      location: 'Philadelphia, Pennsylvania',
     },
     {
       index: 4,
@@ -2968,6 +3116,11 @@ ColumnManager.args = {
       id: '444',
       startDate: new Date('May 4, 2021'),
       endDate: new Date('Jun 4, 2021'),
+      price: '$4.00',
+      color: 'Yellow',
+      stock: 40,
+      rating: '2/5',
+      location: 'Philadelphia, Pennsylvania',
     },
     {
       index: 5,
@@ -2976,6 +3129,11 @@ ColumnManager.args = {
       id: '555',
       startDate: new Date('May 5, 2021'),
       endDate: new Date('Jun 5, 2021'),
+      price: '$5.00',
+      color: 'Purple',
+      stock: 50,
+      rating: '1/5',
+      location: 'Philadelphia, Pennsylvania',
     },
   ],
 };

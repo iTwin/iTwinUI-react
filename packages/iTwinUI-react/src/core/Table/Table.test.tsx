@@ -2447,12 +2447,19 @@ it('should sync body horizontal scroll with header scroll', () => {
   expect(header.scrollLeft).toBe(0);
   expect(body.scrollLeft).toBe(0);
 
+  // When body scrolls, header should scroll
   fireEvent.scroll(body, {
     target: { scrollLeft: 100 },
   });
-
   expect(header.scrollLeft).toBe(100);
   expect(body.scrollLeft).toBe(100);
+
+  // When header scrolls, body should scroll
+  fireEvent.scroll(header, {
+    target: { scrollLeft: 0 },
+  });
+  expect(header.scrollLeft).toBe(0);
+  expect(body.scrollLeft).toBe(0);
 });
 
 it.each([
@@ -2686,7 +2693,7 @@ it('should render empty action column with column manager', async () => {
   expect(columnManagerColumns[2].textContent).toBe('View');
 });
 
-it('should render action column with column manager', () => {
+it('should render action column with column manager', async () => {
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Header name',
@@ -2725,6 +2732,79 @@ it('should render action column with column manager', () => {
   expect(actionColumn[1].textContent).toBe('View');
   expect(actionColumn[2].textContent).toBe('View');
   expect(actionColumn[3].textContent).toBe('View');
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  const columnManager = headerCells[headerCells.length - 1]
+    .firstElementChild as Element;
+
+  await userEvent.click(columnManager);
+
+  const dropdownMenu = document.querySelector('.iui-menu') as HTMLDivElement;
+  expect(dropdownMenu).toBeTruthy();
+  expect(dropdownMenu.classList.contains('iui-scroll')).toBeTruthy();
+  expect(dropdownMenu).toHaveStyle('max-height: 315px');
+});
+
+it('should render dropdown menu with custom style and override default style', async () => {
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'View',
+          Cell: () => <>View</>,
+        },
+        ActionColumn({
+          columnManager: {
+            dropdownMenuProps: {
+              className: 'testing-classname',
+              style: {
+                maxHeight: '600px',
+                backgroundColor: 'red',
+              },
+              role: 'listbox',
+            },
+          },
+        }),
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+  });
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  const columnManager = headerCells[headerCells.length - 1]
+    .firstElementChild as Element;
+
+  expect(
+    columnManager.className.includes('iui-button iui-borderless'),
+  ).toBeTruthy();
+
+  await userEvent.click(columnManager);
+
+  const dropdownMenu = document.querySelector('.iui-menu') as HTMLDivElement;
+  expect(dropdownMenu).toBeTruthy();
+  expect(dropdownMenu.classList.contains('iui-scroll')).toBeTruthy();
+  expect(dropdownMenu.classList.contains('testing-classname')).toBeTruthy();
+  expect(dropdownMenu).toHaveStyle('max-height: 600px');
+  expect(dropdownMenu).toHaveStyle('background-color: red');
+  expect(dropdownMenu).toHaveAttribute('role', 'listbox');
 });
 
 it('should hide column when deselected in column manager', async () => {
@@ -3037,6 +3117,28 @@ it('should not throw on headless table', () => {
 
   expect(container.querySelector('.iui-table-header .iui-row')).toBeFalsy();
   expect(container.querySelector('.iui-table-body')).toBeTruthy();
+});
+
+it('should scroll to selected item in non-virtualized table', async () => {
+  let scrolledElement: HTMLElement | null = null;
+  jest
+    .spyOn(HTMLElement.prototype, 'scrollIntoView')
+    .mockImplementation(function (this: HTMLElement) {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      scrolledElement = this;
+    });
+
+  const data = mockedData(50);
+  renderComponent({
+    data,
+    scrollToRow: (rows) => rows.findIndex((row) => row.original === data[25]),
+  });
+
+  expect(scrolledElement).toBeTruthy();
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  expect(scrolledElement!.querySelector('.iui-cell')?.textContent).toBe(
+    data[25].name,
+  );
 });
 
 it('should render sticky columns correctly', () => {
