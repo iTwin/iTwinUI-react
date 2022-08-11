@@ -163,6 +163,8 @@ const currentPage = new URL(Astro.request.url).pathname;
     </div>
   </main>
 
+  <footer>© 2022 Bentley Systems, Inc</footer>
+
   <style lang='scss'>
     body {
       display: grid;
@@ -362,6 +364,12 @@ const currentPage = new URL(Astro.request.url).pathname;
       align-self: center;
       fill: var(--color-highlight-1);
       height: 96px;
+    }
+
+    footer {
+      color: var(--color-subtext);
+      margin-inline: auto;
+      padding: var(--space-4);
     }
   </style>
 </Global>
