@@ -572,17 +572,17 @@ export const Table = <
         selectRowOnClick &&
         !event.isDefaultPrevented()
       ) {
-        if (event.shiftKey) {
-          dispatch({
-            type: shiftRowSelectedAction,
-            id: row.id,
-          });
-        } else {
-          dispatch({
-            type: singleRowSelectedAction,
-            id: row.id,
-          });
-        }
+        // if (event.shiftKey) {
+        //   dispatch({
+        //     type: shiftRowSelectedAction,
+        //     id: row.id,
+        //   });
+        // } else {
+        //   dispatch({
+        //     type: singleRowSelectedAction,
+        //     id: row.id,
+        //   });
+        // }
 
         // dispatch({
         //   type: toggleAllRowsSelected,
@@ -593,17 +593,26 @@ export const Table = <
         //   // r.toggleRowSelected(true);
         //   console.log(r);
         // });
-        // if (!row.isSelected && (selectionMode === 'single' || !event.ctrlKey)) {
-        //   dispatch({
-        //     type: singleRowSelectedAction,
-        //     id: row.id,
-        //   });
-        //   // row.toggleRowSelected(!row.isSelected);
-        // } else {
-        //   //
-        //   row.toggleRowSelected(!row.isSelected);
-        //   // row.toggle(!row.isSelected);
-        // }
+
+        if (event.shiftKey) {
+          dispatch({
+            type: shiftRowSelectedAction,
+            id: row.id,
+          });
+        } else if (
+          !row.isSelected &&
+          (selectionMode === 'single' || !event.ctrlKey)
+        ) {
+          dispatch({
+            type: singleRowSelectedAction,
+            id: row.id,
+          });
+          // row.toggleRowSelected(!row.isSelected);
+        } else {
+          //
+          row.toggleRowSelected(!row.isSelected);
+          // row.toggle(!row.isSelected);
+        }
         // if (!row.isSelected && selectionMode === 'multi')
         // dispatch({
         //   type: singleRowSelectedAction,
@@ -616,7 +625,7 @@ export const Table = <
       isRowDisabled,
       isSelectable,
       selectRowOnClick,
-      // selectionMode,
+      selectionMode,
       dispatch,
       onRowClick,
     ],
