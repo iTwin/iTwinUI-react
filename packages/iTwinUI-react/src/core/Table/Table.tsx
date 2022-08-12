@@ -52,8 +52,10 @@ import {
 } from './actionHandlers';
 import VirtualScroll from '../utils/components/VirtualScroll';
 import { SELECTION_CELL_ID } from './columns';
+import { onShiftSelectHandler } from './actionHandlers/selectHandler';
 
 const singleRowSelectedAction = 'singleRowSelected';
+const shiftRowSelectedAction = 'shiftRowSelected';
 // const toggleAllRowsSelected = 'toggleAllRowsSelected';
 // const rangeRowSelectedAction = 'rangeRowSelected';
 export const tableResizeStartAction = 'tableResizeStart';
@@ -432,6 +434,10 @@ export const Table = <
           console.log('singleRowSelectedAction', newState.lastSelectedRow);
           break;
         }
+        case shiftRowSelectedAction: {
+          onShiftSelectHandler(newState, action, instance);
+          break;
+        }
         case TableActions.toggleRowSelected:
         case TableActions.toggleAllRowsSelected:
         case TableActions.toggleAllPageRowsSelected: {
@@ -469,6 +475,7 @@ export const Table = <
       onSelect,
       onSort,
       stateReducer,
+      // rows,
     ],
   );
 
@@ -565,6 +572,18 @@ export const Table = <
         selectRowOnClick &&
         !event.isDefaultPrevented()
       ) {
+        if (event.shiftKey) {
+          dispatch({
+            type: shiftRowSelectedAction,
+            id: row.id,
+          });
+        } else {
+          dispatch({
+            type: singleRowSelectedAction,
+            id: row.id,
+          });
+        }
+
         // dispatch({
         //   type: toggleAllRowsSelected,
         //   id: row.id,
@@ -574,17 +593,17 @@ export const Table = <
         //   // r.toggleRowSelected(true);
         //   console.log(r);
         // });
-        if (!row.isSelected && (selectionMode === 'single' || !event.ctrlKey)) {
-          dispatch({
-            type: singleRowSelectedAction,
-            id: row.id,
-          });
-          // row.toggleRowSelected(!row.isSelected);
-        } else {
-          //
-          row.toggleRowSelected(!row.isSelected);
-          // row.toggle(!row.isSelected);
-        }
+        // if (!row.isSelected && (selectionMode === 'single' || !event.ctrlKey)) {
+        //   dispatch({
+        //     type: singleRowSelectedAction,
+        //     id: row.id,
+        //   });
+        //   // row.toggleRowSelected(!row.isSelected);
+        // } else {
+        //   //
+        //   row.toggleRowSelected(!row.isSelected);
+        //   // row.toggle(!row.isSelected);
+        // }
         // if (!row.isSelected && selectionMode === 'multi')
         // dispatch({
         //   type: singleRowSelectedAction,
@@ -597,7 +616,7 @@ export const Table = <
       isRowDisabled,
       isSelectable,
       selectRowOnClick,
-      selectionMode,
+      // selectionMode,
       dispatch,
       onRowClick,
     ],

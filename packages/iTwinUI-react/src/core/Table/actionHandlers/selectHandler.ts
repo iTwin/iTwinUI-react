@@ -94,6 +94,35 @@ export const onSingleSelectHandler = <T extends Record<string, unknown>>(
   return newState;
 };
 
+export const onShiftSelectHandler = <T extends Record<string, unknown>>(
+  state: TableState<T>,
+  action: ActionType,
+  instance?: TableInstance<T>,
+) => {
+  const isInRange = (value: number, limit1: number, limit2: number) => {
+    return (
+      (limit1 <= value && value <= limit2) ||
+      (limit2 <= value && value <= limit1)
+    );
+  };
+
+  const rows = instance?.rows;
+  if (rows == null) {
+    return;
+  }
+
+  const selectedIndex = rows.find((r) => r.id === action.id)?.index ?? 0;
+  const startIndex =
+    rows.find((r) => r.id === state.lastSelectedRow)?.index ?? selectedIndex;
+  const endIndex = selectedIndex;
+
+  // console.log('Shift key', startIndex, endIndex, state.lastSelectedRow);
+
+  rows.forEach((r) => {
+    r.toggleRowSelected(isInRange(r.index, startIndex, endIndex));
+  });
+};
+
 const getSelectedData = <T extends Record<string, unknown>>(
   selectedRowIds: Record<string, boolean>,
   instance?: TableInstance<T>,
