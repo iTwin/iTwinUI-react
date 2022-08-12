@@ -97,7 +97,7 @@ export const onSingleSelectHandler = <T extends Record<string, unknown>>(
 export const onShiftSelectHandler = <T extends Record<string, unknown>>(
   state: TableState<T>,
   action: ActionType,
-  instance?: TableInstance<T>,
+  instance: TableInstance<T>,
 ) => {
   const isInRange = (value: number, limit1: number, limit2: number) => {
     return (
@@ -106,14 +106,14 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     );
   };
 
-  const rows = instance?.rows;
+  const rows = instance.rows;
   if (rows == null) {
     return;
   }
 
-  const selectedIndex = rows.find((r) => r.id === action.id)?.index ?? 0;
+  const selectedIndex = instance.rowsById[action.id]?.index ?? 0;
   const startIndex =
-    rows.find((r) => r.id === state.lastSelectedRow)?.index ?? selectedIndex;
+    instance.rowsById[state.lastSelectedRow]?.index ?? selectedIndex;
   const endIndex = selectedIndex;
 
   // console.log('Shift key', startIndex, endIndex, state.lastSelectedRow);
