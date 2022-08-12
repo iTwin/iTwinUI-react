@@ -69,7 +69,7 @@ export const onSingleSelectHandler = <T extends Record<string, unknown>>(
   ) => void,
   isRowDisabled?: (rowData: T) => boolean,
 ) => {
-  console.log('HERE', action.id);
+  console.log('HERE');
 
   const selectedRowIds = { [action.id]: true } as Record<string, boolean>;
   if (instance?.selectSubRows) {

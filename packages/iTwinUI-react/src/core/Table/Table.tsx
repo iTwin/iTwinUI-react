@@ -54,7 +54,6 @@ import VirtualScroll from '../utils/components/VirtualScroll';
 import { SELECTION_CELL_ID } from './columns';
 
 const singleRowSelectedAction = 'singleRowSelected';
-const shiftRowSelectedAction = 'shiftRowSelected';
 // const toggleAllRowsSelected = 'toggleAllRowsSelected';
 // const rangeRowSelectedAction = 'rangeRowSelected';
 export const tableResizeStartAction = 'tableResizeStart';
@@ -403,13 +402,6 @@ export const Table = <
     return flatColumns.some((column) => column.id === SELECTION_CELL_ID);
   }, [columns]);
 
-  const isInRange = (value: number, limit1: number, limit2: number) => {
-    return (
-      (limit1 <= value && value <= limit2) ||
-      (limit2 <= value && value <= limit1)
-    );
-  };
-
   const tableStateReducer = React.useCallback(
     (
       newState: TableState<T>,
@@ -438,25 +430,6 @@ export const Table = <
             hasManualSelectionColumn ? undefined : isRowDisabled,
           );
           console.log('singleRowSelectedAction', newState.lastSelectedRow);
-          break;
-        }
-        case shiftRowSelectedAction: {
-          const selectedIndex = rows.find((r) => r.id === action.id)?.index;
-          const startIndex =
-            rows.find((r) => r.id === newState.lastSelectedRow)?.index ??
-            selectedIndex;
-          const endIndex = selectedIndex;
-
-          console.log(
-            'Shift key',
-            startIndex,
-            endIndex,
-            newState.lastSelectedRow,
-          );
-
-          rows.forEach((r) => {
-            r.toggleRowSelected(isInRange(r.index, startIndex, endIndex));
-          });
           break;
         }
         case TableActions.toggleRowSelected:
@@ -496,7 +469,6 @@ export const Table = <
       onSelect,
       onSort,
       stateReducer,
-      rows,
     ],
   );
 
@@ -593,18 +565,6 @@ export const Table = <
         selectRowOnClick &&
         !event.isDefaultPrevented()
       ) {
-        if (event.shiftKey) {
-          dispatch({
-            type: shiftRowSelectedAction,
-            id: row.id,
-          });
-        } else {
-          dispatch({
-            type: singleRowSelectedAction,
-            id: row.id,
-          });
-        }
-
         // dispatch({
         //   type: toggleAllRowsSelected,
         //   id: row.id,
@@ -614,17 +574,17 @@ export const Table = <
         //   // r.toggleRowSelected(true);
         //   console.log(r);
         // });
-        // if (!row.isSelected && (selectionMode === 'single' || !event.ctrlKey)) {
-        //   dispatch({
-        //     type: singleRowSelectedAction,
-        //     id: row.id,
-        //   });
-        //   // row.toggleRowSelected(!row.isSelected);
-        // } else {
-        //   //
-        //   row.toggleRowSelected(!row.isSelected);
-        //   // row.toggle(!row.isSelected);
-        // }
+        if (!row.isSelected && (selectionMode === 'single' || !event.ctrlKey)) {
+          dispatch({
+            type: singleRowSelectedAction,
+            id: row.id,
+          });
+          // row.toggleRowSelected(!row.isSelected);
+        } else {
+          //
+          row.toggleRowSelected(!row.isSelected);
+          // row.toggle(!row.isSelected);
+        }
         // if (!row.isSelected && selectionMode === 'multi')
         // dispatch({
         //   type: singleRowSelectedAction,
@@ -637,7 +597,7 @@ export const Table = <
       isRowDisabled,
       isSelectable,
       selectRowOnClick,
-      // selectionMode,
+      selectionMode,
       dispatch,
       onRowClick,
     ],
