@@ -25,9 +25,12 @@ export const HeaderBasicButton: HeaderBasicButtonComponent = React.forwardRef(
       startIcon,
       endIcon,
       as: Element = 'button',
+      styleType,
+      size,
       ...rest
     } = props;
-
+    styleType; // To omit and prevent eslint error.
+    size; // To omit and prevent eslint error.
     useTheme();
 
     return (

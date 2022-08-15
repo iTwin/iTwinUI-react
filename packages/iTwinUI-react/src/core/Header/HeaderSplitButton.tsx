@@ -29,8 +29,6 @@ export const HeaderSplitButton: HeaderSplitButtonComponent = React.forwardRef(
       children,
       style,
       title,
-      styleType,
-      size,
       ...rest
     } = props;
 
@@ -54,13 +52,7 @@ export const HeaderSplitButton: HeaderSplitButtonComponent = React.forwardRef(
         title={title}
         ref={ref}
       >
-        <HeaderBasicButton
-          styleType={styleType}
-          size={size}
-          onClick={onClick}
-          ref={forwardedRef}
-          {...rest}
-        >
+        <HeaderBasicButton onClick={onClick} ref={forwardedRef} {...rest}>
           {children}
         </HeaderBasicButton>
         <DropdownMenu
