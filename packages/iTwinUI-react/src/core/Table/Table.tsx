@@ -409,7 +409,7 @@ export const Table = <
       newState: TableState<T>,
       action: ActionType,
       previousState: TableState<T>,
-      instance?: TableInstance<T>,
+      instance: TableInstance<T>,
     ): TableState<T> => {
       switch (action.type) {
         case TableActions.toggleSortBy:
@@ -560,7 +560,8 @@ export const Table = <
 
   const onRowClickHandler = React.useCallback(
     (event: React.MouseEvent, row: Row<T>) => {
-      // console.log('123', event, row, event.ctrlKey, event.shiftKey);
+      // row.parentId = '123';
+      console.log('123', event, row, event.ctrlKey, event.shiftKey, rows);
 
       const isDisabled = isRowDisabled?.(row.original);
       if (!isDisabled) {
@@ -628,6 +629,7 @@ export const Table = <
       selectionMode,
       dispatch,
       onRowClick,
+      rows,
     ],
   );
 

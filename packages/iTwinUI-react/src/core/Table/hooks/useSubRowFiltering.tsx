@@ -29,6 +29,16 @@ const useInstance = <T extends Record<string, unknown>>(
   };
   setInitialSubRows(instance.initialRows);
 
+  const setParentId = (rows: Row<T>[], currentParentId: string | null) => {
+    rows.forEach((row) => {
+      if (!row.parentId) {
+        row.parentId = currentParentId;
+      }
+      setParentId(row.subRows, row.id);
+    });
+  };
+  setParentId(instance.initialRows, null);
+
   const {
     filteredRows = instance.filteredRows,
     filteredFlatRows = instance.filteredFlatRows,

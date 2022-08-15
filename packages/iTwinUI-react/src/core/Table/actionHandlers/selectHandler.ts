@@ -111,16 +111,28 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     return;
   }
 
+  console.log('action.id', action.id);
+
   const selectedIndex = instance.rowsById[action.id]?.index ?? 0;
   const startIndex =
     instance.rowsById[state.lastSelectedRow]?.index ?? selectedIndex;
   const endIndex = selectedIndex;
+
+  // console.log("selected indices:", selectedIndex, start)
 
   // console.log('Shift key', startIndex, endIndex, state.lastSelectedRow);
 
   rows.forEach((r) => {
     r.toggleRowSelected(isInRange(r.index, startIndex, endIndex));
   });
+
+  // if (instance.selectSubRows) {
+  //   const handleRow = (row: Row<T>) => {
+  //     selectedRowIds[row.id] = true;
+  //     row.subRows.forEach((r) => handleRow(r));
+  //   };
+  //   handleRow(instance.rowsById[action.id]);
+  // }
 };
 
 const getSelectedData = <T extends Record<string, unknown>>(
