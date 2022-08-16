@@ -116,7 +116,9 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
 
   const getGreaterId = (id: string) => {
     const greaterId = id.split('.');
-    greaterId[greaterId.length - 1] = greaterId[greaterId.length - 1] + 1;
+    greaterId[greaterId.length - 1] = `${
+      parseInt(greaterId[greaterId.length - 1]) + 1
+    }`;
     return greaterId.join('.');
   };
 
@@ -165,11 +167,12 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     endId: string,
   ) => {
     // return true;
-    return (
+    const selected =
       (!isLesser(currentId, startId) && isLesser(currentId, endId)) ||
       currentId === startId ||
-      currentId === endId
-    );
+      currentId === endId;
+    // console.log(currentId, startId, endId, selected);
+    return selected;
   };
 
   const shiftSelect = (
@@ -186,7 +189,13 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     const row = instance.rowsById[currentId];
     row.subRows.forEach((r) => {
       const selected = shouldBeSelected(r.id, startId, endId);
-      r.toggleRowSelected(selected);
+      // console.log(r.id, startId, endId, selected);
+
+      // To not undo the partially selected sub rows when control is passed to parent
+      // i.e. only selecting is allowed (no un-selection)
+      if (selected) {
+        r.toggleRowSelected(selected);
+      }
     });
 
     const newCurrentId = getParentId(currentId);

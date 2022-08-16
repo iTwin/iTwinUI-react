@@ -37,6 +37,9 @@ const isLesser = (id: string, referenceId: string) => {
   return true;
 };
 
-const id = '3.2.1';
-const referenceId = '4.0.1';
-console.log(isLesser(id, referenceId));
+console.log(isLesser('3.2.1', '4.0.1'));
+console.log(isLesser('3.0.1', '3.0.3'));
+console.log(isLesser('4.0.1', '3.2.1'));
+console.log(isLesser('3.0.3', '3.0.1'));
+console.log(isLesser('3.0.1', '3.0.1'));
+console.log(isLesser('0.1.2', '1.0'));
