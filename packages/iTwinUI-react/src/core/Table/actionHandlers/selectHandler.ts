@@ -129,7 +129,7 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
   const isLesser = (id: string, referenceId: string) => {
     // 3.2.1    4.0.1
     // 3.0.1    3.0.3
-    console.log('isLesser', id, referenceId);
+    // console.log('isLesser', id, referenceId);
 
     if (id === referenceId) {
       return false;
@@ -161,6 +161,10 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     return true;
   };
 
+  const shouldExpand = (currentId: string, endId: string) => {
+    return endId.indexOf(currentId) === 0;
+  };
+
   const shouldBeSelected = (
     currentId: string,
     startId: string,
@@ -168,10 +172,9 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
   ) => {
     // return true;
     const selected =
-      (!isLesser(currentId, startId) && isLesser(currentId, endId)) ||
-      currentId === startId ||
-      currentId === endId;
-    // console.log(currentId, startId, endId, selected);
+      (currentId === startId || !isLesser(currentId, startId)) &&
+      (currentId === endId || isLesser(currentId, endId));
+    console.log(currentId, startId, endId, selected);
     return selected;
   };
 
@@ -180,16 +183,28 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     startId: string,
     endId: string,
   ) => {
-    if (currentId === endId || currentId == null) {
+    if (currentId === endId) {
       return;
     }
 
     console.log('123', currentId);
 
-    const row = instance.rowsById[currentId];
-    row.subRows.forEach((r) => {
+    let subRows;
+    if (currentId != null) {
+      subRows = instance.rowsById[currentId].subRows;
+    } else {
+      subRows = instance.rows;
+    }
+
+    subRows.forEach((r) => {
       const selected = shouldBeSelected(r.id, startId, endId);
       // console.log(r.id, startId, endId, selected);
+
+      // Go inside the row to toggle the appropriate sub rows
+      if (shouldExpand(r.id, endId)) {
+        shiftSelect(r.id, startId, endId);
+        return;
+      }
 
       // To not undo the partially selected sub rows when control is passed to parent
       // i.e. only selecting is allowed (no un-selection)
@@ -198,9 +213,11 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
       }
     });
 
-    const newCurrentId = getParentId(currentId);
-    const newStartId = getGreaterId(currentId);
-    shiftSelect(newCurrentId, newStartId, endId);
+    if (currentId != null) {
+      const newCurrentId = getParentId(currentId);
+      const newStartId = getGreaterId(currentId);
+      shiftSelect(newCurrentId, newStartId, endId);
+    }
 
     // if (isLesser(currentId, startId)) {
 
