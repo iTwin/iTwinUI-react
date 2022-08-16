@@ -18,11 +18,11 @@ export type StepProps = {
    */
   index: number;
   /**
-   * the Wizard's current step number, 0-based.
+   * the Stepper's current step number, 0-based.
    */
-  currentStepNumber: number;
+  currentStepNumber?: number;
   /**
-   * number of total steps in the wizard.
+   * number of total steps in the stepper.
    */
   totalSteps: number;
   /**
@@ -53,8 +53,14 @@ export const Step = (props: StepProps) => {
     ...rest
   } = props;
 
-  const isPast = type !== 'workflow' && currentStepNumber > index;
-  const isActive = type !== 'workflow' && currentStepNumber === index;
+  const isPast =
+    type !== 'workflow' &&
+    currentStepNumber !== undefined &&
+    currentStepNumber > index;
+  const isActive =
+    type !== 'workflow' &&
+    currentStepNumber !== undefined &&
+    currentStepNumber === index;
   const isClickable = type !== 'workflow' && isPast && !!onClick;
 
   const onCompletedClick = () => {
@@ -72,12 +78,12 @@ export const Step = (props: StepProps) => {
       onCompletedClick();
     }
   };
-  const classNamePrefix = type === 'workflow' ? 'workflow-diagram' : 'stepper';
 
+  const initClassName = type === 'workflow' ? 'workflow-diagram' : 'stepper';
   const stepShape = (
     <li
       className={cx(
-        `iui-${classNamePrefix}-step`,
+        `iui-${initClassName}-step`,
         {
           'iui-current': isActive,
           'iui-clickable': isClickable,
@@ -103,7 +109,7 @@ export const Step = (props: StepProps) => {
       )}
 
       {type === 'default' && (
-        <div className='iui-stepper-step-name'>{title}</div>
+        <span className='iui-stepper-step-name'>{title}</span>
       )}
     </li>
   );

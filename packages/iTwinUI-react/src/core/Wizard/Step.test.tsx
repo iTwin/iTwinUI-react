@@ -162,8 +162,7 @@ describe('Wizard step (default)', () => {
   });
 });
 
-describe.each(['long', 'workflow'] as const)('Wizard step (%s)', (type) => {
-  const classNamePrefix = type === 'long' ? 'stepper' : 'workflow-diagram';
+describe('Wizard step (long)', () => {
   it('should render correctly', () => {
     const mockedClick = jest.fn();
     const step = (
@@ -172,7 +171,7 @@ describe.each(['long', 'workflow'] as const)('Wizard step (%s)', (type) => {
         index={1}
         currentStepNumber={0}
         totalSteps={3}
-        type={type}
+        type={'long'}
         onClick={mockedClick}
       />
     );
@@ -181,7 +180,7 @@ describe.each(['long', 'workflow'] as const)('Wizard step (%s)', (type) => {
 
     // Renders step
     const stepContainer = container.querySelector(
-      `.iui-${classNamePrefix}-step`,
+      '.iui-stepper-step',
     ) as HTMLElement;
     expect(stepContainer).toBeTruthy();
 
@@ -195,21 +194,15 @@ describe.each(['long', 'workflow'] as const)('Wizard step (%s)', (type) => {
     expect(stepContainer).not.toHaveAttribute('tabindex');
 
     // No title
-    expect(
-      container.querySelector(`.iui-${classNamePrefix}-step-name`),
-    ).toBeFalsy();
+    expect(container.querySelector('.iui-stepper-step-name')).toBeFalsy();
     // Circle
     const circle = container.querySelector(
-      `.iui-${classNamePrefix}-${type === 'long' ? 'circle' : 'content'}`, // iui-stepper-circle or iui-workflow-diagram-content
+      '.iui-stepper-circle',
     ) as HTMLElement;
     expect(circle).toBeTruthy();
-    expect(circle.textContent).toBe(type === 'long' ? '2' : 'Second step');
+    expect(circle.textContent).toBe('2');
     // Main track content
-    if (type === 'long') {
-      expect(
-        container.querySelector('.iui-stepper-track-content'),
-      ).toBeTruthy();
-    }
+    expect(container.querySelector('.iui-stepper-track-content')).toBeTruthy();
   });
 
   it('should not set dynamic inline width', () => {
@@ -219,12 +212,56 @@ describe.each(['long', 'workflow'] as const)('Wizard step (%s)', (type) => {
         index={1}
         currentStepNumber={0}
         totalSteps={4}
-        type={type}
+        type={'long'}
+      />,
+    );
+
+    const step = container.querySelector('.iui-stepper-step') as HTMLElement;
+    expect(step).toBeTruthy();
+    expect(step.style.width).toBeFalsy(); // not 25%
+  });
+});
+
+describe('Wizard step (workflow)', () => {
+  it('should render correctly', () => {
+    const step = (
+      <Step title='Second step' index={1} totalSteps={3} type={'workflow'} />
+    );
+
+    const { container } = render(step);
+
+    // Renders step
+    const stepContainer = container.querySelector(
+      '.iui-workflow-diagram-step',
+    ) as HTMLElement;
+    expect(stepContainer).toBeTruthy();
+
+    // No tabindex
+    expect(stepContainer).not.toHaveAttribute('tabindex');
+
+    // No title
+    expect(container.querySelector('.iui-stepper-step-name')).toBeFalsy();
+    // Content
+    const content = container.querySelector(
+      '.iui-workflow-diagram-content',
+    ) as HTMLElement;
+    expect(content).toBeTruthy();
+    expect(content.textContent).toBe('Second step');
+  });
+
+  it('should not set dynamic inline width', () => {
+    const { container } = render(
+      <Step
+        title='Mock step'
+        index={1}
+        currentStepNumber={0}
+        totalSteps={4}
+        type={'workflow'}
       />,
     );
 
     const step = container.querySelector(
-      `.iui-${classNamePrefix}-step`,
+      '.iui-workflow-diagram-step',
     ) as HTMLElement;
     expect(step).toBeTruthy();
     expect(step.style.width).toBeFalsy(); // not 25%

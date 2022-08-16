@@ -3,10 +3,10 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { useTheme } from '../utils';
 import '@itwin/itwinui-css/css/stepper.css';
 import '@itwin/itwinui-css/css/workflow-diagram.css';
-import { Step } from './Step';
+import { Stepper } from './Stepper';
+import { WorkflowDiagram } from './WorkflowDiagram';
 
 export type WizardLocalization = {
   stepsCountLabel: (currentStep: number, totalSteps: number) => string;
@@ -67,60 +67,28 @@ const defaultWizardLocalization: WizardLocalization = {
  *  type='long'
  *  />
  */
-export const Wizard = React.forwardRef<HTMLDivElement, WizardProps>(
-  (props, ref) => {
-    const {
-      currentStep,
-      steps,
-      type = 'default',
-      localization = defaultWizardLocalization,
-      onStepClick,
-      ...rest
-    } = props;
+export const Wizard = (props: WizardProps) => {
+  const {
+    currentStep,
+    steps,
+    type = 'default',
+    localization = defaultWizardLocalization,
+    onStepClick,
+    ...rest
+  } = props;
 
-    const boundedCurrentStep = Math.min(
-      Math.max(0, currentStep ?? 0),
-      steps.length - 1,
-    );
-
-    useTheme();
-
-    const allSteps = (
-      <ol className={type === 'workflow' ? 'iui-workflow-diagram' : undefined}>
-        {steps.map((s, index) => (
-          <Step
-            key={index}
-            index={index}
-            title={type === 'long' ? '' : s.name}
-            currentStepNumber={boundedCurrentStep}
-            totalSteps={steps.length}
-            type={type}
-            onClick={onStepClick}
-            description={s.description}
-          />
-        ))}
-      </ol>
-    );
-
-    return type !== 'workflow' ? (
-      <div className='iui-stepper' ref={ref} {...rest}>
-        {allSteps}
-        {type === 'long' && (
-          <div className='iui-stepper-steps-label'>
-            <span className='iui-stepper-steps-label-count'>
-              {localization.stepsCountLabel(
-                boundedCurrentStep + 1,
-                steps.length,
-              )}
-            </span>
-            {steps[boundedCurrentStep].name}
-          </div>
-        )}
-      </div>
-    ) : (
-      allSteps
-    );
-  },
-);
+  return type !== 'workflow' ? (
+    <Stepper
+      type={type}
+      currentStep={currentStep}
+      steps={steps}
+      localization={localization}
+      onStepClick={onStepClick}
+      {...rest}
+    />
+  ) : (
+    <WorkflowDiagram steps={steps} {...rest} />
+  );
+};
 
 export default Wizard;
