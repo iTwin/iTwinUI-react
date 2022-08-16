@@ -79,11 +79,10 @@ export const Step = (props: StepProps) => {
     }
   };
 
-  const initClassName = type === 'workflow' ? 'workflow-diagram' : 'stepper';
   const stepShape = (
     <li
       className={cx(
-        `iui-${initClassName}-step`,
+        type === 'workflow' ? 'iui-workflow-diagram-step' : 'iui-stepper-step',
         {
           'iui-current': isActive,
           'iui-clickable': isClickable,
