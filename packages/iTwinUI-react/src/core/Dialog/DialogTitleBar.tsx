@@ -58,7 +58,9 @@ export const DialogTitleBar = Object.assign(
     const { onPointerDown } = useDialogDragContext();
     const handlePointerDown = React.useCallback(
       (event: React.PointerEvent<HTMLDivElement>) => {
-        onPointerDown?.(event);
+        if (!event.defaultPrevented) {
+          onPointerDown?.(event);
+        }
         onPointerDownProp?.(event);
       },
       [onPointerDown, onPointerDownProp],
