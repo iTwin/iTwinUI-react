@@ -3,8 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import '@itwin/itwinui-css/css/stepper.css';
-import '@itwin/itwinui-css/css/workflow-diagram.css';
 import { Stepper } from './Stepper';
 import { WorkflowDiagram } from './WorkflowDiagram';
 
