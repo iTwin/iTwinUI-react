@@ -46,8 +46,6 @@ export const useDragAndDrop = (
     let newTranslateX = event.clientX - grabOffsetX.current;
     let newTranslateY = event.clientY - grabOffsetY.current;
 
-    console.log(event.clientX, event.clientY);
-
     const elementTop = event.clientY - distancesToEdges.current.top;
     const elementRight = event.clientX + distancesToEdges.current.right;
     const elementBottom = event.clientY + distancesToEdges.current.bottom;
