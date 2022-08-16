@@ -12,7 +12,6 @@ import {
   CommonProps,
   useTheme,
   useOverflow,
-  getFocusableElements,
 } from '../utils';
 import '@itwin/itwinui-css/css/inputs.css';
 import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
@@ -33,38 +32,6 @@ const isSingleOnChange = <T,>(
   multiple: boolean,
 ): onChange is ((value: T) => void) | undefined => {
   return !multiple;
-};
-
-const focusPreviousElement = (parent: HTMLElement | null) => {
-  if (!parent) {
-    return;
-  }
-
-  const focusableElements = getFocusableElements(parent);
-  const currentIndex = focusableElements.indexOf(
-    parent.ownerDocument.activeElement as HTMLElement,
-  );
-  if (currentIndex === 0) {
-    parent.focus();
-  } else {
-    (focusableElements[currentIndex - 1] as HTMLElement).focus();
-  }
-};
-
-const focusNextElement = (parent: HTMLElement | null, onFail?: () => void) => {
-  if (!parent) {
-    return;
-  }
-
-  const focusableElements = getFocusableElements(parent);
-  const currentIndex = focusableElements.indexOf(
-    parent.ownerDocument.activeElement as HTMLElement,
-  );
-  if (currentIndex < focusableElements.length - 1) {
-    (focusableElements[currentIndex + 1] as HTMLElement).focus();
-  } else {
-    onFail?.();
-  }
 };
 
 export type ItemRendererProps = {
@@ -307,14 +274,6 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
 
   const onKeyDown = (event: React.KeyboardEvent, toggle: () => void) => {
     switch (event.key) {
-      case 'ArrowLeft': {
-        focusPreviousElement(selectRef.current);
-        break;
-      }
-      case 'ArrowRight': {
-        focusNextElement(selectRef.current);
-        break;
-      }
       case 'Enter':
       case ' ':
       case 'Spacebar':
@@ -379,37 +338,9 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
       : options.find((option) => option.value === value);
   }, [multiple, options, value]);
 
-  const tagRenderer = React.useCallback(
-    (item: SelectOption<T>) => {
-      const onCloseKeyDown = (e: React.KeyboardEvent) => {
-        switch (e.key) {
-          case 'Enter':
-          case ' ':
-          case 'Spacebar':
-            focusNextElement(selectRef.current, () =>
-              focusPreviousElement(selectRef.current),
-            );
-            onChange?.(item.value, 'removed');
-            e.preventDefault();
-            break;
-          default:
-            break;
-        }
-      };
-      return (
-        <SelectTag
-          key={item.label}
-          isRemovable
-          onCloseKeyDown={onCloseKeyDown}
-          onCloseClick={() => {
-            onChange?.(item.value, 'removed');
-          }}
-          label={item.label}
-        />
-      );
-    },
-    [onChange],
-  );
+  const tagRenderer = React.useCallback((item: SelectOption<T>) => {
+    return <SelectTag key={item.label} label={item.label} />;
+  }, []);
 
   return (
     <div
@@ -440,7 +371,6 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
             setIsOpen(false);
           }
         }}
-        aria-multiselectable={multiple}
       >
         <div
           ref={selectRef}
@@ -453,7 +383,6 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
           onClick={() => !disabled && toggle()}
           onKeyDown={(e) => !disabled && onKeyDown(e, toggle)}
           tabIndex={!disabled ? 0 : undefined}
-          role={multiple ? 'menubar' : undefined}
         >
           {(!selectedItems || selectedItems.length === 0) && (
             <span className='iui-content'>{placeholder}</span>
@@ -550,11 +479,13 @@ const MultipleSelectButton = <T,>({
         <span className='iui-content'>
           <div className='iui-select-tag-container' ref={containerRef}>
             <>
-              {selectedItemsElements.slice(0, visibleCount)}
+              {visibleCount < selectedItemsElements.length
+                ? selectedItemsElements.slice(0, visibleCount - 1)
+                : selectedItemsElements}
               {visibleCount < selectedItemsElements.length && (
                 <SelectTag
                   label={`+${
-                    selectedItemsElements.length - visibleCount
+                    selectedItemsElements.length - visibleCount + 1
                   } item(s)`}
                 />
               )}

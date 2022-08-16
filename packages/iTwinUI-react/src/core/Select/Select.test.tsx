@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import Select, { SelectProps, SelectMultipleTypeProps } from './Select';
 import SvgSmileyHappy from '@itwin/itwinui-icons-react/cjs/icons/SmileyHappy';
 import { MenuItem } from '../Menu';
@@ -519,34 +519,4 @@ it('should use custom render for selected item (multiple)', async () => {
   expect(selectedValues.length).toBe(2);
   expect((selectedValues[0] as HTMLElement).style.color).toEqual('green');
   expect((selectedValues[1] as HTMLElement).style.color).toEqual('red');
-});
-
-it('should call onChange if tag is removed', async () => {
-  const onChange = jest.fn();
-  renderComponent({
-    onChange,
-    multiple: true,
-    value: [2],
-  });
-
-  const closeButton = screen.getByLabelText('Remove Test2');
-  await userEvent.click(closeButton);
-  expect(onChange).toHaveBeenCalledWith(2, 'removed');
-});
-
-it('should call onChange if tag is removed using keyboard', async () => {
-  const onChange = jest.fn();
-  renderComponent({
-    onChange,
-    multiple: true,
-    value: [1, 2],
-  });
-
-  userEvent.tab();
-  await userEvent.keyboard('[ArrowRight]');
-  await userEvent.keyboard('[ArrowRight]');
-  await userEvent.keyboard('[ArrowLeft]');
-  await userEvent.keyboard('[Enter]');
-
-  expect(onChange).toHaveBeenCalledWith(1, 'removed');
 });
