@@ -83,7 +83,7 @@ const { pathname } = new URL(Astro.request.url);
           var(--color-gradient-1--dark),
           var(--color-gradient-2--dark)
         );
-        --color-active--dark: hsl(206deg 38% 25%);
+        --color-active--dark: hsl(221deg 12% 27% / 40%);
         --color-line-1--dark: hsl(205deg 13% 54%);
         --color-line-2--dark: hsl(205deg 13% 35%);
         // #endregion
@@ -148,6 +148,8 @@ const { pathname } = new URL(Astro.request.url);
         --space-7: clamp(1.75rem, 1.67rem + 0.44vw, 2.25rem);
         --space-8: clamp(2rem, 1.91rem + 0.5vw, 2.56rem);
         // #endregion
+
+        --border-radius-1: var(--space-1);
       }
     </style>
 

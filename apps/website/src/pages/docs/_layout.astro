@@ -121,6 +121,8 @@ const currentPage = new URL(Astro.request.url).pathname;
         }
 
         & :global(li[data-active='true'] > a) {
+          color: var(--color-text);
+
           &:before,
           &:after {
             content: '';
@@ -135,7 +137,7 @@ const currentPage = new URL(Astro.request.url).pathname;
 
           &:after {
             width: 100%;
-            background: hsl(0 0% 50% / 0.1);
+            background: var(--color-active);
             z-index: -1;
           }
         }
@@ -183,7 +185,7 @@ const currentPage = new URL(Astro.request.url).pathname;
           }
         }
 
-        :global(:where(:not(a, h1, h2, h3, h4):not(.live-example, .live-example *))) {
+        :global(:where(:not(a, h1, h2, h3, h4, .live-example, .live-example *, table, table *))) {
           color: var(--color-subtext);
           font-size: var(--type-1);
         }

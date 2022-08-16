@@ -259,15 +259,15 @@ const currentPage = new URL(Astro.request.url).pathname;
       gap: var(--space-5);
     }
     .main-button {
-      padding: 8px 12px;
-      border-radius: 4px;
+      padding: var(--space-2) var(--space-5);
+      border-radius: var(--border-radius-1);
       text-decoration: none;
       background: var(--color-highlight-gradient);
       color: var(--color-background-1);
     }
     .secondary-button {
-      padding: 8px 12px;
-      border-radius: 4px;
+      padding: var(--space-2) var(--space-5);
+      border-radius: var(--border-radius-1);
       text-decoration: none;
       background: transparent;
       color: var(--color-text);
@@ -317,11 +317,11 @@ const currentPage = new URL(Astro.request.url).pathname;
       padding: var(--space-5);
       text-align: start;
       border: 1px solid var(--color-text);
-      border-radius: 4px;
+      border-radius: var(--border-radius-1);
     }
     .join-us {
       height: var(--space-7);
-      border-radius: 10%;
+      border-radius: var(--border-radius-1);
       svg {
         width: var(--space-7);
         height: var(--space-7);
