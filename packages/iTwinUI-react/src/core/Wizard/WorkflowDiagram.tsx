@@ -13,13 +13,17 @@ export type WorkflowDiagramProps = {
    * An array of step objects.
    */
   steps: StepProperties[];
+  /**
+   *  Click handler on completed step.
+   */
+  onStepClick?: (clickedIndex: number) => void;
 };
 
 export const WorkflowDiagram = React.forwardRef<
   HTMLOListElement,
   WorkflowDiagramProps
 >((props, ref) => {
-  const { steps, ...rest } = props;
+  const { steps, onStepClick, ...rest } = props;
 
   useTheme();
 
@@ -32,6 +36,7 @@ export const WorkflowDiagram = React.forwardRef<
           title={s.name}
           totalSteps={steps.length}
           type={'workflow'}
+          onClick={onStepClick}
           description={s.description}
         />
       ))}
