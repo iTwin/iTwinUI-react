@@ -41,6 +41,15 @@ export type DialogContextProps = {
   preventDocumentScroll?: boolean;
   /**
    * Flag whether dialog is draggable.
+   *
+   * If you want to make dialog draggable relatively to the container, you should use `DialogWrapper` component as a wrapper.
+   * @example
+   * <DialogWrapper>
+   *   <Dialog>
+   *     ...
+   *  </Dialog>
+   * </DialogWrapper>
+   *
    * @default false
    */
   isDraggable?: boolean;

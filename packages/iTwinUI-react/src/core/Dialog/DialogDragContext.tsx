@@ -5,7 +5,8 @@
 import React from 'react';
 
 export type DialogDragContextProps = {
-  onPointerDown: (e: React.PointerEvent<HTMLElement>) => void;
+  onPointerDown?: (e: React.PointerEvent<HTMLElement>) => void;
+  boundingRect?: DOMRect;
 };
 
 export const DialogDragContext = React.createContext<

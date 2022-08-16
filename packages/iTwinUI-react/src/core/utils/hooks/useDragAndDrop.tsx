@@ -3,6 +3,8 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
+import { getWindow } from '../functions';
+import { useLatestRef } from './useLatestRef';
 
 /**
  * Helper hook that handles elements drag logic.
@@ -11,24 +13,64 @@ import React from 'react';
  * `onPointerDown` - handler that is called when pointer is down and handles all the dragging logic.
  * `transform` - current transform of the element, it is used to preserve drag position when element visibility is being toggled.
  */
-export const useDragAndDrop = (elementRef: React.RefObject<HTMLElement>) => {
+export const useDragAndDrop = (
+  elementRef: React.RefObject<HTMLElement>,
+  containerRect?: DOMRect,
+) => {
   const grabOffsetX = React.useRef(0);
   const grabOffsetY = React.useRef(0);
   const translateX = React.useRef(0);
   const translateY = React.useRef(0);
 
+  const distancesToEdges = React.useRef({
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+  });
+
+  const containerRectRef = useLatestRef({
+    top: containerRect?.top ?? 0,
+    right: containerRect?.right ?? getWindow()?.innerWidth ?? 0,
+    bottom: containerRect?.bottom ?? getWindow()?.innerHeight ?? 0,
+    left: containerRect?.left ?? 0,
+  });
+
   const [transform, setTransform] = React.useState('');
 
-  const onPointerMove = React.useCallback(
-    (event: PointerEvent) => {
-      if (elementRef.current) {
-        translateX.current = event.clientX - grabOffsetX.current;
-        translateY.current = event.clientY - grabOffsetY.current;
-        elementRef.current.style.transform = `translate(${translateX.current}px, ${translateY.current}px)`;
-      }
-    },
-    [elementRef],
-  );
+  const onPointerMove = React.useRef((event: PointerEvent) => {
+    if (!elementRef.current) {
+      return;
+    }
+
+    let newTranslateX = event.clientX - grabOffsetX.current;
+    let newTranslateY = event.clientY - grabOffsetY.current;
+
+    console.log(event.clientX, event.clientY);
+
+    const elementTop = event.clientY - distancesToEdges.current.top;
+    const elementRight = event.clientX + distancesToEdges.current.right;
+    const elementBottom = event.clientY + distancesToEdges.current.bottom;
+    const elementLeft = event.clientX - distancesToEdges.current.left;
+
+    // Make sure element is not dragged outside of the container.
+    if (elementLeft < containerRectRef.current.left) {
+      newTranslateX += containerRectRef.current.left - elementLeft;
+    } else if (elementRight > containerRectRef.current.right) {
+      newTranslateX -= elementRight - containerRectRef.current.right;
+    }
+
+    if (elementTop < containerRectRef.current.top) {
+      newTranslateY += containerRectRef.current.top - elementTop;
+    } else if (elementBottom > containerRectRef.current.bottom) {
+      newTranslateY -= elementBottom - containerRectRef.current.bottom;
+    }
+
+    translateX.current = newTranslateX;
+    translateY.current = newTranslateY;
+
+    elementRef.current.style.transform = `translate(${translateX.current}px, ${translateY.current}px)`;
+  });
 
   const onPointerDown = React.useCallback(
     (e: React.PointerEvent<HTMLElement>) => {
@@ -46,10 +88,18 @@ export const useDragAndDrop = (elementRef: React.RefObject<HTMLElement>) => {
       grabOffsetX.current = e.clientX - translateX.current;
       grabOffsetY.current = e.clientY - translateY.current;
 
+      // Calculate distances from pointer to edges of the element.
+      const elementRect = elementRef.current.getBoundingClientRect();
+      distancesToEdges.current = {
+        top: e.clientY - elementRect.top,
+        right: elementRect.right - e.clientX,
+        bottom: elementRect.bottom - e.clientY,
+        left: e.clientX - elementRect.left,
+      };
+
       elementRef.current.ownerDocument.addEventListener(
         'pointermove',
-        onPointerMove,
-        false,
+        onPointerMove.current,
       );
       elementRef.current.ownerDocument.addEventListener(
         'pointerup',
@@ -57,12 +107,12 @@ export const useDragAndDrop = (elementRef: React.RefObject<HTMLElement>) => {
           setTransform(
             `translate(${translateX.current}px, ${translateY.current}px)`,
           );
-          document.removeEventListener('pointermove', onPointerMove);
+          document.removeEventListener('pointermove', onPointerMove.current);
         },
         { once: true },
       );
     },
-    [elementRef, onPointerMove],
+    [elementRef],
   );
 
   return { onPointerDown, transform };

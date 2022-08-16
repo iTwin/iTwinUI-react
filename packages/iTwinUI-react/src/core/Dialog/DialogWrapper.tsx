@@ -4,8 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { useTheme } from '../utils';
+import { useMergedRefs, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/dialog.css';
+import { DialogDragContext } from './DialogDragContext';
 
 export type DialogWrapperProps = React.ComponentPropsWithRef<'div'>;
 
@@ -23,10 +24,16 @@ export const DialogWrapper = React.forwardRef<
   DialogWrapperProps
 >((props, ref) => {
   const { children, className, ...rest } = props;
+  const wrapperRef = React.useRef<HTMLDivElement>(null);
+  const refs = useMergedRefs(ref, wrapperRef);
   useTheme();
   return (
-    <div className={cx('iui-dialog-wrapper', className)} ref={ref} {...rest}>
-      {children}
+    <div className={cx('iui-dialog-wrapper', className)} ref={refs} {...rest}>
+      <DialogDragContext.Provider
+        value={{ boundingRect: wrapperRef.current?.getBoundingClientRect() }}
+      >
+        {children}
+      </DialogDragContext.Provider>
     </div>
   );
 });
