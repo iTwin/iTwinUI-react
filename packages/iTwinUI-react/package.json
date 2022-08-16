@@ -33,7 +33,7 @@
     "build:watch": "yarn clean:build && yarn copy-files && concurrently \"tsc -p tsconfig.cjs.json --watch\" \"tsc -p tsconfig.esm.json --watch\"",
     "clean:build": "yarn clean:coverage && rimraf esm && rimraf cjs",
     "clean:coverage": "rimraf coverage",
-    "clean": "yarn clean:coverage && yarn clean:build && rimraf node_modules",
+    "clean": "rimraf .turbo && yarn clean:coverage && yarn clean:build && rimraf node_modules",
     "test": "jest",
     "test:watch": "jest --watch",
     "format": "prettier --config .prettierrc **/*.{tsx,ts,js} --ignore-path .gitignore --write",

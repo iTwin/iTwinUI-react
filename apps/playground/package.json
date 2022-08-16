@@ -6,7 +6,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "clean": "rimraf node_modules && rimraf dist"
+    "clean": "rimraf .turbo && rimraf node_modules && rimraf dist"
   },
   "dependencies": {
     "@itwin/itwinui-react": "*",

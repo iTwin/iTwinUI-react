@@ -11,7 +11,7 @@
     "tsconfig.base.json"
   ],
   "scripts": {
-    "clean": "rimraf node_modules"
+    "clean": "rimraf .turbo && rimraf node_modules"
   },
   "dependencies": {
     "eslint": "^8.12.0",
