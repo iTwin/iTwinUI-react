@@ -314,8 +314,14 @@ export const Sortable: Story<Partial<TableProps>> = (args) => {
         columns: [
           {
             id: 'name',
-            Header: 'Name',
+            Header: 'Name (sort asc first, default)',
             accessor: 'name',
+          },
+          {
+            id: 'id',
+            Header: 'ID (sort desc first)',
+            accessor: 'id',
+            sortDescFirst: true,
           },
           {
             id: 'description',
@@ -341,9 +347,9 @@ export const Sortable: Story<Partial<TableProps>> = (args) => {
 
   const data = useMemo(
     () => [
-      { name: 'Name1', description: 'Description1' },
-      { name: 'Name3', description: 'Description3' },
-      { name: 'Name2', description: 'Description2' },
+      { name: 'Name1', description: 'Description1', id: '1' },
+      { name: 'Name3', description: 'Description3', id: '3' },
+      { name: 'Name2', description: 'Description2', id: '2' },
     ],
     [],
   );
@@ -362,9 +368,9 @@ export const Sortable: Story<Partial<TableProps>> = (args) => {
 
 Sortable.args = {
   data: [
-    { name: 'Name1', description: 'Description1' },
-    { name: 'Name3', description: 'Description3' },
-    { name: 'Name2', description: 'Description2' },
+    { name: 'Name1', description: 'Description1', id: '1' },
+    { name: 'Name3', description: 'Description3', id: '3' },
+    { name: 'Name2', description: 'Description2', id: '2' },
   ],
   isSortable: true,
 };
