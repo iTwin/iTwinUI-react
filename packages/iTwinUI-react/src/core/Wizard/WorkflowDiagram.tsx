@@ -15,14 +15,6 @@ export type WorkflowDiagramProps = {
   steps: StepProperties[];
 };
 
-/**
- * A workflow diagram displays a sequence of logical steps.
- *
- * @example
- * <WorkflowDiagram
- *  steps=[{title: "Step One"}, {title: "Step Two"}, {title: "Step Three"}]
- *  />
- */
 export const WorkflowDiagram = React.forwardRef<
   HTMLOListElement,
   WorkflowDiagramProps

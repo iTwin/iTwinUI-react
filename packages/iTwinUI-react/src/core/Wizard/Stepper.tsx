@@ -41,19 +41,6 @@ const defaultStepperLocalization: StepperLocalization = {
     `Step ${currentStep} of ${totalSteps}:`,
 };
 
-/**
- * A stepper displays progress through a sequence of logical and numbered steps.
- * It may also be used for navigation.
- *
- * The `type` can be set to 'long' to show labels under steps.
- *
- * @example
- * <Stepper
- *  steps=[{name: "Step One"}, {name: "Step Two"}, {name: "Step Three"}]
- *  currentStep={0}
- *  type='long'
- *  />
- */
 export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
   (props, ref) => {
     const {
