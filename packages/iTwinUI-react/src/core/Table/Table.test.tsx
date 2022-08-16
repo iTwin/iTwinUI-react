@@ -917,7 +917,7 @@ it('should show active filter icon when more data is loading', async () => {
   await setFilter(container, '2');
 
   const filterIcon = container.querySelector(
-    '.iui-table-filter-button.iui-active .iui-button-icon',
+    '.iui-table-filter-button[data-iui-active="true"] .iui-button-icon',
   ) as HTMLElement;
   expect(filterIcon).toBeTruthy();
 });
@@ -949,7 +949,7 @@ it('should show message and active filter icon when there is no data after filte
   expect(rows.length).toBe(0);
   screen.getByText('No results. Clear filter.');
   const filterIcon = container.querySelector(
-    '.iui-table-filter-button.iui-active .iui-button-icon',
+    '.iui-table-filter-button[data-iui-active="true"] .iui-button-icon',
   ) as HTMLElement;
   expect(filterIcon).toBeTruthy();
 });
@@ -999,7 +999,7 @@ it('should show message and active filter icon when there is no data after manua
   expect(rows.length).toBe(0);
   screen.getByText('No results. Clear filter.');
   const filterIcon = container.querySelector(
-    '.iui-table-filter-button.iui-active .iui-button-icon',
+    '.iui-table-filter-button[data-iui-active="true"] .iui-button-icon',
   ) as HTMLElement;
   expect(filterIcon).toBeTruthy();
 });
@@ -1129,7 +1129,7 @@ it('should expand correctly', async () => {
 
   expect(
     container.querySelectorAll(
-      '.iui-button.iui-borderless > .iui-button-icon',
+      '.iui-button[data-iui-variant="borderless"] > .iui-button-icon',
     )[0],
   ).toEqual(expanderIcon);
 
@@ -1911,7 +1911,7 @@ it('should change page size', async () => {
   );
 
   const pageSizeSelector = container.querySelector(
-    '.iui-dropdown',
+    '.iui-button-dropdown',
   ) as HTMLButtonElement;
   expect(pageSizeSelector).toBeTruthy();
   await userEvent.click(pageSizeSelector);
@@ -2718,10 +2718,8 @@ it('should render empty action column with column manager', async () => {
   const columnManager = headerCells[headerCells.length - 1]
     .firstElementChild as Element;
 
-  expect(
-    columnManager.className.includes('iui-button iui-borderless'),
-  ).toBeTruthy();
-
+  expect(columnManager.className.includes('iui-button')).toBeTruthy();
+  expect(columnManager).toHaveAttribute('data-iui-variant', 'borderless');
   await userEvent.click(columnManager);
 
   expect(document.querySelector('.iui-menu')).toBeTruthy();
@@ -2764,10 +2762,12 @@ it('should render action column with column manager', () => {
     '.iui-slot',
   );
   expect(
-    actionColumn[0].firstElementChild?.className.includes(
-      'iui-button iui-borderless',
-    ),
+    actionColumn[0].firstElementChild?.className.includes('iui-button'),
   ).toBeTruthy();
+  expect(actionColumn[0].firstElementChild).toHaveAttribute(
+    'data-iui-variant',
+    'borderless',
+  );
   expect(actionColumn[1].textContent).toBe('View');
   expect(actionColumn[2].textContent).toBe('View');
   expect(actionColumn[3].textContent).toBe('View');
@@ -3104,7 +3104,7 @@ it('should scroll to selected item in non-virtualized table', async () => {
 
   expect(scrolledElement).toBeTruthy();
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  expect(scrolledElement!.querySelector('.iui-cell')?.textContent).toBe(
+  expect(scrolledElement!.querySelector('.iui-table-cell')?.textContent).toBe(
     data[25].name,
   );
 });
