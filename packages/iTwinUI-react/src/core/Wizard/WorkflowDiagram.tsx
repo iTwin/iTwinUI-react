@@ -5,25 +5,16 @@
 import React from 'react';
 import { useTheme } from '../utils';
 import '@itwin/itwinui-css/css/workflow-diagram.css';
-import { StepProperties } from './Wizard';
+import { WizardProps } from './Wizard';
 import { Step } from './Step';
 
-export type WorkflowDiagramProps = {
-  /**
-   * An array of step objects.
-   */
-  steps: StepProperties[];
-  /**
-   *  Click handler on completed step.
-   */
-  onStepClick?: (clickedIndex: number) => void;
-};
+export type WorkflowDiagramProps = Pick<WizardProps, 'steps'>;
 
 export const WorkflowDiagram = React.forwardRef<
   HTMLOListElement,
   WorkflowDiagramProps
 >((props, ref) => {
-  const { steps, onStepClick, ...rest } = props;
+  const { steps, ...rest } = props;
 
   useTheme();
 
@@ -36,7 +27,6 @@ export const WorkflowDiagram = React.forwardRef<
           title={s.name}
           totalSteps={steps.length}
           type={'workflow'}
-          onClick={onStepClick}
           description={s.description}
         />
       ))}

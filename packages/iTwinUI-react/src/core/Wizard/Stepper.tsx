@@ -5,7 +5,7 @@
 import React from 'react';
 import { useTheme } from '../utils';
 import '@itwin/itwinui-css/css/stepper.css';
-import { StepProperties } from './Wizard';
+import { WizardProps } from './Wizard';
 import { Step } from './Step';
 
 export type StepperLocalization = {
@@ -14,27 +14,11 @@ export type StepperLocalization = {
 
 export type StepperProps = {
   /**
-   * Current step index, 0 - based.
-   */
-  currentStep?: number;
-  /**
-   * An array of step objects.
-   */
-  steps: StepProperties[];
-  /**
    *  The type of Stepper to display.
    *  @default 'default'
    */
   type?: 'default' | 'long';
-  /**
-   *  Option to provide localized strings.
-   */
-  localization?: StepperLocalization;
-  /**
-   *  Click handler on completed step.
-   */
-  onStepClick?: (clickedIndex: number) => void;
-};
+} & WizardProps;
 
 const defaultStepperLocalization: StepperLocalization = {
   stepsCountLabel: (currentStep, totalSteps) =>
