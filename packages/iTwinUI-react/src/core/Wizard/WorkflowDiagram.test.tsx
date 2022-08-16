@@ -11,71 +11,69 @@ import {
 import React from 'react';
 import { WorkflowDiagram } from './WorkflowDiagram';
 
-describe('<WorkflowDiagram />', () => {
-  it('should display all step names in default workflow diagram', () => {
-    const workflowDiagram = (
-      <WorkflowDiagram
-        steps={[
-          {
-            name: 'Step One',
-          },
-          {
-            name: 'Step Two',
-          },
-          {
-            name: 'Step Three',
-          },
-        ]}
-      />
-    );
+it('should display all step names in default workflow diagram', () => {
+  const workflowDiagram = (
+    <WorkflowDiagram
+      steps={[
+        {
+          name: 'Step One',
+        },
+        {
+          name: 'Step Two',
+        },
+        {
+          name: 'Step Three',
+        },
+      ]}
+    />
+  );
 
-    const { getByText, queryByText } = render(workflowDiagram);
+  const { getByText, queryByText } = render(workflowDiagram);
 
-    getByText('Step One');
-    getByText('Step Two');
-    getByText('Step Three');
+  getByText('Step One');
+  getByText('Step Two');
+  getByText('Step Three');
 
-    expect(queryByText('1')).toBeNull();
-    expect(queryByText('2')).toBeNull();
-    expect(queryByText('3')).toBeNull();
-  });
+  expect(queryByText('1')).toBeNull();
+  expect(queryByText('2')).toBeNull();
+  expect(queryByText('3')).toBeNull();
+});
 
-  it('should display tooltip upon hovering step if description provided', async () => {
-    jest.useFakeTimers();
+it('should display tooltip upon hovering step if description provided', async () => {
+  jest.useFakeTimers();
 
-    const workflowDiagram = (
-      <WorkflowDiagram
-        steps={[
-          {
-            name: 'Step One',
-            description: 'Step one tooltip',
-          },
-          {
-            name: 'Step Two',
-            description: 'Step two tooltip',
-          },
-          {
-            name: 'Step Three',
-          },
-        ]}
-      />
-    );
+  const workflowDiagram = (
+    <WorkflowDiagram
+      steps={[
+        {
+          name: 'Step One',
+          description: 'Step one tooltip',
+        },
+        {
+          name: 'Step Two',
+          description: 'Step two tooltip',
+        },
+        {
+          name: 'Step Three',
+        },
+      ]}
+    />
+  );
 
-    render(workflowDiagram);
+  render(workflowDiagram);
 
-    expect(document.querySelector('.iui-tooltip')).toBeNull();
-    expect(screen.queryByText('Step one tooltip')).toBeNull();
-    fireEvent.mouseEnter(screen.getByText('Step One'), { bubbles: true });
-    const tooltip = document.querySelector('.iui-tooltip') as HTMLElement;
-    expect(tooltip).toBeVisible();
-    expect(tooltip).toHaveTextContent('Step one tooltip');
+  expect(document.querySelector('.iui-tooltip')).toBeNull();
+  expect(screen.queryByText('Step one tooltip')).toBeNull();
+  fireEvent.mouseEnter(screen.getByText('Step One'), { bubbles: true });
+  const tooltip = document.querySelector('.iui-tooltip') as HTMLElement;
+  expect(tooltip).toBeVisible();
+  expect(tooltip).toHaveTextContent('Step one tooltip');
 
-    fireEvent.mouseLeave(screen.getByText('Step One'), { bubbles: true });
-    await waitForElementToBeRemoved(tooltip);
+  fireEvent.mouseLeave(screen.getByText('Step One'), { bubbles: true });
+  await waitForElementToBeRemoved(tooltip);
 
-    fireEvent.mouseEnter(screen.getByText('Step Three'), { bubbles: true });
-    expect(screen.queryByText('Step three tooltip')).toBeNull();
+  fireEvent.mouseEnter(screen.getByText('Step Three'), { bubbles: true });
+  expect(screen.queryByText('Step three tooltip')).toBeNull();
 
-    jest.useRealTimers();
-  });
+  jest.useRealTimers();
 });
