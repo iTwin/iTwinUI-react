@@ -368,7 +368,7 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
   // console.log('currentRow: ', currentRow);
 
   while (true) {
-    console.log('nextRowTrace: ', currentRow);
+    console.log('nextRowTrace: ', currentRow, instance.rowsById);
     // console.log(
     //   'isAncestorParent: ',
     //   !isAncestorParent(currentRow.id, endId),
@@ -384,7 +384,9 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     }
 
     if (!isAncestorParent(currentRow.id, endId)) {
-      currentRow.toggleRowSelected(true);
+      if (currentRow.hasOwnProperty('toggleRowSelected')) {
+        currentRow.toggleRowSelected(true);
+      }
     }
 
     currentRow = getNextRow(currentRow, startId, endId);
