@@ -17,7 +17,7 @@
     "@itwin/itwinui-react": "*",
     "@jsdevtools/rehype-toc": "3.0.2",
     "@types/react": "^18.0.0",
-    "astro": "^1.0.0",
+    "astro": "^1.0.6",
     "postcss-preset-env": "^7.7.2",
     "prettier": "2.7.1",
     "prettier-plugin-astro": "^0.4.1",
