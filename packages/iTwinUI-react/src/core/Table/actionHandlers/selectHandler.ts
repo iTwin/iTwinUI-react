@@ -391,9 +391,9 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     }
 
     if (!isAncestorParent(currentRow.id, endId)) {
-      if (currentRow.hasOwnProperty('toggleRowSelected')) {
-        currentRow.toggleRowSelected(true);
-      }
+      // if (currentRow.hasOwnProperty('toggleRowSelected')) {
+      currentRow.toggleRowSelected(true);
+      // }
     }
 
     currentRow = getNextRow(currentRow, startId, endId);
