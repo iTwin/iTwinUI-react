@@ -362,8 +362,15 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
 
   resetSelection();
 
-  const startId = state.lastSelectedRow;
-  const endId = action.id;
+  // Make sure startId is lesser than endId
+  let startId = state.lastSelectedRow;
+  let endId = action.id;
+  if (startId > endId) {
+    const temp = startId;
+    startId = endId;
+    endId = temp;
+  }
+
   let currentRow = instance.rowsById[startId];
   // console.log('currentRow: ', currentRow);
 
