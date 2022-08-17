@@ -70,7 +70,7 @@ export type ToastProps = {
 };
 
 /**
- * Generic Toast Notification Component
+ * Generic Toast Component
  * @example
  * <Toast type='persisting' content='Job processing completed.' category='positive' link={{onClick:() => {alert('Link callback')}, title:'View the report'}} />
  * <Toast type='temporary' content='Processing completed.' category='positive' />
@@ -226,7 +226,7 @@ export type ToastPresentationProps = Omit<
 > & { onClose?: () => void } & CommonProps;
 
 /**
- * The presentational part of a toast notification, without any animation or logic.
+ * The presentational part of a toast, without any animation or logic.
  * @private
  */
 export const ToastPresentation = (props: ToastPresentationProps) => {
