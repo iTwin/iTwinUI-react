@@ -273,7 +273,7 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
   instance: TableInstance<T>,
 ) => {
   // console.log(state, action, instance);
-  console.log('onShiftSelectClicked', instance.rowsById[action.id]);
+  // console.log('onShiftSelectClicked', instance.rowsById[action.id]);
 
   const resetSelection = () => {
     instance.rows.forEach((r) => r.toggleRowSelected(false));
@@ -305,20 +305,20 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
 
   // Returns the next row as if it was just a non subrows list
   const getNextRow = (currentRow: Row<T>, startId: string, endId: string) => {
-    console.log(startId + endId);
+    console.log(startId, endId);
 
     let nextRow;
 
     // let row = instance.rowsById[currentId];
     if (
       (currentRow.subRows ?? []).length > 0 &&
-      // !isAncestorParent(currentRow.id, endId)
-      true
+      isAncestorParent(currentRow.id, endId)
+      // true
     ) {
       // child
       // nextRow = instance.rowsById[currentRow.subRows[0].id];
       nextRow = currentRow.subRows[0];
-      console.log('rows', instance.rows, instance.rowsById);
+      // console.log('rows', instance.rows, instance.rowsById);
     } else {
       // next sibling
       nextRow = instance.rowsById[getGreaterId(currentRow.id)];
@@ -375,7 +375,7 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
   // console.log('currentRow: ', currentRow);
 
   while (true) {
-    console.log('nextRowTrace: ', currentRow, instance.rowsById);
+    console.log('nextRowTrace: ', currentRow, startId, endId);
     // console.log(
     //   'isAncestorParent: ',
     //   !isAncestorParent(currentRow.id, endId),
@@ -413,7 +413,7 @@ export const onSingleSelectHandler = <T extends Record<string, unknown>>(
   ) => void,
   isRowDisabled?: (rowData: T) => boolean,
 ) => {
-  console.log('HERE');
+  // console.log('HERE');
 
   const selectedRowIds = { [action.id]: true } as Record<string, boolean>;
   if (instance?.selectSubRows) {

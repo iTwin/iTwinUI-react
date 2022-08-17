@@ -431,7 +431,7 @@ export const Table = <
             // If it has manual selection column, then we can't check whether row is disabled
             hasManualSelectionColumn ? undefined : isRowDisabled,
           );
-          console.log('singleRowSelectedAction', newState.lastSelectedRow);
+          // console.log('singleRowSelectedAction', newState.lastSelectedRow);
           break;
         }
         case shiftRowSelectedAction: {
@@ -441,7 +441,7 @@ export const Table = <
         case TableActions.toggleRowSelected:
         case TableActions.toggleAllRowsSelected:
         case TableActions.toggleAllPageRowsSelected: {
-          console.log('TableActions.toggleRowSelected');
+          // console.log('TableActions.toggleRowSelected');
 
           onSelectHandler(
             newState,
@@ -562,7 +562,7 @@ export const Table = <
     (event: React.MouseEvent, row: Row<T>) => {
       // row.parentId = '123';
       // console.log('123', event, row, event.ctrlKey, event.shiftKey, rows);
-      console.log('rowClick', row, instance.rowsById[row.id]);
+      // console.log('rowClick', row, instance.rowsById[row.id]);
 
       const isDisabled = isRowDisabled?.(row.original);
       if (!isDisabled) {
@@ -631,7 +631,7 @@ export const Table = <
       dispatch,
       onRowClick,
       // rows,
-      instance.rowsById,
+      // instance.rowsById,
     ],
   );
 
