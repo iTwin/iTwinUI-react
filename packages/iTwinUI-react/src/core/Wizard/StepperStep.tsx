@@ -6,9 +6,8 @@ import cx from 'classnames';
 import React from 'react';
 import { Tooltip } from '../Tooltip';
 import { StylingProps } from '../utils';
-import { WizardType } from './Wizard';
 
-export type StepProps = {
+export type StepperStepProps = {
   /**
    * The title/label of the step.
    */
@@ -20,7 +19,7 @@ export type StepProps = {
   /**
    * the Stepper's current step number, 0-based.
    */
-  currentStepNumber?: number;
+  currentStepNumber: number;
   /**
    * number of total steps in the stepper.
    */
@@ -28,7 +27,7 @@ export type StepProps = {
   /**
    * Wizard type.
    */
-  type: WizardType;
+  type: 'default' | 'long';
   /**
    *  Click handler on completed step.
    */
@@ -39,7 +38,7 @@ export type StepProps = {
   description?: string;
 } & StylingProps;
 
-export const Step = (props: StepProps) => {
+export const StepperStep = (props: StepperStepProps) => {
   const {
     title,
     index,
@@ -53,15 +52,9 @@ export const Step = (props: StepProps) => {
     ...rest
   } = props;
 
-  const isPast =
-    type !== 'workflow' &&
-    currentStepNumber !== undefined &&
-    currentStepNumber > index;
-  const isActive =
-    type !== 'workflow' &&
-    currentStepNumber !== undefined &&
-    currentStepNumber === index;
-  const isClickable = type !== 'workflow' && isPast && !!onClick;
+  const isPast = currentStepNumber > index;
+  const isActive = currentStepNumber === index;
+  const isClickable = isPast && !!onClick;
 
   const onCompletedClick = () => {
     if (isClickable) {
@@ -82,7 +75,7 @@ export const Step = (props: StepProps) => {
   const stepShape = (
     <li
       className={cx(
-        type === 'workflow' ? 'iui-workflow-diagram-step' : 'iui-stepper-step',
+        'iui-stepper-step',
         {
           'iui-current': isActive,
           'iui-clickable': isClickable,
@@ -99,13 +92,9 @@ export const Step = (props: StepProps) => {
       tabIndex={isClickable ? 0 : undefined}
       {...rest}
     >
-      {type === 'workflow' ? (
-        <span className='iui-workflow-diagram-content'>{title}</span>
-      ) : (
-        <div className='iui-stepper-track-content'>
-          <span className='iui-stepper-circle'>{index + 1}</span>
-        </div>
-      )}
+      <div className='iui-stepper-track-content'>
+        <span className='iui-stepper-circle'>{index + 1}</span>
+      </div>
 
       {type === 'default' && (
         <span className='iui-stepper-step-name'>{title}</span>

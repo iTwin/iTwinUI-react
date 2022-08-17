@@ -5,13 +5,13 @@
 import React from 'react';
 import { useTheme } from '../utils';
 import '@itwin/itwinui-css/css/workflow-diagram.css';
-import { WizardProps } from './Wizard';
-import { Step } from './Step';
+import { StepperProps } from './Stepper';
+import { WorkflowDiagramStep } from './WorkflowDiagramStep';
 
-export type WorkflowDiagramProps = Pick<WizardProps, 'steps'>;
+export type WorkflowDiagramProps = Pick<StepperProps, 'steps'>;
 
 export const WorkflowDiagram = React.forwardRef<
-  HTMLOListElement,
+  HTMLDivElement,
   WorkflowDiagramProps
 >((props, ref) => {
   const { steps, ...rest } = props;
@@ -19,18 +19,17 @@ export const WorkflowDiagram = React.forwardRef<
   useTheme();
 
   return (
-    <ol className={'iui-workflow-diagram'} ref={ref} {...rest}>
-      {steps.map((s, index) => (
-        <Step
-          key={index}
-          index={index}
-          title={s.name}
-          totalSteps={steps.length}
-          type={'workflow'}
-          description={s.description}
-        />
-      ))}
-    </ol>
+    <div ref={ref}>
+      <ol className={'iui-workflow-diagram'} {...rest}>
+        {steps.map((s, index) => (
+          <WorkflowDiagramStep
+            key={index}
+            title={s.name}
+            description={s.description}
+          />
+        ))}
+      </ol>
+    </div>
   );
 });
 

@@ -4,13 +4,13 @@
  *--------------------------------------------------------------------------------------------*/
 import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
-import { Step } from './Step';
+import { StepperStep } from './StepperStep';
 
 describe('Wizard step (default)', () => {
   it('should render step correctly (past)', () => {
     const mockedClick = jest.fn();
     const step = (
-      <Step
+      <StepperStep
         title='First step'
         index={0}
         currentStepNumber={1}
@@ -55,7 +55,7 @@ describe('Wizard step (default)', () => {
   it('should render step correctly (future)', () => {
     const mockedClick = jest.fn();
     const step = (
-      <Step
+      <StepperStep
         title='Second step'
         index={1}
         currentStepNumber={0}
@@ -95,7 +95,7 @@ describe('Wizard step (default)', () => {
   it('should render step correctly (current)', () => {
     const mockedClick = jest.fn();
     const step = (
-      <Step
+      <StepperStep
         title='Current step'
         index={0}
         currentStepNumber={0}
@@ -133,7 +133,7 @@ describe('Wizard step (default)', () => {
 
   it('should set dynamic inline width based on total steps', () => {
     const { container: container1 } = render(
-      <Step
+      <StepperStep
         title='Mock step'
         index={1}
         currentStepNumber={0}
@@ -147,7 +147,7 @@ describe('Wizard step (default)', () => {
     expect(step1.style.width).toEqual('25%');
 
     const { container: container2 } = render(
-      <Step
+      <StepperStep
         title='Mock step'
         index={1}
         currentStepNumber={1}
@@ -166,7 +166,7 @@ describe('Wizard step (long)', () => {
   it('should render correctly', () => {
     const mockedClick = jest.fn();
     const step = (
-      <Step
+      <StepperStep
         title='Second step'
         index={1}
         currentStepNumber={0}
@@ -207,7 +207,7 @@ describe('Wizard step (long)', () => {
 
   it('should not set dynamic inline width', () => {
     const { container } = render(
-      <Step
+      <StepperStep
         title='Mock step'
         index={1}
         currentStepNumber={0}
@@ -222,55 +222,9 @@ describe('Wizard step (long)', () => {
   });
 });
 
-describe('Wizard step (workflow)', () => {
-  it('should render correctly', () => {
-    const step = (
-      <Step title='Second step' index={1} totalSteps={3} type={'workflow'} />
-    );
-
-    const { container } = render(step);
-
-    // Renders step
-    const stepContainer = container.querySelector(
-      '.iui-workflow-diagram-step',
-    ) as HTMLElement;
-    expect(stepContainer).toBeTruthy();
-
-    // No tabindex
-    expect(stepContainer).not.toHaveAttribute('tabindex');
-
-    // No title
-    expect(container.querySelector('.iui-stepper-step-name')).toBeFalsy();
-    // Content
-    const content = container.querySelector(
-      '.iui-workflow-diagram-content',
-    ) as HTMLElement;
-    expect(content).toBeTruthy();
-    expect(content.textContent).toBe('Second step');
-  });
-
-  it('should not set dynamic inline width', () => {
-    const { container } = render(
-      <Step
-        title='Mock step'
-        index={1}
-        currentStepNumber={0}
-        totalSteps={4}
-        type={'workflow'}
-      />,
-    );
-
-    const step = container.querySelector(
-      '.iui-workflow-diagram-step',
-    ) as HTMLElement;
-    expect(step).toBeTruthy();
-    expect(step.style.width).toBeFalsy(); // not 25%
-  });
-});
-
 it('should add className and style props correctly', () => {
   const { container } = render(
-    <Step
+    <StepperStep
       title='Mock step'
       index={1}
       currentStepNumber={0}

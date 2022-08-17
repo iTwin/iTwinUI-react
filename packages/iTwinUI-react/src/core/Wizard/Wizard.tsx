@@ -3,49 +3,18 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { Stepper } from './Stepper';
+import { Stepper, StepperProps, WizardLocalization } from './Stepper';
 import { WorkflowDiagram } from './WorkflowDiagram';
-
-export type WizardLocalization = {
-  stepsCountLabel: (currentStep: number, totalSteps: number) => string;
-};
 
 export type WizardType = 'default' | 'long' | 'workflow';
 
-export type StepProperties = {
-  /**
-   * The title/label of the step.
-   */
-  name: string;
-  /**
-   * A tooltip giving detailed description to this step.
-   */
-  description?: string;
-};
-
 export type WizardProps = {
-  /**
-   * Current step index, 0 - based.
-   */
-  currentStep?: number;
-  /**
-   * An array of step objects.
-   */
-  steps: StepProperties[];
   /**
    *  The type of Wizard to display.
    *  @default 'default'
    */
   type?: WizardType;
-  /**
-   *  Option to provide localized strings.
-   */
-  localization?: WizardLocalization;
-  /**
-   *  Click handler on completed step.
-   */
-  onStepClick?: (clickedIndex: number) => void;
-};
+} & Omit<StepperProps, 'type'>;
 
 const defaultWizardLocalization: WizardLocalization = {
   stepsCountLabel: (currentStep, totalSteps) =>
