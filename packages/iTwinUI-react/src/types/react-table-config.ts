@@ -227,6 +227,5 @@ declare module 'react-table' {
       UseRowSelectRowProps<D>,
       UseRowStateRowProps<D> {
     initialSubRows: Row<D>[];
-    parentId: string | null;
   }
 }
