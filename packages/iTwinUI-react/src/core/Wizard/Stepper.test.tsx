@@ -214,7 +214,7 @@ it('should display tooltip upon hovering step if description provided', async ()
   await waitForElementToBeRemoved(tooltip);
 
   fireEvent.mouseEnter(screen.getByText('Step Three'), { bubbles: true });
-  expect(screen.queryByText('Step three tooltip')).toBeNull();
+  expect(document.querySelector('.iui-tooltip')).toBeNull();
 
   jest.useRealTimers();
 });

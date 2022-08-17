@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { Stepper, StepperProps, WizardLocalization } from './Stepper';
+import { Stepper, StepperProps } from './Stepper';
 import { WorkflowDiagram } from './WorkflowDiagram';
 
 export type WizardType = 'default' | 'long' | 'workflow';
@@ -15,11 +15,6 @@ export type WizardProps = {
    */
   type?: WizardType;
 } & Omit<StepperProps, 'type'>;
-
-const defaultWizardLocalization: WizardLocalization = {
-  stepsCountLabel: (currentStep, totalSteps) =>
-    `Step ${currentStep} of ${totalSteps}:`,
-};
 
 /**
  * A wizard displays progress through a sequence of logical and numbered steps.
@@ -40,7 +35,7 @@ export const Wizard = React.forwardRef<HTMLDivElement, WizardProps>(
       currentStep,
       steps,
       type = 'default',
-      localization = defaultWizardLocalization,
+      localization,
       onStepClick,
       ...rest
     } = props;
