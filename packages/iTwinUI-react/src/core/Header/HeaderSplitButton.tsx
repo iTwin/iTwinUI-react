@@ -22,7 +22,6 @@ type HeaderSplitButtonComponent = PolymorphicForwardRefComponent<
 export const HeaderSplitButton: HeaderSplitButtonComponent = React.forwardRef(
   (props, forwardedRef) => {
     const {
-      onClick,
       menuItems,
       className,
       menuPlacement = 'bottom-end',
@@ -52,7 +51,7 @@ export const HeaderSplitButton: HeaderSplitButtonComponent = React.forwardRef(
         title={title}
         ref={ref}
       >
-        <HeaderBasicButton onClick={onClick} ref={forwardedRef} {...rest}>
+        <HeaderBasicButton ref={forwardedRef} {...rest}>
           {children}
         </HeaderBasicButton>
         <DropdownMenu
