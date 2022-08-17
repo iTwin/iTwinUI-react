@@ -9,6 +9,7 @@ import { useLatestRef } from './useLatestRef';
 /**
  * Helper hook that handles elements drag logic.
  * @param elementRef Element ref that is draggable.
+ * @param containerRect Bounding rectangle of container element that element can't go outside. If not passed window is used as a container.
  * @returns
  * `onPointerDown` - handler that is called when pointer is down and handles all the dragging logic.
  * `transform` - current transform of the element, it is used to preserve drag position when element visibility is being toggled.
@@ -70,6 +71,8 @@ export const useDragAndDrop = (
     elementRef.current.style.transform = `translate(${translateX.current}px, ${translateY.current}px)`;
   });
 
+  const originalUserSelect = React.useRef('');
+
   const onPointerDown = React.useCallback(
     (e: React.PointerEvent<HTMLElement>) => {
       if (!elementRef.current || e.button !== 0) {
@@ -95,6 +98,10 @@ export const useDragAndDrop = (
         left: e.clientX - elementRect.left,
       };
 
+      originalUserSelect.current = elementRef.current.style.userSelect;
+      // Prevents from selecting inner content when dragging.
+      elementRef.current.style.userSelect = 'none';
+
       elementRef.current.ownerDocument.addEventListener(
         'pointermove',
         onPointerMove.current,
@@ -106,6 +113,9 @@ export const useDragAndDrop = (
             `translate(${translateX.current}px, ${translateY.current}px)`,
           );
           document.removeEventListener('pointermove', onPointerMove.current);
+          if (elementRef.current) {
+            elementRef.current.style.userSelect = originalUserSelect.current;
+          }
         },
         { once: true },
       );

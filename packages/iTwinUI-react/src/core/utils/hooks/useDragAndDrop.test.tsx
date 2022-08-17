@@ -54,16 +54,20 @@ it('should handle drag', () => {
   fireEvent.pointerDown(element, { clientX: 100, clientY: 100, button: 0 });
   fireEvent.pointerMove(element, { clientX: 200, clientY: 200 });
   expect(element.style.transform).toBe('translate(100px, 100px)');
+  expect(element.style.userSelect).toBe('none');
   fireEvent.pointerUp(element);
   expect(element.style.transform).toBe('translate(100px, 100px)');
+  expect(element.style.userSelect).toBe('');
 
   // Should take previous transform into account.
   DOMMatrixMock.mockReturnValue({ m41: 100, m42: 100 });
   fireEvent.pointerDown(element, { clientX: 100, clientY: 100, button: 0 });
   fireEvent.pointerMove(element, { clientX: 200, clientY: 200 });
   expect(element.style.transform).toBe('translate(200px, 200px)');
+  expect(element.style.userSelect).toBe('none');
   fireEvent.pointerUp(element);
   expect(element.style.transform).toBe('translate(200px, 200px)');
+  expect(element.style.userSelect).toBe('');
 });
 
 it('should prevent from dragging outside container', () => {
