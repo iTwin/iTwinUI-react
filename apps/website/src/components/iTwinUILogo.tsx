@@ -7,6 +7,7 @@ import * as React from 'react';
 export default (props: React.ComponentProps<'svg'>) => {
   const [logoRotate, setLogoRotate] = React.useState({ x: 0, y: 0 });
   const [gradientRotate, setGradientRotate] = React.useState(135);
+  const [animation, setAnimation] = React.useState('none');
   const svgRef = React.useRef<SVGSVGElement>(null);
   const windowWidth = useWindowWidth();
 
@@ -34,39 +35,44 @@ export default (props: React.ComponentProps<'svg'>) => {
       const gradientRotate = (Math.atan2(y, x) * 180) / Math.PI;
 
       // TODO: throttle these or use requestAnimationFrame
+      setAnimation('none');
       setLogoRotate({ x, y });
       setGradientRotate(gradientRotate);
     };
 
+    const mouseLeaveHandle = (e: MouseEvent) => {
+      setAnimation('transform 1s ease');
+      setLogoRotate({ x: 0, y: 0 });
+      setGradientRotate(135);
+    };
+
     document.addEventListener('mousemove', handle);
-    return () => document.removeEventListener('mousemove', handle);
+    document.addEventListener('mouseleave', mouseLeaveHandle);
+    return () => {
+      document.removeEventListener('mousemove', handle);
+      document.removeEventListener('mouseleave', mouseLeaveHandle);
+    };
   }, [windowWidth]);
 
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
       viewBox='0 0 291.42 333'
-      style={{ transform: `rotateY(${logoRotate.x}deg) rotateX(${logoRotate.y}deg)` }}
+      style={{
+        transform: `rotateY(${logoRotate.x}deg) rotateX(${logoRotate.y}deg)`,
+        transition: `${animation}`,
+      }}
       ref={svgRef}
       {...props}
     >
       <defs>
-        <linearGradient
-          id='grad1'
-          gradientUnits='userSpaceOnUse'
-          gradientTransform={`rotate(${gradientRotate} 0.5 0.5)`}
-        >
+        <linearGradient id='grad1' gradientTransform={`rotate(${90 - gradientRotate} 0.5 0.5)`}>
           <stop offset='0%' stopColor='#ffb6fc' stopOpacity='1' />
           <stop offset='100%' stopColor='#83a4ff' stopOpacity='1' />
         </linearGradient>
-        <linearGradient
-          id='gra2'
-          gradientUnits='userSpaceOnUse'
-          gradientTransform={`rotate(${gradientRotate} 0.5 0.5)`}
-        >
+        <linearGradient id='gra2' gradientTransform={`rotate(${-gradientRotate} 0.5 0.5)`}>
           <stop offset='0%' stopColor='#fff' stopOpacity='1' />
-          <stop offset='50%' stopColor='#fff' stopOpacity='0.2' />
-          <stop offset='100%' stopColor='#fff' stopOpacity='1' />
+          <stop offset='60%' stopColor='#fff' stopOpacity='0' />
         </linearGradient>
       </defs>
       <path
