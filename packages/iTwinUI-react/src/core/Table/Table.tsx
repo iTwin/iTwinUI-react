@@ -56,8 +56,6 @@ import { onShiftSelectHandler } from './actionHandlers/selectHandler';
 
 const singleRowSelectedAction = 'singleRowSelected';
 const shiftRowSelectedAction = 'shiftRowSelected';
-// const toggleAllRowsSelected = 'toggleAllRowsSelected';
-// const rangeRowSelectedAction = 'rangeRowSelected';
 export const tableResizeStartAction = 'tableResizeStart';
 const tableResizeEndAction = 'tableResizeEnd';
 
@@ -380,8 +378,6 @@ export const Table = <
   useTheme();
 
   const [ownerDocument, setOwnerDocument] = React.useState<Document>();
-  // const [selectedRows, setSelectedRows] = React.useState([]);
-  // const [firstSelected, setFirstSelected] = React.useState(null);
 
   const defaultColumn = React.useMemo(
     () => ({
@@ -432,7 +428,6 @@ export const Table = <
             // If it has manual selection column, then we can't check whether row is disabled
             hasManualSelectionColumn ? undefined : isRowDisabled,
           );
-          // console.log('singleRowSelectedAction', newState.lastSelectedRow);
           break;
         }
         case shiftRowSelectedAction: {
@@ -442,8 +437,6 @@ export const Table = <
         case TableActions.toggleRowSelected:
         case TableActions.toggleAllRowsSelected:
         case TableActions.toggleAllPageRowsSelected: {
-          // console.log('TableActions.toggleRowSelected');
-
           onSelectHandler(
             newState,
             instance,
@@ -476,7 +469,6 @@ export const Table = <
       onSelect,
       onSort,
       stateReducer,
-      // rows,
     ],
   );
 
@@ -561,10 +553,6 @@ export const Table = <
 
   const onRowClickHandler = React.useCallback(
     (event: React.MouseEvent, row: Row<T>) => {
-      // row.parentId = '123';
-      // console.log('123', event, row, event.ctrlKey, event.shiftKey, rows);
-      // console.log('rowClick', row, instance.rowsById[row.id]);
-
       const isDisabled = isRowDisabled?.(row.original);
       if (!isDisabled) {
         onRowClick?.(event, row);
@@ -575,28 +563,6 @@ export const Table = <
         selectRowOnClick &&
         !event.isDefaultPrevented()
       ) {
-        // if (event.shiftKey) {
-        //   dispatch({
-        //     type: shiftRowSelectedAction,
-        //     id: row.id,
-        //   });
-        // } else {
-        //   dispatch({
-        //     type: singleRowSelectedAction,
-        //     id: row.id,
-        //   });
-        // }
-
-        // dispatch({
-        //   type: toggleAllRowsSelected,
-        //   id: row.id,
-        // });
-        // console.log('HERE');
-        // rows.forEach((r) => {
-        //   // r.toggleRowSelected(true);
-        //   console.log(r);
-        // });
-
         if (event.shiftKey) {
           dispatch({
             type: shiftRowSelectedAction,
@@ -610,18 +576,9 @@ export const Table = <
             type: singleRowSelectedAction,
             id: row.id,
           });
-          // row.toggleRowSelected(!row.isSelected);
         } else {
-          //
           row.toggleRowSelected(!row.isSelected);
-          // row.toggle(!row.isSelected);
         }
-        // if (!row.isSelected && selectionMode === 'multi')
-        // dispatch({
-        //   type: singleRowSelectedAction,
-        //   id: row.id,
-        // });
-        // row.toggleRowSelected(!row.isSelected);
       }
     },
     [
@@ -631,8 +588,6 @@ export const Table = <
       selectionMode,
       dispatch,
       onRowClick,
-      // rows,
-      // instance.rowsById,
     ],
   );
 
