@@ -273,6 +273,7 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
   instance: TableInstance<T>,
 ) => {
   // console.log(state, action, instance);
+  console.log('onShiftSelectClicked', instance.rowsById[action.id]);
 
   const resetSelection = () => {
     instance.rows.forEach((r) => r.toggleRowSelected(false));
@@ -298,6 +299,10 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
   //   return endId.indexOf(currentId) === 0;
   // };
 
+  const isAncestorParent = (currentId: string, endId: string) => {
+    return endId.indexOf(currentId) === 0;
+  };
+
   // Returns the next row as if it was just a non subrows list
   const getNextRow = (currentRow: Row<T>, startId: string, endId: string) => {
     console.log(startId + endId);
@@ -305,9 +310,15 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     let nextRow;
 
     // let row = instance.rowsById[currentId];
-    if ((currentRow.subRows ?? []).length > 0) {
+    if (
+      (currentRow.subRows ?? []).length > 0 &&
+      // !isAncestorParent(currentRow.id, endId)
+      true
+    ) {
       // child
-      nextRow = instance.rowsById[currentRow.subRows[0].id];
+      // nextRow = instance.rowsById[currentRow.subRows[0].id];
+      nextRow = currentRow.subRows[0];
+      console.log('rows', instance.rows, instance.rowsById);
     } else {
       // next sibling
       nextRow = instance.rowsById[getGreaterId(currentRow.id)];
@@ -341,10 +352,6 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     // }
   };
 
-  const isAncestorParent = (currentId: string, endId: string) => {
-    return endId.indexOf(currentId) === 0;
-  };
-
   // const currentRow = instance.rowsById[state.lastSelectedRow];
   // while (currentRow != null) {
   //   currentRow = getNextId(currentRow.id, state.lastSelectedRow, action.id);
@@ -362,23 +369,24 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
 
   while (true) {
     console.log('nextRowTrace: ', currentRow);
-    console.log(
-      'isAncestorParent: ',
-      !isAncestorParent(currentRow.id, endId),
-      currentRow.id,
-      endId,
-      currentRow.id === endId,
-      endId.indexOf(currentRow.id) === 0,
-    );
-
-    if (!isAncestorParent(currentRow.id, endId)) {
-      currentRow.toggleRowSelected(true);
-    }
+    // console.log(
+    //   'isAncestorParent: ',
+    //   !isAncestorParent(currentRow.id, endId),
+    //   currentRow.id,
+    //   endId,
+    //   currentRow.id === endId,
+    //   endId.indexOf(currentRow.id) === 0,
+    // );
 
     if (currentRow.id === endId) {
       currentRow.toggleRowSelected(true);
       break;
     }
+
+    if (!isAncestorParent(currentRow.id, endId)) {
+      currentRow.toggleRowSelected(true);
+    }
+
     currentRow = getNextRow(currentRow, startId, endId);
   }
 };

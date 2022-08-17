@@ -561,7 +561,8 @@ export const Table = <
   const onRowClickHandler = React.useCallback(
     (event: React.MouseEvent, row: Row<T>) => {
       // row.parentId = '123';
-      console.log('123', event, row, event.ctrlKey, event.shiftKey, rows);
+      // console.log('123', event, row, event.ctrlKey, event.shiftKey, rows);
+      console.log('rowClick', row, instance.rowsById[row.id]);
 
       const isDisabled = isRowDisabled?.(row.original);
       if (!isDisabled) {
@@ -629,7 +630,8 @@ export const Table = <
       selectionMode,
       dispatch,
       onRowClick,
-      rows,
+      // rows,
+      instance.rowsById,
     ],
   );
 
