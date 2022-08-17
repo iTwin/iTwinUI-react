@@ -302,13 +302,16 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
   const getNextRow = (currentRow: Row<T>, startId: string, endId: string) => {
     console.log(startId + endId);
 
+    let nextRow;
+
     // let row = instance.rowsById[currentId];
     if ((currentRow.subRows ?? []).length > 0) {
       // child
-      currentRow = instance.rowsById[currentRow.subRows[0].id];
+      nextRow = instance.rowsById[currentRow.subRows[0].id];
     } else {
       // next sibling
-      currentRow = instance.rowsById[getGreaterId(currentRow.id)];
+      nextRow = instance.rowsById[getGreaterId(currentRow.id)];
+      // instance
       // console.log(
       //   'HEHE',
       //   getGreaterId('2'),
@@ -318,13 +321,13 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
 
       // If the next sibling doesn't exist, go to the next child at a one upper depth
       let parentId = getParentId(currentRow.id);
-      while (currentRow == null && parentId != null) {
-        currentRow = instance.rowsById[getGreaterId(parentId)];
+      while (nextRow == null && parentId != null) {
+        nextRow = instance.rowsById[getGreaterId(parentId)];
         parentId = getParentId(parentId);
       }
     }
 
-    return currentRow;
+    return nextRow;
 
     // // If child doesn't exist, go to the next child at a one higher depth
     // while (row == null) {
