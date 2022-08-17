@@ -34,28 +34,31 @@ const defaultWizardLocalization: WizardLocalization = {
  *  type='long'
  *  />
  */
-export const Wizard = (props: WizardProps) => {
-  const {
-    currentStep,
-    steps,
-    type = 'default',
-    localization = defaultWizardLocalization,
-    onStepClick,
-    ...rest
-  } = props;
+export const Wizard = React.forwardRef<HTMLDivElement, WizardProps>(
+  (props, ref) => {
+    const {
+      currentStep,
+      steps,
+      type = 'default',
+      localization = defaultWizardLocalization,
+      onStepClick,
+      ...rest
+    } = props;
 
-  return type !== 'workflow' ? (
-    <Stepper
-      type={type}
-      currentStep={currentStep}
-      steps={steps}
-      localization={localization}
-      onStepClick={onStepClick}
-      {...rest}
-    />
-  ) : (
-    <WorkflowDiagram steps={steps} {...rest} />
-  );
-};
+    return type !== 'workflow' ? (
+      <Stepper
+        type={type}
+        currentStep={currentStep}
+        steps={steps}
+        localization={localization}
+        onStepClick={onStepClick}
+        ref={ref}
+        {...rest}
+      />
+    ) : (
+      <WorkflowDiagram steps={steps} {...rest} />
+    );
+  },
+);
 
 export default Wizard;
