@@ -113,9 +113,11 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
 
   resetSelection();
 
-  // Make sure startId is lesser than endId. Selection always goes from top to bottom
-  let startId = state.lastSelectedRow;
+  // If no row selected before shift clicking, then assume first row is the last selectedRow (like Windows File Explorer)
+  let startId = state.lastSelectedRow ?? instance.rows[0].id;
   let endId = action.id;
+
+  // Make sure startId is lesser than endId. Selection always goes from top to bottom
   if (startId > endId) {
     const temp = startId;
     startId = endId;
