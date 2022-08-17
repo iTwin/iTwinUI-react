@@ -2,7 +2,6 @@
 import Global from './_global.astro';
 import Header from '../components/Header.astro';
 import ITwinUILogo from '../components/iTwinUILogo';
-import FieldsetDemo from 'src/components/demo/FieldSetDemo';
 import AccessibleIcon from 'src/icons/AccessibleIcon.astro';
 import NoFussIcon from 'src/icons/NoFussIcon.astro';
 import GitHubIcon from 'src/icons/GitHubIcon.astro';
@@ -10,11 +9,9 @@ import EvolvingIcon from 'src/icons/EvolvingIcon.astro';
 import ConsistentIcon from 'src/icons/ConsistentIcon.astro';
 import HexagonBackground from 'src/icons/HexagonBackground.astro';
 import NorthernLights from 'src/components/NorthernLights.astro';
-import BadgeExample from 'src/examples/Badge.example';
-import AlertExample from 'src/examples/Alert.example';
-import AvatarExample from 'src/examples/Avatar.example';
-import BreadcrumbsExample from 'src/examples/Breadcrumbs.example';
-import ExpandableBlockExample from 'src/examples/ExpandableBlock.example';
+import AlertExample from 'src/demos/Alert.demo';
+import ExpandableBlockExample from 'src/demos/ExpandableBlock.demo';
+import { FieldsetDemo, DialogDemo } from '~/demos';
 
 const currentPage = new URL(Astro.request.url).pathname;
 ---
@@ -43,33 +40,33 @@ const currentPage = new URL(Astro.request.url).pathname;
       </div>
 
       <div class='code-blocks iui-body'>
-        <div class='code-wrapper'>
-          <div class='code-sample code-sample-1'><BadgeExample /></div>
+        <div class='code-wrapper' style={{ marginTop: '200px' }}>
+          <div class='code-sample'><DialogDemo /></div>
           <h3>Badge</h3>
           <p>A colorful visual indicator for categorizing items</p>
         </div>
-        <div class='code-wrapper'>
-          <div class='code-sample code-sample-2'>
+        <div class='code-wrapper' style={{ marginTop: '150px' }}>
+          <div class='code-sample'>
             <AlertExample />
           </div>
           <h3>Alert</h3>
           <p>A small box to quickly grab user attention and communicate a brief message</p>
         </div>
-        <div class='code-wrapper'>
-          <div class='code-sample code-sample-3'><AvatarExample /></div>
+        <div class='code-wrapper' style={{ marginTop: '100px' }}>
+          <div class='code-sample'><FieldsetDemo /></div>
           <h3>Avatar</h3>
           <p>
             A circular identifier that displays the user's custom set photo or the user's first and
             last name initials.
           </p>
         </div>
-        <div class='code-wrapper'>
-          <div class='code-sample code-sample-1'><BreadcrumbsExample /></div>
+        <div class='code-wrapper' style={{ marginTop: '50px' }}>
+          <div class='code-sample'><DialogDemo /></div>
           <h3>Breadcumbs</h3>
           <p>Navigate a folder hierarchy quickly with a table and breadcrumbs.</p>
         </div>
         <div class='code-wrapper'>
-          <div class='code-sample code-sample-2'><ExpandableBlockExample /></div>
+          <div class='code-sample'><ExpandableBlockExample /></div>
           <h3>Expandable block</h3>
           <p>A pattern for progressive disclosure of information.</p>
         </div>
@@ -225,25 +222,17 @@ const currentPage = new URL(Astro.request.url).pathname;
 
     .code-wrapper {
       min-width: 300px;
+      color: var(--color-text);
     }
 
     .code-sample {
       color-scheme: dark !important;
-      padding: var(--space-7);
       width: 300px;
       min-height: 300px;
       display: flex;
       justify-content: center;
       align-items: center;
-    }
-    .code-sample-1 {
-      background: var(--color-highlight-gradient);
-    }
-    .code-sample-2 {
-      background: var(--color-highlight-gradient-2);
-    }
-    .code-sample-3 {
-      background: var(--color-highlight-gradient-3);
+      background: var(--color-gradient);
     }
     .colored-text {
       color: var(--color-highlight-1);
@@ -350,6 +339,7 @@ const currentPage = new URL(Astro.request.url).pathname;
     h3 {
       font-size: var(--type-2);
       text-align: left;
+      padding-top: var(--space-2);
       padding-bottom: var(--space-5);
     }
     main {
