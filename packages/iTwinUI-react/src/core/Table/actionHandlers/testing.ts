@@ -43,3 +43,6 @@ console.log(isLesser('4.0.1', '3.2.1'));
 console.log(isLesser('3.0.3', '3.0.1'));
 console.log(isLesser('3.0.1', '3.0.1'));
 console.log(isLesser('0.1.2', '1.0'));
+
+console.log(undefined == null);
+console.log(undefined === null);

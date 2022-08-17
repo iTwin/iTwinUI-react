@@ -267,6 +267,82 @@ export const onSelectHandler = <T extends Record<string, unknown>>(
 //   // }
 // };
 
+export const onShiftSelectHandler = <T extends Record<string, unknown>>(
+  state: TableState<T>,
+  action: ActionType,
+  instance: TableInstance<T>,
+) => {
+  // console.log(state, action, instance);
+
+  const getGreaterId = (id: string) => {
+    const greaterId = id.split('.');
+    greaterId[greaterId.length - 1] = `${
+      parseInt(greaterId[greaterId.length - 1]) + 1
+    }`;
+    return greaterId.join('.');
+  };
+
+  const getParentId = (id: string) => {
+    const lastDotIndex = id.lastIndexOf('.');
+    if (lastDotIndex < 0) {
+      return null;
+    }
+    return id.substring(0, lastDotIndex);
+  };
+
+  // const shouldExpand = (currentId: string, endId: string) => {
+  //   return endId.indexOf(currentId) === 0;
+  // };
+
+  // Returns the next row as if it was just a non subrows list
+  const getNextId = (currentId: string, startId: string, endId: string) => {
+    console.log(startId + endId);
+
+    let row = instance.rowsById[currentId];
+    if ((row.subRows ?? []).length > 0) {
+      // child
+      row = row.subRows[0];
+    } else {
+      // next sibling
+      row = instance.rowsById[getGreaterId(currentId)];
+      console.log(
+        'HEHE',
+        getGreaterId('2'),
+        instance.rowsById['3'],
+        getParentId('2'),
+      );
+
+      // If the next sibling doesn't exist, go to the next child at a one upper depth
+      let parentId = getParentId(currentId);
+      while (row == null && parentId != null) {
+        row = instance.rowsById[getGreaterId(parentId)];
+        parentId = getParentId(parentId);
+      }
+    }
+
+    return row;
+
+    // // If child doesn't exist, go to the next child at a one higher depth
+    // while (row == null) {
+    //   row = instance.rowsById[getGreaterId(getParentId(currentId) ?? '0')];
+    // }
+
+    // if (shouldExpand(currentId, endId)) {
+    //   return row.subRows[0];
+    // } else {
+    //   return row;
+    // }
+  };
+
+  // const currentRow = instance.rowsById[state.lastSelectedRow];
+  // while (currentRow != null) {
+  //   currentRow = getNextId(currentRow.id, state.lastSelectedRow, action.id);
+  //   console.log('Current row: ', currentRow.id);
+  // }
+
+  console.log('nextId: ', getNextId(action.id, action.id, '1.1'));
+};
+
 /**
  * Handles selection when clicked on a row.
  */
@@ -303,14 +379,6 @@ export const onSingleSelectHandler = <T extends Record<string, unknown>>(
   onSelectHandler(newState, instance, onSelect, isRowDisabled);
 
   return newState;
-};
-
-export const onShiftSelectHandler = <T extends Record<string, unknown>>(
-  state: TableState<T>,
-  action: ActionType,
-  instance: TableInstance<T>,
-) => {
-  console.log(state, action, instance);
 };
 
 const getSelectedData = <T extends Record<string, unknown>>(
