@@ -274,6 +274,10 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
 ) => {
   // console.log(state, action, instance);
 
+  const resetSelection = () => {
+    instance.rows.forEach((r) => r.toggleRowSelected(false));
+  };
+
   const getGreaterId = (id: string) => {
     const greaterId = id.split('.');
     greaterId[greaterId.length - 1] = `${
@@ -295,32 +299,32 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
   // };
 
   // Returns the next row as if it was just a non subrows list
-  const getNextId = (currentId: string, startId: string, endId: string) => {
+  const getNextRow = (currentRow: Row<T>, startId: string, endId: string) => {
     console.log(startId + endId);
 
-    let row = instance.rowsById[currentId];
-    if ((row.subRows ?? []).length > 0) {
+    // let row = instance.rowsById[currentId];
+    if ((currentRow.subRows ?? []).length > 0) {
       // child
-      row = row.subRows[0];
+      currentRow = instance.rowsById[currentRow.subRows[0].id];
     } else {
       // next sibling
-      row = instance.rowsById[getGreaterId(currentId)];
-      console.log(
-        'HEHE',
-        getGreaterId('2'),
-        instance.rowsById['3'],
-        getParentId('2'),
-      );
+      currentRow = instance.rowsById[getGreaterId(currentRow.id)];
+      // console.log(
+      //   'HEHE',
+      //   getGreaterId('2'),
+      //   instance.rowsById['3'],
+      //   getParentId('2'),
+      // );
 
       // If the next sibling doesn't exist, go to the next child at a one upper depth
-      let parentId = getParentId(currentId);
-      while (row == null && parentId != null) {
-        row = instance.rowsById[getGreaterId(parentId)];
+      let parentId = getParentId(currentRow.id);
+      while (currentRow == null && parentId != null) {
+        currentRow = instance.rowsById[getGreaterId(parentId)];
         parentId = getParentId(parentId);
       }
     }
 
-    return row;
+    return currentRow;
 
     // // If child doesn't exist, go to the next child at a one higher depth
     // while (row == null) {
@@ -334,13 +338,46 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     // }
   };
 
+  const isAncestorParent = (currentId: string, endId: string) => {
+    return endId.indexOf(currentId) === 0;
+  };
+
   // const currentRow = instance.rowsById[state.lastSelectedRow];
   // while (currentRow != null) {
   //   currentRow = getNextId(currentRow.id, state.lastSelectedRow, action.id);
   //   console.log('Current row: ', currentRow.id);
   // }
 
-  console.log('nextId: ', getNextId(action.id, action.id, '1.1'));
+  // console.log('nextId: ', getNextId(action.id, action.id, '1.1'));
+
+  resetSelection();
+
+  const startId = state.lastSelectedRow;
+  const endId = action.id;
+  let currentRow = instance.rowsById[startId];
+  // console.log('currentRow: ', currentRow);
+
+  while (true) {
+    console.log('nextRowTrace: ', currentRow);
+    console.log(
+      'isAncestorParent: ',
+      !isAncestorParent(currentRow.id, endId),
+      currentRow.id,
+      endId,
+      currentRow.id === endId,
+      endId.indexOf(currentRow.id) === 0,
+    );
+
+    if (!isAncestorParent(currentRow.id, endId)) {
+      currentRow.toggleRowSelected(true);
+    }
+
+    if (currentRow.id === endId) {
+      currentRow.toggleRowSelected(true);
+      break;
+    }
+    currentRow = getNextRow(currentRow, startId, endId);
+  }
 };
 
 /**

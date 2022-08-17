@@ -46,3 +46,5 @@ console.log(isLesser('0.1.2', '1.0'));
 
 console.log(undefined == null);
 console.log(undefined === null);
+
+console.log('123', 'abcd'.indexOf('abcd') === 0);
