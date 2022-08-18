@@ -2,18 +2,18 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-export { default as AlertExample } from './Alert.example';
-export { default as AvatarExample } from './Avatar.example';
-export { default as BadgeExample } from './Badge.example';
-export { default as BreadcrumbsExample } from './Breadcrumbs.example';
-export { default as CarouselExample } from './Carousel.example';
-export { default as ComboBoxExample } from './ComboBox.example';
-export { default as ColorPickerExample } from './ColorPicker.example';
-export { default as DatePickerExample } from './DatePicker.example';
-export { default as DialogExample } from './Dialog.example';
-export { default as DropdownMenuExample } from './DropdownMenu.example';
-export { default as ErrorPageExample } from './ErrorPage.example';
-export { default as ExpandableBlockExample } from './ExpandableBlock.example';
-export { default as FileUploadExample } from './FileUpload.example';
-export { default as FooterExample } from './Footer.example';
-export { default as HeaderExample } from './Header.example';
+export { default as AlertMainExample } from './Alert.main';
+export { default as AvatarMainExample } from './Avatar.main';
+export { default as BadgeMainExample } from './Badge.main';
+export { default as BreadcrumbsMainExample } from './Breadcrumbs.main';
+export { default as CarouselMainExample } from './Carousel.main';
+export { default as ComboBoxMainExample } from './ComboBox.main';
+export { default as ColorPickerMainExample } from './ColorPicker.main';
+export { default as DatePickerMainExample } from './DatePicker.main';
+export { default as DialogMainExample } from './Dialog.main';
+export { default as DropdownMenuMainExample } from './DropdownMenu.main';
+export { default as ErrorPageMainExample } from './ErrorPage.main';
+export { default as ExpandableBlockMainExample } from './ExpandableBlock.main';
+export { default as FileUploadMainExample } from './FileUpload.main';
+export { default as FooterMainExample } from './Footer.main';
+export { default as HeaderMainExample } from './Header.main';
