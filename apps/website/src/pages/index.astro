@@ -11,7 +11,7 @@ import HexagonBackground from 'src/icons/HexagonBackground.astro';
 import NorthernLights from 'src/components/NorthernLights.astro';
 import AlertExample from 'src/demos/Alert.demo';
 import ExpandableBlockExample from 'src/demos/ExpandableBlock.demo';
-import { FieldsetDemo, DialogDemo } from '~/demos';
+import { FieldsetDemo, DialogDemo, SliderDemo } from '~/demos';
 
 const currentPage = new URL(Astro.request.url).pathname;
 ---
@@ -40,30 +40,27 @@ const currentPage = new URL(Astro.request.url).pathname;
       </div>
 
       <div class='code-blocks iui-body'>
-        <div class='code-wrapper' style={{ marginTop: '200px' }}>
+        <div class='code-wrapper'>
           <div class='code-sample'><DialogDemo /></div>
           <h3>Badge</h3>
           <p>A colorful visual indicator for categorizing items</p>
         </div>
-        <div class='code-wrapper' style={{ marginTop: '150px' }}>
+        <div class='code-wrapper'>
           <div class='code-sample'>
             <AlertExample />
           </div>
           <h3>Alert</h3>
           <p>A small box to quickly grab user attention and communicate a brief message</p>
         </div>
-        <div class='code-wrapper' style={{ marginTop: '100px' }}>
+        <div class='code-wrapper'>
           <div class='code-sample'><FieldsetDemo /></div>
-          <h3>Avatar</h3>
-          <p>
-            A circular identifier that displays the user's custom set photo or the user's first and
-            last name initials.
-          </p>
+          <h3>Fieldset</h3>
+          <p>A fieldset is a container grouping interactive components together.</p>
         </div>
-        <div class='code-wrapper' style={{ marginTop: '50px' }}>
-          <div class='code-sample'><DialogDemo /></div>
-          <h3>Breadcumbs</h3>
-          <p>Navigate a folder hierarchy quickly with a table and breadcrumbs.</p>
+        <div class='code-wrapper'>
+          <div class='code-sample'><SliderDemo client:only='react' /></div>
+          <h3>Slider</h3>
+          <p>Sliders let users make selections from a range of values.</p>
         </div>
         <div class='code-wrapper'>
           <div class='code-sample'><ExpandableBlockExample /></div>

@@ -11,29 +11,15 @@ export default () => {
   return (
     <Fieldset
       legend='General Settings'
-      style={{ display: 'flex', flexDirection: 'column', gap: 11, transform: 'scale(0.8)' }}
+      style={{ display: 'flex', flexDirection: 'column', gap: 11 }}
     >
-      <LabeledSelect
-        label='Resolution'
-        options={[
-          { value: 1, label: '1200 x 1000' },
-          { value: 2, label: '1600 x 1200' },
-          { value: 3, label: '2560 x 1600' },
-        ]}
-        displayStyle='inline'
-        value={value}
-        onChange={(value) => setValue(value)}
-        placeholder='Select'
-      />
-
-      <InputGroup label='Color Theme' displayStyle='inline'>
+      <InputGroup label='Color Theme'>
         <Radio name='choice' value='option1' label={'Light'} />
         <Radio name='choice' value='option2' label={'Dark'} />
         <Radio name='choice' value='option3' label={'Match device'} />
       </InputGroup>
 
       <InputGroup>
-        <ToggleSwitch label='Share usage statistics' />
         <ToggleSwitch label='Share crash logs' />
         <ToggleSwitch disabled label='Advanced settings' />
       </InputGroup>
