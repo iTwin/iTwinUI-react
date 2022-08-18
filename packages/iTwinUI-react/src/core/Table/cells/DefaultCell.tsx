@@ -6,9 +6,18 @@ import React from 'react';
 import { CellRendererProps } from 'react-table';
 import cx from 'classnames';
 
-export type DefaultCellProps<
-  T extends Record<string, unknown>
-> = CellRendererProps<T> & React.ComponentPropsWithoutRef<'div'>;
+export type DefaultCellProps<T extends Record<string, unknown>> = {
+  /**
+   * Custom icon to be displayed at the beginning of the cell.
+   */
+  startIcon?: JSX.Element;
+  /**
+   * Custom icon to be displayed at the end of the cell.
+   */
+  endIcon?: JSX.Element;
+  status?: 'positive' | 'negative' | 'warning';
+} & CellRendererProps<T> &
+  React.ComponentPropsWithoutRef<'div'>;
 
 /**
  * Default cell.
@@ -33,10 +42,13 @@ export const DefaultCell = <T extends Record<string, unknown>>(
       ...cellElementProps
     },
     children,
+    startIcon,
+    endIcon,
     cellProps,
     isDisabled,
     className,
     style,
+    status,
     ...rest
   } = props;
 
@@ -46,10 +58,13 @@ export const DefaultCell = <T extends Record<string, unknown>>(
       {...rest}
       className={cx(cellElementClassName, className, {
         'iui-disabled': isDisabled?.(cellProps.row.original),
+        [`iui-${status}`]: !!status,
       })}
       style={{ ...cellElementStyle, ...style }}
     >
+      {startIcon && <div className='iui-cell-start-icon'>{startIcon}</div>}
       {children}
+      {endIcon && <div className='iui-cell-end-icon'>{endIcon}</div>}
     </div>
   );
 };
