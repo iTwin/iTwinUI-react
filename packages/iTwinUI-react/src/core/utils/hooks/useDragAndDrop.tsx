@@ -39,7 +39,6 @@ export const useDragAndDrop = (
   const containerRectRef = React.useRef(getContainerRect(containerRef));
 
   const adjustTransform = React.useCallback(() => {
-    console.log('onResize');
     containerRectRef.current = getContainerRect(containerRef);
     if (
       !elementRef.current ||
