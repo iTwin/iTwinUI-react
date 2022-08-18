@@ -21,7 +21,11 @@ import {
 import { CellProps, Column, Row } from 'react-table';
 import { InputGroup } from '../InputGroup';
 import { Radio } from '../Radio';
-import { SvgChevronRight } from '@itwin/itwinui-icons-react';
+import {
+  SvgChevronRight,
+  SvgSortUp,
+  SvgSortDown,
+} from '@itwin/itwinui-icons-react';
 import { DefaultCell, EditableCell } from './cells';
 import { TablePaginator } from './TablePaginator';
 import * as UseOverflow from '../utils/hooks/useOverflow';
@@ -585,6 +589,113 @@ it('should not show sort icon if disabled in column level', () => {
   });
 
   expect(container.querySelector('.iui-sort .iui-icon-wrapper')).toBeFalsy();
+});
+
+it('should correct sort icons for ascending first on hover and click', async () => {
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns: mockedColumns,
+    isSortable: true,
+  });
+  const {
+    container: { firstChild: sortUpIcon },
+  } = render(<SvgSortUp className='iui-icon iui-sort' aria-hidden />);
+  const {
+    container: { firstChild: sortDownIcon },
+  } = render(<SvgSortDown className='iui-icon iui-sort' aria-hidden />);
+  const nameHeader = container.querySelector(
+    '.iui-table-header .iui-cell',
+  ) as HTMLDivElement;
+  expect(nameHeader).toBeTruthy();
+
+  // hover on column header
+  fireEvent.mouseEnter(nameHeader);
+  expect(container.querySelectorAll('.iui-cell-end-icon > svg')[0]).toEqual(
+    sortUpIcon,
+  );
+
+  // first click on column header
+  await userEvent.click(nameHeader);
+  expect(container.querySelectorAll('.iui-cell-end-icon > svg')[0]).toEqual(
+    sortUpIcon,
+  );
+
+  // second click on column header
+  await userEvent.click(nameHeader);
+  expect(container.querySelectorAll('.iui-cell-end-icon > svg')[0]).toEqual(
+    sortDownIcon,
+  );
+
+  // third click on column header to reset
+  await userEvent.click(nameHeader);
+  expect(container.querySelectorAll('.iui-cell-end-icon > svg')[0]).toEqual(
+    sortUpIcon,
+  );
+});
+
+it('should correct sort icons for descending first on hover and click', async () => {
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          sortDescFirst: true,
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns: mockedColumns,
+    isSortable: true,
+  });
+  const {
+    container: { firstChild: sortUpIcon },
+  } = render(<SvgSortUp className='iui-icon iui-sort' aria-hidden />);
+  const {
+    container: { firstChild: sortDownIcon },
+  } = render(<SvgSortDown className='iui-icon iui-sort' aria-hidden />);
+  const nameHeader = container.querySelector(
+    '.iui-table-header .iui-cell',
+  ) as HTMLDivElement;
+  expect(nameHeader).toBeTruthy();
+
+  // hover on column header
+  fireEvent.mouseEnter(nameHeader);
+  expect(container.querySelectorAll('.iui-cell-end-icon > svg')[0]).toEqual(
+    sortDownIcon,
+  );
+
+  // first click on column header
+  await userEvent.click(nameHeader);
+  expect(container.querySelectorAll('.iui-cell-end-icon > svg')[0]).toEqual(
+    sortDownIcon,
+  );
+
+  // second click on column header
+  await userEvent.click(nameHeader);
+  expect(container.querySelectorAll('.iui-cell-end-icon > svg')[0]).toEqual(
+    sortUpIcon,
+  );
+
+  // third click on column header to reset
+  await userEvent.click(nameHeader);
+  expect(container.querySelectorAll('.iui-cell-end-icon > svg')[0]).toEqual(
+    sortDownIcon,
+  );
 });
 
 it('should trigger onBottomReached', () => {
