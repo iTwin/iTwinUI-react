@@ -59,3 +59,18 @@ it('should leave original text', () => {
   const containerSpan = container.querySelector('span') as HTMLSpanElement;
   expect(containerSpan.textContent).toBe('No trunc');
 });
+
+it('should call onTruncate callback', () => {
+  jest.spyOn(UseOverflow, 'useOverflow').mockReturnValue([jest.fn(), 20]);
+  const onTruncate = jest.fn();
+  render(
+    <div>
+      <MiddleTextTruncation
+        onTruncate={onTruncate}
+        text='This is some very long text to truncate and expect callback'
+      />
+    </div>,
+  );
+
+  expect(onTruncate).toHaveBeenCalled();
+});
