@@ -7,6 +7,7 @@ import * as React from 'react';
 export default (props: React.ComponentProps<'svg'>) => {
   const [logoRotate, setLogoRotate] = React.useState({ x: 0, y: 0 });
   const [gradientRotate, setGradientRotate] = React.useState(135);
+  const [highlightRotate, setHighlightRotate] = React.useState(270);
   const [animation, setAnimation] = React.useState('none');
   const svgRef = React.useRef<SVGSVGElement>(null);
   const windowWidth = useWindowWidth();
@@ -38,12 +39,14 @@ export default (props: React.ComponentProps<'svg'>) => {
       setAnimation('none');
       setLogoRotate({ x, y });
       setGradientRotate(gradientRotate);
+      setHighlightRotate(gradientRotate);
     };
 
     const mouseLeaveHandle = (e: MouseEvent) => {
       setAnimation('transform 1s ease');
       setLogoRotate({ x: 0, y: 0 });
       setGradientRotate(135);
+      setHighlightRotate(270);
     };
 
     document.addEventListener('mousemove', handle);
@@ -70,7 +73,7 @@ export default (props: React.ComponentProps<'svg'>) => {
           <stop offset='0%' stopColor='#ffb6fc' stopOpacity='1' />
           <stop offset='100%' stopColor='#83a4ff' stopOpacity='1' />
         </linearGradient>
-        <linearGradient id='gra2' gradientTransform={`rotate(${-gradientRotate} 0.5 0.5)`}>
+        <linearGradient id='gra2' gradientTransform={`rotate(${-highlightRotate} 0.5 0.5)`}>
           <stop offset='0%' stopColor='#fff' stopOpacity='1' />
           <stop offset='60%' stopColor='#fff' stopOpacity='0' />
         </linearGradient>
