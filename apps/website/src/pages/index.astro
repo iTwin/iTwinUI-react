@@ -152,12 +152,6 @@ const currentPage = new URL(Astro.request.url).pathname;
         </a>
       </div>
     </div>
-    <div class='centered-content'>
-      <h2 class='highlight-text'>Join us</h2>
-      <a class='join-us' href='https://github.com/iTwin/iTwinUI-React' target='_blank'>
-        <GitHubIcon />
-      </a>
-    </div>
   </main>
 
   <footer>© 2022 Bentley Systems, Inc</footer>
@@ -232,7 +226,7 @@ const currentPage = new URL(Astro.request.url).pathname;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: var(--color-gradient);
+      background: var(--color-demo-gradient);
     }
     .colored-text {
       color: var(--color-highlight-1);
@@ -307,14 +301,6 @@ const currentPage = new URL(Astro.request.url).pathname;
       text-align: start;
       border: 1px solid var(--color-text);
       border-radius: var(--border-radius-1);
-    }
-    .join-us {
-      height: var(--space-7);
-      border-radius: var(--border-radius-1);
-      svg {
-        width: var(--space-7);
-        height: var(--space-7);
-      }
     }
     .subheading {
       color: var(--color-subtext);
