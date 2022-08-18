@@ -32,7 +32,7 @@ html { color-scheme: dark; }
   width: 100vw;
   display: grid;
   place-items: center;
-  background: linear-gradient(300deg, #415e74, #172129);
+  background: linear-gradient(135deg, hsl(221deg 12% 40%), hsl(221deg 22% 25%));
 }
 `;
 

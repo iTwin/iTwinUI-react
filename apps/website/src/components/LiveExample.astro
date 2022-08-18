@@ -56,13 +56,21 @@ const StaticComponent = AllExamples[`${capitalize(componentName)}Example`];
       position: relative;
       display: grid;
       place-items: center;
-      background: var(--color-gradient) !important;
+      background: var(--color-sandbox-gradient) !important;
     }
   }
 
   .sp-preview-container,
   .sp-code-editor {
     border-radius: 0.5rem;
+  }
+
+  .sp-preview-actions {
+    left: var(--sp-space-2);
+  }
+
+  .sp-cube-wrapper {
+    left: calc(var(--sp-space-2) + var(--sp-space-1));
   }
 
   .show-code-button {
@@ -82,112 +90,3 @@ const StaticComponent = AllExamples[`${capitalize(componentName)}Example`];
     }
   }
 </style>
-<!-- <style id='sandpack' set:html={staticSandpackCss}> -->
-
-<!--
-⬇️ All my past efforts to prerender the component while JS loads.
----
-// import { createRequire } from 'module';
-// import fs from 'fs';
-// import ReactDOMServer from 'react-dom/server';
-// import { Code } from 'astro/components';
-// import '@codesandbox/sandpack-react/dist/index.css';
-
-// export interface Props {
-//   path: string;
-// }
-
-// const { path: examplePath } = Astro.props;
-
-// const require = createRequire(import.meta.url);
-// const component = (await import(examplePath)).default;
-
-// const markup = ReactDOMServer.renderToString(component());
-// const styles = `${await fs.promises.readFile(require.resolve('@itwin/itwinui-css/css/all.css'))}`;
-// const code = await fs.promises.readFile(require.resolve(Astro.props.path), 'utf8');
-
----
-<div class='wrapper'>
-  <iframe></iframe>
-  <button class='code-button' data-shown='false'>Show code</button>
-  <Code lang='js' code={code} theme='one-dark-pro' />
-</div>
-
-
-<style lang='scss'>
-  .wrapper {
-    display: grid;
-
-    & :global(.sp-stack) {
-      flex-basis: unset;
-    }
-
-    & :global(path) {
-      fill: currentColor;
-    }
-  }
-
-  iframe {
-    grid-area: 1 / -1;
-    border: none;
-    border-radius: 0.5rem;
-    aspect-ratio: 2;
-  }
-
-  .code-button {
-    all: unset;
-    grid-area: 1 / -1;
-    place-self: end;
-    margin: 0.5rem;
-    padding: 0.25rem 0.5rem;
-    font-size: 0.8rem;
-    cursor: pointer;
-    border-radius: 0.25rem;
-
-    &:hover {
-      background: hsl(0 0% 0% / 0.2);
-    }
-
-    &[data-shown='false'] + :global(.astro-code) {
-      display: none;
-    }
-  }
-<\/style>
-
-<script define:vars={{ styles, markup }}>
-  const iframe = document.querySelector('iframe');
-
-  const stylesUrl = URL.createObjectURL(new Blob([styles], { type: 'text/css'}));
-
-  iframe.src = URL.createObjectURL(new Blob([`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <style lang='scss'>lang='scss'>
-          * {
-            margin: 0;
-            box-sizing: border-box;
-          }
-          #root {
-            height: 100vh;
-            width: 100vw;
-            display: grid;
-            place-items: center;
-            background: linear-gradient(225deg, #4e5d6e 0%, #363944 100%);
-          }
-        <\/style>
-        <link rel='stylesheet' href='${stylesUrl}' type='text/css' />
-      </head>
-      <body class="iui-body">
-        <div id='root'>${markup}</div>
-      </body>
-      </html>
-    `],
-    { type: 'text/html' })
-  );
-
-  const codeButton = document.querySelector('.code-button');
-  codeButton.addEventListener('click', () => {
-    codeButton.dataset.shown = codeButton.dataset.shown == 'false' ? 'true' : 'false';
-  });
-</script> -->

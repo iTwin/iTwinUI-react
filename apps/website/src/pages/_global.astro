@@ -69,19 +69,20 @@ const { pathname } = new URL(Astro.request.url);
         // #endregion
 
         // #region Dark
-        // --color-background-1--dark: hsl(233, 46%, 17%);
-        // --color-background-2--dark: hsl(233, 48%, 14%);
         --color-background-1--dark: hsl(221deg 33% 17%);
         --color-background-2--dark: hsl(221deg 47% 11%);
         --color-background-3--dark: white;
         --color-text--dark: hsl(210deg 6% 85%);
         --color-subtext--dark: hsl(221deg 16% 62%);
-        --color-gradient-1--dark: hsl(232, 12%, 40%);
-        --color-gradient-2--dark: hsl(232, 22%, 25%);
-        --color-gradient--dark: linear-gradient(
+        --color-demo-gradient--dark: linear-gradient(
           135deg,
-          var(--color-gradient-1--dark),
-          var(--color-gradient-2--dark)
+          hsl(232deg 12% 40%),
+          hsl(232deg 22% 25%)
+        );
+        --color-sandbox-gradient--dark: linear-gradient(
+          135deg,
+          hsl(221deg 12% 40%),
+          hsl(221deg 22% 25%)
         );
         --color-active--dark: hsl(221deg 12% 27% / 40%);
         --color-line-1--dark: hsl(205deg 13% 54%);
@@ -89,9 +90,9 @@ const { pathname } = new URL(Astro.request.url);
         // #endregion
 
         // #region Current
-        --color-highlight-1: hsl(314, 57%, 88%);
-        --color-highlight-2: hsl(232, 78%, 82%);
-        --color-highlight-3: hsl(186, 78%, 79%);
+        --color-highlight-1: hsl(314deg 57% 88%);
+        --color-highlight-2: hsl(232deg 78% 82%);
+        --color-highlight-3: hsl(186deg 78% 79%);
         --color-highlight-gradient-1: linear-gradient(
           135deg,
           var(--color-highlight-1),
@@ -112,9 +113,8 @@ const { pathname } = new URL(Astro.request.url);
         --color-background-3: var(--color-background-3--dark);
         --color-text: var(--color-text--dark);
         --color-subtext: var(--color-subtext--dark);
-        --color-gradient-1: var(--color-gradient-1--dark);
-        --color-gradient-2: var(--color-gradient-2--dark);
-        --color-gradient: var(--color-gradient--dark);
+        --color-demo-gradient: var(--color-demo-gradient--dark);
+        --color-sandbox-gradient: var(--color-sandbox-gradient--dark);
         --color-highlight-gradient: var(--color-highlight-gradient-1);
         --color-active: var(--color-active--dark);
         --color-line-1: var(--color-line-1--dark);
