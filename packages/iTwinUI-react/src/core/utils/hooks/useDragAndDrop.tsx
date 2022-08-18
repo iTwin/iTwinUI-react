@@ -4,7 +4,20 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { getWindow } from '../functions';
-import { useLatestRef } from './useLatestRef';
+import { useEventListener } from './useEventListener';
+import { useResizeObserver } from './useResizeObserver';
+
+const getContainerRect = (
+  containerRef: React.RefObject<HTMLElement> | undefined,
+) => {
+  const containerRect = containerRef?.current?.getBoundingClientRect();
+  return {
+    top: containerRect?.top ?? 0,
+    right: containerRect?.right ?? getWindow()?.innerWidth ?? 0,
+    bottom: containerRect?.bottom ?? getWindow()?.innerHeight ?? 0,
+    left: containerRect?.left ?? 0,
+  };
+};
 
 /**
  * Helper hook that handles elements drag logic.
@@ -16,26 +29,75 @@ import { useLatestRef } from './useLatestRef';
  */
 export const useDragAndDrop = (
   elementRef: React.RefObject<HTMLElement>,
-  containerRect?: DOMRect,
+  containerRef?: React.RefObject<HTMLElement>,
 ) => {
   const grabOffsetX = React.useRef(0);
   const grabOffsetY = React.useRef(0);
-  const translateX = React.useRef(0);
-  const translateY = React.useRef(0);
+  const translateX = React.useRef<number>();
+  const translateY = React.useRef<number>();
 
-  const distancesToEdges = React.useRef({
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-  });
+  const containerRectRef = React.useRef(getContainerRect(containerRef));
 
-  const containerRectRef = useLatestRef({
-    top: containerRect?.top ?? 0,
-    right: containerRect?.right ?? getWindow()?.innerWidth ?? 0,
-    bottom: containerRect?.bottom ?? getWindow()?.innerHeight ?? 0,
-    left: containerRect?.left ?? 0,
-  });
+  const adjustTransform = React.useCallback(() => {
+    console.log('onResize');
+    containerRectRef.current = getContainerRect(containerRef);
+    if (
+      !elementRef.current ||
+      translateX.current == null ||
+      translateY.current == null
+    ) {
+      return;
+    }
+
+    const {
+      top,
+      right,
+      bottom,
+      left,
+    } = elementRef.current?.getBoundingClientRect();
+
+    let newTranslateX = translateX.current;
+    let newTranslateY = translateY.current;
+
+    if (bottom > containerRectRef.current.bottom) {
+      newTranslateY -= bottom - containerRectRef.current.bottom;
+    }
+    if (top < containerRectRef.current.top) {
+      newTranslateY += containerRectRef.current.top - top;
+    }
+    if (right > containerRectRef.current.right) {
+      newTranslateX -= right - containerRectRef.current.right;
+    }
+    if (left < containerRectRef.current.left) {
+      newTranslateX += containerRectRef.current.left - left;
+    }
+
+    translateX.current = newTranslateX;
+    translateY.current = newTranslateY;
+
+    elementRef.current.style.transform = `translate(${newTranslateX}px, ${newTranslateY}px)`;
+  }, [containerRectRef, containerRef, elementRef]);
+
+  const [resizeRef, resizeObserver] = useResizeObserver(adjustTransform);
+  resizeRef(containerRef?.current);
+  React.useEffect(() => {
+    return () => {
+      resizeObserver?.disconnect();
+    };
+  }, [resizeObserver]);
+
+  useEventListener(
+    'resize',
+    () => {
+      adjustTransform();
+      if (translateX.current != null && translateY.current != null) {
+        setTransform(
+          `translate(${translateX.current}px, ${translateY.current}px)`,
+        );
+      }
+    },
+    getWindow(),
+  );
 
   const [transform, setTransform] = React.useState('');
 
@@ -44,31 +106,11 @@ export const useDragAndDrop = (
       return;
     }
 
-    let newTranslateX = event.clientX - grabOffsetX.current;
-    let newTranslateY = event.clientY - grabOffsetY.current;
-
-    const elementTop = event.clientY - distancesToEdges.current.top;
-    const elementRight = event.clientX + distancesToEdges.current.right;
-    const elementBottom = event.clientY + distancesToEdges.current.bottom;
-    const elementLeft = event.clientX - distancesToEdges.current.left;
-
-    // Make sure element is not dragged outside of the container.
-    if (elementLeft < containerRectRef.current.left) {
-      newTranslateX += containerRectRef.current.left - elementLeft;
-    } else if (elementRight > containerRectRef.current.right) {
-      newTranslateX -= elementRight - containerRectRef.current.right;
-    }
-
-    if (elementTop < containerRectRef.current.top) {
-      newTranslateY += containerRectRef.current.top - elementTop;
-    } else if (elementBottom > containerRectRef.current.bottom) {
-      newTranslateY -= elementBottom - containerRectRef.current.bottom;
-    }
-
-    translateX.current = newTranslateX;
-    translateY.current = newTranslateY;
+    translateX.current = event.clientX - grabOffsetX.current;
+    translateY.current = event.clientY - grabOffsetY.current;
 
     elementRef.current.style.transform = `translate(${translateX.current}px, ${translateY.current}px)`;
+    adjustTransform();
   });
 
   const originalUserSelect = React.useRef('');
@@ -88,15 +130,6 @@ export const useDragAndDrop = (
 
       grabOffsetX.current = e.clientX - translateX.current;
       grabOffsetY.current = e.clientY - translateY.current;
-
-      // Calculate distances from pointer to edges of the element.
-      const elementRect = elementRef.current.getBoundingClientRect();
-      distancesToEdges.current = {
-        top: e.clientY - elementRect.top,
-        right: elementRect.right - e.clientX,
-        bottom: elementRect.bottom - e.clientY,
-        left: e.clientX - elementRect.left,
-      };
 
       originalUserSelect.current = elementRef.current.style.userSelect;
       // Prevents from selecting inner content when dragging.

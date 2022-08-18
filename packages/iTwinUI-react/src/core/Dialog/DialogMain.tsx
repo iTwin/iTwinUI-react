@@ -113,11 +113,8 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
       onKeyDown?.(event);
     };
 
-    const { boundingRect: wrapperBoundingRect } = useDialogDragContext();
-    const { onPointerDown, transform } = useDragAndDrop(
-      dialogRef,
-      wrapperBoundingRect,
-    );
+    const { wrapperRef } = useDialogDragContext();
+    const { onPointerDown, transform } = useDragAndDrop(dialogRef, wrapperRef);
     const handlePointerDown = React.useCallback(
       (event: React.PointerEvent<HTMLElement>) => {
         if (isDraggable) {

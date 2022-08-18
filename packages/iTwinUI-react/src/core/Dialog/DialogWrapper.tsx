@@ -29,9 +29,7 @@ export const DialogWrapper = React.forwardRef<
   useTheme();
   return (
     <div className={cx('iui-dialog-wrapper', className)} ref={refs} {...rest}>
-      <DialogDragContext.Provider
-        value={{ boundingRect: wrapperRef.current?.getBoundingClientRect() }}
-      >
+      <DialogDragContext.Provider value={{ wrapperRef }}>
         {children}
       </DialogDragContext.Provider>
     </div>
