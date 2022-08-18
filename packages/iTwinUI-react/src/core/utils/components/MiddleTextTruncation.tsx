@@ -27,9 +27,13 @@ export type MiddleTextTruncationProps = {
  * <MiddleTextTruncation text='ThisIsMyVeryLongFileName.dgn' />
  */
 export const MiddleTextTruncation = (props: MiddleTextTruncationProps) => {
-  const { text, endCharsCount = 6, style, ...rest } = props;
-
+  const { text, title, endCharsCount = 6, style, ...rest } = props;
   const [ref, visibleCount] = useOverflow(text);
+
+  const hasOverflow = React.useMemo(() => visibleCount < text.length, [
+    text,
+    visibleCount,
+  ]);
 
   const truncatedText = React.useMemo(() => {
     if (visibleCount < text.length) {
@@ -52,6 +56,7 @@ export const MiddleTextTruncation = (props: MiddleTextTruncationProps) => {
         ...style,
       }}
       ref={ref}
+      title={hasOverflow ? title : undefined}
       {...rest}
     >
       {truncatedText}
