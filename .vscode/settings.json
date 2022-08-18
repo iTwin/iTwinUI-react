@@ -21,6 +21,6 @@
   "explorer.fileNesting.patterns": {
     "*.astro": "${capture}.tsx, ${capture).css",
     "*.tsx": "${capture}.ts, ${capture}.css",
-    "*.stories.ts": "${capture}.test.ts"
+    "*.stories.tsx": "${capture}.test.ts"
   }
 }
