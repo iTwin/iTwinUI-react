@@ -1,41 +1,34 @@
 ---
-// TODO: rework this garbage component logic and styles?
+const currentPage = new URL(Astro.request.url).pathname;
 
-import { SIDEBAR } from '../config';
-const { currentPage } = Astro.props;
-const currentPageMatch = currentPage.slice(1);
-// SIDEBAR is a flat array. Group it by sections to properly render.
-const sidebarSections = SIDEBAR.reduce((col, item, i) => {
-  // If the first item is not a section header, create a new container section.
-  if (i === 0) {
-    if (!item.header) {
-      const pesudoSection = { text: '' };
-      col.push({ ...pesudoSection, children: [] });
-    }
-  }
-  if (item.header) {
-    col.push({ ...item, children: [] });
-  } else {
-    col[col.length - 1].children.push(item);
-  }
-  return col;
-}, []);
+const componentsPages = (await Astro.glob('../pages/docs/*.mdx'))
+  .filter(({ file }) => !file.endsWith('index.astro'))
+  .map(({ url, frontmatter }) => ({
+    url,
+    title: frontmatter.title,
+  }));
+
+const sections = new Map<string, typeof componentsPages>();
+sections.set('components', componentsPages);
 ---
 
 <nav aria-labelledby='grid-left'>
   <ul class='nav-groups'>
-    {sidebarSections.map((section) => (
+    <li class='nav-link'>
+      <a href={'/docs'} aria-current={`${currentPage === '/docs' ? 'page' : 'false'}`}>
+        Getting started
+      </a>
+    </li>
+
+    {[...sections.entries()].map(([heading, list]) => (
       <li>
         <div class='nav-group'>
-          <h2 class='nav-group-title'>{section.text}</h2>
+          <h2 class='nav-group-title'>{heading}</h2>
           <ul>
-            {section.children.map((child) => (
+            {list.map(({ url, title }) => (
               <li class='nav-link'>
-                <a
-                  href={`/${child.link}`}
-                  aria-current={`${currentPageMatch === child.link ? 'page' : 'false'}`}
-                >
-                  {child.text}
+                <a href={url} aria-current={`${currentPage === url ? 'page' : 'false'}`}>
+                  {title}
                 </a>
               </li>
             ))}
@@ -82,6 +75,7 @@ const sidebarSections = SIDEBAR.reduce((col, item, i) => {
     font-size: var(--type-0);
     font-weight: 600;
     padding-inline: var(--space-4);
+    margin-bottom: var(--space-2);
     text-transform: uppercase;
   }
 
@@ -106,7 +100,6 @@ const sidebarSections = SIDEBAR.reduce((col, item, i) => {
   .nav-link a[aria-current='page'] {
     background-color: var(--color-active);
     color: var(--color-text);
-    font-weight: 600;
     position: relative;
 
     &::before {

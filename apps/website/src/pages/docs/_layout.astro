@@ -10,11 +10,11 @@ const currentPage = new URL(Astro.request.url).pathname;
 <Global content={content} currentPage={currentPage}>
   <Header class='header' />
   <aside class='sidebar' aria-label='Main navigation'>
-    <LeftSidebar currentPage={currentPage} />
+    <LeftSidebar />
   </aside>
   <div class='content-wrapper'>
     <h1 id='overview'>{content.title}</h1>
-    <slot></slot>
+    <slot />
   </div>
 
   <style lang='scss'>

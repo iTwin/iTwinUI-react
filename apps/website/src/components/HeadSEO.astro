@@ -1,38 +1,31 @@
 ---
-import { SITE, OPEN_GRAPH } from '../config';
-export interface Props {
-  content: any;
-}
+export type Props = { content?: any };
+
 const { content = {} } = Astro.props;
-const formattedContentTitle = content.title ? `${content.title} | ${SITE.title}` : SITE.title;
-const imageSrc = content?.image?.src ?? OPEN_GRAPH.image.src;
-const canonicalImageSrc = new URL(imageSrc, Astro.site);
-const imageAlt = content?.image?.alt ?? OPEN_GRAPH.image.alt;
+const imageSrc = content?.image?.src;
+// const canonicalImageSrc = imageSrc ? new URL(imageSrc, Astro.site) : undefined;
+const imageAlt = content?.image?.alt;
+
+const contentTitle = 'iTwinUI';
+const contentDescription = `An open-source design system for building consistent, accessible experiences.`;
 ---
 
 <!-- Page Metadata -->
 <link rel='canonical' href={Astro.url} />
 
 <!-- OpenGraph Tags -->
-<meta property='og:title' content={formattedContentTitle} />
+<meta property='og:title' content={contentTitle} />
 <meta property='og:type' content='article' />
 <meta property='og:url' content={Astro.url} />
-<meta property='og:locale' content={content.ogLocale ?? SITE.defaultLanguage} />
-<meta property='og:image' content={canonicalImageSrc} />
+<meta property='og:locale' content={content.ogLocale ?? 'en-us'} />
+<!-- <meta property='og:image' content={canonicalImageSrc} /> -->
 <meta property='og:image:alt' content={imageAlt} />
-<meta
-  name='description'
-  property='og:description'
-  content={content.description ? content.description : SITE.description}
-/>
-<meta property='og:site_name' content={SITE.title} />
+<meta name='description' property='og:description' content={contentDescription} />
+<meta property='og:site_name' content={contentTitle} />
 
 <!-- Twitter Tags -->
 <meta name='twitter:card' content='summary_large_image' />
-<meta name='twitter:title' content={formattedContentTitle} />
-<meta
-  name='twitter:description'
-  content={content.description ? content.description : SITE.description}
-/>
-<meta name='twitter:image' content={canonicalImageSrc} />
+<meta name='twitter:title' content={contentTitle} />
+<meta name='twitter:description' content={contentDescription} />
+<!-- <meta name='twitter:image' content={canonicalImageSrc} /> -->
 <meta name='twitter:image:alt' content={imageAlt} />
