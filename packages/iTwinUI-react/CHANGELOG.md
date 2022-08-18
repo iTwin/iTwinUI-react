@@ -2,7 +2,6 @@
 
 ### [1.43.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.43.0...v1.43.1) (2022-08-18)
 
-
 ### Fixes
 
 * **Dialog:** Fixed import path for `useTheme` ([#780](https://www.github.com/iTwin/iTwinUI-react/issues/780)) ([dc5f65a](https://www.github.com/iTwin/iTwinUI-react/commit/dc5f65af8a4a7e8d50f05952084a2ffe98bc0800))
