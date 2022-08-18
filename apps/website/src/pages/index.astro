@@ -1,24 +1,23 @@
 ---
 import Global from './_global.astro';
-import Header from '../components/Header.astro';
-import ITwinUILogo from '../components/iTwinUILogo';
-import AccessibleIcon from 'src/icons/AccessibleIcon.astro';
-import NoFussIcon from 'src/icons/NoFussIcon.astro';
-import GitHubIcon from 'src/icons/GitHubIcon.astro';
-import EvolvingIcon from 'src/icons/EvolvingIcon.astro';
-import ConsistentIcon from 'src/icons/ConsistentIcon.astro';
-import HexagonBackground from 'src/icons/HexagonBackground.astro';
-import NorthernLights from 'src/components/NorthernLights.astro';
-import AlertExample from 'src/demos/Alert.demo';
-import ExpandableBlockExample from 'src/demos/ExpandableBlock.demo';
-import { FieldsetDemo, DialogDemo, SliderDemo } from '~/demos';
+import Header from '~/components/Header.astro';
+import ITwinUILogo from '~/components/iTwinUILogo';
+import AccessibleIcon from '~/icons/AccessibleIcon.astro';
+import NoFussIcon from '~/icons/NoFussIcon.astro';
+import EvolvingIcon from '~/icons/EvolvingIcon.astro';
+import ConsistentIcon from '~/icons/ConsistentIcon.astro';
+import NorthernLights from '~/components/NorthernLights.astro';
+import AlertDemo from '~/demos/Alert.demo';
+import DialogDemo from '~/demos/Dialog.demo';
+import ComboBoxDemo from '~/demos/ComboBox.demo';
+import SliderDemo from '~/demos/Slider.demo';
+import FieldsetDemo from '~/demos/Fieldset.demo';
 
 const currentPage = new URL(Astro.request.url).pathname;
 ---
 
 <Global currentPage={currentPage}>
   <NorthernLights aria-hidden='true' />
-  <!-- <HexagonBackground class='hexagon-bg' aria-hidden='true' /> -->
   <Header class='header' />
   <main>
     <div class='title-box'>
@@ -39,33 +38,35 @@ const currentPage = new URL(Astro.request.url).pathname;
         </div>
       </div>
 
-      <div class='code-blocks iui-body'>
-        <div class='code-wrapper'>
-          <div class='code-sample'><DialogDemo /></div>
-          <h3>Badge</h3>
-          <p>A colorful visual indicator for categorizing items</p>
-        </div>
-        <div class='code-wrapper'>
-          <div class='code-sample'>
-            <AlertExample />
-          </div>
+      <div class='demo-carousel-list iui-body'>
+        <div class='demo-wrapper'>
+          <div class='demo-box'><AlertDemo /></div>
           <h3>Alert</h3>
           <p>A small box to quickly grab user attention and communicate a brief message</p>
         </div>
-        <div class='code-wrapper'>
-          <div class='code-sample'><FieldsetDemo /></div>
+
+        <div class='demo-wrapper'>
+          <div class='demo-box'><DialogDemo /></div>
+          <h3>Dialog</h3>
+          <p>Provides the foundation for building modals and modeless dialogs</p>
+        </div>
+
+        <div class='demo-wrapper'>
+          <div class='demo-box'><FieldsetDemo /></div>
           <h3>Fieldset</h3>
           <p>A fieldset is a container grouping interactive components together.</p>
         </div>
-        <div class='code-wrapper'>
-          <div class='code-sample'><SliderDemo client:only='react' /></div>
+
+        <div class='demo-wrapper'>
+          <div class='demo-box'><SliderDemo client:idle /></div>
           <h3>Slider</h3>
           <p>Sliders let users make selections from a range of values.</p>
         </div>
-        <div class='code-wrapper'>
-          <div class='code-sample'><ExpandableBlockExample /></div>
-          <h3>Expandable block</h3>
-          <p>A pattern for progressive disclosure of information.</p>
+
+        <div class='demo-wrapper'>
+          <div class='demo-box'><ComboBoxDemo client:idle /></div>
+          <h3>ComboBox</h3>
+          <p>Allows typing a value to filter and choose from the options in dropdown list.</p>
         </div>
       </div>
     </div>
@@ -77,7 +78,6 @@ const currentPage = new URL(Astro.request.url).pathname;
           <ConsistentIcon class='icon' />
           <div>
             <h3 class='colored-text'>Consistent</h3>
-
             <p>
               Our components and layouts library was designed specifically for apps within the iTwin
               space. It allows creating seamless front-end environments consistent with the iTwin
@@ -89,7 +89,6 @@ const currentPage = new URL(Astro.request.url).pathname;
           <AccessibleIcon class='icon' />
           <div>
             <h3 class='colored-text'>Accessible</h3>
-
             <p>
               The web is for everyone. All our components were designed with accessibility in mind
               for an inclusive, comfortable experience that leaves no one behind.
@@ -100,7 +99,6 @@ const currentPage = new URL(Astro.request.url).pathname;
           <NoFussIcon class='icon' />
           <div>
             <h3 class='colored-text'>No fuss</h3>
-
             <p>
               Skip the brainstorming sessions. Our components and layouts are entirely ready-to-use,
               so you can focus on getting things done.
@@ -111,7 +109,6 @@ const currentPage = new URL(Astro.request.url).pathname;
           <EvolvingIcon class='icon' />
           <div>
             <h3 class='colored-text'>Evolving</h3>
-
             <p>
               iTwin UI is maintained daily and frequently updated by its supporting team, so you
               always have access to the latest version of our assets.
@@ -193,11 +190,12 @@ const currentPage = new URL(Astro.request.url).pathname;
     .header {
       grid-area: header;
     }
-    .code-blocks {
+    .demo-carousel-list {
       display: flex;
       justify-self: center;
       gap: var(--space-6);
-      margin: 126px 0 96px 0;
+      margin-block: calc(var(--space-7) * 4) calc(var(--space-7) * 3);
+      padding-block: var(--space-7);
       overflow-x: auto;
       max-width: 90vw;
       background: unset !important;
@@ -211,15 +209,17 @@ const currentPage = new URL(Astro.request.url).pathname;
       }
     }
 
-    .code-wrapper {
-      min-width: 300px;
+    .demo-wrapper {
+      min-width: 350px;
       color: var(--color-text);
+      display: grid;
+      gap: var(--space-4);
     }
 
-    .code-sample {
+    .demo-box {
       color-scheme: dark !important;
-      width: 300px;
-      min-height: 300px;
+      width: 350px;
+      min-height: 350px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -322,8 +322,6 @@ const currentPage = new URL(Astro.request.url).pathname;
     h3 {
       font-size: var(--type-2);
       text-align: left;
-      padding-top: var(--space-2);
-      padding-bottom: var(--space-5);
     }
     main {
       grid-area: main;

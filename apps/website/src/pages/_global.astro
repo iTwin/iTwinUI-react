@@ -10,10 +10,11 @@ const { content = {} } = Astro.props;
 const { pathname } = new URL(Astro.request.url);
 ---
 
-<html dir={content.dir ?? 'ltr'} lang={content.lang ?? 'en-us'}>
+<html class='iui-theme-dark' dir={content.dir ?? 'ltr'} lang={content.lang ?? 'en-us'}>
   <head>
     <meta charset='utf-8' />
     <meta name='viewport' content='width=device-width' />
+    <meta name='color-scheme' content='dark' />
 
     <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
     <link rel='alternate icon' href='/favicon.ico' sizes='any' />
@@ -156,31 +157,24 @@ const { pathname } = new URL(Astro.request.url);
     <!-- Page layout, etc -->
     <style lang='scss'>
       html {
-        background-color: var(--color-background-2);
-        color: var(--color-text);
-        color-scheme: dark light;
         height: 100%;
         overflow: auto;
-
-        &[data-theme='light'] {
-          color-scheme: light;
-        }
-
-        &[data-theme='dark'] {
-          color-scheme: dark;
-        }
       }
 
       body {
         height: 100%;
         overflow: auto;
         font-family: var(--font-body);
-        font-size: var(--type-0);
+
+        // these need to override iui-body
+        background-color: var(--color-background-2) !important;
+        color: var(--color-text) !important;
+        font-size: var(--type-0) !important;
       }
     </style>
   </head>
 
-  <body>
+  <body class='iui-body'>
     <slot />
 
     <!--

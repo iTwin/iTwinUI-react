@@ -6,5 +6,5 @@ import * as React from 'react';
 import { Slider } from '@itwin/itwinui-react';
 
 export default () => {
-  return <Slider style={{ width: '80%' }} values={[10, 30]} min={0} max={50} />;
+  return <Slider style={{ width: '80%' }} values={[50]} min={0} max={100} />;
 };
