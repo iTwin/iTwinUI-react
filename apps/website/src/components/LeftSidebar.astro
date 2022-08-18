@@ -2,7 +2,7 @@
 const currentPage = new URL(Astro.request.url).pathname;
 
 const componentsPages = (await Astro.glob('../pages/docs/*.mdx'))
-  .filter(({ file }) => !file.endsWith('index.astro'))
+  .filter(({ file }) => !file.endsWith('index.mdx'))
   .map(({ url, frontmatter }) => ({
     url,
     title: frontmatter.title,
