@@ -28,6 +28,7 @@ export const HeaderSplitButton: HeaderSplitButtonComponent = React.forwardRef(
       children,
       style,
       title,
+      disabled,
       ...rest
     } = props;
 
@@ -51,7 +52,7 @@ export const HeaderSplitButton: HeaderSplitButtonComponent = React.forwardRef(
         title={title}
         ref={ref}
       >
-        <HeaderBasicButton ref={forwardedRef} {...rest}>
+        <HeaderBasicButton ref={forwardedRef} disabled={disabled} {...rest}>
           {children}
         </HeaderBasicButton>
         <DropdownMenu
@@ -61,7 +62,10 @@ export const HeaderSplitButton: HeaderSplitButtonComponent = React.forwardRef(
           onShow={React.useCallback(() => setIsMenuOpen(true), [])}
           onHide={React.useCallback(() => setIsMenuOpen(false), [])}
         >
-          <button className='iui-header-breadcrumb-button iui-header-breadcrumb-button-split'>
+          <button
+            className='iui-header-breadcrumb-button iui-header-breadcrumb-button-split'
+            disabled={disabled}
+          >
             {isMenuOpen ? (
               <SvgCaretUpSmall
                 className='iui-header-breadcrumb-button-dropdown-icon'
