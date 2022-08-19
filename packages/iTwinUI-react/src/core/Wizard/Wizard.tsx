@@ -51,7 +51,7 @@ export const Wizard = React.forwardRef<HTMLDivElement, WizardProps>(
         {...rest}
       />
     ) : (
-      <WorkflowDiagram steps={steps} {...rest} />
+      <WorkflowDiagram steps={steps} ref={ref} {...rest} />
     );
   },
 );

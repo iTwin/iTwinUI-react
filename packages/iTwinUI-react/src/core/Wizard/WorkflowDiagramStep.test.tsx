@@ -30,16 +30,6 @@ it('should render correctly', () => {
   expect(content.textContent).toBe('Second step');
 });
 
-it('should not set dynamic inline width', () => {
-  const { container } = render(<WorkflowDiagramStep title='Mock step' />);
-
-  const step = container.querySelector(
-    '.iui-workflow-diagram-step',
-  ) as HTMLElement;
-  expect(step).toBeTruthy();
-  expect(step.style.width).toBeFalsy(); // not 25%
-});
-
 it('should add className and style props correctly', () => {
   const { container } = render(
     <WorkflowDiagramStep
