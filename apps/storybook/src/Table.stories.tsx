@@ -217,21 +217,19 @@ export const SelectableSingle: Story<Partial<TableProps>> = (args) => {
 SelectableSingle.args = { isSelectable: true, selectionMode: 'single' };
 
 export const SelectableMulti: Story<Partial<TableProps>> = (args) => {
-  const onSelect = useCallback(
-    (rows, state) =>
-      action(
-        `Selected rows: ${JSON.stringify(rows)}, Table state: ${JSON.stringify(
-          state,
-        )}`,
-      )(),
-    [],
-  );
+  const onSelect = useCallback((rows, state) => {
+    console.log('onSelect');
+    action(
+      `Selected rows: ${JSON.stringify(rows)}, Table state: ${JSON.stringify(
+        state,
+      )}`,
+    )();
+  }, []);
 
-  const onRowClick = useCallback(
-    (event: React.MouseEvent, row: Row) =>
-      action(`Row clicked: ${JSON.stringify(row.original)}`)(),
-    [],
-  );
+  const onRowClick = useCallback((event: React.MouseEvent, row: Row) => {
+    console.log('onRowClick param', row.id);
+    action(`Row clicked: ${JSON.stringify(row.original)}`)();
+  }, []);
 
   const columns = useMemo(
     () => [

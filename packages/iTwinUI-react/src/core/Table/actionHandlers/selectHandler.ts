@@ -87,8 +87,6 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
 
   // Returns the next row as if it was just a non subrows list
   const getNextRow = (currentRow: Row<T>, startId: string, endId: string) => {
-    console.log(startId, endId);
-
     let nextRow;
     if (
       (currentRow.subRows ?? []).length > 0 &&

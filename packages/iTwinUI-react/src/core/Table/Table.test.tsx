@@ -383,6 +383,15 @@ it('should handle row clicks', async () => {
   expect(rows[2].classList).toContain('iui-selected');
   expect(onSelect).toHaveBeenCalledTimes(3);
   expect(onRowClick).toHaveBeenCalledTimes(3);
+
+  await user.keyboard('{/ControlLeft}{Shift>}'); // Release Control and Press Shift (without releasing it)
+  await user.click(getByText(mockedData()[0].name)); // Perform a click with `shiftKey: true`
+
+  expect(rows[0].classList).toContain('iui-selected');
+  expect(rows[1].classList).toContain('iui-selected');
+  expect(rows[2].classList).toContain('iui-selected');
+  expect(onSelect).toHaveBeenCalledTimes(3 + (3 + 3)); // number of times before + (to reset all depth 0 rows + select rows from start to end)
+  expect(onRowClick).toHaveBeenCalledTimes(4);
 });
 
 it('should not select when clicked on row but selectRowOnClick flag is false', async () => {
@@ -3091,7 +3100,7 @@ it('should render selectable rows without select column', async () => {
 
   //Test that ctrl clicking doesn't highlight more than one row
   const user = userEvent.setup();
-  await user.keyboard('[ControlLeft>]'); // Press Control (without releasing it)
+  await user.keyboard('{ControlLeft>}'); // Press Control (without releasing it)
   await user.click(getByText(mockedData()[1].name)); // Perform a click with `ctrlKey: true`
   expect(rows[1].classList).toContain('iui-selected');
   expect(rows[2].classList).not.toContain('iui-selected');
