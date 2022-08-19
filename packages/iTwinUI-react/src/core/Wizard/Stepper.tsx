@@ -7,7 +7,7 @@ import { useTheme } from '../utils';
 import '@itwin/itwinui-css/css/stepper.css';
 import { StepperStep } from './StepperStep';
 
-export type WizardLocalization = {
+export type StepperLocalization = {
   stepsCountLabel: (currentStep: number, totalSteps: number) => string;
 };
 
@@ -39,14 +39,14 @@ export type StepperProps = {
   /**
    *  Option to provide localized strings.
    */
-  localization?: WizardLocalization;
+  localization?: StepperLocalization;
   /**
    *  Click handler on completed step.
    */
   onStepClick?: (clickedIndex: number) => void;
 };
 
-const defaultStepperLocalization: WizardLocalization = {
+const defaultStepperLocalization: StepperLocalization = {
   stepsCountLabel: (currentStep, totalSteps) =>
     `Step ${currentStep} of ${totalSteps}:`,
 };

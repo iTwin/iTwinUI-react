@@ -3,10 +3,12 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { Stepper, StepperProps } from './Stepper';
+import { Stepper, StepperProps, StepperLocalization } from './Stepper';
 import { WorkflowDiagram } from './WorkflowDiagram';
 
 export type WizardType = 'default' | 'long' | 'workflow';
+
+export type WizardLocalization = StepperLocalization;
 
 export type WizardProps = {
   /**
