@@ -60,17 +60,29 @@ it('should leave original text', () => {
   expect(containerSpan.textContent).toBe('No trunc');
 });
 
-it('should call onTruncate callback', () => {
+it('should call onTruncate callback with true', () => {
   jest.spyOn(UseOverflow, 'useOverflow').mockReturnValue([jest.fn(), 20]);
   const onTruncate = jest.fn();
   render(
     <div>
       <MiddleTextTruncation
         onTruncate={onTruncate}
-        text='This is some very long text to truncate and expect callback'
+        text='This is some very long text to truncate and get callback'
       />
     </div>,
   );
 
-  expect(onTruncate).toHaveBeenCalled();
+  expect(onTruncate).toHaveBeenCalledWith(true);
+});
+
+it('should call onTruncate callback with false', () => {
+  jest.spyOn(UseOverflow, 'useOverflow').mockReturnValue([jest.fn(), 20]);
+  const onTruncate = jest.fn();
+  render(
+    <div>
+      <MiddleTextTruncation onTruncate={onTruncate} text='No trunc' />
+    </div>,
+  );
+
+  expect(onTruncate).toHaveBeenCalledWith(false);
 });

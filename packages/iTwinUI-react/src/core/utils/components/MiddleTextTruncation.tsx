@@ -21,7 +21,7 @@ export type MiddleTextTruncationProps = {
   /**
    * Callback fired when text is truncated.
    */
-  onTruncate?: () => void;
+  onTruncate?: (isTruncated: boolean) => void;
 } & CommonProps;
 
 /**
@@ -36,12 +36,13 @@ export const MiddleTextTruncation = (props: MiddleTextTruncationProps) => {
 
   const truncatedText = React.useMemo(() => {
     if (visibleCount < text.length) {
-      onTruncate?.();
+      onTruncate?.(true);
       return `${text.substring(
         0,
         visibleCount - endCharsCount - ELLIPSIS_CHAR.length,
       )}${ELLIPSIS_CHAR}${text.substring(text.length - endCharsCount)}`;
     } else {
+      onTruncate?.(false);
       return text;
     }
   }, [endCharsCount, onTruncate, text, visibleCount]);
