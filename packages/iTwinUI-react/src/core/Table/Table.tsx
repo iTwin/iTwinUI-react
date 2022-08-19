@@ -554,7 +554,7 @@ export const Table = <
   const onRowClickHandler = React.useCallback(
     (event: React.MouseEvent, row: Row<T>) => {
       const isDisabled = isRowDisabled?.(row.original);
-      console.log('onRowClicked', row.id);
+      // console.log('onRowClicked', row.id);
 
       if (!isDisabled) {
         onRowClick?.(event, row);
