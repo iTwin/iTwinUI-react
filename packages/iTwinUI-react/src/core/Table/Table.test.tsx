@@ -149,22 +149,12 @@ const flattenData = (data: TestDataType[]) => {
   return flatData;
 };
 
-async function assertRowsData(
-  rows: NodeListOf<Element>,
-  data = mockedData(),
-  a = false,
-) {
+async function assertRowsData(rows: NodeListOf<Element>, data = mockedData()) {
   expect(rows.length).toBe(data.length);
   for (let i = 0; i < rows.length; i++) {
     const row = rows.item(i);
     const { name, description } = data[i];
     const cells = row.querySelectorAll('.iui-cell');
-    if (a) {
-      console.log('i', i);
-      cells.forEach((c) => {
-        console.log(c.classList, c.innerHTML);
-      });
-    }
     expect(cells.length).toBe(3);
     expect(cells[0].textContent).toEqual(name);
     expect(cells[1].textContent).toEqual(description);
@@ -394,79 +384,15 @@ it('should handle row clicks', async () => {
   expect(onSelect).toHaveBeenCalledTimes(3);
   expect(onRowClick).toHaveBeenCalledTimes(3);
 
-  await user.keyboard('{/ControlLeft}{Shift>}'); // Release Control and Press Shift (without releasing it)
+  await user.keyboard('[/ControlLeft][ShiftLeft>]'); // Release Control and Press Shift (without releasing it)
   await user.click(getByText(mockedData()[0].name)); // Perform a click with `shiftKey: true`
 
   expect(rows[0].classList).toContain('iui-selected');
   expect(rows[1].classList).toContain('iui-selected');
   expect(rows[2].classList).toContain('iui-selected');
-  expect(onSelect).toHaveBeenCalledTimes(3 + (3 + 3)); // number of times before + (to reset all depth 0 rows + select rows from start to end)
+  expect(onSelect).toHaveBeenCalledTimes(3 + (3 + 3)); // # times before + (to reset all depth 0 rows + # selected rows from start to end)
   expect(onRowClick).toHaveBeenCalledTimes(4);
 });
-
-// it('should handle shift clicks for sub rows', async () => {
-//   const onSelect = jest.fn();
-//   const onRowClick = jest.fn();
-//   // const data = mockedSubRowsData();
-//   const data = mockedData();
-//   console.log(data);
-//   const { container } = renderComponent({
-//     data,
-//     isSelectable: true,
-//     onSelect,
-//     onRowClick,
-//   });
-
-//   // await expandAll(container);
-
-//   const rows = container.querySelectorAll('.iui-table-body .iui-row');
-//   await assertRowsData(rows, data, true);
-
-//   // await expandAll(container);
-
-//   // rows = container.querySelectorAll('.iui-table-body .iui-row');
-//   // await assertRowsData(rows, flattenData(data));
-
-//   // const rows = container.querySelectorAll('.iui-table-body .iui-row');
-//   // console.log(rows.length);
-//   // rows.forEach((r) => {
-//   //   console.log(r.name);
-//   // });
-//   // expect(rows.length).toBe(3);
-
-//   // const user = userEvent.setup();
-//   // await user.keyboard('{Shift>}'); // Press Shift (without releasing it)
-//   // await user.click(getByText(mockedData()[1].subRows![0].name)); // Perform a click with `shiftKey: true`
-//   // expect(rows[0].classList).toContain('iui-selected');
-//   // expect(rows[0].classList).toContain('iui-selected');
-
-//   // await userEvent.click(getByText(mockedData()[1].name));
-//   // expect(rows[1].classList).toContain('iui-selected');
-//   // expect(onSelect).toHaveBeenCalledTimes(1);
-//   // expect(onRowClick).toHaveBeenCalledTimes(1);
-
-//   // await userEvent.click(getByText(mockedData()[2].name));
-//   // expect(rows[1].classList).not.toContain('iui-selected');
-//   // expect(rows[2].classList).toContain('iui-selected');
-//   // expect(onSelect).toHaveBeenCalledTimes(2);
-//   // expect(onRowClick).toHaveBeenCalledTimes(2);
-
-//   // await user.keyboard('[ControlLeft>]'); // Press Control (without releasing it)
-//   // await user.click(getByText(mockedData()[1].name)); // Perform a click with `ctrlKey: true`
-//   // expect(rows[1].classList).toContain('iui-selected');
-//   // expect(rows[2].classList).toContain('iui-selected');
-//   // expect(onSelect).toHaveBeenCalledTimes(3);
-//   // expect(onRowClick).toHaveBeenCalledTimes(3);
-
-//   // await user.keyboard('{/ControlLeft}{Shift>}'); // Release Control and Press Shift (without releasing it)
-//   // await user.click(getByText(mockedData()[0].name)); // Perform a click with `shiftKey: true`
-
-//   // expect(rows[0].classList).toContain('iui-selected');
-//   // expect(rows[1].classList).toContain('iui-selected');
-//   // expect(rows[2].classList).toContain('iui-selected');
-//   // expect(onSelect).toHaveBeenCalledTimes(3 + (3 + 3)); // number of times before + (to reset all depth 0 rows + select rows from start to end)
-//   // expect(onRowClick).toHaveBeenCalledTimes(4);
-// });
 
 it('should not select when clicked on row but selectRowOnClick flag is false', async () => {
   const onSelect = jest.fn();
@@ -1535,61 +1461,50 @@ it('should handle sub-rows shift click selection', async () => {
 
   const user = userEvent.setup();
   await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
-  await user.click(getByText(data[1].name)); // Perform a click with `shiftKey: true`
+  await user.click(getByText(data[1].name)); // [shiftKey: true]
 
   // By default, when no row is selected before shift click, start selecting from first row to clicked row
-  // lastSelectedRow = 0
   expect(rows[0].classList).toContain('iui-selected');
   expect(rows[1].classList).toContain('iui-selected');
   expect(rows[2].classList).not.toContain('iui-selected');
-  expect(onSelect).toHaveBeenCalledTimes(3 + 2);
+  expect(onSelect).toHaveBeenCalledTimes(3 + 2); // to reset all depth 0 rows + # selected rows from start to end
   expect(onRowClick).toHaveBeenCalledTimes(1);
 
   await expandAll(container);
-
-  // let checkboxes = container.querySelectorAll<HTMLInputElement>(
-  //   '.iui-table-body .iui-checkbox',
-  // );
-
-  // expect(checkboxes.length).toBe(10);
-  // Array.from(checkboxes).forEach((checkbox, index) =>
-  //   expect(!!checkbox.checked).toBe(index < 9),
-  // );
 
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(10);
 
   await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
-  await user.click(getByText(data[0].subRows[1].subRows[0].name)); // [shiftKey = true] Perform a click with `shiftKey: true`
+  await user.click(getByText(data[0].subRows[1].subRows[0].name)); // [shiftKey: true]
 
   let checkboxes = container.querySelectorAll<HTMLInputElement>(
     '.iui-table-body .iui-checkbox',
   );
   let selectedIndices = [1, 3];
   Array.from(checkboxes).forEach((checkbox, index) => {
-    // console.log(index, checkbox.checked, !!checkbox.checked, index < 4);
     expect(!!checkbox.checked).toBe(selectedIndices.includes(index));
   });
+
+  expect(onSelect).toHaveBeenCalledTimes(5 + (3 + 2)); // # times before + (to reset all depth 0 rows + # selected rows from start to end)
+  expect(onRowClick).toHaveBeenCalledTimes(2);
 
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(10);
 
   await user.keyboard('[/ShiftLeft]'); // Release Shift
-  await user.click(getByText(data[0].subRows[1].subRows[1].name)); // [shiftKey = false] Perform a click with `shiftKey: false`
+  await user.click(getByText(data[0].subRows[1].subRows[1].name)); // [shiftKey = false]
 
   selectedIndices = [4];
   Array.from(checkboxes).forEach((checkbox, index) => {
-    console.log(
-      index,
-      checkbox.checked,
-      !!checkbox.checked,
-      selectedIndices.includes(index),
-    );
-    // expect(!!checkbox.checked).toBe(selectedIndices.includes(index));
+    expect(!!checkbox.checked).toBe(selectedIndices.includes(index));
   });
 
+  expect(onSelect).toHaveBeenCalledTimes(10 + 1); // # times before + 1 selection
+  expect(onRowClick).toHaveBeenCalledTimes(3);
+
   await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
-  await user.click(getByText(data[1].subRows[0].name)); // [shiftKey = true] Perform a click with `shiftKey: true`
+  await user.click(getByText(data[1].subRows[0].name)); // [shiftKey = true]
 
   checkboxes = container.querySelectorAll<HTMLInputElement>(
     '.iui-table-body .iui-checkbox',
@@ -1599,29 +1514,8 @@ it('should handle sub-rows shift click selection', async () => {
     expect(!!checkbox.checked).toBe(selectedIndices.includes(index));
   });
 
-  // // await user.keyboard('{/ControlLeft}{Shift>}'); // Release Control and Press Shift (without releasing it)
-  // await user.click(getByText(mockedData()[0].name)); // Perform a click with `shiftKey: true`
-
-  // let checkboxes = container.querySelectorAll<HTMLInputElement>(
-  //   '.iui-table-body .iui-checkbox',
-  // );
-  // expect(checkboxes.length).toBe(3);
-  // await userEvent.click(checkboxes[0]);
-
-  // await expandAll(container);
-
-  // checkboxes = container.querySelectorAll<HTMLInputElement>(
-  //   '.iui-table-body .iui-checkbox',
-  // );
-  // expect(checkboxes.length).toBe(10);
-  // Array.from(checkboxes).forEach((checkbox, index) =>
-  //   expect(!!checkbox.checked).toBe(index < 6),
-  // );
-
-  // expect(onSelect).toHaveBeenCalledWith(
-  //   flattenData([data[0]]),
-  //   expect.any(Object),
-  // );
+  expect(onSelect).toHaveBeenCalledTimes(11 + (3 + 3)); // # times before + (to reset all depth 0 rows + # selected rows from start to end)
+  expect(onRowClick).toHaveBeenCalledTimes(4);
 });
 
 it('should handle sub-rows selection', async () => {
@@ -3279,7 +3173,7 @@ it('should render selectable rows without select column', async () => {
 
   //Test that ctrl clicking doesn't highlight more than one row
   const user = userEvent.setup();
-  await user.keyboard('{ControlLeft>}'); // Press Control (without releasing it)
+  await user.keyboard('[ControlLeft>]'); // Press Control (without releasing it)
   await user.click(getByText(mockedData()[1].name)); // Perform a click with `ctrlKey: true`
   expect(rows[1].classList).toContain('iui-selected');
   expect(rows[2].classList).not.toContain('iui-selected');
