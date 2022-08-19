@@ -38,7 +38,7 @@ import {
 import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
 import { action } from '@storybook/addon-actions';
-import { SvgMore, SvgPlaceholder } from '@itwin/itwinui-icons-react';
+import { SvgMore } from '@itwin/itwinui-icons-react';
 
 export default {
   title: 'Core/Table',
@@ -91,10 +91,11 @@ export default {
   },
 } as Meta<TableProps>;
 
-export const Basic: Story<Partial<TableProps>> = () => {
+export const Basic: Story<Partial<TableProps>> = (args) => {
   const onClickHandler = (
     props: CellProps<{ name: string; description: string }>,
   ) => action(props.row.original.name)();
+
   const columns = useMemo(
     () => [
       {
@@ -104,16 +105,6 @@ export const Basic: Story<Partial<TableProps>> = () => {
             id: 'name',
             Header: 'Name',
             accessor: 'name',
-            cellRenderer: (props) => {
-              return (
-                <DefaultCell
-                  {...props}
-                  status={props.cellProps.row.original.status}
-                  startIcon={<SvgPlaceholder />}
-                  endIcon={<SvgPlaceholder />}
-                />
-              );
-            },
           },
           {
             id: 'description',
@@ -130,7 +121,6 @@ export const Basic: Story<Partial<TableProps>> = () => {
               return <Anchor onClick={onClick}>Click me!</Anchor>;
             },
           },
-          { id: 'status', Header: 'Status', accessor: 'status' },
         ],
       },
     ],
@@ -139,14 +129,21 @@ export const Basic: Story<Partial<TableProps>> = () => {
 
   const data = useMemo(
     () => [
-      { name: 'Name1', description: 'Description1', status: 'positive' },
-      { name: 'Name2', description: 'Description2', status: 'negative' },
-      { name: 'Name3', description: 'Description3', status: undefined },
+      { name: 'Name1', description: 'Description1' },
+      { name: 'Name2', description: 'Description2' },
+      { name: 'Name3', description: 'Description3' },
     ],
     [],
   );
 
-  return <Table columns={columns} data={data} emptyTableContent='No data.' />;
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      emptyTableContent='No data.'
+      {...args}
+    />
+  );
 };
 
 export const SelectableSingle: Story<Partial<TableProps>> = (args) => {
@@ -3392,3 +3389,157 @@ StickyColumns.decorators = [
     </div>
   ),
 ];
+
+export const Status: Story<Partial<TableProps>> = () => {
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+            cellRenderer: (props) => {
+              return (
+                <DefaultCell
+                  {...props}
+                  status={props.cellProps.row.original.cellStatus}
+                />
+              );
+            },
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const data = useMemo(
+    () => [
+      {
+        name: 'Positive row',
+        description: 'Neutral cell',
+        rowStatus: 'positive',
+        cellStatus: undefined,
+      },
+      {
+        name: 'Warning row',
+        description: 'Negative cell',
+        rowStatus: 'warning',
+        cellStatus: 'negative',
+      },
+      {
+        name: 'Negative row',
+        description: 'Positive cell',
+        rowStatus: 'negative',
+        cellStatus: 'positive',
+      },
+      {
+        name: 'Neutral row',
+        description: 'Warning cell',
+        rowStatus: undefined,
+        cellStatus: 'warning',
+      },
+    ],
+    [],
+  );
+
+  const rowProps = useCallback((row) => {
+    return {
+      status: row.original.rowStatus,
+    };
+  }, []);
+
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      emptyTableContent='No data.'
+      rowProps={rowProps}
+    />
+  );
+};
+
+export const Icons: Story<Partial<TableProps>> = () => {
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+            cellRenderer: (props) => {
+              return (
+                <DefaultCell
+                  {...props}
+                  status={props.cellProps.row.original.cellStatus}
+                />
+              );
+            },
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const data = useMemo(
+    () => [
+      {
+        name: 'Positive row',
+        description: 'Neutral cell',
+        rowStatus: 'positive',
+        cellStatus: undefined,
+      },
+      {
+        name: 'Warning row',
+        description: 'Negative cell',
+        rowStatus: 'warning',
+        cellStatus: 'negative',
+      },
+      {
+        name: 'Negative row',
+        description: 'Positive cell',
+        rowStatus: 'negative',
+        cellStatus: 'positive',
+      },
+      {
+        name: 'Neutral row',
+        description: 'Warning cell',
+        rowStatus: undefined,
+        cellStatus: 'warning',
+      },
+    ],
+    [],
+  );
+
+  const rowProps = useCallback((row) => {
+    return {
+      status: row.original.rowStatus,
+    };
+  }, []);
+
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      emptyTableContent='No data.'
+      rowProps={rowProps}
+    />
+  );
+};
