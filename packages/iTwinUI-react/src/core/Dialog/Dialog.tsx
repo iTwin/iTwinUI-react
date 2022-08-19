@@ -16,7 +16,8 @@ export type DialogProps = {
    * Dialog content.
    */
   children: React.ReactNode;
-} & DialogContextProps;
+} & DialogContextProps &
+  React.ComponentPropsWithRef<'div'>;
 
 /**
  * Dialog component.
@@ -51,6 +52,8 @@ export const Dialog = Object.assign(
       closeOnEsc = true,
       closeOnExternalClick = false,
       onClose,
+      style,
+      ...rest
     } = props;
 
     return (
@@ -65,7 +68,9 @@ export const Dialog = Object.assign(
           trapFocus,
         }}
       >
-        {children}
+        <div style={{ isolation: 'isolate', ...style }} {...rest}>
+          {children}
+        </div>
       </DialogContext.Provider>
     );
   },
