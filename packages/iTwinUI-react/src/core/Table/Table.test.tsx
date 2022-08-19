@@ -591,7 +591,7 @@ it('should not show sort icon if disabled in column level', () => {
   expect(container.querySelector('.iui-sort .iui-icon-wrapper')).toBeFalsy();
 });
 
-it('should correct sort icons for ascending first on hover and click', async () => {
+it('should display correct sort icons for ascending first', async () => {
   const mockedColumns = [
     {
       Header: 'Header name',
@@ -619,32 +619,31 @@ it('should correct sort icons for ascending first on hover and click', async () 
   ) as HTMLDivElement;
   expect(nameHeader).toBeTruthy();
 
-  // hover on column header
-  fireEvent.mouseEnter(nameHeader);
-  expect(container.querySelectorAll('.iui-cell-end-icon > svg')[0]).toEqual(
+  // initial icon on column header
+  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
     sortUpIcon,
   );
 
   // first click on column header
   await userEvent.click(nameHeader);
-  expect(container.querySelectorAll('.iui-cell-end-icon > svg')[0]).toEqual(
+  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
     sortUpIcon,
   );
 
   // second click on column header
   await userEvent.click(nameHeader);
-  expect(container.querySelectorAll('.iui-cell-end-icon > svg')[0]).toEqual(
+  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
     sortDownIcon,
   );
 
   // third click on column header to reset
   await userEvent.click(nameHeader);
-  expect(container.querySelectorAll('.iui-cell-end-icon > svg')[0]).toEqual(
+  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
     sortUpIcon,
   );
 });
 
-it('should correct sort icons for descending first on hover and click', async () => {
+it('should display correct sort icons for descending first', async () => {
   const mockedColumns = [
     {
       Header: 'Header name',
@@ -673,27 +672,26 @@ it('should correct sort icons for descending first on hover and click', async ()
   ) as HTMLDivElement;
   expect(nameHeader).toBeTruthy();
 
-  // hover on column header
-  fireEvent.mouseEnter(nameHeader);
-  expect(container.querySelectorAll('.iui-cell-end-icon > svg')[0]).toEqual(
+  // initial icon on column header
+  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
     sortDownIcon,
   );
 
   // first click on column header
   await userEvent.click(nameHeader);
-  expect(container.querySelectorAll('.iui-cell-end-icon > svg')[0]).toEqual(
+  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
     sortDownIcon,
   );
 
   // second click on column header
   await userEvent.click(nameHeader);
-  expect(container.querySelectorAll('.iui-cell-end-icon > svg')[0]).toEqual(
+  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
     sortUpIcon,
   );
 
   // third click on column header to reset
   await userEvent.click(nameHeader);
-  expect(container.querySelectorAll('.iui-cell-end-icon > svg')[0]).toEqual(
+  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
     sortDownIcon,
   );
 });
