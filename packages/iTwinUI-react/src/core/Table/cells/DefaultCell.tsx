@@ -15,6 +15,10 @@ export type DefaultCellProps<T extends Record<string, unknown>> = {
    * Custom icon to be displayed at the end of the cell.
    */
   endIcon?: JSX.Element;
+  /**
+   * Status of the cell.
+   * @default ''
+   */
   status?: 'positive' | 'negative' | 'warning';
 } & CellRendererProps<T> &
   React.ComponentPropsWithoutRef<'div'>;
