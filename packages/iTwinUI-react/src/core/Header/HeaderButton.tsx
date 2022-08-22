@@ -69,6 +69,7 @@ export const HeaderButton: HeaderButtonComponent = React.forwardRef(
       className,
       startIcon,
       menuItems,
+      disabled,
       ...rest
     } = props;
 
@@ -97,6 +98,7 @@ export const HeaderButton: HeaderButtonComponent = React.forwardRef(
         </span>
       ),
       ref: ref,
+      disabled: disabled,
       ...(!!menuItems && { menuItems }),
       ...rest,
     } as const;
@@ -113,6 +115,7 @@ export const HeaderButton: HeaderButtonComponent = React.forwardRef(
       <li
         className='iui-header-breadcrumb-item'
         aria-current={isActive ? 'location' : undefined}
+        aria-disabled={disabled ? 'true' : undefined}
       >
         {headerButton}
       </li>
