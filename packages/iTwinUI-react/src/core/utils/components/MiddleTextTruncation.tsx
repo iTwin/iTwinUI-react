@@ -19,33 +19,37 @@ export type MiddleTextTruncationProps = {
    */
   endCharsCount?: number;
   /**
-   * Callback fired when text is truncated.
+   * Custom renderer for the truncated text.
    */
-  onTruncate?: (isTruncated: boolean) => void;
+  textRenderer?: (
+    truncatedText: string,
+    originalText: string,
+  ) => React.ReactNode;
 } & CommonProps;
-
 /**
  * Truncates text with the ellipsis in the middle,
  * leaving defined number of chars at the end.
  * @example
  * <MiddleTextTruncation text='ThisIsMyVeryLongFileName.dgn' />
+ * @example
+ * <MiddleTextTruncation text='ThisIsMyVeryLongFileName.dgn' endCharsCount={10} />
+ * @example
+ * <MiddleTextTruncation text='ThisIsMyVeryLongFileName.dgn' textRenderer={(truncatedText, originalText) => <span title={originalText}>{truncatedText}</span>} />
  */
 export const MiddleTextTruncation = (props: MiddleTextTruncationProps) => {
-  const { text, endCharsCount = 6, onTruncate, style, ...rest } = props;
+  const { text, endCharsCount = 6, textRenderer, style, ...rest } = props;
   const [ref, visibleCount] = useOverflow(text);
 
   const truncatedText = React.useMemo(() => {
     if (visibleCount < text.length) {
-      onTruncate?.(true);
       return `${text.substring(
         0,
         visibleCount - endCharsCount - ELLIPSIS_CHAR.length,
       )}${ELLIPSIS_CHAR}${text.substring(text.length - endCharsCount)}`;
     } else {
-      onTruncate?.(false);
       return text;
     }
-  }, [endCharsCount, onTruncate, text, visibleCount]);
+  }, [endCharsCount, text, visibleCount]);
 
   return (
     <span
@@ -59,7 +63,7 @@ export const MiddleTextTruncation = (props: MiddleTextTruncationProps) => {
       ref={ref}
       {...rest}
     >
-      {truncatedText}
+      {textRenderer ? textRenderer(truncatedText, text) : truncatedText}
     </span>
   );
 };

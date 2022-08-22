@@ -60,29 +60,23 @@ it('should leave original text', () => {
   expect(containerSpan.textContent).toBe('No trunc');
 });
 
-it('should call onTruncate callback with true', () => {
+it('should render custom text', () => {
   jest.spyOn(UseOverflow, 'useOverflow').mockReturnValue([jest.fn(), 20]);
-  const onTruncate = jest.fn();
-  render(
+  const text = 'This is some very long text to truncate and expect ellipsis';
+  const { container } = render(
     <div>
       <MiddleTextTruncation
-        onTruncate={onTruncate}
-        text='This is some very long text to truncate and get callback'
+        text={text}
+        textRenderer={(truncatedText) => (
+          <span data-testid='custom-text'>{truncatedText}</span>
+        )}
       />
     </div>,
   );
 
-  expect(onTruncate).toHaveBeenCalledWith(true);
-});
-
-it('should call onTruncate callback with false', () => {
-  jest.spyOn(UseOverflow, 'useOverflow').mockReturnValue([jest.fn(), 20]);
-  const onTruncate = jest.fn();
-  render(
-    <div>
-      <MiddleTextTruncation onTruncate={onTruncate} text='No trunc' />
-    </div>,
-  );
-
-  expect(onTruncate).toHaveBeenCalledWith(false);
+  const containerSpan = container.querySelector('span') as HTMLSpanElement;
+  expect(containerSpan.textContent).toBe('This is some …lipsis');
+  expect(
+    containerSpan.querySelector('[data-testid="custom-text"]'),
+  ).toBeTruthy();
 });
