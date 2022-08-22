@@ -3477,11 +3477,24 @@ export const StatusAndCellIcons: Story<Partial<TableProps>> = (args) => {
     [],
   );
 
-  const rowProps = useCallback((row) => {
-    return {
-      status: row.original.status,
-    };
-  }, []);
+  const rowProps = useCallback(
+    (
+      row: Row<{
+        name: string;
+        modified: string;
+        size: string;
+        startIcon: JSX.Element;
+        endIcon: JSX.Element;
+        status: string | undefined;
+      }>,
+    ) => {
+      return {
+        id: row.original.name,
+        status: row.original.status,
+      };
+    },
+    [],
+  );
 
   return (
     <Table

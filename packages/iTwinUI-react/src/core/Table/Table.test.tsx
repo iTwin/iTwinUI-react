@@ -21,7 +21,7 @@ import {
 import { CellProps, Column, Row } from 'react-table';
 import { InputGroup } from '../InputGroup';
 import { Radio } from '../Radio';
-import { SvgChevronRight } from '@itwin/itwinui-icons-react';
+import { SvgChevronRight, SvgPlaceholder } from '@itwin/itwinui-icons-react';
 import { DefaultCell, EditableCell } from './cells';
 import { TablePaginator } from './TablePaginator';
 import * as UseOverflow from '../utils/hooks/useOverflow';
@@ -3638,3 +3638,84 @@ it('should make column sticky and then non-sticky after dragging sticky column a
     expect(cell).not.toHaveStyle('--iui-table-sticky-left: 400px');
   });
 });
+
+it('should render start and end cell icons', () => {
+  const testColumns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          cellRenderer: (props) => {
+            return <DefaultCell {...props} startIcon={<SvgPlaceholder />} />;
+          },
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+          cellRenderer: (props) => {
+            return <DefaultCell {...props} endIcon={<SvgPlaceholder />} />;
+          },
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns: testColumns,
+  });
+
+  const startIcon = container.querySelector('.iui-cell-start-icon');
+  expect(startIcon).toBeTruthy();
+  const endIcon = container.querySelector('.iui-cell-end-icon');
+  expect(endIcon).toBeTruthy();
+});
+
+it.each(['positive', 'warning', 'negative'] as const)(
+  'should render cell with %s status',
+  (status) => {
+    const columns: Column<TestDataType>[] = [
+      {
+        Header: 'Header name',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+            cellRenderer: (props) => {
+              return <DefaultCell {...props} status={status} />;
+            },
+          },
+          {
+            id: 'description',
+            Header: 'description',
+            accessor: 'description',
+          },
+        ],
+      },
+    ];
+    const { container } = renderComponent({
+      columns,
+    });
+
+    const statusCell = container.querySelector(`.iui-cell.iui-${status}`);
+    expect(statusCell).toBeTruthy();
+  },
+);
+
+it.each(['positive', 'warning', 'negative'] as const)(
+  'should render row with %s status',
+  (rowStatus) => {
+    const { container } = renderComponent({
+      rowProps: (row) => ({
+        status: row.index === 0 ? rowStatus : undefined,
+        id: row.original.name,
+      }),
+    });
+
+    const rowCell = container.querySelector(`.iui-row.iui-${rowStatus}`);
+    expect(rowCell).toBeTruthy();
+  },
+);
