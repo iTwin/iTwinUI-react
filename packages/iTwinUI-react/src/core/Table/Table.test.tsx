@@ -2780,7 +2780,7 @@ it('should render action column with column manager', async () => {
   expect(actionColumn[3].textContent).toBe('View');
 
   const headerCells = container.querySelectorAll<HTMLDivElement>(
-    '.iui-table-header .iui-cell',
+    '.iui-table-header .iui-table-cell',
   );
   const columnManager = headerCells[headerCells.length - 1]
     .firstElementChild as Element;
@@ -2790,7 +2790,6 @@ it('should render action column with column manager', async () => {
   const dropdownMenu = document.querySelector('.iui-menu') as HTMLDivElement;
   expect(dropdownMenu).toBeTruthy();
   expect(dropdownMenu.classList.contains('iui-scroll')).toBeTruthy();
-  expect(dropdownMenu).toHaveStyle('max-height: 315px');
 });
 
 it('should render dropdown menu with custom style and override default style', async () => {
@@ -2833,14 +2832,13 @@ it('should render dropdown menu with custom style and override default style', a
   });
 
   const headerCells = container.querySelectorAll<HTMLDivElement>(
-    '.iui-table-header .iui-cell',
+    '.iui-table-header .iui-table-cell',
   );
   const columnManager = headerCells[headerCells.length - 1]
     .firstElementChild as Element;
 
-  expect(
-    columnManager.className.includes('iui-button iui-borderless'),
-  ).toBeTruthy();
+  expect(columnManager.className.includes('iui-button')).toBeTruthy();
+  expect(columnManager).toHaveAttribute('data-iui-variant', 'borderless');
 
   await userEvent.click(columnManager);
 
