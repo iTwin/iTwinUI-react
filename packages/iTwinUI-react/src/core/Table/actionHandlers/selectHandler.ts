@@ -81,6 +81,9 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     return id.substring(0, lastDotIndex);
   };
 
+  // Returns true if endId is a parent of currentId
+  // E.g. currentId = 1.4.2.3, endId = 1.4  -> true
+  // E.g. currentId = 1.2.5, endId = 1.3    -> false
   const isAncestorParent = (currentId: string, endId: string) => {
     return endId.indexOf(currentId) === 0;
   };
