@@ -46,13 +46,13 @@ import {
   onExpandHandler,
   onFilterHandler,
   onSelectHandler,
+  onShiftSelectHandler,
   onSingleSelectHandler,
   onTableResizeEnd,
   onTableResizeStart,
 } from './actionHandlers';
 import VirtualScroll from '../utils/components/VirtualScroll';
 import { SELECTION_CELL_ID } from './columns';
-import { onShiftSelectHandler } from './actionHandlers/selectHandler';
 
 const singleRowSelectedAction = 'singleRowSelected';
 const shiftRowSelectedAction = 'shiftRowSelected';

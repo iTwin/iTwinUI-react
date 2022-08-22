@@ -4,5 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 export { onExpandHandler } from './expandHandler';
 export { onFilterHandler } from './filterHandler';
-export { onSelectHandler, onSingleSelectHandler } from './selectHandler';
+export {
+  onSelectHandler,
+  onShiftSelectHandler,
+  onSingleSelectHandler,
+} from './selectHandler';
 export { onTableResizeStart, onTableResizeEnd } from './resizeHandler';
