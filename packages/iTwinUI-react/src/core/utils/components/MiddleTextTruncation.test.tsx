@@ -64,14 +64,12 @@ it('should render custom text', () => {
   jest.spyOn(UseOverflow, 'useOverflow').mockReturnValue([jest.fn(), 20]);
   const text = 'This is some very long text to truncate and expect ellipsis';
   const { container } = render(
-    <div>
-      <MiddleTextTruncation
-        text={text}
-        textRenderer={(truncatedText) => (
-          <span data-testid='custom-text'>{truncatedText}</span>
-        )}
-      />
-    </div>,
+    <MiddleTextTruncation
+      text={text}
+      textRenderer={(truncatedText) => (
+        <span data-testid='custom-text'>{truncatedText}</span>
+      )}
+    />,
   );
 
   const containerSpan = container.querySelector('span') as HTMLSpanElement;
