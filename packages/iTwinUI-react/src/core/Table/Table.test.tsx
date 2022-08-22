@@ -394,6 +394,79 @@ it('should handle row clicks', async () => {
   expect(onRowClick).toHaveBeenCalledTimes(4);
 });
 
+it('should handle sub-rows shift click selection', async () => {
+  const onSelect = jest.fn();
+  const onRowClick = jest.fn();
+  const data = mockedSubRowsData();
+  const { container, getByText } = renderComponent({
+    data,
+    onSelect,
+    onRowClick,
+    isSelectable: true,
+  });
+
+  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  const user = userEvent.setup();
+  await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
+  await user.click(getByText(data[1].name)); // [shiftKey: true]
+
+  // By default, when no row is selected before shift click, start selecting from first row to clicked row
+  expect(rows[0].classList).toContain('iui-selected');
+  expect(rows[1].classList).toContain('iui-selected');
+  expect(rows[2].classList).not.toContain('iui-selected');
+  expect(onSelect).toHaveBeenCalledTimes(3 + 2); // to reset all depth 0 rows + # selected rows from start to end
+  expect(onRowClick).toHaveBeenCalledTimes(1);
+
+  await expandAll(container);
+
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(10);
+
+  await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
+  await user.click(getByText(data[0].subRows[1].subRows[0].name)); // [shiftKey: true]
+
+  let checkboxes = container.querySelectorAll<HTMLInputElement>(
+    '.iui-table-body .iui-checkbox',
+  );
+  let selectedIndices = [1, 3];
+  Array.from(checkboxes).forEach((checkbox, index) => {
+    expect(!!checkbox.checked).toBe(selectedIndices.includes(index));
+  });
+
+  expect(onSelect).toHaveBeenCalledTimes(5 + (3 + 2)); // # times before + (to reset all depth 0 rows + # selected rows from start to end)
+  expect(onRowClick).toHaveBeenCalledTimes(2);
+
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(10);
+
+  await user.keyboard('[/ShiftLeft]'); // Release Shift
+  await user.click(getByText(data[0].subRows[1].subRows[1].name)); // [shiftKey = false]
+
+  selectedIndices = [4];
+  Array.from(checkboxes).forEach((checkbox, index) => {
+    expect(!!checkbox.checked).toBe(selectedIndices.includes(index));
+  });
+
+  expect(onSelect).toHaveBeenCalledTimes(10 + 1); // # times before + 1 selection
+  expect(onRowClick).toHaveBeenCalledTimes(3);
+
+  await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
+  await user.click(getByText(data[1].subRows[0].name)); // [shiftKey = true]
+
+  checkboxes = container.querySelectorAll<HTMLInputElement>(
+    '.iui-table-body .iui-checkbox',
+  );
+  selectedIndices = [4, 5, 7];
+  Array.from(checkboxes).forEach((checkbox, index) => {
+    expect(!!checkbox.checked).toBe(selectedIndices.includes(index));
+  });
+
+  expect(onSelect).toHaveBeenCalledTimes(11 + (3 + 3)); // # times before + (to reset all depth 0 rows + # selected rows from start to end)
+  expect(onRowClick).toHaveBeenCalledTimes(4);
+});
+
 it('should not select when clicked on row but selectRowOnClick flag is false', async () => {
   const onSelect = jest.fn();
   const onRowClick = jest.fn();
@@ -1443,79 +1516,6 @@ it('should render filtered sub-rows', async () => {
   await clearFilter(container);
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   await assertRowsData(rows, flattenData(data));
-});
-
-it('should handle sub-rows shift click selection', async () => {
-  const onSelect = jest.fn();
-  const onRowClick = jest.fn();
-  const data = mockedSubRowsData();
-  const { container, getByText } = renderComponent({
-    data,
-    onSelect,
-    onRowClick,
-    isSelectable: true,
-  });
-
-  let rows = container.querySelectorAll('.iui-table-body .iui-row');
-  expect(rows.length).toBe(3);
-
-  const user = userEvent.setup();
-  await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
-  await user.click(getByText(data[1].name)); // [shiftKey: true]
-
-  // By default, when no row is selected before shift click, start selecting from first row to clicked row
-  expect(rows[0].classList).toContain('iui-selected');
-  expect(rows[1].classList).toContain('iui-selected');
-  expect(rows[2].classList).not.toContain('iui-selected');
-  expect(onSelect).toHaveBeenCalledTimes(3 + 2); // to reset all depth 0 rows + # selected rows from start to end
-  expect(onRowClick).toHaveBeenCalledTimes(1);
-
-  await expandAll(container);
-
-  rows = container.querySelectorAll('.iui-table-body .iui-row');
-  expect(rows.length).toBe(10);
-
-  await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
-  await user.click(getByText(data[0].subRows[1].subRows[0].name)); // [shiftKey: true]
-
-  let checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox',
-  );
-  let selectedIndices = [1, 3];
-  Array.from(checkboxes).forEach((checkbox, index) => {
-    expect(!!checkbox.checked).toBe(selectedIndices.includes(index));
-  });
-
-  expect(onSelect).toHaveBeenCalledTimes(5 + (3 + 2)); // # times before + (to reset all depth 0 rows + # selected rows from start to end)
-  expect(onRowClick).toHaveBeenCalledTimes(2);
-
-  rows = container.querySelectorAll('.iui-table-body .iui-row');
-  expect(rows.length).toBe(10);
-
-  await user.keyboard('[/ShiftLeft]'); // Release Shift
-  await user.click(getByText(data[0].subRows[1].subRows[1].name)); // [shiftKey = false]
-
-  selectedIndices = [4];
-  Array.from(checkboxes).forEach((checkbox, index) => {
-    expect(!!checkbox.checked).toBe(selectedIndices.includes(index));
-  });
-
-  expect(onSelect).toHaveBeenCalledTimes(10 + 1); // # times before + 1 selection
-  expect(onRowClick).toHaveBeenCalledTimes(3);
-
-  await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
-  await user.click(getByText(data[1].subRows[0].name)); // [shiftKey = true]
-
-  checkboxes = container.querySelectorAll<HTMLInputElement>(
-    '.iui-table-body .iui-checkbox',
-  );
-  selectedIndices = [4, 5, 7];
-  Array.from(checkboxes).forEach((checkbox, index) => {
-    expect(!!checkbox.checked).toBe(selectedIndices.includes(index));
-  });
-
-  expect(onSelect).toHaveBeenCalledTimes(11 + (3 + 3)); // # times before + (to reset all depth 0 rows + # selected rows from start to end)
-  expect(onRowClick).toHaveBeenCalledTimes(4);
 });
 
 it('should handle sub-rows selection', async () => {
