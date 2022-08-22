@@ -247,7 +247,8 @@ export type TableProps<
   /**
    * Function that returns index of the row that you want to scroll to.
    *
-   * It doesn't work with paginated tables and with lazy-loading.
+   * When using with lazy-loading table, you need to take care that row is already loaded.
+   * It doesn't work with paginated tables.
    * @beta
    * @example
    * <Table
@@ -749,7 +750,16 @@ export const Table = <
         data-iui-size={density === 'default' ? undefined : density}
         {...ariaDataAttributes}
       >
-        <div className='iui-table-header-wrapper' ref={headerRef}>
+        <div
+          className='iui-table-header-wrapper'
+          ref={headerRef}
+          onScroll={() => {
+            if (headerRef.current && bodyRef.current) {
+              bodyRef.current.scrollLeft = headerRef.current.scrollLeft;
+              updateStickyState();
+            }
+          }}
+        >
           <div className='iui-table-header'>
             {headerGroups.slice(1).map((headerGroup: HeaderGroup<T>) => {
               const headerGroupProps = headerGroup.getHeaderGroupProps({

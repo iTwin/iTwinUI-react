@@ -78,7 +78,7 @@ export type { FieldsetProps } from './Fieldset';
 export { FileUpload, FileUploadTemplate } from './FileUpload';
 export type { FileUploadProps, FileUploadTemplateProps } from './FileUpload';
 
-export { Footer } from './Footer';
+export { Footer, defaultFooterElements } from './Footer';
 export type { FooterProps, FooterElement, TitleTranslations } from './Footer';
 
 export { Header, HeaderBreadcrumbs, HeaderButton, HeaderLogo } from './Header';
@@ -165,7 +165,12 @@ export { RadioTile, RadioTileGroup } from './RadioTiles';
 export type { RadioTileGroupProps, RadioTileProps } from './RadioTiles';
 
 export { Select } from './Select';
-export type { SelectProps, SelectOption, ItemRendererProps } from './Select';
+export type {
+  SelectProps,
+  SelectOption,
+  ItemRendererProps,
+  SelectValueChangeEvent,
+} from './Select';
 
 export {
   SideNavigation,
