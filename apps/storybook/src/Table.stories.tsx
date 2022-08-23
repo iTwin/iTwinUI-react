@@ -3516,7 +3516,6 @@ export const StatusAndCellIcons: Story<Partial<TableProps>> = (args) => {
       }>,
     ) => {
       return {
-        id: row.original.name,
         status: row.original.status,
       };
     },

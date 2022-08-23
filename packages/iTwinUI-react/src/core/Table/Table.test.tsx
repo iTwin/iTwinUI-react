@@ -3711,7 +3711,6 @@ it.each(['positive', 'warning', 'negative'] as const)(
     const { container } = renderComponent({
       rowProps: (row) => ({
         status: row.index === 0 ? rowStatus : undefined,
-        id: row.original.name,
       }),
     });
 
