@@ -21,10 +21,7 @@ export type MiddleTextTruncationProps = {
   /**
    * Custom renderer for the truncated text.
    */
-  textRenderer?: (
-    truncatedText: string,
-    originalText: string,
-  ) => React.ReactNode;
+  textRenderer?: (truncatedText: string) => React.ReactNode;
 } & CommonProps;
 
 /**
@@ -38,7 +35,7 @@ export type MiddleTextTruncationProps = {
  * <MiddleTextTruncation
  *   text='ThisIsMyVeryLongFileName.dgn'
  *   textRenderer={React.useCallback(
- *     (truncatedText, originalText) => <span title={originalText}>{truncatedText}</span>,
+ *     (truncatedText) => <b>{truncatedText}</b>,
  *     []
  *   )}
  * />
@@ -71,7 +68,7 @@ export const MiddleTextTruncation = (props: MiddleTextTruncationProps) => {
       ref={ref}
       {...rest}
     >
-      {textRenderer ? textRenderer(truncatedText, text) : truncatedText}
+      {textRenderer ? textRenderer(truncatedText) : truncatedText}
     </span>
   );
 };
