@@ -17,7 +17,6 @@ export type DefaultCellProps<T extends Record<string, unknown>> = {
   endIcon?: JSX.Element;
   /**
    * Status of the cell.
-   * @default ''
    */
   status?: 'positive' | 'negative' | 'warning';
 } & CellRendererProps<T> &
