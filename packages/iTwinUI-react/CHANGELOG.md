@@ -2,11 +2,9 @@
 
 ## [1.44.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.43.1...v1.44.0) (2022-08-23)
 
-
 ### What's new
 
 * **Select:** Multiple selection support ([#700](https://www.github.com/iTwin/iTwinUI-react/issues/700)) ([b7d34c1](https://www.github.com/iTwin/iTwinUI-react/commit/b7d34c1702ae416d969bed21098270f7aa7731a9))
-
 
 ### Fixes
 
