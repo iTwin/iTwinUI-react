@@ -75,7 +75,6 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
   });
 
   const userRowProps = rowProps?.(row);
-  const status = rowProps?.(row).status;
   const mergedProps = {
     ...row.getRowProps({ style: { flex: `0 0 auto`, minWidth: '100%' } }),
     ...userRowProps,
@@ -86,7 +85,7 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
           'iui-selected': row.isSelected,
           'iui-row-expanded': row.isExpanded && subComponent,
           'iui-disabled': isDisabled,
-          [`iui-${status}`]: !!status,
+          [`iui-${userRowProps?.status}`]: userRowProps?.status,
         },
         userRowProps?.className,
       ),

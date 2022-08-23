@@ -1395,18 +1395,22 @@ export const Full2: Story<Partial<TableProps>> = (args) => {
     quantity: number;
     rating: number;
     deliveryTime: number;
+    status: string | undefined;
     subRows: TableStoryDataType[];
   };
 
   const generateItem = useCallback(
     (index: number, parentRow = '', depth = 0): TableStoryDataType => {
       const keyValue = parentRow ? `${parentRow}.${index + 1}` : `${index + 1}`;
+      const rating = (index % 4) + 1;
       return {
         product: `Product ${keyValue}`,
         price: ((index % 10) + 1) * 15,
         quantity: ((index % 10) + 1) * 150,
-        rating: (index % 4) + 1,
+        rating: rating,
         deliveryTime: (index % 15) + 1,
+        status:
+          rating >= 4 ? 'positive' : rating === 3 ? 'warning' : 'negative',
         subRows:
           depth < 2
             ? Array(Math.round(index % 5))
@@ -1487,8 +1491,19 @@ export const Full2: Story<Partial<TableProps>> = (args) => {
             filter: 'between',
             sortType: 'number',
             width: 400,
-            Cell: (props: CellProps<TableStoryDataType>) => {
-              return <>{props.value}/5</>;
+            cellRenderer: (props: CellRendererProps<TableStoryDataType>) => {
+              return (
+                <DefaultCell
+                  {...props}
+                  status={
+                    props.cellProps.row.original.status !== 'positive'
+                      ? props.cellProps.row.original.status
+                      : undefined
+                  }
+                >
+                  {props.cellProps.row.original.rating}/5
+                </DefaultCell>
+              );
             },
           },
           {
@@ -1524,6 +1539,12 @@ export const Full2: Story<Partial<TableProps>> = (args) => {
     [isRowDisabled, menuItems],
   );
 
+  const rowProps = useCallback((row: Row<{ status: string | undefined }>) => {
+    return {
+      status: row.original.status,
+    };
+  }, []);
+
   return (
     <Table
       columns={columns}
@@ -1537,6 +1558,7 @@ export const Full2: Story<Partial<TableProps>> = (args) => {
       data={data}
       style={{ height: '100%' }}
       enableVirtualization
+      rowProps={rowProps}
     />
   );
 };
@@ -3407,7 +3429,12 @@ export const StatusAndCellIcons: Story<Partial<TableProps>> = (args) => {
             id: 'name',
             Header: 'Name',
             accessor: 'name',
-            cellRenderer: (props) => (
+            cellRenderer: (
+              props: CellRendererProps<{
+                startIcon: JSX.Element;
+                endIcon: JSX.Element;
+              }>,
+            ) => (
               <DefaultCell
                 startIcon={props.cellProps.row.original.startIcon}
                 endIcon={props.cellProps.row.original.endIcon}
@@ -3420,7 +3447,11 @@ export const StatusAndCellIcons: Story<Partial<TableProps>> = (args) => {
             Header: 'Modified',
             accessor: 'modified',
             maxWidth: 200,
-            cellRenderer: (props) => {
+            cellRenderer: (
+              props: CellRendererProps<{
+                status: 'positive' | 'warning' | 'negative' | undefined;
+              }>,
+            ) => {
               return (
                 <DefaultCell
                   {...props}
@@ -3450,7 +3481,7 @@ export const StatusAndCellIcons: Story<Partial<TableProps>> = (args) => {
         startIcon: <SvgSoundLoud fill='#66c6ff' />,
       },
       {
-        name: 'charlie.pdf',
+        name: 'gamma.pdf',
         modified: 'A few moments ago',
         size: '9 MB',
         startIcon: <SvgDetails fill='#dd3e39' />,
