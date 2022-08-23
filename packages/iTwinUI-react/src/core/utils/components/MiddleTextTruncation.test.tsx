@@ -67,14 +67,13 @@ it('should render custom text', () => {
     <MiddleTextTruncation
       text={text}
       textRenderer={(truncatedText) => (
-        <span data-testid='custom-text'>{truncatedText}</span>
+        <span>{truncatedText} - some additional text</span>
       )}
     />,
   );
 
   const containerSpan = container.querySelector('span') as HTMLSpanElement;
-  expect(containerSpan.textContent).toBe('This is some …lipsis');
-  expect(
-    containerSpan.querySelector('[data-testid="custom-text"]'),
-  ).toBeTruthy();
+  expect(containerSpan.textContent).toBe(
+    'This is some …lipsis - some additional text',
+  );
 });

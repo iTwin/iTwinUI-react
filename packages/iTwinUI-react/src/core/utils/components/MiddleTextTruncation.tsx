@@ -35,7 +35,13 @@ export type MiddleTextTruncationProps = {
  * @example
  * <MiddleTextTruncation text='ThisIsMyVeryLongFileName.dgn' endCharsCount={10} />
  * @example
- * <MiddleTextTruncation text='ThisIsMyVeryLongFileName.dgn' textRenderer={(truncatedText, originalText) => <span title={originalText}>{truncatedText}</span>} />
+ * <MiddleTextTruncation
+ *   text='ThisIsMyVeryLongFileName.dgn'
+ *   textRenderer={React.useCallback(
+ *     (truncatedText, originalText) => <span title={originalText}>{truncatedText}</span>,
+ *     []
+ *   )}
+ * />
  */
 export const MiddleTextTruncation = (props: MiddleTextTruncationProps) => {
   const { text, endCharsCount = 6, textRenderer, style, ...rest } = props;

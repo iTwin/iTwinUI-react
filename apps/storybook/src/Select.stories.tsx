@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Story, Meta } from '@storybook/react';
 import {
   MenuItem,
@@ -324,10 +324,13 @@ export const TruncateMiddleText: Story<SelectProps<string>> = (args) => {
     options[0].value,
   );
 
-  const textRenderer = (truncatedText: string, originalText: string) => (
-    <span title={truncatedText !== originalText ? originalText : undefined}>
-      {truncatedText}
-    </span>
+  const textRenderer = useCallback(
+    (truncatedText: string, originalText: string) => (
+      <span title={truncatedText !== originalText ? originalText : undefined}>
+        {truncatedText}
+      </span>
+    ),
+    [],
   );
 
   return (
