@@ -26,6 +26,7 @@ export type MiddleTextTruncationProps = {
     originalText: string,
   ) => React.ReactNode;
 } & CommonProps;
+
 /**
  * Truncates text with the ellipsis in the middle,
  * leaving defined number of chars at the end.
@@ -38,6 +39,7 @@ export type MiddleTextTruncationProps = {
  */
 export const MiddleTextTruncation = (props: MiddleTextTruncationProps) => {
   const { text, endCharsCount = 6, textRenderer, style, ...rest } = props;
+
   const [ref, visibleCount] = useOverflow(text);
 
   const truncatedText = React.useMemo(() => {
