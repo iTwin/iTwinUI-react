@@ -1395,7 +1395,7 @@ export const Full2: Story<Partial<TableProps>> = (args) => {
     quantity: number;
     rating: number;
     deliveryTime: number;
-    status: string | undefined;
+    status: 'positive' | 'negative' | 'warning' | undefined;
     subRows: TableStoryDataType[];
   };
 
@@ -1495,11 +1495,7 @@ export const Full2: Story<Partial<TableProps>> = (args) => {
               return (
                 <DefaultCell
                   {...props}
-                  status={
-                    props.cellProps.row.original.status !== 'positive'
-                      ? props.cellProps.row.original.status
-                      : undefined
-                  }
+                  status={props.cellProps.row.original.status}
                 >
                   {props.cellProps.row.original.rating}/5
                 </DefaultCell>
