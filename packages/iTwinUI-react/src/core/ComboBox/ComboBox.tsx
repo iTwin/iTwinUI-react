@@ -6,7 +6,7 @@ import React from 'react';
 import cx from 'classnames';
 import { InputProps } from '../Input';
 import { MenuExtraContent } from '../Menu';
-import { SelectOption } from '../Select';
+import { SelectOption, SelectValueChangeEvent } from '../Select';
 import { Text } from '../Typography';
 import {
   useTheme,
@@ -30,6 +30,35 @@ import { ComboBoxInput } from './ComboBoxInput';
 import { ComboBoxInputContainer } from './ComboBoxInputContainer';
 import { ComboBoxMenu } from './ComboBoxMenu';
 import { ComboBoxMenuItem } from './ComboBoxMenuItem';
+
+export type ComboboxMultipleTypeProps<T> =
+  | {
+      /**
+       * Enable multiple selection.
+       * @default false
+       */
+      multiple?: false;
+      /**
+       * Custom renderer for the selected item in select.
+       * If `multiple` is enabled, it will give array of options to render.
+       */
+      selectedItemRenderer?: (option: SelectOption<T>) => JSX.Element;
+      /**
+       * Selected option value.
+       * If `multiple` is enabled, it is an array of values.
+       */
+      value?: T;
+      /**
+       * Callback function handling change event on select.
+       */
+      onChange?: (value: T) => void;
+    }
+  | {
+      multiple: true;
+      selectedItemRenderer?: (options: SelectOption<T>[]) => JSX.Element;
+      value?: T[];
+      onChange?: (value: T, event: SelectValueChangeEvent) => void;
+    };
 
 export type ComboBoxProps<T> = {
   /**
@@ -101,7 +130,8 @@ export type ComboBoxProps<T> = {
    * Callback fired when dropdown menu is closed.
    */
   onHide?: () => void;
-} & Pick<InputContainerProps, 'status'> &
+} & ComboboxMultipleTypeProps<T> &
+  Pick<InputContainerProps, 'status'> &
   Omit<CommonProps, 'title'>;
 
 /** Returns either `option.id` or derives a stable id using `idPrefix` and `option.label` (without whitespace) */
