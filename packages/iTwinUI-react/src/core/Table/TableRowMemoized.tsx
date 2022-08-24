@@ -74,10 +74,11 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
     root: intersectionRoot,
   });
 
-  const userRowProps = rowProps?.(row);
+  const userRowProps = rowProps?.(row) ?? {};
+  const { status, ...restUserRowProps } = userRowProps;
   const mergedProps = {
     ...row.getRowProps({ style: { flex: `0 0 auto`, minWidth: '100%' } }),
-    ...userRowProps,
+    ...restUserRowProps,
     ...{
       className: cx(
         'iui-row',
@@ -85,7 +86,7 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
           'iui-selected': row.isSelected,
           'iui-row-expanded': row.isExpanded && subComponent,
           'iui-disabled': isDisabled,
-          [`iui-${userRowProps?.status}`]: userRowProps?.status,
+          [`iui-${status}`]: !!status,
         },
         userRowProps?.className,
       ),
