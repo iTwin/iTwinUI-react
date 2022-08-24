@@ -827,7 +827,8 @@ export const Table = <
                             )}
                             {showSortButton(column) && (
                               <div className='iui-cell-end-icon'>
-                                {column.isSorted && column.isSortedDesc ? (
+                                {column.isSortedDesc ||
+                                (!column.isSorted && column.sortDescFirst) ? (
                                   <SvgSortDown
                                     className='iui-icon iui-sort'
                                     aria-hidden
