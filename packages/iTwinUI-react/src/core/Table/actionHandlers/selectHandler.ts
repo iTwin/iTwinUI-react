@@ -139,7 +139,7 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
       currentRow.toggleRowSelected(true);
     }
 
-    currentRow = getNextRow(currentRow, startId, endId);
+    currentRow = getNextRow(currentRow, endId);
   }
 };
 
