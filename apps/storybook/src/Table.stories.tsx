@@ -3432,9 +3432,9 @@ export const StatusAndCellIcons: Story<Partial<TableProps>> = (args) => {
               }>,
             ) => (
               <DefaultCell
+                {...props}
                 startIcon={props.cellProps.row.original.startIcon}
                 endIcon={props.cellProps.row.original.endIcon}
-                {...props}
               />
             ),
           },
@@ -3493,7 +3493,7 @@ export const StatusAndCellIcons: Story<Partial<TableProps>> = (args) => {
         status: 'warning',
       },
       {
-        name: 'Theta.dgn',
+        name: 'theta.dgn',
         modified: 'A few moments ago',
         size: '64 KB',
         startIcon: <SvgDetails fill='#d16c00' />,
@@ -3512,7 +3512,7 @@ export const StatusAndCellIcons: Story<Partial<TableProps>> = (args) => {
         size: string;
         startIcon: JSX.Element;
         endIcon: JSX.Element;
-        status: string | undefined;
+        status: 'positive' | 'negative' | 'warning' | undefined;
       }>,
     ) => {
       return {

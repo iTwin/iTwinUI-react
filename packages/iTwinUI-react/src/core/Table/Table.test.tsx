@@ -21,7 +21,11 @@ import {
 import { CellProps, Column, Row } from 'react-table';
 import { InputGroup } from '../InputGroup';
 import { Radio } from '../Radio';
-import { SvgChevronRight, SvgPlaceholder } from '@itwin/itwinui-icons-react';
+import {
+  SvgChevronRight,
+  SvgDeveloper,
+  SvgPlaceholder,
+} from '@itwin/itwinui-icons-react';
 import { DefaultCell, EditableCell } from './cells';
 import { TablePaginator } from './TablePaginator';
 import * as UseOverflow from '../utils/hooks/useOverflow';
@@ -3657,7 +3661,7 @@ it('should render start and end cell icons', () => {
           Header: 'description',
           accessor: 'description',
           cellRenderer: (props) => {
-            return <DefaultCell {...props} endIcon={<SvgPlaceholder />} />;
+            return <DefaultCell {...props} endIcon={<SvgDeveloper />} />;
           },
         },
       ],
@@ -3667,10 +3671,29 @@ it('should render start and end cell icons', () => {
     columns: testColumns,
   });
 
-  const startIcon = container.querySelector('.iui-cell-start-icon');
+  const {
+    container: { firstChild: placeholderIcon },
+  } = render(<SvgPlaceholder />);
+  const {
+    container: { firstChild: developerIcon },
+  } = render(<SvgDeveloper />);
+
+  const row = container.querySelector(
+    '.iui-table-body .iui-row',
+  ) as HTMLDivElement;
+  const cells = row.querySelectorAll('.iui-cell');
+
+  const startIcon = cells[0].querySelector(
+    '.iui-cell-start-icon',
+  ) as HTMLDivElement;
   expect(startIcon).toBeTruthy();
-  const endIcon = container.querySelector('.iui-cell-end-icon');
+  expect(startIcon.querySelector('svg')).toEqual(placeholderIcon);
+
+  const endIcon = cells[1].querySelector(
+    '.iui-cell-end-icon',
+  ) as HTMLDivElement;
   expect(endIcon).toBeTruthy();
+  expect(endIcon.querySelector('svg')).toEqual(developerIcon);
 });
 
 it.each(['positive', 'warning', 'negative'] as const)(
@@ -3700,8 +3723,13 @@ it.each(['positive', 'warning', 'negative'] as const)(
       columns,
     });
 
-    const statusCell = container.querySelector(`.iui-cell.iui-${status}`);
-    expect(statusCell).toBeTruthy();
+    const row = container.querySelector(
+      '.iui-table-body .iui-row',
+    ) as HTMLDivElement;
+    const cells = row.querySelectorAll('.iui-cell');
+
+    expect(cells[0]).toHaveClass(`iui-${status}`);
+    expect(cells[1]).not.toHaveClass(`iui-${status}`);
   },
 );
 
@@ -3709,12 +3737,18 @@ it.each(['positive', 'warning', 'negative'] as const)(
   'should render row with %s status',
   (rowStatus) => {
     const { container } = renderComponent({
-      rowProps: (row) => ({
-        status: row.index === 0 ? rowStatus : undefined,
-      }),
+      rowProps: (row) => {
+        return {
+          status: row.index === 0 ? rowStatus : undefined,
+        };
+      },
     });
 
-    const rowCell = container.querySelector(`.iui-row.iui-${rowStatus}`);
-    expect(rowCell).toBeTruthy();
+    const tableBody = container.querySelector(
+      '.iui-table-body',
+    ) as HTMLDivElement;
+    const rows = tableBody.querySelectorAll('.iui-row');
+    expect(rows[0]).toHaveClass(`iui-${rowStatus}`);
+    expect(rows[1]).not.toHaveClass(`iui-${rowStatus}`);
   },
 );
