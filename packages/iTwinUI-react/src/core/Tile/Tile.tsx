@@ -177,12 +177,14 @@ export const Tile = (props: TileProps) => {
 
           {leftIcon &&
             React.cloneElement(leftIcon as React.ReactElement, {
-              className: 'iui-small iui-tile-thumbnail-type-indicator',
+              className: 'iui-tile-thumbnail-type-indicator',
+              'data-iui-size': 'small',
             })}
 
           {rightIcon &&
             React.cloneElement(rightIcon as React.ReactElement, {
-              className: 'iui-small iui-tile-thumbnail-quick-action',
+              className: 'iui-tile-thumbnail-quick-action',
+              'data-iui-size': 'small',
             })}
 
           {badge && (
