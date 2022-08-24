@@ -21,7 +21,10 @@ export type MiddleTextTruncationProps = {
   /**
    * Custom renderer for the truncated text.
    */
-  textRenderer?: (truncatedText: string) => React.ReactNode;
+  textRenderer?: (
+    truncatedText: string,
+    originalText: string,
+  ) => React.ReactNode;
 } & CommonProps;
 
 /**
@@ -68,7 +71,7 @@ export const MiddleTextTruncation = (props: MiddleTextTruncationProps) => {
       ref={ref}
       {...rest}
     >
-      {textRenderer ? textRenderer(truncatedText) : truncatedText}
+      {textRenderer?.(truncatedText, text) ?? truncatedText}
     </span>
   );
 };

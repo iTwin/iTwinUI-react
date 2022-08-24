@@ -325,7 +325,7 @@ export const TruncateMiddleText: Story<SelectProps<string>> = (args) => {
   );
 
   const textRenderer = useCallback(
-    (originalText: string) => (truncatedText: string) => (
+    (truncatedText: string, originalText: string) => (
       <span title={truncatedText !== originalText ? originalText : undefined}>
         {truncatedText}
       </span>
@@ -344,15 +344,12 @@ export const TruncateMiddleText: Story<SelectProps<string>> = (args) => {
         <MenuItem>
           <MiddleTextTruncation
             text={option.label}
-            textRenderer={textRenderer(option.label)}
+            textRenderer={textRenderer}
           />
         </MenuItem>
       )}
       selectedItemRenderer={(option) => (
-        <MiddleTextTruncation
-          text={option.label}
-          textRenderer={textRenderer(option.label)}
-        />
+        <MiddleTextTruncation text={option.label} textRenderer={textRenderer} />
       )}
     />
   );

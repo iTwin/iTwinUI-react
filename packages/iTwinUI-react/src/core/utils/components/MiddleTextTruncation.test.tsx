@@ -67,7 +67,9 @@ it('should render custom text', () => {
     <MiddleTextTruncation
       text={text}
       textRenderer={(truncatedText) => (
-        <span>{truncatedText} - some additional text</span>
+        <span data-testid='custom-text'>
+          {truncatedText} - some additional text
+        </span>
       )}
     />,
   );
@@ -76,4 +78,7 @@ it('should render custom text', () => {
   expect(containerSpan.textContent).toBe(
     'This is some …lipsis - some additional text',
   );
+  expect(
+    containerSpan.querySelector('[data-testid="custom-text"]'),
+  ).toBeTruthy();
 });
