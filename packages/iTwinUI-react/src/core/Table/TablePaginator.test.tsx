@@ -37,7 +37,7 @@ it('should render in its most basic form', () => {
 
   const pages = container.querySelectorAll('.iui-table-paginator-page-button');
   expect(pages).toHaveLength(20);
-  expect(pages[0].classList).toContain('iui-active');
+  expect(pages[0]).toHaveAttribute('data-iui-active', 'true');
 
   const previousPageButton = screen.getByLabelText(
     'Previous page',
@@ -62,7 +62,7 @@ it('should render currently visible rows info and page size selector', async () 
 
   const pages = container.querySelectorAll('.iui-table-paginator-page-button');
   expect(pages).toHaveLength(20);
-  expect(pages[19].classList).toContain('iui-active');
+  expect(pages[19]).toHaveAttribute('data-iui-active', 'true');
 
   const pageSizeSelector = container.querySelector(
     '.iui-button-dropdown',
@@ -117,7 +117,7 @@ it('should render loading state when there is data', () => {
 
   const pages = container.querySelectorAll('.iui-table-paginator-page-button');
   expect(pages).toHaveLength(20);
-  expect(pages[19].classList).toContain('iui-active');
+  expect(pages[19]).toHaveAttribute('data-iui-active', 'true');
   expect(container.querySelector('.iui-table-paginator-ellipsis')).toBeTruthy();
   expect(
     container.querySelector('.iui-progress-indicator-radial'),
@@ -170,7 +170,7 @@ it('should handle clicks', async () => {
     '.iui-table-paginator-page-button',
   );
   expect(pages).toHaveLength(20);
-  expect(pages[5].classList).toContain('iui-active');
+  expect(pages[5]).toHaveAttribute('data-iui-active', 'true');
 
   const previousPageButton = screen.getByLabelText(
     'Previous page',
@@ -199,7 +199,7 @@ it('should render truncated pages list', () => {
   expect(pages[1].textContent).toEqual('9');
   expect(pages[2].textContent).toEqual('10');
   expect(pages[3].textContent).toEqual('11');
-  expect(pages[3].classList).toContain('iui-active');
+  expect(pages[3]).toHaveAttribute('data-iui-active', 'true');
   expect(pages[4].textContent).toEqual('12');
   expect(pages[5].textContent).toEqual('13');
   expect(pages[6].textContent).toEqual('20');
@@ -215,7 +215,7 @@ it('should render only the current page when screen is very small', () => {
   const pages = container.querySelectorAll('.iui-table-paginator-page-button');
   expect(pages).toHaveLength(1);
   expect(pages[0].textContent).toEqual('11');
-  expect(pages[0].classList).toContain('iui-active');
+  expect(pages[0]).toHaveAttribute('data-iui-active', 'true');
 
   const ellipsis = container.querySelectorAll('.iui-table-paginator-ellipsis');
   expect(ellipsis).toHaveLength(0);
