@@ -812,7 +812,15 @@ export const Table = <
                               />
                             )}
                             {showSortButton(column) && (
-                              <div className='iui-cell-end-icon'>
+                              <div
+                                className='iui-cell-end-icon'
+                                tabIndex={0}
+                                onKeyDown={(e) => {
+                                  if (e.key == 'Enter') {
+                                    column.toggleSortBy();
+                                  }
+                                }}
+                              >
                                 {column.isSortedDesc ||
                                 (!column.isSorted && column.sortDescFirst) ? (
                                   <SvgSortDown

@@ -3747,3 +3747,60 @@ it('should make column sticky and then non-sticky after dragging sticky column a
     expect(cell).not.toHaveStyle('--iui-table-sticky-left: 400px');
   });
 });
+
+it('should navigate through table sorting with the keyboard', async () => {
+  const onSort = jest.fn();
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+      ],
+    },
+  ];
+  renderComponent({
+    columns: mockedColumns,
+    isSortable: true,
+    onSort,
+  });
+
+  await userEvent.tab();
+  await userEvent.keyboard('{Enter}');
+  expect(onSort).toHaveBeenCalled();
+});
+
+it('should navigate through table filtering with the keyboard', async () => {
+  const onFilter = jest.fn();
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          Filter: tableFilters.TextFilter(),
+          fieldType: 'text',
+        },
+      ],
+    },
+  ];
+  renderComponent({
+    columns: mockedColumns,
+    onFilter,
+  });
+
+  await userEvent.tab();
+  await userEvent.keyboard('{Enter}');
+  await userEvent.keyboard('2');
+  await userEvent.tab();
+  await userEvent.keyboard('{Enter}');
+  expect(onFilter).toHaveBeenCalledWith(
+    [{ fieldType: 'text', filterType: 'text', id: 'name', value: '2' }],
+    expect.objectContaining({ filters: [{ id: 'name', value: '2' }] }),
+  );
+});

@@ -118,7 +118,19 @@ export const Basic: Story<Partial<TableProps>> = (args) => {
             width: 100,
             Cell: (props: CellProps<{ name: string; description: string }>) => {
               const onClick = () => onClickHandler(props);
-              return <Anchor onClick={onClick}>Click me!</Anchor>;
+              return (
+                <Anchor
+                  onClick={onClick}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key == 'Enter') {
+                      onClickHandler(props);
+                    }
+                  }}
+                >
+                  Click me!
+                </Anchor>
+              );
             },
           },
         ],
@@ -179,6 +191,13 @@ export const SelectableSingle: Story<Partial<TableProps>> = (args) => {
                   onClick={(e) => {
                     e.stopPropagation(); // prevent row selection when clicking on link
                     action(props.row.original.name)();
+                  }}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key == 'Enter') {
+                      e.stopPropagation(); // prevent row selection when clicking on link
+                      action(props.row.original.name)();
+                    }
                   }}
                 >
                   Click me!
@@ -260,6 +279,13 @@ export const SelectableMulti: Story<Partial<TableProps>> = (args) => {
                     e.stopPropagation(); // prevent row selection when clicking on link
                     action(props.row.original.name)();
                   }}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key == 'Enter') {
+                      e.stopPropagation(); // prevent row selection when clicking on link
+                      action(props.row.original.name)();
+                    }
+                  }}
                 >
                   Click me!
                 </Anchor>
@@ -336,7 +362,19 @@ export const Sortable: Story<Partial<TableProps>> = (args) => {
             width: 100,
             Cell: (props: CellProps<{ name: string; description: string }>) => {
               const onClick = () => onClickHandler(props);
-              return <Anchor onClick={onClick}>Click me!</Anchor>;
+              return (
+                <Anchor
+                  onClick={onClick}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key == 'Enter') {
+                      onClickHandler(props);
+                    }
+                  }}
+                >
+                  Click me!
+                </Anchor>
+              );
             },
           },
         ],
@@ -813,7 +851,19 @@ export const LazyLoading: Story<Partial<TableProps>> = (args) => {
             width: 100,
             Cell: (props: CellProps<{ name: string; description: string }>) => {
               const onClick = () => onClickHandler(props);
-              return <Anchor onClick={onClick}>Click me!</Anchor>;
+              return (
+                <Anchor
+                  onClick={onClick}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key == 'Enter') {
+                      onClickHandler(props);
+                    }
+                  }}
+                >
+                  Click me!
+                </Anchor>
+              );
             },
           },
         ],
@@ -898,7 +948,19 @@ export const RowInViewport: Story<Partial<TableProps>> = (args) => {
             width: 100,
             Cell: (props: CellProps<{ name: string; description: string }>) => {
               const onClick = () => onClickHandler(props);
-              return <Anchor onClick={onClick}>Click me!</Anchor>;
+              return (
+                <Anchor
+                  onClick={onClick}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key == 'Enter') {
+                      onClickHandler(props);
+                    }
+                  }}
+                >
+                  Click me!
+                </Anchor>
+              );
             },
           },
         ],
@@ -999,7 +1061,11 @@ export const DisabledRows: Story<Partial<TableProps>> = (args) => {
             {isRowDisabled(props.row.original) ? (
               <>Click me!</>
             ) : (
-              <Anchor onClick={action(props.row.original.name)}>
+              <Anchor
+                onClick={action(props.row.original.name)}
+                tabIndex={0}
+                onKeyDown={action(props.row.original.name)}
+              >
                 Click me!
               </Anchor>
             )}
@@ -1592,7 +1658,19 @@ export const Condensed: Story<Partial<TableProps>> = (args) => {
             width: 100,
             Cell: (props: CellProps<{ name: string; description: string }>) => {
               const onClick = () => onClickHandler(props);
-              return <Anchor onClick={onClick}>Click me!</Anchor>;
+              return (
+                <Anchor
+                  onClick={onClick}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key == 'Enter') {
+                      onClickHandler(props);
+                    }
+                  }}
+                >
+                  Click me!
+                </Anchor>
+              );
             },
           },
         ],
@@ -2390,7 +2468,19 @@ export const Virtualized: Story<Partial<TableProps>> = (args) => {
             width: 100,
             Cell: (props: CellProps<{ name: string; description: string }>) => {
               const onClick = () => onClickHandler(props);
-              return <Anchor onClick={onClick}>Click me!</Anchor>;
+              return (
+                <Anchor
+                  onClick={onClick}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key == 'Enter') {
+                      onClickHandler(props);
+                    }
+                  }}
+                >
+                  Click me!
+                </Anchor>
+              );
             },
           },
         ],
@@ -2462,7 +2552,19 @@ export const ScrollToRow: Story<Partial<TableProps>> = (args) => {
             width: 100,
             Cell: (props: CellProps<TableStoryDataType>) => {
               const onClick = () => onClickHandler(props);
-              return <Anchor onClick={onClick}>Click me!</Anchor>;
+              return (
+                <Anchor
+                  onClick={onClick}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key == 'Enter') {
+                      onClickHandler(props);
+                    }
+                  }}
+                >
+                  Click me!
+                </Anchor>
+              );
             },
           },
         ],
