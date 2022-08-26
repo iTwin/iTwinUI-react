@@ -21,3 +21,4 @@ export { default as InformationPanelMainExample } from './InformationPanel.main'
 export { default as SideNavigationMainExample } from './SideNavigation.main';
 export { default as ToastStaticExample } from './Toast.static';
 export { default as ToastMainExample } from './Toast.main';
+export { default as TileMainExample } from './Tile.main';
