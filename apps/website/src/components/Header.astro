@@ -9,10 +9,10 @@ export type Props = { class?: string };
 <header class={Astro.props.class}>
   <SkipLink />
 
-  <!-- TODO: improve this mobile navbar -->
-  <div class='menu-toggle'>
+  <!-- TODO: improve this mobile navbar. -->
+  <!-- <div class='menu-toggle'>
     <SidebarToggle client:idle />
-  </div>
+  </div> -->
 
   <a href='/' class='logo'>
     <VisuallyHidden>iTwinUI home</VisuallyHidden>
@@ -30,7 +30,7 @@ export type Props = { class?: string };
   </a>
 
   <nav aria-label='Global site'>
-    <a href='/docs/introduction'>Documentation</a>
+    <a href='/docs'>Documentation</a>
     <a href='https://www.github.com/iTwin/iTwinUI-react' class='github-link'>
       <VisuallyHidden>GitHub</VisuallyHidden>
       <svg width='32' height='32' viewBox='0 0 24 24' fill='currentColor'
