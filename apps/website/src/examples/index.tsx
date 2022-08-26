@@ -17,3 +17,5 @@ export { default as ExpandableBlockMainExample } from './ExpandableBlock.main';
 export { default as FileUploadMainExample } from './FileUpload.main';
 export { default as FooterMainExample } from './Footer.main';
 export { default as HeaderMainExample } from './Header.main';
+export { default as InformationPanelMainExample } from './InformationPanel.main';
+export { default as SideNavigationMainExample } from './SideNavigation.main';

@@ -20,7 +20,7 @@ export default () => {
   ];
 
   return (
-    <Carousel style={{ width: 'min(800px, 90vw)' }}>
+    <Carousel>
       <Carousel.Slider>
         {gradients.map(({ from, to }, index) => (
           <Carousel.Slide key={index}>
