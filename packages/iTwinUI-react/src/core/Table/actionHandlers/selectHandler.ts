@@ -61,11 +61,8 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
   action: ActionType,
   instance: TableInstance<T>,
 ) => {
-  console.log(instance.rows);
-
   const resetSelection = () => {
     instance.toggleAllRowsSelected(false);
-    // instance.rows.forEach((r) => r.toggleRowSelected(false));
   };
 
   const getGreaterId = (id: string) => {
@@ -108,17 +105,6 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
 
   // Returns the next row as if it was just a non subrows list
   const getNextRow = (currentRow: Row<T>, endId: string) => {
-    // const shouldPrint = currentRow.id === '1';
-    // if (shouldPrint) {
-    //   console.log(
-    //     '*1.0',
-    //     currentRow,
-    //     endId,
-    //     (currentRow.subRows ?? []).length > 0,
-    //     isAncestorParent(currentRow.id, endId),
-    //   );
-    // }
-
     let nextRow;
     if (
       (currentRow.subRows ?? []).length > 0 &&
@@ -138,23 +124,10 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
       }
     }
 
-    // console.log('getNextRow', currentRow, nextRow);
-
     return nextRow;
   };
 
   resetSelection();
-
-  // console.log(
-  //   'getNextRow',
-  //   getNextRow(
-  //     instance.rowsById[action.id],
-  //     // instance.rows[instance.rows.length - 5].id,
-  //     '0',
-  //   ),
-  // );
-
-  // return;
 
   // If no row selected before shift clicking, then assume first row is the last selectedRow (like Windows File Explorer)
   let startId = state.lastSelectedRow ?? instance.rows[0].id;
@@ -169,25 +142,13 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
 
   let currentRow = instance.rowsById[startId];
 
-  // endId = '15';
-
   while (currentRow != null) {
-    console.log('error row', currentRow);
-
     if (currentRow.id === endId) {
       currentRow.toggleRowSelected(true);
       break;
     }
 
-    if (
-      !isAncestorParent(currentRow.id, endId) &&
-      typeof currentRow.toggleRowSelected === 'function' &&
-      true
-    ) {
-      // console.log('error row', currentRow);
-      // if (typeof currentRow.toggleRowSelected !== 'function') {
-      //   console.log('error row', currentRow);
-      // }
+    if (!isAncestorParent(currentRow.id, endId)) {
       currentRow.toggleRowSelected(true);
     }
 
