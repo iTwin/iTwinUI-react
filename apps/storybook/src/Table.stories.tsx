@@ -1535,7 +1535,7 @@ export const Full2: Story<Partial<TableProps>> = (args) => {
       {...args}
       data={data}
       style={{ height: '100%' }}
-      enableVirtualization
+      // enableVirtualization
     />
   );
 };
