@@ -25,13 +25,18 @@ if (code.includes('Copyright (c) Bentley Systems')) {
 
 const componentName = src.split('.')[0];
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
-const StaticComponent = AllExamples[`${capitalize(componentName)}MainExample`];
+const StaticComponent = AllExamples[`${capitalize(componentName)}StaticExample`];
+const MainComponent = AllExamples[`${capitalize(componentName)}MainExample`];
 
 // const staticSandpackCss = getSandpackCssText();
 ---
 
-<LiveExample ssr={StaticComponent} code={code} client:load>
-  <StaticComponent slot='staticComponent' />
+<LiveExample ssr={MainComponent} code={code} client:load>
+  {StaticComponent ? (
+    <StaticComponent slot='staticComponent' />
+  ) : (
+    <MainComponent slot='staticComponent' />
+  )}
 </LiveExample>
 
 <style lang='scss' is:global>
