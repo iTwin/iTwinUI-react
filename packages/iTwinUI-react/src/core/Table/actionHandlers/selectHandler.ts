@@ -56,6 +56,9 @@ export const onSelectHandler = <T extends Record<string, unknown>>(
   onSelect?.(selectedData, newState);
 };
 
+/**
+ * Handles selection when clicked on a row while shift is selected.
+ */
 export const onShiftSelectHandler = <T extends Record<string, unknown>>(
   state: TableState<T>,
   action: ActionType,
@@ -63,7 +66,6 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
 ) => {
   const resetSelection = () => {
     instance.toggleAllRowsSelected(false);
-    // instance.rows.forEach((r) => r.toggleRowSelected(false));
   };
 
   const getGreaterId = (id: string) => {
@@ -104,7 +106,7 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     return true;
   };
 
-  // Returns the next row as if it was just a non sub-rows list
+  /** Returns the next row as if it was just a non sub-rows list */
   const getNextRow = (currentRow: Row<T>, endId: string) => {
     let nextRow;
     if (
@@ -130,8 +132,6 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
 
   resetSelection();
 
-  console.log('Testing', getNextRow(instance.rowsById['6'], '6.0'));
-
   // If no row selected before shift clicking, then assume first row is the last selectedRow (like Windows File Explorer)
   let startId = state.lastSelectedRow ?? instance.rows[0].id;
   let endId = action.id;
@@ -142,8 +142,6 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     startId = endId;
     endId = temp;
   }
-
-  console.log(startId, endId);
 
   let currentRow = instance.rowsById[startId];
 
@@ -157,9 +155,7 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
       currentRow.toggleRowSelected(true);
     }
 
-    const old = currentRow?.id;
     currentRow = getNextRow(currentRow, endId);
-    console.log('Next Row', old, currentRow?.id);
   }
 };
 
