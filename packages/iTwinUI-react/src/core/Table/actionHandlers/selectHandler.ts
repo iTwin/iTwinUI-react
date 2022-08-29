@@ -63,6 +63,7 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
 ) => {
   const resetSelection = () => {
     instance.toggleAllRowsSelected(false);
+    // instance.rows.forEach((r) => r.toggleRowSelected(false));
   };
 
   const getGreaterId = (id: string) => {
@@ -82,19 +83,19 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
   };
 
   /**
-   * @returns true if `endId` is a parent of `currentId`
+   * @returns `true` if `subId` is indeed a sub-row of `id`, else `false`
    * @example
-   * isAncestorParent('1.4.2.3', '1.4') // true
-   * isAncestorParent('1.2.5', '1.3')   // false
-   * isAncestorParent('2.4.5', '2.4.5') // true
+   * isSubRow('1.4', '1.4.2.3') // true
+   * isSubRow('1.3', '1.2.5')   // false
+   * isSubRow('2.4.5', '2.4.5') // true
    */
-  const isAncestorParent = (currentId: string, endId: string) => {
-    const currentIdSplit = currentId.split('.');
-    const endIdSplit = endId.split('.');
+  const isSubRow = (id: string, subId: string) => {
+    const idSplit = id.split('.');
+    const subIdSplit = subId.split('.');
 
     let i = 0;
-    while (i < endIdSplit.length) {
-      if (currentIdSplit[i] !== endIdSplit[i]) {
+    while (i < idSplit.length) {
+      if (idSplit[i] !== subIdSplit[i]) {
         return false;
       }
       i++;
@@ -103,12 +104,12 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     return true;
   };
 
-  // Returns the next row as if it was just a non subrows list
+  // Returns the next row as if it was just a non sub-rows list
   const getNextRow = (currentRow: Row<T>, endId: string) => {
     let nextRow;
     if (
       (currentRow.subRows ?? []).length > 0 &&
-      isAncestorParent(currentRow.id, endId)
+      isSubRow(currentRow.id, endId)
     ) {
       // child
       nextRow = currentRow.subRows[0];
@@ -129,6 +130,8 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
 
   resetSelection();
 
+  console.log('Testing', getNextRow(instance.rowsById['6'], '6.0'));
+
   // If no row selected before shift clicking, then assume first row is the last selectedRow (like Windows File Explorer)
   let startId = state.lastSelectedRow ?? instance.rows[0].id;
   let endId = action.id;
@@ -140,6 +143,8 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     endId = temp;
   }
 
+  console.log(startId, endId);
+
   let currentRow = instance.rowsById[startId];
 
   while (currentRow != null) {
@@ -148,11 +153,13 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
       break;
     }
 
-    if (!isAncestorParent(currentRow.id, endId)) {
+    if (!isSubRow(currentRow.id, endId)) {
       currentRow.toggleRowSelected(true);
     }
 
+    const old = currentRow?.id;
     currentRow = getNextRow(currentRow, endId);
+    console.log('Next Row', old, currentRow?.id);
   }
 };
 
