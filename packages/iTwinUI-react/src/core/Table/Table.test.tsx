@@ -396,7 +396,7 @@ it('should handle row clicks', async () => {
   expect(rows[0].classList).toContain('iui-selected');
   expect(rows[1].classList).toContain('iui-selected');
   expect(rows[2].classList).toContain('iui-selected');
-  expect(onSelect).toHaveBeenCalledTimes(3 + (3 + 3)); // # times before + (to reset all depth 0 rows + # selected rows from start to end)
+  expect(onSelect).toHaveBeenCalledTimes(3 + (1 + 3)); // # times before + (reset + # selected rows from start to end)
   expect(onRowClick).toHaveBeenCalledTimes(4);
 });
 
@@ -422,7 +422,7 @@ it('should handle sub-rows shift click selection', async () => {
   expect(rows[0].classList).toContain('iui-selected');
   expect(rows[1].classList).toContain('iui-selected');
   expect(rows[2].classList).not.toContain('iui-selected');
-  expect(onSelect).toHaveBeenCalledTimes(3 + 2); // to reset all depth 0 rows + # selected rows from start to end
+  expect(onSelect).toHaveBeenCalledTimes(1 + 2); // reset + # selected rows from start to end
   expect(onRowClick).toHaveBeenCalledTimes(1);
 
   await expandAll(container);
@@ -441,7 +441,7 @@ it('should handle sub-rows shift click selection', async () => {
     expect(!!checkbox.checked).toBe(selectedIndices.includes(index));
   });
 
-  expect(onSelect).toHaveBeenCalledTimes(5 + (3 + 2)); // # times before + (to reset all depth 0 rows + # selected rows from start to end)
+  expect(onSelect).toHaveBeenCalledTimes(3 + (1 + 2)); // # times before + (reset + # selected rows from start to end)
   expect(onRowClick).toHaveBeenCalledTimes(2);
 
   rows = container.querySelectorAll('.iui-table-body .iui-row');
@@ -455,7 +455,7 @@ it('should handle sub-rows shift click selection', async () => {
     expect(!!checkbox.checked).toBe(selectedIndices.includes(index));
   });
 
-  expect(onSelect).toHaveBeenCalledTimes(10 + 1); // # times before + 1 selection
+  expect(onSelect).toHaveBeenCalledTimes(6 + 1); // # times before + 1 selection
   expect(onRowClick).toHaveBeenCalledTimes(3);
 
   await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
@@ -469,7 +469,7 @@ it('should handle sub-rows shift click selection', async () => {
     expect(!!checkbox.checked).toBe(selectedIndices.includes(index));
   });
 
-  expect(onSelect).toHaveBeenCalledTimes(11 + (3 + 3)); // # times before + (to reset all depth 0 rows + # selected rows from start to end)
+  expect(onSelect).toHaveBeenCalledTimes(7 + (1 + 3)); // # times before + (reset + # selected rows from start to end)
   expect(onRowClick).toHaveBeenCalledTimes(4);
 });
 
