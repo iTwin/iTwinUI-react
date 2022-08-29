@@ -31,6 +31,23 @@ import { ComboBoxInputContainer } from './ComboBoxInputContainer';
 import { ComboBoxMenu } from './ComboBoxMenu';
 import { ComboBoxMenuItem } from './ComboBoxMenuItem';
 
+// const isMultipleEnabled = <T,>(
+//   variable: (T | undefined) | (T[] | undefined),
+//   multiple: boolean,
+// ): variable is T[] | undefined => {
+//   return multiple;
+// };
+
+// Type guard for multiple did not work
+const isSingleOnChange = <T,>(
+  onChange:
+    | (((value: T) => void) | undefined)
+    | (((value: T, event: SelectValueChangeEvent) => void) | undefined),
+  multiple: boolean,
+): onChange is ((value: T) => void) | undefined => {
+  return !multiple;
+};
+
 export type ComboboxMultipleTypeProps<T> =
   | {
       /**
@@ -68,7 +85,7 @@ export type ComboBoxProps<T> = {
   /**
    * Controlled value of ComboBox.
    */
-  value?: T;
+  //value?: T;
   /**
    * Message shown below the combobox.
    * Use `StatusMessage` component.
@@ -77,7 +94,7 @@ export type ComboBoxProps<T> = {
   /**
    * Callback fired when selected value changes.
    */
-  onChange?: (value: T) => void;
+  // onChange?: (value: T) => void;
   /**
    * Function to customize the default filtering logic.
    */
@@ -163,6 +180,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     emptyStateMessage = 'No options found',
     itemRenderer,
     enableVirtualization = false,
+    multiple = false,
     onShow,
     onHide,
     ...rest
@@ -307,12 +325,21 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       return;
     }
     const currentValue = optionsRef.current[selectedIndex]?.value;
+    const currentOption = optionsRef.current[selectedIndex];
 
     if (currentValue === valuePropRef.current || selectedIndex === -1) {
       return;
     }
-    onChangeProp.current?.(currentValue);
-  }, [onChangeProp, optionsRef, selectedIndex, valuePropRef]);
+
+    if (isSingleOnChange(onChangeProp.current, multiple)) {
+      onChangeProp.current?.(currentValue);
+    } else {
+      onChangeProp.current?.(
+        currentValue,
+        currentOption.isSelected ? 'removed' : 'added',
+      );
+    }
+  }, [multiple, onChangeProp, optionsRef, selectedIndex, valuePropRef]);
 
   const getMenuItem = React.useCallback(
     (option: SelectOption<T>, filteredIndex?: number) => {
@@ -397,6 +424,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             enableVirtualization,
             filteredOptions,
             getMenuItem,
+            multiple,
           }}
         >
           <ComboBoxInputContainer disabled={inputProps?.disabled} {...rest}>

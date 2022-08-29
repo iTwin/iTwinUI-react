@@ -55,6 +55,7 @@ type ComboBoxStateContextProps<T = unknown> = {
   filteredOptions: SelectOption<T>[];
   getMenuItem: (option: SelectOption<T>, filteredIndex?: number) => JSX.Element;
   focusedIndex?: number;
+  multiple?: boolean;
 };
 
 export const ComboBoxStateContext = React.createContext<
