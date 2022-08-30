@@ -32,7 +32,7 @@ const MainComponent = AllExamples[`${capitalize(componentName)}MainExample`];
 ---
 
 <LiveExample ssr={MainComponent} code={code} client:load>
-  {StaticComponent ? (
+  {!!StaticComponent ? (
     <StaticComponent slot='staticComponent' />
   ) : (
     <MainComponent slot='staticComponent' />
