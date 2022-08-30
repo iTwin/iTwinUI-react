@@ -12,6 +12,7 @@ import {
   DropdownMenu,
   IconButton,
 } from '@itwin/itwinui-react';
+import { SvgMore } from '@itwin/itwinui-icons-react';
 
 export default () => {
   const [userType, setUserType] = React.useState('User');
@@ -45,7 +46,7 @@ export default () => {
   return (
     <DropdownMenu menuItems={dropdownMenuItems}>
       <IconButton>
-        <span>...</span>
+        <SvgMore />
       </IconButton>
     </DropdownMenu>
   );
