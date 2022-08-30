@@ -162,9 +162,9 @@ export const TablePaginator = (props: TablePaginatorProps) => {
       <button
         key={index}
         className={cx('iui-table-paginator-page-button', {
-          'iui-active': index === currentPage,
           'iui-table-paginator-page-button-small': buttonSize === 'small',
         })}
+        data-iui-active={index === currentPage}
         onClick={() => onPageChange(index)}
         aria-current={index === currentPage}
         aria-label={localization.goToPageLabel(index + 1)}
