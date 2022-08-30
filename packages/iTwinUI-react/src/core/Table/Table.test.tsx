@@ -23,6 +23,8 @@ import { InputGroup } from '../InputGroup';
 import { Radio } from '../Radio';
 import {
   SvgChevronRight,
+  SvgDeveloper,
+  SvgPlaceholder,
   SvgSortUp,
   SvgSortDown,
 } from '@itwin/itwinui-icons-react';
@@ -620,35 +622,35 @@ it('should display correct sort icons for ascending first', async () => {
   });
   const {
     container: { firstChild: sortUpIcon },
-  } = render(<SvgSortUp className='iui-icon iui-sort' aria-hidden />);
+  } = render(<SvgSortUp className='iui-icon iui-table-sort' aria-hidden />);
   const {
     container: { firstChild: sortDownIcon },
-  } = render(<SvgSortDown className='iui-icon iui-sort' aria-hidden />);
+  } = render(<SvgSortDown className='iui-icon iui-table-sort' aria-hidden />);
   const nameHeader = container.querySelector(
-    '.iui-table-header .iui-cell',
+    '.iui-table-header .iui-table-cell',
   ) as HTMLDivElement;
   expect(nameHeader).toBeTruthy();
 
   // initial icon on column header
-  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+  expect(container.querySelector('.iui-table-cell-end-icon > svg')).toEqual(
     sortUpIcon,
   );
 
   // first click on column header
   await userEvent.click(nameHeader);
-  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+  expect(container.querySelector('.iui-table-cell-end-icon > svg')).toEqual(
     sortUpIcon,
   );
 
   // second click on column header
   await userEvent.click(nameHeader);
-  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+  expect(container.querySelector('.iui-table-cell-end-icon > svg')).toEqual(
     sortDownIcon,
   );
 
   // third click on column header to reset
   await userEvent.click(nameHeader);
-  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+  expect(container.querySelector('.iui-table-cell-end-icon > svg')).toEqual(
     sortUpIcon,
   );
 });
@@ -673,35 +675,35 @@ it('should display correct sort icons for descending first', async () => {
   });
   const {
     container: { firstChild: sortUpIcon },
-  } = render(<SvgSortUp className='iui-icon iui-sort' aria-hidden />);
+  } = render(<SvgSortUp className='iui-icon iui-table-sort' aria-hidden />);
   const {
     container: { firstChild: sortDownIcon },
-  } = render(<SvgSortDown className='iui-icon iui-sort' aria-hidden />);
+  } = render(<SvgSortDown className='iui-icon iui-table-sort' aria-hidden />);
   const nameHeader = container.querySelector(
-    '.iui-table-header .iui-cell',
+    '.iui-table-header .iui-table-cell',
   ) as HTMLDivElement;
   expect(nameHeader).toBeTruthy();
 
   // initial icon on column header
-  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+  expect(container.querySelector('.iui-table-cell-end-icon > svg')).toEqual(
     sortDownIcon,
   );
 
   // first click on column header
   await userEvent.click(nameHeader);
-  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+  expect(container.querySelector('.iui-table-cell-end-icon > svg')).toEqual(
     sortDownIcon,
   );
 
   // second click on column header
   await userEvent.click(nameHeader);
-  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+  expect(container.querySelector('.iui-table-cell-end-icon > svg')).toEqual(
     sortUpIcon,
   );
 
   // third click on column header to reset
   await userEvent.click(nameHeader);
-  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+  expect(container.querySelector('.iui-table-cell-end-icon > svg')).toEqual(
     sortDownIcon,
   );
 });
@@ -2889,7 +2891,7 @@ it('should render action column with column manager', async () => {
   expect(actionColumn[3].textContent).toBe('View');
 
   const headerCells = container.querySelectorAll<HTMLDivElement>(
-    '.iui-table-header .iui-cell',
+    '.iui-table-header .iui-table-cell',
   );
   const columnManager = headerCells[headerCells.length - 1]
     .firstElementChild as Element;
@@ -2899,7 +2901,6 @@ it('should render action column with column manager', async () => {
   const dropdownMenu = document.querySelector('.iui-menu') as HTMLDivElement;
   expect(dropdownMenu).toBeTruthy();
   expect(dropdownMenu.classList.contains('iui-scroll')).toBeTruthy();
-  expect(dropdownMenu).toHaveStyle('max-height: 315px');
 });
 
 it('should render dropdown menu with custom style and override default style', async () => {
@@ -2942,14 +2943,13 @@ it('should render dropdown menu with custom style and override default style', a
   });
 
   const headerCells = container.querySelectorAll<HTMLDivElement>(
-    '.iui-table-header .iui-cell',
+    '.iui-table-header .iui-table-cell',
   );
   const columnManager = headerCells[headerCells.length - 1]
     .firstElementChild as Element;
 
-  expect(
-    columnManager.className.includes('iui-button iui-borderless'),
-  ).toBeTruthy();
+  expect(columnManager.className.includes('iui-button')).toBeTruthy();
+  expect(columnManager).toHaveAttribute('data-iui-variant', 'borderless');
 
   await userEvent.click(columnManager);
 
@@ -3797,6 +3797,116 @@ it('should make column sticky and then non-sticky after dragging sticky column a
     expect(cell).not.toHaveStyle('--iui-table-sticky-left: 400px');
   });
 });
+
+it('should render start and end cell icons', () => {
+  const testColumns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          cellRenderer: (props) => {
+            return <DefaultCell {...props} startIcon={<SvgPlaceholder />} />;
+          },
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+          cellRenderer: (props) => {
+            return <DefaultCell {...props} endIcon={<SvgDeveloper />} />;
+          },
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns: testColumns,
+  });
+
+  const {
+    container: { firstChild: placeholderIcon },
+  } = render(<SvgPlaceholder />);
+  const {
+    container: { firstChild: developerIcon },
+  } = render(<SvgDeveloper />);
+
+  const row = container.querySelector(
+    '.iui-table-body .iui-table-row',
+  ) as HTMLDivElement;
+  const cells = row.querySelectorAll('.iui-table-cell');
+
+  const startIcon = cells[0].querySelector(
+    '.iui-table-cell-start-icon',
+  ) as HTMLDivElement;
+  expect(startIcon).toBeTruthy();
+  expect(startIcon.querySelector('svg')).toEqual(placeholderIcon);
+
+  const endIcon = cells[1].querySelector(
+    '.iui-table-cell-end-icon',
+  ) as HTMLDivElement;
+  expect(endIcon).toBeTruthy();
+  expect(endIcon.querySelector('svg')).toEqual(developerIcon);
+});
+
+it.each(['positive', 'warning', 'negative'] as const)(
+  'should render cell with %s status',
+  (status) => {
+    const columns: Column<TestDataType>[] = [
+      {
+        Header: 'Header name',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+            cellRenderer: (props) => {
+              return <DefaultCell {...props} status={status} />;
+            },
+          },
+          {
+            id: 'description',
+            Header: 'description',
+            accessor: 'description',
+          },
+        ],
+      },
+    ];
+    const { container } = renderComponent({
+      columns,
+    });
+
+    const row = container.querySelector(
+      '.iui-table-body .iui-table-row',
+    ) as HTMLDivElement;
+    const cells = row.querySelectorAll('.iui-table-cell');
+
+    expect(cells[0]).toHaveAttribute('data-iui-status', status);
+    expect(cells[1]).not.toHaveAttribute('data-iui-status', status);
+  },
+);
+
+it.each(['positive', 'warning', 'negative'] as const)(
+  'should render row with %s status',
+  (rowStatus) => {
+    const { container } = renderComponent({
+      rowProps: (row) => {
+        return {
+          status: row.index === 0 ? rowStatus : undefined,
+        };
+      },
+    });
+
+    const tableBody = container.querySelector(
+      '.iui-table-body',
+    ) as HTMLDivElement;
+    const rows = tableBody.querySelectorAll('.iui-table-row');
+    expect(rows[0]).toHaveAttribute('data-iui-status', rowStatus);
+    expect(rows[1]).not.toHaveAttribute('data-iui-status', rowStatus);
+  },
+);
 
 it('should navigate through table sorting with the keyboard', async () => {
   const onSort = jest.fn();

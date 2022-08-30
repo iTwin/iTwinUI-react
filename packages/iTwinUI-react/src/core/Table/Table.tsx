@@ -191,7 +191,11 @@ export type TableProps<
    * Function that should return custom props passed to the each row.
    * Must be memoized.
    */
-  rowProps?: (row: Row<T>) => React.ComponentPropsWithRef<'div'>;
+  rowProps?: (
+    row: Row<T>,
+  ) => React.ComponentPropsWithRef<'div'> & {
+    status?: 'positive' | 'warning' | 'negative';
+  };
   /**
    * Modify the density of the table (adjusts the row height).
    * @default 'default'
@@ -809,15 +813,7 @@ export const Table = <
                               />
                             )}
                             {showSortButton(column) && (
-                              <div
-                                className='iui-table-cell-end-icon'
-                                tabIndex={0}
-                                onKeyDown={(e) => {
-                                  if (e.key == 'Enter') {
-                                    column.toggleSortBy();
-                                  }
-                                }}
-                              >
+                              <div className='iui-table-cell-end-icon'>
                                 {column.isSortedDesc ||
                                 (!column.isSorted && column.sortDescFirst) ? (
                                   <SvgSortDown
