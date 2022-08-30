@@ -92,6 +92,7 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
       ),
       'aria-selected': row.isSelected || undefined,
       'aria-disabled': isDisabled || undefined,
+      'data-iui-status': status,
     },
   };
 
