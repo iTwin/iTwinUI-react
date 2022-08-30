@@ -19,6 +19,19 @@ const getContainerRect = (
   };
 };
 
+const parseTranslate = (ref: React.RefObject<HTMLElement>) => {
+  if (!ref.current) {
+    return [];
+  }
+
+  const transformValue = getComputedStyle(ref.current).getPropertyValue(
+    'transform',
+  );
+  const matrix = new DOMMatrix(transformValue);
+
+  return [matrix.m41, matrix.m42];
+};
+
 /**
  * Helper hook that handles elements drag logic.
  * @param elementRef Element ref that is draggable.
@@ -40,12 +53,14 @@ export const useDragAndDrop = (
 
   const adjustTransform = React.useCallback(() => {
     containerRectRef.current = getContainerRect(containerRef);
-    if (
-      !elementRef.current ||
-      translateX.current == null ||
-      translateY.current == null
-    ) {
+    if (!elementRef.current) {
       return;
+    }
+
+    if (translateX.current == null || translateY.current == null) {
+      const [x, y] = parseTranslate(elementRef);
+      translateX.current = x;
+      translateY.current = y;
     }
 
     const {
@@ -75,7 +90,7 @@ export const useDragAndDrop = (
     translateY.current = newTranslateY;
 
     elementRef.current.style.transform = `translate(${newTranslateX}px, ${newTranslateY}px)`;
-  }, [containerRectRef, containerRef, elementRef]);
+  }, [containerRef, elementRef]);
 
   const [resizeRef, resizeObserver] = useResizeObserver(adjustTransform);
   resizeRef(containerRef?.current);
@@ -119,13 +134,10 @@ export const useDragAndDrop = (
       if (!elementRef.current || e.button !== 0) {
         return;
       }
-      const transformValue = getComputedStyle(
-        elementRef.current,
-      ).getPropertyValue('transform');
-      const matrix = new DOMMatrix(transformValue);
 
-      translateX.current = matrix.m41;
-      translateY.current = matrix.m42;
+      const [x, y] = parseTranslate(elementRef);
+      translateX.current = x;
+      translateY.current = y;
 
       grabOffsetX.current = e.clientX - translateX.current;
       grabOffsetY.current = e.clientY - translateY.current;

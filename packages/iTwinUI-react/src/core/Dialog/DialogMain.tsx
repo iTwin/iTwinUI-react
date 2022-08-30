@@ -59,7 +59,7 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
       preventDocumentScroll = dialogContext.preventDocumentScroll,
       onKeyDown,
       isDraggable = dialogContext.isDraggable,
-      style,
+      style: propStyle,
       ...rest
     } = props;
 
@@ -124,6 +124,20 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
       [isDraggable, onPointerDown],
     );
 
+    const [style, setStyle] = React.useState<React.CSSProperties>();
+    React.useEffect(() => {
+      if (!isDraggable) {
+        return;
+      }
+      const rect = dialogRef.current?.getBoundingClientRect();
+      setStyle({
+        width: rect?.width,
+        height: rect?.height,
+        left: dialogRef.current?.offsetLeft,
+        top: dialogRef.current?.offsetTop,
+      });
+    }, [isDraggable, isOpen]);
+
     const content = (
       <div
         className={cx(
@@ -143,6 +157,7 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
         style={{
           transform,
           ...style,
+          ...propStyle,
         }}
         {...rest}
       >
