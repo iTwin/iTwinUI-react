@@ -20,12 +20,12 @@ export default () => {
       thumbnail={<SvgPlaceholder />}
       moreOptions={[<MenuItem>Item 1</MenuItem>, <MenuItem>Item 2</MenuItem>]}
       leftIcon={
-        <IconButton>
+        <IconButton styleType='borderless'>
           <SvgInfo />
         </IconButton>
       }
       rightIcon={
-        <IconButton>
+        <IconButton styleType='borderless'>
           <SvgStar />
         </IconButton>
       }

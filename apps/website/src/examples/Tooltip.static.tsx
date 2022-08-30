@@ -6,8 +6,8 @@ import * as React from 'react';
 
 export default () => {
   return (
-    <div className={'iui-tooltip'} role='tooltip' id={'tooltip-example'}>
-      I am tooltip
+    <div className='iui-tooltip' role='tooltip'>
+      I am a tooltip
     </div>
   );
 };
