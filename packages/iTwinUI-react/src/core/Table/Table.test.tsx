@@ -3800,25 +3800,12 @@ it('should make column sticky and then non-sticky after dragging sticky column a
 
 it('should navigate through table sorting with the keyboard', async () => {
   const onSort = jest.fn();
-  const mockedColumns = [
-    {
-      Header: 'Header name',
-      columns: [
-        {
-          id: 'name',
-          Header: 'Name',
-          accessor: 'name',
-        },
-      ],
-    },
-  ];
   renderComponent({
-    columns: mockedColumns,
     isSortable: true,
     onSort,
   });
 
-  await userEvent.tab();
+  await userEvent.tab(); // tab to sort icon button
   await userEvent.keyboard('{Enter}');
   expect(onSort).toHaveBeenCalled();
 });
@@ -3844,10 +3831,10 @@ it('should navigate through table filtering with the keyboard', async () => {
     onFilter,
   });
 
-  await userEvent.tab();
+  await userEvent.tab(); // tab to filter icon button
   await userEvent.keyboard('{Enter}');
   await userEvent.keyboard('2');
-  await userEvent.tab();
+  await userEvent.tab(); // tab to filter menu 'Filter' submit button
   await userEvent.keyboard('{Enter}');
   expect(onFilter).toHaveBeenCalledWith(
     [{ fieldType: 'text', filterType: 'text', id: 'name', value: '2' }],
