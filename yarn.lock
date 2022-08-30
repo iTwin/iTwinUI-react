@@ -10,22 +10,24 @@
     "@jridgewell/gen-mapping" "^0.1.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@astrojs/compiler@^0.19.0":
-  version "0.19.0"
-  resolved "https://registry.yarnpkg.com/@astrojs/compiler/-/compiler-0.19.0.tgz#ea25fea3ba59ce7734c2bcc65a5fd1e372329943"
-  integrity sha512-8nvyxZTfCXLyRmYfTttpJT6EPhfBRg0/q4J/Jj3/pNPLzp+vs05ZdktsY6QxAREaOMAnNEtSqcrB4S5DsXOfRg==
-
 "@astrojs/compiler@^0.23.3":
   version "0.23.3"
   resolved "https://registry.yarnpkg.com/@astrojs/compiler/-/compiler-0.23.3.tgz#25af8efda9c92dbc8745341c3a2544caa4c689dc"
   integrity sha512-eBWo0d3DoRDeg2Di1/5YJtOXh5eGFSjJMp1wVoVfoITHR4egdUGgsrDHZTzj0a25M/S9W5S6SpXCyNWcqi8jOA==
 
-"@astrojs/language-server@^0.20.0":
-  version "0.20.0"
-  resolved "https://registry.yarnpkg.com/@astrojs/language-server/-/language-server-0.20.0.tgz#16f9d013dfe711c3a846f56a89dc428177461838"
-  integrity sha512-A2zWnlZLcDtHISX18+f91pzTfz0SsZVvbcIDPQAVHk5ErpvdGEhJSEHhqY+wif5OXP37l+CVLVSnGzdmiXl5wg==
+"@astrojs/compiler@^0.23.4":
+  version "0.23.4"
+  resolved "https://registry.yarnpkg.com/@astrojs/compiler/-/compiler-0.23.4.tgz#e22d1436876d0477e62be38063263d2851c57403"
+  integrity sha512-vNZIa5Tf5nOqBEGJvM6xyYBnGcz4MAp+bBPnyVI0UYRjsIWlP7RgMdCpRV0OOh5kgh00BoAypGv27kcoJCMVfA==
+
+"@astrojs/language-server@^0.23.0":
+  version "0.23.0"
+  resolved "https://registry.yarnpkg.com/@astrojs/language-server/-/language-server-0.23.0.tgz#01ce8968494097a7506633f606bb6569d52b4819"
+  integrity sha512-vWQOPipssNUivHIytKX9Zw7TSYVIb1sItDEuZvaWIcim8Q3n7sbigaPpakeVhNh8EbstMMuYswUffJuUemueAw==
   dependencies:
     "@vscode/emmet-helper" "^2.8.4"
+    prettier "^2.7.1"
+    prettier-plugin-astro "^0.5.3"
     source-map "^0.7.3"
     typescript "~4.6.4"
     vscode-css-languageservice "^6.0.1"
@@ -36,10 +38,10 @@
     vscode-languageserver-types "^3.17.1"
     vscode-uri "^3.0.3"
 
-"@astrojs/markdown-remark@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@astrojs/markdown-remark/-/markdown-remark-1.0.0.tgz#14adf79e02e744ee8a1342fa89aa858ccc6160d2"
-  integrity sha512-yQIMvVjSMs4ZQHffT2nBgXiqVHKOwIgd6xC0o5XkcbXxyspxjRGpHyiAp/WKEdKsUeXwjVuL8b+6lhAYByd+lw==
+"@astrojs/markdown-remark@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@astrojs/markdown-remark/-/markdown-remark-1.1.1.tgz#8d07db28ab15a17f54fd2e260052216731932683"
+  integrity sha512-eOvrqejecgeRLUXOdBfb0VoMppe7J80TlazaDnu4tVDdTG4nyuspO0CTPr9nzt6rbW5iLIh4KEUUuOk+z8n8uQ==
   dependencies:
     "@astrojs/micromark-extension-mdx-jsx" "^1.0.3"
     "@astrojs/prism" "^1.0.0"
@@ -57,18 +59,18 @@
     remark-parse "^10.0.1"
     remark-rehype "^10.1.0"
     remark-smartypants "^2.0.0"
-    shiki "^0.10.1"
+    shiki "^0.11.1"
     unified "^10.1.2"
     unist-util-map "^3.1.1"
     unist-util-visit "^4.1.0"
     vfile "^5.3.2"
 
-"@astrojs/mdx@^0.8.1":
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/@astrojs/mdx/-/mdx-0.8.1.tgz#02c3cf47880af9a485342725f7e4690ad05ce6b1"
-  integrity sha512-jYZOfTVPW+Zfx6XCVr3yx/pFgUAwUgv9LMJ9MBkHmbzSEKmS9oHTkoiuvNvHmBzcnz9BQfXJ9wlFjvPB9eTEFg==
+"@astrojs/mdx@^0.10.3":
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/@astrojs/mdx/-/mdx-0.10.3.tgz#e74adf82d58ec60efc0862839c3c5208f23a240b"
+  integrity sha512-bZ74xKJ1eqH9shd4TcpgS4Rn2ycQvXwBXkgKSABvFHQhT16vufuBo0M9vmLDdHKnDupYphCj1aBilmN9VeLugA==
   dependencies:
-    "@astrojs/prism" "^1.0.0"
+    "@astrojs/prism" "^1.0.1"
     "@mdx-js/mdx" "^2.1.2"
     "@mdx-js/rollup" "^2.1.1"
     acorn "^8.8.0"
@@ -78,9 +80,8 @@
     rehype-raw "^6.1.1"
     remark-frontmatter "^4.0.1"
     remark-gfm "^3.0.1"
-    remark-shiki-twoslash "^3.1.0"
     remark-smartypants "^2.0.0"
-    shiki "^0.10.1"
+    shiki "^0.11.1"
     unist-util-visit "^4.1.0"
     vfile "^5.3.2"
 
@@ -106,10 +107,17 @@
   dependencies:
     prismjs "^1.28.0"
 
-"@astrojs/react@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@astrojs/react/-/react-1.0.0.tgz#44f270e45a1608f623275c89d52fd1617315e2bf"
-  integrity sha512-CHJQ1dwjpYOTunioi02yWKdSxN/YeLP1vI70Xq+AqhcTmcmdbCMwbtYOEVwIK1k/AJmLItsJMcrsTfRoQU+Z+Q==
+"@astrojs/prism@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@astrojs/prism/-/prism-1.0.1.tgz#a7a778f9e3814885f587d8074a15452947ab4252"
+  integrity sha512-HxEFslvbv+cfOs51q/C7aMVFuW3EAGg0d1xXU/0e/QeScDzfrp5Ra4SOb8mV082SgENVjtVvet4zR84t3at4VQ==
+  dependencies:
+    prismjs "^1.28.0"
+
+"@astrojs/react@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@astrojs/react/-/react-1.1.1.tgz#cbd01a7ef32418b9fe58a00f5e615f1abe5420a4"
+  integrity sha512-IxER8rq6CFF5c5mmpNv1ZsF0bg/huOaKjtwcvdnPAjcZIatnMjLbRQ0deoYFHJSgYpgMt6Rz1i0g4oEsr1Lzfw==
   dependencies:
     "@babel/core" ">=7.0.0-0 <8.0.0"
     "@babel/plugin-transform-react-jsx" "^7.17.12"
@@ -1532,7 +1540,7 @@
     "@codemirror/state" "^0.19.0"
     "@codemirror/view" "^0.19.23"
 
-"@codemirror/highlight@^0.19.6", "@codemirror/highlight@^0.19.7":
+"@codemirror/highlight@^0.19.0", "@codemirror/highlight@^0.19.6", "@codemirror/highlight@^0.19.7":
   version "0.19.8"
   resolved "https://registry.yarnpkg.com/@codemirror/highlight/-/highlight-0.19.8.tgz#a95aee8ae4389b01f820aa79c48f7b4388087d92"
   integrity sha512-v/lzuHjrYR8MN2mEJcUD6fHSTXXli9C1XGYpr+ElV6fLBIUhMTNKR3qThp611xuWfXfwDxeL7ppcbkM/MzPV3A==
@@ -1563,7 +1571,7 @@
     "@codemirror/state" "^0.19.0"
     "@lezer/css" "^0.15.2"
 
-"@codemirror/lang-html@^0.19.4":
+"@codemirror/lang-html@^0.19.0", "@codemirror/lang-html@^0.19.4":
   version "0.19.4"
   resolved "https://registry.yarnpkg.com/@codemirror/lang-html/-/lang-html-0.19.4.tgz#e6eec28462f18842a0e108732a214a7416b5e333"
   integrity sha512-GpiEikNuCBeFnS+/TJSeanwqaOfNm8Kkp9WpVNEPZCLyW1mAMCuFJu/3xlWYeWc778Hc3vJqGn3bn+cLNubgCA==
@@ -1589,6 +1597,19 @@
     "@codemirror/state" "^0.19.0"
     "@codemirror/view" "^0.19.0"
     "@lezer/javascript" "^0.15.1"
+
+"@codemirror/lang-markdown@^0.19.3":
+  version "0.19.6"
+  resolved "https://registry.yarnpkg.com/@codemirror/lang-markdown/-/lang-markdown-0.19.6.tgz#761301d276fcfbdf88440f0333785efd71c2a4f5"
+  integrity sha512-ojoHeLgv1Rfu0GNGsU0bCtXAIp5dy4VKjndHScITQdlCkS/+SAIfuoeowEx+nMAQwTxI+/9fQZ3xdZVznGFYug==
+  dependencies:
+    "@codemirror/highlight" "^0.19.0"
+    "@codemirror/lang-html" "^0.19.0"
+    "@codemirror/language" "^0.19.0"
+    "@codemirror/state" "^0.19.3"
+    "@codemirror/view" "^0.19.0"
+    "@lezer/common" "^0.15.0"
+    "@lezer/markdown" "^0.15.0"
 
 "@codemirror/language@^0.19.0", "@codemirror/language@^0.19.7":
   version "0.19.10"
@@ -1670,18 +1691,18 @@
     style-mod "^4.0.0"
     w3c-keyname "^2.2.4"
 
-"@codesandbox/sandpack-client@^1.2.2":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@codesandbox/sandpack-client/-/sandpack-client-1.2.2.tgz#e0b79c52dcbc0b622f93527dc9ff3b163467e14a"
-  integrity sha512-sTPQVS7mzpEm2ttpHFFSqkGd1A1tBZn7UTZwIjBNCXKHywrt9o7MyrdhUuS03J7MyXN+HSJ55Vz+OGD1Wv4ejQ==
+"@codesandbox/sandpack-client@^1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@codesandbox/sandpack-client/-/sandpack-client-1.5.4.tgz#92c0fdfb371bf52f945ca8c707187d9e94928f80"
+  integrity sha512-NK3PSTbfiVkbx++WzjpAkIfvc1tcixBOUNmbnSLui4qJ+PzQd7tXpDmrHgLm4Do3Gyw/cdljNfxXhTC9w04Q0g==
   dependencies:
     codesandbox-import-utils "^1.2.3"
     lodash.isequal "^4.5.0"
 
-"@codesandbox/sandpack-react@^1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@codesandbox/sandpack-react/-/sandpack-react-1.2.4.tgz#8c7bb085c8ed7201bea9368eacdabee8477cb698"
-  integrity sha512-Izfg4MxfIwWa2CLK2Pj7s+Gtf700oBb7Tkhqls8mO55E/cfsA30alK81FxLjjey5jOIqqK7Bqf1zwtMpw5sm+Q==
+"@codesandbox/sandpack-react@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@codesandbox/sandpack-react/-/sandpack-react-1.6.0.tgz#7ec52b0c530a84e6b8cd2832cd37c5fa19314410"
+  integrity sha512-vTTOGSGp5IpzpNey+aKZFr216l5boWdlZI9j2PpdghFUQS9Z3IwwLgYNIke26lGZ5BVEoqSRLH5JwWBmicxUfQ==
   dependencies:
     "@code-hike/classer" "^0.0.0-aa6efee"
     "@codemirror/closebrackets" "^0.19.0"
@@ -1693,11 +1714,12 @@
     "@codemirror/lang-css" "^0.19.3"
     "@codemirror/lang-html" "^0.19.4"
     "@codemirror/lang-javascript" "^0.19.3"
+    "@codemirror/lang-markdown" "^0.19.3"
     "@codemirror/language" "^0.19.7"
     "@codemirror/matchbrackets" "^0.19.3"
     "@codemirror/state" "^0.19.6"
     "@codemirror/view" "^0.19.32"
-    "@codesandbox/sandpack-client" "^1.2.2"
+    "@codesandbox/sandpack-client" "^1.5.4"
     "@react-hook/intersection-observer" "^3.1.1"
     "@stitches/core" "^1.2.6"
     codesandbox-import-util-types "^2.2.3"
@@ -1706,10 +1728,10 @@
     react-devtools-inline "4.4.0"
     react-is "^17.0.2"
 
-"@codesandbox/sandpack-themes@^1.3.4":
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/@codesandbox/sandpack-themes/-/sandpack-themes-1.3.4.tgz#4715f1113667b17f52b791ee000b18ccc70c4830"
-  integrity sha512-Ou9/nflspj65hUiKoDdo9SIFb62rHghwdJgTp+h1zTmAcDrgJGxFMCzMqa/Gnix8YrO4tMlPg6fIDnld1pcdFw==
+"@codesandbox/sandpack-themes@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@codesandbox/sandpack-themes/-/sandpack-themes-1.6.0.tgz#8d080d8eeaa0f00bc95dc4065e23cd19ed035b0a"
+  integrity sha512-1MJvFwZSGMzdeEYOLfmw9ILsCVmzBDGmjFNHIC/i8T7jRH1f9pt0b/HnU61jxqSmeSyc5YhbDTO7qQiSL1yfRA==
 
 "@colors/colors@1.5.0":
   version "1.5.0"
@@ -2282,6 +2304,13 @@
   version "0.15.8"
   resolved "https://registry.yarnpkg.com/@lezer/lr/-/lr-0.15.8.tgz#1564a911e62b0a0f75ca63794a6aa8c5dc63db21"
   integrity sha512-bM6oE6VQZ6hIFxDNKk8bKPa14hqFrV07J/vHGOeiAbJReIaQXmkVb6xQu4MR+JBTLa5arGRyAAjJe1qaQt3Uvg==
+  dependencies:
+    "@lezer/common" "^0.15.0"
+
+"@lezer/markdown@^0.15.0":
+  version "0.15.6"
+  resolved "https://registry.yarnpkg.com/@lezer/markdown/-/markdown-0.15.6.tgz#2a826a507399b32176efdc35554397f05227d2aa"
+  integrity sha512-1XXLa4q0ZthryUEfO47ipvZHxNb+sCKoQIMM9dKs5vXZOBbgF2Vah/GL3g26BFIAEc2uCv4VQnI+lSrv58BT3g==
   dependencies:
     "@lezer/common" "^0.15.0"
 
@@ -4134,29 +4163,6 @@
     "@typescript-eslint/types" "5.26.0"
     eslint-visitor-keys "^3.3.0"
 
-"@typescript/twoslash@3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@typescript/twoslash/-/twoslash-3.1.0.tgz#20b4d4bb58729681ff7f4b187af98757ea8723d4"
-  integrity sha512-kTwMUQ8xtAZaC4wb2XuLkPqFVBj2dNBueMQ89NWEuw87k2nLBbuafeG5cob/QEr6YduxIdTVUjix0MtC7mPlmg==
-  dependencies:
-    "@typescript/vfs" "1.3.5"
-    debug "^4.1.1"
-    lz-string "^1.4.4"
-
-"@typescript/vfs@1.3.4":
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/@typescript/vfs/-/vfs-1.3.4.tgz#07f89d2114f6e29255d589395ed7f3b4af8a00c2"
-  integrity sha512-RbyJiaAGQPIcAGWFa3jAXSuAexU4BFiDRF1g3hy7LmRqfNpYlTQWGXjcrOaVZjJ8YkkpuwG0FcsYvtWQpd9igQ==
-  dependencies:
-    debug "^4.1.1"
-
-"@typescript/vfs@1.3.5":
-  version "1.3.5"
-  resolved "https://registry.yarnpkg.com/@typescript/vfs/-/vfs-1.3.5.tgz#801e3c97b5beca4ff5b8763299ca5fd605b862b8"
-  integrity sha512-pI8Saqjupf9MfLw7w2+og+fmb0fZS0J6vsKXXrp4/PDXEFvntgzXmChCXC/KefZZS0YGS6AT8e0hGAJcTsdJlg==
-  dependencies:
-    debug "^4.1.1"
-
 "@vitejs/plugin-react@^1.0.7", "@vitejs/plugin-react@^1.0.8":
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/@vitejs/plugin-react/-/plugin-react-1.3.2.tgz#2fcf0b6ce9bcdcd4cec5c760c199779d5657ece1"
@@ -4891,14 +4897,14 @@ astring@^1.6.0:
   resolved "https://registry.yarnpkg.com/astring/-/astring-1.8.3.tgz#1a0ae738c7cc558f8e5ddc8e3120636f5cebcb85"
   integrity sha512-sRpyiNrx2dEYIMmUXprS8nlpRg2Drs8m9ElX9vVEXaCB4XEAJhKfs7IcX0IwShjuOAjLR6wzIrgoptz1n19i1A==
 
-astro@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/astro/-/astro-1.0.6.tgz#9978c31d7d8359f951a7800e737dddfdfdba2641"
-  integrity sha512-QAkdkzP3PbauiO4YnOgVTWY6z26heKruoXW9TnN8Bbmwtf7DUFIchi6CFSAVYSONX8XtRnj+p6fCkk06OWfJ4w==
+astro@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/astro/-/astro-1.1.2.tgz#e89cb7107d713722fdfe4048e0c0f641ec9c1c89"
+  integrity sha512-btawnJ+MwkJbjLO0uSMrlYl71jsa6ljyXEXeeFitp9aqRo0sqH7JdTE0nh7MWsVMePXEvcJ88WOkEhW/FpRu/Q==
   dependencies:
-    "@astrojs/compiler" "^0.23.3"
-    "@astrojs/language-server" "^0.20.0"
-    "@astrojs/markdown-remark" "^1.0.0"
+    "@astrojs/compiler" "^0.23.4"
+    "@astrojs/language-server" "^0.23.0"
+    "@astrojs/markdown-remark" "^1.1.1"
     "@astrojs/telemetry" "^1.0.0"
     "@astrojs/webapi" "^1.0.0"
     "@babel/core" "^7.18.2"
@@ -4937,9 +4943,9 @@ astro@^1.0.6:
     recast "^0.20.5"
     rehype "^12.0.1"
     resolve "^1.22.0"
-    rollup "^2.75.6"
+    rollup "~2.77.0"
     semver "^7.3.7"
-    shiki "^0.10.1"
+    shiki "^0.11.1"
     sirv "^2.0.2"
     slash "^4.0.0"
     string-width "^5.1.2"
@@ -4948,7 +4954,7 @@ astro@^1.0.6:
     tsconfig-resolver "^3.0.1"
     unist-util-visit "^4.1.0"
     vfile "^5.3.2"
-    vite "3.0.5"
+    vite "3.0.9"
     yargs-parser "^21.0.1"
     zod "^3.17.3"
 
@@ -8508,11 +8514,6 @@ fd-slicer@~1.1.0:
   integrity sha1-JcfInLH5B3+IkbvmHY85Dq4lbx4=
   dependencies:
     pend "~1.2.0"
-
-fenceparser@^1.1.0:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/fenceparser/-/fenceparser-1.1.1.tgz#e10a5f12a54884d4f14edb0f7a52a0edc58fa667"
-  integrity sha512-VdkTsK7GWLT0VWMK5S5WTAPn61wJ98WPFwJiRHumhg4ESNUO/tnkU8bzzzc62o6Uk1SVhuZFLnakmDA4SGV7wA==
 
 fetch-blob@^3.1.2, fetch-blob@^3.1.4:
   version "3.1.5"
@@ -13648,12 +13649,12 @@ prelude-ls@~1.1.2:
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
   integrity sha1-IZMqVJ9eUv/ZqCf1cOBL5iqX2lQ=
 
-prettier-plugin-astro@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-astro/-/prettier-plugin-astro-0.4.1.tgz#fa21974259d815e0dabbe3b75bf6297a5b9b810b"
-  integrity sha512-AvYyg4WDnhmqH5S85EFgJAMU20p1lLypVt4sn4tuGW+lnPfWr70SaHZD9gevx20o3FnALgZxDu1enFSkN/MSwQ==
+prettier-plugin-astro@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-astro/-/prettier-plugin-astro-0.5.3.tgz#6e2f21979ab1bd905f63a816b829aeb2a3698927"
+  integrity sha512-g4uJ/7k1rJeIWBifeBgTqzgV5gmMTG+lOmOvUZvtIh1R91aqa+yYMzbysIlsJKRaRyWefejrOpvpIuEePBDAyw==
   dependencies:
-    "@astrojs/compiler" "^0.19.0"
+    "@astrojs/compiler" "^0.23.3"
     prettier "^2.7.1"
     sass-formatter "^0.7.2"
     synckit "^0.7.0"
@@ -14464,21 +14465,6 @@ remark-rehype@^10.0.0, remark-rehype@^10.1.0:
     mdast-util-to-hast "^12.1.0"
     unified "^10.0.0"
 
-remark-shiki-twoslash@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/remark-shiki-twoslash/-/remark-shiki-twoslash-3.1.0.tgz#b5e58eec9f97458ade1df73cb96566d031cc75bd"
-  integrity sha512-6LqSqVtHQR4S0DKfdQ2/ePn9loTKUtpyopYvwk8johjDTeUW5MkaLQuZHlWNkkST/4aMbz6aTkstIcwfwcHpXg==
-  dependencies:
-    "@typescript/twoslash" "3.1.0"
-    "@typescript/vfs" "1.3.4"
-    fenceparser "^1.1.0"
-    regenerator-runtime "^0.13.7"
-    shiki "0.10.1"
-    shiki-twoslash "3.1.0"
-    tslib "2.1.0"
-    typescript ">3"
-    unist-util-visit "^2.0.0"
-
 remark-slug@^6.0.0:
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/remark-slug/-/remark-slug-6.1.0.tgz#0503268d5f0c4ecb1f33315c00465ccdd97923ce"
@@ -14724,17 +14710,17 @@ rollup-pluginutils@^2.4.1:
   dependencies:
     estree-walker "^0.6.1"
 
+"rollup@>=2.75.6 <2.77.0 || ~2.77.0", rollup@~2.77.0:
+  version "2.77.3"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.77.3.tgz#8f00418d3a2740036e15deb653bed1a90ee0cc12"
+  integrity sha512-/qxNTG7FbmefJWoeeYJFbHehJ2HNWnjkAFRKzWN/45eNBBF/r8lo992CwcJXEzyVxs5FmfId+vTSTQDb+bxA+g==
+  optionalDependencies:
+    fsevents "~2.3.2"
+
 rollup@^2.59.0:
   version "2.74.1"
   resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.74.1.tgz#4fba0ff1c312cc4ee82691b154eee69a0d01929f"
   integrity sha512-K2zW7kV8Voua5eGkbnBtWYfMIhYhT9Pel2uhBk2WO5eMee161nPze/XRfvEQPFYz7KgrCCnmh2Wy0AMFLGGmMA==
-  optionalDependencies:
-    fsevents "~2.3.2"
-
-rollup@^2.75.6:
-  version "2.75.7"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.75.7.tgz#221ff11887ae271e37dcc649ba32ce1590aaa0b9"
-  integrity sha512-VSE1iy0eaAYNCxEXaleThdFXqZJ42qDBatAwrfnPlENEZ8erQ+0LYX4JXOLPceWfZpV1VtZwZ3dFCuOZiSyFtQ==
   optionalDependencies:
     fsevents "~2.3.2"
 
@@ -15083,24 +15069,14 @@ shebang-regex@^3.0.0:
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-3.0.0.tgz#ae16f1644d873ecad843b0307b143362d4c42172"
   integrity sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==
 
-shiki-twoslash@3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/shiki-twoslash/-/shiki-twoslash-3.1.0.tgz#818aaa15e83e0f34325dd56a991f7023f7e8e6db"
-  integrity sha512-uDqrTutOIZzyHbo103GsK7Vvc10saK1XCCivnOQ1NHJzgp3FBilEpftGeVzVSMOJs+JyhI7whkvhXV7kXQ5zCg==
-  dependencies:
-    "@typescript/twoslash" "3.1.0"
-    "@typescript/vfs" "1.3.4"
-    shiki "0.10.1"
-    typescript ">3"
-
-shiki@0.10.1, shiki@^0.10.1:
-  version "0.10.1"
-  resolved "https://registry.yarnpkg.com/shiki/-/shiki-0.10.1.tgz#6f9a16205a823b56c072d0f1a0bcd0f2646bef14"
-  integrity sha512-VsY7QJVzU51j5o1+DguUd+6vmCmZ5v/6gYu4vyYAhzjuNQU6P/vmSy4uQaOhvje031qQMiW0d2BwgMH52vqMng==
+shiki@^0.11.1:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/shiki/-/shiki-0.11.1.tgz#df0f719e7ab592c484d8b73ec10e215a503ab8cc"
+  integrity sha512-EugY9VASFuDqOexOgXR18ZV+TbFrQHeCpEYaXamO+SZlsnT/2LxuLBX25GGtIrwaEVFXUAbUQ601SWE2rMwWHA==
   dependencies:
     jsonc-parser "^3.0.0"
     vscode-oniguruma "^1.6.1"
-    vscode-textmate "5.2.0"
+    vscode-textmate "^6.0.0"
 
 side-channel@^1.0.4:
   version "1.0.4"
@@ -16148,11 +16124,6 @@ tsconfig-resolver@^3.0.1:
     strip-bom "^4.0.0"
     type-fest "^0.13.1"
 
-tslib@2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.1.0.tgz#da60860f1c2ecaa5703ab7d39bc05b6bf988b97a"
-  integrity sha512-hcVC3wYEziELGGmEEXue7D75zbwIIVUMWAVbHItGPx0ziyXxrOMQx4rQEVEV45Ut/1IotuEvwqPopzIOkDMf0A==
-
 tslib@^1.8.1, tslib@^1.9.0:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
@@ -16356,11 +16327,6 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
-
-typescript@>3:
-  version "4.7.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.7.4.tgz#1a88596d1cf47d59507a1bcdfb5b9dfe4d488235"
-  integrity sha512-C0WQT0gezHuw6AdY1M2jxUO83Rjf0HP7Sk1DtXj6j1EwkQNZrHAg2XPWlq62oqEhYvONq5pkC2Y9oPljWToLmQ==
 
 typescript@^4.4.3, typescript@^4.5.4, typescript@^4.6.3:
   version "4.7.2"
@@ -16886,15 +16852,15 @@ vite-plugin-linaria@^1.0.0:
     "@linaria/shaker" "^3.0.0-beta.1"
     "@rollup/pluginutils" "^4.1.0"
 
-vite@3.0.5:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-3.0.5.tgz#56b8d52e00bbbd5f21d02f0868dc613b3246ecc6"
-  integrity sha512-bRvrt9Tw8EGW4jj64aYFTnVg134E8hgDxyl/eEHnxiGqYk7/pTPss6CWlurqPOUzqvEoZkZ58Ws+Iu8MB87iMA==
+vite@3.0.9:
+  version "3.0.9"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-3.0.9.tgz#45fac22c2a5290a970f23d66c1aef56a04be8a30"
+  integrity sha512-waYABTM+G6DBTCpYAxvevpG50UOlZuynR0ckTK5PawNVt7ebX6X7wNXHaGIO6wYYFXSM7/WcuFuO2QzhBB6aMw==
   dependencies:
     esbuild "^0.14.47"
     postcss "^8.4.16"
     resolve "^1.22.1"
-    rollup "^2.75.6"
+    rollup ">=2.75.6 <2.77.0 || ~2.77.0"
   optionalDependencies:
     fsevents "~2.3.2"
 
@@ -16980,10 +16946,10 @@ vscode-oniguruma@^1.6.1:
   resolved "https://registry.yarnpkg.com/vscode-oniguruma/-/vscode-oniguruma-1.6.2.tgz#aeb9771a2f1dbfc9083c8a7fdd9cccaa3f386607"
   integrity sha512-KH8+KKov5eS/9WhofZR8M8dMHWN2gTxjMsG4jd04YhpbPR91fUj7rYQ2/XjeHCJWbg7X++ApRIU9NUwM2vTvLA==
 
-vscode-textmate@5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/vscode-textmate/-/vscode-textmate-5.2.0.tgz#01f01760a391e8222fe4f33fbccbd1ad71aed74e"
-  integrity sha512-Uw5ooOQxRASHgu6C7GVvUxisKXfSgW4oFlO+aa+PAkgmH89O3CXxEEzNRNtHSqtXFTl0nAC1uYj0GMSH27uwtQ==
+vscode-textmate@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/vscode-textmate/-/vscode-textmate-6.0.0.tgz#a3777197235036814ac9a92451492f2748589210"
+  integrity sha512-gu73tuZfJgu+mvCSy4UZwd2JXykjK9zAZsfmDeut5dx/1a7FeTk0XwJsSuqQn+cuMCGVbIBfl+s53X4T19DnzQ==
 
 vscode-uri@^2.1.2:
   version "2.1.2"
