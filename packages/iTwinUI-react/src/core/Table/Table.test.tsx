@@ -3910,13 +3910,16 @@ it.each(['positive', 'warning', 'negative'] as const)(
 
 it('should navigate through table sorting with the keyboard', async () => {
   const onSort = jest.fn();
-  renderComponent({
+  const { container } = renderComponent({
     isSortable: true,
     onSort,
   });
-
-  await userEvent.tab(); // tab to sort icon button
-  await userEvent.keyboard('{Enter}');
+  const tabEvent = new KeyboardEvent('keypress', { keyCode: 9 });
+  const enterEvent = new KeyboardEvent('keypress', { keyCode: 13 });
+  container.dispatchEvent(tabEvent);
+  container.dispatchEvent(enterEvent);
+  // await userEvent.tab(); // tab to sort icon button
+  // await userEvent.keyboard('{Enter}');
   expect(onSort).toHaveBeenCalled();
 });
 
@@ -3941,9 +3944,26 @@ it('should navigate through table filtering with the keyboard', async () => {
     onFilter,
   });
 
+  // const tabEvent = new KeyboardEvent('keypress', { keyCode: 9 });
+  // const enterEvent = new KeyboardEvent('keypress', { keyCode: 13 });
+  const twoEvent = new KeyboardEvent('keydown', { code: '50' });
+  const twoEventUp = new KeyboardEvent('keyup', { code: '50' });
+  // container.dispatchEvent(tabEvent);
+  // container.dispatchEvent(enterEvent);
+  // container.dispatchEvent(twoEvent);
+  // container.dispatchEvent(tabEvent);
+  // container.dispatchEvent(enterEvent);
+  // expect(onFilter).toHaveBeenCalledWith(
+  //   [{ fieldType: 'text', filterType: 'text', id: 'name', value: '2' }],
+  //   expect.objectContaining({ filters: [{ id: 'name', value: '2' }] }),
+  // );
+
   await userEvent.tab(); // tab to filter icon button
   await userEvent.keyboard('{Enter}');
-  await userEvent.keyboard('2');
+  // await userEvent.keyboard('2');
+
+  document.dispatchEvent(twoEvent);
+  document.dispatchEvent(twoEventUp);
   await userEvent.tab(); // tab to filter menu 'Filter' submit button
   await userEvent.keyboard('{Enter}');
   expect(onFilter).toHaveBeenCalledWith(
