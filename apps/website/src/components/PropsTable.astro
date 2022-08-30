@@ -1,16 +1,35 @@
 ---
+import fs from 'fs';
 import { createRequire } from 'module';
-import { parse } from 'react-docgen-typescript';
+import { parse as docgenTsParse } from 'react-docgen-typescript';
+import {
+  parse as docgenParse,
+  handlers as docgenHandlers,
+  resolver as docgenResolver,
+  importers as docgenImporters,
+} from 'react-docgen';
+import type { DocumentationObject } from 'react-docgen/dist/Documentation';
 import snarkdown from 'snarkdown';
 
 export interface Props {
   path: string;
 }
 
-const path = createRequire(import.meta.url).resolve(Astro.props.path);
+const defaultHandlers = Object.values(docgenHandlers).map((handler) => handler);
+const defaultResolver = docgenResolver.findAllExportedComponentDefinitions;
+const defaultImporter = docgenImporters.makeFsImporter();
 
-const [docs] = parse(path);
-const props = docs.props;
+const path = createRequire(import.meta.url).resolve(Astro.props.path);
+const componentName = [...path.split('/')].pop().split('.')[0];
+const src = fs.readFileSync(path, 'utf8');
+
+const docgenResults = path.endsWith('.tsx')
+  ? (docgenParse(src, defaultResolver, defaultHandlers, {
+      importer: defaultImporter,
+    }) as DocumentationObject[])
+  : docgenTsParse(path);
+
+const { props } = [...docgenResults].find((docs) => docs['displayName'] === componentName);
 ---
 
 <div class='wrapper'>
@@ -23,14 +42,14 @@ const props = docs.props;
       </tr>
     </thead>
     <tbody>
-      {Object.values(props).map((value) => (
+      {Object.entries(props).map(([key, value]) => (
         <tr>
-          <td class='mono'>{value.name}</td>
+          <td class='mono'>{value.name || key}</td>
           <td>
             <div class='md' set:html={snarkdown(value.description)} />
-            <div class='types'>{value.type.name}</div>
+            <div class='types'>{value.type?.name || value.flowType.raw}</div>
           </td>
-          <td class='mono'>{value.defaultValue?.value ?? ''}</td>
+          <td class='mono'>{value.defaultValue?.value ?? value.defaultValue ?? ''}</td>
         </tr>
       ))}
     </tbody>

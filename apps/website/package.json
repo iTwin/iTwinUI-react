@@ -23,6 +23,7 @@
     "prettier-plugin-astro": "^0.5.3",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
+    "react-docgen": "^6.0.0-alpha.3",
     "react-docgen-typescript": "^2.2.2",
     "rehype-autolink-headings": "^6.1.1",
     "rehype-slug": "^5.0.1",
