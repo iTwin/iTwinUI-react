@@ -83,13 +83,14 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
       className: cx(
         'iui-table-row',
         {
-          'iui-row-expanded': row.isExpanded && subComponent,
+          'iui-table-row-expanded': row.isExpanded && subComponent,
           [`iui-${status}`]: !!status,
         },
         userRowProps?.className,
       ),
       'aria-selected': row.isSelected || undefined,
       'aria-disabled': isDisabled || undefined,
+      'data-iui-status': status,
     },
   };
 

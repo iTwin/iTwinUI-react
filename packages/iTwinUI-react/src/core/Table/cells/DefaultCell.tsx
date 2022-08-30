@@ -59,10 +59,9 @@ export const DefaultCell = <T extends Record<string, unknown>>(
     <div
       {...cellElementProps}
       {...rest}
-      className={cx(cellElementClassName, className, {
-        [`iui-${status}`]: !!status,
-      })}
+      className={cx(cellElementClassName, className)}
       aria-disabled={isDisabled?.(cellProps.row.original) || undefined}
+      data-iui-status={status}
       style={{ ...cellElementStyle, ...style }}
     >
       {startIcon && (

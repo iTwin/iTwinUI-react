@@ -622,35 +622,35 @@ it('should display correct sort icons for ascending first', async () => {
   });
   const {
     container: { firstChild: sortUpIcon },
-  } = render(<SvgSortUp className='iui-icon iui-sort' aria-hidden />);
+  } = render(<SvgSortUp className='iui-icon iui-table-sort' aria-hidden />);
   const {
     container: { firstChild: sortDownIcon },
-  } = render(<SvgSortDown className='iui-icon iui-sort' aria-hidden />);
+  } = render(<SvgSortDown className='iui-icon iui-table-sort' aria-hidden />);
   const nameHeader = container.querySelector(
-    '.iui-table-header .iui-cell',
+    '.iui-table-header .iui-table-cell',
   ) as HTMLDivElement;
   expect(nameHeader).toBeTruthy();
 
   // initial icon on column header
-  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+  expect(container.querySelector('.iui-table-cell-end-icon > svg')).toEqual(
     sortUpIcon,
   );
 
   // first click on column header
   await userEvent.click(nameHeader);
-  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+  expect(container.querySelector('.iui-table-cell-end-icon > svg')).toEqual(
     sortUpIcon,
   );
 
   // second click on column header
   await userEvent.click(nameHeader);
-  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+  expect(container.querySelector('.iui-table-cell-end-icon > svg')).toEqual(
     sortDownIcon,
   );
 
   // third click on column header to reset
   await userEvent.click(nameHeader);
-  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+  expect(container.querySelector('.iui-table-cell-end-icon > svg')).toEqual(
     sortUpIcon,
   );
 });
@@ -675,35 +675,35 @@ it('should display correct sort icons for descending first', async () => {
   });
   const {
     container: { firstChild: sortUpIcon },
-  } = render(<SvgSortUp className='iui-icon iui-sort' aria-hidden />);
+  } = render(<SvgSortUp className='iui-icon iui-table-sort' aria-hidden />);
   const {
     container: { firstChild: sortDownIcon },
-  } = render(<SvgSortDown className='iui-icon iui-sort' aria-hidden />);
+  } = render(<SvgSortDown className='iui-icon iui-table-sort' aria-hidden />);
   const nameHeader = container.querySelector(
-    '.iui-table-header .iui-cell',
+    '.iui-table-header .iui-table-cell',
   ) as HTMLDivElement;
   expect(nameHeader).toBeTruthy();
 
   // initial icon on column header
-  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+  expect(container.querySelector('.iui-table-cell-end-icon > svg')).toEqual(
     sortDownIcon,
   );
 
   // first click on column header
   await userEvent.click(nameHeader);
-  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+  expect(container.querySelector('.iui-table-cell-end-icon > svg')).toEqual(
     sortDownIcon,
   );
 
   // second click on column header
   await userEvent.click(nameHeader);
-  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+  expect(container.querySelector('.iui-table-cell-end-icon > svg')).toEqual(
     sortUpIcon,
   );
 
   // third click on column header to reset
   await userEvent.click(nameHeader);
-  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+  expect(container.querySelector('.iui-table-cell-end-icon > svg')).toEqual(
     sortDownIcon,
   );
 });
@@ -3834,18 +3834,18 @@ it('should render start and end cell icons', () => {
   } = render(<SvgDeveloper />);
 
   const row = container.querySelector(
-    '.iui-table-body .iui-row',
+    '.iui-table-body .iui-table-row',
   ) as HTMLDivElement;
-  const cells = row.querySelectorAll('.iui-cell');
+  const cells = row.querySelectorAll('.iui-table-cell');
 
   const startIcon = cells[0].querySelector(
-    '.iui-cell-start-icon',
+    '.iui-table-cell-start-icon',
   ) as HTMLDivElement;
   expect(startIcon).toBeTruthy();
   expect(startIcon.querySelector('svg')).toEqual(placeholderIcon);
 
   const endIcon = cells[1].querySelector(
-    '.iui-cell-end-icon',
+    '.iui-table-cell-end-icon',
   ) as HTMLDivElement;
   expect(endIcon).toBeTruthy();
   expect(endIcon.querySelector('svg')).toEqual(developerIcon);
@@ -3879,12 +3879,12 @@ it.each(['positive', 'warning', 'negative'] as const)(
     });
 
     const row = container.querySelector(
-      '.iui-table-body .iui-row',
+      '.iui-table-body .iui-table-row',
     ) as HTMLDivElement;
-    const cells = row.querySelectorAll('.iui-cell');
+    const cells = row.querySelectorAll('.iui-table-cell');
 
-    expect(cells[0]).toHaveClass(`iui-${status}`);
-    expect(cells[1]).not.toHaveClass(`iui-${status}`);
+    expect(cells[0]).toHaveAttribute('data-iui-status', status);
+    expect(cells[1]).not.toHaveAttribute('data-iui-status', status);
   },
 );
 
@@ -3902,8 +3902,8 @@ it.each(['positive', 'warning', 'negative'] as const)(
     const tableBody = container.querySelector(
       '.iui-table-body',
     ) as HTMLDivElement;
-    const rows = tableBody.querySelectorAll('.iui-row');
-    expect(rows[0]).toHaveClass(`iui-${rowStatus}`);
-    expect(rows[1]).not.toHaveClass(`iui-${rowStatus}`);
+    const rows = tableBody.querySelectorAll('.iui-table-row');
+    expect(rows[0]).toHaveAttribute('data-iui-status', rowStatus);
+    expect(rows[1]).not.toHaveAttribute('data-iui-status', rowStatus);
   },
 );
