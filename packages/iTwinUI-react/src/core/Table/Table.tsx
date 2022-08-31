@@ -22,6 +22,7 @@ import {
   usePagination,
   useColumnOrder,
   Column,
+  useGlobalFilter,
 } from 'react-table';
 import { ProgressRadial } from '../ProgressIndicators';
 import { useTheme, CommonProps, useResizeObserver, mergeRefs } from '../utils';
@@ -178,6 +179,11 @@ export type TableProps<
    * Must be memoized.
    */
   onFilter?: (filters: TableFilterValue<T>[], state: TableState<T>) => void;
+  /**
+   * Value used for global filtering.
+   * Use with `globalFilter` and/or `manualGlobalFilter` to handle filtering yourself e.g. filter in server-side.
+   */
+  globalFilterValue?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
   /**
    * Content shown when there is no data after filtering.
    */
@@ -359,6 +365,7 @@ export const Table = <
     subComponent,
     onExpand,
     onFilter,
+    globalFilterValue,
     emptyFilteredTableContent,
     filterTypes: filterFunctions,
     expanderCell,
@@ -498,6 +505,7 @@ export const Table = <
     },
     useFlexLayout,
     useResizeColumns(ownerDocument),
+    useGlobalFilter,
     useFilters,
     useSubRowFiltering(hasAnySubRows),
     useSortBy,
@@ -527,6 +535,7 @@ export const Table = <
     setPageSize,
     flatHeaders,
     visibleColumns,
+    setGlobalFilter,
   } = instance;
 
   const ariaDataAttributes = Object.entries(rest).reduce(
@@ -580,6 +589,10 @@ export const Table = <
       onRowClick,
     ],
   );
+
+  React.useEffect(() => {
+    setGlobalFilter(globalFilterValue);
+  }, [globalFilterValue, setGlobalFilter]);
 
   React.useEffect(() => {
     setPageSize(pageSize);
