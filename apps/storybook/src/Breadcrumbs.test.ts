@@ -10,6 +10,7 @@ describe('Breadcrumbs', () => {
     'Folder Navigation',
     'Links',
     'Overflow',
+    'Custom Overflow',
   ];
 
   tests.forEach((testName) => {
