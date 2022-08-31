@@ -54,6 +54,7 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
       onClose = dialogContext.onClose,
       closeOnEsc = dialogContext.closeOnEsc,
       trapFocus = dialogContext.trapFocus,
+      setFocus = dialogContext.setFocus,
       preventDocumentScroll = dialogContext.preventDocumentScroll,
       onKeyDown,
       ...rest
@@ -67,6 +68,10 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
     // Focuses dialog when opened and brings back focus to the previously focused element when closed.
     const previousFocusedElement = React.useRef<HTMLElement | null>();
     React.useEffect(() => {
+      if (!setFocus) {
+        return;
+      }
+
       if (isOpen) {
         previousFocusedElement.current = dialogRef.current?.ownerDocument
           .activeElement as HTMLElement;
@@ -79,7 +84,7 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
         ref?.contains(document.activeElement) &&
           previousFocusedElement.current?.focus();
       };
-    }, [isOpen]);
+    }, [isOpen, setFocus]);
 
     // Prevents document from scrolling when the dialog is open.
     const originalBodyOverflow = React.useRef('');
