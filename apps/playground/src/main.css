@@ -6,3 +6,8 @@
 html {
   color-scheme: dark light;
 }
+
+.parent {
+  display: none;
+  /* visibility: hidden; */
+}
