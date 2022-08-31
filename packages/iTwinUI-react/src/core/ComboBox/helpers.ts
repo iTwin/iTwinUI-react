@@ -8,7 +8,11 @@ import { SelectOption } from '../Select/Select';
 type ComboBoxAction = 'open' | 'close' | 'select' | 'focus';
 
 export const comboBoxReducer = (
-  state: { isOpen: boolean; selectedIndex: number; focusedIndex: number },
+  state: {
+    isOpen: boolean;
+    selectedIndex: number | number[];
+    focusedIndex: number;
+  },
   [type, value]: [ComboBoxAction] | [ComboBoxAction, number | undefined],
 ) => {
   switch (type) {

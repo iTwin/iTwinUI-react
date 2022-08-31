@@ -31,12 +31,12 @@ import { ComboBoxInputContainer } from './ComboBoxInputContainer';
 import { ComboBoxMenu } from './ComboBoxMenu';
 import { ComboBoxMenuItem } from './ComboBoxMenuItem';
 
-// const isMultipleEnabled = <T,>(
-//   variable: (T | undefined) | (T[] | undefined),
-//   multiple: boolean,
-// ): variable is T[] | undefined => {
-//   return multiple;
-// };
+const isMultipleEnabled = <T,>(
+  variable: (T | undefined) | (T[] | undefined),
+  multiple: boolean,
+): variable is T[] | undefined => {
+  return multiple;
+};
 
 // Type guard for multiple did not work
 const isSingleOnChange = <T,>(
@@ -228,12 +228,27 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     });
   }
 
+  const getSelectedIndexes = () => {
+    const indexArray: number[] = [];
+    isMultipleEnabled(valueProp, multiple) &&
+      valueProp?.forEach((value) => {
+        indexArray.push(
+          optionsRef.current.findIndex((option) => option.value === value),
+        );
+      });
+    return indexArray;
+  };
+
   // Reducer where all the component-wide state is stored
   const [{ isOpen, selectedIndex, focusedIndex }, dispatch] = React.useReducer(
     comboBoxReducer,
     {
       isOpen: false,
-      selectedIndex: valueProp
+      selectedIndex: isMultipleEnabled(valueProp, multiple)
+        ? valueProp
+          ? getSelectedIndexes()
+          : []
+        : valueProp
         ? optionsRef.current.findIndex((option) => option.value === valueProp)
         : -1,
       focusedIndex: -1,
