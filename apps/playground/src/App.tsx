@@ -12,8 +12,6 @@ const mockTableData = Array.from(new Array(1000).keys()).map((k) => {
 });
 
 const App = () => {
-  // return <Button>Hello world</Button>;
-
   const columns = React.useMemo(
     () => [
       {
@@ -40,7 +38,7 @@ const App = () => {
 
   const show = () => {
     const divElement = tableRef.current;
-    divElement?.setAttribute('style', 'display: block; visibility: visible;');
+    divElement?.setAttribute('style', 'display: block;');
   };
 
   return (
