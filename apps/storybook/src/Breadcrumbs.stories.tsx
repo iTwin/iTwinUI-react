@@ -8,13 +8,20 @@ import { useState } from '@storybook/addons';
 import React from 'react';
 import {
   Button,
+  IconButton,
   Breadcrumbs,
   BreadcrumbsProps,
   DropdownButton,
+  DropdownMenu,
   MenuItem,
   Input,
 } from '@itwin/itwinui-react';
-import { SvgChevronRightDouble, SvgFolder } from '@itwin/itwinui-icons-react';
+import {
+  SvgChevronRightDouble,
+  SvgFolder,
+  SvgPlaceholder,
+  SvgMore,
+} from '@itwin/itwinui-icons-react';
 
 export default {
   component: Breadcrumbs,
@@ -79,11 +86,69 @@ CustomSeparator.args = {
 export const Overflow: Story<BreadcrumbsProps> = (args) => {
   const items = Array(10)
     .fill(null)
-    .map((_, index) => <Button key={index}>Item {index}</Button>);
+    .map((_, index) => (
+      <Button
+        key={index}
+        onClick={() => action(`Clicked on button ${index + 1}`)()}
+      >
+        Item {index}
+      </Button>
+    ));
 
   return (
     <div style={{ maxWidth: '50%', border: '1px solid lightpink', padding: 8 }}>
       <Breadcrumbs {...args}>{items}</Breadcrumbs>
+    </div>
+  );
+};
+
+export const CustomOverflow: Story<BreadcrumbsProps> = (args) => {
+  const items = Array(10)
+    .fill(null)
+    .map((_, index) => (
+      <Button
+        key={index}
+        onClick={() => action(`Clicked on button ${index + 1}`)()}
+      >
+        Item {index}
+      </Button>
+    ));
+
+  return (
+    <div style={{ maxWidth: '50%', border: '1px solid lightpink', padding: 8 }}>
+      <Breadcrumbs
+        overflowButton={(visibleCount) => (
+          <DropdownMenu
+            menuItems={(close) =>
+              Array(items.length - visibleCount)
+                .fill(null)
+                .map((_, _index) => {
+                  const index = visibleCount > 1 ? _index + 1 : _index;
+                  const onClick = () => {
+                    action(`Clicked button ${index} (overflow)`)();
+                    close();
+                  };
+                  return (
+                    <MenuItem
+                      key={index}
+                      onClick={onClick}
+                      icon={<SvgPlaceholder />}
+                    >
+                      Item {index}
+                    </MenuItem>
+                  );
+                })
+            }
+          >
+            <IconButton onClick={() => action('Clicked on overflow icon')()}>
+              <SvgMore />
+            </IconButton>
+          </DropdownMenu>
+        )}
+        {...args}
+      >
+        {items}
+      </Breadcrumbs>
     </div>
   );
 };

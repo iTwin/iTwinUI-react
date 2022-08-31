@@ -23,6 +23,14 @@ export type BreadcrumbsProps = {
    * Defaults to the `SvgChevronRight` icon.
    */
   separator?: React.ReactNode;
+  /**
+   * If specified, this prop will be used to show a custom button when overflow happens,
+   * i.e. when there is not enough space to fit all the breadcrumbs.
+   *
+   * Expects a function that takes the number of items that are visible
+   * and returns the `ReactNode` to render.
+   */
+  overflowButton?: (visibleCount: number) => React.ReactNode;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -53,6 +61,7 @@ export const Breadcrumbs = React.forwardRef(
       children: items,
       currentIndex = items.length - 1,
       separator,
+      overflowButton,
       className,
       ...rest
     } = props;
@@ -79,7 +88,11 @@ export const Breadcrumbs = React.forwardRef(
           {items.length - visibleCount > 0 && (
             <>
               <li className='iui-breadcrumbs-item iui-breadcrumbs-item-overrides'>
-                <span className='iui-breadcrumbs-text'>…</span>
+                {overflowButton ? (
+                  overflowButton(visibleCount)
+                ) : (
+                  <span className='iui-breadcrumbs-text'>…</span>
+                )}
               </li>
               <Separator separator={separator} />
             </>
