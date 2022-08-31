@@ -184,6 +184,40 @@ export const useVirtualization = (props: VirtualScrollProps) => {
     return arr;
   }, [itemsLength, itemRenderer, bufferSize, startNode, visibleNodeCount]);
 
+  const updateChildHeight = React.useCallback(() => {
+    if (!parentRef.current || !visibleChildren.length) {
+      return;
+    }
+
+    const firstChild = parentRef.current.children.item(0) as HTMLElement;
+    const secondChild = parentRef.current.children.item(1) as HTMLElement;
+    const lastChild = parentRef.current.children.item(
+      parentRef.current.children.length - 1,
+    ) as HTMLElement;
+    const firstChildHeight = Number(
+      getElementHeightWithMargins(firstChild)?.toFixed(2) ?? 0,
+    );
+
+    // console.log('children', firstChild, secondChild, lastChild);
+    // console.log(
+    //   'firstChildHeight',
+    //   firstChildHeight,
+    //   getElementHeightWithMargins(firstChild),
+    //   getElementHeight(firstChild),
+    // );
+
+    childHeight.current = {
+      first: firstChildHeight,
+      middle: Number(
+        getElementHeightWithMargins(secondChild)?.toFixed(2) ??
+          firstChildHeight,
+      ),
+      last: Number(
+        getElementHeightWithMargins(lastChild)?.toFixed(2) ?? firstChildHeight,
+      ),
+    };
+  }, [visibleChildren.length]);
+
   const onResize = React.useCallback(
     ({ height }: DOMRectReadOnly) => {
       console.log('height', height);
@@ -195,40 +229,9 @@ export const useVirtualization = (props: VirtualScrollProps) => {
       }
       setScrollContainerHeight(height);
 
-      if (!parentRef.current || !visibleChildren.length) {
-        return;
-      }
-
-      const firstChild = parentRef.current.children.item(0) as HTMLElement;
-      const secondChild = parentRef.current.children.item(1) as HTMLElement;
-      const lastChild = parentRef.current.children.item(
-        parentRef.current.children.length - 1,
-      ) as HTMLElement;
-      const firstChildHeight = Number(
-        getElementHeightWithMargins(firstChild)?.toFixed(2) ?? 0,
-      );
-
-      console.log('children', firstChild, secondChild, lastChild);
-      console.log(
-        'firstChildHeight',
-        firstChildHeight,
-        getElementHeightWithMargins(firstChild),
-        getElementHeight(firstChild),
-      );
-
-      childHeight.current = {
-        first: firstChildHeight,
-        middle: Number(
-          getElementHeightWithMargins(secondChild)?.toFixed(2) ??
-            firstChildHeight,
-        ),
-        last: Number(
-          getElementHeightWithMargins(lastChild)?.toFixed(2) ??
-            firstChildHeight,
-        ),
-      };
+      updateChildHeight();
     },
-    [visibleChildren.length],
+    [updateChildHeight],
   );
   const [resizeRef, resizeObserver] = useResizeObserver(onResize);
 
@@ -270,39 +273,7 @@ export const useVirtualization = (props: VirtualScrollProps) => {
   // });
 
   // Get child height when children available
-  React.useEffect(() => {
-    if (!parentRef.current || !visibleChildren.length) {
-      return;
-    }
-
-    const firstChild = parentRef.current.children.item(0) as HTMLElement;
-    const secondChild = parentRef.current.children.item(1) as HTMLElement;
-    const lastChild = parentRef.current.children.item(
-      parentRef.current.children.length - 1,
-    ) as HTMLElement;
-    const firstChildHeight = Number(
-      getElementHeightWithMargins(firstChild)?.toFixed(2) ?? 0,
-    );
-
-    console.log('children', firstChild, secondChild, lastChild);
-    console.log(
-      'firstChildHeight',
-      firstChildHeight,
-      getElementHeightWithMargins(firstChild),
-      getElementHeight(firstChild),
-    );
-
-    // childHeight.current = {
-    //   first: firstChildHeight,
-    //   middle: Number(
-    //     getElementHeightWithMargins(secondChild)?.toFixed(2) ??
-    //       firstChildHeight,
-    //   ),
-    //   last: Number(
-    //     getElementHeightWithMargins(lastChild)?.toFixed(2) ?? firstChildHeight,
-    //   ),
-    // };
-  }, [visibleChildren.length]);
+  React.useEffect(() => updateChildHeight(), [updateChildHeight]);
 
   const updateVirtualScroll = React.useCallback(() => {
     const scrollableContainer = getScrollableContainer();
