@@ -3252,6 +3252,126 @@ it('should scroll to selected item in non-virtualized table', async () => {
   );
 });
 
+it.only('trial: virtual', async () => {
+  // let scrolledElement: HTMLElement | null = null;
+  // jest
+  //   .spyOn(HTMLElement.prototype, 'scrollIntoView')
+  //   .mockImplementation(function (this: HTMLElement) {
+  //     // eslint-disable-next-line @typescript-eslint/no-this-alias
+  //     scrolledElement = this;
+  //   });
+
+  jest
+    .spyOn(HTMLDivElement.prototype, 'scrollHeight', 'get')
+    .mockReturnValue(35 * 1000);
+
+  const heightsMock = jest.spyOn(
+    HTMLElement.prototype,
+    'getBoundingClientRect',
+  );
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  heightsMock.mockImplementation(function (this: Record<string, any>) {
+    this;
+    if (Object.values(this)[0].memoizedProps.id === 'scroller') {
+      return { height: 400 } as DOMRect;
+    }
+    return { height: 35 } as DOMRect;
+  });
+
+  jest
+    .spyOn(HTMLElement.prototype, 'scrollTo')
+    .mockImplementation(function (this: HTMLElement, options) {
+      this.scrollTop = (options as ScrollToOptions).top ?? 0;
+      fireEvent.scroll(this, {
+        target: { scrollTop: (options as ScrollToOptions).top ?? 0 },
+      });
+    });
+
+  const columns = [
+    {
+      ['Header']: 'TableData',
+      columns: [
+        {
+          ...ActionColumn({ columnManager: true }),
+        },
+        {
+          ['Header']: 'id',
+          id: 'id',
+          accessor: 'id',
+          width: 100,
+          disableSortBy: true,
+        },
+      ],
+    },
+  ];
+
+  const mockTableData = Array.from(new Array(1000).keys()).map((k) => {
+    return {
+      id: `opa${k}`,
+    };
+  });
+
+  // const data = mockedData(1000);
+  const { container } = render(
+    <div style={{ overflow: 'auto', height: 400 }} id='scroller'>
+      <Table
+        // id='scroller'
+        columns={columns}
+        data={mockTableData}
+        enableVirtualization={true}
+        emptyTableContent={'No data'}
+        density='extra-condensed'
+        // style={{ height: '400px' }}
+      />
+      ,
+    </div>,
+  );
+  // let body = container.querySelector('.iui-table-body') as HTMLDivElement;
+  let scrollable = container.querySelector('#scroller') as HTMLElement;
+  let rows = container.querySelectorAll('.iui-row');
+  console.log(
+    '# of rows',
+    rows.length,
+    scrollable.scrollTop,
+    scrollable.scrollHeight,
+  );
+  console.log('row content', rows[rows.length - 1].textContent);
+
+  // Scroll to the bottom
+  // const body = container.querySelector('.iui-table-body') as HTMLDivElement;
+  console.log(
+    'scrollable != null',
+    scrollable != null,
+    scrollable.scrollHeight,
+  );
+  fireEvent.scroll(scrollable, {
+    target: { scrollTop: scrollable.scrollHeight },
+  });
+
+  // body = container.querySelector('.iui-table-body') as HTMLDivElement;
+  scrollable = container.querySelector('#scroller') as HTMLElement;
+  rows = container.querySelectorAll('.iui-row');
+  console.log(
+    '# of rows',
+    rows.length,
+    scrollable.scrollTop,
+    scrollable.scrollHeight,
+  );
+  console.log('row content', rows[rows.length - 1].textContent);
+
+  // renderComponent({
+  //   data,
+  //   enableVirtualization: true,
+  //   scrollToRow: (rows) => rows.findIndex((row) => row.original === data[25]),
+  // });
+
+  // expect(scrolledElement).toBeTruthy();
+  // // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  // expect(scrolledElement!.querySelector('.iui-cell')?.textContent).toBe(
+  //   data[25].name,
+  // );
+});
+
 it('should render sticky columns correctly', () => {
   jest
     .spyOn(HTMLDivElement.prototype, 'scrollWidth', 'get')
