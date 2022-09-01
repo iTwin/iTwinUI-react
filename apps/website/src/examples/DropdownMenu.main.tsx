@@ -11,8 +11,10 @@ import {
   MenuItem,
   DropdownMenu,
   IconButton,
+  ButtonGroup,
 } from '@itwin/itwinui-react';
 import { SvgMore } from '@itwin/itwinui-icons-react';
+import { SvgPlaceholder } from '@itwin/itwinui-icons-react';
 
 export default () => {
   const [userType, setUserType] = React.useState('User');
@@ -44,10 +46,20 @@ export default () => {
     </MenuItem>,
   ];
   return (
-    <DropdownMenu menuItems={dropdownMenuItems}>
-      <IconButton>
-        <SvgMore />
-      </IconButton>
-    </DropdownMenu>
+    <div style={{ height: '70%', width: '50%', display: 'flex', alignItems: 'flex-start' }}>
+      <ButtonGroup>
+        <IconButton disabled>
+          <SvgPlaceholder />
+        </IconButton>
+        <IconButton disabled>
+          <SvgPlaceholder />
+        </IconButton>
+        <DropdownMenu menuItems={dropdownMenuItems}>
+          <IconButton>
+            <SvgMore />
+          </IconButton>
+        </DropdownMenu>
+      </ButtonGroup>
+    </div>
   );
 };

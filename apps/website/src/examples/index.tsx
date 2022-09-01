@@ -13,6 +13,7 @@ export { default as ColorPickerMainExample } from './ColorPicker.main';
 export { default as DatePickerMainExample } from './DatePicker.main';
 export { default as DialogMainExample } from './Dialog.main';
 export { default as DropdownMenuMainExample } from './DropdownMenu.main';
+export { default as DropdownMenuStaticExample } from './DropdownMenu.static';
 export { default as ErrorPageMainExample } from './ErrorPage.main';
 export { default as ExpandableBlockMainExample } from './ExpandableBlock.main';
 export { default as FileUploadMainExample } from './FileUpload.main';
