@@ -41,7 +41,10 @@ const { content = {} } = Astro.props;
       * {
         margin: 0;
         box-sizing: border-box;
-        line-height: calc(1em + 0.5rem);
+      }
+
+      :where(body) {
+        line-height: 1.5 !important; // needs to override iui-body
       }
 
       :where(a) {
@@ -52,6 +55,10 @@ const { content = {} } = Astro.props;
         font-weight: normal;
         padding: 0;
         max-width: 75ch;
+      }
+
+      :where(h1, h2) {
+        line-height: 1.2;
       }
     </style>
 
@@ -176,8 +183,6 @@ const { content = {} } = Astro.props;
       Scrollable a11y code helper.
       TODO: remove the need for this script by creating a CodeBlock component.
     -->
-    <script src='/make-scrollable-code-focusable.js' is:inline>
-
-    </script>
+    <script src='/make-scrollable-code-focusable.js' is:inline></script>
   </body>
 </html>
