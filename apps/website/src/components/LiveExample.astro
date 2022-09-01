@@ -32,11 +32,13 @@ const MainComponent = AllExamples[`${capitalize(componentName)}MainExample`];
 ---
 
 <LiveExample ssr={MainComponent} code={code} client:load>
-  {!!StaticComponent ? (
-    <StaticComponent slot='staticComponent' />
-  ) : (
-    <MainComponent slot='staticComponent' />
-  )}
+  {
+    !!StaticComponent ? (
+      <StaticComponent slot='staticComponent' />
+    ) : (
+      <MainComponent slot='staticComponent' />
+    )
+  }
 </LiveExample>
 
 <style lang='scss' is:global>
