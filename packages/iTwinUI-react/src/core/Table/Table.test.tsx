@@ -3910,64 +3910,12 @@ it.each(['positive', 'warning', 'negative'] as const)(
 
 it('should navigate through table sorting with the keyboard', async () => {
   const onSort = jest.fn();
-  const { container } = renderComponent({
+  renderComponent({
     isSortable: true,
     onSort,
   });
-  const tabEvent = new KeyboardEvent('keypress', { keyCode: 9 });
-  const enterEvent = new KeyboardEvent('keypress', { keyCode: 13 });
-  container.dispatchEvent(tabEvent);
-  container.dispatchEvent(enterEvent);
-  // await userEvent.tab(); // tab to sort icon button
-  // await userEvent.keyboard('{Enter}');
+
+  await userEvent.tab(); // tab to sort icon button
+  await userEvent.keyboard('{Enter}');
   expect(onSort).toHaveBeenCalled();
-});
-
-it('should navigate through table filtering with the keyboard', async () => {
-  const onFilter = jest.fn();
-  const mockedColumns = [
-    {
-      Header: 'Header name',
-      columns: [
-        {
-          id: 'name',
-          Header: 'Name',
-          accessor: 'name',
-          Filter: tableFilters.TextFilter(),
-          fieldType: 'text',
-        },
-      ],
-    },
-  ];
-  renderComponent({
-    columns: mockedColumns,
-    onFilter,
-  });
-
-  // const tabEvent = new KeyboardEvent('keypress', { keyCode: 9 });
-  // const enterEvent = new KeyboardEvent('keypress', { keyCode: 13 });
-  const twoEvent = new KeyboardEvent('keydown', { code: '50' });
-  const twoEventUp = new KeyboardEvent('keyup', { code: '50' });
-  // container.dispatchEvent(tabEvent);
-  // container.dispatchEvent(enterEvent);
-  // container.dispatchEvent(twoEvent);
-  // container.dispatchEvent(tabEvent);
-  // container.dispatchEvent(enterEvent);
-  // expect(onFilter).toHaveBeenCalledWith(
-  //   [{ fieldType: 'text', filterType: 'text', id: 'name', value: '2' }],
-  //   expect.objectContaining({ filters: [{ id: 'name', value: '2' }] }),
-  // );
-
-  await userEvent.tab(); // tab to filter icon button
-  await userEvent.keyboard('{Enter}');
-  // await userEvent.keyboard('2');
-
-  document.dispatchEvent(twoEvent);
-  document.dispatchEvent(twoEventUp);
-  await userEvent.tab(); // tab to filter menu 'Filter' submit button
-  await userEvent.keyboard('{Enter}');
-  expect(onFilter).toHaveBeenCalledWith(
-    [{ fieldType: 'text', filterType: 'text', id: 'name', value: '2' }],
-    expect.objectContaining({ filters: [{ id: 'name', value: '2' }] }),
-  );
 });

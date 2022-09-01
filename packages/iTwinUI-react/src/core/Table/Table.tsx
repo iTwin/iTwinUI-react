@@ -801,6 +801,12 @@ export const Table = <
                             column.resizeWidth = el.getBoundingClientRect().width;
                           }
                         }}
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key == 'Enter' && showSortButton(column)) {
+                            column.toggleSortBy();
+                          }
+                        }}
                       >
                         {column.render('Header')}
                         {(showFilterButton(column) ||
@@ -813,15 +819,7 @@ export const Table = <
                               />
                             )}
                             {showSortButton(column) && (
-                              <div
-                                className='iui-table-cell-end-icon'
-                                tabIndex={0}
-                                onKeyDown={(e) => {
-                                  if (e.key == 'Enter') {
-                                    column.toggleSortBy();
-                                  }
-                                }}
-                              >
+                              <div className='iui-table-cell-end-icon'>
                                 {column.isSortedDesc ||
                                 (!column.isSorted && column.sortDescFirst) ? (
                                   <SvgSortDown
