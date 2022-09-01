@@ -6,12 +6,8 @@ import * as React from 'react';
 import * as SandpackReact from '@codesandbox/sandpack-react';
 import { nightOwl } from '@codesandbox/sandpack-themes';
 
-const {
-  SandpackProvider,
-  SandpackThemeProvider,
-  SandpackCodeEditor,
-  SandpackPreview,
-} = SandpackReact;
+const { SandpackProvider, SandpackThemeProvider, SandpackCodeEditor, SandpackPreview } =
+  SandpackReact;
 
 const indexJs = `
 import { createRoot } from 'react-dom/client';
@@ -58,7 +54,7 @@ export default ({ code = '', ssr, staticComponent, ...rest }: Props) => {
 
   // TODO: replace this with composition to have more control over the layout and styling
   return (
-    <div className={`live-example ${!isExpanded ? 'sp-preview-container-collapsed' : ''}`}>
+    <div className={`live-example iui-body ${!isExpanded ? 'sp-preview-container-collapsed' : ''}`}>
       {!isExpanded ? (
         <>
           {staticComponent}
