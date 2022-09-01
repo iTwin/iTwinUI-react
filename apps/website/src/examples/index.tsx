@@ -5,6 +5,7 @@
 export { default as AlertMainExample } from './Alert.main';
 export { default as AvatarMainExample } from './Avatar.main';
 export { default as BadgeMainExample } from './Badge.main';
+export { default as ButtonMainExample } from './Button.main';
 export { default as BlockquoteMainExample } from './Blockquote.main';
 export { default as BreadcrumbsMainExample } from './Breadcrumbs.main';
 export { default as CarouselMainExample } from './Carousel.main';
