@@ -25,6 +25,7 @@ export { default as ToastStaticExample } from './Toast.static';
 export { default as ToastMainExample } from './Toast.main';
 export { default as TableMainExample } from './Table.main';
 export { default as TabsMainExample } from './Tabs.main';
+export { default as TagMainExample } from './Tag.main';
 export { default as TileMainExample } from './Tile.main';
 export { default as TooltipMainExample } from './Tooltip.main';
 export { default as TooltipStaticExample } from './Tooltip.static';
