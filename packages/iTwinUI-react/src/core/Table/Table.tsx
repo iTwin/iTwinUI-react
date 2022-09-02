@@ -555,6 +555,8 @@ export const Table = <
   const showSortButton = (column: HeaderGroup<T>) =>
     data.length !== 0 && column.canSort;
 
+  const [tableCanUserSelect, setTableCanUserSelect] = React.useState(true);
+
   const onRowClickHandler = React.useCallback(
     (event: React.MouseEvent, row: Row<T>) => {
       const isDisabled = isRowDisabled?.(row.original);
@@ -568,10 +570,16 @@ export const Table = <
         !event.isDefaultPrevented()
       ) {
         if (event.shiftKey) {
+          if (selectionMode === 'multi') {
+            setTableCanUserSelect(false);
+          }
           dispatch({
             type: shiftRowSelectedAction,
             id: row.id,
           });
+          setInterval(function () {
+            setTableCanUserSelect(true);
+          }, 3000);
         } else if (
           !row.isSelected &&
           (selectionMode === 'single' || !event.ctrlKey)
@@ -593,6 +601,15 @@ export const Table = <
       dispatch,
       onRowClick,
     ],
+  );
+
+  const onKeyUp = React.useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === 'Shift') {
+        setTableCanUserSelect(true);
+      }
+    },
+    [],
   );
 
   React.useEffect(() => {
@@ -766,9 +783,11 @@ export const Table = <
           ),
           style: {
             minWidth: 0, // Overrides the min-width set by the react-table but when we support horizontal scroll it is not needed
+            userSelect: tableCanUserSelect ? 'auto' : 'none',
             ...style,
           },
         })}
+        onKeyUp={onKeyUp}
         {...ariaDataAttributes}
       >
         <div
