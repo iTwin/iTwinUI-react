@@ -555,16 +555,11 @@ export const Table = <
   const showSortButton = (column: HeaderGroup<T>) =>
     data.length !== 0 && column.canSort;
 
-  const [tableCanUserSelect, setTableCanUserSelect] = React.useState(true);
   const tableUserSelection = React.useRef<Selection | null>(null);
   const tableUserSelectionRanges = React.useRef<Range[]>([]);
 
   const onRowClickHandler = React.useCallback(
     (event: React.MouseEvent, row: Row<T>) => {
-      // const ranges: Range[] = [];
-      // const selection: Selection = document.getSelection() as Selection;
-      // console.log(tableUserSelection);
-
       const isDisabled = isRowDisabled?.(row.original);
       if (!isDisabled) {
         onRowClick?.(event, row);
@@ -576,32 +571,18 @@ export const Table = <
         !event.isDefaultPrevented()
       ) {
         if (event.shiftKey) {
-          if (selectionMode === 'multi') {
-            // setTableCanUserSelect(false);
-            // console.log(window.getSelection());
-            // selection.removeAllRanges();
-            setInterval(function () {
-              // setTableCanUserSelect(true);
-              // const range = document.createRange();
-              // if (selection.focusNode != null) {
-              // range.selectNodeContents(document);
-              // range.selectNode(
-              //   document.querySelector('.iui-table') ?? document,
-              // );
-              // }
-              // ranges.forEach((r) => selection.addRange(r));
-            }, 3000);
-          }
-          tableUserSelection.current?.removeAllRanges();
           dispatch({
             type: shiftRowSelectedAction,
             id: row.id,
           });
-          if (tableUserSelection.current != null) {
+          if (selectionMode === 'multi') {
             const selection = tableUserSelection.current;
-            tableUserSelectionRanges.current.forEach((r) =>
-              selection.addRange(r),
-            );
+            if (selection != null) {
+              selection.removeAllRanges();
+              tableUserSelectionRanges.current.forEach((r) =>
+                selection.addRange(r),
+              );
+            }
           }
         } else if (
           !row.isSelected &&
@@ -624,15 +605,6 @@ export const Table = <
       dispatch,
       onRowClick,
     ],
-  );
-
-  const onKeyUp = React.useCallback(
-    (e: React.KeyboardEvent<HTMLDivElement>) => {
-      if (e.key === 'Shift') {
-        setTableCanUserSelect(true);
-      }
-    },
-    [],
   );
 
   const onMouseDown = React.useCallback(() => {
@@ -818,11 +790,9 @@ export const Table = <
           ),
           style: {
             minWidth: 0, // Overrides the min-width set by the react-table but when we support horizontal scroll it is not needed
-            userSelect: tableCanUserSelect ? 'auto' : 'none',
             ...style,
           },
         })}
-        onKeyUp={onKeyUp}
         onMouseDown={onMouseDown}
         {...ariaDataAttributes}
       >
