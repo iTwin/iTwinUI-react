@@ -775,6 +775,15 @@ export const Table = <
             ...style,
           },
         })}
+        onKeyDown={(e) => {
+          // TODO: check if it is not breaking anything
+          if (e.shiftKey) {
+            e.currentTarget.style.userSelect = 'none';
+          }
+        }}
+        onKeyUp={(e) => {
+          e.currentTarget.style.userSelect = '';
+        }}
         {...ariaDataAttributes}
       >
         <div
