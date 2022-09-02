@@ -556,9 +556,15 @@ export const Table = <
     data.length !== 0 && column.canSort;
 
   const [tableCanUserSelect, setTableCanUserSelect] = React.useState(true);
+  const tableUserSelection = React.useRef<Selection | null>(null);
+  const tableUserSelectionRanges = React.useRef<Range[]>([]);
 
   const onRowClickHandler = React.useCallback(
     (event: React.MouseEvent, row: Row<T>) => {
+      // const ranges: Range[] = [];
+      // const selection: Selection = document.getSelection() as Selection;
+      // console.log(tableUserSelection);
+
       const isDisabled = isRowDisabled?.(row.original);
       if (!isDisabled) {
         onRowClick?.(event, row);
@@ -571,15 +577,32 @@ export const Table = <
       ) {
         if (event.shiftKey) {
           if (selectionMode === 'multi') {
-            setTableCanUserSelect(false);
+            // setTableCanUserSelect(false);
+            // console.log(window.getSelection());
+            // selection.removeAllRanges();
+            setInterval(function () {
+              // setTableCanUserSelect(true);
+              // const range = document.createRange();
+              // if (selection.focusNode != null) {
+              // range.selectNodeContents(document);
+              // range.selectNode(
+              //   document.querySelector('.iui-table') ?? document,
+              // );
+              // }
+              // ranges.forEach((r) => selection.addRange(r));
+            }, 3000);
           }
+          tableUserSelection.current?.removeAllRanges();
           dispatch({
             type: shiftRowSelectedAction,
             id: row.id,
           });
-          setInterval(function () {
-            setTableCanUserSelect(true);
-          }, 3000);
+          if (tableUserSelection.current != null) {
+            const selection = tableUserSelection.current;
+            tableUserSelectionRanges.current.forEach((r) =>
+              selection.addRange(r),
+            );
+          }
         } else if (
           !row.isSelected &&
           (selectionMode === 'single' || !event.ctrlKey)
@@ -611,6 +634,18 @@ export const Table = <
     },
     [],
   );
+
+  const onMouseDown = React.useCallback(() => {
+    tableUserSelection.current = document.getSelection();
+    if (tableUserSelection.current != null) {
+      tableUserSelectionRanges.current = [];
+      for (let i = 0; i < tableUserSelection.current.rangeCount; i++) {
+        tableUserSelectionRanges.current.push(
+          tableUserSelection.current.getRangeAt(i),
+        );
+      }
+    }
+  }, []);
 
   React.useEffect(() => {
     setPageSize(pageSize);
@@ -788,6 +823,7 @@ export const Table = <
           },
         })}
         onKeyUp={onKeyUp}
+        onMouseDown={onMouseDown}
         {...ariaDataAttributes}
       >
         <div
