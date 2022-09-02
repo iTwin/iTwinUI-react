@@ -8,7 +8,7 @@ import { FocusTrap, useMergedRefs, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/dialog.css';
 import { DialogContextProps, useDialogContext } from './DialogContext';
 import { CSSTransition } from 'react-transition-group';
-import { DialogDragContext, useDialogDragContext } from './DialogDragContext';
+import { DialogDragContext } from './DialogDragContext';
 import useDragAndDrop from '../utils/hooks/useDragAndDrop';
 
 export type DialogMainProps = {
@@ -21,7 +21,7 @@ export type DialogMainProps = {
    * Content of the dialog.
    */
   children: React.ReactNode;
-} & Omit<DialogContextProps, 'closeOnExternalClick'> &
+} & Omit<DialogContextProps, 'closeOnExternalClick' | 'dialogRootRef'> &
   React.ComponentPropsWithRef<'div'>;
 
 /**
@@ -113,8 +113,10 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
       onKeyDown?.(event);
     };
 
-    const { wrapperRef } = useDialogDragContext();
-    const { onPointerDown, transform } = useDragAndDrop(dialogRef, wrapperRef);
+    const { onPointerDown, transform } = useDragAndDrop(
+      dialogRef,
+      dialogContext.dialogRootRef,
+    );
     const handlePointerDown = React.useCallback(
       (event: React.PointerEvent<HTMLElement>) => {
         if (isDraggable) {

@@ -30,6 +30,7 @@ export const DialogBackdrop = React.forwardRef<
     onClose = dialogContext.onClose,
     closeOnExternalClick = dialogContext.closeOnExternalClick,
     onMouseDown,
+    style,
     ...rest
   } = props;
 
@@ -53,6 +54,7 @@ export const DialogBackdrop = React.forwardRef<
       isVisible={isVisible}
       ref={refs}
       onMouseDown={handleMouseDown}
+      style={{ pointerEvents: 'auto', ...style }}
       {...rest}
     />
   );

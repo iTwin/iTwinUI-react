@@ -6,7 +6,6 @@ import React from 'react';
 
 export type DialogDragContextProps = {
   onPointerDown?: (e: React.PointerEvent<HTMLElement>) => void;
-  wrapperRef?: React.RefObject<HTMLElement>;
 };
 
 export const DialogDragContext = React.createContext<

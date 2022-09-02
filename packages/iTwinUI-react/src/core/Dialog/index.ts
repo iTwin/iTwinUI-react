@@ -9,7 +9,4 @@ export type { DialogTitleBarProps } from './DialogTitleBar';
 export type { DialogContentProps } from './DialogContent';
 export type { DialogButtonBarProps } from './DialogButtonBar';
 
-export { DialogWrapper } from './DialogWrapper';
-export type { DialogWrapperProps } from './DialogWrapper';
-
 export default './Dialog';

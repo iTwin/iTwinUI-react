@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { Button, Dialog, DialogWrapper } from '@itwin/itwinui-react';
+import { Button, Dialog } from '@itwin/itwinui-react';
 import { action } from '@storybook/addon-actions';
 import { Meta, Story } from '@storybook/react';
 export default {
@@ -229,8 +229,9 @@ export const DraggableRelativeToContainer: Story = ({ isOpen, ...rest }) => {
       <Button styleType='high-visibility' onClick={() => setIsDialogOpen(true)}>
         Open Dialog
       </Button>
-      <DialogWrapper
+      <div
         style={{
+          position: 'relative',
           width: '70vw',
           height: '70vh',
           border: '1px solid red',
@@ -244,6 +245,7 @@ export const DraggableRelativeToContainer: Story = ({ isOpen, ...rest }) => {
           closeOnEsc
           isDismissible
           isDraggable
+          relativeTo='container'
         >
           <Dialog.Main>
             <Dialog.TitleBar titleText='Best dialog ever' />
@@ -264,7 +266,7 @@ export const DraggableRelativeToContainer: Story = ({ isOpen, ...rest }) => {
             </Dialog.ButtonBar>
           </Dialog.Main>
         </Dialog>
-      </DialogWrapper>
+      </div>
     </>
   );
 };
