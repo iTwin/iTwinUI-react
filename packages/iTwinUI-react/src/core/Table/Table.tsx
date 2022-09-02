@@ -555,9 +555,6 @@ export const Table = <
   const showSortButton = (column: HeaderGroup<T>) =>
     data.length !== 0 && column.canSort;
 
-  const tableUserSelection = React.useRef<Selection | null>(null);
-  const tableUserSelectionRanges = React.useRef<Range[]>([]);
-
   const onRowClickHandler = React.useCallback(
     (event: React.MouseEvent, row: Row<T>) => {
       const isDisabled = isRowDisabled?.(row.original);
@@ -575,15 +572,6 @@ export const Table = <
             type: shiftRowSelectedAction,
             id: row.id,
           });
-          if (selectionMode === 'multi') {
-            const selection = tableUserSelection.current;
-            if (selection != null) {
-              selection.removeAllRanges();
-              tableUserSelectionRanges.current.forEach((r) =>
-                selection.addRange(r),
-              );
-            }
-          }
         } else if (
           !row.isSelected &&
           (selectionMode === 'single' || !event.ctrlKey)
@@ -606,18 +594,6 @@ export const Table = <
       onRowClick,
     ],
   );
-
-  const onMouseDown = React.useCallback(() => {
-    tableUserSelection.current = document.getSelection();
-    if (tableUserSelection.current != null) {
-      tableUserSelectionRanges.current = [];
-      for (let i = 0; i < tableUserSelection.current.rangeCount; i++) {
-        tableUserSelectionRanges.current.push(
-          tableUserSelection.current.getRangeAt(i),
-        );
-      }
-    }
-  }, []);
 
   React.useEffect(() => {
     setPageSize(pageSize);
@@ -793,7 +769,14 @@ export const Table = <
             ...style,
           },
         })}
-        onMouseDown={onMouseDown}
+        onKeyDown={(e) => {
+          if (e.shiftKey) {
+            e.currentTarget.style.userSelect = 'none';
+          }
+        }}
+        onKeyUp={(e) => {
+          e.currentTarget.style.userSelect = '';
+        }}
         {...ariaDataAttributes}
       >
         <div
