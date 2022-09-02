@@ -80,6 +80,7 @@ export const onSingleSelectHandler = <T extends Record<string, unknown>>(
 
   const newState = {
     ...state,
+    lastSelectedRow: instance?.rowsById[action.id].index,
     selectedRowIds,
   };
   // Passing to `onSelectHandler` to handle filtered sub-rows
@@ -102,4 +103,43 @@ const getSelectedData = <T extends Record<string, unknown>>(
   instance?.initialRows.forEach((row) => setSelectedData(row));
 
   return selectedData;
+};
+
+export const onShiftSelect = <T extends Record<string, unknown>>(
+  state: TableState<T>,
+  action: ActionType,
+  instance?: TableInstance<T>,
+  onSelect?: (
+    selectedData: T[] | undefined,
+    tableState?: TableState<T>,
+  ) => void,
+  isRowDisabled?: (rowData: T) => boolean,
+) => {
+  const startIndex = state.lastSelectedRow ?? 0;
+  const endIndex = action.index;
+
+  const selectedRowIds: Record<string, boolean> = {};
+  const handleRow = (row: Row<T>) => {
+    if (isRowDisabled?.(row.original)) {
+      return;
+    }
+
+    selectedRowIds[row.id] = true;
+    row.initialSubRows.forEach((r) => {
+      if (!isRowDisabled?.(row.original)) {
+        handleRow(r);
+      }
+    });
+  };
+  instance?.page.slice(startIndex, endIndex + 1).forEach((r) => handleRow(r));
+
+  const newState = {
+    ...state,
+    selectedRowIds,
+  };
+
+  const selectedData = getSelectedData(selectedRowIds, instance);
+  onSelect?.(selectedData, newState);
+
+  return newState;
 };

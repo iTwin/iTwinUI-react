@@ -46,6 +46,7 @@ import {
   onExpandHandler,
   onFilterHandler,
   onSelectHandler,
+  onShiftSelect,
   onSingleSelectHandler,
   onTableResizeEnd,
   onTableResizeStart,
@@ -56,6 +57,7 @@ import { SELECTION_CELL_ID } from './columns';
 const singleRowSelectedAction = 'singleRowSelected';
 export const tableResizeStartAction = 'tableResizeStart';
 const tableResizeEndAction = 'tableResizeEnd';
+const shiftRowSelectedAction = 'shiftRowSelected';
 
 export type TablePaginatorRendererProps = {
   /**
@@ -452,6 +454,16 @@ export const Table = <
           newState = onTableResizeEnd(newState, action);
           break;
         }
+        case shiftRowSelectedAction: {
+          newState = onShiftSelect(
+            newState,
+            action,
+            instance,
+            onSelect,
+            isRowDisabled,
+          );
+          break;
+        }
         default:
           break;
       }
@@ -561,7 +573,16 @@ export const Table = <
         selectRowOnClick &&
         !event.isDefaultPrevented()
       ) {
-        if (!row.isSelected && (selectionMode === 'single' || !event.ctrlKey)) {
+        if (event.shiftKey) {
+          console.log(row.index);
+          dispatch({
+            type: shiftRowSelectedAction,
+            index: row.index,
+          });
+        } else if (
+          !row.isSelected &&
+          (selectionMode === 'single' || !event.ctrlKey)
+        ) {
           dispatch({
             type: singleRowSelectedAction,
             id: row.id,
