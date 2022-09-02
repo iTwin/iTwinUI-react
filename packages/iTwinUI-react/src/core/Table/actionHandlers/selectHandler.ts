@@ -57,7 +57,7 @@ export const onSelectHandler = <T extends Record<string, unknown>>(
 };
 
 /**
- * Handles selection when clicked on a row while shift is selected.
+ * Handles selection when clicked on a row while shift key is pressed.
  */
 export const onShiftSelectHandler = <T extends Record<string, unknown>>(
   state: TableState<T>,
