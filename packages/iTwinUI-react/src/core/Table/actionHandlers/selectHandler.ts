@@ -125,11 +125,7 @@ export const onShiftSelect = <T extends Record<string, unknown>>(
     }
 
     selectedRowIds[row.id] = true;
-    row.initialSubRows.forEach((r) => {
-      if (!isRowDisabled?.(row.original)) {
-        handleRow(r);
-      }
-    });
+    row.initialSubRows.forEach((r) => handleRow(r));
   };
   instance?.page.slice(startIndex, endIndex + 1).forEach((r) => handleRow(r));
 

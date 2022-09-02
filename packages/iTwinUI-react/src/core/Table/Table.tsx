@@ -574,7 +574,6 @@ export const Table = <
         !event.isDefaultPrevented()
       ) {
         if (event.shiftKey) {
-          console.log(row.index);
           dispatch({
             type: shiftRowSelectedAction,
             index: row.index,
