@@ -68,12 +68,19 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     instance.toggleAllRowsSelected(false);
   };
 
-  const getGreaterId = (id: string) => {
-    const greaterId = id.split('.');
-    greaterId[greaterId.length - 1] = `${
-      parseInt(greaterId[greaterId.length - 1]) + 1
+  /**
+   * Returns the id of the next sibling, even if it doesn't exist
+   * @example
+   * getGreaterId('1.5') // '1.6'
+   * getGreaterId('2.8.4') // '2.8.5'
+   * getGreaterId('4') // '5'
+   */
+  const getNextSiblingId = (id: string) => {
+    const nextSiblingId = id.split('.');
+    nextSiblingId[nextSiblingId.length - 1] = `${
+      parseInt(nextSiblingId[nextSiblingId.length - 1]) + 1
     }`;
-    return greaterId.join('.');
+    return nextSiblingId.join('.');
   };
 
   const getParentId = (id: string) => {
@@ -117,12 +124,12 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
       nextRow = currentRow.subRows[0];
     } else {
       // next sibling
-      nextRow = instance.rowsById[getGreaterId(currentRow.id)];
+      nextRow = instance.rowsById[getNextSiblingId(currentRow.id)];
 
       // If the next sibling doesn't exist, go to the next child at a one upper depth
       let parentId = getParentId(currentRow.id);
       while (nextRow == null && parentId != null) {
-        nextRow = instance.rowsById[getGreaterId(parentId)];
+        nextRow = instance.rowsById[getNextSiblingId(parentId)];
         parentId = getParentId(parentId);
       }
     }
