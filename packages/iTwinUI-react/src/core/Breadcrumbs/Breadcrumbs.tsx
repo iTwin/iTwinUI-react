@@ -29,6 +29,30 @@ export type BreadcrumbsProps = {
    *
    * Expects a function that takes the number of items that are visible
    * and returns the `ReactNode` to render.
+   *
+   * @example
+   * <Breadcrumbs
+   *    overflowButton={() => (
+   *       <IconButton onClick={() => {}}>
+   *         <SvgMoreSmall />
+   *       </IconButton>
+   *    )}
+   * >
+   *   ...
+   * </Breadcrumbs>
+   *
+   * @example
+   * <Breadcrumbs
+   *    overflowButton={(visibleCount) => (
+   *      <DropdownMenu menuItems={() => {}}>
+   *        <IconButton onClick={() => {}}>
+   *          <SvgMoreSmall />
+   *        </IconButton>
+   *      </DropdownMenu>
+   *    )}
+   * >
+   *   ...
+   * </Breadcrumbs>
    */
   overflowButton?: (visibleCount: number) => React.ReactNode;
 } & Omit<CommonProps, 'title'>;

@@ -17,6 +17,11 @@ describe('Breadcrumbs', () => {
     it(testName, function () {
       const id = Cypress.storyId(storyPath, testName);
       cy.visit('iframe', { qs: { id } });
+
+      if (testName === 'Custom Overflow') {
+        cy.get('.iui-button').eq(1).click();
+      }
+
       cy.compareSnapshot(testName);
     });
   });

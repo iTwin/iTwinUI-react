@@ -7,8 +7,9 @@ import { fireEvent, render } from '@testing-library/react';
 
 import { Breadcrumbs, BreadcrumbsProps } from './Breadcrumbs';
 import { Button } from '../Buttons';
-import { SvgChevronRight } from '@itwin/itwinui-icons-react';
+import { SvgChevronRight, SvgMoreSmall } from '@itwin/itwinui-icons-react';
 import * as UseOverflow from '../utils/hooks/useOverflow';
+import { IconButton } from '../Buttons/IconButton';
 
 const renderComponent = (props?: Partial<BreadcrumbsProps>) => {
   return render(
@@ -102,7 +103,13 @@ it('should overflow when there is not enough space', () => {
 it('should handle overflow when overflowButton is specified', () => {
   const onClick = jest.fn();
   useOverflowMock.mockReturnValue([jest.fn(), 2]);
-  const { container } = renderComponent({ overflowButton: onClick });
+  const { container } = renderComponent({
+    overflowButton: (visibleCount) => (
+      <IconButton onClick={onClick(visibleCount)}>
+        <SvgMoreSmall />
+      </IconButton>
+    ),
+  });
 
   expect(container.querySelector('.iui-breadcrumbs')).toBeTruthy();
   expect(container.querySelector('.iui-breadcrumbs-list')).toBeTruthy();

@@ -19,8 +19,7 @@ import {
 import {
   SvgChevronRightDouble,
   SvgFolder,
-  SvgPlaceholder,
-  SvgMore,
+  SvgMoreSmall,
 } from '@itwin/itwinui-icons-react';
 
 export default {
@@ -129,19 +128,18 @@ export const CustomOverflow: Story<BreadcrumbsProps> = (args) => {
                     close();
                   };
                   return (
-                    <MenuItem
-                      key={index}
-                      onClick={onClick}
-                      icon={<SvgPlaceholder />}
-                    >
+                    <MenuItem key={index} onClick={onClick}>
                       Item {index}
                     </MenuItem>
                   );
                 })
             }
           >
-            <IconButton onClick={() => action('Clicked on overflow icon')()}>
-              <SvgMore />
+            <IconButton
+              style={{ paddingTop: '8px' }}
+              onClick={() => action('Clicked on overflow icon')()}
+            >
+              <SvgMoreSmall />
             </IconButton>
           </DropdownMenu>
         )}
