@@ -562,7 +562,7 @@ export const Table = <
     data.length !== 0 && column.canSort;
 
   const onRowClickHandler = React.useCallback(
-    (event: React.MouseEvent, row: Row<T>) => {
+    (event: React.MouseEvent, row: Row<T>, index: number) => {
       const isDisabled = isRowDisabled?.(row.original);
       if (!isDisabled) {
         onRowClick?.(event, row);
@@ -576,7 +576,7 @@ export const Table = <
         if (event.shiftKey) {
           dispatch({
             type: shiftRowSelectedAction,
-            index: row.index,
+            index,
           });
         } else if (
           !row.isSelected &&
@@ -685,6 +685,7 @@ export const Table = <
       return (
         <TableRowMemoized
           row={row}
+          index={index}
           rowProps={rowProps}
           isLast={index === page.length - 1}
           onRowInViewport={onRowInViewportRef}
