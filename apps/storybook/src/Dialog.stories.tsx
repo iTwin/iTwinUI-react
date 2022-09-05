@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { Button, Dialog } from '@itwin/itwinui-react';
+import { Button, Code, Dialog } from '@itwin/itwinui-react';
 import { action } from '@storybook/addon-actions';
 import { Meta, Story } from '@storybook/react';
 export default {
@@ -225,48 +225,51 @@ export const DraggableRelativeToContainer: Story = ({ isOpen, ...rest }) => {
   };
 
   return (
-    <>
+    <div
+      style={{
+        position: 'relative',
+        width: '70vw',
+        height: '70vh',
+        border: '1px solid red',
+        padding: 12,
+      }}
+    >
       <Button styleType='high-visibility' onClick={() => setIsDialogOpen(true)}>
         Open Dialog
       </Button>
-      <div
-        style={{
-          position: 'relative',
-          width: '70vw',
-          height: '70vh',
-          border: '1px solid red',
-          marginTop: 12,
-        }}
-      >
-        <Dialog
-          isOpen={isDialogOpen}
-          onClose={onClose}
-          {...rest}
-          closeOnEsc
-          isDismissible
-          isDraggable
-          relativeTo='container'
-        >
-          <Dialog.Main>
-            <Dialog.TitleBar titleText='Best dialog ever' />
-            <Dialog.Content>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </Dialog.Content>
-            <Dialog.ButtonBar>
-              <Button styleType='high-visibility' onClick={primaryButtonHandle}>
-                Primary
-              </Button>
-              <Button onClick={secondaryButtonHandle}>Secondary</Button>
-            </Dialog.ButtonBar>
-          </Dialog.Main>
-        </Dialog>
+      <div style={{ marginTop: 12 }}>
+        When <Code>Dialog</Code> prop is <Code>{"relativeTo='container'"}</Code>{' '}
+        then container element must have <Code>{"position: 'relative'"}</Code>{' '}
+        set.
       </div>
-    </>
+      <Dialog
+        isOpen={isDialogOpen}
+        onClose={onClose}
+        {...rest}
+        closeOnEsc
+        isDismissible
+        isDraggable
+        relativeTo='container'
+      >
+        <Dialog.Main>
+          <Dialog.TitleBar titleText='Best dialog ever' />
+          <Dialog.Content>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat. Duis aute irure dolor in
+            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+            culpa qui officia deserunt mollit anim id est laborum.
+          </Dialog.Content>
+          <Dialog.ButtonBar>
+            <Button styleType='high-visibility' onClick={primaryButtonHandle}>
+              Primary
+            </Button>
+            <Button onClick={secondaryButtonHandle}>Secondary</Button>
+          </Dialog.ButtonBar>
+        </Dialog.Main>
+      </Dialog>
+    </div>
   );
 };

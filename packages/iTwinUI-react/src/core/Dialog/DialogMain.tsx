@@ -157,7 +157,7 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
         onKeyDown={handleKeyDown}
         tabIndex={-1}
         style={{
-          transform,
+          transform: isDraggable ? transform : undefined,
           ...style,
           ...propStyle,
         }}
