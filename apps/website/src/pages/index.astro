@@ -2,11 +2,13 @@
 import Global from './_global.astro';
 import Header from '~/components/Header.astro';
 import ITwinUILogo from '~/components/iTwinUILogo';
+import CopyIcon from '~/icons/CopyIcon.astro';
 import AccessibleIcon from '~/icons/AccessibleIcon.astro';
 import NoFussIcon from '~/icons/NoFussIcon.astro';
 import EvolvingIcon from '~/icons/EvolvingIcon.astro';
 import ConsistentIcon from '~/icons/ConsistentIcon.astro';
 import NorthernLights from '~/components/NorthernLights.astro';
+import CopyCodeButton from '~/components/CopyCodeButton.astro';
 import AlertDemo from '~/demos/Alert.demo';
 import DialogDemo from '~/demos/Dialog.demo';
 import ComboBoxDemo from '~/demos/ComboBox.demo';
@@ -30,7 +32,7 @@ const currentPage = new URL(Astro.request.url).pathname;
           </p>
           <div class='button-area'>
             <a class='main-button' href='/docs'>Documentation</a>
-            <a class='secondary-button' href='/docs'>Get started</a>
+            <CopyCodeButton />
           </div>
         </div>
         <div class='animated-logo-wrapper'>
@@ -244,17 +246,10 @@ const currentPage = new URL(Astro.request.url).pathname;
       text-decoration: none;
       background: var(--color-highlight-gradient);
       color: var(--color-background-1);
+      font-weight: 500;
     }
-    .secondary-button {
-      padding: var(--space-2) var(--space-5);
-      border-radius: var(--border-radius-1);
-      text-decoration: none;
-      background: transparent;
-      color: var(--color-text);
-      border: 1px solid var(--color-text);
-    }
+
     .main-button:hover,
-    .secondary-button:hover,
     .library-item:hover,
     .join-us:hover {
       box-shadow: 0 0 10px var(--color-highlight-1), 0 0 20px var(--color-highlight-2);
