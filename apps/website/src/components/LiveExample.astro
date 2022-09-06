@@ -42,6 +42,10 @@ const MainComponent = AllExamples[`${capitalize(componentName)}MainExample`];
 </LiveExample>
 
 <style lang='scss' is:global>
+  .live-example.iui-body {
+    background-color: transparent;
+  }
+
   .sp-wrapper {
     color-scheme: dark !important;
     display: grid !important;
@@ -51,6 +55,7 @@ const MainComponent = AllExamples[`${capitalize(componentName)}MainExample`];
   .sp-stack {
     height: 350px;
     overflow: auto;
+    border-radius: 0.5rem;
   }
 
   .sp-preview-container {
@@ -65,11 +70,6 @@ const MainComponent = AllExamples[`${capitalize(componentName)}MainExample`];
       place-items: center;
       background: var(--color-sandbox-gradient) !important;
     }
-  }
-
-  .sp-preview-container,
-  .sp-code-editor {
-    border-radius: 0.5rem;
   }
 
   .sp-preview-actions {
