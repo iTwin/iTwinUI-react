@@ -118,6 +118,8 @@ export const onShiftSelect = <T extends Record<string, unknown>>(
   const startIndex = state.lastSelectedRow ?? 0;
   const endIndex = action.index;
 
+  console.log('start to end', startIndex, endIndex, instance?.page);
+
   const selectedRowIds: Record<string, boolean> = {};
   const handleRow = (row: Row<T>) => {
     if (isRowDisabled?.(row.original)) {
@@ -127,7 +129,9 @@ export const onShiftSelect = <T extends Record<string, unknown>>(
     selectedRowIds[row.id] = true;
     row.initialSubRows.forEach((r) => handleRow(r));
   };
-  instance?.page.slice(startIndex, endIndex + 1).forEach((r) => handleRow(r));
+  instance?.page
+    .slice(startIndex + 1, endIndex + 1)
+    .forEach((r) => handleRow(r));
 
   const newState = {
     ...state,
