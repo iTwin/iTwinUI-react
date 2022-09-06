@@ -5,6 +5,7 @@
 import * as React from 'react';
 import * as SandpackReact from '@codesandbox/sandpack-react';
 import { nightOwl } from '@codesandbox/sandpack-themes';
+import { SandpackPreviewRef } from '@codesandbox/sandpack-react';
 
 const { SandpackProvider, SandpackThemeProvider, SandpackCodeEditor, SandpackPreview } =
   SandpackReact;
@@ -41,6 +42,28 @@ type Props = {
 export default ({ code = '', ssr, staticComponent, ...rest }: Props) => {
   const id = React.useId();
   const isHydrated = React.useRef(false);
+  const previewRef = React.useRef<SandpackPreviewRef>();
+  const [, forceUpdate] = React.useReducer((x) => x + 1, 0);
+  const [isDoneLoading, setIsDoneLoading] = React.useState(false);
+
+  // TODO: Instead of waiting for "Show code", automatically load this in the background
+  // and swap out the static component
+  React.useEffect(() => {
+    const client = previewRef.current?.getClient();
+
+    if (isDoneLoading || !previewRef.current || !client) {
+      return;
+    }
+
+    // keep re-rendering until we get the sandpack client
+    if (previewRef.current && !client) forceUpdate();
+
+    client?.listen((message) => {
+      if (message.type === 'done') {
+        setIsDoneLoading(true);
+      }
+    });
+  });
 
   React.useEffect(() => {
     if (isHydrated.current) {
@@ -54,43 +77,63 @@ export default ({ code = '', ssr, staticComponent, ...rest }: Props) => {
 
   // TODO: replace this with composition to have more control over the layout and styling
   return (
-    <div className={`live-example iui-body ${!isExpanded ? 'sp-preview-container-collapsed' : ''}`}>
-      {!isExpanded ? (
-        <>
+    <LiveExampleContext.Provider value={{ isExpanded, setIsExpanded }}>
+      {!isDoneLoading && (
+        <div
+          id={id}
+          className={`live-example iui-body ${
+            !isExpanded || !isDoneLoading ? 'sp-preview-container-collapsed' : ''
+          }`}
+        >
           {staticComponent}
-          <button
-            onClick={() => setIsExpanded(true)}
-            className='show-code-button'
-            aria-controls={id}
-            aria-expanded={isExpanded}
-          >
-            Show code
-          </button>
-        </>
-      ) : (
-        <div id={id}>
-          <SandpackProvider
-            template='react-ts'
-            files={{
-              '/App.tsx': code.trim(),
-              '/index.tsx': { code: indexJs.trim(), hidden: true },
-              '/styles.css': { code: indexCss.trim(), hidden: true },
-            }}
-            customSetup={{
-              dependencies: {
-                '@itwin/itwinui-react': 'latest',
-              },
-            }}
-            id={id}
-            {...rest}
-          >
-            <SandpackThemeProvider theme={nightOwl}>
-              <SandpackPreview />
-              <SandpackCodeEditor showTabs={false} />
-            </SandpackThemeProvider>
-          </SandpackProvider>
+          <Toggle />
         </div>
       )}
-    </div>
+      <SandpackProvider
+        template='react-ts'
+        files={{
+          '/App.tsx': code.trim(),
+          '/index.tsx': { code: indexJs.trim(), hidden: true },
+          '/styles.css': { code: indexCss.trim(), hidden: true },
+        }}
+        customSetup={{
+          dependencies: {
+            '@itwin/itwinui-react': 'latest',
+          },
+        }}
+        id={id}
+        {...rest}
+      >
+        <SandpackThemeProvider theme={nightOwl}>
+          <SandpackPreview
+            ref={previewRef}
+            style={{
+              visibility: isDoneLoading ? 'visible' : 'hidden',
+              position: isDoneLoading ? 'relative' : 'absolute',
+            }}
+            actionsChildren={<Toggle />}
+          />
+          {isExpanded && <SandpackCodeEditor showTabs={false} />}
+        </SandpackThemeProvider>
+      </SandpackProvider>
+    </LiveExampleContext.Provider>
+  );
+};
+
+const LiveExampleContext = React.createContext<{
+  isExpanded: boolean;
+  setIsExpanded: React.Dispatch<React.SetStateAction<boolean>>;
+}>({
+  isExpanded: false,
+  setIsExpanded: () => {},
+});
+
+const Toggle = () => {
+  const { isExpanded, setIsExpanded } = React.useContext(LiveExampleContext);
+
+  return (
+    <button onClick={() => setIsExpanded((e) => !e)} className='show-code-button'>
+      {!isExpanded ? 'Show code' : 'Hide code'}
+    </button>
   );
 };

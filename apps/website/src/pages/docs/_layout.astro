@@ -150,7 +150,7 @@ const currentPage = new URL(Astro.request.url).pathname;
         padding: 1rem 0;
         display: grid;
         align-content: start;
-        gap: 0.5rem;
+        gap: var(--space-4);
 
         & > :global(:is(h1, h2, h3, h4, strong)) {
           text-decoration: none;
@@ -185,7 +185,8 @@ const currentPage = new URL(Astro.request.url).pathname;
           }
         }
 
-        :global(:where(:not(a, h1, h2, h3, h4, .live-example, .live-example *, table, table *))) {
+        :global(:where(:not(a, h1, h2, h3, h4, .live-example, .live-example
+                *, .sp-wrapper, .sp-wrapper *, table, table *))) {
           color: var(--color-subtext);
           font-size: var(--type-1);
         }

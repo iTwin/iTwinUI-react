@@ -42,6 +42,9 @@ const MainComponent = AllExamples[`${capitalize(componentName)}MainExample`];
 </LiveExample>
 
 <style lang='scss' is:global>
+  .live-example {
+    position: relative;
+  }
   .live-example.iui-body {
     background-color: transparent;
   }
@@ -63,9 +66,7 @@ const MainComponent = AllExamples[`${capitalize(componentName)}MainExample`];
 
     &-collapsed {
       height: 350px;
-      font-size: 14px;
       border-radius: 0.5rem;
-      position: relative;
       display: grid;
       place-items: center;
       background: var(--color-sandbox-gradient) !important;
@@ -78,6 +79,14 @@ const MainComponent = AllExamples[`${capitalize(componentName)}MainExample`];
 
   .sp-cube-wrapper {
     left: calc(var(--sp-space-2) + var(--sp-space-1));
+  }
+
+  .sp-code-editor {
+    font-size: 0.8rem;
+  }
+
+  .cm-scroller {
+    scrollbar-gutter: stable;
   }
 
   .show-code-button {
@@ -94,6 +103,11 @@ const MainComponent = AllExamples[`${capitalize(componentName)}MainExample`];
 
     &:hover {
       background: hsl(0 0% 0% / 0.2);
+    }
+
+    .sp-preview-actions & {
+      bottom: 0;
+      right: 0;
     }
   }
 </style>
