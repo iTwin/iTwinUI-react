@@ -5,10 +5,10 @@ const { unhide = false } = Astro.props;
 ---
 
 <span class:list={['visually-hidden', { 'not-visually-hidden': unhide }]}>
-  <slot></slot>
+  <slot />
 </span>
 
-<style lang='scss'>
+<style lang='scss' is:global>
   .visually-hidden {
     position: absolute;
     width: 1px;

@@ -2,13 +2,12 @@
 import Global from './_global.astro';
 import Header from '~/components/Header.astro';
 import ITwinUILogo from '~/components/iTwinUILogo';
-import CopyIcon from '~/icons/CopyIcon.astro';
 import AccessibleIcon from '~/icons/AccessibleIcon.astro';
 import NoFussIcon from '~/icons/NoFussIcon.astro';
 import EvolvingIcon from '~/icons/EvolvingIcon.astro';
 import ConsistentIcon from '~/icons/ConsistentIcon.astro';
 import NorthernLights from '~/components/NorthernLights.astro';
-import CopyCodeButton from '~/components/CopyCodeButton.astro';
+import CopyCommandButton from '~/components/CopyCommandButton.astro';
 import AlertDemo from '~/demos/Alert.demo';
 import DialogDemo from '~/demos/Dialog.demo';
 import ComboBoxDemo from '~/demos/ComboBox.demo';
@@ -32,7 +31,7 @@ const currentPage = new URL(Astro.request.url).pathname;
           </p>
           <div class='button-area'>
             <a class='main-button' href='/docs'>Documentation</a>
-            <CopyCodeButton />
+            <CopyCommandButton command='npm i @itwin/itwinui-react' />
           </div>
         </div>
         <div class='animated-logo-wrapper'>
@@ -239,6 +238,7 @@ const currentPage = new URL(Astro.request.url).pathname;
     .button-area {
       display: flex;
       gap: var(--space-5);
+      flex-wrap: wrap;
     }
     .main-button {
       padding: var(--space-2) var(--space-5);
