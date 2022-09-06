@@ -1105,6 +1105,190 @@ it('should show message and active filter icon when there is no data after manua
   expect(filterIcon).toBeTruthy();
 });
 
+it('should not filter if global filter is not set', async () => {
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+      ],
+    },
+  ];
+
+  const data = mockedData();
+
+  const { container } = render(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={undefined}
+    />,
+  );
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+});
+
+it('should update rows when global filter changes', async () => {
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+      ],
+    },
+  ];
+  const data = mockedData();
+
+  let globalFilterValue = 'Name2';
+
+  const { container, rerender } = render(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(1);
+  expect(rows.item(0).textContent).toContain('Description2');
+
+  globalFilterValue = 'Name3';
+
+  rerender(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(1);
+  expect(rows.item(0).textContent).toContain('Description3');
+});
+
+it('should filter rows with both global and column filters', async () => {
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          Filter: tableFilters.TextFilter(),
+          fieldType: 'text',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+      ],
+    },
+  ];
+  const data = [
+    {
+      name: 'Name11',
+      description: 'Description11',
+    },
+    {
+      name: 'Name12',
+      description: 'Description12',
+    },
+    {
+      name: 'Name22',
+      description: 'Description22',
+    },
+  ];
+
+  let globalFilterValue = '';
+  const { container, rerender } = render(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  globalFilterValue = 'Name1';
+
+  rerender(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(2);
+  expect(rows.item(0).textContent).toContain('Description11');
+  expect(rows.item(1).textContent).toContain('Description12');
+
+  await setFilter(container, '2');
+
+  rerender(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(1);
+  expect(rows.item(0).textContent).toContain('Description12');
+
+  globalFilterValue = '';
+
+  rerender(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(2);
+  expect(rows.item(0).textContent).toContain('Description12');
+  expect(rows.item(1).textContent).toContain('Description22');
+});
+
 it('should not trigger sorting when filter is clicked', async () => {
   const onFilter = jest.fn();
   const onSort = jest.fn();
