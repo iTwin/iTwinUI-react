@@ -53,14 +53,12 @@ export const useDragAndDrop = (
 
   const adjustTransform = React.useCallback(() => {
     containerRectRef.current = getContainerRect(containerRef);
-    if (!elementRef.current) {
+    if (
+      !elementRef.current ||
+      translateX.current == null ||
+      translateY.current == null
+    ) {
       return;
-    }
-
-    if (translateX.current == null || translateY.current == null) {
-      const [x, y] = parseTranslate(elementRef);
-      translateX.current = x;
-      translateY.current = y;
     }
 
     const {
