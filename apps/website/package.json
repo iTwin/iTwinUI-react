@@ -11,23 +11,23 @@
   "devDependencies": {
     "@astrojs/react": "^1.1.1",
     "@astrojs/mdx": "^0.10.3",
-    "@codesandbox/sandpack-react": "^1.6.0",
+    "@codesandbox/sandpack-react": "^1.7.2",
     "@codesandbox/sandpack-themes": "^1.6.0",
     "@fontsource/noto-sans": "^4.5.11",
     "@itwin/itwinui-react": "*",
     "@jsdevtools/rehype-toc": "3.0.2",
     "@types/react": "^18.0.0",
-    "astro": "^1.1.2",
+    "astro": "^1.1.5",
     "postcss-preset-env": "^7.7.2",
     "prettier": "2.7.1",
-    "prettier-plugin-astro": "^0.5.3",
+    "prettier-plugin-astro": "^0.5.4",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-docgen": "^6.0.0-alpha.3",
     "react-docgen-typescript": "^2.2.2",
     "rehype-autolink-headings": "^6.1.1",
     "rehype-slug": "^5.0.1",
-    "sass": "^1.54.0",
+    "sass": "^1.54.8",
     "snarkdown": "2.0.0"
   }
 }

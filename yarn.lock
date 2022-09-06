@@ -1691,18 +1691,18 @@
     style-mod "^4.0.0"
     w3c-keyname "^2.2.4"
 
-"@codesandbox/sandpack-client@^1.5.4":
-  version "1.5.4"
-  resolved "https://registry.yarnpkg.com/@codesandbox/sandpack-client/-/sandpack-client-1.5.4.tgz#92c0fdfb371bf52f945ca8c707187d9e94928f80"
-  integrity sha512-NK3PSTbfiVkbx++WzjpAkIfvc1tcixBOUNmbnSLui4qJ+PzQd7tXpDmrHgLm4Do3Gyw/cdljNfxXhTC9w04Q0g==
+"@codesandbox/sandpack-client@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@codesandbox/sandpack-client/-/sandpack-client-1.7.0.tgz#cae07db91da3ef2893f20c0d11d58641e7af2a33"
+  integrity sha512-13nL7+OX7iefVXeO+cvEntZD/hBuXLPjv72e5tiCjwuq/oor8jR2NGxzJ0pozUfZmJhvDIAxw5isJvhiIdgcWA==
   dependencies:
     codesandbox-import-utils "^1.2.3"
     lodash.isequal "^4.5.0"
 
-"@codesandbox/sandpack-react@^1.6.0":
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/@codesandbox/sandpack-react/-/sandpack-react-1.6.0.tgz#7ec52b0c530a84e6b8cd2832cd37c5fa19314410"
-  integrity sha512-vTTOGSGp5IpzpNey+aKZFr216l5boWdlZI9j2PpdghFUQS9Z3IwwLgYNIke26lGZ5BVEoqSRLH5JwWBmicxUfQ==
+"@codesandbox/sandpack-react@^1.7.2":
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/@codesandbox/sandpack-react/-/sandpack-react-1.7.2.tgz#5559797f2d405a7fb59577d92097c88628f79d20"
+  integrity sha512-oOaGzzqcFcDgoHMZ1cuQKYGTdQPgtmMHNgingSbzxcxTCIsA0hkwm+2ilVH1d1AZSgbIPoLqbYVjrdtsO4lJJg==
   dependencies:
     "@code-hike/classer" "^0.0.0-aa6efee"
     "@codemirror/closebrackets" "^0.19.0"
@@ -1719,9 +1719,10 @@
     "@codemirror/matchbrackets" "^0.19.3"
     "@codemirror/state" "^0.19.6"
     "@codemirror/view" "^0.19.32"
-    "@codesandbox/sandpack-client" "^1.5.4"
+    "@codesandbox/sandpack-client" "^1.7.0"
     "@react-hook/intersection-observer" "^3.1.1"
     "@stitches/core" "^1.2.6"
+    clean-set "^1.1.2"
     codesandbox-import-util-types "^2.2.3"
     lodash.isequal "^4.5.0"
     lz-string "^1.4.4"
@@ -4897,10 +4898,10 @@ astring@^1.6.0:
   resolved "https://registry.yarnpkg.com/astring/-/astring-1.8.3.tgz#1a0ae738c7cc558f8e5ddc8e3120636f5cebcb85"
   integrity sha512-sRpyiNrx2dEYIMmUXprS8nlpRg2Drs8m9ElX9vVEXaCB4XEAJhKfs7IcX0IwShjuOAjLR6wzIrgoptz1n19i1A==
 
-astro@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/astro/-/astro-1.1.2.tgz#e89cb7107d713722fdfe4048e0c0f641ec9c1c89"
-  integrity sha512-btawnJ+MwkJbjLO0uSMrlYl71jsa6ljyXEXeeFitp9aqRo0sqH7JdTE0nh7MWsVMePXEvcJ88WOkEhW/FpRu/Q==
+astro@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/astro/-/astro-1.1.5.tgz#ee55042dfc567836235b13dda7e4e0721c62405b"
+  integrity sha512-V3uDGTHYDbrqDbCpziEgCv8uElow/Ae1LjGC7guTQTU3IXzcVbJPkIfx8uNDThQ6nZpSb38z9GsFtsNJ9A3OmQ==
   dependencies:
     "@astrojs/compiler" "^0.23.4"
     "@astrojs/language-server" "^0.23.0"
@@ -4915,7 +4916,6 @@ astro@^1.1.2:
     "@babel/types" "^7.18.4"
     "@proload/core" "^0.3.2"
     "@proload/plugin-tsm" "^0.2.1"
-    ast-types "^0.14.2"
     boxen "^6.2.1"
     ci-info "^3.3.1"
     common-ancestor-path "^1.0.1"
@@ -5937,6 +5937,11 @@ clean-css@^4.2.3:
   integrity sha512-EJUDT7nDVFDvaQgAo2G/PJvxmp1o/c6iXLbswsBbUFXi1Nr+AjA2cKmfbKDMjMvzEe75g3P6JkaDDAKk96A85A==
   dependencies:
     source-map "~0.6.0"
+
+clean-set@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/clean-set/-/clean-set-1.1.2.tgz#76d8bf238c3e27827bfa73073ecdfdc767187070"
+  integrity sha512-cA8uCj0qSoG9e0kevyOWXwPaELRPVg5Pxp6WskLMwerx257Zfnh8Nl0JBH59d7wQzij2CK7qEfJQK3RjuKKIug==
 
 clean-stack@^2.0.0:
   version "2.2.0"
@@ -13620,7 +13625,7 @@ postcss-value-parser@^4.1.0, postcss-value-parser@^4.2.0:
   resolved "https://registry.yarnpkg.com/postcss-value-parser/-/postcss-value-parser-4.2.0.tgz#723c09920836ba6d3e5af019f92bc0971c02e514"
   integrity sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==
 
-postcss@8, postcss@^7.0.14, postcss@^7.0.26, postcss@^7.0.32, postcss@^7.0.36, postcss@^7.0.5, postcss@^7.0.6, postcss@^8.4.13:
+postcss@8, postcss@^7.0.14, postcss@^7.0.26, postcss@^7.0.32, postcss@^7.0.36, postcss@^7.0.5, postcss@^7.0.6, postcss@^8.4.13, postcss@^8.4.14, postcss@^8.4.16:
   version "8.4.16"
   resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.16.tgz#33a1d675fac39941f5f445db0de4db2b6e01d43c"
   integrity sha512-ipHE1XBvKzm5xI7hiHCZJCSugxvsdq2mPnsq5+UF+VHCjiBvtDrlxJfMBToWaP9D5XlgNmcFGqoHmUn0EYEaRQ==
@@ -13657,6 +13662,16 @@ prettier-plugin-astro@^0.5.3:
     "@astrojs/compiler" "^0.23.3"
     prettier "^2.7.1"
     sass-formatter "^0.7.2"
+    synckit "^0.7.0"
+
+prettier-plugin-astro@^0.5.4:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-astro/-/prettier-plugin-astro-0.5.4.tgz#0ccc510cdd260baf6346ccaf5956fb63d0b2bbd9"
+  integrity sha512-ILs/WgUYtKBOn3Zh217/PwjCFtUWEKQjcCFJDevri0hGEBwEnnda9aqSLL0/nhCOmQn/UE7M9zLQvThu970ZHw==
+  dependencies:
+    "@astrojs/compiler" "^0.23.4"
+    prettier "^2.7.1"
+    sass-formatter "^0.7.5"
     synckit "^0.7.0"
 
 prettier@2.2.1, "prettier@>=2.2.1 <=2.3.0":
@@ -14726,14 +14741,7 @@ rollup-pluginutils@^2.4.1:
   dependencies:
     estree-walker "^0.6.1"
 
-"rollup@>=2.75.6 <2.77.0 || ~2.77.0", rollup@~2.77.0:
-  version "2.77.3"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.77.3.tgz#8f00418d3a2740036e15deb653bed1a90ee0cc12"
-  integrity sha512-/qxNTG7FbmefJWoeeYJFbHehJ2HNWnjkAFRKzWN/45eNBBF/r8lo992CwcJXEzyVxs5FmfId+vTSTQDb+bxA+g==
-  optionalDependencies:
-    fsevents "~2.3.2"
-
-rollup@^2.59.0:
+"rollup@>=2.75.6 <2.77.0 || ~2.77.0", rollup@^2.59.0, rollup@~2.77.0:
   version "2.77.3"
   resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.77.3.tgz#8f00418d3a2740036e15deb653bed1a90ee0cc12"
   integrity sha512-/qxNTG7FbmefJWoeeYJFbHehJ2HNWnjkAFRKzWN/45eNBBF/r8lo992CwcJXEzyVxs5FmfId+vTSTQDb+bxA+g==
@@ -14832,17 +14840,17 @@ sane@^4.0.3:
     minimist "^1.1.1"
     walker "~1.0.5"
 
-sass-formatter@^0.7.2:
+sass-formatter@^0.7.2, sass-formatter@^0.7.5:
   version "0.7.5"
   resolved "https://registry.yarnpkg.com/sass-formatter/-/sass-formatter-0.7.5.tgz#60fc3756267368d82877c6abf2c148f0c9291d6d"
   integrity sha512-NKFP8ddjhUYi6A/iD1cEtzkEs91U61kzqe3lY9SVNuvX7LGc88xnEN0mmsWL7Ol//YTi2GL/ol7b9XZ2+hgXuA==
   dependencies:
     suf-log "^2.5.3"
 
-sass@^1.54.0:
-  version "1.54.3"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.54.3.tgz#37baa2652f7f1fdadb73240ee9a2b9b81fabb5c4"
-  integrity sha512-fLodey5Qd41Pxp/Tk7Al97sViYwF/TazRc5t6E65O7JOk4XF8pzwIW7CvCxYVOfJFFI/1x5+elDyBIixrp+zrw==
+sass@^1.54.8:
+  version "1.54.8"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.54.8.tgz#4adef0dd86ea2b1e4074f551eeda4fc5f812a996"
+  integrity sha512-ib4JhLRRgbg6QVy6bsv5uJxnJMTS2soVcCp9Y88Extyy13A8vV0G1fAwujOzmNkFQbR3LvedudAMbtuNRPbQww==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
     immutable "^4.0.0"
