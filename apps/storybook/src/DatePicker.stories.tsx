@@ -209,7 +209,7 @@ WithYear.args = {
   showYearSelection: true,
 };
 
-export const BasicRange: Story<DatePickerProps> = (args) => {
+export const Range: Story<DatePickerProps> = (args) => {
   const {
     setFocus = true,
     localizedNames,
@@ -218,17 +218,16 @@ export const BasicRange: Story<DatePickerProps> = (args) => {
     ...rest
   } = args;
   const [opened, setOpened] = React.useState(false);
-  const [currentStartDate, setCurrentStartDate] = React.useState(
-    new Date(startDate),
-  );
-  const [currentEndDate, setCurrentEndDate] = React.useState(new Date(endDate));
+  const [currentStartDate, setCurrentStartDate] = React.useState(startDate);
+  const [currentEndDate, setCurrentEndDate] = React.useState(endDate);
   const onChange = (startDate: Date, endDate?: Date) => {
     setCurrentStartDate(startDate);
     endDate && setCurrentEndDate(endDate);
     action(`New start date value: ${startDate}`, {
       clearOnStoryChange: false,
     })();
-    action(`New end date value: ${endDate}`, { clearOnStoryChange: false })();
+    endDate &&
+      action(`New end date value: ${endDate}`, { clearOnStoryChange: false })();
   };
 
   React.useEffect(() => {
@@ -263,7 +262,8 @@ export const BasicRange: Story<DatePickerProps> = (args) => {
   );
 };
 
-BasicRange.args = {
+Range.args = {
+  isRange: true,
   startDate: new Date(2022, 6, 13, 14, 55, 22),
   endDate: new Date(2022, 6, 27, 14, 55, 22),
 };

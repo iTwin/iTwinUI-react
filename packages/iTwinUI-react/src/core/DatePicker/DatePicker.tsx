@@ -24,21 +24,24 @@ const isSameDay = (a: Date | undefined, b: Date | undefined) => {
 };
 
 const isInDateRange = (
-  a: Date | undefined,
-  b: Date | undefined,
-  c: Date | undefined,
+  date: Date | undefined,
+  startDate: Date | undefined,
+  endDate: Date | undefined,
 ) => {
-  a && a.setHours(0, 0, 0, 0);
-  b && b.setHours(0, 0, 0, 0);
-  c && c.setHours(0, 0, 0, 0);
-  return a && b && c && a > b && a < c;
+  date && date.setHours(0, 0, 0, 0);
+  startDate && startDate.setHours(0, 0, 0, 0);
+  endDate && endDate.setHours(0, 0, 0, 0);
+  return date && startDate && endDate && date > startDate && date < endDate;
 };
 
 // compares to see if one date is earlier than another
-const dateCompare = (a: Date | undefined, b: Date | undefined) => {
-  a && a.setHours(0, 0, 0, 0);
-  b && b.setHours(0, 0, 0, 0);
-  return a && b && a < b;
+const isBefore = (
+  beforeDate: Date | undefined,
+  afterDate: Date | undefined,
+) => {
+  beforeDate && beforeDate.setHours(0, 0, 0, 0);
+  afterDate && afterDate.setHours(0, 0, 0, 0);
+  return beforeDate && afterDate && beforeDate < afterDate;
 };
 
 const defaultMonths = [
@@ -156,6 +159,11 @@ export type DatePickerProps = {
    */
   showYearSelection?: boolean;
   /**
+   * Enable date range support.
+   * @default false
+   */
+  isRange?: boolean;
+  /**
    * Selected end-date (only for date-range support.)
    */
   endDate?: Date;
@@ -185,6 +193,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
     minuteStep,
     secondStep,
     showYearSelection = false,
+    isRange = false,
     startDate,
     endDate,
     ...rest
@@ -199,14 +208,21 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
   const [selectedDay, setSelectedDay] = React.useState(date);
   const [selectedStartDay, setSelectedStartDay] = React.useState(startDate);
   const [selectedEndDay, setSelectedEndDay] = React.useState(endDate);
-  const [focusedDay, setFocusedDay] = React.useState(selectedDay ?? new Date());
+  const [focusedDay, setFocusedDay] = React.useState(
+    selectedStartDay ?? selectedDay ?? new Date(),
+  );
   const [displayedMonthIndex, setDisplayedMonthIndex] = React.useState(
-    selectedDay ? selectedDay.getMonth() : new Date().getMonth(),
+    selectedStartDay?.getMonth() ??
+      selectedDay?.getMonth() ??
+      new Date().getMonth(),
   );
   const [displayedYear, setDisplayedYear] = React.useState(
-    selectedDay ? selectedDay.getFullYear() : new Date().getFullYear(),
+    selectedStartDay?.getFullYear() ??
+      selectedDay?.getFullYear() ??
+      new Date().getFullYear(),
   );
-  const [onStartDate, setOnStartDate] = React.useState(true);
+  // boolean that toggles between the user picking the start date and end date for date range
+  const [isSelectingStartDate, setIsSelectingStartDate] = React.useState(true);
 
   // Used to focus days only when days are changed
   // e.g. without this, when changing months day would be focused
@@ -231,10 +247,13 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
     setSelectedDay(date);
     setSelectedStartDay(startDate);
     setSelectedEndDay(endDate);
-    setFocusedDay(date ?? currentDate);
+    setFocusedDay(startDate ?? date ?? currentDate);
     setMonthAndYear(
-      date ? date.getMonth() : currentDate.getMonth(),
-      date ? date.getFullYear() : currentDate.getFullYear(),
+      startDate?.getMonth() ?? date?.getMonth() ?? currentDate.getMonth(),
+
+      startDate?.getFullYear() ??
+        date?.getFullYear() ??
+        currentDate.getFullYear(),
     );
   }, [date, setMonthAndYear, startDate, endDate]);
 
@@ -271,7 +290,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
   }, [days]);
 
   const getNewFocusedDate = (newYear: number, newMonth: number) => {
-    const currentDate = selectedDay ?? new Date();
+    const currentDate = selectedStartDay ?? selectedDay ?? new Date();
     const newDate = new Date(
       newYear,
       newMonth,
@@ -312,11 +331,29 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
   };
 
   const onDayClick = (day: Date) => {
-    if (day.getMonth() !== selectedDay?.getMonth()) {
-      setMonthAndYear(day.getMonth(), day.getFullYear());
+    // single date selection
+    if (!isRange) {
+      if (day.getMonth() !== selectedDay?.getMonth()) {
+        setMonthAndYear(day.getMonth(), day.getFullYear());
+      }
+      const currentDate = selectedDay ?? new Date();
+      const newDate = new Date(
+        day.getFullYear(),
+        day.getMonth(),
+        day.getDate(),
+        currentDate.getHours(),
+        currentDate.getMinutes(),
+        currentDate.getSeconds(),
+      );
+      setSelectedDay(newDate);
+      setFocusedDay(newDate);
+      onChange?.(newDate);
     }
-    // changes start date if clicked before start date
-    if (onStartDate) {
+    // start date selection (date range only)
+    else if (isSelectingStartDate) {
+      if (day.getMonth() !== selectedStartDay?.getMonth()) {
+        setMonthAndYear(day.getMonth(), day.getFullYear());
+      }
       const currentStartDate = selectedStartDay ?? new Date();
       const newStartDate = new Date(
         day.getFullYear(),
@@ -327,34 +364,21 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
         currentStartDate.getSeconds(),
       );
       setSelectedStartDay(newStartDate);
-
-      if (
-        selectedStartDay &&
-        selectedEndDay &&
-        dateCompare(selectedEndDay, newStartDate)
-      ) {
-        // console.log('Start If statement hit! Before Change');
-        // console.log(
-        //   `newStartDate ${newStartDate} selectedStartDay ${selectedStartDay} selectedEndDay ${selectedEndDay}`,
-        // );
-        setSelectedStartDay(selectedEndDay);
+      setFocusedDay(newStartDate);
+      // if the start date is after the end date, reset the end date
+      if (selectedEndDay && !isBefore(newStartDate, selectedEndDay)) {
         setSelectedEndDay(newStartDate);
-        // console.log('After Changes');
-        // console.log(
-        //   `newStartDate ${newStartDate} selectedStartDay ${selectedStartDay} selectedEndDay ${selectedEndDay}`,
-        // );
+        selectedStartDay && onChange?.(newStartDate, newStartDate);
+      } else {
+        selectedStartDay && onChange?.(newStartDate, selectedEndDay);
       }
-      selectedEndDay &&
-        selectedStartDay &&
-        onChange?.(selectedStartDay, selectedEndDay);
-
-      setOnStartDate(false);
-      return;
+      setIsSelectingStartDate(false);
     }
-
-    // changes end date if clicked after end date
-    if (!onStartDate) {
-      setSelectedEndDay(day);
+    // end date selection (date range only)
+    else {
+      if (day.getMonth() !== selectedEndDay?.getMonth()) {
+        setMonthAndYear(day.getMonth(), day.getFullYear());
+      }
       const currentEndDate = selectedEndDay ?? new Date();
       const newEndDate = new Date(
         day.getFullYear(),
@@ -364,38 +388,21 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
         currentEndDate.getMinutes(),
         currentEndDate.getSeconds(),
       );
+      // if the end date is before the start date, move back the start date and still have user select end date
       if (
         selectedStartDay &&
         selectedEndDay &&
-        dateCompare(newEndDate, selectedStartDay)
+        !isBefore(newEndDate, selectedStartDay)
       ) {
-        // console.log('End If statement hit!');
-        const temp = selectedStartDay;
+        setSelectedEndDay(newEndDate);
+        selectedStartDay && onChange?.(selectedStartDay, newEndDate);
+        setIsSelectingStartDate(true);
+      } else {
         setSelectedStartDay(newEndDate);
-        setSelectedEndDay(temp);
-        // console.log(
-        //   `Start: ${selectedStartDay.toDateString()} End: ${selectedEndDay.toDateString()}`,
-        // );
+        setFocusedDay(newEndDate);
+        selectedStartDay && onChange?.(newEndDate, selectedEndDay);
       }
-      selectedStartDay &&
-        selectedEndDay &&
-        onChange?.(selectedStartDay, selectedEndDay);
-
-      setOnStartDate(true);
-      return;
     }
-    const currentDate = selectedDay ?? new Date();
-    const newDate = new Date(
-      day.getFullYear(),
-      day.getMonth(),
-      day.getDate(),
-      currentDate.getHours(),
-      currentDate.getMinutes(),
-      currentDate.getSeconds(),
-    );
-    setSelectedDay(newDate);
-    setFocusedDay(newDate);
-    onChange?.(newDate);
   };
 
   const handleCalendarKeyDown = (
@@ -458,27 +465,19 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
 
     let dayClass = 'iui-calendar-day';
 
-    // if the selected date is not in the range, it will be selected
-    if (
-      isSameDay(day, selectedDay) &&
-      !isInDateRange(selectedDay, selectedStartDay, selectedEndDay)
-    ) {
+    const isSelectedDay =
+      isSameDay(day, selectedDay) ||
+      (isSameDay(day, selectedStartDay) && isSameDay(day, selectedEndDay));
+
+    if (isSelectedDay) {
       dayClass += '-selected';
     }
 
-    // if the start date is not selected, it will be the range-start
-    if (
-      isSameDay(day, selectedStartDay) &&
-      dayClass != 'iui-calendar-day-selected'
-    ) {
+    if (!isSelectedDay && isSameDay(day, selectedStartDay)) {
       dayClass += '-range-start';
     }
 
-    // if the end date is not selected, it will be the range-end
-    if (
-      isSameDay(day, selectedEndDay) &&
-      dayClass != 'iui-calendar-day-selected'
-    ) {
+    if (!isSelectedDay && isSameDay(day, selectedEndDay)) {
       dayClass += '-range-end';
     }
 
@@ -489,10 +488,6 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
       isInDateRange(day, selectedStartDay, selectedEndDay)
     ) {
       dayClass += '-range';
-    }
-
-    // if there is a start date, and it matches with the selected day, get rid of the start date
-    if (selectedStartDay && selectedDay === selectedStartDay) {
     }
 
     if (isSameDay(day, new Date())) {

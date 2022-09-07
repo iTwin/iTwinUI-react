@@ -307,3 +307,102 @@ it('should navigate between years', () => {
   date.setMonth(date.getFullYear() + 1);
   assertMonthYear(container, 'February', '2019');
 });
+
+it('should return selected date range', () => {
+  const onClick = jest.fn();
+  const { container, getByText } = render(
+    <DatePicker
+      startDate={new Date(2020, 5, 5)}
+      endDate={new Date(2020, 5, 10)}
+      onChange={onClick}
+      isRange={true}
+    />,
+  );
+  assertMonthYear(container, 'June', '2020');
+  let selectedStartDay = container.querySelector(
+    '.iui-calendar-day-range-start',
+  ) as HTMLElement;
+  let selectedRange = container.querySelectorAll('.iui-calendar-day-range');
+  let selectedEndDay = container.querySelector(
+    '.iui-calendar-day-range-end',
+  ) as HTMLElement;
+  expect(selectedStartDay.textContent).toBe('5');
+  expect(selectedRange).toHaveLength(4);
+  expect(selectedEndDay.textContent).toBe('10');
+
+  const startDay = getByText('15');
+  const endDay = getByText('20');
+  fireEvent.click(startDay);
+  fireEvent.click(endDay);
+
+  selectedStartDay = container.querySelector(
+    '.iui-calendar-day-range-start',
+  ) as HTMLElement;
+  selectedRange = container.querySelectorAll('.iui-calendar-day-range');
+  selectedEndDay = container.querySelector(
+    '.iui-calendar-day-range-end',
+  ) as HTMLElement;
+  expect(selectedStartDay.textContent).toBe('15');
+  expect(selectedRange).toHaveLength(4);
+  expect(selectedEndDay.textContent).toBe('20');
+});
+
+it('should update startDate when selecting an endDate value that is before startDate', () => {
+  const onClick = jest.fn();
+  const { container, getByText } = render(
+    <DatePicker
+      startDate={new Date(2020, 5, 5)}
+      endDate={new Date(2020, 5, 20)}
+      onChange={onClick}
+      isRange={true}
+    />,
+  );
+  assertMonthYear(container, 'June', '2020');
+
+  const startDay = getByText('15');
+  const endDay = getByText('12');
+  fireEvent.click(startDay);
+  fireEvent.click(endDay);
+
+  const selectedStartDay = container.querySelector(
+    '.iui-calendar-day-range-start',
+  ) as HTMLElement;
+  const selectedRange = container.querySelectorAll('.iui-calendar-day-range');
+  const selectedEndDay = container.querySelector(
+    '.iui-calendar-day-range-end',
+  ) as HTMLElement;
+  expect(selectedStartDay.textContent).toBe('12');
+  expect(selectedRange).toHaveLength(7);
+  expect(selectedEndDay.textContent).toBe('20');
+});
+
+it('should update endDate when selecting a startDate value that is after endDate', () => {
+  const onClick = jest.fn();
+  const { container, getByText } = render(
+    <DatePicker
+      startDate={new Date(2020, 5, 5)}
+      endDate={new Date(2020, 5, 10)}
+      onChange={onClick}
+      isRange={true}
+    />,
+  );
+  assertMonthYear(container, 'June', '2020');
+
+  const startDay = getByText('15');
+  fireEvent.click(startDay);
+
+  const selectedDay = container.querySelector(
+    selectedDaySelector,
+  ) as HTMLElement;
+  const selectedStartDay = container.querySelector(
+    '.iui-calendar-day-range-start',
+  ) as HTMLElement;
+  const selectedRange = container.querySelectorAll('.iui-calendar-day-range');
+  const selectedEndDay = container.querySelector(
+    '.iui-calendar-day-range-end',
+  ) as HTMLElement;
+  expect(selectedDay.textContent).toBe('15');
+  expect(selectedStartDay).toBeNull();
+  expect(selectedRange).toHaveLength(0);
+  expect(selectedEndDay).toBeNull();
+});
