@@ -478,14 +478,14 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
 
     if (isSelectedDay) {
       dayClass += '-selected';
-    }
+    } else {
+      if (isSameDay(day, selectedStartDay)) {
+        dayClass += '-range-start';
+      }
 
-    if (!isSelectedDay && isSameDay(day, selectedStartDay)) {
-      dayClass += '-range-start';
-    }
-
-    if (!isSelectedDay && isSameDay(day, selectedEndDay)) {
-      dayClass += '-range-end';
+      if (isSameDay(day, selectedEndDay)) {
+        dayClass += '-range-end';
+      }
     }
 
     // adds range class to dates between start and end date
