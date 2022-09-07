@@ -6,14 +6,21 @@ import React from 'react';
 import { HeaderProps } from 'react-table';
 import { Checkbox } from '../../Checkbox';
 import SvgColumnManager from '@itwin/itwinui-icons-react/cjs/icons/ColumnManager';
-import { DropdownMenu } from '../../DropdownMenu';
+import { DropdownMenu, DropdownMenuProps } from '../../DropdownMenu';
 import { IconButton } from '../../Buttons/IconButton';
 import { MenuItem } from '../../Menu';
 import { tableResizeStartAction } from '../Table';
 import { SELECTION_CELL_ID } from './selectionColumn';
 import { EXPANDER_CELL_ID } from './expanderColumn';
+import cx from 'classnames';
 
 const ACTION_CELL_ID = 'iui-table-action';
+
+type ActionColumnProps = {
+  columnManager?:
+    | boolean
+    | { dropdownMenuProps: Omit<DropdownMenuProps, 'menuItems' | 'children'> };
+};
 
 /**
  * Action column that adds column manager to the Table header.
@@ -36,7 +43,7 @@ const ACTION_CELL_ID = 'iui-table-action';
  */
 export const ActionColumn = <T extends Record<string, unknown>>({
   columnManager = false,
-} = {}) => {
+}: ActionColumnProps = {}) => {
   return {
     id: ACTION_CELL_ID,
     disableResizing: true,
@@ -49,6 +56,8 @@ export const ActionColumn = <T extends Record<string, unknown>>({
     disableReordering: true,
     Header: ({ allColumns, dispatch, state }: HeaderProps<T>) => {
       const [isOpen, setIsOpen] = React.useState(false);
+      const buttonRef = React.useRef<HTMLButtonElement>(null);
+
       if (!columnManager) {
         return null;
       }
@@ -72,6 +81,13 @@ export const ActionColumn = <T extends Record<string, unknown>>({
               }
               // Triggers an update to resize the widths of all visible columns
               dispatch({ type: tableResizeStartAction });
+
+              // If some columns were resized and some columns visibility was enabled, then horizontal scrollbar appears
+              // and table is scrolled to the very left which means our visibility dropdown menu is not visible.
+              // So for better UX we need to scroll to that dropdown menu.
+              queueMicrotask(() => {
+                buttonRef.current?.scrollIntoView();
+              });
             };
             return (
               <MenuItem
@@ -94,13 +110,31 @@ export const ActionColumn = <T extends Record<string, unknown>>({
               </MenuItem>
             );
           });
+
+      const dropdownMenuProps =
+        typeof columnManager !== 'boolean'
+          ? columnManager.dropdownMenuProps
+          : {};
+
       return (
         <DropdownMenu
+          {...dropdownMenuProps}
           menuItems={headerCheckBoxes}
-          onHide={() => setIsOpen(false)}
-          onShow={() => setIsOpen(true)}
+          onHide={(i) => {
+            setIsOpen(false);
+            dropdownMenuProps.onHide?.(i);
+          }}
+          onShow={(i) => {
+            setIsOpen(true);
+            dropdownMenuProps.onShow?.(i);
+          }}
+          style={{
+            maxHeight: '315px',
+            ...dropdownMenuProps.style,
+          }}
+          className={cx('iui-scroll', dropdownMenuProps.className)}
         >
-          <IconButton styleType='borderless' isActive={isOpen}>
+          <IconButton styleType='borderless' isActive={isOpen} ref={buttonRef}>
             <SvgColumnManager />
           </IconButton>
         </DropdownMenu>

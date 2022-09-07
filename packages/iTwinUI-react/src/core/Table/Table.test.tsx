@@ -21,7 +21,13 @@ import {
 import { CellProps, Column, Row } from 'react-table';
 import { InputGroup } from '../InputGroup';
 import { Radio } from '../Radio';
-import { SvgChevronRight } from '@itwin/itwinui-icons-react';
+import {
+  SvgChevronRight,
+  SvgDeveloper,
+  SvgPlaceholder,
+  SvgSortUp,
+  SvgSortDown,
+} from '@itwin/itwinui-icons-react';
 import { DefaultCell, EditableCell } from './cells';
 import { TablePaginator } from './TablePaginator';
 import * as UseOverflow from '../utils/hooks/useOverflow';
@@ -585,6 +591,111 @@ it('should not show sort icon if disabled in column level', () => {
   });
 
   expect(container.querySelector('.iui-sort .iui-icon-wrapper')).toBeFalsy();
+});
+
+it('should display correct sort icons for ascending first', async () => {
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns: mockedColumns,
+    isSortable: true,
+  });
+  const {
+    container: { firstChild: sortUpIcon },
+  } = render(<SvgSortUp className='iui-icon iui-sort' aria-hidden />);
+  const {
+    container: { firstChild: sortDownIcon },
+  } = render(<SvgSortDown className='iui-icon iui-sort' aria-hidden />);
+  const nameHeader = container.querySelector(
+    '.iui-table-header .iui-cell',
+  ) as HTMLDivElement;
+  expect(nameHeader).toBeTruthy();
+
+  // initial icon on column header
+  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+    sortUpIcon,
+  );
+
+  // first click on column header
+  await userEvent.click(nameHeader);
+  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+    sortUpIcon,
+  );
+
+  // second click on column header
+  await userEvent.click(nameHeader);
+  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+    sortDownIcon,
+  );
+
+  // third click on column header to reset
+  await userEvent.click(nameHeader);
+  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+    sortUpIcon,
+  );
+});
+
+it('should display correct sort icons for descending first', async () => {
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          sortDescFirst: true,
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns: mockedColumns,
+    isSortable: true,
+  });
+  const {
+    container: { firstChild: sortUpIcon },
+  } = render(<SvgSortUp className='iui-icon iui-sort' aria-hidden />);
+  const {
+    container: { firstChild: sortDownIcon },
+  } = render(<SvgSortDown className='iui-icon iui-sort' aria-hidden />);
+  const nameHeader = container.querySelector(
+    '.iui-table-header .iui-cell',
+  ) as HTMLDivElement;
+  expect(nameHeader).toBeTruthy();
+
+  // initial icon on column header
+  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+    sortDownIcon,
+  );
+
+  // first click on column header
+  await userEvent.click(nameHeader);
+  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+    sortDownIcon,
+  );
+
+  // second click on column header
+  await userEvent.click(nameHeader);
+  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+    sortUpIcon,
+  );
+
+  // third click on column header to reset
+  await userEvent.click(nameHeader);
+  expect(container.querySelector('.iui-cell-end-icon > svg')).toEqual(
+    sortDownIcon,
+  );
 });
 
 it('should trigger onBottomReached', () => {
@@ -2447,12 +2558,19 @@ it('should sync body horizontal scroll with header scroll', () => {
   expect(header.scrollLeft).toBe(0);
   expect(body.scrollLeft).toBe(0);
 
+  // When body scrolls, header should scroll
   fireEvent.scroll(body, {
     target: { scrollLeft: 100 },
   });
-
   expect(header.scrollLeft).toBe(100);
   expect(body.scrollLeft).toBe(100);
+
+  // When header scrolls, body should scroll
+  fireEvent.scroll(header, {
+    target: { scrollLeft: 0 },
+  });
+  expect(header.scrollLeft).toBe(0);
+  expect(body.scrollLeft).toBe(0);
 });
 
 it.each([
@@ -2686,7 +2804,7 @@ it('should render empty action column with column manager', async () => {
   expect(columnManagerColumns[2].textContent).toBe('View');
 });
 
-it('should render action column with column manager', () => {
+it('should render action column with column manager', async () => {
   const columns: Column<TestDataType>[] = [
     {
       Header: 'Header name',
@@ -2725,6 +2843,79 @@ it('should render action column with column manager', () => {
   expect(actionColumn[1].textContent).toBe('View');
   expect(actionColumn[2].textContent).toBe('View');
   expect(actionColumn[3].textContent).toBe('View');
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  const columnManager = headerCells[headerCells.length - 1]
+    .firstElementChild as Element;
+
+  await userEvent.click(columnManager);
+
+  const dropdownMenu = document.querySelector('.iui-menu') as HTMLDivElement;
+  expect(dropdownMenu).toBeTruthy();
+  expect(dropdownMenu.classList.contains('iui-scroll')).toBeTruthy();
+  expect(dropdownMenu).toHaveStyle('max-height: 315px');
+});
+
+it('should render dropdown menu with custom style and override default style', async () => {
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'View',
+          Cell: () => <>View</>,
+        },
+        ActionColumn({
+          columnManager: {
+            dropdownMenuProps: {
+              className: 'testing-classname',
+              style: {
+                maxHeight: '600px',
+                backgroundColor: 'red',
+              },
+              role: 'listbox',
+            },
+          },
+        }),
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+  });
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  const columnManager = headerCells[headerCells.length - 1]
+    .firstElementChild as Element;
+
+  expect(
+    columnManager.className.includes('iui-button iui-borderless'),
+  ).toBeTruthy();
+
+  await userEvent.click(columnManager);
+
+  const dropdownMenu = document.querySelector('.iui-menu') as HTMLDivElement;
+  expect(dropdownMenu).toBeTruthy();
+  expect(dropdownMenu.classList.contains('iui-scroll')).toBeTruthy();
+  expect(dropdownMenu.classList.contains('testing-classname')).toBeTruthy();
+  expect(dropdownMenu).toHaveStyle('max-height: 600px');
+  expect(dropdownMenu).toHaveStyle('background-color: red');
+  expect(dropdownMenu).toHaveAttribute('role', 'listbox');
 });
 
 it('should hide column when deselected in column manager', async () => {
@@ -3558,3 +3749,113 @@ it('should make column sticky and then non-sticky after dragging sticky column a
     expect(cell).not.toHaveStyle('--iui-table-sticky-left: 400px');
   });
 });
+
+it('should render start and end cell icons', () => {
+  const testColumns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          cellRenderer: (props) => {
+            return <DefaultCell {...props} startIcon={<SvgPlaceholder />} />;
+          },
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+          cellRenderer: (props) => {
+            return <DefaultCell {...props} endIcon={<SvgDeveloper />} />;
+          },
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns: testColumns,
+  });
+
+  const {
+    container: { firstChild: placeholderIcon },
+  } = render(<SvgPlaceholder />);
+  const {
+    container: { firstChild: developerIcon },
+  } = render(<SvgDeveloper />);
+
+  const row = container.querySelector(
+    '.iui-table-body .iui-row',
+  ) as HTMLDivElement;
+  const cells = row.querySelectorAll('.iui-cell');
+
+  const startIcon = cells[0].querySelector(
+    '.iui-cell-start-icon',
+  ) as HTMLDivElement;
+  expect(startIcon).toBeTruthy();
+  expect(startIcon.querySelector('svg')).toEqual(placeholderIcon);
+
+  const endIcon = cells[1].querySelector(
+    '.iui-cell-end-icon',
+  ) as HTMLDivElement;
+  expect(endIcon).toBeTruthy();
+  expect(endIcon.querySelector('svg')).toEqual(developerIcon);
+});
+
+it.each(['positive', 'warning', 'negative'] as const)(
+  'should render cell with %s status',
+  (status) => {
+    const columns: Column<TestDataType>[] = [
+      {
+        Header: 'Header name',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+            cellRenderer: (props) => {
+              return <DefaultCell {...props} status={status} />;
+            },
+          },
+          {
+            id: 'description',
+            Header: 'description',
+            accessor: 'description',
+          },
+        ],
+      },
+    ];
+    const { container } = renderComponent({
+      columns,
+    });
+
+    const row = container.querySelector(
+      '.iui-table-body .iui-row',
+    ) as HTMLDivElement;
+    const cells = row.querySelectorAll('.iui-cell');
+
+    expect(cells[0]).toHaveClass(`iui-${status}`);
+    expect(cells[1]).not.toHaveClass(`iui-${status}`);
+  },
+);
+
+it.each(['positive', 'warning', 'negative'] as const)(
+  'should render row with %s status',
+  (rowStatus) => {
+    const { container } = renderComponent({
+      rowProps: (row) => {
+        return {
+          status: row.index === 0 ? rowStatus : undefined,
+        };
+      },
+    });
+
+    const tableBody = container.querySelector(
+      '.iui-table-body',
+    ) as HTMLDivElement;
+    const rows = tableBody.querySelectorAll('.iui-row');
+    expect(rows[0]).toHaveClass(`iui-${rowStatus}`);
+    expect(rows[1]).not.toHaveClass(`iui-${rowStatus}`);
+  },
+);

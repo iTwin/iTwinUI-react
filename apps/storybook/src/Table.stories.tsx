@@ -38,7 +38,14 @@ import {
 import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
 import { action } from '@storybook/addon-actions';
-import { SvgMore } from '@itwin/itwinui-icons-react';
+import {
+  SvgDetails,
+  SvgMore,
+  SvgSoundLoud,
+  SvgStatusError,
+  SvgStatusSuccess,
+  SvgStatusWarning,
+} from '@itwin/itwinui-icons-react';
 
 export default {
   title: 'Core/Table',
@@ -313,8 +320,14 @@ export const Sortable: Story<Partial<TableProps>> = (args) => {
         Header: 'Table',
         columns: [
           {
+            id: 'id',
+            Header: 'ID (Sorts Desc First)',
+            accessor: 'id',
+            sortDescFirst: true,
+          },
+          {
             id: 'name',
-            Header: 'Name',
+            Header: 'Name (Sorts Asc First)',
             accessor: 'name',
           },
           {
@@ -341,9 +354,9 @@ export const Sortable: Story<Partial<TableProps>> = (args) => {
 
   const data = useMemo(
     () => [
-      { name: 'Name1', description: 'Description1' },
-      { name: 'Name3', description: 'Description3' },
-      { name: 'Name2', description: 'Description2' },
+      { id: '1', name: 'Name1', description: 'Description1' },
+      { id: '3', name: 'Name3', description: 'Description3' },
+      { id: '2', name: 'Name2', description: 'Description2' },
     ],
     [],
   );
@@ -362,9 +375,9 @@ export const Sortable: Story<Partial<TableProps>> = (args) => {
 
 Sortable.args = {
   data: [
-    { name: 'Name1', description: 'Description1' },
-    { name: 'Name3', description: 'Description3' },
-    { name: 'Name2', description: 'Description2' },
+    { id: '1', name: 'Name1', description: 'Description1' },
+    { id: '3', name: 'Name3', description: 'Description3' },
+    { id: '2', name: 'Name2', description: 'Description2' },
   ],
   isSortable: true,
 };
@@ -1388,18 +1401,22 @@ export const Full2: Story<Partial<TableProps>> = (args) => {
     quantity: number;
     rating: number;
     deliveryTime: number;
+    status: 'positive' | 'negative' | 'warning' | undefined;
     subRows: TableStoryDataType[];
   };
 
   const generateItem = useCallback(
     (index: number, parentRow = '', depth = 0): TableStoryDataType => {
       const keyValue = parentRow ? `${parentRow}.${index + 1}` : `${index + 1}`;
+      const rating = (index % 4) + 1;
       return {
         product: `Product ${keyValue}`,
         price: ((index % 10) + 1) * 15,
         quantity: ((index % 10) + 1) * 150,
-        rating: (index % 4) + 1,
+        rating: rating,
         deliveryTime: (index % 15) + 1,
+        status:
+          rating >= 4 ? 'positive' : rating === 3 ? 'warning' : 'negative',
         subRows:
           depth < 2
             ? Array(Math.round(index % 5))
@@ -1480,8 +1497,15 @@ export const Full2: Story<Partial<TableProps>> = (args) => {
             filter: 'between',
             sortType: 'number',
             width: 400,
-            Cell: (props: CellProps<TableStoryDataType>) => {
-              return <>{props.value}/5</>;
+            cellRenderer: (props: CellRendererProps<TableStoryDataType>) => {
+              return (
+                <DefaultCell
+                  {...props}
+                  status={props.cellProps.row.original.status}
+                >
+                  {props.cellProps.row.original.rating}/5
+                </DefaultCell>
+              );
             },
           },
           {
@@ -1517,6 +1541,12 @@ export const Full2: Story<Partial<TableProps>> = (args) => {
     [isRowDisabled, menuItems],
   );
 
+  const rowProps = useCallback((row: Row<{ status: string | undefined }>) => {
+    return {
+      status: row.original.status,
+    };
+  }, []);
+
   return (
     <Table
       columns={columns}
@@ -1530,6 +1560,7 @@ export const Full2: Story<Partial<TableProps>> = (args) => {
       data={data}
       style={{ height: '100%' }}
       enableVirtualization
+      rowProps={rowProps}
     />
   );
 };
@@ -2953,7 +2984,34 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
               );
             },
           },
-          ActionColumn({ columnManager: true }),
+          {
+            id: 'Price',
+            Header: 'Price',
+            accessor: 'price',
+          },
+          {
+            id: 'Color',
+            Header: 'Color',
+            accessor: 'color',
+          },
+          {
+            id: '# in stock',
+            Header: '# in stock',
+            accessor: 'stock',
+          },
+          {
+            id: 'Rating',
+            Header: 'Rating',
+            accessor: 'rating',
+          },
+          {
+            id: 'Location',
+            Header: 'Location',
+            accessor: 'location',
+          },
+          ActionColumn({
+            columnManager: true,
+          }),
         ],
       },
     ],
@@ -2968,6 +3026,11 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
         id: '111',
         startDate: new Date('May 1, 2021'),
         endDate: new Date('Jun 1, 2021'),
+        price: '$1.00',
+        color: 'Red',
+        stock: 10,
+        rating: '5/5',
+        location: 'Philadelphia, Pennsylvania',
       },
       {
         index: 2,
@@ -2976,6 +3039,11 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
         id: '222',
         startDate: new Date('May 2, 2021'),
         endDate: new Date('Jun 2, 2021'),
+        price: '$2.00',
+        color: 'Green',
+        stock: 20,
+        rating: '4/5',
+        location: 'Philadelphia, Pennsylvania',
       },
       {
         index: 3,
@@ -2984,6 +3052,11 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
         id: '333',
         startDate: new Date('May 3, 2021'),
         endDate: new Date('Jun 3, 2021'),
+        price: '$3.00',
+        color: 'Green',
+        stock: 30,
+        rating: '3/5',
+        location: 'Philadelphia, Pennsylvania',
       },
       {
         index: 4,
@@ -2992,6 +3065,11 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
         id: '444',
         startDate: new Date('May 4, 2021'),
         endDate: new Date('Jun 4, 2021'),
+        price: '$4.00',
+        color: 'Yellow',
+        stock: 40,
+        rating: '2/5',
+        location: 'Philadelphia, Pennsylvania',
       },
       {
         index: 5,
@@ -3000,6 +3078,11 @@ export const ColumnManager: Story<Partial<TableProps>> = (args) => {
         id: '555',
         startDate: new Date('May 5, 2021'),
         endDate: new Date('Jun 5, 2021'),
+        price: '$5.00',
+        color: 'Purple',
+        stock: 50,
+        rating: '1/5',
+        location: 'Philadelphia, Pennsylvania',
       },
     ],
     [],
@@ -3025,6 +3108,11 @@ ColumnManager.args = {
       id: '111',
       startDate: new Date('May 1, 2021'),
       endDate: new Date('Jun 1, 2021'),
+      price: '$1.00',
+      color: 'Red',
+      stock: 10,
+      rating: '5/5',
+      location: 'Philadelphia, Pennsylvania',
     },
     {
       index: 2,
@@ -3033,6 +3121,11 @@ ColumnManager.args = {
       id: '222',
       startDate: new Date('May 2, 2021'),
       endDate: new Date('Jun 2, 2021'),
+      price: '$2.00',
+      color: 'Green',
+      stock: 20,
+      rating: '4/5',
+      location: 'Philadelphia, Pennsylvania',
     },
     {
       index: 3,
@@ -3041,6 +3134,11 @@ ColumnManager.args = {
       id: '333',
       startDate: new Date('May 3, 2021'),
       endDate: new Date('Jun 3, 2021'),
+      price: '$3.00',
+      color: 'Green',
+      stock: 30,
+      rating: '3/5',
+      location: 'Philadelphia, Pennsylvania',
     },
     {
       index: 4,
@@ -3049,6 +3147,11 @@ ColumnManager.args = {
       id: '444',
       startDate: new Date('May 4, 2021'),
       endDate: new Date('Jun 4, 2021'),
+      price: '$4.00',
+      color: 'Yellow',
+      stock: 40,
+      rating: '2/5',
+      location: 'Philadelphia, Pennsylvania',
     },
     {
       index: 5,
@@ -3057,6 +3160,11 @@ ColumnManager.args = {
       id: '555',
       startDate: new Date('May 5, 2021'),
       endDate: new Date('Jun 5, 2021'),
+      price: '$5.00',
+      color: 'Purple',
+      stock: 50,
+      rating: '1/5',
+      location: 'Philadelphia, Pennsylvania',
     },
   ],
 };
@@ -3312,3 +3420,128 @@ StickyColumns.decorators = [
     </div>
   ),
 ];
+
+export const StatusAndCellIcons: Story<Partial<TableProps>> = (args) => {
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+            cellRenderer: (
+              props: CellRendererProps<{
+                startIcon: JSX.Element;
+                endIcon: JSX.Element;
+              }>,
+            ) => (
+              <DefaultCell
+                {...props}
+                startIcon={props.cellProps.row.original.startIcon}
+                endIcon={props.cellProps.row.original.endIcon}
+              />
+            ),
+          },
+          {
+            id: 'modified',
+            Header: 'Modified',
+            accessor: 'modified',
+            maxWidth: 200,
+            cellRenderer: (
+              props: CellRendererProps<{
+                status: 'positive' | 'warning' | 'negative' | undefined;
+              }>,
+            ) => {
+              return (
+                <DefaultCell
+                  {...props}
+                  status={props.cellProps.row.original.status}
+                />
+              );
+            },
+          },
+          {
+            id: 'size',
+            Header: 'Size',
+            maxWidth: 200,
+            accessor: 'size',
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const data = useMemo(
+    () => [
+      {
+        name: 'beta.mp3',
+        modified: 'Just now',
+        size: '15 KB',
+        startIcon: <SvgSoundLoud fill='#66c6ff' />,
+      },
+      {
+        name: 'gamma.pdf',
+        modified: 'A few moments ago',
+        size: '9 MB',
+        startIcon: <SvgDetails fill='#dd3e39' />,
+        endIcon: <SvgStatusSuccess />,
+        status: 'positive',
+      },
+      {
+        name: 'delta.jpg',
+        modified: 'A few moments ago',
+        size: '963 MB',
+        startIcon: <SvgDetails fill='#7957a3' />,
+        endIcon: <SvgStatusWarning />,
+        status: 'warning',
+      },
+      {
+        name: 'theta.dgn',
+        modified: 'A few moments ago',
+        size: '64 KB',
+        startIcon: <SvgDetails fill='#d16c00' />,
+        endIcon: <SvgStatusError />,
+        status: 'negative',
+      },
+    ],
+    [],
+  );
+
+  const rowProps = useCallback(
+    (
+      row: Row<{
+        name: string;
+        modified: string;
+        size: string;
+        startIcon: JSX.Element;
+        endIcon: JSX.Element;
+        status: 'positive' | 'negative' | 'warning' | undefined;
+      }>,
+    ) => {
+      return {
+        status: row.original.status,
+      };
+    },
+    [],
+  );
+
+  return (
+    <Table
+      {...args}
+      columns={columns}
+      data={data}
+      emptyTableContent='No data.'
+      selectionMode='multi'
+      isSelectable={true}
+      rowProps={rowProps}
+    />
+  );
+};
+
+StatusAndCellIcons.args = {
+  isSelectable: true,
+  selectionMode: 'multi',
+};
