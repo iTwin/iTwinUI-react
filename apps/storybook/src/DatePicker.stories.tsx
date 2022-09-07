@@ -38,7 +38,7 @@ export const Basic: Story<DatePickerProps> = (args) => {
     ...rest
   } = args;
   const [opened, setOpened] = React.useState(false);
-  const [currentDate, setCurrentDate] = React.useState(new Date(date));
+  const [currentDate, setCurrentDate] = React.useState(date);
   const onChange = (date: Date) => {
     setCurrentDate(date);
     action(`New date value: ${date}`, { clearOnStoryChange: false })();
@@ -82,7 +82,7 @@ export const WithTime: Story<DatePickerProps> = (args) => {
     ...rest
   } = args;
   const [opened, setOpened] = React.useState(false);
-  const [currentDate, setCurrentDate] = React.useState(new Date(date));
+  const [currentDate, setCurrentDate] = React.useState(date);
   const onChange = (date: Date) => {
     setCurrentDate(date);
     action(`New date value: ${date}`, { clearOnStoryChange: false })();
@@ -128,7 +128,7 @@ export const Localized: Story<DatePickerProps> = (args) => {
     ...rest
   } = args;
   const [opened, setOpened] = React.useState(false);
-  const [currentDate, setCurrentDate] = React.useState(new Date(date));
+  const [currentDate, setCurrentDate] = React.useState(date);
   const onChange = (date: Date) => {
     setCurrentDate(date);
     action(`New date value: ${date}`, { clearOnStoryChange: false })();
@@ -172,7 +172,7 @@ export const WithYear: Story<DatePickerProps> = (args) => {
     ...rest
   } = args;
   const [opened, setOpened] = React.useState(false);
-  const [currentDate, setCurrentDate] = React.useState(new Date(date));
+  const [currentDate, setCurrentDate] = React.useState(date);
   const onChange = (date: Date) => {
     setCurrentDate(date);
     action(`New date value: ${date}`, { clearOnStoryChange: false })();

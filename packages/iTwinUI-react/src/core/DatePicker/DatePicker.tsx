@@ -28,10 +28,15 @@ const isInDateRange = (
   startDate: Date | undefined,
   endDate: Date | undefined,
 ) => {
-  date && date.setHours(0, 0, 0, 0);
-  startDate && startDate.setHours(0, 0, 0, 0);
-  endDate && endDate.setHours(0, 0, 0, 0);
-  return date && startDate && endDate && date > startDate && date < endDate;
+  const minDate = startDate;
+  const maxDate = endDate;
+  const testDate = date;
+  testDate && testDate.setHours(0, 0, 0, 0);
+  minDate && minDate.setHours(0, 0, 0, 0);
+  maxDate && maxDate.setHours(0, 0, 0, 0);
+  return (
+    testDate && minDate && maxDate && testDate > minDate && testDate < maxDate
+  );
 };
 
 // compares to see if one date is earlier than another
@@ -39,9 +44,11 @@ const isBefore = (
   beforeDate: Date | undefined,
   afterDate: Date | undefined,
 ) => {
-  beforeDate && beforeDate.setHours(0, 0, 0, 0);
-  afterDate && afterDate.setHours(0, 0, 0, 0);
-  return beforeDate && afterDate && beforeDate < afterDate;
+  const firstDate = beforeDate;
+  const secondDate = afterDate;
+  firstDate && firstDate.setHours(0, 0, 0, 0);
+  secondDate && secondDate.setHours(0, 0, 0, 0);
+  return firstDate && secondDate && firstDate < secondDate;
 };
 
 const defaultMonths = [
