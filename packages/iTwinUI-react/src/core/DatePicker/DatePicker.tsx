@@ -34,9 +34,9 @@ const isInDateRange = (
   const minDate = new Date(startDate);
   const maxDate = new Date(endDate);
   const testDate = new Date(date);
-  testDate && testDate.setHours(2, 0, 0, 0);
-  minDate && minDate.setHours(2, 0, 0, 0);
-  maxDate && maxDate.setHours(2, 0, 0, 0);
+  testDate && testDate.setHours(0, 0, 0, 0);
+  minDate && minDate.setHours(0, 0, 0, 0);
+  maxDate && maxDate.setHours(0, 0, 0, 0);
   return testDate > minDate && testDate < maxDate;
 };
 
@@ -50,8 +50,8 @@ const isBefore = (
   }
   const firstDate = new Date(beforeDate);
   const secondDate = new Date(afterDate);
-  firstDate && firstDate.setHours(1, 0, 0, 0);
-  secondDate && secondDate.setHours(1, 0, 0, 0);
+  firstDate && firstDate.setHours(0, 0, 0, 0);
+  secondDate && secondDate.setHours(0, 0, 0, 0);
   return firstDate < secondDate;
 };
 
