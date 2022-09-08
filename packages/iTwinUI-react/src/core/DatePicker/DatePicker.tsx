@@ -28,15 +28,16 @@ const isInDateRange = (
   startDate: Date | undefined,
   endDate: Date | undefined,
 ) => {
-  const minDate = startDate;
-  const maxDate = endDate;
-  const testDate = date;
-  testDate && testDate.setHours(0, 0, 0, 0);
-  minDate && minDate.setHours(0, 0, 0, 0);
-  maxDate && maxDate.setHours(0, 0, 0, 0);
-  return (
-    testDate && minDate && maxDate && testDate > minDate && testDate < maxDate
-  );
+  if (!date || !startDate || !endDate) {
+    return false;
+  }
+  const minDate = new Date(startDate);
+  const maxDate = new Date(endDate);
+  const testDate = new Date(date);
+  testDate && testDate.setHours(2, 0, 0, 0);
+  minDate && minDate.setHours(2, 0, 0, 0);
+  maxDate && maxDate.setHours(2, 0, 0, 0);
+  return testDate > minDate && testDate < maxDate;
 };
 
 // compares to see if one date is earlier than another
@@ -44,11 +45,14 @@ const isBefore = (
   beforeDate: Date | undefined,
   afterDate: Date | undefined,
 ) => {
-  const firstDate = beforeDate;
-  const secondDate = afterDate;
-  firstDate && firstDate.setHours(0, 0, 0, 0);
-  secondDate && secondDate.setHours(0, 0, 0, 0);
-  return firstDate && secondDate && firstDate < secondDate;
+  if (!beforeDate || !afterDate) {
+    return false;
+  }
+  const firstDate = new Date(beforeDate);
+  const secondDate = new Date(afterDate);
+  firstDate && firstDate.setHours(1, 0, 0, 0);
+  secondDate && secondDate.setHours(1, 0, 0, 0);
+  return firstDate < secondDate;
 };
 
 // Type guard for multiple did not work
@@ -273,7 +277,15 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
     setSelectedDay(date);
     setSelectedStartDay(startDate);
     setSelectedEndDay(endDate);
-    setFocusedDay(startDate ?? date ?? currentDate);
+    if (startDate && endDate) {
+      setFocusedDay(isSelectingStartDate ? endDate : startDate);
+    } else if (startDate) {
+      setFocusedDay(startDate);
+    } else if (endDate) {
+      setFocusedDay(endDate);
+    } else {
+      setFocusedDay(date ?? currentDate);
+    }
     setMonthAndYear(
       startDate?.getMonth() ?? date?.getMonth() ?? currentDate.getMonth(),
 
@@ -281,7 +293,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
         date?.getFullYear() ??
         currentDate.getFullYear(),
     );
-  }, [date, setMonthAndYear, startDate, endDate]);
+  }, [date, setMonthAndYear, startDate, endDate, isSelectingStartDate]);
 
   const days = React.useMemo(() => {
     let offsetToFirst = new Date(
@@ -414,6 +426,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
         currentEndDate.getMinutes(),
         currentEndDate.getSeconds(),
       );
+      setFocusedDay(newEndDate);
       // if the end date is before the start date, move back the start date and still have user select end date
       if (!isBefore(newEndDate, selectedStartDay)) {
         setSelectedEndDay(newEndDate);
@@ -421,7 +434,6 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
         setIsSelectingStartDate(true);
       } else {
         setSelectedStartDay(newEndDate);
-        setFocusedDay(newEndDate);
         selectedEndDay && onChange?.(newEndDate, selectedEndDay);
       }
     }
@@ -609,14 +621,33 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
       </div>
       {showTime && (
         <TimePicker
-          date={selectedDay}
+          date={selectedStartDay ?? selectedDay}
           use12Hours={use12Hours}
           precision={precision}
           hourStep={hourStep}
           minuteStep={minuteStep}
           secondStep={secondStep}
           onChange={(date) =>
-            isSingleOnChange(onChange, enableRangeSelect) && onChange?.(date)
+            isSingleOnChange(onChange, enableRangeSelect)
+              ? onChange?.(date)
+              : onChange?.(
+                  new Date(
+                    selectedStartDay?.getFullYear() ?? date.getFullYear(),
+                    selectedStartDay?.getMonth() ?? date.getMonth(),
+                    selectedStartDay?.getDate() ?? date.getDate(),
+                    date.getHours(),
+                    date.getMinutes(),
+                    date.getSeconds(),
+                  ),
+                  new Date(
+                    selectedEndDay?.getFullYear() ?? date.getFullYear(),
+                    selectedEndDay?.getMonth() ?? date.getMonth(),
+                    selectedEndDay?.getDate() ?? date.getDate(),
+                    date.getHours(),
+                    date.getMinutes(),
+                    date.getSeconds(),
+                  ),
+                )
           }
         />
       )}
