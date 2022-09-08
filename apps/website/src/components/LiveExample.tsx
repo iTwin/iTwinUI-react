@@ -41,17 +41,21 @@ type Props = {
 
 export default ({ code = '', ssr, staticComponent, ...rest }: Props) => {
   const id = React.useId();
-  const isHydrated = React.useRef(false);
   const previewRef = React.useRef<SandpackPreviewRef>();
   const [, forceUpdate] = React.useReducer((x) => x + 1, 0);
   const [isDoneLoading, setIsDoneLoading] = React.useState(false);
+
+  // if undefined, it means the user hasn't expanded the code even once
+  const [isExpanded, setIsExpanded] = React.useState<boolean | undefined>(undefined);
+
+  const shouldShowStatic = !isDoneLoading || isExpanded === undefined;
 
   // TODO: Instead of waiting for "Show code", automatically load this in the background
   // and swap out the static component
   React.useEffect(() => {
     const client = previewRef.current?.getClient();
 
-    if (isDoneLoading || !previewRef.current || !client) {
+    if (isDoneLoading || !previewRef.current) {
       return;
     }
 
@@ -65,20 +69,10 @@ export default ({ code = '', ssr, staticComponent, ...rest }: Props) => {
     });
   });
 
-  React.useEffect(() => {
-    if (isHydrated.current) {
-      return;
-    }
-
-    isHydrated.current = true;
-  }, [isHydrated]);
-
-  const [isExpanded, setIsExpanded] = React.useState(false);
-
   // TODO: replace this with composition to have more control over the layout and styling
   return (
     <LiveExampleContext.Provider value={{ isExpanded, setIsExpanded }}>
-      {!isDoneLoading && (
+      {shouldShowStatic && (
         <div
           id={id}
           className={`live-example iui-body ${
@@ -108,8 +102,9 @@ export default ({ code = '', ssr, staticComponent, ...rest }: Props) => {
           <SandpackPreview
             ref={previewRef}
             style={{
-              visibility: isDoneLoading ? 'visible' : 'hidden',
-              position: isDoneLoading ? 'relative' : 'absolute',
+              visibility: shouldShowStatic ? 'hidden' : 'visible',
+              position: shouldShowStatic ? 'absolute' : 'relative',
+              left: shouldShowStatic ? -10000 : undefined,
             }}
             actionsChildren={<Toggle />}
           />
@@ -121,10 +116,10 @@ export default ({ code = '', ssr, staticComponent, ...rest }: Props) => {
 };
 
 const LiveExampleContext = React.createContext<{
-  isExpanded: boolean;
+  isExpanded: boolean | undefined;
   setIsExpanded: React.Dispatch<React.SetStateAction<boolean>>;
 }>({
-  isExpanded: false,
+  isExpanded: undefined,
   setIsExpanded: () => {},
 });
 
