@@ -4,7 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { Input, InputProps } from '../Input';
-import { useSafeContext, useMergedRefs } from '../utils';
+import SelectTag from '../Select/SelectTag';
+import SelectTagContainer from '../Select/SelectTagContainer';
+import { useSafeContext, useMergedRefs, useContainerWidth } from '../utils';
 import {
   ComboBoxStateContext,
   ComboBoxActionContext,
@@ -17,9 +19,13 @@ export const ComboBoxInput = React.forwardRef(
   (props: ComboBoxInputProps, forwardedRef: React.Ref<HTMLInputElement>) => {
     const { onKeyDown: onKeyDownProp, onFocus: onFocusProp, ...rest } = props;
 
-    const { isOpen, id, focusedIndex, enableVirtualization } = useSafeContext(
-      ComboBoxStateContext,
-    );
+    const {
+      isOpen,
+      id,
+      focusedIndex,
+      enableVirtualization,
+      multiple,
+    } = useSafeContext(ComboBoxStateContext);
     const dispatch = useSafeContext(ComboBoxActionContext);
     const { inputRef, menuRef, optionsExtraInfoRef } = useSafeContext(
       ComboBoxRefsContext,
@@ -171,24 +177,48 @@ export const ComboBoxInput = React.forwardRef(
       [dispatch, onFocusProp],
     );
 
+    const [tagContainerRef, tagContainerWidth] = useContainerWidth(true);
+
     return (
-      <Input
-        ref={refs}
-        onKeyDown={handleKeyDown}
-        onFocus={handleFocus}
-        aria-activedescendant={
-          isOpen && focusedIndex != undefined && focusedIndex > -1
-            ? getIdFromIndex(focusedIndex)
-            : undefined
-        }
-        role='combobox'
-        aria-controls={isOpen ? `${id}-list` : undefined}
-        aria-autocomplete='list'
-        spellCheck={false}
-        autoCapitalize='none'
-        autoCorrect='off'
-        {...rest}
-      />
+      <>
+        <Input
+          style={{ paddingLeft: tagContainerWidth + 18 }}
+          ref={refs}
+          onKeyDown={handleKeyDown}
+          onFocus={handleFocus}
+          aria-activedescendant={
+            isOpen && focusedIndex != undefined && focusedIndex > -1
+              ? getIdFromIndex(focusedIndex)
+              : undefined
+          }
+          role='combobox'
+          aria-controls={isOpen ? `${id}-list` : undefined}
+          aria-autocomplete='list'
+          spellCheck={false}
+          autoCapitalize='none'
+          autoCorrect='off'
+          {...rest}
+        />
+        {multiple && (
+          <SelectTagContainer
+            ref={tagContainerRef}
+            style={{
+              maxWidth: `calc(100% - 150px)`,
+              right: 'unset',
+            }}
+            tags={[
+              <SelectTag key={1} label='asdasd' />,
+              <SelectTag key={2} label='asdasd' />,
+              <SelectTag key={3} label='asdasd' />,
+              <SelectTag key={4} label='asdasd' />,
+              <SelectTag key={4} label='asdasd' />,
+              <SelectTag key={4} label='asdasd' />,
+              <SelectTag key={4} label='asdasd' />,
+              <SelectTag key={4} label='asdasd' />,
+            ]}
+          />
+        )}
+      </>
     );
   },
 );

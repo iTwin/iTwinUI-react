@@ -30,7 +30,9 @@ export const ComboBoxInputContainer = (props: ComboBoxInputContainerProps) => {
       {...rest}
       id={id}
     >
-      <div className='iui-input-with-icon'>{children}</div>
+      <div className='iui-input-with-icon' style={{ position: 'relative' }}>
+        {children}
+      </div>
     </InputContainer>
   );
 };
