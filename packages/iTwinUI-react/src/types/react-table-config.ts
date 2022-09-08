@@ -86,9 +86,9 @@ declare module 'react-table' {
       UseRowSelectOptions<D>,
       UseExpandedOptions<D>,
       UseFiltersOptions<D>,
-      // UseGlobalFiltersOptions<D>,
       // UseGroupByOptions<D>,
       UsePaginationOptions<D>,
+      UseGlobalFiltersOptions<D>,
       Omit<UseResizeColumnsOptions<D>, 'disableResizing'>,
       // UseRowStateOptions<D>,
       UseSortByOptions<D> {

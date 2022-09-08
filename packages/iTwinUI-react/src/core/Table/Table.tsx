@@ -182,8 +182,9 @@ export type TableProps<
   /**
    * Value used for global filtering.
    * Use with `globalFilter` and/or `manualGlobalFilter` to handle filtering yourself e.g. filter in server-side.
+   * Must be memoized.
    */
-  globalFilterValue?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  globalFilterValue?: unknown;
   /**
    * Content shown when there is no data after filtering.
    */
@@ -505,9 +506,9 @@ export const Table = <
     },
     useFlexLayout,
     useResizeColumns(ownerDocument),
-    useGlobalFilter,
     useFilters,
     useSubRowFiltering(hasAnySubRows),
+    useGlobalFilter,
     useSortBy,
     useExpanded,
     usePagination,

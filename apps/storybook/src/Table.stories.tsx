@@ -616,12 +616,12 @@ export const GlobalFilter: Story<Partial<TableProps>> = (args) => {
 
   const data = useMemo<TableStoryDataType[]>(
     () => [
-      { name: 'Name1', description: 'Description1' },
-      { name: 'Name2', description: 'Description2' },
-      { name: 'Name3', description: 'Description3' },
-      { name: 'Name31', description: 'Description31' },
-      { name: 'Name32', description: 'Description32' },
-      { name: 'Name33', description: 'Description33' },
+      { name: 'Name1', description: 'Description7' },
+      { name: 'Name2', description: 'Description7' },
+      { name: 'Name3', description: 'Description8' },
+      { name: 'Name4', description: 'Description8' },
+      { name: 'Name5', description: 'Description9' },
+      { name: 'Name6', description: 'Description9' },
     ],
     [],
   );
@@ -652,12 +652,12 @@ export const GlobalFilter: Story<Partial<TableProps>> = (args) => {
 
 GlobalFilter.args = {
   data: [
-    { name: 'Name1', description: 'Description1' },
-    { name: 'Name2', description: 'Description2' },
-    { name: 'Name3', description: 'Description3' },
-    { name: 'Name31', description: 'Description31' },
-    { name: 'Name32', description: 'Description32' },
-    { name: 'Name33', description: 'Description33' },
+    { name: 'Name1', description: 'Description7' },
+    { name: 'Name2', description: 'Description7' },
+    { name: 'Name3', description: 'Description8' },
+    { name: 'Name4', description: 'Description8' },
+    { name: 'Name5', description: 'Description9' },
+    { name: 'Name6', description: 'Description9' },
   ],
 };
 

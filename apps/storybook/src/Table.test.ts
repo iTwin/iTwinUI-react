@@ -61,7 +61,7 @@ describe('Table', () => {
           break;
         }
         case 'Global Filter': {
-          cy.get('.iui-input').first().click().type('2');
+          cy.get('.iui-input').first().click().type('Description8');
           break;
         }
       }
