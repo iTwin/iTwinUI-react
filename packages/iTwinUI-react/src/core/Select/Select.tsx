@@ -6,16 +6,11 @@ import React from 'react';
 import cx from 'classnames';
 import { DropdownMenu } from '../DropdownMenu';
 import { MenuItem, MenuItemProps } from '../Menu/MenuItem';
-import {
-  PopoverProps,
-  PopoverInstance,
-  CommonProps,
-  useTheme,
-  useOverflow,
-} from '../utils';
+import { PopoverProps, PopoverInstance, CommonProps, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/inputs.css';
 import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
 import SelectTag from './SelectTag';
+import SelectTagContainer from './SelectTagContainer';
 
 const isMultipleEnabled = <T,>(
   variable: (T | undefined) | (T[] | undefined),
@@ -468,30 +463,13 @@ const MultipleSelectButton = <T,>({
     return selectedItems.map((item) => tagRenderer(item));
   }, [selectedItems, tagRenderer]);
 
-  const [containerRef, visibleCount] = useOverflow(selectedItemsElements);
-
   return (
     <>
       {selectedItems &&
         selectedItemsRenderer &&
         selectedItemsRenderer(selectedItems)}
       {selectedItems && !selectedItemsRenderer && (
-        <span className='iui-content'>
-          <div className='iui-select-tag-container' ref={containerRef}>
-            <>
-              {visibleCount < selectedItemsElements.length
-                ? selectedItemsElements.slice(0, visibleCount - 1)
-                : selectedItemsElements}
-              {visibleCount < selectedItemsElements.length && (
-                <SelectTag
-                  label={`+${
-                    selectedItemsElements.length - visibleCount + 1
-                  } item(s)`}
-                />
-              )}
-            </>
-          </div>
-        </span>
+        <SelectTagContainer tags={selectedItemsElements} />
       )}
     </>
   );

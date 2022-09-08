@@ -267,13 +267,15 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       // Reset the focused index
       dispatch(['focus']);
       // Reset the input value
-      setInputValue(
-        selectedIndex != undefined && selectedIndex >= 0
-          ? optionsRef.current[selectedIndex]?.label
-          : '',
-      );
+      if (!isMultipleEnabled(selectedIndex, multiple)) {
+        setInputValue(
+          selectedIndex != undefined && selectedIndex >= 0
+            ? optionsRef.current[selectedIndex]?.label
+            : '',
+        );
+      }
     }
-  }, [isOpen, optionsRef, selectedIndex]);
+  }, [isOpen, multiple, optionsRef, selectedIndex]);
 
   // Set min-width of menu to be same as input
   const [minWidth, setMinWidth] = React.useState(0);
@@ -339,20 +341,22 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       mounted.current = true;
       return;
     }
-    const currentValue = optionsRef.current[selectedIndex]?.value;
-    const currentOption = optionsRef.current[selectedIndex];
+    if (!isMultipleEnabled(selectedIndex, multiple)) {
+      const currentValue = optionsRef.current[selectedIndex]?.value;
+      const currentOption = optionsRef.current[selectedIndex];
 
-    if (currentValue === valuePropRef.current || selectedIndex === -1) {
-      return;
-    }
+      if (currentValue === valuePropRef.current || selectedIndex === -1) {
+        return;
+      }
 
-    if (isSingleOnChange(onChangeProp.current, multiple)) {
-      onChangeProp.current?.(currentValue);
-    } else {
-      onChangeProp.current?.(
-        currentValue,
-        currentOption.isSelected ? 'removed' : 'added',
-      );
+      if (isSingleOnChange(onChangeProp.current, multiple)) {
+        onChangeProp.current?.(currentValue);
+      } else {
+        onChangeProp.current?.(
+          currentValue,
+          currentOption.isSelected ? 'removed' : 'added',
+        );
+      }
     }
   }, [multiple, onChangeProp, optionsRef, selectedIndex, valuePropRef]);
 
@@ -435,7 +439,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             id,
             minWidth,
             isOpen,
-            focusedIndex,
+            focusedIndex: undefined,
             enableVirtualization,
             filteredOptions,
             getMenuItem,
