@@ -178,12 +178,13 @@ export const ComboBoxInput = React.forwardRef(
     );
 
     const [tagContainerRef, tagContainerWidth] = useContainerWidth(true);
+    const [inputContainerRef] = useContainerWidth();
 
     return (
       <>
         <Input
           style={{ paddingLeft: tagContainerWidth + 18 }}
-          ref={refs}
+          ref={useMergedRefs(refs, inputContainerRef)}
           onKeyDown={handleKeyDown}
           onFocus={handleFocus}
           aria-activedescendant={
@@ -211,10 +212,10 @@ export const ComboBoxInput = React.forwardRef(
               <SelectTag key={2} label='asdasd' />,
               <SelectTag key={3} label='asdasd' />,
               <SelectTag key={4} label='asdasd' />,
-              <SelectTag key={4} label='asdasd' />,
-              <SelectTag key={4} label='asdasd' />,
-              <SelectTag key={4} label='asdasd' />,
-              <SelectTag key={4} label='asdasd' />,
+              <SelectTag key={5} label='asdasd' />,
+              <SelectTag key={6} label='asdasd' />,
+              <SelectTag key={7} label='asdasd' />,
+              <SelectTag key={8} label='asdasd' />,
             ]}
           />
         )}
