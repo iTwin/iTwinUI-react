@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { FocusTrap, useMergedRefs, useTheme } from '../utils';
+import { FocusTrap, Resizer, useMergedRefs, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/dialog.css';
 import { DialogContextProps, useDialogContext } from './DialogContext';
 import { CSSTransition } from 'react-transition-group';
@@ -59,11 +59,13 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
       preventDocumentScroll = dialogContext.preventDocumentScroll,
       onKeyDown,
       isDraggable = dialogContext.isDraggable,
-      style,
+      style: propStyle,
       ...rest
     } = props;
 
     useTheme();
+
+    const [style, setStyle] = React.useState<React.CSSProperties>();
 
     const dialogRef = React.useRef<HTMLDivElement>(null);
     const refs = useMergedRefs(dialogRef, ref);
@@ -144,10 +146,17 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
         tabIndex={-1}
         style={{
           transform,
+          overflow: 'unset',
           ...style,
+          ...propStyle,
         }}
         {...rest}
       >
+        <Resizer
+          elementRef={dialogRef}
+          containerRef={dialogContext.dialogRootRef}
+          setStyle={setStyle}
+        />
         {children}
       </div>
     );
