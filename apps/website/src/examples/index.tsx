@@ -25,6 +25,8 @@ export { default as FooterMainExample } from './Footer.main';
 export { default as HeaderMainExample } from './Header.main';
 export { default as InformationPanelMainExample } from './InformationPanel.main';
 export { default as InputMainExample } from './Input.main';
+export { default as LabeledInputMainExample } from './LabeledInput.main';
+export { default as LabeledSelectMainExample } from './LabeledSelect.main';
 export { default as InputGroupMainExample } from './InputGroup.main';
 export { default as SideNavigationMainExample } from './SideNavigation.main';
 export { default as SurfaceMainExample } from './Surface.main';
