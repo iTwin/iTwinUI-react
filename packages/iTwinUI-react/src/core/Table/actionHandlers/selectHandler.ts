@@ -115,8 +115,14 @@ export const onShiftSelect = <T extends Record<string, unknown>>(
   ) => void,
   isRowDisabled?: (rowData: T) => boolean,
 ) => {
-  const startIndex = state.lastSelectedRow ?? 0;
-  const endIndex = action.index;
+  let startIndex = state.lastSelectedRow ?? 0; // relative index to parent
+  let endIndex = action.index; // relative index to pages
+
+  if (startIndex > endIndex) {
+    const temp = startIndex;
+    startIndex = endIndex;
+    endIndex = temp;
+  }
 
   // console.log('start to end', startIndex, endIndex, instance?.page);
 
@@ -143,14 +149,15 @@ export const onShiftSelect = <T extends Record<string, unknown>>(
   };
 
   const selectedRowIds: Record<string, boolean> = {};
-  const handleRow = (row: Row<T>, pageRowIndex: number) => {
+  const handleRow = (row: Row<T>) => {
     if (isRowDisabled?.(row.original)) {
       return;
     }
 
     const shouldSelect =
       !isSubRow(row.id, instance?.page[endIndex].id ?? '') ||
-      pageRowIndex == endIndex;
+      row.id === instance?.page[endIndex].id;
+    // pageRowIndex == endIndex;
     console.log(
       shouldSelect,
       row.index,
@@ -162,11 +169,15 @@ export const onShiftSelect = <T extends Record<string, unknown>>(
       selectedRowIds[row.id] = true;
     }
     // selectedRowIds[row.id] = true;
-    // row.initialSubRows.forEach((r) => handleRow(r));
+    row.initialSubRows.forEach((r) => handleRow(r));
   };
-  instance?.page
-    .slice(startIndex, endIndex + 1)
-    .forEach((r, index) => handleRow(r, index));
+  console.log(
+    'slicing',
+    startIndex,
+    endIndex + 1,
+    instance?.page.slice(startIndex, endIndex + 1),
+  );
+  instance?.page.slice(startIndex, endIndex + 1).forEach((r) => handleRow(r)); // relative index to pages
 
   const newState = {
     ...state,
