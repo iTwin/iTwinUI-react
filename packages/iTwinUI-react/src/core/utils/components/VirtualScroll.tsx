@@ -172,6 +172,10 @@ export const useVirtualization = (props: VirtualScrollProps) => {
   // because before that calculations are not right
   const [isMounted, setIsMounted] = React.useState(false);
 
+  const getScrollableContainer = () =>
+    scrollContainer.current ??
+    (parentRef.current?.ownerDocument.scrollingElement as HTMLElement);
+
   const visibleChildren = React.useMemo(() => {
     const arr = [];
     const endIndex = Math.min(
@@ -241,10 +245,6 @@ export const useVirtualization = (props: VirtualScrollProps) => {
   React.useLayoutEffect(() => {
     return () => resizeObserver?.disconnect();
   }, [resizeObserver]);
-
-  const getScrollableContainer = () =>
-    scrollContainer.current ??
-    (parentRef.current?.ownerDocument.scrollingElement as HTMLElement);
 
   // Get child height when children available
   React.useEffect(() => updateChildHeight(), [updateChildHeight]);
