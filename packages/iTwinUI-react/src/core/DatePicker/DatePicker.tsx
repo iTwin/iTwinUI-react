@@ -134,17 +134,38 @@ export const generateLocalizedStrings = (
     days,
   };
 };
+export type DateRangePickerProps =
+  | {
+      /**
+       * Enable date range support.
+       * @default false
+       */
+      enableRangeSelect?: false;
+      /**
+       * Selected start date
+       */
+      startDate?: undefined;
+      /**
+       * Selected end date
+       */
+      endDate?: undefined;
+      /**
+       * Callback when date is changed.
+       */
+      onChange?: (date: Date) => void;
+    }
+  | {
+      enableRangeSelect: true;
+      startDate: Date;
+      endDate: Date;
+      onChange?: (startDate?: Date, endDate?: Date) => void;
+    };
 
 export type DatePickerProps = {
   /**
    * Selected date.
    */
   date?: Date;
-  /**
-   * Callback when date is changed.
-   * Optional parameter is only used for date range support
-   */
-  onChange?: (date: Date, endDate?: Date) => void;
   /**
    * Pass localized week days (start from sunday) and months.
    * Use helper function `generateLocalizedStrings` to generate strings using `Intl.DateTimeFormat`.
@@ -165,20 +186,8 @@ export type DatePickerProps = {
    * @default false
    */
   showYearSelection?: boolean;
-  /**
-   * Enable date range support.
-   * @default false
-   */
-  isRange?: boolean;
-  /**
-   * Selected end-date (only for date-range support.)
-   */
-  endDate?: Date;
-  /**
-   * Selected start-date (only for date-range support.)
-   */
-  startDate?: Date;
-} & Omit<TimePickerProps, 'date' | 'onChange' | 'setFocusHour'>;
+} & DateRangePickerProps &
+  Omit<TimePickerProps, 'date' | 'onChange' | 'setFocusHour'>;
 
 /**
  * Date picker component
@@ -200,7 +209,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
     minuteStep,
     secondStep,
     showYearSelection = false,
-    isRange = false,
+    enableRangeSelect = false,
     startDate,
     endDate,
     ...rest
@@ -339,7 +348,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
 
   const onDayClick = (day: Date) => {
     // single date selection
-    if (!isRange) {
+    if (!enableRangeSelect) {
       if (day.getMonth() !== selectedDay?.getMonth()) {
         setMonthAndYear(day.getMonth(), day.getFullYear());
       }

@@ -315,7 +315,7 @@ it('should return selected date range', () => {
       startDate={new Date(2020, 5, 5)}
       endDate={new Date(2020, 5, 10)}
       onChange={onClick}
-      isRange={true}
+      enableRangeSelect
     />,
   );
   assertMonthYear(container, 'June', '2020');
@@ -354,7 +354,7 @@ it('should update startDate when selecting an endDate value that is before start
       startDate={new Date(2020, 5, 5)}
       endDate={new Date(2020, 5, 20)}
       onChange={onClick}
-      isRange={true}
+      enableRangeSelect
     />,
   );
   assertMonthYear(container, 'June', '2020');
@@ -383,7 +383,7 @@ it('should update endDate when selecting a startDate value that is after endDate
       startDate={new Date(2020, 5, 5)}
       endDate={new Date(2020, 5, 10)}
       onChange={onClick}
-      isRange={true}
+      enableRangeSelect
     />,
   );
   assertMonthYear(container, 'June', '2020');

@@ -250,6 +250,7 @@ export const Range: Story<DatePickerProps> = (args) => {
         <div style={{ marginTop: 4 }}>
           <DatePicker
             {...rest}
+            enableRangeSelect
             startDate={currentStartDate}
             endDate={currentEndDate}
             onChange={onChange}
@@ -263,7 +264,6 @@ export const Range: Story<DatePickerProps> = (args) => {
 };
 
 Range.args = {
-  isRange: true,
   startDate: new Date(2022, 6, 13, 14, 55, 22),
   endDate: new Date(2022, 6, 27, 14, 55, 22),
 };
