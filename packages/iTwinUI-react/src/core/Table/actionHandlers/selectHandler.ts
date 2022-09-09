@@ -115,6 +115,11 @@ export const onShiftSelect = <T extends Record<string, unknown>>(
     tableState?: TableState<T>,
   ) => void,
 ) => {
+  // if (instance == null) {
+  //   console.debug('TableInstance == null');
+  //   return;
+  // }
+
   let startIndex = state.lastSelectedRow ?? 0;
   let endIndex = instance?.allRowIds.findIndex((id) => id === action.id) ?? 0;
 
@@ -128,6 +133,14 @@ export const onShiftSelect = <T extends Record<string, unknown>>(
   instance?.allRowIds
     .slice(startIndex, endIndex + 1)
     .forEach((id) => (selectedRowIds[id] = true));
+
+  const handleRow = (row: Row<T>) => {
+    selectedRowIds[row.id] = true;
+    row.subRows.forEach((r) => handleRow(r));
+  };
+  if (instance != null) {
+    handleRow(instance.rowsById[action.id]);
+  }
 
   const newState = {
     ...state,
