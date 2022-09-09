@@ -277,13 +277,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
     setSelectedDay(date);
     setSelectedStartDay(startDate);
     setSelectedEndDay(endDate);
-    if (startDate && endDate) {
-      setFocusedDay(isSelectingStartDate ? endDate : startDate);
-    } else if (startDate) {
-      setFocusedDay(startDate);
-    } else if (endDate) {
-      setFocusedDay(endDate);
-    } else {
+    if (!enableRangeSelect) {
       setFocusedDay(date ?? currentDate);
     }
     setMonthAndYear(
@@ -293,7 +287,7 @@ export const DatePicker = (props: DatePickerProps): JSX.Element => {
         date?.getFullYear() ??
         currentDate.getFullYear(),
     );
-  }, [date, setMonthAndYear, startDate, endDate, isSelectingStartDate]);
+  }, [date, setMonthAndYear, startDate, endDate, enableRangeSelect]);
 
   const days = React.useMemo(() => {
     let offsetToFirst = new Date(
