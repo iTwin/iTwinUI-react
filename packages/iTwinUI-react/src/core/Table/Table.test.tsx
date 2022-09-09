@@ -3917,5 +3917,47 @@ it('should navigate through table sorting with the keyboard', async () => {
 
   await userEvent.tab(); // tab to sort icon button
   await userEvent.keyboard('{Enter}');
-  expect(onSort).toHaveBeenCalled();
+  expect(onSort).toHaveBeenCalledTimes(1);
+});
+
+it('should navigate through table filtering with the keyboard', async () => {
+  const onFilter = jest.fn();
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          Filter: tableFilters.TextFilter(),
+          fieldType: 'text',
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns: mockedColumns,
+    onFilter,
+  });
+
+  const filterIconButton = container.querySelector(
+    '.iui-table-filter-button',
+  ) as HTMLElement;
+  fireEvent.focus(filterIconButton);
+  fireEvent.blur(filterIconButton);
+  filterIconButton.focus();
+  // const table = container.querySelector('.iui-table') as HTMLElement;
+  // fireEvent.keyDown(table, { key: 'Tab' });
+  // console.log('!!!!!!!!!!!!!!!!!!!!!!!!' + filterIconButton);
+  // console.log('22222222222222222222222222222222' + table);
+  // await userEvent.tab(); // tab to filter icon button
+  await userEvent.keyboard('{Enter}');
+  await userEvent.keyboard('2');
+  await userEvent.tab(); // tab to filter menu 'Filter' submit button
+  await userEvent.keyboard('{Enter}');
+  expect(onFilter).toHaveBeenCalledWith(
+    [{ fieldType: 'text', filterType: 'text', id: 'name', value: '2' }],
+    expect.objectContaining({ filters: [{ id: 'name', value: '2' }] }),
+  );
 });
