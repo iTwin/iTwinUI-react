@@ -62,108 +62,43 @@ export const onSelectHandler = <T extends Record<string, unknown>>(
 export const onShiftSelectHandler = <T extends Record<string, unknown>>(
   state: TableState<T>,
   action: ActionType,
-  instance: TableInstance<T>,
+  instance?: TableInstance<T>,
+  onSelect?: (
+    selectedData: T[] | undefined,
+    tableState?: TableState<T>,
+  ) => void,
 ) => {
-  const resetSelection = () => {
-    instance.toggleAllRowsSelected(false);
-  };
+  let startIndex = state.lastSelectedRow ?? 0;
+  let endIndex = instance?.allRowIds.findIndex((id) => id === action.id) ?? 0;
 
-  /**
-   * Returns the id of the next sibling, even if it doesn't exist
-   * @example
-   * getGreaterId('1.5') // '1.6'
-   * getGreaterId('2.8.4') // '2.8.5'
-   * getGreaterId('4') // '5'
-   */
-  const getNextSiblingId = (id: string) => {
-    const nextSiblingId = id.split('.');
-    nextSiblingId[nextSiblingId.length - 1] = `${
-      parseInt(nextSiblingId[nextSiblingId.length - 1]) + 1
-    }`;
-    return nextSiblingId.join('.');
-  };
-
-  const getParentId = (id: string) => {
-    const lastDotIndex = id.lastIndexOf('.');
-    if (lastDotIndex < 0) {
-      return null;
-    }
-    return id.substring(0, lastDotIndex);
-  };
-
-  /**
-   * @returns `true` if `subId` is indeed a sub-row of `id`, else `false`
-   * @example
-   * isSubRow('1.4', '1.4.2.3') // true
-   * isSubRow('1.3', '1.2.5')   // false
-   * isSubRow('2.4.5', '2.4.5') // true
-   */
-  const isSubRow = (id: string, subId: string) => {
-    const idSplit = id.split('.');
-    const subIdSplit = subId.split('.');
-
-    let i = 0;
-    while (i < idSplit.length) {
-      if (idSplit[i] !== subIdSplit[i]) {
-        return false;
-      }
-      i++;
-    }
-
-    return true;
-  };
-
-  /** Returns the next row as if it was just a non sub-rows list */
-  const getNextRow = (currentRow: Row<T>, endId: string) => {
-    let nextRow;
-    if (
-      (currentRow.subRows ?? []).length > 0 &&
-      isSubRow(currentRow.id, endId)
-    ) {
-      // child
-      nextRow = currentRow.subRows[0];
-    } else {
-      // next sibling
-      nextRow = instance.rowsById[getNextSiblingId(currentRow.id)];
-
-      // If the next sibling doesn't exist, go to the next child at a one upper depth
-      let parentId = getParentId(currentRow.id);
-      while (nextRow == null && parentId != null) {
-        nextRow = instance.rowsById[getNextSiblingId(parentId)];
-        parentId = getParentId(parentId);
-      }
-    }
-
-    return nextRow;
-  };
-
-  resetSelection();
-
-  // If no row selected before shift clicking, then assume first row is the last selectedRow (like Windows File Explorer)
-  let startId = state.lastSelectedRow ?? instance.rows[0].id;
-  let endId = action.id;
-
-  // Make sure startId is lesser than endId. Selection always goes from top to bottom
-  if (startId > endId) {
-    const temp = startId;
-    startId = endId;
-    endId = temp;
+  if (startIndex > endIndex) {
+    const temp = startIndex;
+    startIndex = endIndex;
+    endIndex = temp;
   }
 
-  let currentRow = instance.rowsById[startId];
+  const selectedRowIds: Record<string, boolean> = {};
+  instance?.allRowIds
+    .slice(startIndex, endIndex + 1)
+    .forEach((id) => (selectedRowIds[id] = true));
 
-  while (currentRow != null) {
-    if (currentRow.id === endId) {
-      currentRow.toggleRowSelected(true);
-      break;
-    }
-
-    if (!isSubRow(currentRow.id, endId)) {
-      currentRow.toggleRowSelected(true);
-    }
-
-    currentRow = getNextRow(currentRow, endId);
+  if (instance != null) {
+    const handleRow = (row: Row<T>) => {
+      selectedRowIds[row.id] = true;
+      row.subRows.forEach((r) => handleRow(r));
+    };
+    handleRow(instance.rowsById[action.id]);
   }
+
+  const newState = {
+    ...state,
+    selectedRowIds,
+  };
+
+  const selectedData = getSelectedData(selectedRowIds, instance);
+  onSelect?.(selectedData, newState);
+
+  return newState;
 };
 
 /**

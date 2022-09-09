@@ -410,7 +410,7 @@ export const Table = <
       newState: TableState<T>,
       action: ActionType,
       previousState: TableState<T>,
-      instance: TableInstance<T>,
+      instance?: TableInstance<T>,
     ): TableState<T> => {
       switch (action.type) {
         case TableActions.toggleSortBy:
