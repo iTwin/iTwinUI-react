@@ -33,6 +33,10 @@ const useInstance = <T extends Record<string, unknown>>(
     filteredRows = instance.filteredRows,
     filteredFlatRows = instance.filteredFlatRows,
     filteredRowsById = instance.filteredRowsById,
+    allFilteredRowsById = Object.entries(instance.filteredRowsById),
+    // allFilteredRowsById = Object.keys(instance.filteredRowsById).map(
+    //   (key) => instance.filteredRowsById[key],
+    // ),
   } = React.useMemo(() => {
     if (!hasAnySubRows) {
       return {};
@@ -79,6 +83,8 @@ const useInstance = <T extends Record<string, unknown>>(
     const filteredRows: Row<T>[] = [];
     const filteredFlatRows: Row<T>[] = [];
     const filteredRowsById: Record<string, Row<T>> = {};
+    // let allFilteredRowsById: [string, Row<T>][] = [];
+    const allFilteredRowsById: string[] = [];
 
     // Setting rows here helps to keep them ordered.
     const populateRows = (row: Row<T>) => {
@@ -87,13 +93,37 @@ const useInstance = <T extends Record<string, unknown>>(
       }
       filteredFlatRows.push(row);
       filteredRowsById[row.id] = row;
+      allFilteredRowsById.push(row.id);
       if (row.subRows.length) {
         row.subRows.forEach((r) => populateRows(r));
       }
     };
     currentlyFilteredRows.forEach((row) => populateRows(row));
 
-    return { filteredRows, filteredFlatRows, filteredRowsById };
+    // const a = Object.keys(filteredRowsById ?? {}).map((key) => filteredRowsById[key]);
+    // allFilteredRowsById = Object.entries(filteredRowsById);
+    // allFilteredRowsById = Object.keys(filteredRowsById).map(
+    //   (key) => filteredRowsById[key],
+    // );
+    console.log(
+      'create',
+      filteredRowsById,
+      filteredRowsById[2].id,
+      Object.keys(filteredRowsById),
+      currentlyFilteredRows,
+      Object.keys(filteredRowsById).sort(),
+      filteredFlatRows,
+      // filtere
+      allFilteredRowsById,
+    );
+    // allFilteredRowsById = Object.keys(filteredRowsById);
+
+    return {
+      filteredRows,
+      filteredFlatRows,
+      filteredRowsById,
+      allFilteredRowsById,
+    };
   }, [
     instance.allColumns,
     instance.filterTypes,
@@ -109,6 +139,7 @@ const useInstance = <T extends Record<string, unknown>>(
     rows: filteredRows,
     flatRows: filteredFlatRows,
     rowsById: filteredRowsById,
+    allRowsById: allFilteredRowsById,
   });
 };
 

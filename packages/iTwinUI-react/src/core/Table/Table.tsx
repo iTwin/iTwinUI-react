@@ -460,7 +460,7 @@ export const Table = <
             action,
             instance,
             onSelect,
-            isRowDisabled,
+            // isRowDisabled,
           );
           break;
         }
@@ -572,6 +572,12 @@ export const Table = <
         instance.page.slice(1, 5),
       );
 
+      // index = instance?.allRowsById.findIndex((id) => id === row.id);
+      // console.log('onRowClickHandler', instance?.allRowsById, row.id, index);
+
+      // index = instance?.allRowsById.findIndex((id) => id === row.id);
+      // console.log('onRowClickHandler', instance?.allRowsById, row.id, index);
+
       const isDisabled = isRowDisabled?.(row.original);
       if (!isDisabled) {
         onRowClick?.(event, row);
@@ -585,7 +591,8 @@ export const Table = <
         if (event.shiftKey) {
           dispatch({
             type: shiftRowSelectedAction,
-            index,
+            // index,
+            id: row.id,
           });
         } else if (
           !row.isSelected &&

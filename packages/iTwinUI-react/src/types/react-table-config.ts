@@ -119,6 +119,7 @@ declare module 'react-table' {
       UseRowStateInstanceProps<D>,
       UseSortByInstanceProps<D> {
     initialRows: Row<D>[];
+    allRowsById: string[];
   }
 
   export interface TableState<D extends object = {}>
