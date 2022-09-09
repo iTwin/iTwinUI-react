@@ -46,7 +46,7 @@ import {
   onExpandHandler,
   onFilterHandler,
   onSelectHandler,
-  onShiftSelect,
+  onShiftSelectHandler,
   onSingleSelectHandler,
   onTableResizeEnd,
   onTableResizeStart,
@@ -55,9 +55,9 @@ import VirtualScroll from '../utils/components/VirtualScroll';
 import { SELECTION_CELL_ID } from './columns';
 
 const singleRowSelectedAction = 'singleRowSelected';
+const shiftRowSelectedAction = 'shiftRowSelected';
 export const tableResizeStartAction = 'tableResizeStart';
 const tableResizeEndAction = 'tableResizeEnd';
-const shiftRowSelectedAction = 'shiftRowSelected';
 
 export type TablePaginatorRendererProps = {
   /**
@@ -455,7 +455,7 @@ export const Table = <
           break;
         }
         case shiftRowSelectedAction: {
-          newState = onShiftSelect(newState, action, instance, onSelect);
+          newState = onShiftSelectHandler(newState, action, instance, onSelect);
           break;
         }
         default:

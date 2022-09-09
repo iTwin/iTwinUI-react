@@ -77,8 +77,8 @@ export const onSingleSelectHandler = <T extends Record<string, unknown>>(
     };
     handleRow(instance.rowsById[action.id]);
   }
-  const index = instance?.allRowIds.findIndex((id) => id === action.id);
 
+  const index = instance?.allRowIds.findIndex((id) => id === action.id);
   const newState = {
     ...state,
     lastSelectedRow: index,
@@ -86,6 +86,48 @@ export const onSingleSelectHandler = <T extends Record<string, unknown>>(
   };
   // Passing to `onSelectHandler` to handle filtered sub-rows
   onSelectHandler(newState, instance, onSelect, isRowDisabled);
+
+  return newState;
+};
+
+export const onShiftSelectHandler = <T extends Record<string, unknown>>(
+  state: TableState<T>,
+  action: ActionType,
+  instance?: TableInstance<T>,
+  onSelect?: (
+    selectedData: T[] | undefined,
+    tableState?: TableState<T>,
+  ) => void,
+) => {
+  let startIndex = state.lastSelectedRow ?? 0;
+  let endIndex = instance?.allRowIds.findIndex((id) => id === action.id) ?? 0;
+
+  if (startIndex > endIndex) {
+    const temp = startIndex;
+    startIndex = endIndex;
+    endIndex = temp;
+  }
+
+  const selectedRowIds: Record<string, boolean> = {};
+  instance?.allRowIds
+    .slice(startIndex, endIndex + 1)
+    .forEach((id) => (selectedRowIds[id] = true));
+
+  if (instance != null) {
+    const handleRow = (row: Row<T>) => {
+      selectedRowIds[row.id] = true;
+      row.subRows.forEach((r) => handleRow(r));
+    };
+    handleRow(instance.rowsById[action.id]);
+  }
+
+  const newState = {
+    ...state,
+    selectedRowIds,
+  };
+
+  const selectedData = getSelectedData(selectedRowIds, instance);
+  onSelect?.(selectedData, newState);
 
   return newState;
 };
@@ -104,51 +146,4 @@ const getSelectedData = <T extends Record<string, unknown>>(
   instance?.initialRows.forEach((row) => setSelectedData(row));
 
   return selectedData;
-};
-
-export const onShiftSelect = <T extends Record<string, unknown>>(
-  state: TableState<T>,
-  action: ActionType,
-  instance?: TableInstance<T>,
-  onSelect?: (
-    selectedData: T[] | undefined,
-    tableState?: TableState<T>,
-  ) => void,
-) => {
-  // if (instance == null) {
-  //   console.debug('TableInstance == null');
-  //   return;
-  // }
-
-  let startIndex = state.lastSelectedRow ?? 0;
-  let endIndex = instance?.allRowIds.findIndex((id) => id === action.id) ?? 0;
-
-  if (startIndex > endIndex) {
-    const temp = startIndex;
-    startIndex = endIndex;
-    endIndex = temp;
-  }
-
-  const selectedRowIds: Record<string, boolean> = {};
-  instance?.allRowIds
-    .slice(startIndex, endIndex + 1)
-    .forEach((id) => (selectedRowIds[id] = true));
-
-  const handleRow = (row: Row<T>) => {
-    selectedRowIds[row.id] = true;
-    row.subRows.forEach((r) => handleRow(r));
-  };
-  if (instance != null) {
-    handleRow(instance.rowsById[action.id]);
-  }
-
-  const newState = {
-    ...state,
-    selectedRowIds,
-  };
-
-  const selectedData = getSelectedData(selectedRowIds, instance);
-  onSelect?.(selectedData, newState);
-
-  return newState;
 };
