@@ -41,7 +41,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <input
-        className={cx('iui-input', { [`iui-${size}`]: !!size }, className)}
+        className={cx('iui-input', className)}
+        data-iui-size={size}
         ref={refs}
         {...rest}
       />

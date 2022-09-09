@@ -378,9 +378,10 @@ it.each(['small', 'large'] as const)(
   'should render small and large sizes',
   (size) => {
     const { container } = renderComponent({ size });
-    expect(
-      container.querySelector(`.iui-select-button.iui-${size}`),
-    ).toBeTruthy();
+    expect(container.querySelector(`.iui-select-button`)).toHaveAttribute(
+      'data-iui-size',
+      size,
+    );
   },
 );
 

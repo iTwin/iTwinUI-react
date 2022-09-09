@@ -1430,6 +1430,11 @@
   resolved "https://registry.yarnpkg.com/@itwin/itwinui-illustrations-react/-/itwinui-illustrations-react-1.3.1.tgz#f534fa1da707272a4351f3b2bbc240c9ea8e3ae6"
   integrity sha512-hIZwYwd1qmyjt5yiL8Lg6E3CpgeLxGOnb4dVktoM+h3h5zSmgjhm2qFk+RqgsqV+dy0Fb2cs1jH4Jup9jWY9pA==
 
+"@itwin/itwinui-variables@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@itwin/itwinui-variables/-/itwinui-variables-0.3.0.tgz#90189b43cc4624563273612772735b063d9f3ee7"
+  integrity sha512-OX/Dje/VxR/YcYtUvmawqHQ4vjpBTsKWux0T9Wa8T2GGiOW+lD51dOkAAfoXgNALUa9YUXb9/F7pbaGMlm5tbg==
+
 "@jest/console@^28.1.0":
   version "28.1.0"
   resolved "https://registry.yarnpkg.com/@jest/console/-/console-28.1.0.tgz#db78222c3d3b0c1db82f1b9de51094c2aaff2176"
