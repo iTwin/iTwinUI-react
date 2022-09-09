@@ -9,15 +9,11 @@ import * as UseMediaQuery from '../utils/hooks/useMediaQuery';
 import { ThemeProvider } from './ThemeProvider';
 
 const expectLightTheme = (ownerDocument = document) => {
-  expect(ownerDocument.documentElement.classList).toContain('iui-theme-light');
-  expect(ownerDocument.documentElement.classList).not.toContain(
-    'iui-theme-dark',
-  );
+  expect(ownerDocument.documentElement.dataset.iuiTheme).toEqual('light');
 };
 
 const expectDarkTheme = () => {
-  expect(document.documentElement.classList).not.toContain('iui-theme-light');
-  expect(document.documentElement.classList).toContain('iui-theme-dark');
+  expect(document.documentElement.dataset.iuiTheme).toEqual('dark');
 };
 
 let useMediaSpy: jest.SpyInstance;
@@ -29,8 +25,8 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  document.documentElement.classList.remove('iui-theme-light');
-  document.documentElement.classList.remove('iui-theme-dark');
+  document.documentElement.removeAttribute('data-iui-theme');
+  document.documentElement.removeAttribute('data-iui-contrast');
   useMediaSpy?.mockRestore();
 });
 
@@ -155,9 +151,9 @@ it('should set default theme', () => {
   expectDarkTheme();
 });
 
-it('should set body class', () => {
+it('should set iui-root class on body', () => {
   render(<ThemeProvider />);
-  expect(document.body.classList).toContain('iui-body');
+  expect(document.body.classList).toContain('iui-root');
 });
 
 it.each(['light', 'dark'] as const)(
@@ -165,9 +161,8 @@ it.each(['light', 'dark'] as const)(
   (theme) => {
     useMediaSpy.mockReturnValue(true);
     render(<ThemeProvider theme={theme} />);
-    expect(document.documentElement.classList).toContain(
-      `iui-theme-${theme}-hc`,
-    );
+    expect(document.documentElement.dataset.iuiTheme).toEqual(theme);
+    expect(document.documentElement.dataset.iuiContrast).toEqual(`high`);
   },
 );
 
@@ -177,9 +172,7 @@ it.each(['light', 'dark'] as const)(
     render(
       <ThemeProvider theme={theme} themeOptions={{ highContrast: true }} />,
     );
-    expect(document.documentElement.classList).toContain(
-      `iui-theme-${theme}-hc`,
-    );
+    expect(document.documentElement.dataset.iuiContrast).toEqual(`high`);
   },
 );
 
@@ -188,8 +181,8 @@ it.each([true, false])(
   (highContrast) => {
     useMediaSpy.mockReturnValue(true);
     render(<ThemeProvider theme={'light'} themeOptions={{ highContrast }} />);
-    expect(document.documentElement.classList).toContain(
-      `iui-theme-light${highContrast ? '-hc' : ''}`,
+    expect(document.documentElement.dataset.iuiContrast).toEqual(
+      highContrast ? `high` : 'default',
     );
   },
 );

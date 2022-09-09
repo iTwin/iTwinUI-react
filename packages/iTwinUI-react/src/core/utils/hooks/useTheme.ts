@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import '@itwin/itwinui-css/css/global.css';
+import '@itwin/itwinui-variables/index.css';
 import { getDocument, getWindow } from '../functions/dom';
 import { useMediaQuery } from './useMediaQuery';
 
@@ -42,8 +43,8 @@ export const useTheme = (
   );
 
   React.useLayoutEffect(() => {
-    if (!ownerDocument?.body.classList.contains('iui-body')) {
-      ownerDocument?.body.classList.add('iui-body');
+    if (!ownerDocument?.body.classList.contains('iui-root')) {
+      ownerDocument?.body.classList.add('iui-root');
     }
   }, [ownerDocument]);
 
@@ -84,9 +85,7 @@ export const useTheme = (
         }
         break;
       default:
-        if (
-          ownerDocument.documentElement.className.indexOf('iui-theme') === -1
-        ) {
+        if (ownerDocument.documentElement.dataset.iuiTheme == null) {
           applyTheme('light', { ownerDocument, highContrast });
         }
     }
@@ -101,12 +100,8 @@ const applyTheme = (
   theme: 'light' | 'dark',
   { ownerDocument, highContrast }: Required<ThemeOptions>,
 ) => {
-  const classList = ownerDocument.documentElement.classList;
-  const currentTheme = Array.from(classList).find((cls) =>
-    cls.startsWith('iui-theme'),
-  );
-  if (currentTheme) {
-    classList.remove(currentTheme);
-  }
-  classList.add(`iui-theme-${theme}${highContrast ? '-hc' : ''}`);
+  ownerDocument.documentElement.dataset.iuiTheme = theme;
+  ownerDocument.documentElement.dataset.iuiContrast = highContrast
+    ? 'high'
+    : 'default';
 };
