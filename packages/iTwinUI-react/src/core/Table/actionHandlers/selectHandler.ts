@@ -86,9 +86,9 @@ export const onSingleSelectHandler = <T extends Record<string, unknown>>(
   //   Object.keys(instance?.rowsById ?? {}).map((key) => instance?.rowsById[key]),
   // );
 
-  console.log('SingleSelect', 1, instance?.allRowsById);
+  console.log('SingleSelect', 1, instance?.allRowIds);
 
-  const index = instance?.allRowsById.findIndex((id) => id === action.id);
+  const index = instance?.allRowIds.findIndex((id) => id === action.id);
 
   const newState = {
     ...state,
@@ -129,7 +129,7 @@ export const onShiftSelect = <T extends Record<string, unknown>>(
   // isRowDisabled?: (rowData: T) => boolean,
 ) => {
   let startIndex = state.lastSelectedRow ?? 0; // relative index to parent
-  let endIndex = instance?.allRowsById.findIndex((id) => id === action.id) ?? 0; // relative index to pages
+  let endIndex = instance?.allRowIds.findIndex((id) => id === action.id) ?? 0; // relative index to pages
 
   if (startIndex > endIndex) {
     const temp = startIndex;
@@ -191,7 +191,7 @@ export const onShiftSelect = <T extends Record<string, unknown>>(
     instance?.page.slice(startIndex, endIndex + 1),
   );
   // instance?.page.slice(startIndex, endIndex + 1).forEach((r) => handleRow(r)); // relative index to pages
-  instance?.allRowsById
+  instance?.allRowIds
     .slice(startIndex, endIndex + 1)
     .forEach((id) => (selectedRowIds[id] = true));
 
