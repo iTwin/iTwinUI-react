@@ -33,10 +33,7 @@ const useInstance = <T extends Record<string, unknown>>(
     filteredRows = instance.filteredRows,
     filteredFlatRows = instance.filteredFlatRows,
     filteredRowsById = instance.filteredRowsById,
-    filteredAllRowIds: filteredAllRowIds = instance.allRowIds,
-    // allFilteredRowsById = Object.keys(instance.filteredRowsById).map(
-    //   (key) => instance.filteredRowsById[key],
-    // ),
+    filteredAllRowIds = instance.allRowIds,
   } = React.useMemo(() => {
     if (!hasAnySubRows) {
       return {};
@@ -83,7 +80,6 @@ const useInstance = <T extends Record<string, unknown>>(
     const filteredRows: Row<T>[] = [];
     const filteredFlatRows: Row<T>[] = [];
     const filteredRowsById: Record<string, Row<T>> = {};
-    // let allFilteredRowsById: [string, Row<T>][] = [];
     const filteredAllRowIds: string[] = [];
 
     // Setting rows here helps to keep them ordered.
@@ -99,24 +95,6 @@ const useInstance = <T extends Record<string, unknown>>(
       }
     };
     currentlyFilteredRows.forEach((row) => populateRows(row));
-
-    // const a = Object.keys(filteredRowsById ?? {}).map((key) => filteredRowsById[key]);
-    // allFilteredRowsById = Object.entries(filteredRowsById);
-    // allFilteredRowsById = Object.keys(filteredRowsById).map(
-    //   (key) => filteredRowsById[key],
-    // );
-    // console.log(
-    //   'create',
-    //   filteredRowsById,
-    //   filteredRowsById[2].id,
-    //   Object.keys(filteredRowsById),
-    //   currentlyFilteredRows,
-    //   Object.keys(filteredRowsById).sort(),
-    //   filteredFlatRows,
-    //   // filtere
-    //   allFilteredRowsById,
-    // );
-    // allFilteredRowsById = Object.keys(filteredRowsById);
 
     return {
       filteredRows,

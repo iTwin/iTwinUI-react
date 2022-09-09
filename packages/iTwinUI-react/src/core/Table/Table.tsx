@@ -455,13 +455,7 @@ export const Table = <
           break;
         }
         case shiftRowSelectedAction: {
-          newState = onShiftSelect(
-            newState,
-            action,
-            instance,
-            onSelect,
-            // isRowDisabled,
-          );
+          newState = onShiftSelect(newState, action, instance, onSelect);
           break;
         }
         default:
@@ -562,22 +556,7 @@ export const Table = <
     data.length !== 0 && column.canSort;
 
   const onRowClickHandler = React.useCallback(
-    (event: React.MouseEvent, row: Row<T>, index: number) => {
-      console.log(
-        'index',
-        index,
-        'row',
-        row,
-        instance.page,
-        instance.page.slice(1, 5),
-      );
-
-      // index = instance?.allRowsById.findIndex((id) => id === row.id);
-      // console.log('onRowClickHandler', instance?.allRowsById, row.id, index);
-
-      // index = instance?.allRowsById.findIndex((id) => id === row.id);
-      // console.log('onRowClickHandler', instance?.allRowsById, row.id, index);
-
+    (event: React.MouseEvent, row: Row<T>) => {
       const isDisabled = isRowDisabled?.(row.original);
       if (!isDisabled) {
         onRowClick?.(event, row);
@@ -591,7 +570,6 @@ export const Table = <
         if (event.shiftKey) {
           dispatch({
             type: shiftRowSelectedAction,
-            // index,
             id: row.id,
           });
         } else if (
@@ -614,7 +592,6 @@ export const Table = <
       selectionMode,
       dispatch,
       onRowClick,
-      instance.page,
     ],
   );
 
@@ -702,7 +679,6 @@ export const Table = <
       return (
         <TableRowMemoized
           row={row}
-          index={index}
           rowProps={rowProps}
           isLast={index === page.length - 1}
           onRowInViewport={onRowInViewportRef}

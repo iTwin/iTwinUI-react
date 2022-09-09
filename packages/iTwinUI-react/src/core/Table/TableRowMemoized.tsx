@@ -16,7 +16,6 @@ import { TableCell } from './TableCell';
  */
 export const TableRow = <T extends Record<string, unknown>>(props: {
   row: Row<T>;
-  index: number;
   rowProps?: (
     row: Row<T>,
   ) => React.ComponentPropsWithRef<'div'> & {
@@ -27,7 +26,7 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
   onBottomReached: React.MutableRefObject<(() => void) | undefined>;
   intersectionMargin: number;
   state: TableState<T>; // Needed for explicitly checking selection and expansion changes
-  onClick?: (event: React.MouseEvent, row: Row<T>, index: number) => void;
+  onClick?: (event: React.MouseEvent, row: Row<T>) => void;
   subComponent?: (row: Row<T>) => React.ReactNode;
   isDisabled: boolean;
   tableHasSubRows: boolean;
@@ -38,7 +37,6 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
 }) => {
   const {
     row,
-    index,
     rowProps,
     isLast,
     onRowInViewport,
@@ -104,7 +102,7 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
         ref={refs}
         onClick={(event) => {
           mergedProps?.onClick?.(event);
-          onClick?.(event, row, index);
+          onClick?.(event, row);
         }}
       >
         {row.cells.map((cell, index) => {
