@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { ThemeContext } from '../../ThemeProvider/ThemeProvider';
-import { getDocument } from '../functions';
+import { getDocument, getWindow } from '../functions';
 import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
 import '@itwin/itwinui-css/css/global.css';
 import '@itwin/itwinui-variables/index.css';
@@ -94,24 +94,20 @@ const handleTheme = (
   highContrast?: boolean,
 ) => {
   const root = ownerDocument.documentElement;
-  const _window = ownerDocument.defaultView;
-
-  if (!_window) {
-    return;
-  }
+  const _window = ownerDocument.defaultView ?? getWindow();
 
   const applyThemeAttributes = (isDark = false, isHC = false) => {
     root.dataset.iuiTheme = isDark ? 'dark' : 'light';
     root.dataset.iuiContrast = isHC ? 'high' : 'default';
   };
 
-  const prefersDarkQuery = _window.matchMedia('(prefers-color-scheme: dark)');
-  const prefersHCQuery = _window.matchMedia('(prefers-contrast: more)');
+  const prefersDarkQuery = _window?.matchMedia('(prefers-color-scheme: dark)');
+  const prefersHCQuery = _window?.matchMedia('(prefers-contrast: more)');
 
   const changeHandler = () => {
     const isDark =
-      theme === 'dark' || (theme === 'os' && prefersDarkQuery.matches);
-    const isHC = highContrast ?? prefersHCQuery.matches;
+      theme === 'dark' || (theme === 'os' && prefersDarkQuery?.matches);
+    const isHC = highContrast ?? prefersHCQuery?.matches;
 
     applyThemeAttributes(isDark, isHC);
   };
@@ -119,13 +115,13 @@ const handleTheme = (
   // call handler once to set initial theme
   changeHandler();
 
-  // add listeners
-  prefersDarkQuery.addEventListener('change', changeHandler);
-  prefersHCQuery.addEventListener('change', changeHandler);
+  // add listeners in supported browsers
+  prefersDarkQuery?.addEventListener?.('change', changeHandler);
+  prefersHCQuery?.addEventListener?.('change', changeHandler);
 
   // return cleanup function to remove event listeners (should be returned from useEffect)
   return () => {
-    prefersDarkQuery.removeEventListener('change', changeHandler);
-    prefersHCQuery.removeEventListener('change', changeHandler);
+    prefersDarkQuery?.removeEventListener?.('change', changeHandler);
+    prefersHCQuery?.removeEventListener?.('change', changeHandler);
   };
 };
