@@ -180,6 +180,47 @@ export const ComboBoxInput = React.forwardRef(
     const [tagContainerRef, tagContainerWidth] = useContainerWidth(true);
     const [inputContainerRef] = useContainerWidth();
 
+    const selectedItemsRenderer = (customRenderer: boolean) => {
+      return customRenderer ? (
+        <div
+          ref={tagContainerRef}
+          className='iui-select-tag-container'
+          style={{
+            maxWidth: `calc(100% - 150px)`,
+            right: 'unset',
+          }}
+        >
+          <span>item 1</span>
+          <span>item 1</span>
+          <span>item 1</span>
+          <span>item 1</span>
+          <span>item 1</span>
+          <span>item 1</span>
+          <span>item 1</span>
+          <span>item 1</span>
+          <span>item 1</span>
+        </div>
+      ) : (
+        <SelectTagContainer
+          ref={tagContainerRef}
+          style={{
+            maxWidth: `calc(100% - 150px)`,
+            right: 'unset',
+          }}
+          tags={[
+            <SelectTag key={1} label='asdasd' />,
+            <SelectTag key={2} label='asdasd' />,
+            <SelectTag key={3} label='asdasd' />,
+            <SelectTag key={4} label='asdasd' />,
+            <SelectTag key={5} label='asdasd' />,
+            <SelectTag key={6} label='asdasd' />,
+            <SelectTag key={7} label='asdasd' />,
+            <SelectTag key={8} label='asdasd' />,
+          ]}
+        />
+      );
+    };
+
     return (
       <>
         <Input
@@ -200,25 +241,7 @@ export const ComboBoxInput = React.forwardRef(
           autoCorrect='off'
           {...rest}
         />
-        {multiple && (
-          <SelectTagContainer
-            ref={tagContainerRef}
-            style={{
-              maxWidth: `calc(100% - 150px)`,
-              right: 'unset',
-            }}
-            tags={[
-              <SelectTag key={1} label='asdasd' />,
-              <SelectTag key={2} label='asdasd' />,
-              <SelectTag key={3} label='asdasd' />,
-              <SelectTag key={4} label='asdasd' />,
-              <SelectTag key={5} label='asdasd' />,
-              <SelectTag key={6} label='asdasd' />,
-              <SelectTag key={7} label='asdasd' />,
-              <SelectTag key={8} label='asdasd' />,
-            ]}
-          />
-        )}
+        {multiple && selectedItemsRenderer(true)}
       </>
     );
   },
