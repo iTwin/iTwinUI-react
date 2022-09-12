@@ -4,6 +4,45 @@
  *--------------------------------------------------------------------------------------------*/
 import { ActionType, Row, TableInstance, TableState } from 'react-table';
 
+// const handleRow2Driver = <T extends Record<string, unknown>>(
+//   row: Row<T>,
+//   instance: TableInstance<T>,
+//   newState: TableState<T>,
+//   isRowDisabled?: (rowData: T) => boolean,
+// ) => {
+//   console.log('handle2Driver', row.id);
+
+//   const handleRow2 = (row: Row<T>) => {
+//     if (isRowDisabled?.(row.original)) {
+//       return false;
+//     }
+
+//     let isAllSubSelected = true;
+//     row.initialSubRows.forEach((subRow) => {
+//       const result = handleRow2(subRow);
+//       if (!result) {
+//         isAllSubSelected = false;
+//       }
+//     });
+
+//     // If `selectSubRows` is false, then no need to select sub-rows and just check current selection state.
+//     // If a row doesn't have sub-rows then check its selection state.
+//     // If it has sub-rows then check whether all of them are selected.
+//     if (
+//       (!instance.selectSubRows && newState.selectedRowIds[row.id]) ||
+//       (!row.initialSubRows.length && newState.selectedRowIds[row.id]) ||
+//       (row.initialSubRows.length && isAllSubSelected)
+//     ) {
+//       newSelectedRowIds[row.id] = true;
+//       console.log('current newSelectedRowIds', newSelectedRowIds);
+//     }
+//     return !!newSelectedRowIds[row.id];
+//   };
+
+//   const newSelectedRowIds: Record<string, boolean> = {};
+//   handleRow2(row);
+// };
+
 /**
  * Handles selection when clicked on a checkbox.
  */
@@ -141,22 +180,32 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
   // };
   // For all rows between start and end
   // const disabledRowIds = [];
-  let currentDisabledRowId = '';
-  instance?.flatRows.slice(startIndex, endIndex + 1).forEach((row) => {
-    const rowDisabled = isRowDisabled?.(row.original);
-    if (rowDisabled) {
-      // disabledRowIds.push(row.id);
-      currentDisabledRowId = row.id;
-    }
-    // console.log(row.id, row.original);
-    // is NOT ancestor of endId && is NOT child of disabled row
-    !isSubRow(row.id, endId) && !isSubRow(currentDisabledRowId, row.id)
-      ? (selectedRowIds[row.id] = true)
-      : null;
+  // let currentDisabledRowId = '';
+
+  // const handleRow1 = (row: Row<T>) => {
+  //   const rowDisabled = isRowDisabled?.(row.original);
+  //   if (rowDisabled) {
+  //     // disabledRowIds.push(row.id);
+  //     currentDisabledRowId = row.id;
+  //   }
+  //   // console.log(row.id, row.original);
+  //   // is NOT ancestor of endId && is NOT child of disabled row
+  //   // !isSubRow(row.id, endId) && !isSubRow(currentDisabledRowId, row.id)
+  //   row.initialSubRows.length === 0 && !isSubRow(currentDisabledRowId, row.id)
+  //     ? (selectedRowIds[row.id] = true)
+  //     : null;
+  // };
+
+  instance?.flatRows.slice(startIndex, endIndex + 1).forEach((r) => {
+    selectedRowIds[r.id] = true;
+    console.log('foreach iter', selectedRowIds);
   });
   // For the last row (endId)
   if (instance != null) {
     const handleRow = (row: Row<T>) => {
+      // handleRow1(row);
+      // row.initialSubRows.forEach((r) => handleRow1(r));
+
       selectedRowIds[row.id] = true;
       row.subRows.forEach((r) => handleRow(r));
     };
@@ -164,12 +213,14 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
   }
   const newState = {
     ...state,
-    selectedRowIds,
+    selectedRowIds: selectedRowIds,
   };
-  const selectedData = getSelectedData(selectedRowIds, instance);
-  onSelect?.(selectedData, newState);
-  console.log('selectedRowIds', selectedRowIds);
-  // onSelectHandler(newState, instance, onSelect, isRowDisabled);
+  // const selectedData = getSelectedData(selectedRowIds, instance);
+  // onSelect?.(selectedData, newState);
+  console.log('slice', instance?.flatRows.slice(startIndex, endIndex + 1));
+  console.log('old selectedRowIds', selectedRowIds, newState.selectedRowIds);
+  onSelectHandler(newState, instance, onSelect, isRowDisabled);
+  console.log('new selectedRowIds', newState.selectedRowIds);
   return newState;
 };
 
@@ -189,24 +240,24 @@ const getSelectedData = <T extends Record<string, unknown>>(
   return selectedData;
 };
 
-/**
- * @returns `true` if `subId` is indeed a sub-row of `id`, else `false`
- * @example
- * isSubRow('1.4', '1.4.2.3') // true
- * isSubRow('1.3', '1.2.5')   // false
- * isSubRow('2.4.5', '2.4.5') // true
- */
-const isSubRow = (id: string, subId: string) => {
-  const idSplit = id.split('.');
-  const subIdSplit = subId.split('.');
+// /**
+//  * @returns `true` if `subId` is indeed a sub-row of `id`, else `false`
+//  * @example
+//  * isSubRow('1.4', '1.4.2.3') // true
+//  * isSubRow('1.3', '1.2.5')   // false
+//  * isSubRow('2.4.5', '2.4.5') // true
+//  */
+// const isSubRow = (id: string, subId: string) => {
+//   const idSplit = id.split('.');
+//   const subIdSplit = subId.split('.');
 
-  let i = 0;
-  while (i < idSplit.length) {
-    if (idSplit[i] !== subIdSplit[i]) {
-      return false;
-    }
-    i++;
-  }
+//   let i = 0;
+//   while (i < idSplit.length) {
+//     if (idSplit[i] !== subIdSplit[i]) {
+//       return false;
+//     }
+//     i++;
+//   }
 
-  return true;
-};
+//   return true;
+// };
