@@ -372,13 +372,13 @@ it('should handle row clicks', async () => {
   expect(rows.length).toBe(3);
 
   await userEvent.click(getByText(mockedData()[1].name));
-  expect(rows[1].classList).toContain('iui-selected');
+  expect(rows[1].classList).toContain('iui-selected'); // lastSelectedRow = 1
   expect(onSelect).toHaveBeenCalledTimes(1);
   expect(onRowClick).toHaveBeenCalledTimes(1);
 
   await userEvent.click(getByText(mockedData()[2].name));
   expect(rows[1].classList).not.toContain('iui-selected');
-  expect(rows[2].classList).toContain('iui-selected');
+  expect(rows[2].classList).toContain('iui-selected'); // lastSelectedRow = 1 -> 2
   expect(onSelect).toHaveBeenCalledTimes(2);
   expect(onRowClick).toHaveBeenCalledTimes(2);
 
@@ -390,14 +390,23 @@ it('should handle row clicks', async () => {
   expect(onSelect).toHaveBeenCalledTimes(3);
   expect(onRowClick).toHaveBeenCalledTimes(3);
 
-  await user.keyboard('[/ControlLeft][ShiftLeft>]'); // Release Control and Press Shift (without releasing it)
+  await user.keyboard('[/ControlLeft]');
+  await user.click(getByText(mockedData()[1].name)); // Deselect
+  expect(onSelect).toHaveBeenCalledTimes(4);
+  expect(onRowClick).toHaveBeenCalledTimes(4);
+
+  await user.click(getByText(mockedData()[1].name)); // Reselect; lastSelectedRow = 2 -> 1
+  expect(onSelect).toHaveBeenCalledTimes(5);
+  expect(onRowClick).toHaveBeenCalledTimes(5);
+
+  await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
   await user.click(getByText(mockedData()[0].name)); // Perform a click with `shiftKey: true`
 
   expect(rows[0].classList).toContain('iui-selected');
   expect(rows[1].classList).toContain('iui-selected');
-  expect(rows[2].classList).toContain('iui-selected');
-  expect(onSelect).toHaveBeenCalledTimes(3 + (1 + 3)); // # times before + (reset + # selected rows from start to end)
-  expect(onRowClick).toHaveBeenCalledTimes(4);
+  expect(rows[2].classList).not.toContain('iui-selected');
+  expect(onSelect).toHaveBeenCalledTimes(6);
+  expect(onRowClick).toHaveBeenCalledTimes(6);
 });
 
 it('should handle sub-rows shift click selection', async () => {
