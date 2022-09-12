@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { getBoundedValue, getWindow } from '../functions';
+import { getBoundedValue, getTranslateValues, getWindow } from '../functions';
 
 export type ResizerProps = {
   elementRef: React.RefObject<HTMLElement>;
@@ -11,31 +11,20 @@ export type ResizerProps = {
   setStyle?: (style: React.CSSProperties) => void;
 };
 
-const parseTranslate = (ref: React.RefObject<HTMLElement>) => {
-  if (!ref.current) {
-    return [];
-  }
-
-  const transformValue = getComputedStyle(ref.current).getPropertyValue(
-    'transform',
-  );
-  const matrix = new DOMMatrix(transformValue);
-
-  return [matrix.m41, matrix.m42];
-};
-
 export const Resizer = (props: ResizerProps) => {
   const { elementRef, containerRef, setStyle } = props;
 
   const onResizePointerDown = (event: React.PointerEvent<HTMLElement>) => {
-    if (!elementRef.current) {
+    if (!elementRef.current || event.button !== 0) {
       return;
     }
 
     const initialPointerX = event.clientX;
     const initialPointerY = event.clientY;
 
-    const [initialTranslateX, initialTranslateY] = parseTranslate(elementRef);
+    const [initialTranslateX, initialTranslateY] = getTranslateValues(
+      elementRef.current,
+    );
     const {
       width: initialWidth,
       height: initialHeight,
@@ -43,7 +32,8 @@ export const Resizer = (props: ResizerProps) => {
 
     let width = `${initialWidth}px`;
     let height = `${initialHeight}px`;
-    let transform = `translate(${initialTranslateX}px,${initialTranslateY}px)`;
+    let translateX = initialTranslateX;
+    let translateY = initialTranslateY;
 
     const minWidth = Number(
       getComputedStyle(elementRef.current).minWidth.replace('px', ''),
@@ -57,8 +47,6 @@ export const Resizer = (props: ResizerProps) => {
     const originalUserSelect =
       elementRef.current.ownerDocument.body.style.userSelect;
     elementRef.current.ownerDocument.body.style.userSelect = 'none';
-
-    console.log('start', { width, height, transform });
 
     const onResizePointerMove = (event: PointerEvent) => {
       if (!elementRef.current) {
@@ -80,27 +68,16 @@ export const Resizer = (props: ResizerProps) => {
       switch (resizer) {
         case 'top-left': {
           const newHeight = initialHeight + (initialPointerY - clientY);
+          if (newHeight >= minHeight) {
+            height = elementRef.current.style.height = `${newHeight}px`;
+            translateY = initialTranslateY - (initialPointerY - clientY);
+          }
           const newWidth = initialWidth + (initialPointerX - clientX);
-          width = elementRef.current.style.width = `${Math.max(
-            newWidth,
-            minWidth,
-          )}px`;
-          height = elementRef.current.style.height = `${Math.max(
-            newHeight,
-            minHeight,
-          )}px`;
-          const [currentTranslateX, currentTranslateY] = parseTranslate(
-            elementRef,
-          );
-          const newTranslateX =
-            newWidth < minWidth
-              ? currentTranslateX
-              : initialTranslateX - (initialPointerX - clientX);
-          const newTranslateY =
-            newHeight < minHeight
-              ? currentTranslateY
-              : initialTranslateY - (initialPointerY - clientY);
-          transform = elementRef.current.style.transform = `translate(${newTranslateX}px, ${newTranslateY}px)`;
+          if (newWidth >= minWidth) {
+            width = elementRef.current.style.width = `${newWidth}px`;
+            translateX = initialTranslateX - (initialPointerX - clientX);
+          }
+          elementRef.current.style.transform = `translate(${translateX}px, ${translateY}px)`;
           break;
         }
         case 'top': {
@@ -109,28 +86,20 @@ export const Resizer = (props: ResizerProps) => {
             break;
           }
           height = elementRef.current.style.height = `${newHeight}px`;
-          transform = elementRef.current.style.transform = `translate(${
-            parseTranslate(elementRef)[0]
-          }px, ${initialTranslateY - (initialPointerY - clientY)}px)`;
+          translateY = initialTranslateY - (initialPointerY - clientY);
+          elementRef.current.style.transform = `translate(${translateX}px, ${translateY}px)`;
           break;
         }
         case 'top-right': {
           const newHeight = initialHeight + (initialPointerY - clientY);
-          height = elementRef.current.style.height = `${Math.max(
-            newHeight,
-            minHeight,
-          )}px`;
+          if (newHeight >= minHeight) {
+            height = elementRef.current.style.height = `${newHeight}px`;
+            translateY = initialTranslateY - (initialPointerY - clientY);
+          }
           width = elementRef.current.style.width = `${
             initialWidth - (initialPointerX - clientX)
           }px`;
-          const [currentTranslateX, currentTranslateY] = parseTranslate(
-            elementRef,
-          );
-          const newTranslateY =
-            newHeight < minHeight
-              ? currentTranslateY
-              : initialTranslateY - (initialPointerY - clientY);
-          transform = elementRef.current.style.transform = `translate(${currentTranslateX}px, ${newTranslateY}px)`;
+          elementRef.current.style.transform = `translate(${translateX}px, ${translateY}px)`;
           break;
         }
         case 'right': {
@@ -156,20 +125,14 @@ export const Resizer = (props: ResizerProps) => {
         }
         case 'bottom-left': {
           const newWidth = initialWidth + (initialPointerX - clientX);
-          width = elementRef.current.style.width = `${Math.max(
-            newWidth,
-            minWidth,
-          )}px`;
+          if (newWidth >= minWidth) {
+            width = elementRef.current.style.width = `${newWidth}px`;
+            translateX = initialTranslateX - (initialPointerX - clientX);
+          }
           height = elementRef.current.style.height = `${
             initialHeight - (initialPointerY - clientY)
           }px`;
-          const newTranslateX =
-            newWidth < minWidth
-              ? parseTranslate(elementRef)[0]
-              : initialTranslateX - (initialPointerX - clientX);
-          transform = elementRef.current.style.transform = `translate(${newTranslateX}px, ${
-            parseTranslate(elementRef)[1]
-          }px)`;
+          elementRef.current.style.transform = `translate(${translateX}px, ${translateY}px)`;
           break;
         }
         case 'left': {
@@ -178,9 +141,8 @@ export const Resizer = (props: ResizerProps) => {
             break;
           }
           width = elementRef.current.style.width = `${newWidth}px`;
-          transform = elementRef.current.style.transform = `translate(${
-            initialTranslateX - (initialPointerX - clientX)
-          }px, ${parseTranslate(elementRef)[1]}px)`;
+          translateX = initialTranslateX - (initialPointerX - clientX);
+          elementRef.current.style.transform = `translate(${translateX}px, ${translateY}px)`;
           break;
         }
         default:
@@ -198,11 +160,10 @@ export const Resizer = (props: ResizerProps) => {
         document.removeEventListener('pointermove', onResizePointerMove);
         if (elementRef.current) {
           elementRef.current.ownerDocument.body.style.userSelect = originalUserSelect;
-          console.log('end', { width, height, transform });
           setStyle?.({
             width,
             height,
-            transform,
+            transform: `translate(${translateX}px, ${translateY}px)`,
           });
         }
       },

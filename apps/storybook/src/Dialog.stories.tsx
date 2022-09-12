@@ -170,6 +170,7 @@ export const Draggable: Story = () => {
         closeOnEsc
         isDismissible
         isDraggable
+        isResizable
       >
         <Dialog.Main>
           <Dialog.TitleBar titleText='Best dialog ever' />
@@ -249,6 +250,7 @@ export const DraggableRelativeToContainer: Story = ({ isOpen, ...rest }) => {
         closeOnEsc
         isDismissible
         isDraggable
+        isResizable
         relativeTo='container'
       >
         <Dialog.Main>

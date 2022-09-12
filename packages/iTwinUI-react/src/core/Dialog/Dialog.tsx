@@ -56,6 +56,7 @@ export const Dialog = Object.assign(
         closeOnExternalClick = false,
         onClose,
         isDraggable = false,
+        isResizable = false,
         relativeTo = 'viewport',
         className,
         style,
@@ -76,6 +77,7 @@ export const Dialog = Object.assign(
             preventDocumentScroll,
             trapFocus,
             isDraggable,
+            isResizable,
             relativeTo,
             dialogRootRef,
           }}

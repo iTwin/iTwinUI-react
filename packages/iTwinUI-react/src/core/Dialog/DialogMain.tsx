@@ -4,7 +4,13 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { FocusTrap, Resizer, useMergedRefs, useTheme } from '../utils';
+import {
+  FocusTrap,
+  getTranslateValues,
+  Resizer,
+  useMergedRefs,
+  useTheme,
+} from '../utils';
 import '@itwin/itwinui-css/css/dialog.css';
 import { DialogContextProps, useDialogContext } from './DialogContext';
 import { CSSTransition } from 'react-transition-group';
@@ -59,6 +65,7 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
       preventDocumentScroll = dialogContext.preventDocumentScroll,
       onKeyDown,
       isDraggable = dialogContext.isDraggable,
+      isResizable = dialogContext.isResizable,
       style: propStyle,
       ...rest
     } = props;
@@ -118,6 +125,7 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
     const { onPointerDown, transform } = useDragAndDrop(
       dialogRef,
       dialogContext.dialogRootRef,
+      isDraggable,
     );
     const handlePointerDown = React.useCallback(
       (event: React.PointerEvent<HTMLElement>) => {
@@ -127,6 +135,22 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
       },
       [isDraggable, onPointerDown],
     );
+
+    // Prevents dialog from moving when window is being resized
+    React.useLayoutEffect(() => {
+      if (!isDraggable || !isOpen) {
+        return;
+      }
+      const rect = dialogRef.current?.getBoundingClientRect();
+      const [translateX, translateY] = getTranslateValues(dialogRef.current);
+      setStyle({
+        width: rect?.width,
+        height: rect?.height,
+        left: dialogRef.current?.offsetLeft,
+        top: dialogRef.current?.offsetTop,
+        transform: `translate(${translateX}px,${translateY}px)`,
+      });
+    }, [isDraggable, isOpen]);
 
     const content = (
       <div
@@ -152,11 +176,13 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
         }}
         {...rest}
       >
-        <Resizer
-          elementRef={dialogRef}
-          containerRef={dialogContext.dialogRootRef}
-          setStyle={setStyle}
-        />
+        {isResizable && (
+          <Resizer
+            elementRef={dialogRef}
+            containerRef={dialogContext.dialogRootRef}
+            setStyle={setStyle}
+          />
+        )}
         {children}
       </div>
     );

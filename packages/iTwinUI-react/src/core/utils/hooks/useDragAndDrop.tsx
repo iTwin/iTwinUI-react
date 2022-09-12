@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { getWindow } from '../functions';
+import { getTranslateValues, getWindow } from '../functions';
 import { useEventListener } from './useEventListener';
 import { useResizeObserver } from './useResizeObserver';
 
@@ -19,19 +19,6 @@ const getContainerRect = (
   };
 };
 
-const parseTranslate = (ref: React.RefObject<HTMLElement>) => {
-  if (!ref.current) {
-    return [];
-  }
-
-  const transformValue = getComputedStyle(ref.current).getPropertyValue(
-    'transform',
-  );
-  const matrix = new DOMMatrix(transformValue);
-
-  return [matrix.m41, matrix.m42];
-};
-
 /**
  * Helper hook that handles elements drag logic.
  * @param elementRef Element ref that is draggable.
@@ -43,6 +30,7 @@ const parseTranslate = (ref: React.RefObject<HTMLElement>) => {
 export const useDragAndDrop = (
   elementRef: React.RefObject<HTMLElement>,
   containerRef?: React.RefObject<HTMLElement>,
+  enabled = true,
 ) => {
   const grabOffsetX = React.useRef(0);
   const grabOffsetY = React.useRef(0);
@@ -52,8 +40,7 @@ export const useDragAndDrop = (
   const containerRectRef = React.useRef(getContainerRect(containerRef));
 
   const adjustTransform = React.useCallback(() => {
-    containerRectRef.current = getContainerRect(containerRef);
-    if (!elementRef.current) {
+    if (!elementRef.current || !enabled) {
       return;
     }
 
@@ -64,8 +51,9 @@ export const useDragAndDrop = (
       left,
     } = elementRef.current?.getBoundingClientRect();
 
-    let [newTranslateX, newTranslateY] = parseTranslate(elementRef);
+    let [newTranslateX, newTranslateY] = getTranslateValues(elementRef.current);
 
+    containerRectRef.current = getContainerRect(containerRef);
     if (bottom > containerRectRef.current.bottom) {
       newTranslateY -= bottom - containerRectRef.current.bottom;
     }
@@ -83,7 +71,7 @@ export const useDragAndDrop = (
     translateY.current = newTranslateY;
 
     elementRef.current.style.transform = `translate(${newTranslateX}px, ${newTranslateY}px)`;
-  }, [containerRef, elementRef]);
+  }, [containerRef, elementRef, enabled]);
 
   const [resizeRef, resizeObserver] = useResizeObserver(adjustTransform);
   resizeRef(containerRef?.current);
@@ -124,11 +112,11 @@ export const useDragAndDrop = (
 
   const onPointerDown = React.useCallback(
     (e: React.PointerEvent<HTMLElement>) => {
-      if (!elementRef.current || e.button !== 0) {
+      if (!elementRef.current || e.button !== 0 || !enabled) {
         return;
       }
 
-      const [x, y] = parseTranslate(elementRef);
+      const [x, y] = getTranslateValues(elementRef.current);
 
       grabOffsetX.current = e.clientX - x;
       grabOffsetY.current = e.clientY - y;
@@ -155,7 +143,7 @@ export const useDragAndDrop = (
         { once: true },
       );
     },
-    [elementRef],
+    [elementRef, enabled],
   );
 
   return { onPointerDown, transform };
