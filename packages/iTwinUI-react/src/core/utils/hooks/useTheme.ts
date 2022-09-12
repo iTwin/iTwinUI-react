@@ -61,6 +61,8 @@ export const useTheme = (
       return;
     }
 
+    ownerDocument.body.classList.toggle('iui-root', true);
+
     switch (theme) {
       case 'light':
       case 'dark':
@@ -99,7 +101,6 @@ const handleTheme = (
   }
 
   const applyThemeAttributes = (isDark = false, isHC = false) => {
-    ownerDocument.body.classList.toggle('iui-root', true);
     root.dataset.iuiTheme = isDark ? 'dark' : 'light';
     root.dataset.iuiContrast = isHC ? 'high' : 'default';
   };
