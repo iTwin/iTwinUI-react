@@ -119,7 +119,6 @@ declare module 'react-table' {
       UseRowStateInstanceProps<D>,
       UseSortByInstanceProps<D> {
     initialRows: Row<D>[];
-    allRowIds: string[];
   }
 
   export interface TableState<D extends object = {}>
@@ -148,7 +147,7 @@ declare module 'react-table' {
       isScrolledToRight?: boolean;
       isScrolledToLeft?: boolean;
     };
-    lastSelectedRow?: number;
+    lastSelectedRow?: string;
   }
 
   export interface ColumnInterface<D extends object = {}>

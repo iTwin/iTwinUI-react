@@ -80,10 +80,10 @@ export const onSingleSelectHandler = <T extends Record<string, unknown>>(
     handleRow(instance.rowsById[action.id]);
   }
 
-  const index = instance?.allRowIds.findIndex((id) => id === action.id);
+  // const index = instance?.initialRows.findIndex((row) => row.id === action.id);
   const newState = {
     ...state,
-    lastSelectedRow: index,
+    lastSelectedRow: action.id,
     selectedRowIds,
   };
   // Passing to `onSelectHandler` to handle filtered sub-rows
@@ -105,8 +105,25 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
   ) => void,
   isRowDisabled?: (rowData: T) => boolean,
 ) => {
-  let startIndex = state.lastSelectedRow ?? 0;
-  let endIndex = instance?.allRowIds.findIndex((id) => id === action.id) ?? 0;
+  // console.log(
+  //   instance?.rows,
+  //   instance?.initialRows,
+  //   instance?.filteredRows,
+  //   instance?.flatRows,
+  //   instance?.rowsById,
+  // );
+  // instance?.flatRows.forEach((r) => console.log('row### ', r.id));
+
+  let startIndex = instance?.flatRows.findIndex(
+    (row) => row.id === state.lastSelectedRow,
+  );
+  let endIndex = instance?.flatRows.findIndex((row) => row.id === action.id);
+  if (startIndex == null || startIndex < 0) {
+    startIndex = 0;
+  }
+  if (endIndex == null || endIndex < 0) {
+    endIndex = 0;
+  }
 
   if (startIndex > endIndex) {
     const temp = startIndex;
@@ -115,31 +132,28 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
   }
 
   const selectedRowIds: Record<string, boolean> = {};
-  const endId = instance?.rowsById[action.id].id ?? '';
+  const endId = action.id;
 
+  console.log('start-end', startIndex, endIndex, endId);
   // const newState = {
   //   ...state,
   //   selectedRowIds,
   // };
-
   // For all rows between start and end
   // const disabledRowIds = [];
   let currentDisabledRowId = '';
-  instance?.allRowIds.slice(startIndex, endIndex + 1).forEach((id) => {
-    const row = instance?.rowsById[id];
+  instance?.flatRows.slice(startIndex, endIndex + 1).forEach((row) => {
     const rowDisabled = isRowDisabled?.(row.original);
     if (rowDisabled) {
       // disabledRowIds.push(row.id);
       currentDisabledRowId = row.id;
     }
     // console.log(row.id, row.original);
-
     // is NOT ancestor of endId && is NOT child of disabled row
-    !isSubRow(id, endId) && !isSubRow(currentDisabledRowId, id)
-      ? (selectedRowIds[id] = true)
+    !isSubRow(row.id, endId) && !isSubRow(currentDisabledRowId, row.id)
+      ? (selectedRowIds[row.id] = true)
       : null;
   });
-
   // For the last row (endId)
   if (instance != null) {
     const handleRow = (row: Row<T>) => {
@@ -148,19 +162,14 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     };
     handleRow(instance.rowsById[action.id]);
   }
-
   const newState = {
     ...state,
     selectedRowIds,
   };
-
   const selectedData = getSelectedData(selectedRowIds, instance);
   onSelect?.(selectedData, newState);
-
-  // console.log('selectedRowIds', selectedRowIds);
-
-  onSelectHandler(newState, instance, onSelect, isRowDisabled);
-
+  console.log('selectedRowIds', selectedRowIds);
+  // onSelectHandler(newState, instance, onSelect, isRowDisabled);
   return newState;
 };
 
