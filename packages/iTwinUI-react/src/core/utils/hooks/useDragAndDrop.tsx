@@ -40,7 +40,12 @@ export const useDragAndDrop = (
   const containerRectRef = React.useRef(getContainerRect(containerRef));
 
   const adjustTransform = React.useCallback(() => {
-    if (!elementRef.current || !enabled) {
+    if (
+      !elementRef.current ||
+      !enabled ||
+      translateX.current == null ||
+      translateY.current == null
+    ) {
       return;
     }
 
@@ -51,7 +56,8 @@ export const useDragAndDrop = (
       left,
     } = elementRef.current?.getBoundingClientRect();
 
-    let [newTranslateX, newTranslateY] = getTranslateValues(elementRef.current);
+    let newTranslateX = translateX.current;
+    let newTranslateY = translateY.current;
 
     containerRectRef.current = getContainerRect(containerRef);
     if (bottom > containerRectRef.current.bottom) {
@@ -101,10 +107,10 @@ export const useDragAndDrop = (
       return;
     }
 
-    const newTranslateX = event.clientX - grabOffsetX.current;
-    const newTranslateY = event.clientY - grabOffsetY.current;
+    translateX.current = event.clientX - grabOffsetX.current;
+    translateY.current = event.clientY - grabOffsetY.current;
 
-    elementRef.current.style.transform = `translate(${newTranslateX}px, ${newTranslateY}px)`;
+    elementRef.current.style.transform = `translate(${translateX.current}px, ${translateY.current}px)`;
     adjustTransform();
   });
 
@@ -117,9 +123,11 @@ export const useDragAndDrop = (
       }
 
       const [x, y] = getTranslateValues(elementRef.current);
+      translateX.current = x;
+      translateY.current = y;
 
-      grabOffsetX.current = e.clientX - x;
-      grabOffsetY.current = e.clientY - y;
+      grabOffsetX.current = e.clientX - translateX.current;
+      grabOffsetY.current = e.clientY - translateY.current;
 
       originalUserSelect.current = elementRef.current.style.userSelect;
       // Prevents from selecting inner content when dragging.
