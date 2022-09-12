@@ -57,6 +57,40 @@ export const onSelectHandler = <T extends Record<string, unknown>>(
 };
 
 /**
+ * Handles selection when clicked on a row.
+ */
+export const onSingleSelectHandler = <T extends Record<string, unknown>>(
+  state: TableState<T>,
+  action: ActionType,
+  instance?: TableInstance<T>,
+  onSelect?: (
+    selectedData: T[] | undefined,
+    tableState?: TableState<T>,
+  ) => void,
+  isRowDisabled?: (rowData: T) => boolean,
+) => {
+  const selectedRowIds = { [action.id]: true } as Record<string, boolean>;
+  if (instance?.selectSubRows) {
+    const handleRow = (row: Row<T>) => {
+      selectedRowIds[row.id] = true;
+      row.subRows.forEach((r) => handleRow(r));
+    };
+    handleRow(instance.rowsById[action.id]);
+  }
+
+  const index = instance?.allRowIds.findIndex((id) => id === action.id);
+  const newState = {
+    ...state,
+    lastSelectedRow: index,
+    selectedRowIds,
+  };
+  // Passing to `onSelectHandler` to handle filtered sub-rows
+  onSelectHandler(newState, instance, onSelect, isRowDisabled);
+
+  return newState;
+};
+
+/**
  * Handles selection when clicked on a row while shift key is pressed.
  */
 export const onShiftSelectHandler = <T extends Record<string, unknown>>(
@@ -134,40 +168,6 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
 
   const selectedData = getSelectedData(selectedRowIds, instance);
   onSelect?.(selectedData, newState);
-
-  return newState;
-};
-
-/**
- * Handles selection when clicked on a row.
- */
-export const onSingleSelectHandler = <T extends Record<string, unknown>>(
-  state: TableState<T>,
-  action: ActionType,
-  instance?: TableInstance<T>,
-  onSelect?: (
-    selectedData: T[] | undefined,
-    tableState?: TableState<T>,
-  ) => void,
-  isRowDisabled?: (rowData: T) => boolean,
-) => {
-  const selectedRowIds = { [action.id]: true } as Record<string, boolean>;
-  if (instance?.selectSubRows) {
-    const handleRow = (row: Row<T>) => {
-      selectedRowIds[row.id] = true;
-      row.subRows.forEach((r) => handleRow(r));
-    };
-    handleRow(instance.rowsById[action.id]);
-  }
-
-  const index = instance?.allRowIds.findIndex((id) => id === action.id);
-  const newState = {
-    ...state,
-    lastSelectedRow: index,
-    selectedRowIds,
-  };
-  // Passing to `onSelectHandler` to handle filtered sub-rows
-  onSelectHandler(newState, instance, onSelect, isRowDisabled);
 
   return newState;
 };
