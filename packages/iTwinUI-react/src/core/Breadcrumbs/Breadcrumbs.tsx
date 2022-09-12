@@ -30,29 +30,60 @@ export type BreadcrumbsProps = {
    * Expects a function that takes the number of items that are visible
    * and returns the `ReactNode` to render.
    *
-   * @example
+   * @example <caption>Uses the overflow button to redirect to the previous breadcrumb</caption>
    * <Breadcrumbs
-   *    overflowButton={() => (
-   *       <IconButton onClick={() => {}}>
-   *         <SvgMoreSmall />
-   *       </IconButton>
-   *    )}
-   * >
-   *   ...
-   * </Breadcrumbs>
+        overflowButton={(visibleCount: number) => (
+          <IconButton
+            style={{ paddingTop: '8px' }}
+            onClick={() => {
+              const previousBreadcrumb =
+                visibleCount > 1
+                  ? items.length - visibleCount
+                  : items.length - 2;
+              action(`Visit breadcrumb ${previousBreadcrumb}`)();
+            }}
+          >
+            <SvgMoreSmall />
+          </IconButton>
+        )}
+        {...args}
+      >
+        {items}
+      </Breadcrumbs>
    *
-   * @example
+   * @example <caption>Uses the overflow button to add a dropdown that contains hidden breadcrumbs</caption>
    * <Breadcrumbs
-   *    overflowButton={(visibleCount) => (
-   *      <DropdownMenu menuItems={() => {}}>
-   *        <IconButton onClick={() => {}}>
-   *          <SvgMoreSmall />
-   *        </IconButton>
-   *      </DropdownMenu>
-   *    )}
-   * >
-   *   ...
-   * </Breadcrumbs>
+   *     overflowButton={(visibleCount) => (
+   *       <DropdownMenu
+   *         menuItems={(close) =>
+   *           Array(items.length - visibleCount)
+   *             .fill(null)
+   *             .map((_, _index) => {
+   *               const index = visibleCount > 1 ? _index + 1 : _index;
+   *               const onClick = () => {
+   *                 action(`Clicked button ${index} (overflow)`)();
+   *                 close();
+   *               };
+   *               return (
+   *                 <MenuItem key={index} onClick={onClick}>
+   *                   Item {index}
+   *                 </MenuItem>
+   *               );
+   *             })
+   *         }
+   *       >
+   *         <IconButton
+   *           style={{ paddingTop: '8px' }}
+   *           onClick={() => action('Clicked on overflow icon')()}
+   *         >
+   *           <SvgMoreSmall />
+   *         </IconButton>
+   *       </DropdownMenu>
+   *     )}
+   *     {...args}
+   *   >
+   *     {items}
+   *   </Breadcrumbs>
    */
   overflowButton?: (visibleCount: number) => React.ReactNode;
 } & Omit<CommonProps, 'title'>;

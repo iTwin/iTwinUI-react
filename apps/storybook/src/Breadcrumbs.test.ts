@@ -10,7 +10,8 @@ describe('Breadcrumbs', () => {
     'Folder Navigation',
     'Links',
     'Overflow',
-    'Custom Overflow',
+    'Custom Overflow Dropdown',
+    'Custom Overflow Back Button',
   ];
 
   tests.forEach((testName) => {
@@ -18,7 +19,7 @@ describe('Breadcrumbs', () => {
       const id = Cypress.storyId(storyPath, testName);
       cy.visit('iframe', { qs: { id } });
 
-      if (testName === 'Custom Overflow') {
+      if (testName === 'Custom Overflow Dropdown') {
         cy.get('.iui-button').eq(1).click();
       }
 

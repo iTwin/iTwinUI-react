@@ -88,7 +88,7 @@ export const Overflow: Story<BreadcrumbsProps> = (args) => {
     .map((_, index) => (
       <Button
         key={index}
-        onClick={() => action(`Clicked on button ${index + 1}`)()}
+        onClick={() => action(`Clicked on breadcrumb ${index + 1}`)()}
       >
         Item {index}
       </Button>
@@ -101,13 +101,13 @@ export const Overflow: Story<BreadcrumbsProps> = (args) => {
   );
 };
 
-export const CustomOverflow: Story<BreadcrumbsProps> = (args) => {
+export const CustomOverflowBackButton: Story<BreadcrumbsProps> = (args) => {
   const items = Array(10)
     .fill(null)
     .map((_, index) => (
       <Button
         key={index}
-        onClick={() => action(`Clicked on button ${index + 1}`)()}
+        onClick={() => action(`Clicked on breadcrumb ${index + 1}`)()}
       >
         Item {index}
       </Button>
@@ -116,7 +116,44 @@ export const CustomOverflow: Story<BreadcrumbsProps> = (args) => {
   return (
     <div style={{ maxWidth: '50%', border: '1px solid lightpink', padding: 8 }}>
       <Breadcrumbs
-        overflowButton={(visibleCount) => (
+        overflowButton={(visibleCount: number) => (
+          <IconButton
+            style={{ paddingTop: '8px' }}
+            onClick={() => {
+              const previousBreadcrumb =
+                visibleCount > 1
+                  ? items.length - visibleCount
+                  : items.length - 2;
+              action(`Visit breadcrumb ${previousBreadcrumb}`)();
+            }}
+          >
+            <SvgMoreSmall />
+          </IconButton>
+        )}
+        {...args}
+      >
+        {items}
+      </Breadcrumbs>
+    </div>
+  );
+};
+
+export const CustomOverflowDropdown: Story<BreadcrumbsProps> = (args) => {
+  const items = Array(10)
+    .fill(null)
+    .map((_, index) => (
+      <Button
+        key={index}
+        onClick={() => action(`Clicked on breadcrumb ${index + 1}`)()}
+      >
+        Item {index}
+      </Button>
+    ));
+
+  return (
+    <div style={{ maxWidth: '50%', border: '1px solid lightpink', padding: 8 }}>
+      <Breadcrumbs
+        overflowButton={(visibleCount: number) => (
           <DropdownMenu
             menuItems={(close) =>
               Array(items.length - visibleCount)
@@ -124,7 +161,7 @@ export const CustomOverflow: Story<BreadcrumbsProps> = (args) => {
                 .map((_, _index) => {
                   const index = visibleCount > 1 ? _index + 1 : _index;
                   const onClick = () => {
-                    action(`Clicked button ${index} (overflow)`)();
+                    action(`Visit breadcrumb ${index}`)();
                     close();
                   };
                   return (
