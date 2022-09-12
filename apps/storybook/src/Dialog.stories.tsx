@@ -133,7 +133,7 @@ export const Modal: Story = () => {
   );
 };
 
-export const Draggable: Story = () => {
+export const DraggableAndResizable: Story = () => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const closeDialog = () => {

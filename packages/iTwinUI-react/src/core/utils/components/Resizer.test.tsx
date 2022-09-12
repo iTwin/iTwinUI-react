@@ -54,6 +54,26 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
+/*
+ * For better understanding how everything is positioned.
+ * +------------------------------+
+ * |                              |
+ * |  (100;100)                   |
+ * |      +---------------+       |
+ * |      |    w=100px    |       |
+ * |      |               |       |
+ * |      |               |       |
+ * |      | h=100px       |       | h=300px
+ * |      |               |       |
+ * |      |    element    |       |
+ * |      +---------------+       |
+ * |                  (200;200)   |
+ * |                              |
+ * |         container            |
+ * +------------------------------+
+ *            w=300px         (300;300)
+ */
+
 it('should resize from the top-left', () => {
   const { container } = renderComponent();
 

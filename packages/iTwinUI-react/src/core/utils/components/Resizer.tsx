@@ -6,11 +6,33 @@ import React from 'react';
 import { getBoundedValue, getTranslateValues, getWindow } from '../functions';
 
 export type ResizerProps = {
+  /**
+   * Ref of the element that is being resized.
+   */
   elementRef: React.RefObject<HTMLElement>;
+  /**
+   * Ref of the container element in order to avoid resizing past container boundaries.
+   * If not passed, viewport will be used.
+   */
   containerRef?: React.RefObject<HTMLElement>;
+  /**
+   * Callback that is being called on resize end.
+   * Useful to preserve state if element is being closed.
+   */
   setStyle?: (style: React.CSSProperties) => void;
 };
 
+/**
+ * Component that allows to resize parent element.
+ * Parent must have `position: relative`.
+ * @example
+ * const ref = React.useRef<HTMLDivElement>(null);
+ * return (
+ *   <div ref={ref} style={{ position: 'relative' }}>
+ *     <Resizer elementRef={ref} />
+ *   </div>
+ * );
+ */
 export const Resizer = (props: ResizerProps) => {
   const { elementRef, containerRef, setStyle } = props;
 
@@ -177,7 +199,6 @@ export const Resizer = (props: ResizerProps) => {
         data-iui-resizer='top-left'
         onPointerDown={onResizePointerDown}
         style={{
-          background: 'rgba(255, 0, 0, .5)',
           position: 'absolute',
           top: -4,
           left: -4,
@@ -190,7 +211,6 @@ export const Resizer = (props: ResizerProps) => {
         data-iui-resizer='top'
         onPointerDown={onResizePointerDown}
         style={{
-          background: 'rgba(0, 255, 0, .5)',
           position: 'absolute',
           top: -4,
           left: 4,
@@ -203,7 +223,6 @@ export const Resizer = (props: ResizerProps) => {
         data-iui-resizer='top-right'
         onPointerDown={onResizePointerDown}
         style={{
-          background: 'rgba(255, 0, 0, .5)',
           position: 'absolute',
           top: -4,
           right: -4,
@@ -216,7 +235,6 @@ export const Resizer = (props: ResizerProps) => {
         data-iui-resizer='right'
         onPointerDown={onResizePointerDown}
         style={{
-          background: 'rgba(0, 255, 0, .5)',
           position: 'absolute',
           top: 4,
           right: -4,
@@ -229,7 +247,6 @@ export const Resizer = (props: ResizerProps) => {
         data-iui-resizer='bottom-right'
         onPointerDown={onResizePointerDown}
         style={{
-          background: 'rgba(255, 0, 0, .5)',
           position: 'absolute',
           bottom: -4,
           right: -4,
@@ -242,7 +259,6 @@ export const Resizer = (props: ResizerProps) => {
         data-iui-resizer='bottom'
         onPointerDown={onResizePointerDown}
         style={{
-          background: 'rgba(0, 255, 0, .5)',
           position: 'absolute',
           bottom: -4,
           left: 4,
@@ -255,7 +271,6 @@ export const Resizer = (props: ResizerProps) => {
         data-iui-resizer='bottom-left'
         onPointerDown={onResizePointerDown}
         style={{
-          background: 'rgba(255, 0, 0, .5)',
           position: 'absolute',
           bottom: -4,
           left: -4,
@@ -268,7 +283,6 @@ export const Resizer = (props: ResizerProps) => {
         data-iui-resizer='left'
         onPointerDown={onResizePointerDown}
         style={{
-          background: 'rgba(0, 255, 0, .5)',
           position: 'absolute',
           top: 4,
           left: -4,
