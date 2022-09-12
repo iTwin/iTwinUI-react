@@ -4,17 +4,14 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import {
+import { useTheme, useMediaQuery } from '../utils';
+import type {
   PolymorphicComponentProps,
   PolymorphicForwardRefComponent,
-  useMediaQuery,
-} from '../utils';
-import {
-  useTheme,
   ThemeOptions,
   ThemeType,
   UseThemeProps,
-} from '../utils/hooks/useTheme';
+} from '../utils';
 import '@itwin/itwinui-css/css/global.css';
 import '@itwin/itwinui-variables/index.css';
 
