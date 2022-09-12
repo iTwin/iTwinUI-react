@@ -68,6 +68,28 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     tableState?: TableState<T>,
   ) => void,
 ) => {
+  // /**
+  //  * @returns `true` if `subId` is indeed a sub-row of `id`, else `false`
+  //  * @example
+  //  * isSubRow('1.4', '1.4.2.3') // true
+  //  * isSubRow('1.3', '1.2.5')   // false
+  //  * isSubRow('2.4.5', '2.4.5') // true
+  //  */
+  // const isSubRow = (id: string, subId: string) => {
+  //   const idSplit = id.split('.');
+  //   const subIdSplit = subId.split('.');
+
+  //   let i = 0;
+  //   while (i < idSplit.length) {
+  //     if (idSplit[i] !== subIdSplit[i]) {
+  //       return false;
+  //     }
+  //     i++;
+  //   }
+
+  //   return true;
+  // };
+
   let startIndex = state.lastSelectedRow ?? 0;
   let endIndex = instance?.allRowIds.findIndex((id) => id === action.id) ?? 0;
 
@@ -78,9 +100,22 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
   }
 
   const selectedRowIds: Record<string, boolean> = {};
-  instance?.allRowIds
-    .slice(startIndex, endIndex + 1)
-    .forEach((id) => (selectedRowIds[id] = true));
+  const endId = instance?.rowsById[action.id].id ?? '';
+  console.log('selectHandler', endId);
+
+  console.log(instance?.allRowIds.slice(startIndex, endIndex + 1));
+
+  // const selectedRowIds: Record<string, boolean> = {};
+  // instance?.allRowIds
+  //   .slice(startIndex, endIndex + 1)
+  //   .forEach((id) => (selectedRowIds[id] = true));
+
+  instance?.allRowIds.slice(startIndex, endIndex + 1).forEach((id) => {
+    // const subRow = isSubRow(id, endId);
+    // console.log('toggle step', id, endId, subRow);
+    // return !subRow ? (selectedRowIds[id] = true) : null;
+    selectedRowIds[id] = true;
+  });
 
   if (instance != null) {
     const handleRow = (row: Row<T>) => {
@@ -89,6 +124,8 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     };
     handleRow(instance.rowsById[action.id]);
   }
+
+  console.log('selectedRowIds', selectedRowIds);
 
   const newState = {
     ...state,
@@ -123,9 +160,10 @@ export const onSingleSelectHandler = <T extends Record<string, unknown>>(
     handleRow(instance.rowsById[action.id]);
   }
 
+  const index = instance?.allRowIds.findIndex((id) => id === action.id);
   const newState = {
     ...state,
-    lastSelectedRow: action.id,
+    lastSelectedRow: index,
     selectedRowIds,
   };
   // Passing to `onSelectHandler` to handle filtered sub-rows
