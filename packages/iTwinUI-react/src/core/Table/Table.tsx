@@ -435,7 +435,7 @@ export const Table = <
           break;
         }
         case shiftRowSelectedAction: {
-          onShiftSelectHandler(newState, action, instance);
+          newState = onShiftSelectHandler(newState, action, instance, onSelect);
           break;
         }
         case TableActions.toggleRowSelected:
