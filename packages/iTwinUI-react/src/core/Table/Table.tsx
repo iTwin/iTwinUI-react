@@ -435,18 +435,11 @@ export const Table = <
           break;
         }
         case shiftRowSelectedAction: {
-          // console.log(
-          //   'rows',
-          //   instance?.rows,
-          //   instance?.flatRows,
-          //   instance?.initialRows,
-          // );
-
           newState = onShiftSelectHandler(
             newState,
             action,
             instance,
-            () => console.log('onSelect called'),
+            onSelect,
             // If it has manual selection column, then we can't check whether row is disabled
             hasManualSelectionColumn ? undefined : isRowDisabled,
           );

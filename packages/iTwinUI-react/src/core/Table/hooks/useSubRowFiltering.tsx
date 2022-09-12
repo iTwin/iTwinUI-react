@@ -93,11 +93,7 @@ const useInstance = <T extends Record<string, unknown>>(
     };
     currentlyFilteredRows.forEach((row) => populateRows(row));
 
-    return {
-      filteredRows,
-      filteredFlatRows,
-      filteredRowsById,
-    };
+    return { filteredRows, filteredFlatRows, filteredRowsById };
   }, [
     instance.allColumns,
     instance.filterTypes,
