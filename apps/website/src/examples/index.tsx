@@ -27,6 +27,8 @@ export { default as InformationPanelMainExample } from './InformationPanel.main'
 export { default as InputMainExample } from './Input.main';
 export { default as LabeledInputMainExample } from './LabeledInput.main';
 export { default as LabeledSelectMainExample } from './LabeledSelect.main';
+export { default as LabeledTextareaMainExample } from './LabeledTextarea.main';
+export { default as RadioMainExample } from './Radio.main';
 export { default as RadioTileMainExample } from './RadioTile.main';
 export { default as SelectMainExample } from './Select.main';
 export { default as InputGroupMainExample } from './InputGroup.main';

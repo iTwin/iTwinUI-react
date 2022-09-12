@@ -8,8 +8,24 @@ const componentsPages = (await Astro.glob('../pages/docs/*.mdx'))
     title: frontmatter.title,
   }));
 
+const inputPages = (await Astro.glob('../pages/docs/inputs/*.mdx'))
+  .filter(({ file }) => !file.endsWith('index.mdx'))
+  .map(({ url, frontmatter }) => ({
+    url,
+    title: frontmatter.title,
+  }));
+
+const buttonsPages = (await Astro.glob('../pages/docs/buttons/*.mdx'))
+  .filter(({ file }) => !file.endsWith('index.mdx'))
+  .map(({ url, frontmatter }) => ({
+    url,
+    title: frontmatter.title,
+  }));
+
 const sections = new Map<string, typeof componentsPages>();
 sections.set('components', componentsPages);
+sections.set('inputs', inputPages);
+sections.set('buttons', buttonsPages);
 ---
 
 <nav aria-labelledby='grid-left'>
@@ -20,22 +36,24 @@ sections.set('components', componentsPages);
       </a>
     </li>
 
-    {[...sections.entries()].map(([heading, list]) => (
-      <li>
-        <div class='nav-group'>
-          <h2 class='nav-group-title'>{heading}</h2>
-          <ul>
-            {list.map(({ url, title }) => (
-              <li class='nav-link'>
-                <a href={url} aria-current={`${currentPage === url ? 'page' : 'false'}`}>
-                  {title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </li>
-    ))}
+    {
+      [...sections.entries()].map(([heading, list]) => (
+        <li>
+          <div class='nav-group'>
+            <h2 class='nav-group-title'>{heading}</h2>
+            <ul>
+              {list.map(({ url, title }) => (
+                <li class='nav-link'>
+                  <a href={url} aria-current={`${currentPage === url ? 'page' : 'false'}`}>
+                    {title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </li>
+      ))
+    }
   </ul>
 </nav>
 
