@@ -15,13 +15,32 @@ import {
   ThemeType,
   UseThemeProps,
 } from '../utils/hooks/useTheme';
+import '@itwin/itwinui-css/css/global.css';
+import '@itwin/itwinui-variables/index.css';
 
 export type ThemeProviderProps<
   T extends React.ElementType = 'div'
 > = PolymorphicComponentProps<T, UseThemeProps>;
 
 /**
- * Component providing global styles that are required for all components and allows changing theme.
+ * This component provides global styles and applies theme to the entire tree
+ * that it is wrapping around. The `theme` prop is optional and defaults to the
+ * light theme.
+ *
+ * If you want to theme the entire app, you should use this component at the root.
+ * The `as` prop can be used to render a `<body>` element instead of a `<div>`.
+ *
+ * You can also use this component to apply a different theme to only a part of the tree.
+ *
+ * @example
+ * <ThemeProvider theme='os'>
+ *  <App />
+ * </ThemeProvider>
+ *
+ * @example
+ * <ThemeProvider as='body'>
+ *   <App />
+ * </ThemeProvider>
  */
 export const ThemeProvider = React.forwardRef((props, ref) => {
   const {
