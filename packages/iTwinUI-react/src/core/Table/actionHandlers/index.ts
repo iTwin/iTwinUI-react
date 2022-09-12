@@ -6,7 +6,7 @@ export { onExpandHandler } from './expandHandler';
 export { onFilterHandler } from './filterHandler';
 export {
   onSelectHandler,
-  onShiftSelectHandler,
   onSingleSelectHandler,
+  onShiftSelectHandler,
 } from './selectHandler';
 export { onTableResizeStart, onTableResizeEnd } from './resizeHandler';
