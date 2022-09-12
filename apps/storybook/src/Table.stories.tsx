@@ -1438,6 +1438,7 @@ export const Full2: Story<Partial<TableProps>> = (args) => {
 
   const isRowDisabled = useCallback((rowData: TableStoryDataType) => {
     return rowData.product.endsWith('3');
+    // return false;
   }, []);
 
   const menuItems = useCallback((close: () => void) => {

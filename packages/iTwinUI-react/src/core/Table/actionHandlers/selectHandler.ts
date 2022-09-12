@@ -69,6 +69,8 @@ export const onSingleSelectHandler = <T extends Record<string, unknown>>(
   ) => void,
   isRowDisabled?: (rowData: T) => boolean,
 ) => {
+  console.log('onSingleSelectHandler');
+
   const selectedRowIds = { [action.id]: true } as Record<string, boolean>;
   if (instance?.selectSubRows) {
     const handleRow = (row: Row<T>) => {
@@ -101,6 +103,7 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     selectedData: T[] | undefined,
     tableState?: TableState<T>,
   ) => void,
+  isRowDisabled?: (rowData: T) => boolean,
 ) => {
   let startIndex = state.lastSelectedRow ?? 0;
   let endIndex = instance?.allRowIds.findIndex((id) => id === action.id) ?? 0;
@@ -114,12 +117,28 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
   const selectedRowIds: Record<string, boolean> = {};
   const endId = instance?.rowsById[action.id].id ?? '';
 
+  // const newState = {
+  //   ...state,
+  //   selectedRowIds,
+  // };
+
   // For all rows between start and end
-  instance?.allRowIds
-    .slice(startIndex, endIndex + 1)
-    .forEach((id) =>
-      !isSubRow(id, endId) ? (selectedRowIds[id] = true) : null,
-    );
+  // const disabledRowIds = [];
+  let currentDisabledRowId = '';
+  instance?.allRowIds.slice(startIndex, endIndex + 1).forEach((id) => {
+    const row = instance?.rowsById[id];
+    const rowDisabled = isRowDisabled?.(row.original);
+    if (rowDisabled) {
+      // disabledRowIds.push(row.id);
+      currentDisabledRowId = row.id;
+    }
+    // console.log(row.id, row.original);
+
+    // is NOT ancestor of endId && is NOT child of disabled row
+    !isSubRow(id, endId) && !isSubRow(currentDisabledRowId, id)
+      ? (selectedRowIds[id] = true)
+      : null;
+  });
 
   // For the last row (endId)
   if (instance != null) {
@@ -137,6 +156,10 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
 
   const selectedData = getSelectedData(selectedRowIds, instance);
   onSelect?.(selectedData, newState);
+
+  // console.log('selectedRowIds', selectedRowIds);
+
+  onSelectHandler(newState, instance, onSelect, isRowDisabled);
 
   return newState;
 };

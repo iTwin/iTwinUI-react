@@ -435,7 +435,21 @@ export const Table = <
           break;
         }
         case shiftRowSelectedAction: {
-          newState = onShiftSelectHandler(newState, action, instance, onSelect);
+          // console.log(
+          //   'rows',
+          //   instance?.rows,
+          //   instance?.flatRows,
+          //   instance?.initialRows,
+          // );
+
+          newState = onShiftSelectHandler(
+            newState,
+            action,
+            instance,
+            () => console.log('onSelect called'),
+            // If it has manual selection column, then we can't check whether row is disabled
+            hasManualSelectionColumn ? undefined : isRowDisabled,
+          );
           break;
         }
         case TableActions.toggleRowSelected:
