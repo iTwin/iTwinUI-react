@@ -3936,22 +3936,12 @@ it('should navigate through table filtering with the keyboard', async () => {
       ],
     },
   ];
-  const { container } = renderComponent({
+  renderComponent({
     columns: mockedColumns,
     onFilter,
   });
 
-  const filterIconButton = container.querySelector(
-    '.iui-table-filter-button',
-  ) as HTMLElement;
-  fireEvent.focus(filterIconButton);
-  fireEvent.blur(filterIconButton);
-  filterIconButton.focus();
-  // const table = container.querySelector('.iui-table') as HTMLElement;
-  // fireEvent.keyDown(table, { key: 'Tab' });
-  // console.log('!!!!!!!!!!!!!!!!!!!!!!!!' + filterIconButton);
-  // console.log('22222222222222222222222222222222' + table);
-  // await userEvent.tab(); // tab to filter icon button
+  await userEvent.tab(); // tab to filter icon button
   await userEvent.keyboard('{Enter}');
   await userEvent.keyboard('2');
   await userEvent.tab(); // tab to filter menu 'Filter' submit button
