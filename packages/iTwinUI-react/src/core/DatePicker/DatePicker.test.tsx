@@ -333,7 +333,15 @@ it('should return selected date range', () => {
   const startDay = getByText('15');
   const endDay = getByText('20');
   fireEvent.click(startDay);
+  expect(onClick).toHaveBeenCalledWith(
+    new Date(2020, 5, 15),
+    new Date(2020, 5, 15),
+  );
   fireEvent.click(endDay);
+  expect(onClick).toHaveBeenCalledWith(
+    new Date(2020, 5, 15),
+    new Date(2020, 5, 20),
+  );
 
   selectedStartDay = container.querySelector(
     '.iui-calendar-day-range-start',
