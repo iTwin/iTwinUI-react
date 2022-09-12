@@ -118,6 +118,7 @@ it('should handle overflow when overflowButton is specified', () => {
   expect(breadcrumbs.length).toEqual(3);
   fireEvent.click(breadcrumbs[1]);
   expect(onClick).toHaveBeenCalledTimes(1);
+  expect(onClick).toHaveBeenCalledWith(2);
 });
 
 it('should show the last item when only one can be visible', () => {
