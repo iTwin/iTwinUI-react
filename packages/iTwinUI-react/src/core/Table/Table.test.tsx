@@ -371,42 +371,52 @@ it('should handle row clicks', async () => {
   const rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
 
-  await userEvent.click(getByText(mockedData()[1].name));
-  expect(rows[1].classList).toContain('iui-selected'); // lastSelectedRow = 1
+  const user = userEvent.setup();
+
+  // Shift click test #1
+  // By default, when no row is selected before shift click, start selecting from first row to clicked row
+  await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
+  await user.click(getByText(mockedData()[1].name)); // [shiftKey: true]
+
+  expect(rows[0].classList).toContain('iui-selected');
+  expect(rows[1].classList).toContain('iui-selected');
+  expect(rows[2].classList).not.toContain('iui-selected');
   expect(onSelect).toHaveBeenCalledTimes(1);
   expect(onRowClick).toHaveBeenCalledTimes(1);
 
-  await userEvent.click(getByText(mockedData()[2].name));
+  await userEvent.click(getByText(mockedData()[1].name)); // Deselect
+  expect(rows[0].classList).toContain('iui-selected');
   expect(rows[1].classList).not.toContain('iui-selected');
-  expect(rows[2].classList).toContain('iui-selected'); // lastSelectedRow = 1 -> 2
+  expect(rows[2].classList).not.toContain('iui-selected');
   expect(onSelect).toHaveBeenCalledTimes(2);
   expect(onRowClick).toHaveBeenCalledTimes(2);
 
-  const user = userEvent.setup();
-  await user.keyboard('[ControlLeft>]'); // Press Control (without releasing it)
-  await user.click(getByText(mockedData()[1].name)); // Perform a click with `ctrlKey: true`
+  await userEvent.click(getByText(mockedData()[1].name)); // Reselect; lastSelectedRow = undefined -> 1
+  expect(rows[0].classList).not.toContain('iui-selected');
   expect(rows[1].classList).toContain('iui-selected');
-  expect(rows[2].classList).toContain('iui-selected');
+  expect(rows[2].classList).not.toContain('iui-selected');
   expect(onSelect).toHaveBeenCalledTimes(3);
   expect(onRowClick).toHaveBeenCalledTimes(3);
 
-  await user.keyboard('[/ControlLeft]');
-  await user.click(getByText(mockedData()[1].name)); // Deselect
+  await user.keyboard('[ControlLeft>]'); // Press Control (without releasing it)
+  await user.click(getByText(mockedData()[2].name)); // Perform a click with `ctrlKey: true`
+  expect(rows[0].classList).not.toContain('iui-selected');
+  expect(rows[1].classList).toContain('iui-selected');
+  expect(rows[2].classList).toContain('iui-selected');
   expect(onSelect).toHaveBeenCalledTimes(4);
   expect(onRowClick).toHaveBeenCalledTimes(4);
 
-  await user.click(getByText(mockedData()[1].name)); // Reselect; lastSelectedRow = 2 -> 1
-  expect(onSelect).toHaveBeenCalledTimes(5);
-  expect(onRowClick).toHaveBeenCalledTimes(5);
-
-  await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
+  // Shift click test #2
+  // When a row is clicked before shift click (lastSelectedRow), selection starts from that row and ends at the currently clicked row
+  // But if the startIndex > endIndex, then startIndex and endIndex are swapped
+  await user.keyboard('[/ControlLeft][ShiftLeft>]'); // Release Ctrl and Press Shift (without releasing it)
   await user.click(getByText(mockedData()[0].name)); // Perform a click with `shiftKey: true`
 
   expect(rows[0].classList).toContain('iui-selected');
   expect(rows[1].classList).toContain('iui-selected');
   expect(rows[2].classList).not.toContain('iui-selected');
-  expect(onSelect).toHaveBeenCalledTimes(6);
-  expect(onRowClick).toHaveBeenCalledTimes(6);
+  expect(onSelect).toHaveBeenCalledTimes(5);
+  expect(onRowClick).toHaveBeenCalledTimes(5);
 });
 
 it('should handle sub-rows shift click selection', async () => {
@@ -419,63 +429,80 @@ it('should handle sub-rows shift click selection', async () => {
     onRowClick,
     isSelectable: true,
   });
+  // const testIfCheckboxesChecked = (selectedIndices: Array<number>) => {
+  //   Array.from(checkboxes).forEach((checkbox, index) => {
+  //     expect(!!checkbox.checked).toBe(selectedIndices.includes(index));
+  //   });
+  // };
 
   let rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
-
-  const user = userEvent.setup();
-  await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
-  await user.click(getByText(data[1].name)); // [shiftKey: true]
-
-  // By default, when no row is selected before shift click, start selecting from first row to clicked row
-  expect(rows[0].classList).toContain('iui-selected');
-  expect(rows[1].classList).toContain('iui-selected');
-  expect(rows[2].classList).not.toContain('iui-selected');
-  expect(onSelect).toHaveBeenCalledTimes(1);
-  expect(onRowClick).toHaveBeenCalledTimes(1);
 
   await expandAll(container);
 
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(10);
 
-  await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
-  await user.click(getByText(data[0].subRows[1].subRows[0].name)); // [shiftKey: true]
+  const user = userEvent.setup();
+  await user.click(getByText(data[0].subRows[0].name)); // [shiftKey: false]; lastSelectedRow = 0.0
+  expect(onSelect).toHaveBeenCalledTimes(1);
+  expect(onRowClick).toHaveBeenCalledTimes(1);
 
+  // testIfCheckboxesChecked([1]);
   let checkboxes = container.querySelectorAll<HTMLInputElement>(
     '.iui-table-body .iui-checkbox',
   );
-  let selectedIndices = [1, 3];
+  let checkedIndices = [1];
+  let indeterminateIndices: Array<number> = [0];
   Array.from(checkboxes).forEach((checkbox, index) => {
-    expect(!!checkbox.checked).toBe(selectedIndices.includes(index));
+    expect(!!checkbox.checked).toBe(checkedIndices.includes(index));
+    expect(!!checkbox.indeterminate).toBe(indeterminateIndices.includes(index));
   });
 
+  await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
+  await user.click(getByText(data[0].subRows[1].subRows[0].name)); // [shiftKey: true]
   expect(onSelect).toHaveBeenCalledTimes(2);
   expect(onRowClick).toHaveBeenCalledTimes(2);
+
+  checkboxes = container.querySelectorAll<HTMLInputElement>(
+    '.iui-table-body .iui-checkbox',
+  );
+  checkedIndices = [1, 3];
+  indeterminateIndices = [0, 2];
+  Array.from(checkboxes).forEach((checkbox, index) => {
+    expect(!!checkbox.checked).toBe(checkedIndices.includes(index));
+    expect(!!checkbox.indeterminate).toBe(indeterminateIndices.includes(index));
+  });
 
   // rows = container.querySelectorAll('.iui-table-body .iui-row');
   // expect(rows.length).toBe(10);
 
   await user.keyboard('[/ShiftLeft]'); // Release Shift
-  await user.click(getByText(data[0].subRows[1].subRows[1].name)); // [shiftKey = false]
-
-  selectedIndices = [4];
-  Array.from(checkboxes).forEach((checkbox, index) => {
-    expect(!!checkbox.checked).toBe(selectedIndices.includes(index));
-  });
-
+  await user.click(getByText(data[1].subRows[0].name)); // [shiftKey = true]; lastSelectedRow = undefined -> 1.0
   expect(onSelect).toHaveBeenCalledTimes(3);
   expect(onRowClick).toHaveBeenCalledTimes(3);
-
-  await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
-  await user.click(getByText(data[1].subRows[0].name)); // [shiftKey = true]
 
   checkboxes = container.querySelectorAll<HTMLInputElement>(
     '.iui-table-body .iui-checkbox',
   );
-  selectedIndices = [4, 5, 7];
+  checkedIndices = [7];
+  indeterminateIndices = [6];
   Array.from(checkboxes).forEach((checkbox, index) => {
-    expect(!!checkbox.checked).toBe(selectedIndices.includes(index));
+    expect(!!checkbox.checked).toBe(checkedIndices.includes(index));
+    expect(!!checkbox.indeterminate).toBe(indeterminateIndices.includes(index));
+  });
+
+  await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
+  await user.click(getByText(data[0].subRows[1].subRows[1].name)); // [shiftKey = true]
+
+  checkboxes = container.querySelectorAll<HTMLInputElement>(
+    '.iui-table-body .iui-checkbox',
+  );
+  checkedIndices = [4, 5, 7];
+  indeterminateIndices = [0, 2, 6];
+  Array.from(checkboxes).forEach((checkbox, index) => {
+    expect(!!checkbox.checked).toBe(checkedIndices.includes(index));
+    expect(!!checkbox.indeterminate).toBe(indeterminateIndices.includes(index));
   });
 
   expect(onSelect).toHaveBeenCalledTimes(4);
