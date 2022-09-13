@@ -191,7 +191,11 @@ export type TableProps<
    * Function that should return custom props passed to the each row.
    * Must be memoized.
    */
-  rowProps?: (row: Row<T>) => React.ComponentPropsWithRef<'div'>;
+  rowProps?: (
+    row: Row<T>,
+  ) => React.ComponentPropsWithRef<'div'> & {
+    status?: 'positive' | 'warning' | 'negative';
+  };
   /**
    * Modify the density of the table (adjusts the row height).
    * @default 'default'
@@ -247,7 +251,8 @@ export type TableProps<
   /**
    * Function that returns index of the row that you want to scroll to.
    *
-   * It doesn't work with paginated tables and with lazy-loading.
+   * When using with lazy-loading table, you need to take care that row is already loaded.
+   * It doesn't work with paginated tables.
    * @beta
    * @example
    * <Table
@@ -812,7 +817,8 @@ export const Table = <
                             )}
                             {showSortButton(column) && (
                               <div className='iui-cell-end-icon'>
-                                {column.isSorted && column.isSortedDesc ? (
+                                {column.isSortedDesc ||
+                                (!column.isSorted && column.sortDescFirst) ? (
                                   <SvgSortDown
                                     className='iui-icon iui-sort'
                                     aria-hidden

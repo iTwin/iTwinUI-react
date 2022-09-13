@@ -1,5 +1,42 @@
 # Changelog
 
+## [1.45.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.44.0...v1.45.0) (2022-08-25)
+
+### What's new
+
+* **MiddleTextTruncation:** Add text renderer for customizing rendered content ([#787](https://www.github.com/iTwin/iTwinUI-react/issues/787)) ([293ebea](https://www.github.com/iTwin/iTwinUI-react/commit/293ebeac844eb540c1d5c7f999e176f3be377d8e))
+* **Table:** Add `Cell` and `Row` status. Icons support in `DefaultCell` ([#788](https://www.github.com/iTwin/iTwinUI-react/issues/788)) ([9b0282e](https://www.github.com/iTwin/iTwinUI-react/commit/9b0282e610434301ff69e296086304afc5648034))
+
+## [1.44.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.43.1...v1.44.0) (2022-08-23)
+
+### What's new
+
+* **Select:** Multiple selection support ([#700](https://www.github.com/iTwin/iTwinUI-react/issues/700)) ([b7d34c1](https://www.github.com/iTwin/iTwinUI-react/commit/b7d34c1702ae416d969bed21098270f7aa7731a9))
+
+### Fixes
+
+* **Table:** Show correct icon on hover for columns with `sortDescFirst` ([#779](https://www.github.com/iTwin/iTwinUI-react/issues/779)) ([acf19a2](https://www.github.com/iTwin/iTwinUI-react/commit/acf19a23d4680e6e1c1789e45b8e76e0848d8166))
+
+### [1.43.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.43.0...v1.43.1) (2022-08-18)
+
+### Fixes
+
+* **Dialog:** Fixed import path for `useTheme` ([#780](https://www.github.com/iTwin/iTwinUI-react/issues/780)) ([dc5f65a](https://www.github.com/iTwin/iTwinUI-react/commit/dc5f65af8a4a7e8d50f05952084a2ffe98bc0800))
+
+## [1.43.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.42.0...v1.43.0) (2022-08-17)
+
+### What's new
+
+* **Footer:** Allows to use composition to customize Footer as you wish ([#754](https://www.github.com/iTwin/iTwinUI-react/issues/754)) ([48dfe52](https://www.github.com/iTwin/iTwinUI-react/commit/48dfe524f4ac45a81cd98504f38c50420f47664a))
+* **Slider:** Adding vertical orientation support ([#747](https://www.github.com/iTwin/iTwinUI-react/issues/747)) ([18cb893](https://www.github.com/iTwin/iTwinUI-react/commit/18cb89317118081ab425606f5679be56e1b60552))
+* **Table:** Style `DropdownMenu` inside of `ActionColumn` in `Table` ([#756](https://www.github.com/iTwin/iTwinUI-react/issues/756)) ([1116369](https://www.github.com/iTwin/iTwinUI-react/commit/111636962076797cbbc0f0b8b5ae4077a7e5a8d2))
+
+### Fixes
+
+* **Breadcrumbs**, **ButtonGroup**: Fix focus getting lost while resizing on overflow ([#777](https://www.github.com/iTwin/iTwinUI-react/issues/777)) ([8ee9c7b](https://www.github.com/iTwin/iTwinUI-react/commit/8ee9c7b57829b330cea7db5f89864c90211ec4d1))
+* **Table:** Enabled scrollToRow for lazy-loading tables ([#775](https://www.github.com/iTwin/iTwinUI-react/issues/775)) ([c57b458](https://www.github.com/iTwin/iTwinUI-react/commit/c57b458e7d74609d44d3f0d304e49ee2c1f22d54))
+* **Table:** Syncing header and body horizontal scroll state ([#760](https://www.github.com/iTwin/iTwinUI-react/issues/760)) ([5ceeec2](https://www.github.com/iTwin/iTwinUI-react/commit/5ceeec279585ca5af92f1b26440c354ee6eeb027))
+
 ## [1.42.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.41.0...v1.42.0) (2022-07-26)
 
 ### Fixes
