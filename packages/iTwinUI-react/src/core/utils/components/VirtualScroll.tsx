@@ -247,7 +247,7 @@ export const useVirtualization = (props: VirtualScrollProps) => {
   }, [resizeObserver]);
 
   // Get child height when children available
-  React.useEffect(() => updateChildHeight(), [updateChildHeight]);
+  React.useLayoutEffect(() => updateChildHeight(), [updateChildHeight]);
 
   const updateVirtualScroll = React.useCallback(() => {
     const scrollableContainer = getScrollableContainer();
