@@ -133,7 +133,7 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
       selectedRowIds[row.id] = true;
       row.subRows.forEach((r) => handleRow(r));
     };
-    handleRow(instance.rowsById[action.id]);
+    handleRow(instance.flatRows[endIndex]);
   }
 
   const newState = {
