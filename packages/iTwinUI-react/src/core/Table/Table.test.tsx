@@ -429,7 +429,6 @@ it('should handle sub-rows shift click selection', async () => {
     onRowClick,
     isSelectable: true,
   });
-
   const testIfCheckboxesChecked = (
     checkboxes: NodeListOf<HTMLInputElement>,
     checkedIndices: Array<number>,
@@ -447,9 +446,9 @@ it('should handle sub-rows shift click selection', async () => {
   expect(rows.length).toBe(3);
 
   await expandAll(container);
-
   rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(10);
+
   const checkboxes = container.querySelectorAll<HTMLInputElement>(
     '.iui-table-body .iui-checkbox',
   );
@@ -472,6 +471,7 @@ it('should handle sub-rows shift click selection', async () => {
   expect(onRowClick).toHaveBeenCalledTimes(3);
   testIfCheckboxesChecked(checkboxes, [7], [6]);
 
+  // When startIndex > endIndex, then startIndex and endIndex are swapped
   await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
   await user.click(getByText(data[0].subRows[1].subRows[1].name)); // [shiftKey = true]
   expect(onSelect).toHaveBeenCalledTimes(4);
