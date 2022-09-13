@@ -310,3 +310,6 @@ export {
   MiddleTextTruncation,
 } from './utils';
 export type { ThemeType, MiddleTextTruncationProps } from './utils';
+
+export { NotificationMarker } from './NotificationMarker';
+export type { NotificationMarkerProps } from './NotificationMarker';
