@@ -51,7 +51,7 @@ export type DialogContextProps = {
    * Whether dialog should be positioned relatively to a container or the viewport.
    *
    * Using `'container'` will absolutely position this dialog relative to the closest positioned ancestor.
-   * In other words, you must place the dialog as a child of an element that has `position` set to
+   * In other words, you must place the dialog as a child of an element that has `position` set to 
    * something other than `static`, e.g. `position: relative`.
    * @default 'viewport'
    */
