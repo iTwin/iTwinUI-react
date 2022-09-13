@@ -15,6 +15,7 @@ import {
   DropdownMenu,
   MenuItem,
   Input,
+  Tooltip,
 } from '@itwin/itwinui-react';
 import {
   SvgChevronRightDouble,
@@ -116,20 +117,22 @@ export const CustomOverflowBackButton: Story<BreadcrumbsProps> = (args) => {
   return (
     <div style={{ maxWidth: '50%', border: '1px solid lightpink', padding: 8 }}>
       <Breadcrumbs
-        overflowButton={(visibleCount: number) => (
-          <IconButton
-            style={{ paddingTop: '8px' }}
-            onClick={() => {
-              const previousBreadcrumb =
-                visibleCount > 1
-                  ? items.length - visibleCount
-                  : items.length - 2;
-              action(`Visit breadcrumb ${previousBreadcrumb}`)();
-            }}
-          >
-            <SvgMoreSmall />
-          </IconButton>
-        )}
+        overflowButton={(visibleCount: number) => {
+          const previousBreadcrumb =
+            visibleCount > 1 ? items.length - visibleCount : items.length - 2;
+          return (
+            <Tooltip content={`Item ${previousBreadcrumb}`} placement='bottom'>
+              <IconButton
+                style={{ paddingTop: '8px' }}
+                onClick={() => {
+                  action(`Visit breadcrumb ${previousBreadcrumb}`)();
+                }}
+              >
+                <SvgMoreSmall />
+              </IconButton>
+            </Tooltip>
+          );
+        }}
         {...args}
       >
         {items}
