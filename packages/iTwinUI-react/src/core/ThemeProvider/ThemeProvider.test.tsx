@@ -113,6 +113,8 @@ describe('When rendering an element (with children)', () => {
 });
 
 describe('Fallback (without children)', () => {
+  const originalMatchMedia = window.matchMedia;
+
   const expectLightTheme = (ownerDocument = document) => {
     expect(ownerDocument.documentElement.dataset.iuiTheme).toEqual('light');
   };
@@ -122,8 +124,10 @@ describe('Fallback (without children)', () => {
   };
 
   afterEach(() => {
+    document.body.classList.remove('iui-root');
     document.documentElement.removeAttribute('data-iui-theme');
     document.documentElement.removeAttribute('data-iui-contrast');
+    window.matchMedia = originalMatchMedia;
   });
 
   it('should respect os theme (light)', () => {
@@ -142,7 +146,6 @@ describe('Fallback (without children)', () => {
 
   // TODO: fix or remove this test
   describe.skip('media query', () => {
-    const originalMatchMedia = window.matchMedia;
     let matches = false;
 
     const changeOSTheme = (theme: 'dark' | 'light') => {
@@ -264,4 +267,20 @@ describe('Fallback (without children)', () => {
       );
     },
   );
+
+  it('should not modify root or <body> if a parent ThemeProvider exists', () => {
+    render(
+      <ThemeProvider theme='dark'>
+        <ThemeProvider theme='dark' />
+      </ThemeProvider>,
+    );
+
+    const element = document.querySelector('.iui-root');
+    expect(element).toHaveAttribute('data-iui-theme', 'dark');
+    expect(element).toHaveAttribute('data-iui-contrast', 'default');
+
+    expect(document.documentElement.dataset.iuiTheme).toBeUndefined();
+    expect(document.documentElement.dataset.iuiContrast).toBeUndefined();
+    expect(document.body.classList).not.toContain('iui-root');
+  });
 });
