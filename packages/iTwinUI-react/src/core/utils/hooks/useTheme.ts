@@ -101,8 +101,10 @@ const handleTheme = (
     root.dataset.iuiContrast = isHC ? 'high' : 'default';
   };
 
-  const prefersDarkQuery = _window?.matchMedia('(prefers-color-scheme: dark)');
-  const prefersHCQuery = _window?.matchMedia('(prefers-contrast: more)');
+  const prefersDarkQuery = _window?.matchMedia?.(
+    '(prefers-color-scheme: dark)',
+  );
+  const prefersHCQuery = _window?.matchMedia?.('(prefers-contrast: more)');
 
   const changeHandler = () => {
     const isDark =
