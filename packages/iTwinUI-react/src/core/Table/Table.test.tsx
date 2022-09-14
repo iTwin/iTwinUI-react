@@ -4396,3 +4396,47 @@ it.each(['positive', 'warning', 'negative'] as const)(
     expect(rows[1]).not.toHaveAttribute('data-iui-status', rowStatus);
   },
 );
+
+it('should navigate through table sorting with the keyboard', async () => {
+  const onSort = jest.fn();
+  renderComponent({
+    isSortable: true,
+    onSort,
+  });
+
+  await userEvent.tab(); // tab to sort icon button
+  await userEvent.keyboard('{Enter}');
+  expect(onSort).toHaveBeenCalledTimes(1);
+});
+
+it('should navigate through table filtering with the keyboard', async () => {
+  const onFilter = jest.fn();
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          Filter: tableFilters.TextFilter(),
+          fieldType: 'text',
+        },
+      ],
+    },
+  ];
+  renderComponent({
+    columns: mockedColumns,
+    onFilter,
+  });
+
+  await userEvent.tab(); // tab to filter icon button
+  await userEvent.keyboard('{Enter}');
+  await userEvent.keyboard('2');
+  await userEvent.tab(); // tab to filter menu 'Filter' submit button
+  await userEvent.keyboard('{Enter}');
+  expect(onFilter).toHaveBeenCalledWith(
+    [{ fieldType: 'text', filterType: 'text', id: 'name', value: '2' }],
+    expect.objectContaining({ filters: [{ id: 'name', value: '2' }] }),
+  );
+});
