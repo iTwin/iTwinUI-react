@@ -801,6 +801,12 @@ export const Table = <
                             column.resizeWidth = el.getBoundingClientRect().width;
                           }
                         }}
+                        tabIndex={showSortButton(column) ? 0 : undefined}
+                        onKeyDown={(e) => {
+                          if (e.key == 'Enter' && showSortButton(column)) {
+                            column.toggleSortBy();
+                          }
+                        }}
                       >
                         {column.render('Header')}
                         {(showFilterButton(column) ||
