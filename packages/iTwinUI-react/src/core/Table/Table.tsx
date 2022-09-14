@@ -529,7 +529,6 @@ export const Table = <
     prepareRow,
     state,
     allColumns,
-    filteredFlatRows,
     dispatch,
     page,
     gotoPage,
@@ -549,9 +548,10 @@ export const Table = <
     {} as Record<string, string>,
   );
 
-  const areFiltersSet = allColumns.some(
-    (column) => column.filterValue != null && column.filterValue !== '',
-  );
+  const areFiltersSet =
+    allColumns.some(
+      (column) => column.filterValue != null && column.filterValue !== '',
+    ) || !!globalFilterValue;
 
   const showFilterButton = (column: HeaderGroup<T>) =>
     (data.length !== 0 || areFiltersSet) && column.canFilter;
@@ -928,7 +928,7 @@ export const Table = <
             </div>
           )}
           {!isLoading &&
-            (data.length === 0 || filteredFlatRows.length === 0) &&
+            (data.length === 0 || rows.length === 0) &&
             areFiltersSet && (
               <div className='iui-table-empty'>
                 <div>{emptyFilteredTableContent}</div>
