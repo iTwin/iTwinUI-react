@@ -16,6 +16,7 @@ import {
   InputContainerProps,
   mergeRefs,
   useLatestRef,
+  useContainerWidth,
 } from '../utils';
 import 'tippy.js/animations/shift-away.css';
 import {
@@ -30,6 +31,8 @@ import { ComboBoxInput } from './ComboBoxInput';
 import { ComboBoxInputContainer } from './ComboBoxInputContainer';
 import { ComboBoxMenu } from './ComboBoxMenu';
 import { ComboBoxMenuItem } from './ComboBoxMenuItem';
+import SelectTagContainer from '../Select/SelectTagContainer';
+import SelectTag from '../Select/SelectTag';
 
 const isMultipleEnabled = <T,>(
   variable: (T | undefined) | (T[] | undefined),
@@ -183,6 +186,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     multiple = false,
     onShow,
     onHide,
+    selectedItemRenderer,
     ...rest
   } = props;
 
@@ -429,6 +433,38 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     [emptyStateMessage],
   );
 
+  const [tagContainerRef, tagContainerWidth] = useContainerWidth(true);
+
+  const selectedItems = React.useMemo(() => {
+    if (selectedIndex == null) {
+      return undefined;
+    }
+    const indexes = [1, 2, 3, 4, 5];
+    const item = isMultipleEnabled(selectedIndex, multiple)
+      ? indexes != undefined && indexes.length > 0
+        ? indexes.map((index) => optionsRef.current[index])
+        : undefined
+      : optionsRef.current[selectedIndex];
+    return item;
+  }, [multiple, optionsRef, selectedIndex]);
+
+  const tagRenderer = React.useCallback((item: SelectOption<T>) => {
+    return <SelectTag key={item.label} label={item.label} />;
+  }, []);
+
+  const multipleSelectedRenderer = () => {
+    return (
+      <MultipleSelectButton
+        mRef={tagContainerRef}
+        selectedItemsRenderer={
+          selectedItemRenderer as (options: SelectOption<T>[]) => JSX.Element
+        }
+        selectedItems={selectedItems as SelectOption<T>[]}
+        tagRenderer={tagRenderer}
+      />
+    );
+  };
+
   return (
     <ComboBoxRefsContext.Provider
       value={{ inputRef, menuRef, toggleButtonRef, optionsExtraInfoRef }}
@@ -447,11 +483,16 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           }}
         >
           <ComboBoxInputContainer disabled={inputProps?.disabled} {...rest}>
-            <ComboBoxInput
-              value={inputValue}
-              {...inputProps}
-              onChange={handleOnInput}
-            />
+            <>
+              <ComboBoxInput
+                style={{ paddingLeft: tagContainerWidth + 18 }}
+                value={inputValue}
+                {...inputProps}
+                onChange={handleOnInput}
+              />
+              {isMultipleEnabled(selectedIndex, multiple) &&
+                multipleSelectedRenderer()}
+            </>
             <ComboBoxEndIcon disabled={inputProps?.disabled} isOpen={isOpen} />
           </ComboBoxInputContainer>
           <ComboBoxDropdown
@@ -468,6 +509,49 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
         </ComboBoxStateContext.Provider>
       </ComboBoxActionContext.Provider>
     </ComboBoxRefsContext.Provider>
+  );
+};
+
+type MultipleComboboxProps<T> = {
+  selectedItems?: SelectOption<T>[];
+  selectedItemsRenderer?: (options: SelectOption<T>[]) => JSX.Element;
+  tagRenderer: (item: SelectOption<T>) => JSX.Element;
+  mRef: React.ForwardedRef<HTMLDivElement>;
+};
+
+const MultipleSelectButton = <T,>({
+  selectedItems,
+  selectedItemsRenderer,
+  tagRenderer,
+  mRef,
+}: MultipleComboboxProps<T>) => {
+  const selectedItemsElements = React.useMemo(() => {
+    if (!selectedItems) {
+      return [];
+    }
+
+    return selectedItems.map((item) => tagRenderer(item));
+  }, [selectedItems, tagRenderer]);
+
+  return (
+    <>
+      {selectedItems && selectedItemsRenderer && (
+        <div
+          className='iui-select-tag-container'
+          ref={mRef}
+          style={{ maxWidth: `calc(100% - 150px)`, right: 'unset' }}
+        >
+          {selectedItemsRenderer(selectedItems)}
+        </div>
+      )}
+      {selectedItems && !selectedItemsRenderer && (
+        <SelectTagContainer
+          style={{ maxWidth: `calc(100% - 150px)`, right: 'unset' }}
+          ref={mRef}
+          tags={selectedItemsElements}
+        />
+      )}
+    </>
   );
 };
 
