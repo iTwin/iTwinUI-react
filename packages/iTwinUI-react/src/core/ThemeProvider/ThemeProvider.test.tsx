@@ -4,21 +4,115 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { act, render } from '@testing-library/react';
+import * as UseMediaQuery from '../utils/hooks/useMediaQuery';
 
 import { ThemeProvider } from './ThemeProvider';
 
-describe('When rendering an element (with context)', () => {
-  it('should render the element with default values', () => {
-    const { container } = render(<ThemeProvider>Test</ThemeProvider>);
-    const element = container.querySelector('div');
-    expect(element).toBeTruthy();
+describe('When rendering an element (with children)', () => {
+  let useMediaSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    useMediaSpy = jest
+      .spyOn(UseMediaQuery, 'useMediaQuery')
+      .mockReturnValue(false);
+  });
+
+  afterEach(() => useMediaSpy.mockRestore());
+
+  it.each(['default', 'light', 'dark'] as const)(
+    'should render correctly with %s theme',
+    (theme) => {
+      const { container } = render(
+        <ThemeProvider theme={theme === 'default' ? undefined : theme}>
+          Test
+        </ThemeProvider>,
+      );
+      const element = container.querySelector('div');
+      expect(element).toBeTruthy();
+      expect(element).toHaveClass('iui-root');
+      expect(element).toHaveAttribute(
+        'data-iui-theme',
+        theme == 'dark' ? 'dark' : 'light',
+      );
+      expect(element).toHaveAttribute('data-iui-contrast', 'default');
+    },
+  );
+
+  it.each(['default', 'high'] as const)(
+    'should render correctly with %s contrast',
+    (contrast) => {
+      const { container } = render(
+        <ThemeProvider themeOptions={{ highContrast: contrast === 'high' }}>
+          Test
+        </ThemeProvider>,
+      );
+      const element = container.querySelector('.iui-root');
+      expect(element).toHaveAttribute('data-iui-theme', 'light');
+      expect(element).toHaveAttribute('data-iui-contrast', contrast);
+    },
+  );
+
+  it('should respect OS preferences', () => {
+    useMediaSpy.mockReturnValue(true);
+    const { container } = render(
+      <ThemeProvider theme='os'>Test</ThemeProvider>,
+    );
+    const element = container.querySelector('.iui-root');
+    expect(element).toHaveAttribute('data-iui-theme', 'dark');
+    expect(element).toHaveAttribute('data-iui-contrast', 'high');
+  });
+
+  it('should respect prefers-contrast even with theme set', () => {
+    useMediaSpy.mockReturnValue(true);
+    const { container } = render(
+      <ThemeProvider theme='dark'>Test</ThemeProvider>,
+    );
+    const element = container.querySelector('.iui-root');
+    expect(element).toHaveAttribute('data-iui-theme', 'dark');
+    expect(element).toHaveAttribute('data-iui-contrast', 'high');
+  });
+
+  it('should prioritize user props over OS preferences', () => {
+    useMediaSpy.mockReturnValue(true);
+    const { container } = render(
+      <ThemeProvider theme='light' themeOptions={{ highContrast: false }}>
+        Test
+      </ThemeProvider>,
+    );
+    const element = container.querySelector('.iui-root');
+    expect(element).toHaveAttribute('data-iui-theme', 'light');
+    expect(element).toHaveAttribute('data-iui-contrast', 'default');
+  });
+
+  it('should render the correct element with `as` prop', () => {
+    const { container } = render(
+      <ThemeProvider as='section'>Test</ThemeProvider>,
+    );
+    const element = container.querySelector('section');
     expect(element).toHaveClass('iui-root');
     expect(element).toHaveAttribute('data-iui-theme', 'light');
     expect(element).toHaveAttribute('data-iui-contrast', 'default');
   });
+
+  it('should allow nesting ThemeProviders', () => {
+    const { container } = render(
+      <ThemeProvider theme='dark' id='parent'>
+        <ThemeProvider theme='light' id='child'>
+          Test
+        </ThemeProvider>
+      </ThemeProvider>,
+    );
+    const element1 = container.querySelector('#parent');
+    expect(element1).toHaveClass('iui-root');
+    expect(element1).toHaveAttribute('data-iui-theme', 'dark');
+
+    const element2 = container.querySelector('#child');
+    expect(element2).toHaveClass('iui-root');
+    expect(element2).toHaveAttribute('data-iui-theme', 'light');
+  });
 });
 
-describe('Fallback (without context)', () => {
+describe('Fallback (without children)', () => {
   const expectLightTheme = (ownerDocument = document) => {
     expect(ownerDocument.documentElement.dataset.iuiTheme).toEqual('light');
   };
