@@ -4,9 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { Input, InputProps } from '../Input';
-import SelectTag from '../Select/SelectTag';
-import SelectTagContainer from '../Select/SelectTagContainer';
-import { useSafeContext, useMergedRefs, useContainerWidth } from '../utils';
+import { useSafeContext, useMergedRefs } from '../utils';
 import {
   ComboBoxStateContext,
   ComboBoxActionContext,
@@ -19,13 +17,9 @@ export const ComboBoxInput = React.forwardRef(
   (props: ComboBoxInputProps, forwardedRef: React.Ref<HTMLInputElement>) => {
     const { onKeyDown: onKeyDownProp, onFocus: onFocusProp, ...rest } = props;
 
-    const {
-      isOpen,
-      id,
-      focusedIndex,
-      enableVirtualization,
-      multiple,
-    } = useSafeContext(ComboBoxStateContext);
+    const { isOpen, id, focusedIndex, enableVirtualization } = useSafeContext(
+      ComboBoxStateContext,
+    );
     const dispatch = useSafeContext(ComboBoxActionContext);
     const { inputRef, menuRef, optionsExtraInfoRef } = useSafeContext(
       ComboBoxRefsContext,
@@ -177,56 +171,11 @@ export const ComboBoxInput = React.forwardRef(
       [dispatch, onFocusProp],
     );
 
-    const [tagContainerRef, tagContainerWidth] = useContainerWidth(true);
-    const [inputContainerRef] = useContainerWidth();
-
-    const selectedItemsRenderer = (customRenderer: boolean) => {
-      return customRenderer ? (
-        <div
-          ref={tagContainerRef}
-          className='iui-select-tag-container'
-          style={{
-            maxWidth: `calc(100% - 150px)`,
-            right: 'unset',
-          }}
-        >
-          <span>item 1</span>
-          <span>item 1</span>
-          <span>item 1</span>
-          <span>item 1</span>
-          <span>item 1</span>
-          <span>item 1</span>
-          <span>item 1</span>
-          <span>item 1</span>
-          <span>item 1</span>
-        </div>
-      ) : (
-        <SelectTagContainer
-          ref={tagContainerRef}
-          style={{
-            maxWidth: `calc(100% - 150px)`,
-            right: 'unset',
-          }}
-          tags={[
-            <SelectTag key={1} label='asdasd' />,
-            <SelectTag key={2} label='asdasd' />,
-            <SelectTag key={3} label='asdasd' />,
-            <SelectTag key={4} label='asdasd' />,
-            <SelectTag key={5} label='asdasd' />,
-            <SelectTag key={6} label='asdasd' />,
-            <SelectTag key={7} label='asdasd' />,
-            <SelectTag key={8} label='asdasd' />,
-          ]}
-        />
-      );
-    };
-
     return (
       <>
         <Input
-          style={{ paddingLeft: tagContainerWidth + 18 }}
-          ref={useMergedRefs(refs, inputContainerRef)}
           onKeyDown={handleKeyDown}
+          ref={refs}
           onFocus={handleFocus}
           aria-activedescendant={
             isOpen && focusedIndex != undefined && focusedIndex > -1
@@ -241,7 +190,6 @@ export const ComboBoxInput = React.forwardRef(
           autoCorrect='off'
           {...rest}
         />
-        {multiple && selectedItemsRenderer(true)}
       </>
     );
   },
