@@ -4,12 +4,13 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { useTheme } from '../utils';
-// import cx from 'classnames';
+import cx from 'classnames';
 import '@itwin/itwinui-css/css/notification-marker.css';
 
 export type NotificationMarkerProps = {
   // children: React.ReactNode;
   children: JSX.Element;
+  className?: string;
 };
 
 /**
@@ -18,12 +19,21 @@ export type NotificationMarkerProps = {
  * Example usages go here!
  */
 export const NotificationMarker = (props: NotificationMarkerProps) => {
-  const { ...rest } = props;
+  const { className, ...rest } = props;
   console.log(props);
   useTheme();
   return (
     // <div className={cx('iui-notification-positive', 'iui-urgent')} {...rest}>
-    <div className={'iui-notification-positive'} {...rest}>
+    // <div className='iui-notification-positive' {...rest}>
+    <div
+      className={cx(
+        {
+          'iui-notification-positive': true,
+        },
+        className,
+      )}
+      {...rest}
+    >
       {props.children}
       {/* abc */}
     </div>

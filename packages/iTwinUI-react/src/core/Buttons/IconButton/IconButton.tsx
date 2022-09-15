@@ -45,11 +45,12 @@ export const IconButton: IconButtonComponent = React.forwardRef(
 
     console.log(
       'className: ',
-      children,
-      children as JSX.Element,
+      // children,
+      // children as JSX.Element,
       (children as JSX.Element).props,
-      (children as JSX.Element).props.children,
-      (children as JSX.Element).props.className,
+      children as React.ReactNode,
+      // (children as JSX.Element).props.children,
+      // (children as JSX.Element).props.className,
     );
 
     return (
@@ -67,6 +68,7 @@ export const IconButton: IconButtonComponent = React.forwardRef(
         type={type}
         {...rest}
       >
+        {/* <div className='iui-button-icon'>{children}</div> */}
         {/* {children} */}
         {React.cloneElement(children as JSX.Element, {
           className: cx(

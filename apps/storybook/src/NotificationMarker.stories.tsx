@@ -9,6 +9,7 @@ import {
   IconButton,
   NotificationMarker,
   NotificationMarkerProps,
+  // Text,
 } from '@itwin/itwinui-react';
 import SvgNotification from '@itwin/itwinui-icons-react/cjs/icons/Notification';
 // import { action } from '@storybook/addon-actions';
@@ -34,11 +35,32 @@ export default {
   ],
 } as Meta<NotificationMarkerProps>;
 
+// const trialP = () => {
+//   return <b className='trial b'>abcd</b>;
+// };
+
 export const Basic: Story<NotificationMarkerProps> = (args) => {
   console.log(args);
+  return (
+    <IconButton>
+      <NotificationMarker>
+        <SvgNotification />
+      </NotificationMarker>
+    </IconButton>
+  );
+
   // return (
-  //   <Button styleType='borderless'>
-  //     <NotificationMarker>
+  //   <Button
+  //     styleType='borderless'
+  //     // startIcon={<Text className='trial text class'>trial text</Text>}
+  //     startIcon={
+  //       <NotificationMarker className='My trial classname 1'>
+  //         <p>abc</p>
+  //       </NotificationMarker>
+  //     }
+  //     endIcon={<p className='trial p'>abcd</p>}
+  //   >
+  //     <NotificationMarker className='my trial classname 2'>
   //       <p>abc</p>
   //     </NotificationMarker>
   //   </Button>
@@ -51,17 +73,17 @@ export const Basic: Story<NotificationMarkerProps> = (args) => {
   //       {/* abcd */}
   //     </NotificationMarker>
 
-  return (
-    <IconButton>
-      {/* <div className='abcde' /> */}
-      {/* <NotificationMarker> */}
-      <div className={'iui-notification-positive'}>
-        {/* <div className='inner-div' /> */}
-        <SvgNotification />
-      </div>
-      {/* </NotificationMarker> */}
-    </IconButton>
-  );
+  // return (
+  //   <IconButton>
+  //     {/* <div className='abcde' /> */}
+  //     <NotificationMarker>
+  //       {/* <div className={'iui-notification-positive iui-urgent'}> */}
+  //       {/* <div className='inner-div' /> */}
+  //       <SvgNotification />
+  //       {/* </div> */}
+  //     </NotificationMarker>
+  //   </IconButton>
+  // );
 
   // return (
   //   <IconButton
