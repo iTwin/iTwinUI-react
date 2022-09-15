@@ -103,7 +103,6 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
   isRowDisabled?: (rowData: T) => boolean,
 ) => {
   if (instance == null) {
-    console.debug('instance == null');
     return state;
   }
 
