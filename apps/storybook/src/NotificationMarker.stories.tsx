@@ -13,6 +13,7 @@ import {
   // Text,
 } from '@itwin/itwinui-react';
 import SvgNotification from '@itwin/itwinui-icons-react/cjs/icons/Notification';
+import { action } from '@storybook/addon-actions';
 // import { action } from '@storybook/addon-actions';
 
 export default {
@@ -43,7 +44,12 @@ export default {
 const notificationButton = (
   props: Omit<NotificationMarkerProps, 'children'>,
 ) => (
-  <IconButton>
+  <IconButton
+    onClick={action(`props: ${JSON.stringify(props)} clicked`)}
+    // onClick={() =>
+    //   console.log(`props: ${JSON.stringify({ ...props })} clicked`)
+    // }
+  >
     <NotificationMarker {...props}>
       <SvgNotification />
       {/* <b>abc</b> */}
