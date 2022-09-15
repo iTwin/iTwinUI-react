@@ -109,11 +109,19 @@ it.each(['start', 'end'] as const)(
       );
     };
     const { container } = render(<OverflowGroup />);
+    const {
+      container: { firstChild: moreIconButton },
+    } = render(
+      <IconButton>
+        <SvgMore />
+      </IconButton>,
+    );
 
     expect(container.querySelector('.iui-button-group')).toBeTruthy();
 
     const buttons = container.querySelectorAll('.iui-button');
     expect(buttons).toHaveLength(1);
+    expect(buttons[0]).toEqual(moreIconButton);
 
     scrollWidthSpy.mockRestore();
     offsetWidthSpy.mockRestore();
