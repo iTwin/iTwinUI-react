@@ -6,10 +6,26 @@ const componentsPages = (await Astro.glob('../pages/docs/*.mdx'))
   .map(({ url, frontmatter }) => ({
     url,
     title: frontmatter.title,
+    group: frontmatter.group,
   }));
 
 const sections = new Map<string, typeof componentsPages>();
-sections.set('components', componentsPages);
+sections.set(
+  'components',
+  componentsPages.filter((item) => item.group === 'core')
+);
+sections.set(
+  'buttons',
+  componentsPages.filter((item) => item.group === 'buttons')
+);
+sections.set(
+  'inputs',
+  componentsPages.filter((item) => item.group === 'inputs')
+);
+sections.set(
+  'typography',
+  componentsPages.filter((item) => item.group === 'typography')
+);
 ---
 
 <nav aria-labelledby='grid-left'>
