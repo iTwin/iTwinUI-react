@@ -5,6 +5,7 @@
 import { Story, Meta } from '@storybook/react';
 import React from 'react';
 import {
+  ButtonGroup,
   // Button,
   IconButton,
   NotificationMarker,
@@ -39,15 +40,37 @@ export default {
 //   return <b className='trial b'>abcd</b>;
 // };
 
+const notificationButton = (
+  props: Omit<NotificationMarkerProps, 'children'>,
+) => (
+  <IconButton>
+    <NotificationMarker {...props}>
+      <SvgNotification />
+      {/* <b>abc</b> */}
+    </NotificationMarker>
+  </IconButton>
+);
+
 export const Basic: Story<NotificationMarkerProps> = (args) => {
   console.log(args);
   return (
-    <IconButton>
-      <NotificationMarker>
-        <SvgNotification />
-      </NotificationMarker>
-    </IconButton>
+    <ButtonGroup>
+      {['primary', 'positive', 'warning', 'negative'].map((variant) =>
+        notificationButton({
+          variant: variant as NotificationMarkerProps['variant'],
+        }),
+      )}
+    </ButtonGroup>
   );
+
+  // return (
+  //   <IconButton>
+  //     <NotificationMarker>
+  //       <SvgNotification />
+  //       {/* <b>abc</b> */}
+  //     </NotificationMarker>
+  //   </IconButton>
+  // );
 
   // return (
   //   <Button
