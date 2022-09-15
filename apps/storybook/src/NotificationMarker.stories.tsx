@@ -5,15 +5,12 @@
 import { Story, Meta } from '@storybook/react';
 import React from 'react';
 import {
-  ButtonGroup,
-  // Button,
   IconButton,
   NotificationMarker,
   NotificationMarkerProps,
   // Text,
 } from '@itwin/itwinui-react';
 import SvgNotification from '@itwin/itwinui-icons-react/cjs/icons/Notification';
-import { action } from '@storybook/addon-actions';
 // import { action } from '@storybook/addon-actions';
 
 export default {
@@ -21,6 +18,10 @@ export default {
   argTypes: {
     className: { control: { disable: true } },
     style: { control: { disable: true } },
+    variant: {
+      control: 'radio',
+      options: ['primary', 'positive', 'warning', 'negative'],
+    },
   },
   title: 'Core/NotificationMarker',
   decorators: [
@@ -41,32 +42,14 @@ export default {
 //   return <b className='trial b'>abcd</b>;
 // };
 
-const notificationButton = (
-  props: Omit<NotificationMarkerProps, 'children'>,
-) => (
-  <IconButton
-    onClick={action(`props: ${JSON.stringify(props)} clicked`)}
-    // onClick={() =>
-    //   console.log(`props: ${JSON.stringify({ ...props })} clicked`)
-    // }
-  >
-    <NotificationMarker {...props}>
-      <SvgNotification />
-      {/* <b>abc</b> */}
-    </NotificationMarker>
-  </IconButton>
-);
-
 export const Basic: Story<NotificationMarkerProps> = (args) => {
   console.log(args);
   return (
-    <ButtonGroup>
-      {['primary', 'positive', 'warning', 'negative'].map((variant) =>
-        notificationButton({
-          variant: variant as NotificationMarkerProps['variant'],
-        }),
-      )}
-    </ButtonGroup>
+    <IconButton>
+      <NotificationMarker {...args}>
+        <SvgNotification />
+      </NotificationMarker>
+    </IconButton>
   );
 
   // return (
@@ -137,6 +120,11 @@ export const Basic: Story<NotificationMarkerProps> = (args) => {
   // );
 
   // return <NotificationMarker {...args} />;
+};
+
+Basic.args = {
+  variant: 'primary',
+  urgent: false,
 };
 
 // Basic.args = {
