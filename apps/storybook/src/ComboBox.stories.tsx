@@ -590,3 +590,22 @@ export const MultipleSelect: Story<Partial<ComboBoxProps<string>>> = (args) => {
     />
   );
 };
+
+export const MultipleSelectCustom: Story<Partial<ComboBoxProps<string>>> = (
+  args,
+) => {
+  const options = React.useMemo(() => countriesList, []);
+
+  return (
+    <ComboBox
+      options={options}
+      inputProps={{ placeholder: 'Select a country' }}
+      onChange={(value: string) => action(value ?? '')()}
+      multiple={true}
+      selectedItemRenderer={(options) => (
+        <>{options.map((option) => option.label).join(', ')}</>
+      )}
+      {...args}
+    />
+  );
+};
