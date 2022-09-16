@@ -39,9 +39,7 @@ export const Basic: Story<NotificationMarkerProps> = (args) => {
   console.log(args);
   return (
     <IconButton>
-      <NotificationMarker {...args}>
-        <SvgNotification />
-      </NotificationMarker>
+      <NotificationMarker {...args}>{args.children}</NotificationMarker>
     </IconButton>
   );
 };
@@ -49,4 +47,45 @@ export const Basic: Story<NotificationMarkerProps> = (args) => {
 Basic.args = {
   variant: 'primary',
   urgent: false,
+  children: <SvgNotification />,
+};
+
+Basic.argTypes = {
+  children: {
+    control: false,
+  },
+};
+
+export const CustomChild: Story<NotificationMarkerProps> = (args) => {
+  console.log(args);
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        gap: '20px',
+      }}
+    >
+      <NotificationMarker variant='positive' {...args}>
+        Live
+      </NotificationMarker>
+      <NotificationMarker variant='negative' {...args}>
+        Rec
+      </NotificationMarker>
+      <NotificationMarker variant='primary' {...args}>
+        1 new message
+      </NotificationMarker>
+    </div>
+  );
+};
+
+CustomChild.args = {
+  urgent: true,
+};
+
+CustomChild.argTypes = {
+  variant: {
+    control: false,
+  },
 };

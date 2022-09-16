@@ -9,7 +9,7 @@ import '@itwin/itwinui-css/css/notification-marker.css';
 
 export type NotificationMarkerProps = {
   // children: React.ReactNode;
-  children: JSX.Element;
+  children: React.ReactNode;
   className?: string;
   /**
    * Type of notification
