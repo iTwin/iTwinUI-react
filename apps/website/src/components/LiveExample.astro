@@ -25,13 +25,13 @@ if (code.includes('Copyright (c) Bentley Systems')) {
 
 const componentName = src.split('.')[0];
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+// TODO: temporarily removing these until we can figure out how to SSR correctly
 const StaticComponent = AllExamples[`${capitalize(componentName)}StaticExample`];
 const MainComponent = AllExamples[`${capitalize(componentName)}MainExample`];
-
-// const staticSandpackCss = getSandpackCssText();
 ---
 
-<LiveExample code={code} client:only='react' />
+<LiveExample code={code} client:visible />
 
 <style lang='scss' is:global>
   .live-example {

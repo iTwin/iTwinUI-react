@@ -20,8 +20,9 @@ export default defineConfig({
     ssr: {
       noExternal: [
         '@fontsource/noto-sans',
-        // '@itwin/itwinui-css',
-        // '@codesandbox/*',
+        '@codesandbox/sandpack-themes',
+        '@codesandbox/sandpack-react',
+        '@codesandbox/sandpack-client',
         // '@itwin/itwinui-icons-react',
         // '@itwin/itwinui-illustrations-react',
         // 'react',
