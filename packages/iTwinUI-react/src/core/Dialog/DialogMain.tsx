@@ -7,6 +7,7 @@ import cx from 'classnames';
 import {
   FocusTrap,
   getTranslateValues,
+  useLatestRef,
   Resizer,
   useMergedRefs,
   useTheme,
@@ -62,6 +63,7 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
       onClose = dialogContext.onClose,
       closeOnEsc = dialogContext.closeOnEsc,
       trapFocus = dialogContext.trapFocus,
+      setFocus = dialogContext.setFocus,
       preventDocumentScroll = dialogContext.preventDocumentScroll,
       onKeyDown,
       isDraggable = dialogContext.isDraggable,
@@ -79,7 +81,12 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
 
     // Focuses dialog when opened and brings back focus to the previously focused element when closed.
     const previousFocusedElement = React.useRef<HTMLElement | null>();
+    const setFocusRef = useLatestRef(setFocus);
     React.useEffect(() => {
+      if (!setFocusRef.current) {
+        return;
+      }
+
       if (isOpen) {
         previousFocusedElement.current = dialogRef.current?.ownerDocument
           .activeElement as HTMLElement;
@@ -92,18 +99,29 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
         ref?.contains(document.activeElement) &&
           previousFocusedElement.current?.focus();
       };
+    }, [isOpen, setFocusRef]);
+
+    const originalBodyOverflow = React.useRef('');
+    React.useEffect(() => {
+      if (isOpen) {
+        originalBodyOverflow.current = document.body.style.overflow;
+      }
     }, [isOpen]);
 
     // Prevents document from scrolling when the dialog is open.
-    const originalBodyOverflow = React.useRef('');
     React.useEffect(() => {
       const ownerDocument = dialogRef.current?.ownerDocument;
-      if (!ownerDocument || !preventDocumentScroll) {
+      // If there is no `ownerDocument` or `preventDocumentScroll` is false or
+      // document body originally has `overflow: hidden` (possibly from other/parent dialog), then do nothing.
+      if (
+        !ownerDocument ||
+        !preventDocumentScroll ||
+        originalBodyOverflow.current === 'hidden'
+      ) {
         return;
       }
 
       if (isOpen) {
-        originalBodyOverflow.current = ownerDocument.body.style.overflow;
         ownerDocument.body.style.overflow = 'hidden';
       } else {
         ownerDocument.body.style.overflow = originalBodyOverflow.current;

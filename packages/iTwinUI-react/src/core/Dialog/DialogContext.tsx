@@ -35,6 +35,11 @@ export type DialogContextProps = {
    */
   trapFocus?: boolean;
   /**
+   * If true, focuses the dialog.
+   * @default false
+   */
+  setFocus?: boolean;
+  /**
    * Prevents body from being scrollable. This is useful when the dialog is modal.
    * @default false
    */
