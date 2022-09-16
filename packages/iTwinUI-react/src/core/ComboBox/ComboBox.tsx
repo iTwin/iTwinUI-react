@@ -259,6 +259,18 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     },
   );
 
+  const selectedOptions = React.useMemo(() => {
+    if (selectedIndex == null) {
+      return undefined;
+    }
+    const item = isMultipleEnabled(selectedIndex, multiple)
+      ? selectedIndex != undefined && selectedIndex.length > 0
+        ? selectedIndex.map((index) => optionsRef.current[index])
+        : undefined
+      : optionsRef.current[selectedIndex];
+    return item;
+  }, [multiple, optionsRef, selectedIndex]);
+
   React.useLayoutEffect(() => {
     // When the dropdown opens
     if (isOpen) {
@@ -331,11 +343,12 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   );
 
   // When the value prop changes, update the selectedIndex
+  // TODO add multiselect version of this
   React.useEffect(() => {
-    dispatch([
-      'select',
-      options.findIndex((option) => option.value === valueProp),
-    ]);
+    // dispatch([
+    //   'select',
+    //   options.findIndex((option) => option.value === valueProp),
+    // ]);
   }, [options, valueProp]);
 
   // Call user-defined onChange when the value actually changes
@@ -345,9 +358,21 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       mounted.current = true;
       return;
     }
-    if (!isMultipleEnabled(selectedIndex, multiple)) {
+    if (isMultipleEnabled(selectedIndex, multiple)) {
+      const currentOptions = selectedOptions as SelectOption<T>[];
+      if (
+        !isSingleOnChange(onChangeProp.current, multiple) &&
+        currentOptions.length > 0
+      ) {
+        currentOptions.map((option) =>
+          onChangeProp.current?.(
+            option.value,
+            option.isSelected ? 'removed' : 'added',
+          ),
+        );
+      }
+    } else {
       const currentValue = optionsRef.current[selectedIndex]?.value;
-      const currentOption = optionsRef.current[selectedIndex];
 
       if (currentValue === valuePropRef.current || selectedIndex === -1) {
         return;
@@ -355,14 +380,27 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
       if (isSingleOnChange(onChangeProp.current, multiple)) {
         onChangeProp.current?.(currentValue);
-      } else {
-        onChangeProp.current?.(
-          currentValue,
-          currentOption.isSelected ? 'removed' : 'added',
-        );
       }
     }
-  }, [multiple, onChangeProp, optionsRef, selectedIndex, valuePropRef]);
+  }, [
+    multiple,
+    onChangeProp,
+    optionsRef,
+    selectedIndex,
+    selectedOptions,
+    valuePropRef,
+  ]);
+
+  const isMenuItemSelected = React.useCallback(
+    (index: number) => {
+      if (isMultipleEnabled(selectedIndex, multiple)) {
+        return !!selectedIndex.includes(index as number);
+      } else {
+        return selectedIndex === index;
+      }
+    },
+    [multiple, selectedIndex],
+  );
 
   const getMenuItem = React.useCallback(
     (option: SelectOption<T>, filteredIndex?: number) => {
@@ -381,7 +419,13 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       return customItem ? (
         React.cloneElement(customItem, {
           onClick: (e: unknown) => {
-            dispatch(['select', __originalIndex]);
+            isMultipleEnabled(selectedIndex, multiple)
+              ? dispatch([
+                  'multiselect',
+                  __originalIndex,
+                  isMenuItemSelected(__originalIndex) ? 'removed' : 'added',
+                ])
+              : dispatch(['select', __originalIndex]);
             dispatch(['close']);
             customItem.props.onClick?.(e);
           },
@@ -403,9 +447,15 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           key={optionId}
           id={optionId}
           {...option}
-          isSelected={selectedIndex === __originalIndex}
+          isSelected={isMenuItemSelected(__originalIndex)}
           onClick={() => {
-            dispatch(['select', __originalIndex]);
+            isMultipleEnabled(selectedIndex, multiple)
+              ? dispatch([
+                  'multiselect',
+                  __originalIndex,
+                  isMenuItemSelected(__originalIndex) ? 'removed' : 'added',
+                ])
+              : dispatch(['select', __originalIndex]);
             dispatch(['close']);
           }}
           index={__originalIndex}
@@ -415,7 +465,15 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
         </ComboBoxMenuItem>
       );
     },
-    [enableVirtualization, focusedIndex, id, itemRenderer, selectedIndex],
+    [
+      enableVirtualization,
+      focusedIndex,
+      id,
+      isMenuItemSelected,
+      itemRenderer,
+      multiple,
+      selectedIndex,
+    ],
   );
 
   const emptyContent = React.useMemo(
@@ -435,35 +493,9 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   const [tagContainerRef, tagContainerWidth] = useContainerWidth(true);
 
-  const selectedItems = React.useMemo(() => {
-    if (selectedIndex == null) {
-      return undefined;
-    }
-    const indexes = [1, 2, 3, 4, 5];
-    const item = isMultipleEnabled(selectedIndex, multiple)
-      ? indexes != undefined && indexes.length > 0
-        ? indexes.map((index) => optionsRef.current[index])
-        : undefined
-      : optionsRef.current[selectedIndex];
-    return item;
-  }, [multiple, optionsRef, selectedIndex]);
-
   const tagRenderer = React.useCallback((item: SelectOption<T>) => {
     return <SelectTag key={item.label} label={item.label} />;
   }, []);
-
-  const multipleSelectedRenderer = () => {
-    return (
-      <MultipleSelectButton
-        mRef={tagContainerRef}
-        selectedItemsRenderer={
-          selectedItemRenderer as (options: SelectOption<T>[]) => JSX.Element
-        }
-        selectedItems={selectedItems as SelectOption<T>[]}
-        tagRenderer={tagRenderer}
-      />
-    );
-  };
 
   return (
     <ComboBoxRefsContext.Provider
@@ -490,8 +522,18 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
                 {...inputProps}
                 onChange={handleOnInput}
               />
-              {isMultipleEnabled(selectedIndex, multiple) &&
-                multipleSelectedRenderer()}
+              {isMultipleEnabled(selectedIndex, multiple) && (
+                <MultipleSelectedContainer
+                  mRef={tagContainerRef}
+                  selectedItemsRenderer={
+                    selectedItemRenderer as (
+                      options: SelectOption<T>[],
+                    ) => JSX.Element
+                  }
+                  selectedItems={selectedOptions as SelectOption<T>[]}
+                  tagRenderer={tagRenderer}
+                />
+              )}
             </>
             <ComboBoxEndIcon disabled={inputProps?.disabled} isOpen={isOpen} />
           </ComboBoxInputContainer>
@@ -519,7 +561,7 @@ type MultipleComboboxProps<T> = {
   mRef: React.ForwardedRef<HTMLDivElement>;
 };
 
-const MultipleSelectButton = <T,>({
+const MultipleSelectedContainer = <T,>({
   selectedItems,
   selectedItemsRenderer,
   tagRenderer,
