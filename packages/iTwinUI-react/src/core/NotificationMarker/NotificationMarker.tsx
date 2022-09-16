@@ -59,16 +59,7 @@ export const NotificationMarker = (props: NotificationMarkerProps) => {
     active = true,
     ...rest
   } = props;
-  console.log(props);
   useTheme();
-  // return React.cloneElement(children as JSX.Element, {
-  //   className: cx(
-  //     'iui-notification-positive',
-  //     (children as JSX.Element).props.className,
-  //   ),
-  //   'aria-hidden': true,
-  // });
-
   return (
     <div
       className={cx(
@@ -82,25 +73,6 @@ export const NotificationMarker = (props: NotificationMarkerProps) => {
       {children}
     </div>
   );
-
-  // <div className={cx('iui-notification-positive', 'iui-urgent')} {...rest}>
-  // <div className='iui-notification-positive' {...rest}>
-  // <div
-  //   className={cx(
-  //     {
-  //       'iui-notification-positive': true,
-  //     },
-  //     className,
-  //   )}
-  //   {...rest}
-  // >
-  //   {props.children}
-  //   {/* abc */}
-  // </div>
 };
-
-// {/* <div {...rest} /> */}
-//         // <>
-//     // </>
 
 export default NotificationMarker;

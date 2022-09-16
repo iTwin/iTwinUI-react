@@ -68,9 +68,6 @@ export const Button: ButtonComponent = React.forwardRef((props, ref) => {
 
   useTheme();
 
-  console.log('startIcon', startIcon);
-  console.log('endIcon', endIcon);
-
   return (
     <Element
       ref={ref}

@@ -16,7 +16,7 @@ export default {
   argTypes: {
     className: { control: { disable: true } },
     style: { control: { disable: true } },
-    variant: {
+    type: {
       control: 'radio',
       options: ['primary', 'positive', 'warning', 'negative'],
     },
@@ -25,21 +25,9 @@ export default {
     active: true,
   },
   title: 'Core/NotificationMarker',
-  decorators: [
-    (Story) => (
-      <div
-        style={{
-          width: 'fit-content',
-        }}
-      >
-        <Story />
-      </div>
-    ),
-  ],
 } as Meta<NotificationMarkerProps>;
 
 export const Basic: Story<NotificationMarkerProps> = (args) => {
-  console.log(args);
   return (
     <IconButton styleType='borderless'>
       <NotificationMarker {...args}>{args.children}</NotificationMarker>
@@ -70,13 +58,13 @@ export const CustomChild: Story<NotificationMarkerProps> = (args) => {
         gap: '20px',
       }}
     >
-      <NotificationMarker variant='positive' {...args}>
+      <NotificationMarker type='positive' {...args}>
         Live
       </NotificationMarker>
-      <NotificationMarker variant='negative' {...args}>
+      <NotificationMarker type='negative' {...args}>
         Rec
       </NotificationMarker>
-      <NotificationMarker variant='primary' {...args}>
+      <NotificationMarker type='primary' {...args}>
         1 new message
       </NotificationMarker>
     </div>
