@@ -1105,6 +1105,407 @@ it('should show message and active filter icon when there is no data after manua
   expect(filterIcon).toBeTruthy();
 });
 
+it('should not filter if global filter is not set', async () => {
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+      ],
+    },
+  ];
+
+  const data = mockedData();
+
+  const { container } = render(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={undefined}
+    />,
+  );
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+});
+
+it('should update rows when global filter changes', async () => {
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+      ],
+    },
+  ];
+  const data = mockedData();
+
+  let globalFilterValue = 'Name2';
+
+  const { container, rerender } = render(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(1);
+  expect(rows.item(0).textContent).toContain('Description2');
+
+  globalFilterValue = 'Name3';
+
+  rerender(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(1);
+  expect(rows.item(0).textContent).toContain('Description3');
+});
+
+it('should filter rows with both global and column filters', async () => {
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          Filter: tableFilters.TextFilter(),
+          fieldType: 'text',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+      ],
+    },
+  ];
+  const data = [
+    {
+      name: 'Name11',
+      description: 'Description11',
+    },
+    {
+      name: 'Name12',
+      description: 'Description12',
+    },
+    {
+      name: 'Name22',
+      description: 'Description22',
+    },
+  ];
+
+  let globalFilterValue = '';
+  const { container, rerender } = render(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  globalFilterValue = 'Name1';
+
+  rerender(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(2);
+  expect(rows.item(0).textContent).toContain('Description11');
+  expect(rows.item(1).textContent).toContain('Description12');
+
+  await setFilter(container, '2');
+
+  rerender(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(1);
+  expect(rows.item(0).textContent).toContain('Description12');
+
+  globalFilterValue = '';
+
+  rerender(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(2);
+  expect(rows.item(0).textContent).toContain('Description12');
+  expect(rows.item(1).textContent).toContain('Description22');
+});
+
+it('should show empty filtered table content with global filter', async () => {
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+      ],
+    },
+  ];
+  const data = mockedData();
+
+  const emptyFilteredTableContent = 'Empty table filtered content';
+  let globalFilterValue = 'Name2';
+
+  const { container, rerender } = render(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      emptyFilteredTableContent={emptyFilteredTableContent}
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(1);
+  expect(rows.item(0).textContent).toContain('Description2');
+
+  globalFilterValue = 'Name4';
+
+  rerender(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      emptyFilteredTableContent={emptyFilteredTableContent}
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(0);
+  expect(container.textContent).toContain(emptyFilteredTableContent);
+});
+
+it('should not show empty filtered table content when global filter is empty', async () => {
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+      ],
+    },
+  ];
+  const data: { name: string; description: string }[] = [];
+
+  const emptyFilteredTableContent = 'Empty table filtered content';
+  const emptyTableContent = 'Empty table content';
+
+  let globalFilterValue: string | undefined = undefined;
+
+  const { container, rerender } = render(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent={emptyTableContent}
+      emptyFilteredTableContent={emptyFilteredTableContent}
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  expect(container.textContent).toContain(emptyTableContent);
+  expect(container.textContent).not.toContain(emptyFilteredTableContent);
+
+  globalFilterValue = '';
+
+  rerender(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent={emptyTableContent}
+      emptyFilteredTableContent={emptyFilteredTableContent}
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  expect(container.textContent).toContain(emptyTableContent);
+  expect(container.textContent).not.toContain(emptyFilteredTableContent);
+});
+
+it('should disable global filter column with disableGlobalFilter', async () => {
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+          disableGlobalFilter: true,
+        },
+      ],
+    },
+  ];
+  const data = mockedData();
+
+  let globalFilterValue = 'Name2';
+
+  const { container, rerender } = render(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(1);
+  expect(rows.item(0).textContent).toContain('Description2');
+
+  globalFilterValue = 'Description2';
+
+  rerender(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(0);
+});
+
+it('should not global filter with manualGlobalFilter', async () => {
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+          disableGlobalFilter: true,
+        },
+      ],
+    },
+  ];
+  const data = mockedData();
+
+  let globalFilterValue = '';
+
+  const { container, rerender } = render(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+      manualGlobalFilter={true}
+    />,
+  );
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  globalFilterValue = 'Description2';
+
+  rerender(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+      manualGlobalFilter={true}
+    />,
+  );
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+});
+
 it('should not trigger sorting when filter is clicked', async () => {
   const onFilter = jest.fn();
   const onSort = jest.fn();
@@ -2477,7 +2878,7 @@ it('should handle table resize only when some columns were resized', () => {
       triggerResize = onResize;
       return [
         jest.fn(),
-        ({ disconnect: jest.fn() } as unknown) as ResizeObserver,
+        { disconnect: jest.fn() } as unknown as ResizeObserver,
       ];
     });
   const columns: Column<TestDataType>[] = [
@@ -2832,9 +3233,8 @@ it('should render action column with column manager', async () => {
   });
 
   expect(container.querySelectorAll('[role="columnheader"]').length).toBe(3);
-  const actionColumn = container.querySelectorAll<HTMLInputElement>(
-    '.iui-slot',
-  );
+  const actionColumn =
+    container.querySelectorAll<HTMLInputElement>('.iui-slot');
   expect(
     actionColumn[0].firstElementChild?.className.includes(
       'iui-button iui-borderless',
@@ -2957,9 +3357,8 @@ it('should hide column when deselected in column manager', async () => {
 
   const columnManager = container.querySelector('.iui-button') as HTMLElement;
   await userEvent.click(columnManager);
-  const columnManagerColumns = document.querySelectorAll<HTMLLIElement>(
-    '.iui-menu-item',
-  );
+  const columnManagerColumns =
+    document.querySelectorAll<HTMLLIElement>('.iui-menu-item');
   await userEvent.click(columnManagerColumns[1]);
 
   headerCells = container.querySelectorAll<HTMLDivElement>(
@@ -3003,9 +3402,8 @@ it('should be disabled in column manager if `disableToggleVisibility` is true', 
   const columnManager = container.querySelector('.iui-button') as HTMLElement;
 
   await userEvent.click(columnManager);
-  const columnManagerColumns = document.querySelectorAll<HTMLLIElement>(
-    '.iui-menu-item',
-  );
+  const columnManagerColumns =
+    document.querySelectorAll<HTMLLIElement>('.iui-menu-item');
   expect(columnManagerColumns[0].classList).toContain('iui-disabled');
 
   expect(
@@ -3091,9 +3489,8 @@ it('should add expander column manually', () => {
   const rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
 
-  const expanders = container.querySelectorAll<HTMLButtonElement>(
-    '.iui-row-expander',
-  );
+  const expanders =
+    container.querySelectorAll<HTMLButtonElement>('.iui-row-expander');
   expect(expanders.length).toBe(3);
   expect(expanders[0].disabled).toBe(false);
   expect(expanders[1].disabled).toBe(true);

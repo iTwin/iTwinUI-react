@@ -22,6 +22,7 @@ import {
   usePagination,
   useColumnOrder,
   Column,
+  useGlobalFilter,
 } from 'react-table';
 import { ProgressRadial } from '../ProgressIndicators';
 import { useTheme, CommonProps, useResizeObserver, mergeRefs } from '../utils';
@@ -95,7 +96,7 @@ export type TablePaginatorRendererProps = {
  * columns and data must be memoized.
  */
 export type TableProps<
-  T extends Record<string, unknown> = Record<string, unknown>
+  T extends Record<string, unknown> = Record<string, unknown>,
 > = Omit<TableOptions<T>, 'disableSortBy'> & {
   /**
    * Flag whether data is loading.
@@ -179,6 +180,12 @@ export type TableProps<
    */
   onFilter?: (filters: TableFilterValue<T>[], state: TableState<T>) => void;
   /**
+   * Value used for global filtering.
+   * Use with `globalFilter` and/or `manualGlobalFilter` to handle filtering yourself e.g. filter in server-side.
+   * Must be memoized.
+   */
+  globalFilterValue?: unknown;
+  /**
    * Content shown when there is no data after filtering.
    */
   emptyFilteredTableContent?: React.ReactNode;
@@ -191,9 +198,7 @@ export type TableProps<
    * Function that should return custom props passed to the each row.
    * Must be memoized.
    */
-  rowProps?: (
-    row: Row<T>,
-  ) => React.ComponentPropsWithRef<'div'> & {
+  rowProps?: (row: Row<T>) => React.ComponentPropsWithRef<'div'> & {
     status?: 'positive' | 'warning' | 'negative';
   };
   /**
@@ -275,11 +280,10 @@ export type TableProps<
 } & Omit<CommonProps, 'title'>;
 
 // Original type for some reason is missing sub-columns
-type ColumnType<
-  T extends Record<string, unknown> = Record<string, unknown>
-> = Column<T> & {
-  columns: ColumnType[];
-};
+type ColumnType<T extends Record<string, unknown> = Record<string, unknown>> =
+  Column<T> & {
+    columns: ColumnType[];
+  };
 const flattenColumns = (columns: ColumnType[]): ColumnType[] => {
   const flatColumns: ColumnType[] = [];
   columns.forEach((column) => {
@@ -334,7 +338,7 @@ const flattenColumns = (columns: ColumnType[]): ColumnType[] => {
  * />
  */
 export const Table = <
-  T extends Record<string, unknown> = Record<string, unknown>
+  T extends Record<string, unknown> = Record<string, unknown>,
 >(
   props: TableProps<T>,
 ): JSX.Element => {
@@ -359,6 +363,7 @@ export const Table = <
     subComponent,
     onExpand,
     onFilter,
+    globalFilterValue,
     emptyFilteredTableContent,
     filterTypes: filterFunctions,
     expanderCell,
@@ -500,6 +505,7 @@ export const Table = <
     useResizeColumns(ownerDocument),
     useFilters,
     useSubRowFiltering(hasAnySubRows),
+    useGlobalFilter,
     useSortBy,
     useExpanded,
     usePagination,
@@ -520,13 +526,13 @@ export const Table = <
     prepareRow,
     state,
     allColumns,
-    filteredFlatRows,
     dispatch,
     page,
     gotoPage,
     setPageSize,
     flatHeaders,
     visibleColumns,
+    setGlobalFilter,
   } = instance;
 
   const ariaDataAttributes = Object.entries(rest).reduce(
@@ -539,9 +545,10 @@ export const Table = <
     {} as Record<string, string>,
   );
 
-  const areFiltersSet = allColumns.some(
-    (column) => column.filterValue != null && column.filterValue !== '',
-  );
+  const areFiltersSet =
+    allColumns.some(
+      (column) => column.filterValue != null && column.filterValue !== '',
+    ) || !!globalFilterValue;
 
   const showFilterButton = (column: HeaderGroup<T>) =>
     (data.length !== 0 || areFiltersSet) && column.canFilter;
@@ -582,6 +589,10 @@ export const Table = <
   );
 
   React.useEffect(() => {
+    setGlobalFilter(globalFilterValue);
+  }, [globalFilterValue, setGlobalFilter]);
+
+  React.useEffect(() => {
     setPageSize(pageSize);
   }, [pageSize, setPageSize]);
 
@@ -619,9 +630,8 @@ export const Table = <
       // Update column widths when table was resized
       flatHeaders.forEach((header) => {
         if (columnRefs.current[header.id]) {
-          header.resizeWidth = columnRefs.current[
-            header.id
-          ].getBoundingClientRect().width;
+          header.resizeWidth =
+            columnRefs.current[header.id].getBoundingClientRect().width;
         }
       });
 
@@ -642,9 +652,8 @@ export const Table = <
       const newColumnWidths: Record<string, number> = {};
       flatHeaders.forEach((column) => {
         if (columnRefs.current[column.id]) {
-          newColumnWidths[column.id] = columnRefs.current[
-            column.id
-          ].getBoundingClientRect().width;
+          newColumnWidths[column.id] =
+            columnRefs.current[column.id].getBoundingClientRect().width;
         }
       });
       dispatch({ type: tableResizeEndAction, columnWidths: newColumnWidths });
@@ -801,7 +810,8 @@ export const Table = <
                         ref={(el) => {
                           if (el) {
                             columnRefs.current[column.id] = el;
-                            column.resizeWidth = el.getBoundingClientRect().width;
+                            column.resizeWidth =
+                              el.getBoundingClientRect().width;
                           }
                         }}
                       >
@@ -914,7 +924,7 @@ export const Table = <
             </div>
           )}
           {!isLoading &&
-            (data.length === 0 || filteredFlatRows.length === 0) &&
+            (data.length === 0 || rows.length === 0) &&
             areFiltersSet && (
               <div className='iui-table-empty'>
                 <div>{emptyFilteredTableContent}</div>
