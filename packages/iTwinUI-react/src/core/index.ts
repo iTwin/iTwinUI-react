@@ -59,6 +59,15 @@ export type { ComboBoxProps } from './ComboBox';
 export { DatePicker, generateLocalizedStrings } from './DatePicker';
 export type { DatePickerProps } from './DatePicker';
 
+export { Dialog } from './Dialog';
+export type {
+  DialogProps,
+  DialogButtonBarProps,
+  DialogContentProps,
+  DialogMainProps,
+  DialogTitleBarProps,
+} from './Dialog';
+
 export { DropdownMenu } from './DropdownMenu';
 export type { DropdownMenuProps } from './DropdownMenu';
 
@@ -200,6 +209,7 @@ export type { SurfaceProps } from './Surface';
 export {
   Table,
   tableFilters,
+  BaseFilter,
   FilterButtonBar,
   DefaultCell,
   EditableCell,
