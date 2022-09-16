@@ -12,21 +12,11 @@ import mdx from '@astrojs/mdx';
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [
-    react(),
-    mdx({
-      rehypePlugins: {
-        extends: [rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }], rehypeToc],
-      },
-    }),
-  ],
-  // markdown: {
-  //   rehypePlugins: ['rehype-slug', ['rehype-autolink-headings', { behavior: 'wrap' }], rehypeToc],
-  // },
+  integrations: [react(), mdx()],
+  markdown: {
+    rehypePlugins: [rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }], rehypeToc],
+  },
   vite: {
-    legacy: {
-      // buildSsrCjsExternalHeuristics: true,
-    },
     ssr: {
       noExternal: [
         '@fontsource/noto-sans',
@@ -38,9 +28,6 @@ export default defineConfig({
         // 'react-dom',
       ],
     },
-  },
-  legacy: {
-    // astroFlavoredMarkdown: true,
   },
 });
 
