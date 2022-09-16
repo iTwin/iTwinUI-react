@@ -405,10 +405,9 @@ export const Table = <
     return flatColumns.some((column) => column.id === SELECTION_CELL_ID);
   }, [columns]);
 
-  const shiftListener = React.useCallback(
+  const disableUserSelect = React.useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Shift') {
-        console.log('Shift Pressed');
         ownerDocument &&
           (ownerDocument.documentElement.style.userSelect = 'none');
       }
@@ -416,10 +415,9 @@ export const Table = <
     [ownerDocument],
   );
 
-  const shiftListener1 = React.useCallback(
+  const enableUserSelect = React.useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Shift') {
-        console.log('Shift Released');
         ownerDocument && (ownerDocument.documentElement.style.userSelect = '');
       }
     },
@@ -428,23 +426,21 @@ export const Table = <
 
   // Add onkeydown event listeners
   React.useEffect(() => {
-    console.log('Ran once');
     if (selectionMode === 'multi') {
-      document.addEventListener('keydown', shiftListener);
-      document.addEventListener('keyup', shiftListener1);
+      document.addEventListener('keydown', disableUserSelect);
+      document.addEventListener('keyup', enableUserSelect);
     }
-  }, [selectionMode, shiftListener, shiftListener1]);
+  }, [selectionMode, disableUserSelect, enableUserSelect]);
 
   // Remove onkeydown event listeners
   React.useLayoutEffect(() => {
     return () => {
-      console.log('Removed');
       if (selectionMode === 'multi') {
-        document.removeEventListener('keydown', shiftListener);
-        document.removeEventListener('keyup', shiftListener1);
+        document.removeEventListener('keydown', disableUserSelect);
+        document.removeEventListener('keyup', enableUserSelect);
       }
     };
-  }, [selectionMode, shiftListener, shiftListener1]);
+  }, [selectionMode, disableUserSelect, enableUserSelect]);
 
   const tableStateReducer = React.useCallback(
     (
