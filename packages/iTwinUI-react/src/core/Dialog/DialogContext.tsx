@@ -49,6 +49,7 @@ export type DialogContextProps = {
   isDraggable?: boolean;
   /**
    * Flag whether dialog is resizable.
+   * @default false
    */
   isResizable?: boolean;
   /**

@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { getBoundedValue, getTranslateValues, getWindow } from '../functions';
+import { getBoundedValue, getTranslateValues } from '../functions';
 
 export type ResizerProps = {
   /**
@@ -25,6 +25,7 @@ export type ResizerProps = {
 /**
  * Component that allows to resize parent element.
  * Parent must have `position: relative`.
+ * @private
  * @example
  * const ref = React.useRef<HTMLDivElement>(null);
  * return (
@@ -79,91 +80,92 @@ export const Resizer = (props: ResizerProps) => {
       const clientX = getBoundedValue(
         event.clientX,
         containerRect?.left ?? 0,
-        containerRect?.right ?? getWindow()?.innerWidth ?? 0,
+        containerRect?.right ??
+          elementRef.current.ownerDocument.documentElement.clientWidth ??
+          0,
       );
       const clientY = getBoundedValue(
         event.clientY,
         containerRect?.top ?? 0,
-        containerRect?.bottom ?? getWindow()?.innerHeight ?? 0,
+        containerRect?.bottom ??
+          elementRef.current.ownerDocument.documentElement.clientHeight ??
+          0,
       );
+
+      const diffX = initialPointerX - clientX;
+      const diffY = initialPointerY - clientY;
 
       switch (resizer) {
         case 'top-left': {
-          const newHeight = initialHeight + (initialPointerY - clientY);
+          const newHeight = initialHeight + diffY;
           if (newHeight >= minHeight) {
             height = elementRef.current.style.height = `${newHeight}px`;
-            translateY = initialTranslateY - (initialPointerY - clientY);
+            translateY = initialTranslateY - diffY;
           }
-          const newWidth = initialWidth + (initialPointerX - clientX);
+          const newWidth = initialWidth + diffX;
           if (newWidth >= minWidth) {
             width = elementRef.current.style.width = `${newWidth}px`;
-            translateX = initialTranslateX - (initialPointerX - clientX);
+            translateX = initialTranslateX - diffX;
           }
           elementRef.current.style.transform = `translate(${translateX}px, ${translateY}px)`;
           break;
         }
         case 'top': {
-          const newHeight = initialHeight + (initialPointerY - clientY);
+          const newHeight = initialHeight + diffY;
           if (newHeight < minHeight) {
             break;
           }
           height = elementRef.current.style.height = `${newHeight}px`;
-          translateY = initialTranslateY - (initialPointerY - clientY);
+          translateY = initialTranslateY - diffY;
           elementRef.current.style.transform = `translate(${translateX}px, ${translateY}px)`;
           break;
         }
         case 'top-right': {
-          const newHeight = initialHeight + (initialPointerY - clientY);
+          const newHeight = initialHeight + diffY;
           if (newHeight >= minHeight) {
             height = elementRef.current.style.height = `${newHeight}px`;
-            translateY = initialTranslateY - (initialPointerY - clientY);
+            translateY = initialTranslateY - diffY;
           }
-          width = elementRef.current.style.width = `${
-            initialWidth - (initialPointerX - clientX)
-          }px`;
+          width = elementRef.current.style.width = `${initialWidth - diffX}px`;
           elementRef.current.style.transform = `translate(${translateX}px, ${translateY}px)`;
           break;
         }
         case 'right': {
-          width = elementRef.current.style.width = `${
-            initialWidth - (initialPointerX - clientX)
-          }px`;
+          width = elementRef.current.style.width = `${initialWidth - diffX}px`;
           break;
         }
         case 'bottom-right': {
-          width = elementRef.current.style.width = `${
-            initialWidth - (initialPointerX - clientX)
-          }px`;
+          width = elementRef.current.style.width = `${initialWidth - diffX}px`;
           height = elementRef.current.style.height = `${
-            initialHeight - (initialPointerY - clientY)
+            initialHeight - diffY
           }px`;
           break;
         }
         case 'bottom': {
           height = elementRef.current.style.height = `${
-            initialHeight - (initialPointerY - clientY)
+            initialHeight - diffY
           }px`;
           break;
         }
         case 'bottom-left': {
-          const newWidth = initialWidth + (initialPointerX - clientX);
+          const newWidth = initialWidth + diffX;
           if (newWidth >= minWidth) {
             width = elementRef.current.style.width = `${newWidth}px`;
-            translateX = initialTranslateX - (initialPointerX - clientX);
+            translateX = initialTranslateX - diffX;
           }
           height = elementRef.current.style.height = `${
-            initialHeight - (initialPointerY - clientY)
+            initialHeight - diffY
           }px`;
           elementRef.current.style.transform = `translate(${translateX}px, ${translateY}px)`;
           break;
         }
         case 'left': {
-          const newWidth = initialWidth + (initialPointerX - clientX);
+          const newWidth = initialWidth + diffX;
           if (newWidth < minWidth) {
             break;
           }
           width = elementRef.current.style.width = `${newWidth}px`;
-          translateX = initialTranslateX - (initialPointerX - clientX);
+          translateX = initialTranslateX - diffX;
           elementRef.current.style.transform = `translate(${translateX}px, ${translateY}px)`;
           break;
         }

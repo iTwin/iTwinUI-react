@@ -143,14 +143,25 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
       }
       const rect = dialogRef.current?.getBoundingClientRect();
       const [translateX, translateY] = getTranslateValues(dialogRef.current);
-      setStyle({
+      setStyle((oldStyle) => ({
+        ...oldStyle,
         width: rect?.width,
         height: rect?.height,
         left: dialogRef.current?.offsetLeft,
         top: dialogRef.current?.offsetTop,
         transform: `translate(${translateX}px,${translateY}px)`,
-      });
+      }));
     }, [isDraggable, isOpen]);
+
+    const setResizeStyle = React.useCallback(
+      (newStyle: React.CSSProperties) => {
+        setStyle((oldStyle) => ({
+          ...oldStyle,
+          ...newStyle,
+        }));
+      },
+      [],
+    );
 
     const content = (
       <div
@@ -180,7 +191,7 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
           <Resizer
             elementRef={dialogRef}
             containerRef={dialogContext.dialogRootRef}
-            setStyle={setStyle}
+            setStyle={setResizeStyle}
           />
         )}
         {children}
