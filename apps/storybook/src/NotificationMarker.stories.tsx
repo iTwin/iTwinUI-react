@@ -21,6 +21,9 @@ export default {
       options: ['primary', 'positive', 'warning', 'negative'],
     },
   },
+  args: {
+    active: true,
+  },
   title: 'Core/NotificationMarker',
   decorators: [
     (Story) => (
@@ -38,7 +41,7 @@ export default {
 export const Basic: Story<NotificationMarkerProps> = (args) => {
   console.log(args);
   return (
-    <IconButton>
+    <IconButton styleType='borderless'>
       <NotificationMarker {...args}>{args.children}</NotificationMarker>
     </IconButton>
   );

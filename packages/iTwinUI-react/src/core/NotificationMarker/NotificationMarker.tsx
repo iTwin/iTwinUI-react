@@ -8,6 +8,9 @@ import cx from 'classnames';
 import '@itwin/itwinui-css/css/notification-marker.css';
 
 export type NotificationMarkerProps = {
+  /**
+   * Content of the NotificationMarker.
+   */
   children: React.ReactNode;
   /**
    * Type of notification
@@ -21,14 +24,41 @@ export type NotificationMarkerProps = {
   variant?: 'primary' | 'positive' | 'warning' | 'negative';
   /**
    * Set this to true for important notifications
+   * @default false
    */
   urgent?: boolean;
+  /**
+   * Set this programmatically to false when you just want to render the passed children without the notification
+   * @default true
+   * @example
+   * let [newMessagesCount, ...] = useState(0);
+   * ...
+   * <NotificationMarker active={newMessagesCount > 0}>
+   *   <SvgNotification />
+   * </NotificationMarker>
+   */
+  active?: boolean;
 } & Omit<CommonProps, 'title'>;
 
 /**
- * Describe me here!
+ * A small box to quickly grab user attention and communicate a brief message
  * @example
- * Example usages go here!
+ * <Alert>This is a basic alert.</Alert>
+ * <Alert type='positive'>This is a positive alert.</Alert>
+ * <Alert type='warning'>This is a warning alert.</Alert>
+ * <Alert type='negative'>This is a negative alert.</Alert>
+ * <Alert type='positive' clickableText="I am a clickable text" onClick={()=>alert("Pressed")}>This is a positive alert with a clickable text</Alert>
+ */
+
+/**
+ * A small notification circle to the top-right of the passed children prop. This can be applied to pretty much anything but mostly intended for icons within default / borderless buttons.
+ * @example
+ * <NotificationMarker type='positive' urgent={true}>Live</NotificationMarker>
+ * @example
+ * // Primary Intended Use-case
+ * <IconButton styleType='borderless'>
+ *   <NotificationMarker><SvgNotification /></NotificationMarker>
+ * </IconButton>
  */
 export const NotificationMarker = (props: NotificationMarkerProps) => {
   const {
@@ -36,6 +66,7 @@ export const NotificationMarker = (props: NotificationMarkerProps) => {
     children,
     variant = 'primary',
     urgent = false,
+    active = true,
     ...rest
   } = props;
   console.log(props);
@@ -51,7 +82,9 @@ export const NotificationMarker = (props: NotificationMarkerProps) => {
   return (
     <div
       className={cx(
-        { [`iui-notification-${variant}`]: true, 'iui-urgent': urgent },
+        active
+          ? { [`iui-notification-${variant}`]: true, 'iui-urgent': urgent }
+          : {},
         className,
       )}
       {...rest}
