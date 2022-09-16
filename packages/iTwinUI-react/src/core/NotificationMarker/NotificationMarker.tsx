@@ -3,12 +3,11 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { useTheme } from '../utils';
+import { CommonProps, useTheme } from '../utils';
 import cx from 'classnames';
 import '@itwin/itwinui-css/css/notification-marker.css';
 
 export type NotificationMarkerProps = {
-  // children: React.ReactNode;
   children: React.ReactNode;
   className?: string;
   /**
@@ -25,7 +24,7 @@ export type NotificationMarkerProps = {
    * Set this to true for important notifications
    */
   urgent?: boolean;
-};
+} & Omit<CommonProps, 'title'>;
 
 /**
  * Describe me here!
