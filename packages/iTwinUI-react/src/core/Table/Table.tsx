@@ -426,21 +426,25 @@ export const Table = <
     [ownerDocument],
   );
 
-  // Add onkeydown event listener
+  // Add onkeydown event listeners
   React.useEffect(() => {
     console.log('Ran once');
-    document.addEventListener('keydown', shiftListener);
-    document.addEventListener('keyup', shiftListener1);
-  }, [shiftListener, shiftListener1]);
+    if (selectionMode === 'multi') {
+      document.addEventListener('keydown', shiftListener);
+      document.addEventListener('keyup', shiftListener1);
+    }
+  }, [selectionMode, shiftListener, shiftListener1]);
 
-  // Remove onkeydown event listener
+  // Remove onkeydown event listeners
   React.useLayoutEffect(() => {
     return () => {
       console.log('Removed');
-      document.removeEventListener('keydown', shiftListener);
-      document.removeEventListener('keyup', shiftListener1);
+      if (selectionMode === 'multi') {
+        document.removeEventListener('keydown', shiftListener);
+        document.removeEventListener('keyup', shiftListener1);
+      }
     };
-  }, [shiftListener, shiftListener1]);
+  }, [selectionMode, shiftListener, shiftListener1]);
 
   const tableStateReducer = React.useCallback(
     (
@@ -611,7 +615,7 @@ export const Table = <
         selectRowOnClick &&
         !event.isDefaultPrevented()
       ) {
-        if (event.shiftKey) {
+        if (selectionMode === 'multi' && event.shiftKey) {
           dispatch({
             type: shiftRowSelectedAction,
             id: row.id,
@@ -813,14 +817,6 @@ export const Table = <
             ...style,
           },
         })}
-        onKeyDown={(e) => {
-          if (e.shiftKey) {
-            e.currentTarget.style.userSelect = 'none';
-          }
-        }}
-        onKeyUp={(e) => {
-          e.currentTarget.style.userSelect = '';
-        }}
         {...ariaDataAttributes}
       >
         <div
