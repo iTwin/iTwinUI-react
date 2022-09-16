@@ -405,6 +405,43 @@ export const Table = <
     return flatColumns.some((column) => column.id === SELECTION_CELL_ID);
   }, [columns]);
 
+  const shiftListener = React.useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Shift') {
+        console.log('Shift Pressed');
+        ownerDocument &&
+          (ownerDocument.documentElement.style.userSelect = 'none');
+      }
+    },
+    [ownerDocument],
+  );
+
+  const shiftListener1 = React.useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Shift') {
+        console.log('Shift Released');
+        ownerDocument && (ownerDocument.documentElement.style.userSelect = '');
+      }
+    },
+    [ownerDocument],
+  );
+
+  // Add onkeydown event listener
+  React.useEffect(() => {
+    console.log('Ran once');
+    document.addEventListener('keydown', shiftListener);
+    document.addEventListener('keyup', shiftListener1);
+  }, [shiftListener, shiftListener1]);
+
+  // Remove onkeydown event listener
+  React.useLayoutEffect(() => {
+    return () => {
+      console.log('Removed');
+      document.removeEventListener('keydown', shiftListener);
+      document.removeEventListener('keyup', shiftListener1);
+    };
+  }, [shiftListener, shiftListener1]);
+
   const tableStateReducer = React.useCallback(
     (
       newState: TableState<T>,
