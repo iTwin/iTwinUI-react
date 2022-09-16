@@ -424,16 +424,14 @@ export const Table = <
     [ownerDocument],
   );
 
-  // Add onkeydown event listeners
   React.useEffect(() => {
+    // Add onkeydown event listeners (during creation)
     if (selectionMode === 'multi') {
       document.addEventListener('keydown', disableUserSelect);
       document.addEventListener('keyup', enableUserSelect);
     }
-  }, [selectionMode, disableUserSelect, enableUserSelect]);
 
-  // Remove onkeydown event listeners
-  React.useLayoutEffect(() => {
+    // Remove onkeydown event listeners (during destruction)
     return () => {
       if (selectionMode === 'multi') {
         document.removeEventListener('keydown', disableUserSelect);
