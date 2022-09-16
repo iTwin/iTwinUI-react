@@ -21,7 +21,7 @@ export type NotificationMarkerProps = {
    * 'negative' = red,
    * @default 'primary'
    */
-  variant?: 'primary' | 'positive' | 'warning' | 'negative';
+  type?: 'primary' | 'positive' | 'warning' | 'negative';
   /**
    * Set this to true for important notifications
    * @default false
@@ -41,16 +41,6 @@ export type NotificationMarkerProps = {
 } & Omit<CommonProps, 'title'>;
 
 /**
- * A small box to quickly grab user attention and communicate a brief message
- * @example
- * <Alert>This is a basic alert.</Alert>
- * <Alert type='positive'>This is a positive alert.</Alert>
- * <Alert type='warning'>This is a warning alert.</Alert>
- * <Alert type='negative'>This is a negative alert.</Alert>
- * <Alert type='positive' clickableText="I am a clickable text" onClick={()=>alert("Pressed")}>This is a positive alert with a clickable text</Alert>
- */
-
-/**
  * A small notification circle to the top-right of the passed children prop. This can be applied to pretty much anything but mostly intended for icons within default / borderless buttons.
  * @example
  * <NotificationMarker type='positive' urgent={true}>Live</NotificationMarker>
@@ -64,7 +54,7 @@ export const NotificationMarker = (props: NotificationMarkerProps) => {
   const {
     className,
     children,
-    variant = 'primary',
+    type = 'primary',
     urgent = false,
     active = true,
     ...rest
@@ -83,7 +73,7 @@ export const NotificationMarker = (props: NotificationMarkerProps) => {
     <div
       className={cx(
         active
-          ? { [`iui-notification-${variant}`]: true, 'iui-urgent': urgent }
+          ? { [`iui-notification-${type}`]: true, 'iui-urgent': urgent }
           : {},
         className,
       )}
