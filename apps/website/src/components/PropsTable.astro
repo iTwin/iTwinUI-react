@@ -42,16 +42,18 @@ const { props } = [...docgenResults].find((docs) => docs['displayName'] === comp
       </tr>
     </thead>
     <tbody>
-      {Object.entries(props).map(([key, value]) => (
-        <tr>
-          <td class='mono'>{value.name || key}</td>
-          <td>
-            <div class='md' set:html={snarkdown(value.description)} />
-            <div class='types'>{value.type?.name || value.flowType.raw}</div>
-          </td>
-          <td class='mono'>{value.defaultValue?.value ?? value.defaultValue ?? ''}</td>
-        </tr>
-      ))}
+      {
+        Object.entries(props).map(([key, value]) => (
+          <tr>
+            <td class='mono'>{value.name || key}</td>
+            <td>
+              <div class='md' set:html={snarkdown(value.description)} />
+              <div class='types'>{value.type?.name || value.flowType.raw}</div>
+            </td>
+            <td class='mono'>{value.defaultValue?.value ?? value.defaultValue ?? ''}</td>
+          </tr>
+        ))
+      }
     </tbody>
   </table>
 </div>

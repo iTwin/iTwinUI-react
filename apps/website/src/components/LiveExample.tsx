@@ -35,11 +35,10 @@ html { color-scheme: dark; }
 
 type Props = {
   code: string;
-  ssr?: () => JSX.Element;
   staticComponent?: React.ReactNode;
 };
 
-export default ({ code = '', ssr, staticComponent, ...rest }: Props) => {
+export default ({ code = '', staticComponent, ...rest }: Props) => {
   const id = React.useId();
   const previewRef = React.useRef<SandpackPreviewRef>();
   const [, forceUpdate] = React.useReducer((x) => x + 1, 0);
@@ -48,7 +47,7 @@ export default ({ code = '', ssr, staticComponent, ...rest }: Props) => {
   // if undefined, it means the user hasn't expanded the code even once
   const [isExpanded, setIsExpanded] = React.useState<boolean | undefined>(undefined);
 
-  const shouldShowStatic = !isDoneLoading || isExpanded === undefined;
+  const shouldShowStatic = false; // !isDoneLoading || isExpanded === undefined;
 
   // TODO: Instead of waiting for "Show code", automatically load this in the background
   // and swap out the static component

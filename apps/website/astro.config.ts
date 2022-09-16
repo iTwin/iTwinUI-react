@@ -25,10 +25,18 @@ export default defineConfig({
   // },
   vite: {
     legacy: {
-      buildSsrCjsExternalHeuristics: true,
+      // buildSsrCjsExternalHeuristics: true,
     },
     ssr: {
-      noExternal: ['@fontsource/noto-sans'],
+      noExternal: [
+        '@fontsource/noto-sans',
+        // '@itwin/itwinui-css',
+        // '@codesandbox/*',
+        // '@itwin/itwinui-icons-react',
+        // '@itwin/itwinui-illustrations-react',
+        // 'react',
+        // 'react-dom',
+      ],
     },
   },
   legacy: {

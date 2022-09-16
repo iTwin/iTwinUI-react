@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import * as React from 'react';
 import { Button, Wizard } from '@itwin/itwinui-react';
+
 export default () => {
   const [currentStep, setCurrentStep] = React.useState(2);
   const steps = [

@@ -3,8 +3,9 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import * as React from 'react';
-import { Tile, TagContainer, Tag, Badge, MenuItem, IconButton } from '@itwin/itwinui-react';
-import { SvgStar, SvgInfo, SvgPlaceholder } from '@itwin/itwinui-icons-react';
+import { Tile, TagContainer, Tag, MenuItem, IconButton } from '@itwin/itwinui-react';
+import _icons from '@itwin/itwinui-icons-react';
+const { SvgStar, SvgInfo, SvgPlaceholder } = _icons;
 
 export default () => {
   return (

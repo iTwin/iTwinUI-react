@@ -5,7 +5,7 @@
 import * as React from 'react';
 import { ComboBox } from '@itwin/itwinui-react';
 
-export default () => {
+export default function ComboBoxDemo() {
   const options = React.useMemo(
     () => [
       { label: 'Apple', value: 'apple' },
@@ -19,4 +19,4 @@ export default () => {
   );
 
   return <ComboBox options={options} inputProps={{ placeholder: 'Pick a fruit, any fruit' }} />;
-};
+}

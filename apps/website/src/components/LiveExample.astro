@@ -1,7 +1,7 @@
 ---
 import * as AllExamples from '~/examples';
 import LiveExample from './LiveExample';
-import fs from 'fs';
+import fs from 'node:fs';
 
 export type Props = {
   /** name of the file to read code example from, should be located in ~/examples folder */
@@ -31,15 +31,7 @@ const MainComponent = AllExamples[`${capitalize(componentName)}MainExample`];
 // const staticSandpackCss = getSandpackCssText();
 ---
 
-<LiveExample ssr={MainComponent} code={code} client:visible>
-  {
-    !!StaticComponent ? (
-      <StaticComponent slot='staticComponent' />
-    ) : (
-      <MainComponent slot='staticComponent' />
-    )
-  }
-</LiveExample>
+<LiveExample code={code} client:only='react' />
 
 <style lang='scss' is:global>
   .live-example {

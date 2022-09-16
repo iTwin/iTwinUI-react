@@ -1,4 +1,5 @@
 ---
+import '@itwin/itwinui-css/css/all.css';
 import Global from './_global.astro';
 import Header from '~/components/Header.astro';
 import ITwinUILogo from '~/components/iTwinUILogo';
@@ -41,31 +42,31 @@ const currentPage = new URL(Astro.request.url).pathname;
 
       <div class='demo-carousel-list iui-body'>
         <div class='demo-wrapper'>
-          <div class='demo-box'><AlertDemo /></div>
+          <div class='demo-box'><AlertDemo client:only='react' /></div>
           <h3>Alert</h3>
           <p>A small box to quickly grab user attention and communicate a brief message</p>
         </div>
 
         <div class='demo-wrapper'>
-          <div class='demo-box'><DialogDemo /></div>
+          <div class='demo-box'><DialogDemo client:only='react' /></div>
           <h3>Dialog</h3>
           <p>Provides the foundation for building modals and modeless dialogs</p>
         </div>
 
         <div class='demo-wrapper'>
-          <div class='demo-box'><FieldsetDemo /></div>
+          <div class='demo-box'><FieldsetDemo client:only='react' /></div>
           <h3>Fieldset</h3>
           <p>A fieldset is a container grouping interactive components together.</p>
         </div>
 
         <div class='demo-wrapper'>
-          <div class='demo-box'><SliderDemo client:idle /></div>
+          <div class='demo-box'><SliderDemo client:only='react' /></div>
           <h3>Slider</h3>
           <p>Sliders let users make selections from a range of values.</p>
         </div>
 
         <div class='demo-wrapper'>
-          <div class='demo-box'><ComboBoxDemo client:idle /></div>
+          <div class='demo-box'><ComboBoxDemo client:only='react' /></div>
           <h3>ComboBox</h3>
           <p>Allows typing a value to filter and choose from the options in dropdown list.</p>
         </div>

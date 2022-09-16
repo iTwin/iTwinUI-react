@@ -4,7 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 import * as React from 'react';
 import { ToggleSwitch } from '@itwin/itwinui-react';
-import { SvgCheckmark } from '@itwin/itwinui-icons-react';
+import _icons from '@itwin/itwinui-icons-react';
+const { SvgCheckmark } = _icons;
 
 export default () => {
   return (
