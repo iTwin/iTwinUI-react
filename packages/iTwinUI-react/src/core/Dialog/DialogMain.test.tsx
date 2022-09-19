@@ -80,7 +80,7 @@ it('should close on Esc click and move focus back', () => {
 
   const onClose = jest.fn();
   const { container, rerender } = render(
-    <DialogMain isOpen onClose={onClose} isDismissible closeOnEsc>
+    <DialogMain isOpen onClose={onClose} isDismissible closeOnEsc setFocus>
       Here is my dialog content
     </DialogMain>,
   );
@@ -93,11 +93,34 @@ it('should close on Esc click and move focus back', () => {
   expect(document.activeElement).toEqual(dialog);
 
   rerender(
-    <DialogMain isOpen={false} onClose={onClose} isDismissible closeOnEsc>
+    <DialogMain
+      isOpen={false}
+      onClose={onClose}
+      isDismissible
+      closeOnEsc
+      setFocus
+    >
       Here is my dialog content
     </DialogMain>,
   );
   // Bring back focus when dialog is closed
+  expect(document.activeElement).toEqual(button);
+});
+
+it('should not focus dialog when setFocus is false', () => {
+  const { container: buttonContainer } = render(<button>button</button>);
+  const button = buttonContainer.querySelector('button') as HTMLElement;
+  button.focus();
+  expect(document.activeElement).toEqual(button);
+
+  const { container } = render(
+    <DialogMain isOpen setFocus={false}>
+      Here is my dialog content
+    </DialogMain>,
+  );
+
+  const dialog = container.querySelector('.iui-dialog') as HTMLElement;
+  expect(dialog).toBeTruthy();
   expect(document.activeElement).toEqual(button);
 });
 
@@ -157,7 +180,45 @@ it('should reset body overflow on closing and unmounting', () => {
   );
   expect(document.body.style.overflow).toEqual('hidden');
 
-  // Closing by unmounting/destructing the Modal
+  // Closing by unmounting/destructing the dialog
+  unmount();
+  expect(document.body.style.overflow).not.toEqual('hidden');
+});
+
+it('should handle body overflow correctly when there is a dialog inside another dialog', () => {
+  const { rerender, unmount } = render(
+    <DialogMain isOpen preventDocumentScroll>
+      Here is my dialog content
+      <DialogMain isOpen={false} preventDocumentScroll>
+        Here is my second dialog content
+      </DialogMain>
+    </DialogMain>,
+  );
+  expect(document.body.style.overflow).toEqual('hidden');
+
+  // Open second dialog
+  rerender(
+    <DialogMain isOpen preventDocumentScroll>
+      Here is my dialog content
+      <DialogMain isOpen preventDocumentScroll>
+        Here is my second dialog content
+      </DialogMain>
+    </DialogMain>,
+  );
+  expect(document.body.style.overflow).toEqual('hidden');
+
+  // Closing second dialog by setting isOpen to false
+  rerender(
+    <DialogMain isOpen preventDocumentScroll>
+      Here is my dialog content
+      <DialogMain isOpen={false} preventDocumentScroll>
+        Here is my second dialog content
+      </DialogMain>
+    </DialogMain>,
+  );
+  expect(document.body.style.overflow).toEqual('hidden');
+
+  // Closing main dialog by unmounting/destructing it
   unmount();
   expect(document.body.style.overflow).not.toEqual('hidden');
 });
