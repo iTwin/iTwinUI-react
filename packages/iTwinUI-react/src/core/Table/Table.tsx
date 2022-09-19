@@ -22,6 +22,7 @@ import {
   usePagination,
   useColumnOrder,
   Column,
+  useGlobalFilter,
 } from 'react-table';
 import { ProgressRadial } from '../ProgressIndicators';
 import { useTheme, CommonProps, useResizeObserver, mergeRefs } from '../utils';
@@ -180,6 +181,12 @@ export type TableProps<
    * Must be memoized.
    */
   onFilter?: (filters: TableFilterValue<T>[], state: TableState<T>) => void;
+  /**
+   * Value used for global filtering.
+   * Use with `globalFilter` and/or `manualGlobalFilter` to handle filtering yourself e.g. filter in server-side.
+   * Must be memoized.
+   */
+  globalFilterValue?: unknown;
   /**
    * Content shown when there is no data after filtering.
    */
@@ -361,6 +368,7 @@ export const Table = <
     subComponent,
     onExpand,
     onFilter,
+    globalFilterValue,
     emptyFilteredTableContent,
     filterTypes: filterFunctions,
     expanderCell,
@@ -548,6 +556,7 @@ export const Table = <
     useResizeColumns(ownerDocument),
     useFilters,
     useSubRowFiltering(hasAnySubRows),
+    useGlobalFilter,
     useSortBy,
     useExpanded,
     usePagination,
@@ -568,13 +577,13 @@ export const Table = <
     prepareRow,
     state,
     allColumns,
-    filteredFlatRows,
     dispatch,
     page,
     gotoPage,
     setPageSize,
     flatHeaders,
     visibleColumns,
+    setGlobalFilter,
   } = instance;
 
   const ariaDataAttributes = Object.entries(rest).reduce(
@@ -587,9 +596,10 @@ export const Table = <
     {} as Record<string, string>,
   );
 
-  const areFiltersSet = allColumns.some(
-    (column) => column.filterValue != null && column.filterValue !== '',
-  );
+  const areFiltersSet =
+    allColumns.some(
+      (column) => column.filterValue != null && column.filterValue !== '',
+    ) || !!globalFilterValue;
 
   const showFilterButton = (column: HeaderGroup<T>) =>
     (data.length !== 0 || areFiltersSet) && column.canFilter;
@@ -636,6 +646,10 @@ export const Table = <
       onRowClick,
     ],
   );
+
+  React.useEffect(() => {
+    setGlobalFilter(globalFilterValue);
+  }, [globalFilterValue, setGlobalFilter]);
 
   React.useEffect(() => {
     setPageSize(pageSize);
@@ -970,7 +984,7 @@ export const Table = <
             </div>
           )}
           {!isLoading &&
-            (data.length === 0 || filteredFlatRows.length === 0) &&
+            (data.length === 0 || rows.length === 0) &&
             areFiltersSet && (
               <div className='iui-table-empty'>
                 <div>{emptyFilteredTableContent}</div>
