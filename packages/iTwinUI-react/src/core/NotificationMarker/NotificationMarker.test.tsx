@@ -8,13 +8,10 @@ import { render } from '@testing-library/react';
 import { NotificationMarker } from './NotificationMarker';
 
 it('should render in its most basic state', () => {
-  // TODO: Make sure all required props are passed in here
-  const { container } = render(<NotificationMarker />);
-  expect(container.querySelector('div')).toBeTruthy();
-});
+  const { container } = render(<NotificationMarker>Demo</NotificationMarker>);
+  const notificationMarker = container.querySelector('div');
 
-// TODO: Write tests here!
-
-it('should be improved', () => {
-  expect(false).toBe(true);
+  expect(notificationMarker).toBeTruthy();
+  expect(notificationMarker).toHaveClass('iui-notification-primary');
+  expect(notificationMarker).toHaveTextContent('Demo');
 });
