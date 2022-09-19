@@ -52,7 +52,7 @@ export const comboBoxReducer = (
           focusedIndex: value ?? state.focusedIndex,
           selectedIndex:
             value !== null && value !== undefined
-              ? [...(state.selectedIndex as number[]), value]
+              ? [...(state.selectedIndex as number[]), value].sort()
               : state.selectedIndex,
         };
       }

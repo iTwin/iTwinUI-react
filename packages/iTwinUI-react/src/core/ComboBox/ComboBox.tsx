@@ -17,6 +17,7 @@ import {
   mergeRefs,
   useLatestRef,
   useContainerWidth,
+  useContainerHeight,
 } from '../utils';
 import 'tippy.js/animations/shift-away.css';
 import {
@@ -419,14 +420,17 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       return customItem ? (
         React.cloneElement(customItem, {
           onClick: (e: unknown) => {
-            isMultipleEnabled(selectedIndex, multiple)
-              ? dispatch([
-                  'multiselect',
-                  __originalIndex,
-                  isMenuItemSelected(__originalIndex) ? 'removed' : 'added',
-                ])
-              : dispatch(['select', __originalIndex]);
-            dispatch(['close']);
+            if (isMultipleEnabled(selectedIndex, multiple)) {
+              dispatch([
+                'multiselect',
+                __originalIndex,
+                isMenuItemSelected(__originalIndex) ? 'removed' : 'added',
+              ]);
+              setInputValue('');
+            } else {
+              dispatch(['select', __originalIndex]);
+              dispatch(['close']);
+            }
             customItem.props.onClick?.(e);
           },
           // ComboBox.MenuItem handles scrollIntoView, data-iui-index and iui-focused through context
@@ -449,14 +453,17 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           {...option}
           isSelected={isMenuItemSelected(__originalIndex)}
           onClick={() => {
-            isMultipleEnabled(selectedIndex, multiple)
-              ? dispatch([
-                  'multiselect',
-                  __originalIndex,
-                  isMenuItemSelected(__originalIndex) ? 'removed' : 'added',
-                ])
-              : dispatch(['select', __originalIndex]);
-            dispatch(['close']);
+            if (isMultipleEnabled(selectedIndex, multiple)) {
+              dispatch([
+                'multiselect',
+                __originalIndex,
+                isMenuItemSelected(__originalIndex) ? 'removed' : 'added',
+              ]);
+              setInputValue('');
+            } else {
+              dispatch(['select', __originalIndex]);
+              dispatch(['close']);
+            }
           }}
           index={__originalIndex}
           data-iui-filtered-index={filteredIndex}
@@ -491,7 +498,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     [emptyStateMessage],
   );
 
-  const [tagContainerRef, tagContainerWidth] = useContainerWidth(true);
+  const [tagContainerWidthRef, tagContainerWidth] = useContainerWidth(true);
+  const [tagContainerHeightRef, tagContainerHeight] = useContainerHeight(true);
 
   const tagRenderer = React.useCallback((item: SelectOption<T>) => {
     return <SelectTag key={item.label} label={item.label} />;
@@ -517,14 +525,17 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           <ComboBoxInputContainer disabled={inputProps?.disabled} {...rest}>
             <>
               <ComboBoxInput
-                style={{ paddingLeft: tagContainerWidth + 18 }}
+                style={{
+                  paddingLeft: tagContainerWidth + 18,
+                  minHeight: tagContainerHeight,
+                }}
                 value={inputValue}
                 {...inputProps}
                 onChange={handleOnInput}
               />
               {isMultipleEnabled(selectedIndex, multiple) && (
                 <MultipleSelectedContainer
-                  mRef={tagContainerRef}
+                  mRef={mergeRefs(tagContainerWidthRef, tagContainerHeightRef)}
                   selectedItemsRenderer={
                     selectedItemRenderer as (
                       options: SelectOption<T>[],
@@ -581,14 +592,20 @@ const MultipleSelectedContainer = <T,>({
         <div
           className='iui-select-tag-container'
           ref={mRef}
-          style={{ maxWidth: `calc(100% - 150px)`, right: 'unset' }}
+          style={{
+            maxWidth: `70%`,
+            inset: 'unset',
+            paddingLeft: '12px',
+            height: 'fit-content',
+            right: 'unset',
+          }}
         >
           {selectedItemsRenderer(selectedItems)}
         </div>
       )}
       {selectedItems && !selectedItemsRenderer && (
         <SelectTagContainer
-          style={{ maxWidth: `calc(100% - 150px)`, right: 'unset' }}
+          style={{ maxWidth: `70%`, right: 'unset' }}
           ref={mRef}
           tags={selectedItemsElements}
         />
