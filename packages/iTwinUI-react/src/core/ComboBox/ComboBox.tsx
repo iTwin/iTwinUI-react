@@ -605,7 +605,10 @@ const MultipleSelectedContainer = <T,>({
       )}
       {selectedItems && !selectedItemsRenderer && (
         <SelectTagContainer
-          style={{ maxWidth: `70%`, right: 'unset' }}
+          style={{
+            maxWidth: `70%`,
+            right: 'unset',
+          }}
           ref={mRef}
           tags={selectedItemsElements}
         />
