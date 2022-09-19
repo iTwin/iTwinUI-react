@@ -78,8 +78,10 @@ CustomChild.argTypes = {
   },
 };
 
-export const ProgrammaticDisplay: Story<NotificationMarkerProps> = (args) => {
-  const active = parseInt(args.demoNotificationCount) > 0;
+export const ProgrammaticDisplay: Story<
+  NotificationMarkerProps & { demoNotificationCount: number }
+> = (args) => {
+  const active = args.demoNotificationCount > 0;
 
   return (
     <div
@@ -90,7 +92,10 @@ export const ProgrammaticDisplay: Story<NotificationMarkerProps> = (args) => {
         gap: '20px',
       }}
     >
-      <Text>active = demoNotificationCount &gt; 0</Text>
+      <div>
+        <Text variant='heading'>Try changing demoNotificationCount</Text>
+        <Text variant='small'>active = demoNotificationCount &gt; 0</Text>
+      </div>
       <IconButton styleType='borderless'>
         <NotificationMarker active={active} {...args}>
           <SvgNotification />
