@@ -132,6 +132,7 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     .forEach((r) => (selectedRowIds[r.id] = true));
 
   // 2. Select all children of the last row (endIndex)
+  // Because the subRows of the lastRow have indices > endIndex and hence won't be selected by step 1
   const handleRow = (row: Row<T>) => {
     selectedRowIds[row.id] = true;
     row.subRows.forEach((r) => handleRow(r));
