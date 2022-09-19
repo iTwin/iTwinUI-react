@@ -17,7 +17,7 @@ jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
   height: 100,
 } as DOMRect);
 
-const setStyle = jest.fn();
+const onResizeEnd = jest.fn();
 
 const TestComponent = (props?: Partial<ResizerProps>) => {
   const ref = React.useRef<HTMLDivElement>(null);
@@ -39,7 +39,7 @@ const TestComponent = (props?: Partial<ResizerProps>) => {
             }),
           } as HTMLElement,
         }}
-        setStyle={setStyle}
+        onResizeEnd={onResizeEnd}
         {...props}
       />
     </div>
@@ -106,7 +106,7 @@ it('should resize from the top-left', () => {
   expect(element.style.transform).toBe('translate(50px, 50px)');
   fireEvent.pointerUp(resizer);
 
-  expect(setStyle).toHaveBeenCalledWith({
+  expect(onResizeEnd).toHaveBeenCalledWith({
     width: '150px',
     height: '150px',
     transform: 'translate(50px, 50px)',
@@ -145,7 +145,7 @@ it('should resize from the top', () => {
   expect(element.style.transform).toBe('translate(100px, 50px)');
   fireEvent.pointerUp(resizer);
 
-  expect(setStyle).toHaveBeenCalledWith({
+  expect(onResizeEnd).toHaveBeenCalledWith({
     width: '100px',
     height: '150px',
     transform: 'translate(100px, 50px)',
@@ -184,7 +184,7 @@ it('should resize from the top-right', () => {
   expect(element.style.transform).toBe('translate(100px, 50px)');
   fireEvent.pointerUp(resizer);
 
-  expect(setStyle).toHaveBeenCalledWith({
+  expect(onResizeEnd).toHaveBeenCalledWith({
     width: '150px',
     height: '150px',
     transform: 'translate(100px, 50px)',
@@ -215,7 +215,7 @@ it('should resize from the right', () => {
   expect(element.style.transform).toBe('translate(100px, 100px)');
   fireEvent.pointerUp(resizer);
 
-  expect(setStyle).toHaveBeenCalledWith({
+  expect(onResizeEnd).toHaveBeenCalledWith({
     width: '150px',
     height: '100px',
     transform: 'translate(100px, 100px)',
@@ -246,7 +246,7 @@ it('should resize from the bottom-right', () => {
   expect(element.style.transform).toBe('translate(100px, 100px)');
   fireEvent.pointerUp(resizer);
 
-  expect(setStyle).toHaveBeenCalledWith({
+  expect(onResizeEnd).toHaveBeenCalledWith({
     width: '150px',
     height: '150px',
     transform: 'translate(100px, 100px)',
@@ -285,7 +285,7 @@ it('should resize from the bottom-left', () => {
   expect(element.style.transform).toBe('translate(50px, 100px)');
   fireEvent.pointerUp(resizer);
 
-  expect(setStyle).toHaveBeenCalledWith({
+  expect(onResizeEnd).toHaveBeenCalledWith({
     width: '150px',
     height: '150px',
     transform: 'translate(50px, 100px)',
@@ -324,7 +324,7 @@ it('should resize from the left', () => {
   expect(element.style.transform).toBe('translate(50px, 100px)');
   fireEvent.pointerUp(resizer);
 
-  expect(setStyle).toHaveBeenCalledWith({
+  expect(onResizeEnd).toHaveBeenCalledWith({
     width: '150px',
     height: '100px',
     transform: 'translate(50px, 100px)',
@@ -364,5 +364,5 @@ it('should do nothing on mouse right click', () => {
   expect(element.style.height).toBe('100px');
   expect(element.style.transform).toBe('translate(100px, 100px)');
   fireEvent.pointerUp(resizer);
-  expect(setStyle).not.toHaveBeenCalled();
+  expect(onResizeEnd).not.toHaveBeenCalled();
 });

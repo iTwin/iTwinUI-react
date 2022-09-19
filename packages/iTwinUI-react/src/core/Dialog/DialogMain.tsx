@@ -209,7 +209,7 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
           <Resizer
             elementRef={dialogRef}
             containerRef={dialogContext.dialogRootRef}
-            setStyle={setResizeStyle}
+            onResizeEnd={setResizeStyle}
           />
         )}
         {children}

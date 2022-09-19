@@ -19,7 +19,7 @@ export type ResizerProps = {
    * Callback that is being called on resize end.
    * Useful to preserve state if element is being closed.
    */
-  setStyle?: (style: React.CSSProperties) => void;
+  onResizeEnd?: (style: React.CSSProperties) => void;
 };
 
 /**
@@ -35,7 +35,7 @@ export type ResizerProps = {
  * );
  */
 export const Resizer = (props: ResizerProps) => {
-  const { elementRef, containerRef, setStyle } = props;
+  const { elementRef, containerRef, onResizeEnd } = props;
 
   const onResizePointerDown = (event: React.PointerEvent<HTMLElement>) => {
     if (!elementRef.current || event.button !== 0) {
@@ -182,7 +182,7 @@ export const Resizer = (props: ResizerProps) => {
         document.removeEventListener('pointermove', onResizePointerMove);
         if (elementRef.current) {
           elementRef.current.ownerDocument.body.style.userSelect = originalUserSelect;
-          setStyle?.({
+          onResizeEnd?.({
             width,
             height,
             transform: `translate(${translateX}px, ${translateY}px)`,
