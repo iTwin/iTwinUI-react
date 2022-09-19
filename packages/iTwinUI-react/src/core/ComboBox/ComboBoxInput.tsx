@@ -172,25 +172,23 @@ export const ComboBoxInput = React.forwardRef(
     );
 
     return (
-      <>
-        <Input
-          onKeyDown={handleKeyDown}
-          ref={refs}
-          onFocus={handleFocus}
-          aria-activedescendant={
-            isOpen && focusedIndex != undefined && focusedIndex > -1
-              ? getIdFromIndex(focusedIndex)
-              : undefined
-          }
-          role='combobox'
-          aria-controls={isOpen ? `${id}-list` : undefined}
-          aria-autocomplete='list'
-          spellCheck={false}
-          autoCapitalize='none'
-          autoCorrect='off'
-          {...rest}
-        />
-      </>
+      <Input
+        ref={refs}
+        onKeyDown={handleKeyDown}
+        onFocus={handleFocus}
+        aria-activedescendant={
+          isOpen && focusedIndex != undefined && focusedIndex > -1
+            ? getIdFromIndex(focusedIndex)
+            : undefined
+        }
+        role='combobox'
+        aria-controls={isOpen ? `${id}-list` : undefined}
+        aria-autocomplete='list'
+        spellCheck={false}
+        autoCapitalize='none'
+        autoCorrect='off'
+        {...rest}
+      />
     );
   },
 );
