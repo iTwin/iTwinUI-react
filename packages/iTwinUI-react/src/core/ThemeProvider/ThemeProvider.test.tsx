@@ -144,27 +144,37 @@ describe('Fallback (without children)', () => {
     expectDarkTheme();
   });
 
-  // TODO: fix or remove this test
-  describe.skip('media query', () => {
-    let matches = false;
+  describe('media query', () => {
+    let listeners: Array<(e: { matches: boolean }) => void> = [];
+
+    const matchMediaObject = {
+      matches: false,
+      addEventListener: (_: 'change', listener: (e: unknown) => void) => {
+        listeners.push(listener);
+      },
+      removeEventListener: (_: 'change', listener: (e: unknown) => void) => {
+        const i = listeners.indexOf(listener);
+        if (i > -1) {
+          listeners.splice(i);
+        }
+      },
+    };
 
     const changeOSTheme = (theme: 'dark' | 'light') => {
-      matches = theme === 'dark';
+      matchMediaObject.matches = theme === 'dark';
+      listeners.forEach((listener) => {
+        listener({ matches: matchMediaObject.matches });
+      });
     };
 
     beforeEach(() => {
-      window.matchMedia = jest.fn().mockImplementation(() => {
-        return {
-          matches: matches,
-          addEventListener: jest.fn(),
-          removeEventListener: jest.fn(),
-        };
-      });
+      window.matchMedia = jest.fn().mockReturnValue(matchMediaObject);
     });
 
     afterEach(() => {
       window.matchMedia = originalMatchMedia;
-      matches = false;
+      listeners = [];
+      matchMediaObject.matches = false;
     });
 
     it('should observe changes to os theme', () => {
