@@ -44,3 +44,15 @@ it('should propagate misc props', () => {
   expect(notificationMarker).toHaveTextContent('🏠');
   expect(notificationMarker).toHaveAttribute('aria-label', 'Home');
 });
+
+it('should display notification circle only when active', () => {
+  const { container } = render(
+    <NotificationMarker active={false} type='negative' urgent={true}>
+      🏠
+    </NotificationMarker>,
+  );
+  const notificationMarker = container.querySelector('div');
+  expect(notificationMarker).not.toHaveClass('iui-notification-negative');
+  expect(notificationMarker).not.toHaveClass('iui-urgent');
+  expect(notificationMarker).toHaveTextContent('🏠');
+});
