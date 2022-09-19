@@ -437,14 +437,20 @@ export const Table = <
       return;
     }
 
-    document.addEventListener('keydown', disableUserSelect);
-    document.addEventListener('keyup', enableUserSelect);
+    ownerDocument?.addEventListener('keydown', disableUserSelect);
+    ownerDocument?.addEventListener('keyup', enableUserSelect);
 
     return () => {
-      document.removeEventListener('keydown', disableUserSelect);
-      document.removeEventListener('keyup', enableUserSelect);
+      ownerDocument?.removeEventListener('keydown', disableUserSelect);
+      ownerDocument?.removeEventListener('keyup', enableUserSelect);
     };
-  }, [selectionMode, disableUserSelect, enableUserSelect, isSelectable]);
+  }, [
+    isSelectable,
+    selectionMode,
+    ownerDocument,
+    disableUserSelect,
+    enableUserSelect,
+  ]);
 
   const tableStateReducer = React.useCallback(
     (
