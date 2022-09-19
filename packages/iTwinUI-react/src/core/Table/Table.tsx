@@ -433,20 +433,18 @@ export const Table = <
   );
 
   React.useEffect(() => {
-    // Add onkeydown event listeners (during creation)
-    if (selectionMode === 'multi') {
-      document.addEventListener('keydown', disableUserSelect);
-      document.addEventListener('keyup', enableUserSelect);
+    if (!isSelectable || selectionMode !== 'multi') {
+      return;
     }
 
-    // Remove onkeydown event listeners (during destruction)
+    document.addEventListener('keydown', disableUserSelect);
+    document.addEventListener('keyup', enableUserSelect);
+
     return () => {
-      if (selectionMode === 'multi') {
-        document.removeEventListener('keydown', disableUserSelect);
-        document.removeEventListener('keyup', enableUserSelect);
-      }
+      document.removeEventListener('keydown', disableUserSelect);
+      document.removeEventListener('keyup', enableUserSelect);
     };
-  }, [selectionMode, disableUserSelect, enableUserSelect]);
+  }, [selectionMode, disableUserSelect, enableUserSelect, isSelectable]);
 
   const tableStateReducer = React.useCallback(
     (
