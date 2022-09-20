@@ -161,6 +161,9 @@ export type {
   ModalContentProps,
 } from './Modal';
 
+export { NotificationMarker } from './NotificationMarker';
+export type { NotificationMarkerProps } from './NotificationMarker';
+
 export { ProgressLinear, ProgressRadial } from './ProgressIndicators';
 export type {
   ProgressLinearProps,
@@ -311,6 +314,3 @@ export {
   MiddleTextTruncation,
 } from './utils';
 export type { ThemeType, MiddleTextTruncationProps } from './utils';
-
-export { NotificationMarker } from './NotificationMarker';
-export type { NotificationMarkerProps } from './NotificationMarker';
