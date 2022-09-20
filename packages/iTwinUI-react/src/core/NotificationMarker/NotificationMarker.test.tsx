@@ -11,7 +11,7 @@ import Anchor from '../Typography/Anchor/Anchor';
 
 it('should render in its most basic state', () => {
   const { container } = render(<NotificationMarker>Demo</NotificationMarker>);
-  const notificationMarker = container.querySelector('div');
+  const notificationMarker = container.querySelector('span');
 
   expect(notificationMarker).toBeTruthy();
   expect(notificationMarker).toHaveClass('iui-notification-primary');
@@ -24,7 +24,7 @@ it('should propagate pertinent props', () => {
       Demo
     </NotificationMarker>,
   );
-  const notificationMarker = container.querySelector('div');
+  const notificationMarker = container.querySelector('span');
   expect(notificationMarker).toBeTruthy();
   expect(notificationMarker).toHaveClass('iui-notification-positive');
   expect(notificationMarker).toHaveClass('iui-urgent');
@@ -41,7 +41,7 @@ it('should propagate misc props', () => {
       🔔
     </NotificationMarker>,
   );
-  const notificationMarker = container.querySelector('div');
+  const notificationMarker = container.querySelector('span');
   expect(notificationMarker).toHaveClass('test-class');
   expect(notificationMarker).toHaveStyle('color: rebeccapurple');
   expect(notificationMarker).toHaveTextContent('🔔');
@@ -54,7 +54,7 @@ it('should display notification circle only when enabled', () => {
       🔔
     </NotificationMarker>,
   );
-  const notificationMarker = container.querySelector('div');
+  const notificationMarker = container.querySelector('span');
   expect(notificationMarker).not.toHaveClass('iui-notification-negative');
   expect(notificationMarker).not.toHaveClass('iui-urgent');
   expect(notificationMarker).toHaveTextContent('🔔');
@@ -66,7 +66,7 @@ it('should support all kinds of children', () => {
       Demo
     </NotificationMarker>,
   );
-  let notificationMarker = container.container.querySelector('div');
+  let notificationMarker = container.container.querySelector('span');
   expect(notificationMarker).toHaveClass('iui-notification-warning');
   expect(notificationMarker).toHaveClass('iui-urgent');
   expect(notificationMarker).toHaveTextContent('Demo');
@@ -76,7 +76,7 @@ it('should support all kinds of children', () => {
       🔔
     </NotificationMarker>,
   );
-  notificationMarker = container.container.querySelector('div');
+  notificationMarker = container.container.querySelector('span');
   expect(notificationMarker).toHaveClass('iui-notification-warning');
   expect(notificationMarker).toHaveClass('iui-urgent');
   expect(notificationMarker).toHaveTextContent('🔔');
@@ -86,7 +86,7 @@ it('should support all kinds of children', () => {
       <Anchor>1 warning</Anchor>
     </NotificationMarker>,
   );
-  notificationMarker = container.container.querySelector('div');
+  notificationMarker = container.container.querySelector('span');
   expect(notificationMarker).toHaveClass('iui-notification-warning');
   expect(notificationMarker).toHaveClass('iui-urgent');
   expect(notificationMarker).toHaveTextContent('1 warning');
@@ -104,7 +104,7 @@ it('should support all kinds of children', () => {
       <SvgNotification />
     </NotificationMarker>,
   );
-  notificationMarker = container.container.querySelector('div');
+  notificationMarker = container.container.querySelector('span');
   expect(notificationMarker).toHaveClass('iui-notification-warning');
   expect(notificationMarker).toHaveClass('iui-urgent');
   expect(notificationMarker?.querySelector('svg')).toEqual(notificationIcon);
