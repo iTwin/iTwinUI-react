@@ -13,7 +13,7 @@ export type NotificationMarkerProps = {
    */
   children: React.ReactNode;
   /**
-   * Type of notification
+   * Status of notification
    *
    * 'primary' = blue,
    * 'positive' = green,
@@ -21,7 +21,7 @@ export type NotificationMarkerProps = {
    * 'negative' = red,
    * @default 'primary'
    */
-  type?: 'primary' | 'positive' | 'warning' | 'negative';
+  status?: 'primary' | 'positive' | 'warning' | 'negative';
   /**
    * Set this to true for important notifications
    * @default false
@@ -54,7 +54,7 @@ export const NotificationMarker = (props: NotificationMarkerProps) => {
   const {
     className,
     children,
-    type = 'primary',
+    status = 'primary',
     urgent = false,
     active = true,
     ...rest
@@ -64,7 +64,7 @@ export const NotificationMarker = (props: NotificationMarkerProps) => {
     <div
       className={cx(
         active
-          ? { [`iui-notification-${type}`]: true, 'iui-urgent': urgent }
+          ? { [`iui-notification-${status}`]: true, 'iui-urgent': urgent }
           : {},
         className,
       )}

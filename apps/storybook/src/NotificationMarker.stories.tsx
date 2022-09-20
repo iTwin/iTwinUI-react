@@ -17,7 +17,7 @@ export default {
   argTypes: {
     className: { control: { disable: true } },
     style: { control: { disable: true } },
-    type: {
+    status: {
       control: 'radio',
       options: ['primary', 'positive', 'warning', 'negative'],
     },
@@ -34,7 +34,7 @@ export const Basic: Story<NotificationMarkerProps> = (args) => {
 };
 
 Basic.args = {
-  type: 'primary',
+  status: 'primary',
   urgent: false,
   children: <SvgNotification />,
 };
@@ -55,13 +55,13 @@ export const CustomChild: Story<NotificationMarkerProps> = (args) => {
         gap: '20px',
       }}
     >
-      <NotificationMarker type='positive' {...args}>
+      <NotificationMarker status='positive' {...args}>
         Live
       </NotificationMarker>
-      <NotificationMarker type='negative' {...args}>
+      <NotificationMarker status='negative' {...args}>
         Rec
       </NotificationMarker>
-      <NotificationMarker type='primary' {...args}>
+      <NotificationMarker status='primary' {...args}>
         1 new message
       </NotificationMarker>
     </div>
@@ -115,7 +115,7 @@ export const ProgrammaticDisplay: Story<
 ProgrammaticDisplay.args = {
   demoNotificationCount: 0,
   urgent: true,
-  type: 'primary',
+  status: 'primary',
 };
 
 ProgrammaticDisplay.argTypes = {
