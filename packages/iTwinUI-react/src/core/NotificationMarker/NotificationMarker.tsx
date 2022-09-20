@@ -41,9 +41,9 @@ export type NotificationMarkerProps = {
 } & Omit<CommonProps, 'title'>;
 
 /**
- * A small notification circle to the top-right of the passed children prop. This can be applied to pretty much anything but mostly intended for icons within default / borderless buttons.
+ * A small notification circle to the top-right of the passed children prop.
+ * This can be applied to almost anything but mostly intended for icons within default / borderless buttons.
  * @example
- * // Primary Intended Use-case
  * <IconButton styleType='borderless'>
  *   <NotificationMarker><SvgNotification /></NotificationMarker>
  * </IconButton>
