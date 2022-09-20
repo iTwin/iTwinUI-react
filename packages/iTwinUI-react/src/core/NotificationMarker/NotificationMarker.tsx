@@ -61,7 +61,7 @@ export const NotificationMarker = (props: NotificationMarkerProps) => {
   } = props;
   useTheme();
   return (
-    <div
+    <span
       className={cx(
         enabled
           ? { [`iui-notification-${status}`]: true, 'iui-urgent': urgent }
@@ -71,7 +71,7 @@ export const NotificationMarker = (props: NotificationMarkerProps) => {
       {...rest}
     >
       {children}
-    </div>
+    </span>
   );
 };
 
