@@ -43,12 +43,12 @@ export type NotificationMarkerProps = {
 /**
  * A small notification circle to the top-right of the passed children prop. This can be applied to pretty much anything but mostly intended for icons within default / borderless buttons.
  * @example
- * <NotificationMarker type='positive' urgent={true}>Live</NotificationMarker>
- * @example
  * // Primary Intended Use-case
  * <IconButton styleType='borderless'>
  *   <NotificationMarker><SvgNotification /></NotificationMarker>
  * </IconButton>
+ * @example
+ * <NotificationMarker type='positive' urgent={true}>Live</NotificationMarker>
  */
 export const NotificationMarker = (props: NotificationMarkerProps) => {
   const {
