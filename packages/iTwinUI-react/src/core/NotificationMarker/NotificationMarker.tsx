@@ -23,10 +23,11 @@ export type NotificationMarkerProps = {
    */
   status?: 'primary' | 'positive' | 'warning' | 'negative';
   /**
-   * Set this to true for important notifications
+   * Adds a pulse effect to the notification
+   * WARNING: Avoid overuse of this prop.
    * @default false
    */
-  urgent?: boolean;
+  pulsing?: boolean;
   /**
    * Set this programmatically to false when you just want to render the passed children without the notification
    * @default true
@@ -55,7 +56,7 @@ export const NotificationMarker = (props: NotificationMarkerProps) => {
     className,
     children,
     status = 'primary',
-    urgent = false,
+    pulsing = false,
     enabled = true,
     ...rest
   } = props;
@@ -65,7 +66,7 @@ export const NotificationMarker = (props: NotificationMarkerProps) => {
       className={cx(
         {
           [`iui-notification-${status}`]: enabled,
-          'iui-urgent': enabled && urgent,
+          'iui-urgent': enabled && pulsing,
         },
         className,
       )}

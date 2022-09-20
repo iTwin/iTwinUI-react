@@ -20,7 +20,7 @@ it('should render in its most basic state', () => {
 
 it('should propagate pertinent props', () => {
   const { container } = render(
-    <NotificationMarker status='positive' urgent={true}>
+    <NotificationMarker status='positive' pulsing={true}>
       Demo
     </NotificationMarker>,
   );
@@ -50,7 +50,7 @@ it('should propagate misc props', () => {
 
 it('should display notification circle only when enabled', () => {
   const { container } = render(
-    <NotificationMarker enabled={false} status='negative' urgent={true}>
+    <NotificationMarker enabled={false} status='negative' pulsing={true}>
       🔔
     </NotificationMarker>,
   );
@@ -62,7 +62,7 @@ it('should display notification circle only when enabled', () => {
 
 it('should support all kinds of children', () => {
   let container = render(
-    <NotificationMarker status='warning' urgent={true}>
+    <NotificationMarker status='warning' pulsing={true}>
       Demo
     </NotificationMarker>,
   );
@@ -72,7 +72,7 @@ it('should support all kinds of children', () => {
   expect(notificationMarker).toHaveTextContent('Demo');
 
   container = render(
-    <NotificationMarker status='warning' urgent={true}>
+    <NotificationMarker status='warning' pulsing={true}>
       🔔
     </NotificationMarker>,
   );
@@ -82,7 +82,7 @@ it('should support all kinds of children', () => {
   expect(notificationMarker).toHaveTextContent('🔔');
 
   container = render(
-    <NotificationMarker status='warning' urgent={true}>
+    <NotificationMarker status='warning' pulsing={true}>
       <Anchor>1 warning</Anchor>
     </NotificationMarker>,
   );
@@ -100,7 +100,7 @@ it('should support all kinds of children', () => {
   } = render(<SvgNotification />);
 
   container = render(
-    <NotificationMarker status='warning' urgent={true}>
+    <NotificationMarker status='warning' pulsing={true}>
       <SvgNotification />
     </NotificationMarker>,
   );

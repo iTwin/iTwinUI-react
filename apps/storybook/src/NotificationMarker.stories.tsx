@@ -15,6 +15,7 @@ export default {
   component: NotificationMarker,
   args: {
     enabled: true,
+    pulsing: false,
   },
   argTypes: {
     className: { control: { disable: true } },
@@ -37,7 +38,6 @@ export const Basic: Story<NotificationMarkerProps> = (args) => {
 
 Basic.args = {
   status: 'primary',
-  urgent: false,
   children: <SvgNotification />,
 };
 
@@ -68,10 +68,6 @@ export const CustomChild: Story<NotificationMarkerProps> = (args) => {
       </NotificationMarker>
     </div>
   );
-};
-
-CustomChild.args = {
-  urgent: true,
 };
 
 CustomChild.argTypes = {
