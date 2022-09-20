@@ -23,7 +23,7 @@ export type NotificationMarkerProps = {
    */
   status?: 'primary' | 'positive' | 'warning' | 'negative';
   /**
-   * Adds a pulse effect to the notification
+   * Adds a pulse effect to the notification.
    * WARNING: Avoid overuse of this prop.
    * @default false
    */
@@ -34,7 +34,7 @@ export type NotificationMarkerProps = {
    * @example
    * let [newMessagesCount, ...] = useState(0);
    * ...
-   * <NotificationMarker active={newMessagesCount > 0}>
+   * <NotificationMarker enabled={newMessagesCount > 0}>
    *   <SvgNotification />
    * </NotificationMarker>
    */
