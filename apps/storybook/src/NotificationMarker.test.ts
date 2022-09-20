@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 describe('NotificationMarker', () => {
   const storyPath = 'Core/NotificationMarker';
-  const tests = ['Basic', 'Custom Child', 'Programmatic Display'];
+  const tests = ['Basic', 'Custom Child'];
 
   tests.forEach((testName) => {
     it(testName, function () {
