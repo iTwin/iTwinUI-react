@@ -80,7 +80,7 @@ export const onSingleSelectHandler = <T extends Record<string, unknown>>(
 
   const newState = {
     ...state,
-    lastSelectedRow: action.id,
+    lastSelectedRowId: action.id,
     selectedRowIds,
   };
   // Passing to `onSelectHandler` to handle filtered sub-rows
@@ -106,17 +106,14 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     return state;
   }
 
-  let startIndex = instance.flatRows.findIndex(
-    (row) => row.id === state.lastSelectedRow,
+  let startIndex = Math.max(
+    0,
+    instance.flatRows.findIndex((row) => row.id === state.lastSelectedRowId),
   );
-  let endIndex = instance.flatRows.findIndex((row) => row.id === action.id);
-
-  if (startIndex < 0) {
-    startIndex = 0;
-  }
-  if (endIndex < 0) {
-    endIndex = 0;
-  }
+  let endIndex = Math.max(
+    0,
+    instance.flatRows.findIndex((row) => row.id === action.id),
+  );
 
   if (startIndex > endIndex) {
     const temp = startIndex;
@@ -141,7 +138,7 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
 
   const newState = {
     ...state,
-    selectedRowIds: selectedRowIds,
+    selectedRowIds,
   };
 
   // 3.1 Deselect all selected disabled rows and their children

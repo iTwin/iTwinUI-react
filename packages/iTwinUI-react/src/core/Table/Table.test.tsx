@@ -391,7 +391,7 @@ it('should handle row clicks', async () => {
   expect(onSelect).toHaveBeenCalledTimes(2);
   expect(onRowClick).toHaveBeenCalledTimes(2);
 
-  await userEvent.click(getByText(mockedData()[1].name)); // Reselect; lastSelectedRow = undefined -> 1
+  await userEvent.click(getByText(mockedData()[1].name)); // Reselect; lastSelectedRowId = undefined -> 1
   expect(rows[0].classList).not.toContain('iui-selected');
   expect(rows[1].classList).toContain('iui-selected');
   expect(rows[2].classList).not.toContain('iui-selected');
@@ -407,7 +407,7 @@ it('should handle row clicks', async () => {
   expect(onRowClick).toHaveBeenCalledTimes(4);
 
   // Shift click test #2
-  // When a row is clicked before shift click (lastSelectedRow), selection starts from that row and ends at the currently clicked row
+  // When a row is clicked before shift click (lastSelectedRowId), selection starts from that row and ends at the currently clicked row
   // But if the startIndex > endIndex, then startIndex and endIndex are swapped
   await user.keyboard('[/ControlLeft][ShiftLeft>]'); // Release Ctrl and Press Shift (without releasing it)
   await user.click(getByText(mockedData()[0].name)); // Perform a click with `shiftKey: true`
@@ -454,7 +454,7 @@ it('should handle sub-rows shift click selection', async () => {
   );
 
   const user = userEvent.setup();
-  await user.click(getByText(data[0].subRows[0].name)); // [shiftKey: false]; lastSelectedRow = 0.0
+  await user.click(getByText(data[0].subRows[0].name)); // [shiftKey: false]; lastSelectedRowId = 0.0
   expect(onSelect).toHaveBeenCalledTimes(1);
   expect(onRowClick).toHaveBeenCalledTimes(1);
   testIfCheckboxesChecked(checkboxes, [1], [0]);
@@ -466,7 +466,7 @@ it('should handle sub-rows shift click selection', async () => {
   testIfCheckboxesChecked(checkboxes, [1, 3], [0, 2]);
 
   await user.keyboard('[/ShiftLeft]'); // Release Shift
-  await user.click(getByText(data[1].subRows[0].name)); // [shiftKey = true]; lastSelectedRow = undefined -> 1.0
+  await user.click(getByText(data[1].subRows[0].name)); // [shiftKey = true]; lastSelectedRowId = undefined -> 1.0
   expect(onSelect).toHaveBeenCalledTimes(3);
   expect(onRowClick).toHaveBeenCalledTimes(3);
   testIfCheckboxesChecked(checkboxes, [7], [6]);
