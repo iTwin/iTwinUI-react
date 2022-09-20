@@ -63,9 +63,10 @@ export const NotificationMarker = (props: NotificationMarkerProps) => {
   return (
     <span
       className={cx(
-        enabled
-          ? { [`iui-notification-${status}`]: true, 'iui-urgent': urgent }
-          : {},
+        {
+          [`iui-notification-${status}`]: enabled,
+          'iui-urgent': enabled && urgent,
+        },
         className,
       )}
       {...rest}
