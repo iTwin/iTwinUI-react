@@ -77,7 +77,7 @@ const defaultGetResizerProps = (ownerDocument: Document | undefined) => (
     return props;
   }
 
-  const { dispatch, flatHeaders } = instance;
+  const { dispatch } = instance;
 
   const onResizeStart = (
     e: React.TouchEvent | React.MouseEvent,
@@ -88,16 +88,12 @@ const defaultGetResizerProps = (ownerDocument: Document | undefined) => (
       return;
     }
 
-    // Setting `width` here because it might take several rerenders until actual column width is set.
-    flatHeaders.forEach((h) => {
-      if (!h.width) {
-        h.width = h.resizeWidth;
-      }
-    });
-
-    const headerIdWidths = getLeafHeaders(header).map((d) => [d.id, d.width]);
+    const headerIdWidths = getLeafHeaders(header).map((d) => [
+      d.id,
+      d.resizeWidth,
+    ]);
     const nextHeaderIdWidths = nextHeader
-      ? getLeafHeaders(nextHeader).map((d) => [d.id, d.width])
+      ? getLeafHeaders(nextHeader).map((d) => [d.id, d.resizeWidth])
       : [];
 
     const clientX = isTouchEvent(e)
@@ -172,8 +168,8 @@ const defaultGetResizerProps = (ownerDocument: Document | undefined) => (
     dispatch({
       type: actions.columnStartResizing,
       columnId: header.id,
-      columnWidth: header.width,
-      nextColumnWidth: nextHeader?.width,
+      columnWidth: header.resizeWidth,
+      nextColumnWidth: nextHeader?.resizeWidth,
       headerIdWidths,
       nextHeaderIdWidths,
       clientX,
@@ -280,11 +276,19 @@ const reducer = <T extends Record<string, unknown>>(
     );
 
     if (
-      !isNewColumnWidthsValid(newColumnWidths, instance?.flatHeaders) ||
-      !isNewColumnWidthsValid(newNextColumnWidths, instance?.flatHeaders)
+      !isNewColumnWidthsValid(newColumnWidths, instance) ||
+      !isNewColumnWidthsValid(newNextColumnWidths, instance)
     ) {
       return newState;
     }
+
+    // Setting `width` here because it might take several rerenders until actual column width is set.
+    // Also setting after the actual resize happened.
+    instance?.flatHeaders.forEach((h) => {
+      if (!h.width) {
+        h.width = h.resizeWidth;
+      }
+    });
 
     return {
       ...newState,
@@ -328,7 +332,7 @@ const getColumnWidths = (
 
 const isNewColumnWidthsValid = <T extends Record<string, unknown>>(
   columnWidths: Record<string, number>,
-  headers: ColumnInstance<T>[] | undefined,
+  instance?: TableInstance<T>,
 ) => {
   // Prevents from going outside the column bounds
   if (Object.values(columnWidths).some((width) => width <= 1)) {
@@ -336,7 +340,7 @@ const isNewColumnWidthsValid = <T extends Record<string, unknown>>(
   }
 
   for (const [headerId, width] of Object.entries(columnWidths)) {
-    const header = headers?.find((h) => h.id === headerId);
+    const header = instance?.flatHeaders?.find((h) => h.id === headerId);
     if (!header) {
       continue;
     }
@@ -344,6 +348,19 @@ const isNewColumnWidthsValid = <T extends Record<string, unknown>>(
     const minWidth = header.minWidth || 0;
     const maxWidth = header.maxWidth || Infinity;
     if (width < minWidth || width > maxWidth) {
+      return false;
+    }
+  }
+
+  if (instance && instance.resizeMode === 'current-column') {
+    let newTableWidth = 0;
+    for (const header of instance.flatHeaders) {
+      newTableWidth += columnWidths[header.id]
+        ? columnWidths[header.id]
+        : header.resizeWidth || 0;
+    }
+    // `tableWidth` is whole number therefore we need to round the `newTableWidth`
+    if (Math.round(newTableWidth) < instance.tableWidth) {
       return false;
     }
   }
@@ -358,6 +375,7 @@ const useInstanceBeforeDimensions = <T extends Record<string, unknown>>(
     flatHeaders,
     getHooks,
     state: { columnResizing },
+    resizeMode,
   } = instance;
 
   const getInstance = useGetLatest(instance);
@@ -367,23 +385,29 @@ const useInstanceBeforeDimensions = <T extends Record<string, unknown>>(
     header.width = resizeWidth || header.width || header.originalWidth;
     header.isResizing = columnResizing.isResizingColumn === header.id;
 
-    const headerToResize = header.disableResizing
-      ? getPreviousResizableHeader(header, instance)
-      : header;
+    const headerToResize =
+      header.disableResizing && resizeMode === 'next-column'
+        ? getPreviousResizableHeader(header, instance)
+        : header;
     const nextResizableHeader = getNextResizableHeader(header, instance);
 
     header.canResize =
       header.disableResizing != null ? !header.disableResizing : true;
     // Show resizer when header is resizable or when next header is resizable
     // and there is resizable columns on the left side of the resizer.
-    header.isResizerVisible =
-      (header.canResize && !!nextResizableHeader) ||
-      (headerToResize && !!instance.flatHeaders[index + 1]?.canResize);
+    if (resizeMode === 'next-column') {
+      header.isResizerVisible =
+        (header.canResize && !!nextResizableHeader) ||
+        (headerToResize && !!instance.flatHeaders[index + 1]?.canResize);
+      // When resize mode is `current-column` show resizer on the current resizable column.
+    } else {
+      header.isResizerVisible = header.canResize && !!headerToResize;
+    }
 
     header.getResizerProps = makePropGetter(getHooks().getResizerProps, {
       instance: getInstance(),
       header: headerToResize,
-      nextHeader: nextResizableHeader,
+      nextHeader: resizeMode === 'next-column' ? nextResizableHeader : [],
     });
   });
 };

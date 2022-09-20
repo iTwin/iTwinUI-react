@@ -100,6 +100,7 @@ declare module 'react-table' {
      * If some rows don't have sub-data, it is recommended to pass an empty array to `subRows` for consistent spacing.
      */
     data: D[];
+    resizeMode: 'next-column' | 'current-column';
   }
 
   export interface Hooks<D extends object = {}>
@@ -119,6 +120,8 @@ declare module 'react-table' {
       UseRowStateInstanceProps<D>,
       UseSortByInstanceProps<D> {
     initialRows: Row<D>[];
+    resizeMode: TableOptions['resizeMode'];
+    tableWidth: number;
   }
 
   export interface TableState<D extends object = {}>
