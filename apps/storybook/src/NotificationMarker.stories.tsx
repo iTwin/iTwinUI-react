@@ -13,6 +13,9 @@ import SvgNotification from '@itwin/itwinui-icons-react/cjs/icons/Notification';
 
 export default {
   component: NotificationMarker,
+  args: {
+    enabled: true,
+  },
   argTypes: {
     className: { control: { disable: true } },
     style: { control: { disable: true } },

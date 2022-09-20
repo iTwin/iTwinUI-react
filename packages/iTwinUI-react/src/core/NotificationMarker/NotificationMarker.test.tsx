@@ -48,9 +48,9 @@ it('should propagate misc props', () => {
   expect(notificationMarker).toHaveAttribute('aria-label', 'Home');
 });
 
-it('should display notification circle only when active', () => {
+it('should display notification circle only when enabled', () => {
   const { container } = render(
-    <NotificationMarker active={false} status='negative' urgent={true}>
+    <NotificationMarker enabled={false} status='negative' urgent={true}>
       🔔
     </NotificationMarker>,
   );

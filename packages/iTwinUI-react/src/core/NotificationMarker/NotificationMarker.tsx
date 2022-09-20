@@ -37,7 +37,7 @@ export type NotificationMarkerProps = {
    *   <SvgNotification />
    * </NotificationMarker>
    */
-  active?: boolean;
+  enabled?: boolean;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -56,14 +56,14 @@ export const NotificationMarker = (props: NotificationMarkerProps) => {
     children,
     status = 'primary',
     urgent = false,
-    active = true,
+    enabled = true,
     ...rest
   } = props;
   useTheme();
   return (
     <div
       className={cx(
-        active
+        enabled
           ? { [`iui-notification-${status}`]: true, 'iui-urgent': urgent }
           : {},
         className,
