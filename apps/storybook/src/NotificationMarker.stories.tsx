@@ -75,7 +75,7 @@ CustomChild.args = {
 };
 
 CustomChild.argTypes = {
-  type: {
+  status: {
     control: false,
   },
 };
