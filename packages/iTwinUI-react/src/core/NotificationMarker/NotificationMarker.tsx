@@ -49,7 +49,7 @@ export type NotificationMarkerProps = {
  *   <NotificationMarker><SvgNotification /></NotificationMarker>
  * </IconButton>
  * @example
- * <NotificationMarker type='positive' pulsing={true}>Live</NotificationMarker>
+ * <NotificationMarker status='positive' pulsing={true}>Live</NotificationMarker>
  */
 export const NotificationMarker = (props: NotificationMarkerProps) => {
   const {
