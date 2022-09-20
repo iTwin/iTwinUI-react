@@ -21,6 +21,7 @@ import {
   Text,
   Select,
   MenuDivider,
+  NotificationMarker,
 } from '@itwin/itwinui-react';
 import SvgHelpCircularHollow from '@itwin/itwinui-icons-react/cjs/icons/HelpCircularHollow';
 import SvgVersion from '@itwin/itwinui-icons-react/cjs/icons/Pin';
@@ -165,7 +166,9 @@ export const Full: Story<HeaderProps> = (args) => {
           onClick={() => action('Clicked on the notification bell')()}
           styleType='borderless'
         >
-          <SvgNotification />
+          <NotificationMarker status='positive' pulsing={true}>
+            <SvgNotification />
+          </NotificationMarker>
         </IconButton>,
         <DropdownMenu key='help' menuItems={buildMenu('Help')}>
           <IconButton styleType='borderless'>
