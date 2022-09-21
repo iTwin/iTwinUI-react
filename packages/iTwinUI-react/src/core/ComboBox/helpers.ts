@@ -6,7 +6,6 @@ import React from 'react';
 import { SelectOption } from '../Select/Select';
 
 type ComboBoxAction = 'open' | 'close' | 'select' | 'multiselect' | 'focus';
-type SelectedAction = 'added' | 'removed';
 
 export const comboBoxReducer = (
   state: {
@@ -14,10 +13,7 @@ export const comboBoxReducer = (
     selectedIndex: number | number[];
     focusedIndex: number;
   },
-  [type, value, action]:
-    | [ComboBoxAction]
-    | [ComboBoxAction, number | undefined]
-    | [ComboBoxAction, number | undefined, SelectedAction | undefined],
+  [type, value]: [ComboBoxAction] | [ComboBoxAction, number | undefined],
 ) => {
   switch (type) {
     case 'open': {
@@ -34,25 +30,27 @@ export const comboBoxReducer = (
       };
     }
     case 'multiselect': {
-      if (action === 'removed') {
-        console.log('removed', value);
+      const actionIndex = (state.selectedIndex as number[]).findIndex(
+        (item) => item === value,
+      );
+      if (actionIndex >= 0) {
         return {
           ...state,
           focusedIndex: value ?? state.focusedIndex,
           selectedIndex: (state.selectedIndex as number[]).filter(
             (index) => index !== value,
-          ),
+          ) as number[],
         };
-      }
-      if (action === 'added') {
-        console.log('added', value);
-        console.log([...(state.selectedIndex as number[]), value]);
+      } else if (actionIndex === -1) {
         return {
           ...state,
           focusedIndex: value ?? state.focusedIndex,
           selectedIndex:
             value !== null && value !== undefined
-              ? [...(state.selectedIndex as number[]), value].sort()
+              ? ([
+                  ...(state.selectedIndex as number[]),
+                  value,
+                ].sort() as number[])
               : state.selectedIndex,
         };
       }
