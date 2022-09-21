@@ -1059,7 +1059,7 @@ it('should not filter table when manualFilters flag is on', async () => {
 
   await setFilter(container, '2');
 
-  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(3);
   expect(onFilter).toHaveBeenCalledWith(
     [{ fieldType: 'text', filterType: 'text', id: 'name', value: '2' }],
@@ -1085,11 +1085,11 @@ it('should not show filter icon when filter component is not set', () => {
   });
 
   expect(screen.queryByText('Header name')).toBeFalsy();
-  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  const rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(3);
 
   const filterIcon = container.querySelector(
-    '.iui-filter-button .iui-button-icon',
+    '.iui-table-filter-button .iui-button-icon',
   ) as HTMLElement;
   expect(filterIcon).toBeFalsy();
 });
@@ -1116,7 +1116,7 @@ it('should show active filter icon when more data is loading', async () => {
   await setFilter(container, '2');
 
   const filterIcon = container.querySelector(
-    '.iui-filter-button.iui-active .iui-button-icon',
+    '.iui-table-filter-button[data-iui-active="true"] .iui-button-icon',
   ) as HTMLElement;
   expect(filterIcon).toBeTruthy();
 });
@@ -1139,16 +1139,16 @@ it('should show message and active filter icon when there is no data after filte
   const { container } = renderComponent({ columns: mockedColumns });
 
   expect(screen.queryByText('Header name')).toBeFalsy();
-  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  let rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(3);
 
   await setFilter(container, 'invalid value');
 
-  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(0);
   screen.getByText('No results. Clear filter.');
   const filterIcon = container.querySelector(
-    '.iui-filter-button.iui-active .iui-button-icon',
+    '.iui-table-filter-button[data-iui-active="true"] .iui-button-icon',
   ) as HTMLElement;
   expect(filterIcon).toBeTruthy();
 });
@@ -1179,7 +1179,7 @@ it('should show message and active filter icon when there is no data after manua
   );
 
   expect(screen.queryByText('Header name')).toBeFalsy();
-  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  let rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(3);
 
   await setFilter(container, 'invalid value');
@@ -1194,11 +1194,11 @@ it('should show message and active filter icon when there is no data after manua
     />,
   );
 
-  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(0);
   screen.getByText('No results. Clear filter.');
   const filterIcon = container.querySelector(
-    '.iui-filter-button.iui-active .iui-button-icon',
+    '.iui-table-filter-button[data-iui-active="true"] .iui-button-icon',
   ) as HTMLElement;
   expect(filterIcon).toBeTruthy();
 });
