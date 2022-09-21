@@ -27,8 +27,7 @@ export default {
   },
   decorators: [
     (Story) => (
-      <div>
-        {/* <div style={{ maxWidth: 'clamp(300px, 50%, 100%)', minHeight: 380 }}> */}
+      <div style={{ maxWidth: 'clamp(300px, 50%, 100%)', minHeight: 380 }}>
         <Story />
       </div>
     ),
