@@ -605,7 +605,7 @@ export const Table = <
 
   const numSelectedRows =
     selectionMode === 'single'
-      ? undefined
+      ? 0
       : rows.filter((row) => row.isSelected).length;
   const paginatorRendererProps: TablePaginatorRendererProps = React.useMemo(
     () => ({
