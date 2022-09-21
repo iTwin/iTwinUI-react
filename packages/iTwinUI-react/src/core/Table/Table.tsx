@@ -22,6 +22,7 @@ import {
   usePagination,
   useColumnOrder,
   Column,
+  useGlobalFilter,
 } from 'react-table';
 import { ProgressRadial } from '../ProgressIndicators';
 import { useTheme, CommonProps, useResizeObserver, mergeRefs } from '../utils';
@@ -46,6 +47,7 @@ import {
   onExpandHandler,
   onFilterHandler,
   onSelectHandler,
+  onShiftSelectHandler,
   onSingleSelectHandler,
   onTableResizeEnd,
   onTableResizeStart,
@@ -54,6 +56,7 @@ import VirtualScroll from '../utils/components/VirtualScroll';
 import { SELECTION_CELL_ID } from './columns';
 
 const singleRowSelectedAction = 'singleRowSelected';
+const shiftRowSelectedAction = 'shiftRowSelected';
 export const tableResizeStartAction = 'tableResizeStart';
 const tableResizeEndAction = 'tableResizeEnd';
 
@@ -178,6 +181,12 @@ export type TableProps<
    * Must be memoized.
    */
   onFilter?: (filters: TableFilterValue<T>[], state: TableState<T>) => void;
+  /**
+   * Value used for global filtering.
+   * Use with `globalFilter` and/or `manualGlobalFilter` to handle filtering yourself e.g. filter in server-side.
+   * Must be memoized.
+   */
+  globalFilterValue?: unknown;
   /**
    * Content shown when there is no data after filtering.
    */
@@ -359,6 +368,7 @@ export const Table = <
     subComponent,
     onExpand,
     onFilter,
+    globalFilterValue,
     emptyFilteredTableContent,
     filterTypes: filterFunctions,
     expanderCell,
@@ -404,6 +414,45 @@ export const Table = <
     return flatColumns.some((column) => column.id === SELECTION_CELL_ID);
   }, [columns]);
 
+  const disableUserSelect = React.useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Shift') {
+        ownerDocument &&
+          (ownerDocument.documentElement.style.userSelect = 'none');
+      }
+    },
+    [ownerDocument],
+  );
+
+  const enableUserSelect = React.useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Shift') {
+        ownerDocument && (ownerDocument.documentElement.style.userSelect = '');
+      }
+    },
+    [ownerDocument],
+  );
+
+  React.useEffect(() => {
+    if (!isSelectable || selectionMode !== 'multi') {
+      return;
+    }
+
+    ownerDocument?.addEventListener('keydown', disableUserSelect);
+    ownerDocument?.addEventListener('keyup', enableUserSelect);
+
+    return () => {
+      ownerDocument?.removeEventListener('keydown', disableUserSelect);
+      ownerDocument?.removeEventListener('keyup', enableUserSelect);
+    };
+  }, [
+    isSelectable,
+    selectionMode,
+    ownerDocument,
+    disableUserSelect,
+    enableUserSelect,
+  ]);
+
   const tableStateReducer = React.useCallback(
     (
       newState: TableState<T>,
@@ -424,6 +473,17 @@ export const Table = <
           break;
         case singleRowSelectedAction: {
           newState = onSingleSelectHandler(
+            newState,
+            action,
+            instance,
+            onSelect,
+            // If it has manual selection column, then we can't check whether row is disabled
+            hasManualSelectionColumn ? undefined : isRowDisabled,
+          );
+          break;
+        }
+        case shiftRowSelectedAction: {
+          newState = onShiftSelectHandler(
             newState,
             action,
             instance,
@@ -502,6 +562,7 @@ export const Table = <
     useResizeColumns(ownerDocument),
     useFilters,
     useSubRowFiltering(hasAnySubRows),
+    useGlobalFilter,
     useSortBy,
     useExpanded,
     usePagination,
@@ -522,13 +583,13 @@ export const Table = <
     prepareRow,
     state,
     allColumns,
-    filteredFlatRows,
     dispatch,
     page,
     gotoPage,
     setPageSize,
     flatHeaders,
     visibleColumns,
+    setGlobalFilter,
   } = instance;
 
   const ariaDataAttributes = Object.entries(rest).reduce(
@@ -541,9 +602,10 @@ export const Table = <
     {} as Record<string, string>,
   );
 
-  const areFiltersSet = allColumns.some(
-    (column) => column.filterValue != null && column.filterValue !== '',
-  );
+  const areFiltersSet =
+    allColumns.some(
+      (column) => column.filterValue != null && column.filterValue !== '',
+    ) || !!globalFilterValue;
 
   const showFilterButton = (column: HeaderGroup<T>) =>
     (data.length !== 0 || areFiltersSet) && column.canFilter;
@@ -563,7 +625,15 @@ export const Table = <
         selectRowOnClick &&
         !event.isDefaultPrevented()
       ) {
-        if (!row.isSelected && (selectionMode === 'single' || !event.ctrlKey)) {
+        if (selectionMode === 'multi' && event.shiftKey) {
+          dispatch({
+            type: shiftRowSelectedAction,
+            id: row.id,
+          });
+        } else if (
+          !row.isSelected &&
+          (selectionMode === 'single' || !event.ctrlKey)
+        ) {
           dispatch({
             type: singleRowSelectedAction,
             id: row.id,
@@ -582,6 +652,10 @@ export const Table = <
       onRowClick,
     ],
   );
+
+  React.useEffect(() => {
+    setGlobalFilter(globalFilterValue);
+  }, [globalFilterValue, setGlobalFilter]);
 
   React.useEffect(() => {
     setPageSize(pageSize);
@@ -918,7 +992,7 @@ export const Table = <
             </div>
           )}
           {!isLoading &&
-            (data.length === 0 || filteredFlatRows.length === 0) &&
+            (data.length === 0 || rows.length === 0) &&
             areFiltersSet && (
               <div className='iui-table-empty'>
                 <div>{emptyFilteredTableContent}</div>

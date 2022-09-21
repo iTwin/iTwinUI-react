@@ -371,24 +371,112 @@ it('should handle row clicks', async () => {
   const rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
 
-  await userEvent.click(getByText(mockedData()[1].name));
+  const user = userEvent.setup();
+
+  // Shift click test #1
+  // By default, when no row is selected before shift click, start selecting from first row to clicked row
+  await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
+  await user.click(getByText(mockedData()[1].name)); // [shiftKey: true]
+
+  expect(rows[0].classList).toContain('iui-selected');
   expect(rows[1].classList).toContain('iui-selected');
+  expect(rows[2].classList).not.toContain('iui-selected');
   expect(onSelect).toHaveBeenCalledTimes(1);
   expect(onRowClick).toHaveBeenCalledTimes(1);
 
-  await userEvent.click(getByText(mockedData()[2].name));
+  await userEvent.click(getByText(mockedData()[1].name)); // Deselect
+  expect(rows[0].classList).toContain('iui-selected');
   expect(rows[1].classList).not.toContain('iui-selected');
-  expect(rows[2].classList).toContain('iui-selected');
+  expect(rows[2].classList).not.toContain('iui-selected');
   expect(onSelect).toHaveBeenCalledTimes(2);
   expect(onRowClick).toHaveBeenCalledTimes(2);
 
-  const user = userEvent.setup();
-  await user.keyboard('[ControlLeft>]'); // Press Control (without releasing it)
-  await user.click(getByText(mockedData()[1].name)); // Perform a click with `ctrlKey: true`
+  await userEvent.click(getByText(mockedData()[1].name)); // Reselect; lastSelectedRowId = undefined -> 1
+  expect(rows[0].classList).not.toContain('iui-selected');
   expect(rows[1].classList).toContain('iui-selected');
-  expect(rows[2].classList).toContain('iui-selected');
+  expect(rows[2].classList).not.toContain('iui-selected');
   expect(onSelect).toHaveBeenCalledTimes(3);
   expect(onRowClick).toHaveBeenCalledTimes(3);
+
+  await user.keyboard('[ControlLeft>]'); // Press Control (without releasing it)
+  await user.click(getByText(mockedData()[2].name)); // Perform a click with `ctrlKey: true`
+  expect(rows[0].classList).not.toContain('iui-selected');
+  expect(rows[1].classList).toContain('iui-selected');
+  expect(rows[2].classList).toContain('iui-selected');
+  expect(onSelect).toHaveBeenCalledTimes(4);
+  expect(onRowClick).toHaveBeenCalledTimes(4);
+
+  // Shift click test #2
+  // When a row is clicked before shift click (lastSelectedRowId), selection starts from that row and ends at the currently clicked row
+  // But if the startIndex > endIndex, then startIndex and endIndex are swapped
+  await user.keyboard('[/ControlLeft][ShiftLeft>]'); // Release Ctrl and Press Shift (without releasing it)
+  await user.click(getByText(mockedData()[0].name)); // Perform a click with `shiftKey: true`
+
+  expect(rows[0].classList).toContain('iui-selected');
+  expect(rows[1].classList).toContain('iui-selected');
+  expect(rows[2].classList).not.toContain('iui-selected');
+  expect(onSelect).toHaveBeenCalledTimes(5);
+  expect(onRowClick).toHaveBeenCalledTimes(5);
+});
+
+it('should handle sub-rows shift click selection', async () => {
+  const onSelect = jest.fn();
+  const onRowClick = jest.fn();
+  const data = mockedSubRowsData();
+  const { container, getByText } = renderComponent({
+    data,
+    onSelect,
+    onRowClick,
+    isSelectable: true,
+  });
+  const testIfCheckboxesChecked = (
+    checkboxes: NodeListOf<HTMLInputElement>,
+    checkedIndices: Array<number>,
+    indeterminateIndices: Array<number>,
+  ) => {
+    Array.from(checkboxes).forEach((checkbox, index) => {
+      expect(!!checkbox.checked).toBe(checkedIndices.includes(index));
+      expect(!!checkbox.indeterminate).toBe(
+        indeterminateIndices.includes(index),
+      );
+    });
+  };
+
+  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  await expandAll(container);
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(10);
+
+  const checkboxes = container.querySelectorAll<HTMLInputElement>(
+    '.iui-table-body .iui-checkbox',
+  );
+
+  const user = userEvent.setup();
+  await user.click(getByText(data[0].subRows[0].name)); // [shiftKey: false]; lastSelectedRowId = 0.0
+  expect(onSelect).toHaveBeenCalledTimes(1);
+  expect(onRowClick).toHaveBeenCalledTimes(1);
+  testIfCheckboxesChecked(checkboxes, [1], [0]);
+
+  await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
+  await user.click(getByText(data[0].subRows[1].subRows[0].name)); // [shiftKey: true]
+  expect(onSelect).toHaveBeenCalledTimes(2);
+  expect(onRowClick).toHaveBeenCalledTimes(2);
+  testIfCheckboxesChecked(checkboxes, [1, 3], [0, 2]);
+
+  await user.keyboard('[/ShiftLeft]'); // Release Shift
+  await user.click(getByText(data[1].subRows[0].name)); // [shiftKey = true]; lastSelectedRowId = undefined -> 1.0
+  expect(onSelect).toHaveBeenCalledTimes(3);
+  expect(onRowClick).toHaveBeenCalledTimes(3);
+  testIfCheckboxesChecked(checkboxes, [7], [6]);
+
+  // When startIndex > endIndex, then startIndex and endIndex are swapped
+  await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
+  await user.click(getByText(data[0].subRows[1].subRows[1].name)); // [shiftKey = true]
+  expect(onSelect).toHaveBeenCalledTimes(4);
+  expect(onRowClick).toHaveBeenCalledTimes(4);
+  testIfCheckboxesChecked(checkboxes, [4, 5, 7], [0, 2, 6]);
 });
 
 it('should not select when clicked on row but selectRowOnClick flag is false', async () => {
@@ -1103,6 +1191,407 @@ it('should show message and active filter icon when there is no data after manua
     '.iui-filter-button.iui-active .iui-button-icon',
   ) as HTMLElement;
   expect(filterIcon).toBeTruthy();
+});
+
+it('should not filter if global filter is not set', async () => {
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+      ],
+    },
+  ];
+
+  const data = mockedData();
+
+  const { container } = render(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={undefined}
+    />,
+  );
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+});
+
+it('should update rows when global filter changes', async () => {
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+      ],
+    },
+  ];
+  const data = mockedData();
+
+  let globalFilterValue = 'Name2';
+
+  const { container, rerender } = render(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(1);
+  expect(rows.item(0).textContent).toContain('Description2');
+
+  globalFilterValue = 'Name3';
+
+  rerender(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(1);
+  expect(rows.item(0).textContent).toContain('Description3');
+});
+
+it('should filter rows with both global and column filters', async () => {
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          Filter: tableFilters.TextFilter(),
+          fieldType: 'text',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+      ],
+    },
+  ];
+  const data = [
+    {
+      name: 'Name11',
+      description: 'Description11',
+    },
+    {
+      name: 'Name12',
+      description: 'Description12',
+    },
+    {
+      name: 'Name22',
+      description: 'Description22',
+    },
+  ];
+
+  let globalFilterValue = '';
+  const { container, rerender } = render(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  globalFilterValue = 'Name1';
+
+  rerender(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(2);
+  expect(rows.item(0).textContent).toContain('Description11');
+  expect(rows.item(1).textContent).toContain('Description12');
+
+  await setFilter(container, '2');
+
+  rerender(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(1);
+  expect(rows.item(0).textContent).toContain('Description12');
+
+  globalFilterValue = '';
+
+  rerender(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(2);
+  expect(rows.item(0).textContent).toContain('Description12');
+  expect(rows.item(1).textContent).toContain('Description22');
+});
+
+it('should show empty filtered table content with global filter', async () => {
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+      ],
+    },
+  ];
+  const data = mockedData();
+
+  const emptyFilteredTableContent = 'Empty table filtered content';
+  let globalFilterValue = 'Name2';
+
+  const { container, rerender } = render(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      emptyFilteredTableContent={emptyFilteredTableContent}
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(1);
+  expect(rows.item(0).textContent).toContain('Description2');
+
+  globalFilterValue = 'Name4';
+
+  rerender(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      emptyFilteredTableContent={emptyFilteredTableContent}
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(0);
+  expect(container.textContent).toContain(emptyFilteredTableContent);
+});
+
+it('should not show empty filtered table content when global filter is empty', async () => {
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+      ],
+    },
+  ];
+  const data: { name: string; description: string }[] = [];
+
+  const emptyFilteredTableContent = 'Empty table filtered content';
+  const emptyTableContent = 'Empty table content';
+
+  let globalFilterValue: string | undefined = undefined;
+
+  const { container, rerender } = render(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent={emptyTableContent}
+      emptyFilteredTableContent={emptyFilteredTableContent}
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  expect(container.textContent).toContain(emptyTableContent);
+  expect(container.textContent).not.toContain(emptyFilteredTableContent);
+
+  globalFilterValue = '';
+
+  rerender(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent={emptyTableContent}
+      emptyFilteredTableContent={emptyFilteredTableContent}
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  expect(container.textContent).toContain(emptyTableContent);
+  expect(container.textContent).not.toContain(emptyFilteredTableContent);
+});
+
+it('should disable global filter column with disableGlobalFilter', async () => {
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+          disableGlobalFilter: true,
+        },
+      ],
+    },
+  ];
+  const data = mockedData();
+
+  let globalFilterValue = 'Name2';
+
+  const { container, rerender } = render(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(1);
+  expect(rows.item(0).textContent).toContain('Description2');
+
+  globalFilterValue = 'Description2';
+
+  rerender(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+    />,
+  );
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(0);
+});
+
+it('should not global filter with manualGlobalFilter', async () => {
+  const mockedColumns = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+          disableGlobalFilter: true,
+        },
+      ],
+    },
+  ];
+  const data = mockedData();
+
+  let globalFilterValue = '';
+
+  const { container, rerender } = render(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+      manualGlobalFilter={true}
+    />,
+  );
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  globalFilterValue = 'Description2';
+
+  rerender(
+    <Table
+      data={data}
+      columns={mockedColumns}
+      emptyTableContent='Empty table'
+      globalFilterValue={globalFilterValue}
+      manualGlobalFilter={true}
+    />,
+  );
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
 });
 
 it('should not trigger sorting when filter is clicked', async () => {
