@@ -63,7 +63,7 @@ type ComboboxMultipleTypeProps<T> =
        * Custom renderer for the selected item in select.
        * If `multiple` is enabled, it will give array of options to render.
        */
-      selectedItemRenderer?: (option: SelectOption<T>) => JSX.Element;
+      selectedItemRenderer?: (option: SelectOption<T>) => JSX.Element[];
       /**
        * Controlled value of ComboBox.
        * If `multiple` is enabled, it is an array of values.
@@ -179,7 +179,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     multiple = false,
     onShow,
     onHide,
-    selectedItemRenderer,
     ...rest
   } = props;
 
@@ -524,11 +523,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
               {isMultipleEnabled(selectedIndex, multiple) && (
                 <ComboBoxMultipleContainer
                   mRef={mergeRefs(tagContainerWidthRef, tagContainerHeightRef)}
-                  selectedItemsRenderer={
-                    selectedItemRenderer as (
-                      options: SelectOption<T>[],
-                    ) => JSX.Element
-                  }
                   selectedItems={selectedOptions as SelectOption<T>[]}
                   tagRenderer={tagRenderer}
                 />

@@ -8,7 +8,7 @@ import SelectTagContainer from '../Select/SelectTagContainer';
 
 type ComboBoxMultipleContainerProps<T> = {
   selectedItems?: SelectOption<T>[];
-  selectedItemsRenderer?: (options: SelectOption<T>[]) => JSX.Element;
+  selectedItemsRenderer?: (options: SelectOption<T>[]) => JSX.Element[];
   tagRenderer: (item: SelectOption<T>) => JSX.Element;
   mRef: React.ForwardedRef<HTMLDivElement>;
 };
@@ -29,29 +29,18 @@ export const ComboBoxMultipleContainer = <T,>({
 
   return (
     <>
-      {selectedItems && selectedItemsRenderer && (
-        <div
-          className='iui-select-tag-container'
-          ref={mRef}
-          style={{
-            maxWidth: `70%`,
-            inset: 'unset',
-            paddingLeft: '12px',
-            height: 'fit-content',
-            right: 'unset',
-          }}
-        >
-          {selectedItemsRenderer(selectedItems)}
-        </div>
-      )}
-      {selectedItems && !selectedItemsRenderer && (
+      {selectedItems && (
         <SelectTagContainer
           style={{
             maxWidth: `70%`,
             right: 'unset',
           }}
           ref={mRef}
-          tags={selectedItemsElements}
+          tags={
+            selectedItemsRenderer
+              ? selectedItemsRenderer(selectedItems)
+              : selectedItemsElements
+          }
         />
       )}
     </>
