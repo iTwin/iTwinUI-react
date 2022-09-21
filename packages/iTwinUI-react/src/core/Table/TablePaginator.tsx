@@ -114,7 +114,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
     totalRowsCount,
     pageSize,
     onPageChange,
-    totalSelectedRowsCount,
+    totalSelectedRowsCount = 0,
     focusActivationMode = 'manual',
     isLoading = false,
     size = 'default',
@@ -284,7 +284,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
       {...rest}
     >
       <div className='iui-left'>
-        {totalSelectedRowsCount && totalSelectedRowsCount > 0 && (
+        {totalSelectedRowsCount > 0 && (
           <span className='iui-table-paginator-selection-count'>
             {`${totalSelectedRowsCount} ${
               totalSelectedRowsCount > 1 ? 'rows' : 'row'
