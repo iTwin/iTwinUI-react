@@ -2511,23 +2511,19 @@ it('should render number of rows selected for paginator', async () => {
     '.iui-table-body .iui-row .iui-checkbox',
   );
 
-  expect(
-    container.querySelector('.iui-table-paginator-selection-count'),
-  ).toBeNull();
+  expect(container.querySelector('.iui-left span')).toBeNull();
 
   fireEvent.click(rowCheckboxes[0]);
 
-  expect(
-    container.querySelector('.iui-table-paginator-selection-count')
-      ?.textContent,
-  ).toBe('1 row selected');
+  expect(container.querySelector('.iui-left span')?.textContent).toBe(
+    '1 row selected',
+  );
 
   fireEvent.click(rowCheckboxes[1]);
 
-  expect(
-    container.querySelector('.iui-table-paginator-selection-count')
-      ?.textContent,
-  ).toBe('2 rows selected');
+  expect(container.querySelector('.iui-left span')?.textContent).toBe(
+    '2 rows selected',
+  );
 });
 
 it('should handle resize by increasing width of current column and decreasing the next ones', () => {
