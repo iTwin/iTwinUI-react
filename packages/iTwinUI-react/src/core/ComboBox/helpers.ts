@@ -53,7 +53,10 @@ export const comboBoxReducer = (
       }
     }
     case 'focus': {
-      return { ...state, focusedIndex: value ?? state.selectedIndex ?? -1 };
+      return {
+        ...state,
+        focusedIndex: value ?? (state.selectedIndex as number) ?? -1,
+      };
     }
     default: {
       return state;
