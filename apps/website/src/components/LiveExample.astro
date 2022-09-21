@@ -2,6 +2,7 @@
 import * as AllExamples from '~/examples';
 import LiveExample from './LiveExample';
 import fs from 'node:fs';
+import { getSandpackCssText } from '@codesandbox/sandpack-react';
 
 export type Props = {
   /** name of the file to read code example from, should be located in ~/examples folder */
@@ -32,6 +33,8 @@ const MainComponent = AllExamples[`${capitalize(componentName)}MainExample`];
 ---
 
 <LiveExample code={code} client:visible />
+
+<style set:html={getSandpackCssText()}></style>
 
 <style lang='scss' is:global>
   .live-example {
@@ -91,7 +94,7 @@ const MainComponent = AllExamples[`${capitalize(componentName)}MainExample`];
     border: 1px solid transparent;
     cursor: pointer;
     padding: 0.25rem 0.5rem;
-    color: var(--text);
+    color: var(--color-text);
 
     &:hover {
       background: hsl(0 0% 0% / 0.2);
