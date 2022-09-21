@@ -90,10 +90,10 @@ const defaultGetResizerProps = (ownerDocument: Document | undefined) => (
 
     const headerIdWidths = getLeafHeaders(header).map((d) => [
       d.id,
-      d.resizeWidth,
+      getHeaderWidth(d),
     ]);
     const nextHeaderIdWidths = nextHeader
-      ? getLeafHeaders(nextHeader).map((d) => [d.id, d.resizeWidth])
+      ? getLeafHeaders(nextHeader).map((d) => [d.id, getHeaderWidth(d)])
       : [];
 
     const clientX = isTouchEvent(e)
@@ -168,8 +168,8 @@ const defaultGetResizerProps = (ownerDocument: Document | undefined) => (
     dispatch({
       type: actions.columnStartResizing,
       columnId: header.id,
-      columnWidth: header.resizeWidth,
-      nextColumnWidth: nextHeader?.resizeWidth,
+      columnWidth: getHeaderWidth(header),
+      nextColumnWidth: getHeaderWidth(nextHeader),
       headerIdWidths,
       nextHeaderIdWidths,
       clientX,
@@ -357,7 +357,7 @@ const isNewColumnWidthsValid = <T extends Record<string, unknown>>(
     for (const header of instance.flatHeaders) {
       newTableWidth += columnWidths[header.id]
         ? columnWidths[header.id]
-        : header.resizeWidth || 0;
+        : getHeaderWidth(header);
     }
     // `tableWidth` is whole number therefore we need to round the `newTableWidth`
     if (Math.round(newTableWidth) < instance.tableWidth) {
@@ -450,6 +450,12 @@ function getLeafHeaders(header: HeaderGroup) {
   recurseHeader(header);
   return leafHeaders;
 }
+
+const getHeaderWidth = <T extends Record<string, unknown>>(
+  header: ColumnInstance<T>,
+) => {
+  return Number(header.width || header.resizeWidth || 0);
+};
 
 // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#safely_detecting_option_support
 let passiveSupported: boolean | null = null;

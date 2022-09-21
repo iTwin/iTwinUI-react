@@ -100,7 +100,14 @@ declare module 'react-table' {
      * If some rows don't have sub-data, it is recommended to pass an empty array to `subRows` for consistent spacing.
      */
     data: D[];
-    resizeMode: 'next-column' | 'current-column';
+    /**
+     * Column's resize mode.
+     *  - `next-column` - when resizing it affects current and the next column,
+     *   e.g. when increasing width of current column, next column's width will decrease.
+     *  - `current-column` - when resizing it affects only the current column,
+     *   e.g. when increasing width of the current column, next column's width remains the same.
+     */
+    resizeMode?: 'next-column' | 'current-column';
   }
 
   export interface Hooks<D extends object = {}>
