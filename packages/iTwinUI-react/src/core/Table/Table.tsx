@@ -47,6 +47,7 @@ import {
   onExpandHandler,
   onFilterHandler,
   onSelectHandler,
+  onShiftSelectHandler,
   onSingleSelectHandler,
   onTableResizeEnd,
   onTableResizeStart,
@@ -55,6 +56,7 @@ import VirtualScroll from '../utils/components/VirtualScroll';
 import { SELECTION_CELL_ID } from './columns';
 
 const singleRowSelectedAction = 'singleRowSelected';
+const shiftRowSelectedAction = 'shiftRowSelected';
 export const tableResizeStartAction = 'tableResizeStart';
 const tableResizeEndAction = 'tableResizeEnd';
 
@@ -96,7 +98,7 @@ export type TablePaginatorRendererProps = {
  * columns and data must be memoized.
  */
 export type TableProps<
-  T extends Record<string, unknown> = Record<string, unknown>,
+  T extends Record<string, unknown> = Record<string, unknown>
 > = Omit<TableOptions<T>, 'disableSortBy'> & {
   /**
    * Flag whether data is loading.
@@ -198,7 +200,9 @@ export type TableProps<
    * Function that should return custom props passed to the each row.
    * Must be memoized.
    */
-  rowProps?: (row: Row<T>) => React.ComponentPropsWithRef<'div'> & {
+  rowProps?: (
+    row: Row<T>,
+  ) => React.ComponentPropsWithRef<'div'> & {
     status?: 'positive' | 'warning' | 'negative';
   };
   /**
@@ -280,10 +284,11 @@ export type TableProps<
 } & Omit<CommonProps, 'title'>;
 
 // Original type for some reason is missing sub-columns
-type ColumnType<T extends Record<string, unknown> = Record<string, unknown>> =
-  Column<T> & {
-    columns: ColumnType[];
-  };
+type ColumnType<
+  T extends Record<string, unknown> = Record<string, unknown>
+> = Column<T> & {
+  columns: ColumnType[];
+};
 const flattenColumns = (columns: ColumnType[]): ColumnType[] => {
   const flatColumns: ColumnType[] = [];
   columns.forEach((column) => {
@@ -338,7 +343,7 @@ const flattenColumns = (columns: ColumnType[]): ColumnType[] => {
  * />
  */
 export const Table = <
-  T extends Record<string, unknown> = Record<string, unknown>,
+  T extends Record<string, unknown> = Record<string, unknown>
 >(
   props: TableProps<T>,
 ): JSX.Element => {
@@ -408,6 +413,45 @@ export const Table = <
     return flatColumns.some((column) => column.id === SELECTION_CELL_ID);
   }, [columns]);
 
+  const disableUserSelect = React.useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Shift') {
+        ownerDocument &&
+          (ownerDocument.documentElement.style.userSelect = 'none');
+      }
+    },
+    [ownerDocument],
+  );
+
+  const enableUserSelect = React.useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Shift') {
+        ownerDocument && (ownerDocument.documentElement.style.userSelect = '');
+      }
+    },
+    [ownerDocument],
+  );
+
+  React.useEffect(() => {
+    if (!isSelectable || selectionMode !== 'multi') {
+      return;
+    }
+
+    ownerDocument?.addEventListener('keydown', disableUserSelect);
+    ownerDocument?.addEventListener('keyup', enableUserSelect);
+
+    return () => {
+      ownerDocument?.removeEventListener('keydown', disableUserSelect);
+      ownerDocument?.removeEventListener('keyup', enableUserSelect);
+    };
+  }, [
+    isSelectable,
+    selectionMode,
+    ownerDocument,
+    disableUserSelect,
+    enableUserSelect,
+  ]);
+
   const tableStateReducer = React.useCallback(
     (
       newState: TableState<T>,
@@ -428,6 +472,17 @@ export const Table = <
           break;
         case singleRowSelectedAction: {
           newState = onSingleSelectHandler(
+            newState,
+            action,
+            instance,
+            onSelect,
+            // If it has manual selection column, then we can't check whether row is disabled
+            hasManualSelectionColumn ? undefined : isRowDisabled,
+          );
+          break;
+        }
+        case shiftRowSelectedAction: {
+          newState = onShiftSelectHandler(
             newState,
             action,
             instance,
@@ -568,7 +623,15 @@ export const Table = <
         selectRowOnClick &&
         !event.isDefaultPrevented()
       ) {
-        if (!row.isSelected && (selectionMode === 'single' || !event.ctrlKey)) {
+        if (selectionMode === 'multi' && event.shiftKey) {
+          dispatch({
+            type: shiftRowSelectedAction,
+            id: row.id,
+          });
+        } else if (
+          !row.isSelected &&
+          (selectionMode === 'single' || !event.ctrlKey)
+        ) {
           dispatch({
             type: singleRowSelectedAction,
             id: row.id,
@@ -630,8 +693,9 @@ export const Table = <
       // Update column widths when table was resized
       flatHeaders.forEach((header) => {
         if (columnRefs.current[header.id]) {
-          header.resizeWidth =
-            columnRefs.current[header.id].getBoundingClientRect().width;
+          header.resizeWidth = columnRefs.current[
+            header.id
+          ].getBoundingClientRect().width;
         }
       });
 
@@ -652,8 +716,9 @@ export const Table = <
       const newColumnWidths: Record<string, number> = {};
       flatHeaders.forEach((column) => {
         if (columnRefs.current[column.id]) {
-          newColumnWidths[column.id] =
-            columnRefs.current[column.id].getBoundingClientRect().width;
+          newColumnWidths[column.id] = columnRefs.current[
+            column.id
+          ].getBoundingClientRect().width;
         }
       });
       dispatch({ type: tableResizeEndAction, columnWidths: newColumnWidths });
@@ -810,8 +875,7 @@ export const Table = <
                         ref={(el) => {
                           if (el) {
                             columnRefs.current[column.id] = el;
-                            column.resizeWidth =
-                              el.getBoundingClientRect().width;
+                            column.resizeWidth = el.getBoundingClientRect().width;
                           }
                         }}
                       >
