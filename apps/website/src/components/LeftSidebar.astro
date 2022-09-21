@@ -1,41 +1,45 @@
 ---
 const currentPage = new URL(Astro.request.url).pathname;
 
-const componentsPages = (await Astro.glob('../pages/docs/*.mdx'))
-  .filter(({ file }) => !file.endsWith('index.mdx'))
+const docsPages = (await Astro.glob('../pages/docs/*.mdx'))
   .map(({ url, frontmatter }) => ({
     url,
     title: frontmatter.title,
     group: frontmatter.group,
   }));
 
-const sections = new Map<string, typeof componentsPages>();
+const introPages = docsPages.filter((page) => !page.group);
+
+const sections = new Map<string, typeof docsPages>();
 sections.set(
   'components',
-  componentsPages.filter((item) => item.group === 'core')
+  docsPages.filter((item) => item.group === 'core')
 );
 sections.set(
   'buttons',
-  componentsPages.filter((item) => item.group === 'buttons')
+  docsPages.filter((item) => item.group === 'buttons')
 );
 sections.set(
   'inputs',
-  componentsPages.filter((item) => item.group === 'inputs')
+  docsPages.filter((item) => item.group === 'inputs')
 );
 sections.set(
   'typography',
-  componentsPages.filter((item) => item.group === 'typography')
+  docsPages.filter((item) => item.group === 'typography')
 );
 ---
 
 <nav aria-labelledby='grid-left'>
   <ul class='nav-groups'>
-    <li class='nav-link'>
-      <a href={'/docs'} aria-current={`${currentPage === '/docs' ? 'page' : 'false'}`}>
-        Getting started
-      </a>
-    </li>
-
+    {
+      introPages.map(({ url, title }) => (
+        <li class='nav-link'>
+          <a href={url} aria-current={`${currentPage === url ? 'page' : 'false'}`}>
+            {title}
+          </a>
+        </li>
+      ))
+    }
     {
       [...sections.entries()].map(([heading, list]) => (
         <li>
@@ -57,15 +61,6 @@ sections.set(
   </ul>
 </nav>
 
-<script is:inline>
-  window.addEventListener('DOMContentLoaded', (event) => {
-    var target = document.querySelector('[aria-current="page"]');
-    if (target && target.offsetTop > window.innerHeight - 100) {
-      document.querySelector('.nav-groups').scrollTop = target.offsetTop;
-    }
-  });
-</script>
-
 <style lang='scss'>
   nav {
     width: 100%;
@@ -84,7 +79,7 @@ sections.set(
     min-width: 250px;
   }
 
-  .nav-groups > li + li {
+  .nav-groups > li + li:not(.nav-link) {
     margin-top: var(--space-5);
   }
 
