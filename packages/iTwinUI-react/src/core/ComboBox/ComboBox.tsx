@@ -52,34 +52,31 @@ const isSingleOnChange = <T,>(
   return !multiple;
 };
 
-type ComboboxMultipleTypeProps<T> =
-  | {
-      /**
-       * Enable multiple selection.
-       * @default false
-       */
-      multiple?: false;
-      /**
-       * Custom renderer for the selected item in select.
-       * If `multiple` is enabled, it will give array of options to render.
-       */
-      selectedItemRenderer?: (option: SelectOption<T>) => JSX.Element[];
-      /**
-       * Controlled value of ComboBox.
-       * If `multiple` is enabled, it is an array of values.
-       */
-      value?: T;
-      /**
-       * Callback fired when selected value changes.
-       */
-      onChange?: (value: T) => void;
-    }
-  | {
-      multiple: true;
-      selectedItemRenderer?: (options: SelectOption<T>[]) => JSX.Element;
-      value?: T[];
-      onChange?: (value: T, event: SelectValueChangeEvent) => void;
-    };
+type ComboboxMultipleTypeProps<T> = {
+  /**
+   * Enable multiple selection.
+   * @default false
+   */
+  multiple?: boolean;
+  /**
+   * Custom renderer for the selected item in select.
+   * If `multiple` is enabled, it will give array of options to render.
+   */
+  selectedItemRenderer?:
+    | ((option: SelectOption<T>) => JSX.Element[])
+    | ((options: SelectOption<T>[]) => JSX.Element);
+  /**
+   * Controlled value of ComboBox.
+   * If `multiple` is enabled, it is an array of values.
+   */
+  value?: T | T[];
+  /**
+   * Callback fired when selected value changes.
+   */
+  onChange?:
+    | ((value: T) => void)
+    | ((value: T, event: SelectValueChangeEvent) => void);
+};
 
 export type ComboBoxProps<T> = {
   /**
@@ -502,7 +499,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             id,
             minWidth,
             isOpen,
-            focusedIndex: undefined,
+            focusedIndex: focusedIndex,
             enableVirtualization,
             filteredOptions,
             getMenuItem,
