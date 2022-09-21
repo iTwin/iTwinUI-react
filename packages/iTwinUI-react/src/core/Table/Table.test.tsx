@@ -2499,6 +2499,37 @@ it('should change page size', async () => {
   expect(rows[49].querySelector('.iui-cell')?.textContent).toEqual('Name50');
 });
 
+it('should render number of rows selected for paginator', async () => {
+  const { container } = renderComponent({
+    data: mockedData(100),
+    pageSize: 10,
+    paginatorRenderer: (props) => <TablePaginator {...props} />,
+    isSelectable: true,
+  });
+
+  const rowCheckboxes = container.querySelectorAll(
+    '.iui-table-body .iui-row .iui-checkbox',
+  );
+
+  expect(
+    container.querySelector('.iui-table-paginator-selection-count'),
+  ).toBeNull();
+
+  fireEvent.click(rowCheckboxes[0]);
+
+  expect(
+    container.querySelector('.iui-table-paginator-selection-count')
+      ?.textContent,
+  ).toBe('1 row selected');
+
+  fireEvent.click(rowCheckboxes[1]);
+
+  expect(
+    container.querySelector('.iui-table-paginator-selection-count')
+      ?.textContent,
+  ).toBe('2 rows selected');
+});
+
 it('should handle resize by increasing width of current column and decreasing the next ones', () => {
   jest
     .spyOn(HTMLElement.prototype, 'getBoundingClientRect')

@@ -114,6 +114,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
     totalRowsCount,
     pageSize,
     onPageChange,
+    totalSelectedRowsCount = 0,
     focusActivationMode = 'manual',
     isLoading = false,
     size = 'default',
@@ -281,7 +282,15 @@ export const TablePaginator = (props: TablePaginatorProps) => {
       ref={paginatorResizeRef}
       {...rest}
     >
-      <div className='iui-left' />
+      <div className='iui-left'>
+        {totalSelectedRowsCount > 0 && (
+          <span className='iui-table-paginator-selection-count'>
+            {`${totalSelectedRowsCount} ${
+              totalSelectedRowsCount > 1 ? 'rows' : 'row'
+            } selected`}
+          </span>
+        )}
+      </div>
       {showPagesList && (
         <div className='iui-center' ref={overflowRef}>
           <IconButton
