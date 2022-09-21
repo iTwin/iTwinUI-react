@@ -1146,7 +1146,7 @@ it('should not filter if global filter is not set', async () => {
   );
 
   expect(screen.queryByText('Header name')).toBeFalsy();
-  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  const rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(3);
 });
 
@@ -1182,7 +1182,7 @@ it('should update rows when global filter changes', async () => {
   );
 
   expect(screen.queryByText('Header name')).toBeFalsy();
-  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  let rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(1);
   expect(rows.item(0).textContent).toContain('Description2');
 
@@ -1197,7 +1197,7 @@ it('should update rows when global filter changes', async () => {
     />,
   );
 
-  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(1);
   expect(rows.item(0).textContent).toContain('Description3');
 });
@@ -1248,7 +1248,7 @@ it('should filter rows with both global and column filters', async () => {
   );
 
   expect(screen.queryByText('Header name')).toBeFalsy();
-  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  let rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(3);
 
   globalFilterValue = 'Name1';
@@ -1262,7 +1262,7 @@ it('should filter rows with both global and column filters', async () => {
     />,
   );
 
-  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(2);
   expect(rows.item(0).textContent).toContain('Description11');
   expect(rows.item(1).textContent).toContain('Description12');
@@ -1278,7 +1278,7 @@ it('should filter rows with both global and column filters', async () => {
     />,
   );
 
-  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(1);
   expect(rows.item(0).textContent).toContain('Description12');
 
@@ -1293,7 +1293,7 @@ it('should filter rows with both global and column filters', async () => {
     />,
   );
 
-  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(2);
   expect(rows.item(0).textContent).toContain('Description12');
   expect(rows.item(1).textContent).toContain('Description22');
@@ -1333,7 +1333,7 @@ it('should show empty filtered table content with global filter', async () => {
   );
 
   expect(screen.queryByText('Header name')).toBeFalsy();
-  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  let rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(1);
   expect(rows.item(0).textContent).toContain('Description2');
 
@@ -1349,7 +1349,7 @@ it('should show empty filtered table content with global filter', async () => {
     />,
   );
 
-  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(0);
   expect(container.textContent).toContain(emptyFilteredTableContent);
 });
@@ -1442,7 +1442,7 @@ it('should disable global filter column with disableGlobalFilter', async () => {
   );
 
   expect(screen.queryByText('Header name')).toBeFalsy();
-  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  let rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(1);
   expect(rows.item(0).textContent).toContain('Description2');
 
@@ -1458,7 +1458,7 @@ it('should disable global filter column with disableGlobalFilter', async () => {
   );
 
   expect(screen.queryByText('Header name')).toBeFalsy();
-  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(0);
 });
 
@@ -1496,7 +1496,7 @@ it('should not global filter with manualGlobalFilter', async () => {
   );
 
   expect(screen.queryByText('Header name')).toBeFalsy();
-  let rows = container.querySelectorAll('.iui-table-body .iui-row');
+  let rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(3);
 
   globalFilterValue = 'Description2';
@@ -1512,7 +1512,7 @@ it('should not global filter with manualGlobalFilter', async () => {
   );
 
   expect(screen.queryByText('Header name')).toBeFalsy();
-  rows = container.querySelectorAll('.iui-table-body .iui-row');
+  rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(3);
 });
 
