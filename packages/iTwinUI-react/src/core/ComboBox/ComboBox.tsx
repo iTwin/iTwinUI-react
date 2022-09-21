@@ -509,10 +509,14 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           <ComboBoxInputContainer disabled={inputProps?.disabled} {...rest}>
             <>
               <ComboBoxInput
-                style={{
-                  paddingLeft: tagContainerWidth + 18,
-                  minHeight: tagContainerHeight,
-                }}
+                style={
+                  isMultipleEnabled(selectedIndex, multiple)
+                    ? {
+                        paddingLeft: tagContainerWidth + 18,
+                        minHeight: tagContainerHeight,
+                      }
+                    : {}
+                }
                 value={inputValue}
                 {...inputProps}
                 onChange={handleOnInput}
