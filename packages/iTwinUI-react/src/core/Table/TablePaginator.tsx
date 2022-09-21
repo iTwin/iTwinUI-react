@@ -286,7 +286,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
         {totalSelectedRowsCount > 0 && (
           <span className='iui-table-paginator-selection-count'>
             {`${totalSelectedRowsCount} ${
-              totalSelectedRowsCount > 1 ? 'rows' : 'row'
+              totalSelectedRowsCount === 1 ? 'row' : 'rows'
             } selected`}
           </span>
         )}
