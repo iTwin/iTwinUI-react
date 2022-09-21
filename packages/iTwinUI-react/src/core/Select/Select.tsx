@@ -468,7 +468,9 @@ const MultipleSelectButton = <T,>({
         selectedItemsRenderer &&
         selectedItemsRenderer(selectedItems)}
       {selectedItems && !selectedItemsRenderer && (
-        <SelectTagContainer tags={selectedItemsElements} />
+        <span className='iui-content'>
+          <SelectTagContainer tags={selectedItemsElements} />
+        </span>
       )}
     </>
   );
