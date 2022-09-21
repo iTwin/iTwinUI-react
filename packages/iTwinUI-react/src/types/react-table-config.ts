@@ -106,6 +106,7 @@ declare module 'react-table' {
      *   e.g. when increasing width of current column, next column's width will decrease.
      *  - `current-column` - when resizing it affects only the current column,
      *   e.g. when increasing width of the current column, next column's width remains the same.
+     * @default 'next-column'
      */
     resizeMode?: 'next-column' | 'current-column';
   }
