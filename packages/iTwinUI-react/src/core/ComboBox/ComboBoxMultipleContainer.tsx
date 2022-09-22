@@ -8,14 +8,12 @@ import SelectTagContainer from '../Select/SelectTagContainer';
 
 type ComboBoxMultipleContainerProps<T> = {
   selectedItems?: SelectOption<T>[];
-  selectedItemsRenderer?: (options: SelectOption<T>[]) => JSX.Element[];
   tagRenderer: (item: SelectOption<T>) => JSX.Element;
   mRef: React.ForwardedRef<HTMLDivElement>;
 };
 
 export const ComboBoxMultipleContainer = <T,>({
   selectedItems,
-  selectedItemsRenderer,
   tagRenderer,
   mRef,
 }: ComboBoxMultipleContainerProps<T>) => {
@@ -30,17 +28,14 @@ export const ComboBoxMultipleContainer = <T,>({
   return (
     <>
       {selectedItems && (
+        // target from combobox css
         <SelectTagContainer
           style={{
             maxWidth: `70%`,
             right: 'unset',
           }}
           ref={mRef}
-          tags={
-            selectedItemsRenderer
-              ? selectedItemsRenderer(selectedItems)
-              : selectedItemsElements
-          }
+          tags={selectedItemsElements}
         />
       )}
     </>
