@@ -26,13 +26,30 @@ export default {
     },
   },
   title: 'Core/NotificationMarker',
+  decorators: [
+    (Story) => (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          gap: '20px',
+        }}
+      >
+        <Story />
+      </div>
+    ),
+  ],
 } as Meta<NotificationMarkerProps>;
 
 export const Basic: Story<NotificationMarkerProps> = (args) => {
   return (
-    <IconButton styleType='borderless'>
-      <NotificationMarker {...args}>{args.children}</NotificationMarker>
-    </IconButton>
+    <>
+      <IconButton styleType='borderless'>
+        <NotificationMarker {...args}>{args.children}</NotificationMarker>
+      </IconButton>
+      <NotificationMarker {...args}>3 members online</NotificationMarker>
+    </>
   );
 };
 
@@ -47,18 +64,14 @@ Basic.argTypes = {
   },
 };
 
-export const CustomChild: Story<NotificationMarkerProps> = (args) => {
+export const Pulsing: Story<NotificationMarkerProps> = (args) => {
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-        gap: '20px',
-      }}
-    >
+    <>
       <NotificationMarker status='positive' {...args}>
         Live
+      </NotificationMarker>
+      <NotificationMarker status='warning' {...args}>
+        Loads exceeded
       </NotificationMarker>
       <NotificationMarker status='negative' {...args}>
         Rec
@@ -66,11 +79,15 @@ export const CustomChild: Story<NotificationMarkerProps> = (args) => {
       <NotificationMarker status='primary' {...args}>
         1 new message
       </NotificationMarker>
-    </div>
+    </>
   );
 };
 
-CustomChild.argTypes = {
+Pulsing.args = {
+  pulsing: true,
+};
+
+Pulsing.argTypes = {
   status: {
     control: false,
   },
