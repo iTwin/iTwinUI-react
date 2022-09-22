@@ -49,7 +49,7 @@ export const Basic: Story<NotificationMarkerProps> = (args) => {
       <IconButton styleType='borderless'>
         <NotificationMarker {...args}>{args.children}</NotificationMarker>
       </IconButton>
-      <NotificationMarker {...args}>3 members online</NotificationMarker>
+      <NotificationMarker {...args}>Normal</NotificationMarker>
     </>
   );
 };
@@ -111,17 +111,17 @@ export const Status: Story<NotificationMarkerProps> = (args) => {
           </NotificationMarker>
         </IconButton>
       </span>
+      <NotificationMarker status='primary' {...args}>
+        Primary
+      </NotificationMarker>
       <NotificationMarker status='positive' {...args}>
-        Live
+        Positive
       </NotificationMarker>
       <NotificationMarker status='warning' {...args}>
-        Loads exceeded
+        Warning
       </NotificationMarker>
       <NotificationMarker status='negative' {...args}>
-        Rec
-      </NotificationMarker>
-      <NotificationMarker status='primary' {...args}>
-        1 new message
+        Negative
       </NotificationMarker>
     </>
   );
