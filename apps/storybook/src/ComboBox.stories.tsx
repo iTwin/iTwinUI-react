@@ -27,7 +27,8 @@ export default {
   },
   decorators: [
     (Story) => (
-      <div style={{ maxWidth: 'clamp(300px, 50%, 100%)', minHeight: 380 }}>
+      // <div style={{ maxWidth: 'clamp(300px, 50%, 100%)', minHeight: 380 }}>
+      <div>
         <Story />
       </div>
     ),
@@ -578,32 +579,12 @@ Virtualized.argTypes = {
 
 export const MultipleSelect: Story<Partial<ComboBoxProps<string>>> = (args) => {
   const options = React.useMemo(() => countriesList, []);
-
   return (
     <ComboBox
       options={options}
       inputProps={{ placeholder: 'Select a country' }}
       onChange={(value: string) => action(value ?? '')()}
       multiple={true}
-      {...args}
-    />
-  );
-};
-
-export const MultipleSelectCustom: Story<Partial<ComboBoxProps<string>>> = (
-  args,
-) => {
-  const options = React.useMemo(() => countriesList, []);
-
-  return (
-    <ComboBox
-      options={options}
-      inputProps={{ placeholder: 'Select a country' }}
-      onChange={(value: string) => action(value ?? '')()}
-      multiple={true}
-      selectedItemRenderer={(options) => (
-        <>{options.map((option) => option.label).join(', ')}</>
-      )}
       {...args}
     />
   );

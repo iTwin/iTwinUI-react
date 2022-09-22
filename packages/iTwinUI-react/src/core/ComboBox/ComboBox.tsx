@@ -17,7 +17,6 @@ import {
   mergeRefs,
   useLatestRef,
   useContainerWidth,
-  useContainerHeight,
 } from '../utils';
 import 'tippy.js/animations/shift-away.css';
 import {
@@ -58,13 +57,6 @@ type ComboboxMultipleTypeProps<T> = {
    * @default false
    */
   multiple?: boolean;
-  /**
-   * Custom renderer for the selected item in select.
-   * If `multiple` is enabled, it will give array of options to render.
-   */
-  selectedItemRenderer?:
-    | ((option: SelectOption<T>) => JSX.Element[])
-    | ((options: SelectOption<T>[]) => JSX.Element);
   /**
    * Controlled value of ComboBox.
    * If `multiple` is enabled, it is an array of values.
@@ -239,12 +231,9 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     comboBoxReducer,
     {
       isOpen: false,
-      // if multiple enabled -> get selected indexes, if not -> is valueProp defined -> yes - get index of selected value -> no - set index as -1
       selectedIndex: isMultipleEnabled(valueProp, multiple)
         ? getSelectedIndexes()
-        : valueProp
-        ? optionsRef.current.findIndex((option) => option.value === valueProp)
-        : -1,
+        : optionsRef.current.findIndex((option) => option.value === valueProp),
       focusedIndex: -1,
     },
   );
@@ -254,10 +243,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       return undefined;
     }
     const item = isMultipleEnabled(selectedIndex, multiple)
-      ? selectedIndex != undefined && selectedIndex.length > 0 // if multiple enabled -> check if we have anything selected
-        ? selectedIndex.map((index) => optionsRef.current[index]) // if we have selected items, find their option items
-        : [] // if not selected, return empty array
-      : optionsRef.current[selectedIndex]; // if multiple is not selected, get simple option item
+      ? selectedIndex.map((index) => optionsRef.current[index])
+      : optionsRef.current[selectedIndex];
     return item;
   }, [multiple, optionsRef, selectedIndex]);
 
@@ -334,8 +321,16 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   // When the value prop changes, update the selectedIndex
   // TODO add multiselect version of this
+  // add reducer
   React.useEffect(() => {
-    if (!isMultipleEnabled(valueProp, multiple)) {
+    if (isMultipleEnabled(valueProp, multiple)) {
+      // valueProp?.map((item) => {
+      //   dispatch([
+      //     'multiselect',
+      //     options.findIndex((option) => option.value === item),
+      //   ]);
+      // });
+    } else {
       dispatch([
         'select',
         options.findIndex((option) => option.value === valueProp),
@@ -344,6 +339,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   }, [multiple, options, valueProp]);
 
   // Call user-defined onChange when the value actually changes
+  // move onClick ????
   React.useEffect(() => {
     // Prevent user-defined onChange to be called on mount
     if (!mounted.current) {
@@ -483,7 +479,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   );
 
   const [tagContainerWidthRef, tagContainerWidth] = useContainerWidth(true);
-  const [tagContainerHeightRef, tagContainerHeight] = useContainerHeight(true);
+  // const [tagContainerHeightRef, tagContainerHeight] = useContainerHeight(true);
 
   const tagRenderer = React.useCallback((item: SelectOption<T>) => {
     return <SelectTag key={item.label} label={item.label} />;
@@ -513,7 +509,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
                   isMultipleEnabled(selectedIndex, multiple)
                     ? {
                         paddingLeft: tagContainerWidth + 18,
-                        minHeight: tagContainerHeight,
                       }
                     : {}
                 }
@@ -523,7 +518,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
               />
               {isMultipleEnabled(selectedIndex, multiple) && (
                 <ComboBoxMultipleContainer
-                  mRef={mergeRefs(tagContainerWidthRef, tagContainerHeightRef)}
+                  mRef={tagContainerWidthRef}
                   selectedItems={selectedOptions as SelectOption<T>[]}
                   tagRenderer={tagRenderer}
                 />
