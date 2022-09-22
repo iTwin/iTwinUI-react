@@ -5,6 +5,7 @@
 import { Story, Meta } from '@storybook/react';
 import React from 'react';
 import {
+  Text,
   IconButton,
   NotificationMarker,
   NotificationMarkerProps,
@@ -67,6 +68,49 @@ Basic.argTypes = {
 export const Pulsing: Story<NotificationMarkerProps> = (args) => {
   return (
     <>
+      <IconButton styleType='borderless'>
+        <NotificationMarker status='primary' {...args}>
+          <SvgNotification />
+        </NotificationMarker>
+      </IconButton>
+
+      <NotificationMarker status='primary' {...args}>
+        <Text style={{ fontWeight: '700' }}>URGENT</Text>
+      </NotificationMarker>
+    </>
+  );
+};
+
+Pulsing.args = {
+  status: 'negative',
+  pulsing: true,
+};
+
+export const Status: Story<NotificationMarkerProps> = (args) => {
+  return (
+    <>
+      <span>
+        <IconButton styleType='borderless'>
+          <NotificationMarker status='primary' {...args}>
+            <SvgNotification />
+          </NotificationMarker>
+        </IconButton>
+        <IconButton styleType='borderless'>
+          <NotificationMarker status='positive' {...args}>
+            <SvgNotification />
+          </NotificationMarker>
+        </IconButton>
+        <IconButton styleType='borderless'>
+          <NotificationMarker status='warning' {...args}>
+            <SvgNotification />
+          </NotificationMarker>
+        </IconButton>
+        <IconButton styleType='borderless'>
+          <NotificationMarker status='negative' {...args}>
+            <SvgNotification />
+          </NotificationMarker>
+        </IconButton>
+      </span>
       <NotificationMarker status='positive' {...args}>
         Live
       </NotificationMarker>
@@ -83,11 +127,7 @@ export const Pulsing: Story<NotificationMarkerProps> = (args) => {
   );
 };
 
-Pulsing.args = {
-  pulsing: true,
-};
-
-Pulsing.argTypes = {
+Status.argTypes = {
   status: {
     control: false,
   },
