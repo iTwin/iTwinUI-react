@@ -2159,7 +2159,7 @@ export const ResizableColumns: Story<Partial<TableProps>> = (args) => {
           name='choice'
           value='expand'
           onChange={() => setResizeMode('expand')}
-          label='expand-'
+          label='expand'
           checked={resizeMode === 'expand'}
         />
       </InputGroup>
