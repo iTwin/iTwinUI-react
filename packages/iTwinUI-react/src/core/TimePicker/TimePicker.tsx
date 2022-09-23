@@ -29,6 +29,30 @@ const isSameSecond = (date1: Date, date2: Date | undefined) => {
   return !!date2 && date1.getSeconds() === date2.getSeconds();
 };
 
+const isSameTime = (
+  date1: Date,
+  date2: Date | undefined,
+  precision: Precision,
+  meridiem?: MeridiemType,
+) => {
+  let isSameTime = true;
+  switch (precision) {
+    case 'seconds':
+      isSameTime = isSameSecond(date1, date2);
+      if (!isSameTime) {
+        break;
+      }
+    case 'minutes':
+      isSameTime = isSameMinute(date1, date2);
+      if (!isSameTime) {
+        break;
+      }
+    case 'hours':
+      isSameTime = isSameHour(date1, date2, meridiem);
+  }
+  return isSameTime;
+};
+
 const isSameMeridiem = (meridiem: MeridiemType, date: Date | undefined) => {
   return (
     !!date && (meridiem === 'AM' ? date.getHours() < 12 : date.getHours() >= 12)
@@ -52,6 +76,7 @@ const setHours = (hour: number, date: Date) => {
 };
 
 export type MeridiemType = 'AM' | 'PM';
+export type Precision = 'hours' | 'minutes' | 'seconds';
 
 export type TimePickerProps = {
   /**
@@ -71,7 +96,7 @@ export type TimePickerProps = {
    * Precision of the time.
    * @default 'minutes'
    */
-  precision?: 'hours' | 'minutes' | 'seconds';
+  precision?: Precision;
   /**
    * Change step of the hours displayed.
    * @default 1
@@ -112,6 +137,28 @@ export type TimePickerProps = {
    * @default (meridiem: MeridiemType) => meridiem
    */
   meridiemRenderer?: (meridiem: MeridiemType) => React.ReactNode;
+  /**
+   * Use combined time renderer. Combines hour, minute, and seconds into one column.
+   * @default false
+   */
+  useCombinedRenderer?: boolean;
+  /**
+   * Custom combined time renderer.
+   * Default returns time in `HH:MM:SS` format
+   * @default (date: Date, precision: Precision) => {
+   *   let dateString = '';
+   *   switch (precision) {
+   *     case 'seconds':
+   *        dateString = ':' + date.getSeconds().toLocaleString(undefined, { minimumIntegerDigits: 2 });
+   *      case 'minutes':
+   *        dateString = ':' + date.getMinutes().toLocaleString(undefined, { minimumIntegerDigits: 2 }) + dateString;
+   *      case 'hours':
+   *        dateString = date.getHours().toLocaleString(undefined, { minimumIntegerDigits: 2 }) + dateString;
+   *    }
+   *    return dateString;
+   *   }
+   */
+  combinedRenderer?: (date: Date, precision: Precision) => React.ReactNode;
 } & StylingProps;
 
 /**
@@ -136,6 +183,32 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
     secondRenderer = (date: Date) =>
       date.getSeconds().toLocaleString(undefined, { minimumIntegerDigits: 2 }),
     meridiemRenderer = (meridiem: MeridiemType) => meridiem,
+    useCombinedRenderer = false,
+    combinedRenderer = (date: Date, precision: Precision) => {
+      let dateString = '';
+      switch (precision) {
+        case 'seconds':
+          dateString =
+            ':' +
+            date
+              .getSeconds()
+              .toLocaleString(undefined, { minimumIntegerDigits: 2 });
+        case 'minutes':
+          dateString =
+            ':' +
+            date
+              .getMinutes()
+              .toLocaleString(undefined, { minimumIntegerDigits: 2 }) +
+            dateString;
+        case 'hours':
+          dateString =
+            date
+              .getHours()
+              .toLocaleString(undefined, { minimumIntegerDigits: 2 }) +
+            dateString;
+      }
+      return dateString;
+    },
     className,
     ...rest
   } = props;
@@ -163,6 +236,14 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
       adjustedHour,
       selectedTime ?? new Date(),
     );
+    updateCurrentTime(adjustedSelectedTime);
+  };
+
+  const onTimeClick = (date: Date) => {
+    const adjustedHour = use12Hours
+      ? formatHourFrom12(date.getHours(), meridiem)
+      : date.getHours();
+    const adjustedSelectedTime = setHours(adjustedHour, date);
     updateCurrentTime(adjustedSelectedTime);
   };
 
@@ -214,6 +295,13 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
     setFocusedTime(setHours(adjustedHour, focusedTime));
   };
 
+  const onTimeFocus = (date: Date) => {
+    const adjustedHour = use12Hours
+      ? formatHourFrom12(date.getHours(), meridiem)
+      : date.getHours();
+    setFocusedTime(setHours(adjustedHour, date));
+  };
+
   const onMeridiemFocus = (value: MeridiemType) => {
     let adjustedSelectedTime = selectedTime ?? new Date();
     const currentHours = adjustedSelectedTime.getHours();
@@ -234,13 +322,71 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
     step: number,
   ) => {
     const data = [];
-    for (let i = 0; i < size; ++i) {
+    for (let i = 0; i < size; i++) {
       if (i % step === 0) {
         data.push(value(i));
       }
     }
     return data;
   };
+
+  const isTimeFound = (timeArray: Date[], timeToFind: Date) => {
+    return timeArray[timeArray.length - 1].getTime() === timeToFind.getTime();
+  };
+
+  const time = React.useMemo(() => {
+    const time = selectedTime ?? new Date();
+    const numHours = use12Hours ? 12 : 24;
+    const numMinutes = 60;
+    const numSeconds = 60;
+
+    const data = [];
+    for (let i = 0; i < numHours; i++) {
+      if (i % hourStep === 0) {
+        data.push(
+          new Date(
+            time.getFullYear(),
+            time.getMonth(),
+            time.getDate(),
+            use12Hours && i === 0 ? 12 : i,
+            0,
+            0,
+          ),
+        );
+      }
+      if (precision !== 'hours') {
+        for (let j = 0; j < numMinutes; j++) {
+          const newTime = new Date(
+            time.getFullYear(),
+            time.getMonth(),
+            time.getDate(),
+            use12Hours && i === 0 ? 12 : i,
+            j,
+            0,
+          );
+          if (j % minuteStep === 0 && !isTimeFound(data, newTime)) {
+            data.push(newTime);
+          }
+          if (precision === 'seconds') {
+            for (let k = 0; k < numSeconds; k++) {
+              const newTime = new Date(
+                time.getFullYear(),
+                time.getMonth(),
+                time.getDate(),
+                use12Hours && i === 0 ? 12 : i,
+                j,
+                k,
+              );
+              if (k % secondStep === 0 && !isTimeFound(data, newTime)) {
+                data.push(newTime);
+              }
+            }
+          }
+        }
+      }
+    }
+    return data;
+  }, [hourStep, minuteStep, secondStep, selectedTime, use12Hours, precision]);
 
   const hours = React.useMemo(() => {
     const time = selectedTime ?? new Date();
@@ -295,20 +441,48 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
 
   return (
     <div className={cx('iui-time-picker', className)} {...rest}>
-      <TimePickerColumn
-        data={hours}
-        isSameFocused={(val) =>
-          isSameHour(val, focusedTime, use12Hours ? meridiem : undefined)
-        }
-        isSameSelected={(val) =>
-          isSameHour(val, selectedTime, use12Hours ? meridiem : undefined)
-        }
-        onFocusChange={onHourFocus}
-        onSelectChange={onHourClick}
-        setFocus={setFocusHour}
-        valueRenderer={hourRenderer}
-      />
-      {precision != 'hours' && (
+      {useCombinedRenderer && (
+        <TimePickerColumn
+          data={time}
+          isSameFocused={(val) =>
+            isSameTime(
+              val,
+              focusedTime,
+              precision,
+              use12Hours ? meridiem : undefined,
+            )
+          }
+          isSameSelected={(val) =>
+            isSameTime(
+              val,
+              selectedTime,
+              precision,
+              use12Hours ? meridiem : undefined,
+            )
+          }
+          onFocusChange={onTimeFocus}
+          onSelectChange={onTimeClick}
+          precision={precision}
+          useCombinedRenderer={useCombinedRenderer}
+          valueRenderer={combinedRenderer}
+        />
+      )}
+      {!useCombinedRenderer && (
+        <TimePickerColumn
+          data={hours}
+          isSameFocused={(val) =>
+            isSameHour(val, focusedTime, use12Hours ? meridiem : undefined)
+          }
+          isSameSelected={(val) =>
+            isSameHour(val, selectedTime, use12Hours ? meridiem : undefined)
+          }
+          onFocusChange={onHourFocus}
+          onSelectChange={onHourClick}
+          setFocus={setFocusHour}
+          valueRenderer={hourRenderer}
+        />
+      )}
+      {!useCombinedRenderer && precision != 'hours' && (
         <TimePickerColumn
           data={minutes}
           isSameFocused={(val) => isSameMinute(val, focusedTime)}
@@ -318,7 +492,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
           valueRenderer={minuteRenderer}
         />
       )}
-      {precision == 'seconds' && (
+      {!useCombinedRenderer && precision == 'seconds' && (
         <TimePickerColumn
           data={seconds}
           isSameFocused={(val) => isSameSecond(val, focusedTime)}
@@ -371,7 +545,17 @@ type TimePickerColumnProps<T = Date> = {
   /**
    * What value to display in every cell.
    */
-  valueRenderer: (value: T) => React.ReactNode;
+  valueRenderer: (value: T, precision?: Precision) => React.ReactNode;
+  /**
+   * Precision of the time.
+   * @default 'minutes'
+   */
+  precision?: Precision;
+  /**
+   * Use combined time renderer. Combines hour, minute, and seconds into one column.
+   * @default false
+   */
+  useCombinedRenderer?: boolean;
 } & ClassNameProps;
 
 const TimePickerColumn = <T,>(props: TimePickerColumnProps<T>): JSX.Element => {
@@ -383,6 +567,8 @@ const TimePickerColumn = <T,>(props: TimePickerColumnProps<T>): JSX.Element => {
     isSameSelected,
     setFocus = false,
     valueRenderer,
+    precision = 'minutes',
+    useCombinedRenderer = false,
     className = 'iui-time',
   } = props;
   const needFocus = React.useRef(setFocus);
@@ -461,7 +647,9 @@ const TimePickerColumn = <T,>(props: TimePickerColumnProps<T>): JSX.Element => {
                 onSelectChange(value);
               }}
             >
-              {valueRenderer(value)}
+              {useCombinedRenderer && precision && valueRenderer.length === 2
+                ? valueRenderer(value, precision)
+                : valueRenderer(value)}
             </li>
           );
         })}
