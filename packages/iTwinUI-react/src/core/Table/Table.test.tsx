@@ -3028,7 +3028,7 @@ it('should not render resizer when resizer is disabled', () => {
   expect(resizer).toBeFalsy();
 });
 
-it('should resize only the current column when resize mode is current-column', () => {
+it('should resize only the current column when resize mode is expand', () => {
   jest
     .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
     .mockReturnValue({ width: 100 } as DOMRect);
@@ -3057,7 +3057,7 @@ it('should resize only the current column when resize mode is current-column', (
   const { container } = renderComponent({
     columns,
     isResizable: true,
-    resizeMode: 'current-column',
+    resizeMode: 'expand',
   });
 
   const rows = container.querySelectorAll('.iui-table-body .iui-row');
@@ -3081,7 +3081,7 @@ it('should resize only the current column when resize mode is current-column', (
   expect(headerCells[2].style.width).toBe('100px');
 });
 
-it('should not resize column so that table width would decrease when resize mode is current-column', () => {
+it('should not resize column so that table width would decrease when resize mode is expand', () => {
   jest
     .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
     .mockReturnValue({ width: 100 } as DOMRect);
@@ -3120,7 +3120,7 @@ it('should not resize column so that table width would decrease when resize mode
   const { container } = renderComponent({
     columns,
     isResizable: true,
-    resizeMode: 'current-column',
+    resizeMode: 'expand',
   });
 
   // Initial render
@@ -3157,7 +3157,7 @@ it('should not resize column so that table width would decrease when resize mode
   expect(headerCells[2].style.width).toBe('100px');
 });
 
-it('should not show resizer when column has disabled resizing when resize mode is current-column', () => {
+it('should not show resizer when column has disabled resizing when resize mode is expand', () => {
   jest
     .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
     .mockReturnValue({ width: 100 } as DOMRect);
@@ -3187,7 +3187,7 @@ it('should not show resizer when column has disabled resizing when resize mode i
   const { container } = renderComponent({
     columns,
     isResizable: true,
-    resizeMode: 'current-column',
+    resizeMode: 'expand',
   });
 
   const rows = container.querySelectorAll('.iui-table-body .iui-row');

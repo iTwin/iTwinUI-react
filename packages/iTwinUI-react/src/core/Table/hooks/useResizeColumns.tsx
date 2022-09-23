@@ -352,7 +352,7 @@ const isNewColumnWidthsValid = <T extends Record<string, unknown>>(
     }
   }
 
-  if (instance && instance.resizeMode === 'current-column') {
+  if (instance && instance.resizeMode === 'expand') {
     let newTableWidth = 0;
     for (const header of instance.flatHeaders) {
       newTableWidth += columnWidths[header.id]
@@ -386,7 +386,7 @@ const useInstanceBeforeDimensions = <T extends Record<string, unknown>>(
     header.isResizing = columnResizing.isResizingColumn === header.id;
 
     const headerToResize =
-      header.disableResizing && resizeMode === 'next-column'
+      header.disableResizing && resizeMode === 'fit'
         ? getPreviousResizableHeader(header, instance)
         : header;
     const nextResizableHeader = getNextResizableHeader(header, instance);
@@ -395,11 +395,11 @@ const useInstanceBeforeDimensions = <T extends Record<string, unknown>>(
       header.disableResizing != null ? !header.disableResizing : true;
     // Show resizer when header is resizable or when next header is resizable
     // and there is resizable columns on the left side of the resizer.
-    if (resizeMode === 'next-column') {
+    if (resizeMode === 'fit') {
       header.isResizerVisible =
         (header.canResize && !!nextResizableHeader) ||
         (headerToResize && !!instance.flatHeaders[index + 1]?.canResize);
-      // When resize mode is `current-column` show resizer on the current resizable column.
+      // When resize mode is `expand` show resizer on the current resizable column.
     } else {
       header.isResizerVisible = header.canResize && !!headerToResize;
     }
@@ -407,7 +407,7 @@ const useInstanceBeforeDimensions = <T extends Record<string, unknown>>(
     header.getResizerProps = makePropGetter(getHooks().getResizerProps, {
       instance: getInstance(),
       header: headerToResize,
-      nextHeader: resizeMode === 'next-column' ? nextResizableHeader : [],
+      nextHeader: resizeMode === 'fit' ? nextResizableHeader : [],
     });
   });
 };

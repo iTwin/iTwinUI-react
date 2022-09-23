@@ -381,7 +381,7 @@ export const Table = <
     paginatorRenderer,
     pageSize = 25,
     isResizable = false,
-    resizeMode = 'next-column',
+    resizeMode = 'fit',
     styleType = 'default',
     enableVirtualization = false,
     enableColumnReordering = false,
@@ -913,7 +913,7 @@ export const Table = <
                         {isResizable &&
                           column.isResizerVisible &&
                           (index !== headerGroup.headers.length - 1 ||
-                            resizeMode === 'current-column') && (
+                            resizeMode === 'expand') && (
                             <div
                               {...column.getResizerProps()}
                               className='iui-resizer'

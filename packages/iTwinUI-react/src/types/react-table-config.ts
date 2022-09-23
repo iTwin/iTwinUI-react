@@ -103,13 +103,13 @@ declare module 'react-table' {
     data: D[];
     /**
      * Column's resize mode.
-     *  - `next-column` - when resizing it affects current and the next column,
+     *  - `fit` - when resizing it affects current and the next column,
      *   e.g. when increasing width of current column, next column's width will decrease.
-     *  - `current-column` - when resizing it affects only the current column,
+     *  - `expand` - when resizing it affects only the current column,
      *   e.g. when increasing width of the current column, next column's width remains the same.
-     * @default 'next-column'
+     * @default 'fit'
      */
-    resizeMode?: 'next-column' | 'current-column';
+    resizeMode?: 'fit' | 'expand';
   }
 
   export interface Hooks<D extends object = {}>
