@@ -285,8 +285,8 @@ const reducer = <T extends Record<string, unknown>>(
         : {};
 
     if (
-      !isNewColumnWidthsValid(newColumnWidths, instance) ||
-      !isNewColumnWidthsValid(newNextColumnWidths, instance) ||
+      !isNewColumnWidthsValid(newColumnWidths, instance.flatHeaders) ||
+      !isNewColumnWidthsValid(newNextColumnWidths, instance.flatHeaders) ||
       !isNewTableWidthValid(
         { ...newColumnWidths, ...newNextColumnWidths },
         instance,
@@ -345,7 +345,7 @@ const getColumnWidths = (
 
 const isNewColumnWidthsValid = <T extends Record<string, unknown>>(
   columnWidths: Record<string, number>,
-  instance?: TableInstance<T>,
+  headers: ColumnInstance<T>[] | undefined,
 ) => {
   // Prevents from going outside the column bounds
   if (Object.values(columnWidths).some((width) => width <= 1)) {
@@ -353,7 +353,7 @@ const isNewColumnWidthsValid = <T extends Record<string, unknown>>(
   }
 
   for (const [headerId, width] of Object.entries(columnWidths)) {
-    const header = instance?.flatHeaders?.find((h) => h.id === headerId);
+    const header = headers?.find((h) => h.id === headerId);
     if (!header) {
       continue;
     }
