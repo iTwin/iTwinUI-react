@@ -58,9 +58,46 @@ export const Basic: Story<DropdownMenuProps> = (args) => {
     <MenuItem key={3} onClick={onClick(3, close)} disabled>
       Item #3
     </MenuItem>,
+    <MenuItem key={3} onClick={onClick(3, close)} disabled>
+      Item #3
+    </MenuItem>,
+    <MenuItem key={3} onClick={onClick(3, close)} disabled>
+      Item #3
+    </MenuItem>,
+    <MenuItem key={3} onClick={onClick(3, close)} disabled>
+      Item #3
+    </MenuItem>,
+    <MenuItem key={3} onClick={onClick(3, close)} disabled>
+      Item #3
+    </MenuItem>,
+    <MenuItem key={3} onClick={onClick(3, close)} disabled>
+      Item #3
+    </MenuItem>,
+    <MenuItem key={3} onClick={onClick(3, close)} disabled>
+      Item #3
+    </MenuItem>,
+    <MenuItem key={3} onClick={onClick(3, close)} disabled>
+      Item #3
+    </MenuItem>,
+    <MenuItem key={3} onClick={onClick(3, close)} disabled>
+      Item #3
+    </MenuItem>,
+    <MenuItem key={3} onClick={onClick(3, close)} disabled>
+      Item #3
+    </MenuItem>,
+    <MenuItem key={3} onClick={onClick(3, close)} disabled>
+      Item #3
+    </MenuItem>,
+    <MenuItem key={3} onClick={onClick(3, close)} disabled>
+      Item #3
+    </MenuItem>,
   ];
   return (
-    <DropdownMenu menuItems={menuItems || dropdownMenuItems} {...rest}>
+    <DropdownMenu
+      className='abc'
+      menuItems={menuItems || dropdownMenuItems}
+      {...rest}
+    >
       <IconButton>
         <SvgMore />
       </IconButton>
@@ -189,15 +226,48 @@ export const Submenu: Story<DropdownMenuProps> = (args) => {
     close();
   };
   const dropdownMenuItems = (close: () => void) => [
-    <MenuItem key={1} onClick={onClick(1, close)}>
-      Item #1
-    </MenuItem>,
+    // <MenuItem key={1} onClick={onClick(1, close)}>
+    //   Item #1
+    // </MenuItem>,
     <MenuItem key={2} onClick={onClick(2, close)}>
       Item #2
     </MenuItem>,
     <MenuItem
       key={3}
       subMenuItems={[
+        <MenuItem key={2} onClick={onClick(2, close)}>
+          Item #2
+        </MenuItem>,
+        <MenuItem key={2} onClick={onClick(2, close)}>
+          Item #2
+        </MenuItem>,
+        <MenuItem key={2} onClick={onClick(2, close)}>
+          Item #2
+        </MenuItem>,
+        <MenuItem key={2} onClick={onClick(2, close)}>
+          Item #2
+        </MenuItem>,
+        <MenuItem key={2} onClick={onClick(2, close)}>
+          Item #2
+        </MenuItem>,
+        <MenuItem key={2} onClick={onClick(2, close)}>
+          Item #2
+        </MenuItem>,
+        <MenuItem key={2} onClick={onClick(2, close)}>
+          Item #2
+        </MenuItem>,
+        <MenuItem key={2} onClick={onClick(2, close)}>
+          Item #2
+        </MenuItem>,
+        <MenuItem key={2} onClick={onClick(2, close)}>
+          Item #2
+        </MenuItem>,
+        <MenuItem key={2} onClick={onClick(2, close)}>
+          Item #2
+        </MenuItem>,
+        <MenuItem key={2} onClick={onClick(2, close)}>
+          Item #2
+        </MenuItem>,
         <MenuItem
           key={4}
           subMenuItems={[
@@ -207,6 +277,27 @@ export const Submenu: Story<DropdownMenuProps> = (args) => {
             <MenuItem key={8} onClick={onClick(8, close)}>
               Item #8
             </MenuItem>,
+            // <MenuItem key={8} onClick={onClick(8, close)}>
+            //   Item #8
+            // </MenuItem>,
+            // <MenuItem key={8} onClick={onClick(8, close)}>
+            //   Item #8
+            // </MenuItem>,
+            // <MenuItem key={8} onClick={onClick(8, close)}>
+            //   Item #8
+            // </MenuItem>,
+            // <MenuItem key={8} onClick={onClick(8, close)}>
+            //   Item #8
+            // </MenuItem>,
+            // <MenuItem key={8} onClick={onClick(8, close)}>
+            //   Item #8
+            // </MenuItem>,
+            // <MenuItem key={8} onClick={onClick(8, close)}>
+            //   Item #8
+            // </MenuItem>,
+            // <MenuItem key={8} onClick={onClick(8, close)}>
+            //   Item #8
+            // </MenuItem>,
           ]}
         >
           Item #4

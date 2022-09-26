@@ -2,7 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import cx from 'classnames';
 import React from 'react';
 import { Menu, MenuProps } from '../Menu';
 import { Surface } from '../Surface';
@@ -69,7 +68,6 @@ const VirtualizedComboBoxMenu = React.forwardRef(
       () => ({
         minWidth,
         maxWidth: `min(${minWidth * 2}px, 90vw)`,
-        maxHeight: 315,
       }),
       [minWidth],
     );
@@ -110,7 +108,6 @@ export const ComboBoxMenu = React.forwardRef(
       () => ({
         minWidth,
         maxWidth: `min(${minWidth * 2}px, 90vw)`,
-        maxHeight: 315,
       }),
       [minWidth],
     );
@@ -124,7 +121,7 @@ export const ComboBoxMenu = React.forwardRef(
             setFocus={false}
             role='listbox'
             ref={refs}
-            className={cx('iui-scroll', className)}
+            className={className}
             {...rest}
           />
         ) : (

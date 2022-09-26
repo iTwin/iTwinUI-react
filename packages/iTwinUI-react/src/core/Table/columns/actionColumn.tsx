@@ -128,7 +128,7 @@ export const ActionColumn = <T extends Record<string, unknown>>({
             setIsOpen(true);
             dropdownMenuProps.onShow?.(i);
           }}
-          className={cx('iui-scroll', dropdownMenuProps.className)}
+          className={cx(dropdownMenuProps.className)}
         >
           <IconButton styleType='borderless' isActive={isOpen} ref={buttonRef}>
             <SvgColumnManager />
