@@ -479,7 +479,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   );
 
   const [tagContainerWidthRef, tagContainerWidth] = useContainerWidth(true);
-  // const [tagContainerHeightRef, tagContainerHeight] = useContainerHeight(true);
 
   const tagRenderer = React.useCallback((item: SelectOption<T>) => {
     return <SelectTag key={item.label} label={item.label} />;
@@ -518,7 +517,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
               />
               {isMultipleEnabled(selectedIndex, multiple) && (
                 <ComboBoxMultipleContainer
-                  mRef={tagContainerWidthRef}
+                  ref={tagContainerWidthRef}
                   selectedItems={selectedOptions as SelectOption<T>[]}
                   tagRenderer={tagRenderer}
                 />

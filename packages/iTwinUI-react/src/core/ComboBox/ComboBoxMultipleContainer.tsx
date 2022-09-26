@@ -9,37 +9,36 @@ import SelectTagContainer from '../Select/SelectTagContainer';
 type ComboBoxMultipleContainerProps<T> = {
   selectedItems?: SelectOption<T>[];
   tagRenderer: (item: SelectOption<T>) => JSX.Element;
-  mRef: React.ForwardedRef<HTMLDivElement>;
 };
 
-export const ComboBoxMultipleContainer = <T,>({
-  selectedItems,
-  tagRenderer,
-  mRef,
-}: ComboBoxMultipleContainerProps<T>) => {
-  const selectedItemsElements = React.useMemo(() => {
-    if (!selectedItems) {
-      return [];
-    }
+export const ComboBoxMultipleContainer = React.forwardRef(
+  <T,>(
+    { selectedItems, tagRenderer }: ComboBoxMultipleContainerProps<T>,
+    ref: React.RefObject<HTMLDivElement>,
+  ) => {
+    const selectedItemsElements = React.useMemo(() => {
+      if (!selectedItems) {
+        return [];
+      }
 
-    return selectedItems.map((item) => tagRenderer(item));
-  }, [selectedItems, tagRenderer]);
+      return selectedItems.map((item) => tagRenderer(item));
+    }, [selectedItems, tagRenderer]);
 
-  return (
-    <>
-      {selectedItems && (
-        // target from combobox css
-        <SelectTagContainer
-          style={{
-            maxWidth: `70%`,
-            right: 'unset',
-          }}
-          ref={mRef}
-          tags={selectedItemsElements}
-        />
-      )}
-    </>
-  );
-};
+    return (
+      <>
+        {selectedItems && (
+          <SelectTagContainer
+            style={{
+              maxWidth: `70%`,
+              right: 'unset',
+            }}
+            ref={ref}
+            tags={selectedItemsElements}
+          />
+        )}
+      </>
+    );
+  },
+);
 
 ComboBoxMultipleContainer.displayName = 'ComboBoxMultipleContainer';
