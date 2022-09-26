@@ -102,14 +102,8 @@ export const Menu = React.forwardRef<HTMLUListElement, MenuProps>(
 
     return (
       <ul
-        // className={cx('iui-menu', 'iui-scroll', className)}
         className={cx('iui-menu', 'iui-scroll', className)}
-        // style={style}
-        style={{
-          ...style,
-          // overflowY: 'overlay',
-          // overflowY: 'visible',
-        }}
+        style={style}
         role={role}
         onKeyDown={onKeyDown}
         ref={refs}
