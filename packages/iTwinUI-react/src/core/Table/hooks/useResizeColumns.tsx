@@ -264,20 +264,33 @@ const reducer = <T extends Record<string, unknown>>(
       nextHeaderIdWidths = [],
     } = newState.columnResizing;
 
+    if (!instance) {
+      return newState;
+    }
+
     const deltaX = clientX - startX;
 
     const newColumnWidths = getColumnWidths(
       headerIdWidths,
       deltaX / columnWidth,
     );
-    const newNextColumnWidths = getColumnWidths(
-      nextHeaderIdWidths,
-      -deltaX / nextColumnWidth,
-    );
+
+    const isTableWidthDecreasing =
+      calculateTableWidth(newColumnWidths, instance.flatHeaders) <
+      instance.tableWidth;
+    const newNextColumnWidths =
+      instance?.resizeMode === 'fit' ||
+      (instance?.resizeMode === 'expand' && isTableWidthDecreasing)
+        ? getColumnWidths(nextHeaderIdWidths, -deltaX / nextColumnWidth)
+        : {};
 
     if (
       !isNewColumnWidthsValid(newColumnWidths, instance) ||
-      !isNewColumnWidthsValid(newNextColumnWidths, instance)
+      !isNewColumnWidthsValid(newNextColumnWidths, instance) ||
+      !isNewTableWidthValid(
+        { ...newColumnWidths, ...newNextColumnWidths },
+        instance,
+      )
     ) {
       return newState;
     }
@@ -352,17 +365,26 @@ const isNewColumnWidthsValid = <T extends Record<string, unknown>>(
     }
   }
 
-  if (instance && instance.resizeMode === 'expand') {
-    let newTableWidth = 0;
-    for (const header of instance.flatHeaders) {
-      newTableWidth += columnWidths[header.id]
-        ? columnWidths[header.id]
-        : getHeaderWidth(header);
-    }
-    // `tableWidth` is whole number therefore we need to round the `newTableWidth`
-    if (Math.round(newTableWidth) < instance.tableWidth) {
-      return false;
-    }
+  return true;
+};
+
+const isNewTableWidthValid = <T extends Record<string, unknown>>(
+  columnWidths: Record<string, number>,
+  instance: TableInstance<T>,
+) => {
+  if (instance.resizeMode === 'fit') {
+    return true;
+  }
+
+  let newTableWidth = 0;
+  for (const header of instance.flatHeaders) {
+    newTableWidth += columnWidths[header.id]
+      ? columnWidths[header.id]
+      : getHeaderWidth(header);
+  }
+  // `tableWidth` is whole number therefore we need to round the `newTableWidth`
+  if (Math.round(newTableWidth) < instance.tableWidth) {
+    return false;
   }
 
   return true;
@@ -389,7 +411,14 @@ const useInstanceBeforeDimensions = <T extends Record<string, unknown>>(
       header.disableResizing && resizeMode === 'fit'
         ? getPreviousResizableHeader(header, instance)
         : header;
-    const nextResizableHeader = getNextResizableHeader(header, instance);
+
+    // When `resizeMode` is `expand` and it is a last column,
+    // then try to find some column on the left side to resize
+    // when table width is decreasing.
+    const nextResizableHeader =
+      resizeMode === 'expand' && index === flatHeaders.length - 1
+        ? getPreviousResizableHeader(header, instance)
+        : getNextResizableHeader(header, instance);
 
     header.canResize =
       header.disableResizing != null ? !header.disableResizing : true;
@@ -407,7 +436,7 @@ const useInstanceBeforeDimensions = <T extends Record<string, unknown>>(
     header.getResizerProps = makePropGetter(getHooks().getResizerProps, {
       instance: getInstance(),
       header: headerToResize,
-      nextHeader: resizeMode === 'fit' ? nextResizableHeader : [],
+      nextHeader: nextResizableHeader,
     });
   });
 };
@@ -455,6 +484,19 @@ const getHeaderWidth = <T extends Record<string, unknown>>(
   header: ColumnInstance<T>,
 ) => {
   return Number(header.width || header.resizeWidth || 0);
+};
+
+const calculateTableWidth = <T extends Record<string, unknown>>(
+  columnWidths: Record<string, number>,
+  headers: ColumnInstance<T>[],
+) => {
+  let newTableWidth = 0;
+  for (const header of headers) {
+    newTableWidth += columnWidths[header.id]
+      ? columnWidths[header.id]
+      : getHeaderWidth(header);
+  }
+  return newTableWidth;
 };
 
 // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#safely_detecting_option_support
