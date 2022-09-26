@@ -353,11 +353,10 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
       <DropdownMenu
         menuItems={menuItems}
         placement='bottom-start'
-        className={cx('iui-scroll', menuClassName)}
+        className={cx(menuClassName)}
         style={{
           minWidth,
           maxWidth: `min(${minWidth * 2}px, 90vw)`,
-          maxHeight: 315,
           ...menuStyle,
         }}
         role='listbox'
