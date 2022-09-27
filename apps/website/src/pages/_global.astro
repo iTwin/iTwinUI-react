@@ -3,6 +3,7 @@
 
 import HeadSEO from '~/components/HeadSEO.astro';
 import '@fontsource/noto-sans';
+import '@fontsource/noto-sans/400-italic.css';
 import '@fontsource/noto-sans/600.css';
 
 const { content = {} } = Astro.props;
@@ -167,7 +168,7 @@ const { content = {} } = Astro.props;
       body {
         height: 100%;
         overflow: auto;
-        font-family: var(--font-body);
+        font-family: var(--font-body) !important;
 
         // these need to override iui-body
         background-color: var(--color-background-2) !important;
