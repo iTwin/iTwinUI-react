@@ -5,7 +5,8 @@ layout: ./_layout.astro
 toc: false
 ---
 
-import ColorList from '~/components/ColorList.astro';
+import ColorList from '~/components/variables/ColorList.astro';
+import FontsDemo from '~/components/variables/FontsDemo.astro';
 
 ## Installation
 
@@ -137,3 +138,15 @@ These soft backgrounds can be used for badges and avatars.
     'var(--iui-color-background-oak)',
   ]}
 />
+
+### Typography
+
+iTwinUI uses _Noto Sans_ for body text and _Noto Sans Mono_ for monospace text.
+
+The font scale increases in size from 0 to 5, with `--iui-font-size-1` being the base font size for body text.
+
+<FontsDemo sizes />
+
+There are four font weights available: light, normal, semibold, and bold.
+
+<FontsDemo weights />
