@@ -7,25 +7,33 @@ type Props = { colors: string[] | string[][] } & astroHTML.JSX.HTMLAttributes;
 const { colors, ...rest } = Astro.props;
 ---
 
-{
-  Array.isArray(colors[0]) ? (
-    <div class='color-list-wrapper'>
-      {colors.map((_colors) => (
-        <ColorList client:visible colors={_colors} />
-      ))}
-    </div>
-  ) : (
-    <ColorList client:visible colors={colors as string[]} {...rest} />
-  )
-}
+<article class:list={[{ 'color-list-wrapper': Array.isArray(colors[0]) }]}>
+  {
+    Array.isArray(colors[0]) ? (
+      <>
+        {colors.map((_colors) => (
+          <ColorList client:visible colors={_colors} />
+        ))}
+      </>
+    ) : (
+      <ColorList client:visible colors={colors as string[]} {...rest} />
+    )
+  }
+</article>
+
+<style>
+  article {
+    border-radius: var(--space-2);
+    border: 1px solid var(--color-line-2);
+    padding: var(--space-3);
+    display: grid;
+    grid-auto-flow: column;
+    gap: var(--space-5);
+    justify-content: center;
+  }
+</style>
 
 <style lang='scss' is:global>
-  .color-list-wrapper {
-    display: flex;
-    gap: var(--space-5);
-    margin-inline: auto;
-  }
-
   .color-list {
     display: flex;
     flex-wrap: wrap;

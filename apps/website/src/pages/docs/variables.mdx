@@ -7,6 +7,7 @@ toc: false
 
 import ColorList from '~/components/variables/ColorList.astro';
 import FontsDemo from '~/components/variables/FontsDemo.astro';
+import SizesDemo from '~/components/variables/SizesDemo.astro';
 
 ## Installation
 
@@ -86,7 +87,7 @@ The status colors are used for indicating the status of an element: success, war
   ]}
 />
 
-Because the default status backgrounds feel so heavy and saturated, we also offer a set of subtle background colors.
+Because the default status backgrounds feel so heavy and saturated, iTwinUI also offers a set of subtle background colors.
 These should be used when there is text on top of them.
 
 <ColorList
@@ -138,6 +139,12 @@ These soft backgrounds can be used for badges and avatars.
     'var(--iui-color-background-oak)',
   ]}
 />
+
+### Sizes
+
+iTwinUI's spacing scale follows t-shirt sizes as a naming convention, where `m` corresponds to `1rem`, with `3xs` being the smallest and `3xl` being the largest.
+
+<SizesDemo />
 
 ### Typography
 
