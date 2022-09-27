@@ -14,58 +14,55 @@ export const comboBoxReducer = (
     focusedIndex: number;
   },
   [type, value]: [ComboBoxAction] | [ComboBoxAction, number | undefined],
-) =>
-  // { type, value }: { type: 'multiselect'; value: number[] },
-
-  {
-    switch (type) {
-      case 'open': {
-        return { ...state, isOpen: true };
-      }
-      case 'close': {
-        return { ...state, isOpen: false };
-      }
-      case 'select': {
+) => {
+  switch (type) {
+    case 'open': {
+      return { ...state, isOpen: true };
+    }
+    case 'close': {
+      return { ...state, isOpen: false };
+    }
+    case 'select': {
+      return {
+        ...state,
+        selectedIndex: value ?? state.selectedIndex,
+        focusedIndex: value ?? state.focusedIndex,
+      };
+    }
+    case 'multiselect': {
+      const actionIndex = (state.selectedIndex as number[]).findIndex(
+        (item) => item === value,
+      );
+      if (actionIndex >= 0) {
         return {
           ...state,
-          selectedIndex: value ?? state.selectedIndex,
           focusedIndex: value ?? state.focusedIndex,
+          selectedIndex: (state.selectedIndex as number[]).filter(
+            (index) => index !== value,
+          ) as number[],
         };
-      }
-      case 'multiselect': {
-        const actionIndex = (state.selectedIndex as number[]).findIndex(
-          (item) => item === value,
-        );
-        if (actionIndex >= 0) {
-          return {
-            ...state,
-            focusedIndex: value ?? state.focusedIndex,
-            selectedIndex: (state.selectedIndex as number[]).filter(
-              (index) => index !== value,
-            ) as number[],
-          };
-        } else if (actionIndex === -1) {
-          return {
-            ...state,
-            focusedIndex: value ?? state.focusedIndex,
-            selectedIndex:
-              value != null
-                ? ([...(state.selectedIndex as number[]), value] as number[])
-                : state.selectedIndex,
-          };
-        }
-      }
-      case 'focus': {
+      } else if (actionIndex === -1) {
         return {
           ...state,
-          focusedIndex: value ?? (state.selectedIndex as number) ?? -1,
+          focusedIndex: value ?? state.focusedIndex,
+          selectedIndex:
+            value != null
+              ? ([...(state.selectedIndex as number[]), value] as number[])
+              : state.selectedIndex,
         };
-      }
-      default: {
-        return state;
       }
     }
-  };
+    case 'focus': {
+      return {
+        ...state,
+        focusedIndex: value ?? (state.selectedIndex as number) ?? -1,
+      };
+    }
+    default: {
+      return state;
+    }
+  }
+};
 
 export const ComboBoxRefsContext = React.createContext<
   | {

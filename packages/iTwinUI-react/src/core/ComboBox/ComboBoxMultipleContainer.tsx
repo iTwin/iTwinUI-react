@@ -4,18 +4,23 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { SelectOption } from '../Select';
+import SelectTag from '../Select/SelectTag';
 import SelectTagContainer from '../Select/SelectTagContainer';
 
 type ComboBoxMultipleContainerProps<T> = {
   selectedItems?: SelectOption<T>[];
-  tagRenderer: (item: SelectOption<T>) => JSX.Element;
 };
 
 export const ComboBoxMultipleContainer = React.forwardRef(
   <T,>(
-    { selectedItems, tagRenderer }: ComboBoxMultipleContainerProps<T>,
+    { selectedItems }: ComboBoxMultipleContainerProps<T>,
     ref: React.RefObject<HTMLDivElement>,
   ) => {
+    const tagRenderer = React.useCallback((item: SelectOption<T>) => {
+      console.log(item.label);
+      return <SelectTag key={item.label} label={item.label} />;
+    }, []);
+
     const selectedItemsElements = React.useMemo(() => {
       if (!selectedItems) {
         return [];
