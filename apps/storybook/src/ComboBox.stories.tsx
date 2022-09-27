@@ -579,12 +579,21 @@ Virtualized.argTypes = {
 
 export const MultipleSelect: Story<Partial<ComboBoxProps<string>>> = (args) => {
   const options = React.useMemo(() => countriesList, []);
+  const [selectedOptions, setSelectedOptions] = React.useState(['CA', 'LT']);
   return (
     <ComboBox
       options={options}
       inputProps={{ placeholder: 'Select a country' }}
-      onChange={(value: string) => action(value ?? '')()}
+      onChange={(value: string, event: string) => {
+        action(value + ' ' + event ?? '')();
+        setSelectedOptions((prev) =>
+          event === 'removed'
+            ? prev.filter((value) => value !== value)
+            : [...prev, value],
+        );
+      }}
       multiple={true}
+      value={selectedOptions}
       {...args}
     />
   );
