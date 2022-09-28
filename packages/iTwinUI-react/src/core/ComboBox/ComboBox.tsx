@@ -21,7 +21,6 @@ import {
 import 'tippy.js/animations/shift-away.css';
 import {
   ComboBoxActionContext,
-  comboBoxReducer,
   ComboBoxRefsContext,
   ComboBoxStateContext,
 } from './helpers';
@@ -221,6 +220,80 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   }, [multiple, options, valueProp]);
 
   // Reducer where all the component-wide state is stored
+  const comboBoxReducer = (
+    state: {
+      isOpen: boolean;
+      selectedIndex: number | number[];
+      focusedIndex: number;
+    },
+    {
+      type,
+      value,
+    }:
+      | { type: 'multiselect'; value: number }
+      | { type: 'multi-override'; value: number[] }
+      | { type: 'open'; value: undefined }
+      | { type: 'close'; value: undefined }
+      | { type: 'select'; value: number }
+      | { type: 'focus'; value: number | undefined },
+  ) => {
+    switch (type) {
+      case 'open': {
+        return { ...state, isOpen: true };
+      }
+      case 'close': {
+        return { ...state, isOpen: false };
+      }
+      case 'select': {
+        if (isSingleOnChange(onChangeProp.current, multiple)) {
+          onChangeProp.current?.(optionsRef.current[value]?.value);
+        }
+        return {
+          ...state,
+          selectedIndex: value ?? state.selectedIndex,
+          focusedIndex: value ?? state.focusedIndex,
+        };
+      }
+      case 'multi-override': {
+        return { ...state, selectedIndex: value };
+      }
+      case 'multiselect': {
+        const actionIndex = (state.selectedIndex as number[]).findIndex(
+          (item) => item === value,
+        );
+        if (actionIndex >= 0) {
+          onChangeProp.current?.(optionsRef.current[value]?.value, 'removed');
+          return {
+            ...state,
+            focusedIndex: value ?? state.focusedIndex,
+            selectedIndex: (state.selectedIndex as number[]).filter(
+              (index) => index !== value,
+            ) as number[],
+          };
+        } else if (actionIndex === -1) {
+          onChangeProp.current?.(optionsRef.current[value]?.value, 'added');
+          return {
+            ...state,
+            focusedIndex: value ?? state.focusedIndex,
+            selectedIndex:
+              value != null
+                ? [...(state.selectedIndex as number[]), value]
+                : state.selectedIndex,
+          };
+        }
+      }
+      case 'focus': {
+        return {
+          ...state,
+          focusedIndex: value ?? (state.selectedIndex as number) ?? -1,
+        };
+      }
+      default: {
+        return state;
+      }
+    }
+  };
+
   const [{ isOpen, selectedIndex, focusedIndex }, dispatch] = React.useReducer(
     comboBoxReducer,
     {
@@ -335,19 +408,12 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     (__originalIndex: number) => {
       if (isMultipleEnabled(selectedIndex, multiple)) {
         dispatch({ type: 'multiselect', value: __originalIndex });
-        onChangeProp.current?.(
-          optionsRef.current[__originalIndex]?.value,
-          isMenuItemSelected(__originalIndex) ? 'removed' : 'added',
-        );
       } else {
         dispatch({ type: 'select', value: __originalIndex });
-        if (isSingleOnChange(onChangeProp.current, multiple)) {
-          onChangeProp.current?.(optionsRef.current[__originalIndex]?.value);
-        }
         dispatch({ type: 'close', value: undefined });
       }
     },
-    [isMenuItemSelected, multiple, onChangeProp, optionsRef, selectedIndex],
+    [multiple, selectedIndex],
   );
 
   const getMenuItem = React.useCallback(
