@@ -28,16 +28,10 @@ function assertSelect(
 
 function assertMenu(
   menu: HTMLUListElement,
-  {
-    maxHeight = '315px',
-    hasIcon = false,
-    selectedIndex = -1,
-    disabledIndex = -1,
-  } = {},
+  { hasIcon = false, selectedIndex = -1, disabledIndex = -1 } = {},
 ) {
   expect(menu).toBeTruthy();
   expect(menu.getAttribute('role')).toEqual('listbox');
-  expect(menu.style.maxHeight).toEqual(maxHeight);
   expect(menu.classList).toContain('iui-scroll');
   const menuItems = menu.querySelectorAll('.iui-menu-item');
   expect(menuItems.length).toBe(3);
