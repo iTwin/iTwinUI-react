@@ -2137,9 +2137,9 @@ export const ResizableColumns: Story<Partial<TableProps>> = (args) => {
     [],
   );
 
-  const [resizeMode, setResizeMode] = React.useState<TableProps['resizeMode']>(
-    'fit',
-  );
+  const [columnResizeMode, setColumnResizeMode] = React.useState<
+    TableProps['columnResizeMode']
+  >('fit');
 
   return (
     <>
@@ -2151,16 +2151,16 @@ export const ResizableColumns: Story<Partial<TableProps>> = (args) => {
         <Radio
           name='choice'
           value='fit'
-          onChange={() => setResizeMode('fit')}
+          onChange={() => setColumnResizeMode('fit')}
           label='fit'
-          checked={resizeMode === 'fit'}
+          checked={columnResizeMode === 'fit'}
         />
         <Radio
           name='choice'
           value='expand'
-          onChange={() => setResizeMode('expand')}
+          onChange={() => setColumnResizeMode('expand')}
           label='expand'
-          checked={resizeMode === 'expand'}
+          checked={columnResizeMode === 'expand'}
         />
       </InputGroup>
       <Table
@@ -2170,7 +2170,7 @@ export const ResizableColumns: Story<Partial<TableProps>> = (args) => {
         isResizable
         isSortable
         {...args}
-        resizeMode={resizeMode}
+        columnResizeMode={columnResizeMode}
       />
     </>
   );

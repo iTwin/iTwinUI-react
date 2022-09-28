@@ -109,7 +109,7 @@ declare module 'react-table' {
      *   e.g. when increasing width of the current column, next column's width remains the same.
      * @default 'fit'
      */
-    resizeMode?: 'fit' | 'expand';
+    columnResizeMode?: 'fit' | 'expand';
   }
 
   export interface Hooks<D extends object = {}>
@@ -129,7 +129,7 @@ declare module 'react-table' {
       UseRowStateInstanceProps<D>,
       UseSortByInstanceProps<D> {
     initialRows: Row<D>[];
-    resizeMode: TableOptions['resizeMode'];
+    columnResizeMode: TableOptions['columnResizeMode'];
     tableWidth: number;
   }
 

@@ -279,8 +279,8 @@ const reducer = <T extends Record<string, unknown>>(
       calculateTableWidth(newColumnWidths, instance.flatHeaders) <
       instance.tableWidth;
     const newNextColumnWidths =
-      instance?.resizeMode === 'fit' ||
-      (instance?.resizeMode === 'expand' && isTableWidthDecreasing)
+      instance?.columnResizeMode === 'fit' ||
+      (instance?.columnResizeMode === 'expand' && isTableWidthDecreasing)
         ? getColumnWidths(nextHeaderIdWidths, -deltaX / nextColumnWidth)
         : {};
 
@@ -372,7 +372,7 @@ const isNewTableWidthValid = <T extends Record<string, unknown>>(
   columnWidths: Record<string, number>,
   instance: TableInstance<T>,
 ) => {
-  if (instance.resizeMode === 'fit') {
+  if (instance.columnResizeMode === 'fit') {
     return true;
   }
 
@@ -397,7 +397,7 @@ const useInstanceBeforeDimensions = <T extends Record<string, unknown>>(
     flatHeaders,
     getHooks,
     state: { columnResizing },
-    resizeMode,
+    columnResizeMode,
   } = instance;
 
   const getInstance = useGetLatest(instance);
@@ -408,15 +408,15 @@ const useInstanceBeforeDimensions = <T extends Record<string, unknown>>(
     header.isResizing = columnResizing.isResizingColumn === header.id;
 
     const headerToResize =
-      header.disableResizing && resizeMode === 'fit'
+      header.disableResizing && columnResizeMode === 'fit'
         ? getPreviousResizableHeader(header, instance)
         : header;
 
-    // When `resizeMode` is `expand` and it is a last column,
+    // When `columnResizeMode` is `expand` and it is a last column,
     // then try to find some column on the left side to resize
     // when table width is decreasing.
     const nextResizableHeader =
-      resizeMode === 'expand' && index === flatHeaders.length - 1
+      columnResizeMode === 'expand' && index === flatHeaders.length - 1
         ? getPreviousResizableHeader(header, instance)
         : getNextResizableHeader(header, instance);
 
@@ -424,7 +424,7 @@ const useInstanceBeforeDimensions = <T extends Record<string, unknown>>(
       header.disableResizing != null ? !header.disableResizing : true;
     // Show resizer when header is resizable or when next header is resizable
     // and there is resizable columns on the left side of the resizer.
-    if (resizeMode === 'fit') {
+    if (columnResizeMode === 'fit') {
       header.isResizerVisible =
         (header.canResize && !!nextResizableHeader) ||
         (headerToResize && !!instance.flatHeaders[index + 1]?.canResize);

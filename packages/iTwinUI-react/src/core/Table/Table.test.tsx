@@ -3057,7 +3057,7 @@ it('should resize only the current column when resize mode is expand', () => {
   const { container } = renderComponent({
     columns,
     isResizable: true,
-    resizeMode: 'expand',
+    columnResizeMode: 'expand',
   });
 
   const rows = container.querySelectorAll('.iui-table-body .iui-row');
@@ -3120,7 +3120,7 @@ it('should resize current and closest column when table width would decrease whe
   const { container } = renderComponent({
     columns,
     isResizable: true,
-    resizeMode: 'expand',
+    columnResizeMode: 'expand',
   });
 
   // Initial render
@@ -3188,7 +3188,7 @@ it('should resize last and closest column on the left when table width would dec
   const { container } = renderComponent({
     columns,
     isResizable: true,
-    resizeMode: 'expand',
+    columnResizeMode: 'expand',
   });
 
   // Initial render
@@ -3247,7 +3247,7 @@ it('should not show resizer when column has disabled resizing when resize mode i
   const { container } = renderComponent({
     columns,
     isResizable: true,
-    resizeMode: 'expand',
+    columnResizeMode: 'expand',
   });
 
   const rows = container.querySelectorAll('.iui-table-body .iui-row');
