@@ -13,7 +13,9 @@ export const comboBoxReducer = (
     selectedIndex: number | number[];
     focusedIndex: number;
   },
-  [type, value]: [ComboBoxAction] | [ComboBoxAction, number | undefined],
+  [type, value]:
+    | [ComboBoxAction]
+    | [ComboBoxAction, number | number[] | undefined],
 ) => {
   switch (type) {
     case 'open': {
@@ -30,6 +32,9 @@ export const comboBoxReducer = (
       };
     }
     case 'multiselect': {
+      if (Array.isArray(value)) {
+        return { ...state, selectedIndex: value };
+      }
       const actionIndex = (state.selectedIndex as number[]).findIndex(
         (item) => item === value,
       );

@@ -17,7 +17,6 @@ export const ComboBoxMultipleContainer = React.forwardRef(
     ref: React.RefObject<HTMLDivElement>,
   ) => {
     const tagRenderer = React.useCallback((item: SelectOption<T>) => {
-      console.log(item.label);
       return <SelectTag key={item.label} label={item.label} />;
     }, []);
 

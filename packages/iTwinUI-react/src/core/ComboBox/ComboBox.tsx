@@ -186,7 +186,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   const toggleButtonRef = React.useRef<HTMLSpanElement>(null);
   const onChangeProp = useLatestRef(onChange);
   const optionsRef = useLatestRef(options);
-  const valuePropRef = useLatestRef(valueProp);
 
   // Record to store all extra information (e.g. original indexes), where the key is the id of the option
   const optionsExtraInfoRef = React.useRef<
@@ -213,15 +212,13 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   // Get indices of selected elements in options array when we have selected values.
   const getSelectedIndexes = React.useCallback(() => {
     const indexArray: number[] = [];
-    if (isMultipleEnabled(valuePropRef.current, multiple)) {
-      valuePropRef.current?.forEach((value) => {
-        indexArray.push(
-          optionsRef.current.findIndex((option) => option.value === value),
-        );
+    if (isMultipleEnabled(valueProp, multiple) && !!valueProp) {
+      valueProp.forEach((value) => {
+        indexArray.push(options.findIndex((option) => option.value === value));
       });
     }
     return indexArray;
-  }, [multiple, optionsRef, valuePropRef]);
+  }, [multiple, options, valueProp]);
 
   // Reducer where all the component-wide state is stored
   const [{ isOpen, selectedIndex, focusedIndex }, dispatch] = React.useReducer(
@@ -234,16 +231,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       focusedIndex: -1,
     },
   );
-
-  const selectedOptions = React.useMemo(() => {
-    if (selectedIndex == null) {
-      return undefined;
-    }
-    const item = isMultipleEnabled(selectedIndex, multiple)
-      ? selectedIndex.map((index) => optionsRef.current[index])
-      : optionsRef.current[selectedIndex];
-    return item;
-  }, [multiple, optionsRef, selectedIndex]);
 
   React.useLayoutEffect(() => {
     // When the dropdown opens
@@ -319,10 +306,19 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   // When the value prop changes, update the selectedIndex
   React.useEffect(() => {
-    if (isMultipleEnabled(valueProp, multiple)) {
-      const indexes = getSelectedIndexes();
-      // to do - set when valueProp or options changes.
-      indexes.forEach((index) => console.log('use effect ', index));
+    if (isMultipleEnabled(valueProp, multiple) && !!valueProp) {
+      const indexes = valueProp.map((value) => {
+        return options.findIndex((option) => option.value === value);
+      });
+
+      if (
+        !indexes.every(
+          (item) => (selectedIndex as number[]).indexOf(item) > -1,
+        ) &&
+        !(selectedIndex as number[]).every((item) => indexes.indexOf(item) > -1)
+      ) {
+        dispatch(['multiselect', indexes]);
+      }
     } else {
       dispatch([
         'select',
@@ -440,6 +436,10 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   const [tagContainerWidthRef, tagContainerWidth] = useContainerWidth(true);
 
+  const selectedItems = (selectedIndex as number[]).map(
+    (index) => optionsRef.current[index],
+  );
+
   return (
     <ComboBoxRefsContext.Provider
       value={{ inputRef, menuRef, toggleButtonRef, optionsExtraInfoRef }}
@@ -450,7 +450,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             id,
             minWidth,
             isOpen,
-            focusedIndex: focusedIndex,
+            focusedIndex: focusedIndex as number,
             enableVirtualization,
             filteredOptions,
             getMenuItem,
@@ -474,7 +474,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
               {isMultipleEnabled(selectedIndex, multiple) && (
                 <ComboBoxMultipleContainer
                   ref={tagContainerWidthRef}
-                  selectedItems={selectedOptions as SelectOption<T>[]}
+                  selectedItems={selectedItems}
                 />
               )}
             </>
