@@ -590,7 +590,7 @@ export const MultipleSelect: Story<Partial<ComboBoxProps<string>>> = (args) => {
           action(value + ' ' + event ?? '')();
           setSelectedOptions((prev) =>
             event === 'removed'
-              ? prev.filter((value) => value !== value)
+              ? prev.filter((item) => item !== value)
               : [...prev, value],
           );
         }}
