@@ -237,12 +237,12 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     if (isOpen) {
       inputRef.current?.focus(); // Focus the input
       setFilteredOptions(optionsRef.current); // Reset the filtered list
-      dispatch(['focus']);
+      dispatch({ type: 'focus', value: undefined });
     }
     // When the dropdown closes
     else {
       // Reset the focused index
-      dispatch(['focus']);
+      dispatch({ type: 'focus', value: undefined });
       // Reset the input value
       if (!isMultipleEnabled(selectedIndex, multiple)) {
         setInputValue(
@@ -275,7 +275,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     } else {
       setFilteredOptions(options);
     }
-    dispatch(['focus']);
+    dispatch({ type: 'focus', value: undefined });
     // Only need to call on options update
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [options]);
@@ -289,7 +289,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = event.currentTarget;
       setInputValue(value);
-      dispatch(['open']); // reopen when typing
+      dispatch({ type: 'open', value: undefined }); // reopen when typing
       setFilteredOptions(
         filterFunction?.(optionsRef.current, value) ??
           optionsRef.current.filter((option) =>
@@ -297,7 +297,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           ),
       );
       if (focusedIndex != -1) {
-        dispatch(['focus', -1]);
+        dispatch({ type: 'focus', value: -1 });
       }
       inputProps?.onChange?.(event);
     },
@@ -310,20 +310,12 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       const indexes = valueProp.map((value) => {
         return options.findIndex((option) => option.value === value);
       });
-
-      if (
-        !indexes.every(
-          (item) => (selectedIndex as number[]).indexOf(item) > -1,
-        ) &&
-        !(selectedIndex as number[]).every((item) => indexes.indexOf(item) > -1)
-      ) {
-        dispatch(['multiselect', indexes]);
-      }
+      dispatch({ type: 'multi-override', value: indexes });
     } else {
-      dispatch([
-        'select',
-        options.findIndex((option) => option.value === valueProp),
-      ]);
+      dispatch({
+        type: 'select',
+        value: options.findIndex((option) => option.value === valueProp),
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [valueProp, options]);
@@ -342,18 +334,17 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   const onClickHandler = React.useCallback(
     (__originalIndex: number) => {
       if (isMultipleEnabled(selectedIndex, multiple)) {
-        dispatch(['multiselect', __originalIndex]);
+        dispatch({ type: 'multiselect', value: __originalIndex });
         onChangeProp.current?.(
           optionsRef.current[__originalIndex]?.value,
           isMenuItemSelected(__originalIndex) ? 'removed' : 'added',
         );
-        setInputValue('');
       } else {
-        dispatch(['select', __originalIndex]);
+        dispatch({ type: 'select', value: __originalIndex });
         if (isSingleOnChange(onChangeProp.current, multiple)) {
           onChangeProp.current?.(optionsRef.current[__originalIndex]?.value);
         }
-        dispatch(['close']);
+        dispatch({ type: 'close', value: undefined });
       }
     },
     [isMenuItemSelected, multiple, onChangeProp, optionsRef, selectedIndex],
@@ -434,11 +425,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     [emptyStateMessage],
   );
 
-  const [tagContainerWidthRef, tagContainerWidth] = useContainerWidth(true);
-
-  const selectedItems = (selectedIndex as number[]).map(
-    (index) => optionsRef.current[index],
-  );
+  const [tagContainerWidthRef, tagContainerWidth] = useContainerWidth();
 
   return (
     <ComboBoxRefsContext.Provider
@@ -450,7 +437,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             id,
             minWidth,
             isOpen,
-            focusedIndex: focusedIndex as number,
+            focusedIndex: focusedIndex,
             enableVirtualization,
             filteredOptions,
             getMenuItem,
@@ -474,7 +461,9 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
               {isMultipleEnabled(selectedIndex, multiple) && (
                 <ComboBoxMultipleContainer
                   ref={tagContainerWidthRef}
-                  selectedItems={selectedItems}
+                  selectedItems={(selectedIndex as number[]).map(
+                    (index) => optionsRef.current[index],
+                  )}
                 />
               )}
             </>

@@ -17,9 +17,13 @@ export const ComboBoxInput = React.forwardRef(
   (props: ComboBoxInputProps, forwardedRef: React.Ref<HTMLInputElement>) => {
     const { onKeyDown: onKeyDownProp, onFocus: onFocusProp, ...rest } = props;
 
-    const { isOpen, id, focusedIndex, enableVirtualization } = useSafeContext(
-      ComboBoxStateContext,
-    );
+    const {
+      isOpen,
+      id,
+      focusedIndex,
+      enableVirtualization,
+      multiple,
+    } = useSafeContext(ComboBoxStateContext);
     const dispatch = useSafeContext(ComboBoxActionContext);
     const { inputRef, menuRef, optionsExtraInfoRef } = useSafeContext(
       ComboBoxRefsContext,
@@ -46,7 +50,7 @@ export const ComboBoxInput = React.forwardRef(
           case 'ArrowDown': {
             event.preventDefault();
             if (!isOpen) {
-              return dispatch(['open']);
+              return dispatch({ type: 'open', value: undefined });
             }
 
             if (length === 0) {
@@ -57,10 +61,12 @@ export const ComboBoxInput = React.forwardRef(
               const currentElement = menuRef.current?.querySelector(
                 '[data-iui-index]',
               );
-              return dispatch([
-                'focus',
-                Number(currentElement?.getAttribute('data-iui-index') ?? 0),
-              ]);
+              return dispatch({
+                type: 'focus',
+                value: Number(
+                  currentElement?.getAttribute('data-iui-index') ?? 0,
+                ),
+              });
             }
 
             // If virtualization is enabled, dont let round scrolling
@@ -84,7 +90,7 @@ export const ComboBoxInput = React.forwardRef(
               nextIndex = Number(nextElement?.getAttribute('data-iui-index'));
 
               if (nextElement?.ariaDisabled !== 'true') {
-                return dispatch(['focus', nextIndex]);
+                return dispatch({ type: 'focus', value: nextIndex });
               }
             } while (nextIndex !== focusedIndexRef.current);
             break;
@@ -92,7 +98,7 @@ export const ComboBoxInput = React.forwardRef(
           case 'ArrowUp': {
             event.preventDefault();
             if (!isOpen) {
-              return dispatch(['open']);
+              return dispatch({ type: 'open', value: undefined });
             }
 
             if (length === 0) {
@@ -110,11 +116,12 @@ export const ComboBoxInput = React.forwardRef(
             }
 
             if (focusedIndexRef.current === -1) {
-              return dispatch([
-                'focus',
-                Object.values(optionsExtraInfoRef.current)?.[length - 1]
-                  .__originalIndex ?? -1,
-              ]);
+              return dispatch({
+                type: 'focus',
+                value:
+                  Object.values(optionsExtraInfoRef.current)?.[length - 1]
+                    .__originalIndex ?? -1,
+              });
             }
 
             let prevIndex = focusedIndexRef.current;
@@ -128,7 +135,7 @@ export const ComboBoxInput = React.forwardRef(
               prevIndex = Number(prevElement?.getAttribute('data-iui-index'));
 
               if (prevElement?.ariaDisabled !== 'true') {
-                return dispatch(['focus', prevIndex]);
+                return dispatch({ type: 'focus', value: prevIndex });
               }
             } while (prevIndex !== focusedIndexRef.current);
             break;
@@ -136,20 +143,27 @@ export const ComboBoxInput = React.forwardRef(
           case 'Enter': {
             event.preventDefault();
             if (isOpen) {
-              dispatch(['select', focusedIndexRef.current]);
-              dispatch(['close']);
+              if (multiple) {
+                dispatch({
+                  type: 'multiselect',
+                  value: focusedIndexRef.current,
+                });
+              } else {
+                dispatch({ type: 'select', value: focusedIndexRef.current });
+                dispatch({ type: 'close', value: undefined });
+              }
             } else {
-              dispatch(['open']);
+              dispatch({ type: 'open', value: undefined });
             }
             break;
           }
           case 'Escape': {
             event.preventDefault();
-            dispatch(['close']);
+            dispatch({ type: 'close', value: undefined });
             break;
           }
           case 'Tab':
-            dispatch(['close']);
+            dispatch({ type: 'close', value: undefined });
             break;
         }
       },
@@ -158,6 +172,7 @@ export const ComboBoxInput = React.forwardRef(
         enableVirtualization,
         isOpen,
         menuRef,
+        multiple,
         onKeyDownProp,
         optionsExtraInfoRef,
       ],
@@ -165,7 +180,7 @@ export const ComboBoxInput = React.forwardRef(
 
     const handleFocus = React.useCallback(
       (event: React.FocusEvent<HTMLInputElement>) => {
-        dispatch(['open']);
+        dispatch({ type: 'open', value: undefined });
         onFocusProp?.(event);
       },
       [dispatch, onFocusProp],

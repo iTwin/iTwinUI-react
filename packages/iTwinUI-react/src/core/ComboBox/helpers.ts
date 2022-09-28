@@ -5,17 +5,22 @@
 import React from 'react';
 import { SelectOption } from '../Select/Select';
 
-type ComboBoxAction = 'open' | 'close' | 'select' | 'multiselect' | 'focus';
-
 export const comboBoxReducer = (
   state: {
     isOpen: boolean;
     selectedIndex: number | number[];
     focusedIndex: number;
   },
-  [type, value]:
-    | [ComboBoxAction]
-    | [ComboBoxAction, number | number[] | undefined],
+  {
+    type,
+    value,
+  }:
+    | { type: 'multiselect'; value: number }
+    | { type: 'multi-override'; value: number[] }
+    | { type: 'open'; value: undefined }
+    | { type: 'close'; value: undefined }
+    | { type: 'select'; value: number }
+    | { type: 'focus'; value: number | undefined },
 ) => {
   switch (type) {
     case 'open': {
@@ -31,10 +36,10 @@ export const comboBoxReducer = (
         focusedIndex: value ?? state.focusedIndex,
       };
     }
+    case 'multi-override': {
+      return { ...state, selectedIndex: value };
+    }
     case 'multiselect': {
-      if (Array.isArray(value)) {
-        return { ...state, selectedIndex: value };
-      }
       const actionIndex = (state.selectedIndex as number[]).findIndex(
         (item) => item === value,
       );
@@ -99,6 +104,15 @@ export const ComboBoxStateContext = React.createContext<
 ComboBoxStateContext.displayName = 'ComboBoxStateContext';
 
 export const ComboBoxActionContext = React.createContext<
-  ((x: [ComboBoxAction] | [ComboBoxAction, number]) => void) | undefined
+  | ((
+      x:
+        | { type: 'multiselect'; value: number }
+        | { type: 'multi-override'; value: number[] }
+        | { type: 'open'; value: undefined }
+        | { type: 'close'; value: undefined }
+        | { type: 'select'; value: number }
+        | { type: 'focus'; value: number | undefined },
+    ) => void)
+  | undefined
 >(undefined);
 ComboBoxActionContext.displayName = 'ComboBoxActionContext';
