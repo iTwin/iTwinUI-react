@@ -47,7 +47,10 @@ const { props } = [...docgenResults].find((docs) => docs['displayName'] === comp
           <tr>
             <td class='mono'>{value.name || key}</td>
             <td>
-              <div class='md' set:html={snarkdown(value.description)} />
+              <div
+                class='md'
+                set:html={snarkdown(value.description.split('@example')[0] ?? value.description)}
+              />
               <div class='types'>{value.type?.name || value.flowType.raw}</div>
             </td>
             <td class='mono'>{value.defaultValue?.value ?? value.defaultValue ?? ''}</td>
