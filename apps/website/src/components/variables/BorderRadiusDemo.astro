@@ -1,26 +1,20 @@
 ---
 import Wrapper from './_wrapper.astro';
+import Item from './_item.astro';
 ---
 
 <Wrapper>
-  <div>1</div>
-  <div>round</div>
+  <Item class='item'>1</Item>
+  <Item class='item'>round</Item>
 </Wrapper>
 
 <style lang='scss'>
-  div {
+  .item {
     border-radius: var(--iui-border-radius-1);
-    min-width: var(--space-8);
-    padding: var(--space-3);
-    height: var(--space-8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--iui-color-background-1);
-    color: var(--iui-color-foreground-2);
 
     &:nth-child(2) {
       border-radius: var(--iui-border-radius-round);
+      padding-inline: var(--space-5);
     }
   }
 </style>

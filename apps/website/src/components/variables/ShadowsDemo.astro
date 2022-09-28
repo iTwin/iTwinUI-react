@@ -1,21 +1,20 @@
 ---
 import Wrapper from './_wrapper.astro';
+import Item from './_item.astro';
 ---
 
 <Wrapper>
-  {[...Array(6)].map((_, i) => <div style={`--_shadow: var(--iui-shadow-${i})`}>{i}</div>)}
+  {
+    [...Array(6)].map((_, i) => (
+      <Item class='item' style={`--_shadow: var(--iui-shadow-${i})`}>
+        {i}
+      </Item>
+    ))
+  }
 </Wrapper>
 
 <style>
-  div {
-    width: calc(var(--space-8) * 2);
-    height: calc(var(--space-8) * 2);
-    border-radius: var(--space-1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--iui-color-background-1);
-    color: var(--iui-color-foreground-2);
+  .item {
     box-shadow: var(--_shadow);
   }
 </style>
