@@ -7,7 +7,7 @@ type Props = { colors: string[] | string[][] } & astroHTML.JSX.HTMLAttributes;
 const { colors, ...rest } = Astro.props;
 ---
 
-<article class:list={[{ 'color-list-wrapper': Array.isArray(colors[0]) }]}>
+<article class:list={[{ 'color-list-wrapper': Array.isArray(colors[0]) }]} {...rest}>
   {
     Array.isArray(colors[0]) ? (
       <>
@@ -16,7 +16,7 @@ const { colors, ...rest } = Astro.props;
         ))}
       </>
     ) : (
-      <ColorList client:visible colors={colors as string[]} {...rest} />
+      <ColorList client:visible colors={colors as string[]} />
     )
   }
 </article>

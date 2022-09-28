@@ -27,6 +27,9 @@ const howMany = sizes ? 6 : 4;
     @for $i from 0 through 5 {
       p:nth-child(#{$i + 1}) {
         font-size: var(--iui-font-size-#{$i});
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
   }
