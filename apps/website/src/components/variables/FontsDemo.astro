@@ -1,26 +1,23 @@
 ---
+import Wrapper from './_wrapper.astro';
 type Props = { sizes?: boolean; weights?: boolean };
 
 const { sizes, weights } = Astro.props;
-
 const howMany = sizes ? 6 : 4;
 ---
 
-<article class:list={[{ sizes: sizes, weights: !sizes && weights }]}>
+<Wrapper class:list={[{ sizes: sizes, weights: !sizes && weights }]}>
   {
     Array.from({ length: howMany }).map((_, i) => (
       <p>The quick brown fox jumped over the lazy dog</p>
     ))
   }
-</article>
+</Wrapper>
 
 <style lang='scss'>
-  article {
-    border-radius: var(--space-2);
-    border: 1px solid var(--color-line-2);
+  :is(.sizes, .weights) {
     display: grid;
-    gap: var(--space-3);
-    padding: var(--space-3);
+    justify-content: start;
   }
 
   .sizes {

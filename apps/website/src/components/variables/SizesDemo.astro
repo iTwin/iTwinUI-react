@@ -1,8 +1,10 @@
 ---
+import Wrapper from './_wrapper.astro';
+
 const sizes = ['3xs', '2xs', 'xs', 's', 'm', 'l', 'xl', '2xl', '3xl'];
 ---
 
-<article>
+<Wrapper class='wrapper'>
   {
     sizes.map((size) => (
       <div>
@@ -11,15 +13,12 @@ const sizes = ['3xs', '2xs', 'xs', 's', 'm', 'l', 'xl', '2xl', '3xl'];
       </div>
     ))
   }
-</article>
+</Wrapper>
 
 <style>
-  article {
-    border-radius: var(--space-2);
-    border: 1px solid var(--color-line-2);
+  .wrapper {
     display: grid;
-    gap: var(--space-3);
-    padding: var(--space-3);
+    justify-content: unset;
   }
 
   div {
