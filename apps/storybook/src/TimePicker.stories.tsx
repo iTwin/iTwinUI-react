@@ -10,7 +10,6 @@ import {
   TimePickerProps,
   IconButton,
   LabeledInput,
-  MeridiemType,
 } from '@itwin/itwinui-react';
 import SvgCalendar from '@itwin/itwinui-icons-react/cjs/icons/Calendar';
 
@@ -77,13 +76,6 @@ export const Basic: Story<TimePickerProps> = (args) => {
 Basic.args = {
   date: new Date(2021, 4, 11, 14, 55, 22),
   setFocusHour: true,
-  hourRenderer: (date: Date) =>
-    date.getHours().toLocaleString(undefined, { minimumIntegerDigits: 2 }),
-  minuteRenderer: (date: Date) =>
-    date.getMinutes().toLocaleString(undefined, { minimumIntegerDigits: 2 }),
-  secondRenderer: (date: Date) =>
-    date.getSeconds().toLocaleString(undefined, { minimumIntegerDigits: 2 }),
-  meridiemRenderer: (meridiem: MeridiemType) => meridiem,
 };
 
 export const Combined: Story<TimePickerProps> = (args) => {
@@ -103,6 +95,8 @@ export const Combined: Story<TimePickerProps> = (args) => {
     action(`New Time value: ${date}`, { clearOnStoryChange: false })();
   };
 
+  const inputValueType = precision === 'seconds' ? 'medium' : 'short';
+
   React.useEffect(() => {
     setCurrentDate(new Date(date));
     return () => action('', { clearOnStoryChange: true })();
@@ -111,7 +105,9 @@ export const Combined: Story<TimePickerProps> = (args) => {
     <>
       <LabeledInput
         displayStyle='inline'
-        value={currentDate.toLocaleTimeString()}
+        value={currentDate.toLocaleTimeString('en-US', {
+          timeStyle: inputValueType,
+        })}
         svgIcon={
           <IconButton
             styleType='borderless'

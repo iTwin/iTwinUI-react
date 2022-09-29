@@ -330,15 +330,15 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
     return data;
   };
 
-  const isTimeFound = (timeArray: Date[], timeToFind: Date) => {
-    return timeArray[timeArray.length - 1].getTime() === timeToFind.getTime();
-  };
-
   const time = React.useMemo(() => {
     const time = selectedTime ?? new Date();
     const numHours = use12Hours ? 12 : 24;
     const numMinutes = 60;
     const numSeconds = 60;
+
+    const isTimeFound = (timeArray: Date[], timeToFind: Date) => {
+      return isSameTime(timeArray[timeArray.length - 1], timeToFind, precision);
+    };
 
     const data = [];
     for (let i = 0; i < numHours; i++) {
@@ -349,36 +349,38 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
             time.getMonth(),
             time.getDate(),
             use12Hours && i === 0 ? 12 : i,
-            0,
-            0,
+            precision !== 'hours' ? 0 : time.getMinutes(),
+            precision !== 'hours' ? 0 : time.getSeconds(),
           ),
         );
-      }
-      if (precision !== 'hours') {
-        for (let j = 0; j < numMinutes; j++) {
-          const newTime = new Date(
-            time.getFullYear(),
-            time.getMonth(),
-            time.getDate(),
-            use12Hours && i === 0 ? 12 : i,
-            j,
-            0,
-          );
-          if (j % minuteStep === 0 && !isTimeFound(data, newTime)) {
-            data.push(newTime);
-          }
-          if (precision === 'seconds') {
-            for (let k = 0; k < numSeconds; k++) {
-              const newTime = new Date(
-                time.getFullYear(),
-                time.getMonth(),
-                time.getDate(),
-                use12Hours && i === 0 ? 12 : i,
-                j,
-                k,
-              );
-              if (k % secondStep === 0 && !isTimeFound(data, newTime)) {
+        if (precision !== 'hours') {
+          for (let j = 0; j < numMinutes; j++) {
+            const newTime = new Date(
+              time.getFullYear(),
+              time.getMonth(),
+              time.getDate(),
+              use12Hours && i === 0 ? 12 : i,
+              j,
+              precision === 'seconds' ? 0 : time.getSeconds(),
+            );
+            if (j % minuteStep === 0) {
+              if (!isTimeFound(data, newTime)) {
                 data.push(newTime);
+              }
+              if (precision === 'seconds') {
+                for (let k = 0; k < numSeconds; k++) {
+                  const newTime = new Date(
+                    time.getFullYear(),
+                    time.getMonth(),
+                    time.getDate(),
+                    use12Hours && i === 0 ? 12 : i,
+                    j,
+                    k,
+                  );
+                  if (k % secondStep === 0 && !isTimeFound(data, newTime)) {
+                    data.push(newTime);
+                  }
+                }
               }
             }
           }
@@ -462,6 +464,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
           }
           onFocusChange={onTimeFocus}
           onSelectChange={onTimeClick}
+          setFocus={setFocusHour}
           precision={precision}
           useCombinedRenderer={useCombinedRenderer}
           valueRenderer={combinedRenderer}
