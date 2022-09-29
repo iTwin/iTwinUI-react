@@ -6,6 +6,14 @@
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "typings": "cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./cjs/index.js"
+    },
+    "./cjs/": "./cjs/",
+    "./esm/": "./esm/"
+  },
   "files": [
     "cjs",
     "esm",
