@@ -3259,6 +3259,58 @@ it('should not show resizer when column has disabled resizing when resize mode i
   expect(descriptionResizer).toBeFalsy();
 });
 
+it('should stop resizing when mouse leaves the screen', () => {
+  jest
+    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    .mockReturnValue({ width: 100 } as DOMRect);
+  const columns: Column<TestDataType>[] = [
+    {
+      Header: 'Header name',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'description',
+          Header: 'description',
+          accessor: 'description',
+        },
+        {
+          id: 'view',
+          Header: 'view',
+          Cell: () => <>View</>,
+        },
+      ],
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+    isResizable: true,
+  });
+
+  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  expect(rows.length).toBe(3);
+
+  const resizer = container.querySelector('.iui-resizer') as HTMLDivElement;
+  expect(resizer).toBeTruthy();
+
+  fireEvent.mouseDown(resizer, { clientX: 100 });
+  fireEvent.mouseMove(resizer, { clientX: 150 });
+  fireEvent.mouseLeave(resizer.ownerDocument);
+  fireEvent.mouseMove(resizer, { clientX: 50 });
+
+  const headerCells = container.querySelectorAll<HTMLDivElement>(
+    '.iui-table-header .iui-cell',
+  );
+  expect(headerCells).toHaveLength(3);
+
+  expect(headerCells[0].style.width).toBe('150px');
+  expect(headerCells[1].style.width).toBe('50px');
+  expect(headerCells[2].style.width).toBe('100px');
+});
+
 it('should render zebra striped table', () => {
   const { container } = renderComponent({ styleType: 'zebra-rows' });
 

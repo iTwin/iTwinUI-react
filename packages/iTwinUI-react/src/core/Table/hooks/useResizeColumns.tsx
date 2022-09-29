@@ -164,6 +164,13 @@ const defaultGetResizerProps = (ownerDocument: Document | undefined) => (
       events.upHandler,
       passiveIfSupported,
     );
+    if (!isTouchEvent(e)) {
+      ownerDocument.addEventListener(
+        'mouseleave',
+        handlersAndEvents.mouse.upHandler,
+        passiveIfSupported,
+      );
+    }
 
     dispatch({
       type: actions.columnStartResizing,
