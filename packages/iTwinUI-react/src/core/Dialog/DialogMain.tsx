@@ -4,7 +4,14 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { FocusTrap, useLatestRef, useMergedRefs, useTheme } from '../utils';
+import {
+  FocusTrap,
+  getTranslateValues,
+  useLatestRef,
+  Resizer,
+  useMergedRefs,
+  useTheme,
+} from '../utils';
 import '@itwin/itwinui-css/css/dialog.css';
 import { DialogContextProps, useDialogContext } from './DialogContext';
 import { CSSTransition } from 'react-transition-group';
@@ -60,11 +67,14 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
       preventDocumentScroll = dialogContext.preventDocumentScroll,
       onKeyDown,
       isDraggable = dialogContext.isDraggable,
-      style,
+      isResizable = dialogContext.isResizable,
+      style: propStyle,
       ...rest
     } = props;
 
     useTheme();
+
+    const [style, setStyle] = React.useState<React.CSSProperties>();
 
     const dialogRef = React.useRef<HTMLDivElement>(null);
     const refs = useMergedRefs(dialogRef, ref);
@@ -91,16 +101,27 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
       };
     }, [isOpen, setFocusRef]);
 
-    // Prevents document from scrolling when the dialog is open.
     const originalBodyOverflow = React.useRef('');
     React.useEffect(() => {
+      if (isOpen) {
+        originalBodyOverflow.current = document.body.style.overflow;
+      }
+    }, [isOpen]);
+
+    // Prevents document from scrolling when the dialog is open.
+    React.useEffect(() => {
       const ownerDocument = dialogRef.current?.ownerDocument;
-      if (!ownerDocument || !preventDocumentScroll) {
+      // If there is no `ownerDocument` or `preventDocumentScroll` is false or
+      // document body originally has `overflow: hidden` (possibly from other/parent dialog), then do nothing.
+      if (
+        !ownerDocument ||
+        !preventDocumentScroll ||
+        originalBodyOverflow.current === 'hidden'
+      ) {
         return;
       }
 
       if (isOpen) {
-        originalBodyOverflow.current = ownerDocument.body.style.overflow;
         ownerDocument.body.style.overflow = 'hidden';
       } else {
         ownerDocument.body.style.overflow = originalBodyOverflow.current;
@@ -122,6 +143,7 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
     const { onPointerDown, transform } = useDragAndDrop(
       dialogRef,
       dialogContext.dialogRootRef,
+      isDraggable,
     );
     const handlePointerDown = React.useCallback(
       (event: React.PointerEvent<HTMLElement>) => {
@@ -130,6 +152,33 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
         }
       },
       [isDraggable, onPointerDown],
+    );
+
+    // Prevents dialog from moving when window is being resized
+    React.useLayoutEffect(() => {
+      if (!isDraggable || !isOpen) {
+        return;
+      }
+      const rect = dialogRef.current?.getBoundingClientRect();
+      const [translateX, translateY] = getTranslateValues(dialogRef.current);
+      setStyle((oldStyle) => ({
+        ...oldStyle,
+        width: rect?.width,
+        height: rect?.height,
+        left: dialogRef.current?.offsetLeft,
+        top: dialogRef.current?.offsetTop,
+        transform: `translate(${translateX}px,${translateY}px)`,
+      }));
+    }, [isDraggable, isOpen]);
+
+    const setResizeStyle = React.useCallback(
+      (newStyle: React.CSSProperties) => {
+        setStyle((oldStyle) => ({
+          ...oldStyle,
+          ...newStyle,
+        }));
+      },
+      [],
     );
 
     const content = (
@@ -150,10 +199,19 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
         tabIndex={-1}
         style={{
           transform,
+          overflow: 'unset',
           ...style,
+          ...propStyle,
         }}
         {...rest}
       >
+        {isResizable && (
+          <Resizer
+            elementRef={dialogRef}
+            containerRef={dialogContext.dialogRootRef}
+            onResizeEnd={setResizeStyle}
+          />
+        )}
         {children}
       </div>
     );

@@ -10,6 +10,7 @@ describe('DatePicker', () => {
     'With Time',
     'With Combined Time',
     'With Year',
+    'Range',
   ];
 
   tests.forEach((testName) => {
