@@ -2514,13 +2514,11 @@ it('should render number of rows selected for paginator', async () => {
   expect(container.querySelector('.iui-left span')).toBeNull();
 
   fireEvent.click(rowCheckboxes[0]);
-
   expect(container.querySelector('.iui-left span')?.textContent).toBe(
     '1 row selected',
   );
 
   fireEvent.click(rowCheckboxes[1]);
-
   expect(container.querySelector('.iui-left span')?.textContent).toBe(
     '2 rows selected',
   );

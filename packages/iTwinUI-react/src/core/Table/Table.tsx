@@ -663,10 +663,6 @@ export const Table = <
     setPageSize(pageSize);
   }, [pageSize, setPageSize]);
 
-  const numSelectedRows =
-    selectionMode === 'single'
-      ? 0
-      : rows.filter((row) => row.isSelected).length;
   const paginatorRendererProps: TablePaginatorRendererProps = React.useMemo(
     () => ({
       currentPage: state.pageIndex,
@@ -676,7 +672,10 @@ export const Table = <
       isLoading,
       onPageChange: gotoPage,
       onPageSizeChange: setPageSize,
-      totalSelectedRowsCount: numSelectedRows,
+      totalSelectedRowsCount:
+        selectionMode === 'single'
+          ? 0
+          : instance.flatRows.filter((row) => row.isSelected).length,
     }),
     [
       density,
@@ -686,7 +685,8 @@ export const Table = <
       setPageSize,
       state.pageIndex,
       state.pageSize,
-      numSelectedRows,
+      instance.flatRows,
+      selectionMode,
     ],
   );
 
