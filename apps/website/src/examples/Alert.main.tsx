@@ -10,6 +10,7 @@ export default () => {
     <Alert
       onClose={() => console.log('CLOSED')}
       clickableText='Learn more'
+      clickableTextProps={{ onClick: () => console.log('Clicked more info!') }}
       style={{ minWidth: 350 }}
     >
       This is an alert

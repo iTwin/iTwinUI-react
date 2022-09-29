@@ -8,13 +8,13 @@ import { Alert } from '@itwin/itwinui-react';
 export default () => {
   return (
     <Alert
-      type='negative'
+      type='warning'
       onClose={() => console.log('CLOSED')}
       clickableText='Learn more'
       clickableTextProps={{ onClick: () => console.log('Clicked more info!') }}
       style={{ minWidth: 350 }}
     >
-      This is a negative alert
+      This is a warning alert
     </Alert>
   );
 };

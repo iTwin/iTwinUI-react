@@ -7,14 +7,16 @@ import { Alert } from '@itwin/itwinui-react';
 
 export default () => {
   return (
-    <Alert
-      type='negative'
-      onClose={() => console.log('CLOSED')}
-      clickableText='Learn more'
-      clickableTextProps={{ onClick: () => console.log('Clicked more info!') }}
-      style={{ minWidth: 350 }}
-    >
-      This is a negative alert
-    </Alert>
+    <>
+      <Alert
+        isSticky
+        onClose={() => console.log('CLOSED')}
+        clickableTextProps={{ onClick: () => console.log('Clicked more info!') }}
+        clickableText='Learn more'
+      >
+        This is a sticky alert
+      </Alert>
+      <p>Page content.</p>
+    </>
   );
 };
