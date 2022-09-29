@@ -496,7 +496,7 @@ it('should return selected time in combined renderer (seconds)', async () => {
     '.iui-time .iui-selected',
   ) as HTMLElement;
   expect(selectedTime.textContent).toBe('22:09:22');
-}, 25000);
+}, 50000);
 
 it('should return selected time in combined renderer (minutes)', async () => {
   const onClick = jest.fn();
@@ -678,7 +678,7 @@ it('should show 24 hours in combined renderer (seconds)', async () => {
   selectedTime = getByText('11:45:52');
   await userEvent.click(selectedTime);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 11, 45, 52));
-}, 25000);
+}, 50000);
 
 it('should show 24 hours in combined renderer (minutes)', async () => {
   const onClick = jest.fn();
@@ -763,7 +763,7 @@ it('should show 12 hours in combined renderer (seconds)', async () => {
   selectedMeridiem = getByText('PM');
   await userEvent.click(selectedMeridiem);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 21, 30, 7));
-}, 25000);
+}, 50000);
 
 it('should show 12 hours in combined renderer (minutes)', async () => {
   const onClick = jest.fn();
