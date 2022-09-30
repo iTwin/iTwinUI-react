@@ -48,7 +48,7 @@ import {
 } from 'react-table';
 
 export const useResizeColumns = <T extends Record<string, unknown>>(
-  ownerDocument: Document | undefined,
+  ownerDocument: React.RefObject<Document | undefined>,
 ) => (hooks: Hooks<T>) => {
   hooks.getResizerProps = [defaultGetResizerProps(ownerDocument)];
   hooks.stateReducers.push(reducer);
@@ -61,7 +61,9 @@ const isTouchEvent = (
   return event.type === 'touchstart';
 };
 
-const defaultGetResizerProps = (ownerDocument: Document | undefined) => (
+const defaultGetResizerProps = (
+  ownerDocument: React.RefObject<Document | undefined>,
+) => (
   props: TableKeyedProps,
   {
     instance,
@@ -73,10 +75,6 @@ const defaultGetResizerProps = (ownerDocument: Document | undefined) => (
     nextHeader: HeaderGroup;
   },
 ) => {
-  if (!ownerDocument) {
-    return props;
-  }
-
   const { dispatch } = instance;
 
   const onResizeStart = (
@@ -113,11 +111,11 @@ const defaultGetResizerProps = (ownerDocument: Document | undefined) => (
         moveHandler: (e: MouseEvent) => dispatchMove(e.clientX),
         upEvent: 'mouseup',
         upHandler: () => {
-          ownerDocument.removeEventListener(
+          ownerDocument.current?.removeEventListener(
             'mousemove',
             handlersAndEvents.mouse.moveHandler,
           );
-          ownerDocument.removeEventListener(
+          ownerDocument.current?.removeEventListener(
             'mouseup',
             handlersAndEvents.mouse.upHandler,
           );
@@ -135,11 +133,11 @@ const defaultGetResizerProps = (ownerDocument: Document | undefined) => (
         },
         upEvent: 'touchend',
         upHandler: () => {
-          ownerDocument.removeEventListener(
+          ownerDocument.current?.removeEventListener(
             handlersAndEvents.touch.moveEvent,
             handlersAndEvents.touch.moveHandler,
           );
-          ownerDocument.removeEventListener(
+          ownerDocument.current?.removeEventListener(
             handlersAndEvents.touch.upEvent,
             handlersAndEvents.touch.moveHandler,
           );
@@ -154,18 +152,18 @@ const defaultGetResizerProps = (ownerDocument: Document | undefined) => (
     const passiveIfSupported = passiveEventSupported()
       ? { passive: false }
       : false;
-    ownerDocument.addEventListener(
+    ownerDocument.current?.addEventListener(
       events.moveEvent,
       events.moveHandler,
       passiveIfSupported,
     );
-    ownerDocument.addEventListener(
+    ownerDocument.current?.addEventListener(
       events.upEvent,
       events.upHandler,
       passiveIfSupported,
     );
     if (!isTouchEvent(e)) {
-      ownerDocument.addEventListener(
+      ownerDocument.current?.addEventListener(
         'mouseleave',
         handlersAndEvents.mouse.upHandler,
         passiveIfSupported,
@@ -186,14 +184,12 @@ const defaultGetResizerProps = (ownerDocument: Document | undefined) => (
   return [
     props,
     {
-      onClick: (e: React.MouseEvent) => {
-        // Prevents from triggering sort
-        e.stopPropagation();
-      },
       onMouseDown: (e: React.MouseEvent) => {
         e.persist();
         // Prevents from triggering drag'n'drop
         e.preventDefault();
+        // Prevents from triggering sort
+        e.stopPropagation();
         onResizeStart(e, header);
       },
       onTouchStart: (e: React.TouchEvent) => {

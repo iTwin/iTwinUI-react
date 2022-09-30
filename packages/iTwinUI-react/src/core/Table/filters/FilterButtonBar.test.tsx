@@ -78,10 +78,10 @@ it('should call callbacks on clicks', () => {
   expect(clearFilter).toHaveBeenCalled();
 });
 
-it('should consume the click event and stop its propagation', async () => {
+it('should consume the onMouseDown event and stop its propagation', async () => {
   const parentClick = jest.fn();
   render(
-    <div onClick={parentClick}>
+    <div onMouseDown={parentClick}>
       <BaseFilter>
         <FilterButtonBar setFilter={setFilter} clearFilter={clearFilter} />
       </BaseFilter>

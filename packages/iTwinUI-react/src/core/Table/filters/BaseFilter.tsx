@@ -39,7 +39,7 @@ export const BaseFilter = (props: BaseFilterProps) => {
       className={cx('iui-column-filter', className)}
       style={style}
       // Prevents from triggering sort
-      onClick={(e: React.MouseEvent) => {
+      onMouseDown={(e: React.MouseEvent) => {
         e.stopPropagation();
       }}
       id={id}
