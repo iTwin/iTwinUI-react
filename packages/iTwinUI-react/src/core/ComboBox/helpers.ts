@@ -24,18 +24,15 @@ export const comboBoxReducer = (
     selected: number | number[];
     focusedIndex: number;
   },
-  {
-    type,
-    value,
-  }:
+  action:
     | { type: 'multiselect'; value: number }
     | { type: 'multi-override'; value: number[] }
-    | { type: 'open'; value: undefined }
-    | { type: 'close'; value: undefined }
+    | { type: 'open' }
+    | { type: 'close' }
     | { type: 'select'; value: number }
     | { type: 'focus'; value: number | undefined },
 ) => {
-  switch (type) {
+  switch (action.type) {
     case 'open': {
       return { ...state, isOpen: true };
     }
@@ -48,34 +45,39 @@ export const comboBoxReducer = (
       }
       return {
         ...state,
-        selected: value ?? state.selected,
-        focusedIndex: value ?? state.focusedIndex,
+        selected: action.value ?? state.selected,
+        focusedIndex: action.value ?? state.focusedIndex,
       };
     }
     case 'multi-override': {
       if (!Array.isArray(state.selected)) {
         return { ...state };
       }
-      return { ...state, selected: value };
+      return { ...state, selected: action.value };
     }
     case 'multiselect': {
       if (!Array.isArray(state.selected)) {
         return { ...state };
       }
-      const actionIndex = state.selected.findIndex((item) => item === value);
+      const actionIndex = state.selected.findIndex(
+        (item) => item === action.value,
+      );
       if (actionIndex >= 0) {
         return {
           ...state,
-          focusedIndex: value ?? state.focusedIndex,
+          focusedIndex: action.value ?? state.focusedIndex,
           selected: state.selected.filter(
-            (index) => index !== value,
+            (index) => index !== action.value,
           ) as number[],
         };
       } else if (actionIndex === -1) {
         return {
           ...state,
-          focusedIndex: value ?? state.focusedIndex,
-          selected: value != null ? [...state.selected, value] : state.selected,
+          focusedIndex: action.value ?? state.focusedIndex,
+          selected:
+            action.value != null
+              ? [...state.selected, action.value]
+              : state.selected,
         };
       }
     }
@@ -87,7 +89,7 @@ export const comboBoxReducer = (
       }
       return {
         ...state,
-        focusedIndex: value ?? state.selected ?? -1,
+        focusedIndex: action.value ?? state.selected ?? -1,
       };
     }
     default: {
@@ -117,8 +119,8 @@ export const ComboBoxActionContext = React.createContext<
       x:
         | { type: 'multiselect'; value: number }
         | { type: 'multi-override'; value: number[] }
-        | { type: 'open'; value: undefined }
-        | { type: 'close'; value: undefined }
+        | { type: 'open' }
+        | { type: 'close' }
         | { type: 'select'; value: number }
         | { type: 'focus'; value: number | undefined },
     ) => void)
