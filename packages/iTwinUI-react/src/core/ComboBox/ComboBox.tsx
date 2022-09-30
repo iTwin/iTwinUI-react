@@ -289,7 +289,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = event.currentTarget;
       setInputValue(value);
-      dispatch({ type: 'open', value: undefined }); // reopen when typing
+      dispatch({ type: 'open' }); // reopen when typing
       setFilteredOptions(
         filterFunction?.(optionsRef.current, value) ??
           optionsRef.current.filter((option) =>
@@ -343,7 +343,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
         if (isSingleOnChange(onChangeProp.current, multiple)) {
           onChangeProp.current?.(optionsRef.current[__originalIndex]?.value);
         }
-        dispatch({ type: 'close', value: undefined });
+        dispatch({ type: 'close' });
       }
     },
     [isMenuItemSelected, multiple, onChangeProp, optionsRef, selected],

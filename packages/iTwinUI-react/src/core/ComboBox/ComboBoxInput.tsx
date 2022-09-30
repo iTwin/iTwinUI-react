@@ -17,17 +17,11 @@ export const ComboBoxInput = React.forwardRef(
   (props: ComboBoxInputProps, forwardedRef: React.Ref<HTMLInputElement>) => {
     const { onKeyDown: onKeyDownProp, onFocus: onFocusProp, ...rest } = props;
 
-    const {
-      isOpen,
-      id,
-      focusedIndex,
-      enableVirtualization,
-      multiple,
-    } = useSafeContext(ComboBoxStateContext);
+    const { isOpen, id, focusedIndex, enableVirtualization, multiple } =
+      useSafeContext(ComboBoxStateContext);
     const dispatch = useSafeContext(ComboBoxActionContext);
-    const { inputRef, menuRef, optionsExtraInfoRef } = useSafeContext(
-      ComboBoxRefsContext,
-    );
+    const { inputRef, menuRef, optionsExtraInfoRef } =
+      useSafeContext(ComboBoxRefsContext);
     const refs = useMergedRefs(inputRef, forwardedRef);
 
     const focusedIndexRef = React.useRef(focusedIndex ?? -1);
@@ -50,7 +44,7 @@ export const ComboBoxInput = React.forwardRef(
           case 'ArrowDown': {
             event.preventDefault();
             if (!isOpen) {
-              return dispatch({ type: 'open', value: undefined });
+              return dispatch({ type: 'open' });
             }
 
             if (length === 0) {
@@ -58,9 +52,8 @@ export const ComboBoxInput = React.forwardRef(
             }
 
             if (focusedIndexRef.current === -1) {
-              const currentElement = menuRef.current?.querySelector(
-                '[data-iui-index]',
-              );
+              const currentElement =
+                menuRef.current?.querySelector('[data-iui-index]');
               return dispatch({
                 type: 'focus',
                 value: Number(
@@ -98,7 +91,7 @@ export const ComboBoxInput = React.forwardRef(
           case 'ArrowUp': {
             event.preventDefault();
             if (!isOpen) {
-              return dispatch({ type: 'open', value: undefined });
+              return dispatch({ type: 'open' });
             }
 
             if (length === 0) {
@@ -150,20 +143,20 @@ export const ComboBoxInput = React.forwardRef(
                 });
               } else {
                 dispatch({ type: 'select', value: focusedIndexRef.current });
-                dispatch({ type: 'close', value: undefined });
+                dispatch({ type: 'close' });
               }
             } else {
-              dispatch({ type: 'open', value: undefined });
+              dispatch({ type: 'open' });
             }
             break;
           }
           case 'Escape': {
             event.preventDefault();
-            dispatch({ type: 'close', value: undefined });
+            dispatch({ type: 'close' });
             break;
           }
           case 'Tab':
-            dispatch({ type: 'close', value: undefined });
+            dispatch({ type: 'close' });
             break;
         }
       },
@@ -180,7 +173,7 @@ export const ComboBoxInput = React.forwardRef(
 
     const handleFocus = React.useCallback(
       (event: React.FocusEvent<HTMLInputElement>) => {
-        dispatch({ type: 'open', value: undefined });
+        dispatch({ type: 'open' });
         onFocusProp?.(event);
       },
       [dispatch, onFocusProp],
