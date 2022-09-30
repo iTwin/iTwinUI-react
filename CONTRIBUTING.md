@@ -37,6 +37,8 @@ e.g. to build all workspaces together, run the following command from the root:
 yarn build
 ```
 
+**NOTE:** To avoid build issues, we recommend using [Node](https://nodejs.org/en/download/current/) *v16.x (16+)* and not *v17.x (17+)*. You can install and use [nvm](https://github.com/nvm-sh/nvm#intro) to change your node version.
+
 #### Development environment
 
 To start the development server for all workspaces, run the following command from the root.
