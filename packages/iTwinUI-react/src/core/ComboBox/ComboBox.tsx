@@ -330,23 +330,32 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     [multiple, selected],
   );
 
-  const onClickHandler = React.useCallback(
+  const onChangeHandler = React.useCallback(
     (__originalIndex: number) => {
-      if (isMultipleEnabled(selected, multiple)) {
-        dispatch({ type: 'multiselect', value: __originalIndex });
+      if (isSingleOnChange(onChangeProp.current, multiple)) {
+        onChangeProp.current?.(optionsRef.current[__originalIndex]?.value);
+      } else {
         onChangeProp.current?.(
           optionsRef.current[__originalIndex]?.value,
           isMenuItemSelected(__originalIndex) ? 'removed' : 'added',
         );
-      } else {
-        dispatch({ type: 'select', value: __originalIndex });
-        if (isSingleOnChange(onChangeProp.current, multiple)) {
-          onChangeProp.current?.(optionsRef.current[__originalIndex]?.value);
-        }
-        dispatch({ type: 'close' });
       }
     },
-    [isMenuItemSelected, multiple, onChangeProp, optionsRef, selected],
+    [isMenuItemSelected, multiple, onChangeProp, optionsRef],
+  );
+
+  const onClickHandler = React.useCallback(
+    (__originalIndex: number) => {
+      if (isMultipleEnabled(selected, multiple)) {
+        dispatch({ type: 'multiselect', value: __originalIndex });
+      } else {
+        dispatch({ type: 'select', value: __originalIndex });
+
+        dispatch({ type: 'close' });
+      }
+      onChangeHandler(__originalIndex);
+    },
+    [multiple, onChangeHandler, selected],
   );
 
   const getMenuItem = React.useCallback(
@@ -437,6 +446,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             minWidth,
             isOpen,
             focusedIndex,
+            onChangeHandler,
             enableVirtualization,
             filteredOptions,
             getMenuItem,
