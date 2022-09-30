@@ -19,10 +19,7 @@ function assertBaseElement(menu: HTMLUListElement, role = 'menu') {
   });
 }
 
-function renderComponent(
-  props?: Partial<DropdownMenuProps>,
-  container?: HTMLElement,
-) {
+function renderComponent(props?: Partial<DropdownMenuProps>) {
   return render(
     <DropdownMenu
       menuItems={(close) => [
@@ -40,23 +37,19 @@ function renderComponent(
     >
       <Button>Click here</Button>
     </DropdownMenu>,
-    { container },
   );
 }
 
 it('should show menu only after click', () => {
-  const mockDocument = document.implementation.createHTMLDocument();
-  const div = mockDocument.createElement('div');
-  const mockContainer = mockDocument.body.appendChild(div);
-  renderComponent(undefined, mockContainer);
+  renderComponent();
 
-  let menu = mockDocument.querySelector('.iui-menu') as HTMLUListElement;
+  let menu = document.querySelector('.iui-menu') as HTMLUListElement;
   expect(menu).toBeFalsy();
 
-  const button = mockDocument.querySelector('.iui-button') as HTMLButtonElement; // screen.getByText('Click here');
-  button.click(); // fireEvent.click(button);
+  const button = screen.getByText('Click here');
+  fireEvent.click(button);
 
-  menu = mockDocument.querySelector('.iui-menu') as HTMLUListElement;
+  menu = document.querySelector('.iui-menu') as HTMLUListElement;
   assertBaseElement(menu);
 });
 

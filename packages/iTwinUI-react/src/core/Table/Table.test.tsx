@@ -1654,7 +1654,9 @@ it('should render filter dropdown in the correct document', async () => {
     '.iui-filter-button',
   ) as HTMLElement;
   expect(filterToggle).toBeTruthy();
-  act(() => filterToggle.click());
+  act(() => {
+    filterToggle.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+  });
 
   await waitFor(() =>
     expect(mockDocument.querySelector('.iui-column-filter')).toBeTruthy(),
