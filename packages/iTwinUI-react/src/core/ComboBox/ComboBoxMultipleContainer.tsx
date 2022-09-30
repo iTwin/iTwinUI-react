@@ -13,34 +13,20 @@ type ComboBoxMultipleContainerProps<T> = {
 
 export const ComboBoxMultipleContainer = React.forwardRef(
   <T,>(
-    { selectedItems }: ComboBoxMultipleContainerProps<T>,
+    { selectedItems = [] }: ComboBoxMultipleContainerProps<T>,
     ref: React.RefObject<HTMLDivElement>,
   ) => {
-    const tagRenderer = React.useCallback((item: SelectOption<T>) => {
-      return <SelectTag key={item.label} label={item.label} />;
-    }, []);
-
-    const selectedItemsElements = React.useMemo(() => {
-      if (!selectedItems) {
-        return [];
-      }
-
-      return selectedItems.map((item) => tagRenderer(item));
-    }, [selectedItems, tagRenderer]);
-
     return (
-      <>
-        {selectedItems && (
-          <SelectTagContainer
-            style={{
-              maxWidth: `70%`,
-              right: 'unset',
-            }}
-            ref={ref}
-            tags={selectedItemsElements}
-          />
-        )}
-      </>
+      <SelectTagContainer
+        style={{
+          maxWidth: `70%`,
+          right: 'unset',
+        }}
+        ref={ref}
+        tags={selectedItems.map((item) => (
+          <SelectTag key={item.label} label={item.label} />
+        ))}
+      />
     );
   },
 );
