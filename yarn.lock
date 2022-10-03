@@ -5515,7 +5515,7 @@ cacache@^12.0.2:
 
 cacache@^15.0.5:
   version "15.3.0"
-  resolved "https://registry.yarnpkg.com/cacache/-/cacache-1,,5.3.0.tgz#dc85380fb2f556fe3dda4c719bfa0ec875a7f1eb"
+  resolved "https://registry.yarnpkg.com/cacache/-/cacache-15.3.0.tgz#dc85380fb2f556fe3dda4c719bfa0ec875a7f1eb"
   integrity sha512-VVdYzXEn+cnbXpFgWs5hTT7OScegHVmLhJIR8Ufqk3iFD6A6j5iSX1KuBTfNEv4tdJWE2PzA6IVFtcLC7fN9wQ==
   dependencies:
     "@npmcli/fs" "^1.0.0"
