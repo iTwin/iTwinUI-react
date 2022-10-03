@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import * as React from 'react';
 import { ComboBox } from '@itwin/itwinui-react';
+import 'tippy.js/animations/shift-away.css';
 
 export default function ComboBoxDemo() {
   const options = React.useMemo(
