@@ -102,7 +102,7 @@ export const Menu = React.forwardRef<HTMLUListElement, MenuProps>(
 
     return (
       <ul
-        className={cx('iui-menu', 'iui-scroll', className)}
+        className={cx('iui-menu', className)}
         style={style}
         role={role}
         onKeyDown={onKeyDown}
