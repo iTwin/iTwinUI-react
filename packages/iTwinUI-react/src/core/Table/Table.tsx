@@ -25,7 +25,7 @@ import {
   useGlobalFilter,
 } from 'react-table';
 import { ProgressRadial } from '../ProgressIndicators';
-import { useTheme, CommonProps, useResizeObserver, mergeRefs } from '../utils';
+import { useTheme, CommonProps, useResizeObserver } from '../utils';
 import '@itwin/itwinui-css/css/table.css';
 import SvgSortDown from '@itwin/itwinui-icons-react/cjs/icons/SortDown';
 import SvgSortUp from '@itwin/itwinui-icons-react/cjs/icons/SortUp';
@@ -98,7 +98,7 @@ export type TablePaginatorRendererProps = {
  * columns and data must be memoized.
  */
 export type TableProps<
-  T extends Record<string, unknown> = Record<string, unknown>
+  T extends Record<string, unknown> = Record<string, unknown>,
 > = Omit<TableOptions<T>, 'disableSortBy'> & {
   /**
    * Flag whether data is loading.
@@ -200,9 +200,7 @@ export type TableProps<
    * Function that should return custom props passed to the each row.
    * Must be memoized.
    */
-  rowProps?: (
-    row: Row<T>,
-  ) => React.ComponentPropsWithRef<'div'> & {
+  rowProps?: (row: Row<T>) => React.ComponentPropsWithRef<'div'> & {
     status?: 'positive' | 'warning' | 'negative';
   };
   /**
@@ -284,11 +282,10 @@ export type TableProps<
 } & Omit<CommonProps, 'title'>;
 
 // Original type for some reason is missing sub-columns
-type ColumnType<
-  T extends Record<string, unknown> = Record<string, unknown>
-> = Column<T> & {
-  columns: ColumnType[];
-};
+type ColumnType<T extends Record<string, unknown> = Record<string, unknown>> =
+  Column<T> & {
+    columns: ColumnType[];
+  };
 const flattenColumns = (columns: ColumnType[]): ColumnType[] => {
   const flatColumns: ColumnType[] = [];
   columns.forEach((column) => {
@@ -343,7 +340,7 @@ const flattenColumns = (columns: ColumnType[]): ColumnType[] => {
  * />
  */
 export const Table = <
-  T extends Record<string, unknown> = Record<string, unknown>
+  T extends Record<string, unknown> = Record<string, unknown>,
 >(
   props: TableProps<T>,
 ): JSX.Element => {
@@ -381,6 +378,7 @@ export const Table = <
     paginatorRenderer,
     pageSize = 25,
     isResizable = false,
+    columnResizeMode = 'fit',
     styleType = 'default',
     enableVirtualization = false,
     enableColumnReordering = false,
@@ -389,7 +387,7 @@ export const Table = <
 
   useTheme();
 
-  const [ownerDocument, setOwnerDocument] = React.useState<Document>();
+  const ownerDocument = React.useRef<Document | undefined>();
 
   const defaultColumn = React.useMemo(
     () => ({
@@ -413,36 +411,32 @@ export const Table = <
     return flatColumns.some((column) => column.id === SELECTION_CELL_ID);
   }, [columns]);
 
-  const disableUserSelect = React.useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === 'Shift') {
-        ownerDocument &&
-          (ownerDocument.documentElement.style.userSelect = 'none');
-      }
-    },
-    [ownerDocument],
-  );
+  const disableUserSelect = React.useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Shift') {
+      ownerDocument.current &&
+        (ownerDocument.current.documentElement.style.userSelect = 'none');
+    }
+  }, []);
 
-  const enableUserSelect = React.useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === 'Shift') {
-        ownerDocument && (ownerDocument.documentElement.style.userSelect = '');
-      }
-    },
-    [ownerDocument],
-  );
+  const enableUserSelect = React.useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Shift') {
+      ownerDocument.current &&
+        (ownerDocument.current.documentElement.style.userSelect = '');
+    }
+  }, []);
 
   React.useEffect(() => {
     if (!isSelectable || selectionMode !== 'multi') {
       return;
     }
 
-    ownerDocument?.addEventListener('keydown', disableUserSelect);
-    ownerDocument?.addEventListener('keyup', enableUserSelect);
+    const ownerDoc = ownerDocument.current;
+    ownerDoc?.addEventListener('keydown', disableUserSelect);
+    ownerDoc?.addEventListener('keyup', enableUserSelect);
 
     return () => {
-      ownerDocument?.removeEventListener('keydown', disableUserSelect);
-      ownerDocument?.removeEventListener('keyup', enableUserSelect);
+      ownerDoc?.removeEventListener('keydown', disableUserSelect);
+      ownerDoc?.removeEventListener('keyup', enableUserSelect);
     };
   }, [
     isSelectable,
@@ -555,6 +549,7 @@ export const Table = <
       data,
       getSubRows,
       initialState: { pageSize, ...props.initialState },
+      columnResizeMode,
     },
     useFlexLayout,
     useResizeColumns(ownerDocument),
@@ -685,6 +680,7 @@ export const Table = <
   const previousTableWidth = React.useRef(0);
   const onTableResize = React.useCallback(
     ({ width }: DOMRectReadOnly) => {
+      instance.tableWidth = width;
       if (width === previousTableWidth.current) {
         return;
       }
@@ -693,9 +689,8 @@ export const Table = <
       // Update column widths when table was resized
       flatHeaders.forEach((header) => {
         if (columnRefs.current[header.id]) {
-          header.resizeWidth = columnRefs.current[
-            header.id
-          ].getBoundingClientRect().width;
+          header.resizeWidth =
+            columnRefs.current[header.id].getBoundingClientRect().width;
         }
       });
 
@@ -706,7 +701,7 @@ export const Table = <
 
       dispatch({ type: tableResizeStartAction });
     },
-    [dispatch, state.columnResizing.columnWidths, flatHeaders],
+    [dispatch, state.columnResizing.columnWidths, flatHeaders, instance],
   );
   const [resizeRef] = useResizeObserver(onTableResize);
 
@@ -716,9 +711,8 @@ export const Table = <
       const newColumnWidths: Record<string, number> = {};
       flatHeaders.forEach((column) => {
         if (columnRefs.current[column.id]) {
-          newColumnWidths[column.id] = columnRefs.current[
-            column.id
-          ].getBoundingClientRect().width;
+          newColumnWidths[column.id] =
+            columnRefs.current[column.id].getBoundingClientRect().width;
         }
       });
       dispatch({ type: tableResizeEndAction, columnWidths: newColumnWidths });
@@ -727,10 +721,6 @@ export const Table = <
 
   const headerRef = React.useRef<HTMLDivElement>(null);
   const bodyRef = React.useRef<HTMLDivElement>(null);
-  // Using `useState` to rerender rows when table body ref is available
-  const [bodyRefState, setBodyRefState] = React.useState<HTMLDivElement | null>(
-    null,
-  );
 
   const getPreparedRow = React.useCallback(
     (index: number) => {
@@ -752,7 +742,7 @@ export const Table = <
           tableHasSubRows={hasAnySubRows}
           tableInstance={instance}
           expanderCell={expanderCell}
-          bodyRef={bodyRefState}
+          bodyRef={bodyRef.current}
           tableRowRef={enableVirtualization ? undefined : tableRowRef(row)}
         />
       );
@@ -769,7 +759,6 @@ export const Table = <
       hasAnySubRows,
       instance,
       expanderCell,
-      bodyRefState,
       enableVirtualization,
       tableRowRef,
     ],
@@ -808,11 +797,13 @@ export const Table = <
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const isHeaderDirectClick = React.useRef(false);
+
   return (
     <>
       <div
         ref={(element) => {
-          setOwnerDocument(element?.ownerDocument);
+          ownerDocument.current = element?.ownerDocument;
           if (isResizable) {
             resizeRef(element);
           }
@@ -849,8 +840,10 @@ export const Table = <
               return (
                 <div {...headerGroupProps} key={headerGroupProps.key}>
                   {headerGroup.headers.map((column, index) => {
+                    const { onClick, ...restSortProps } =
+                      column.getSortByToggleProps();
                     const columnProps = column.getHeaderProps({
-                      ...column.getSortByToggleProps(),
+                      ...restSortProps,
                       className: cx(
                         'iui-cell',
                         {
@@ -875,7 +868,18 @@ export const Table = <
                         ref={(el) => {
                           if (el) {
                             columnRefs.current[column.id] = el;
-                            column.resizeWidth = el.getBoundingClientRect().width;
+                            column.resizeWidth =
+                              el.getBoundingClientRect().width;
+                          }
+                        }}
+                        onMouseDown={() => {
+                          isHeaderDirectClick.current = true;
+                        }}
+                        onClick={(e) => {
+                          // Prevents from triggering sort when resizing and mouse is released in the middle of header
+                          if (isHeaderDirectClick.current) {
+                            onClick?.(e);
+                            isHeaderDirectClick.current = false;
                           }
                         }}
                       >
@@ -884,10 +888,7 @@ export const Table = <
                           showSortButton(column)) && (
                           <div className='iui-table-header-actions-container'>
                             {showFilterButton(column) && (
-                              <FilterToggle
-                                column={column}
-                                ownerDocument={ownerDocument}
-                              />
+                              <FilterToggle column={column} />
                             )}
                             {showSortButton(column) && (
                               <div className='iui-cell-end-icon'>
@@ -909,7 +910,8 @@ export const Table = <
                         )}
                         {isResizable &&
                           column.isResizerVisible &&
-                          index !== headerGroup.headers.length - 1 && (
+                          (index !== headerGroup.headers.length - 1 ||
+                            columnResizeMode === 'expand') && (
                             <div
                               {...column.getResizerProps()}
                               className='iui-resizer'
@@ -944,7 +946,7 @@ export const Table = <
             }),
             style: { outline: 0 },
           })}
-          ref={mergeRefs(bodyRef, setBodyRefState)}
+          ref={bodyRef}
           onScroll={() => {
             if (headerRef.current && bodyRef.current) {
               headerRef.current.scrollLeft = bodyRef.current.scrollLeft;

@@ -47,13 +47,15 @@ import {
   useGetLatest,
 } from 'react-table';
 
-export const useResizeColumns = <T extends Record<string, unknown>>(
-  ownerDocument: Document | undefined,
-) => (hooks: Hooks<T>) => {
-  hooks.getResizerProps = [defaultGetResizerProps(ownerDocument)];
-  hooks.stateReducers.push(reducer);
-  hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions);
-};
+export const useResizeColumns =
+  <T extends Record<string, unknown>>(
+    ownerDocument: React.RefObject<Document | undefined>,
+  ) =>
+  (hooks: Hooks<T>) => {
+    hooks.getResizerProps = [defaultGetResizerProps(ownerDocument)];
+    hooks.stateReducers.push(reducer);
+    hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions);
+  };
 
 const isTouchEvent = (
   event: React.MouseEvent | React.TouchEvent,
@@ -61,152 +63,159 @@ const isTouchEvent = (
   return event.type === 'touchstart';
 };
 
-const defaultGetResizerProps = (ownerDocument: Document | undefined) => (
-  props: TableKeyedProps,
-  {
-    instance,
-    header,
-    nextHeader,
-  }: {
-    instance: TableInstance;
-    header: HeaderGroup;
-    nextHeader: HeaderGroup;
-  },
-) => {
-  if (!ownerDocument) {
-    return props;
-  }
-
-  const { dispatch, flatHeaders } = instance;
-
-  const onResizeStart = (
-    e: React.TouchEvent | React.MouseEvent,
-    header: HeaderGroup,
+const defaultGetResizerProps =
+  (ownerDocument: React.RefObject<Document | undefined>) =>
+  (
+    props: TableKeyedProps,
+    {
+      instance,
+      header,
+      nextHeader,
+    }: {
+      instance: TableInstance;
+      header: HeaderGroup;
+      nextHeader: HeaderGroup;
+    },
   ) => {
-    // lets not respond to multiple touches (e.g. 2 or 3 fingers)
-    if (isTouchEvent(e) && e.touches && e.touches.length > 1) {
-      return;
-    }
+    const { dispatch } = instance;
 
-    // Setting `width` here because it might take several rerenders until actual column width is set.
-    flatHeaders.forEach((h) => {
-      if (!h.width) {
-        h.width = h.resizeWidth;
+    const onResizeStart = (
+      e: React.TouchEvent | React.MouseEvent,
+      header: HeaderGroup,
+    ) => {
+      // lets not respond to multiple touches (e.g. 2 or 3 fingers)
+      if (isTouchEvent(e) && e.touches && e.touches.length > 1) {
+        return;
       }
-    });
 
-    const headerIdWidths = getLeafHeaders(header).map((d) => [d.id, d.width]);
-    const nextHeaderIdWidths = nextHeader
-      ? getLeafHeaders(nextHeader).map((d) => [d.id, d.width])
-      : [];
+      const headerIdWidths = getLeafHeaders(header).map((d) => [
+        d.id,
+        getHeaderWidth(d),
+      ]);
+      const nextHeaderIdWidths = nextHeader
+        ? getLeafHeaders(nextHeader).map((d) => [d.id, getHeaderWidth(d)])
+        : [];
 
-    const clientX = isTouchEvent(e)
-      ? Math.round(e.touches[0].clientX)
-      : e.clientX;
+      const clientX = isTouchEvent(e)
+        ? Math.round(e.touches[0].clientX)
+        : e.clientX;
 
-    const dispatchMove = (clientXPos: number) =>
-      dispatch({ type: actions.columnResizing, clientX: clientXPos });
-    const dispatchEnd = () =>
+      const dispatchMove = (clientXPos: number) =>
+        dispatch({ type: actions.columnResizing, clientX: clientXPos });
+      const dispatchEnd = () =>
+        dispatch({
+          type: actions.columnDoneResizing,
+        });
+
+      const handlersAndEvents = {
+        mouse: {
+          moveEvent: 'mousemove',
+          moveHandler: (e: MouseEvent) => dispatchMove(e.clientX),
+          upEvent: 'mouseup',
+          upHandler: () => {
+            ownerDocument.current?.removeEventListener(
+              'mousemove',
+              handlersAndEvents.mouse.moveHandler,
+            );
+            ownerDocument.current?.removeEventListener(
+              'mouseup',
+              handlersAndEvents.mouse.upHandler,
+            );
+            ownerDocument.current?.removeEventListener(
+              'mouseleave',
+              handlersAndEvents.mouse.upHandler,
+            );
+            dispatchEnd();
+          },
+        },
+        touch: {
+          moveEvent: 'touchmove',
+          moveHandler: (e: TouchEvent) => {
+            if (e.cancelable) {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+            dispatchMove(e.touches[0].clientX);
+          },
+          upEvent: 'touchend',
+          upHandler: () => {
+            ownerDocument.current?.removeEventListener(
+              handlersAndEvents.touch.moveEvent,
+              handlersAndEvents.touch.moveHandler,
+            );
+            ownerDocument.current?.removeEventListener(
+              handlersAndEvents.touch.upEvent,
+              handlersAndEvents.touch.moveHandler,
+            );
+            dispatchEnd();
+          },
+        },
+      };
+
+      const events = isTouchEvent(e)
+        ? handlersAndEvents.touch
+        : handlersAndEvents.mouse;
+      const passiveIfSupported = passiveEventSupported()
+        ? { passive: false }
+        : false;
+      ownerDocument.current?.addEventListener(
+        events.moveEvent,
+        events.moveHandler,
+        passiveIfSupported,
+      );
+      ownerDocument.current?.addEventListener(
+        events.upEvent,
+        events.upHandler,
+        passiveIfSupported,
+      );
+      if (!isTouchEvent(e)) {
+        ownerDocument.current?.addEventListener(
+          'mouseleave',
+          handlersAndEvents.mouse.upHandler,
+          passiveIfSupported,
+        );
+      }
+
       dispatch({
-        type: actions.columnDoneResizing,
+        type: actions.columnStartResizing,
+        columnId: header.id,
+        columnWidth: getHeaderWidth(header),
+        nextColumnWidth: getHeaderWidth(nextHeader),
+        headerIdWidths,
+        nextHeaderIdWidths,
+        clientX,
       });
-
-    const handlersAndEvents = {
-      mouse: {
-        moveEvent: 'mousemove',
-        moveHandler: (e: MouseEvent) => dispatchMove(e.clientX),
-        upEvent: 'mouseup',
-        upHandler: () => {
-          ownerDocument.removeEventListener(
-            'mousemove',
-            handlersAndEvents.mouse.moveHandler,
-          );
-          ownerDocument.removeEventListener(
-            'mouseup',
-            handlersAndEvents.mouse.upHandler,
-          );
-          dispatchEnd();
-        },
-      },
-      touch: {
-        moveEvent: 'touchmove',
-        moveHandler: (e: TouchEvent) => {
-          if (e.cancelable) {
-            e.preventDefault();
-            e.stopPropagation();
-          }
-          dispatchMove(e.touches[0].clientX);
-        },
-        upEvent: 'touchend',
-        upHandler: () => {
-          ownerDocument.removeEventListener(
-            handlersAndEvents.touch.moveEvent,
-            handlersAndEvents.touch.moveHandler,
-          );
-          ownerDocument.removeEventListener(
-            handlersAndEvents.touch.upEvent,
-            handlersAndEvents.touch.moveHandler,
-          );
-          dispatchEnd();
-        },
-      },
     };
 
-    const events = isTouchEvent(e)
-      ? handlersAndEvents.touch
-      : handlersAndEvents.mouse;
-    const passiveIfSupported = passiveEventSupported()
-      ? { passive: false }
-      : false;
-    ownerDocument.addEventListener(
-      events.moveEvent,
-      events.moveHandler,
-      passiveIfSupported,
-    );
-    ownerDocument.addEventListener(
-      events.upEvent,
-      events.upHandler,
-      passiveIfSupported,
-    );
-
-    dispatch({
-      type: actions.columnStartResizing,
-      columnId: header.id,
-      columnWidth: header.width,
-      nextColumnWidth: nextHeader?.width,
-      headerIdWidths,
-      nextHeaderIdWidths,
-      clientX,
-    });
+    return [
+      props,
+      {
+        onClick: (e: React.MouseEvent) => {
+          // Prevents from triggering sort
+          e.stopPropagation();
+        },
+        onMouseDown: (e: React.MouseEvent) => {
+          e.persist();
+          // Prevents from triggering drag'n'drop
+          e.preventDefault();
+          // Prevents from triggering sort
+          e.stopPropagation();
+          onResizeStart(e, header);
+        },
+        onTouchStart: (e: React.TouchEvent) => {
+          e.persist();
+          // Prevents from triggering drag'n'drop
+          e.preventDefault();
+          onResizeStart(e, header);
+        },
+        style: {
+          cursor: 'col-resize',
+        },
+        draggable: false,
+        role: 'separator',
+      },
+    ];
   };
-
-  return [
-    props,
-    {
-      onClick: (e: React.MouseEvent) => {
-        // Prevents from triggering sort
-        e.stopPropagation();
-      },
-      onMouseDown: (e: React.MouseEvent) => {
-        e.persist();
-        // Prevents from triggering drag'n'drop
-        e.preventDefault();
-        onResizeStart(e, header);
-      },
-      onTouchStart: (e: React.TouchEvent) => {
-        e.persist();
-        // Prevents from triggering drag'n'drop
-        e.preventDefault();
-        onResizeStart(e, header);
-      },
-      style: {
-        cursor: 'col-resize',
-      },
-      draggable: false,
-      role: 'separator',
-    },
-  ];
-};
 
 useResizeColumns.pluginName = 'useResizeColumns';
 
@@ -268,23 +277,44 @@ const reducer = <T extends Record<string, unknown>>(
       nextHeaderIdWidths = [],
     } = newState.columnResizing;
 
+    if (!instance) {
+      return newState;
+    }
+
     const deltaX = clientX - startX;
 
     const newColumnWidths = getColumnWidths(
       headerIdWidths,
       deltaX / columnWidth,
     );
-    const newNextColumnWidths = getColumnWidths(
-      nextHeaderIdWidths,
-      -deltaX / nextColumnWidth,
-    );
+
+    const isTableWidthDecreasing =
+      calculateTableWidth(newColumnWidths, instance.flatHeaders) <
+      instance.tableWidth;
+    const newNextColumnWidths =
+      instance?.columnResizeMode === 'fit' ||
+      (instance?.columnResizeMode === 'expand' && isTableWidthDecreasing)
+        ? getColumnWidths(nextHeaderIdWidths, -deltaX / nextColumnWidth)
+        : {};
 
     if (
-      !isNewColumnWidthsValid(newColumnWidths, instance?.flatHeaders) ||
-      !isNewColumnWidthsValid(newNextColumnWidths, instance?.flatHeaders)
+      !isNewColumnWidthsValid(newColumnWidths, instance.flatHeaders) ||
+      !isNewColumnWidthsValid(newNextColumnWidths, instance.flatHeaders) ||
+      !isNewTableWidthValid(
+        { ...newColumnWidths, ...newNextColumnWidths },
+        instance,
+      )
     ) {
       return newState;
     }
+
+    // Setting `width` here because it might take several rerenders until actual column width is set.
+    // Also setting after the actual resize happened.
+    instance?.flatHeaders.forEach((h) => {
+      if (!h.width) {
+        h.width = h.resizeWidth;
+      }
+    });
 
     return {
       ...newState,
@@ -351,6 +381,28 @@ const isNewColumnWidthsValid = <T extends Record<string, unknown>>(
   return true;
 };
 
+const isNewTableWidthValid = <T extends Record<string, unknown>>(
+  columnWidths: Record<string, number>,
+  instance: TableInstance<T>,
+) => {
+  if (instance.columnResizeMode === 'fit') {
+    return true;
+  }
+
+  let newTableWidth = 0;
+  for (const header of instance.flatHeaders) {
+    newTableWidth += columnWidths[header.id]
+      ? columnWidths[header.id]
+      : getHeaderWidth(header);
+  }
+  // `tableWidth` is whole number therefore we need to round the `newTableWidth`
+  if (Math.round(newTableWidth) < instance.tableWidth) {
+    return false;
+  }
+
+  return true;
+};
+
 const useInstanceBeforeDimensions = <T extends Record<string, unknown>>(
   instance: TableInstance<T>,
 ) => {
@@ -358,6 +410,7 @@ const useInstanceBeforeDimensions = <T extends Record<string, unknown>>(
     flatHeaders,
     getHooks,
     state: { columnResizing },
+    columnResizeMode,
   } = instance;
 
   const getInstance = useGetLatest(instance);
@@ -367,18 +420,31 @@ const useInstanceBeforeDimensions = <T extends Record<string, unknown>>(
     header.width = resizeWidth || header.width || header.originalWidth;
     header.isResizing = columnResizing.isResizingColumn === header.id;
 
-    const headerToResize = header.disableResizing
-      ? getPreviousResizableHeader(header, instance)
-      : header;
-    const nextResizableHeader = getNextResizableHeader(header, instance);
+    const headerToResize =
+      header.disableResizing && columnResizeMode === 'fit'
+        ? getPreviousResizableHeader(header, instance)
+        : header;
+
+    // When `columnResizeMode` is `expand` and it is a last column,
+    // then try to find some column on the left side to resize
+    // when table width is decreasing.
+    const nextResizableHeader =
+      columnResizeMode === 'expand' && index === flatHeaders.length - 1
+        ? getPreviousResizableHeader(header, instance)
+        : getNextResizableHeader(header, instance);
 
     header.canResize =
       header.disableResizing != null ? !header.disableResizing : true;
     // Show resizer when header is resizable or when next header is resizable
     // and there is resizable columns on the left side of the resizer.
-    header.isResizerVisible =
-      (header.canResize && !!nextResizableHeader) ||
-      (headerToResize && !!instance.flatHeaders[index + 1]?.canResize);
+    if (columnResizeMode === 'fit') {
+      header.isResizerVisible =
+        (header.canResize && !!nextResizableHeader) ||
+        (headerToResize && !!instance.flatHeaders[index + 1]?.canResize);
+      // When resize mode is `expand` show resizer on the current resizable column.
+    } else {
+      header.isResizerVisible = header.canResize && !!headerToResize;
+    }
 
     header.getResizerProps = makePropGetter(getHooks().getResizerProps, {
       instance: getInstance(),
@@ -426,6 +492,25 @@ function getLeafHeaders(header: HeaderGroup) {
   recurseHeader(header);
   return leafHeaders;
 }
+
+const getHeaderWidth = <T extends Record<string, unknown>>(
+  header: ColumnInstance<T>,
+) => {
+  return Number(header.width || header.resizeWidth || 0);
+};
+
+const calculateTableWidth = <T extends Record<string, unknown>>(
+  columnWidths: Record<string, number>,
+  headers: ColumnInstance<T>[],
+) => {
+  let newTableWidth = 0;
+  for (const header of headers) {
+    newTableWidth += columnWidths[header.id]
+      ? columnWidths[header.id]
+      : getHeaderWidth(header);
+  }
+  return newTableWidth;
+};
 
 // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#safely_detecting_option_support
 let passiveSupported: boolean | null = null;
