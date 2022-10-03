@@ -61,6 +61,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
       variant = 'default',
       setFocus,
       isLoading = false,
+      style,
       ...rest
     } = props;
 
@@ -93,8 +94,9 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
               'iui-checkbox-visibility': variant === 'eyeball',
               'iui-loading': isLoading,
             },
-            className,
+            className && { [className]: !label },
           )}
+          style={!label ? style : undefined}
           disabled={disabled || isLoading}
           type='checkbox'
           ref={refs}
@@ -117,6 +119,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
           },
           className,
         )}
+        style={style}
       >
         {checkbox}
         {label && <span className='iui-checkbox-label'>{label}</span>}

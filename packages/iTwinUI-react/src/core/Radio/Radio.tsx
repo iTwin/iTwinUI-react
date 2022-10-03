@@ -59,7 +59,8 @@ export const Radio = React.forwardRef<HTMLInputElement, RadioProps>(
 
     const radio = (
       <input
-        className={cx('iui-radio', className)}
+        className={cx('iui-radio', className && { [className]: !label })}
+        style={!label ? style : undefined}
         disabled={disabled}
         type='radio'
         ref={refs}
