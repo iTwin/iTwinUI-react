@@ -3,12 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import {
-  CommonProps,
-  getFocusableElements,
-  getWindow,
-  useTheme,
-} from '../utils';
+import { CommonProps, getFocusableElements, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/tree.css';
 import cx from 'classnames';
 import { TreeNodeExpander } from './TreeNodeExpander';
@@ -130,10 +125,7 @@ export const TreeNode = (props: TreeNodeProps) => {
   const nodeRef = React.useRef<HTMLLIElement>(null);
 
   const styleDepth = React.useMemo(
-    () =>
-      getWindow()?.CSS?.supports?.(`--level: ${nodeDepth}`)
-        ? { '--level': nodeDepth }
-        : { marginLeft: nodeDepth ? nodeDepth * 28 : 0 },
+    () => ({ '--level': nodeDepth } as React.CSSProperties),
     [nodeDepth],
   );
 

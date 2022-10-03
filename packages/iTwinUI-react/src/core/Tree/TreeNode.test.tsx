@@ -48,7 +48,7 @@ it('should render in its most basic state', () => {
 
   const treeNode = container.querySelector('.iui-tree-node');
   expect(treeNode).toBeTruthy();
-  expect(treeNode).toHaveAttribute('style', 'margin-left: 0px;');
+  expect(treeNode).toHaveAttribute('style', '--level: 0;');
   expect(treeNode?.classList.contains('iui-disabled')).toBe(false);
   expect(treeNode?.classList.contains('iui-active')).toBe(false);
 
@@ -73,8 +73,6 @@ it('should add className and style correctly', () => {
 });
 
 it('should render node with correct depth', () => {
-  window.CSS = { supports: () => true, escape: (i) => i };
-
   const { container } = renderComponent({ contextProps: { nodeDepth: 2 } });
 
   const treeNode = container.querySelector('.iui-tree-node');

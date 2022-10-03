@@ -5,7 +5,7 @@
 import React from 'react';
 import cx from 'classnames';
 import '@itwin/itwinui-css/css/color-picker.css';
-import { useTheme, getWindow, ColorValue, ColorType } from '../utils';
+import { useTheme, ColorValue, ColorType } from '../utils';
 import { getColorValue } from './ColorPicker';
 
 export type ColorSwatchProps = {
@@ -39,12 +39,7 @@ export const ColorSwatch = React.forwardRef<HTMLDivElement, ColorSwatchProps>(
     );
 
     const _style = React.useMemo(
-      () =>
-        getWindow()?.CSS?.supports?.(
-          `--iui-color-swatch-background: ${colorString}`,
-        )
-          ? { '--iui-color-swatch-background': colorString, ...style }
-          : { backgroundColor: colorString, ...style },
+      () => ({ '--iui-color-swatch-background': colorString, ...style }),
       [colorString, style],
     );
 
