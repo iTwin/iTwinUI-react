@@ -36,20 +36,6 @@ export type CheckboxProps = {
    * @default false
    */
   isLoading?: boolean;
-  /**
-   * Custom CSS class name for the checkmark element.
-   *
-   * @deprecated As of 1.32.0, this is applied on the actual checkbox `<input>` element.
-   * The checkmark has been moved into a pseudo-element.
-   */
-  checkmarkClassName?: string;
-  /**
-   * Custom CSS Style for the checkmark element.
-   *
-   * @deprecated As of 1.32.0, this is applied on the actual checkbox `<input>` element.
-   * The checkmark has been moved into a pseudo-element.
-   */
-  checkmarkStyle?: React.CSSProperties;
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'>;
 
 /**
@@ -75,9 +61,6 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
       variant = 'default',
       setFocus,
       isLoading = false,
-      style,
-      checkmarkClassName,
-      checkmarkStyle,
       ...rest
     } = props;
 
@@ -110,10 +93,8 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
               'iui-checkbox-visibility': variant === 'eyeball',
               'iui-loading': isLoading,
             },
-            className && { [className]: !label },
-            checkmarkClassName,
+            className,
           )}
-          style={{ ...(!label && style), ...checkmarkStyle }}
           disabled={disabled || isLoading}
           type='checkbox'
           ref={refs}
@@ -136,7 +117,6 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
           },
           className,
         )}
-        style={style}
       >
         {checkbox}
         {label && <span className='iui-checkbox-label'>{label}</span>}
