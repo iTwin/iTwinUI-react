@@ -18,7 +18,7 @@ import {
   TableFilterProps,
   tableFilters,
 } from './filters';
-import { CellProps, Column, Row } from 'react-table';
+import { actions, CellProps, Column, Row } from 'react-table';
 import { InputGroup } from '../InputGroup';
 import { Radio } from '../Radio';
 import {
@@ -1654,9 +1654,7 @@ it('should render filter dropdown in the correct document', async () => {
     '.iui-filter-button',
   ) as HTMLElement;
   expect(filterToggle).toBeTruthy();
-  act(() => {
-    filterToggle.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-  });
+  act(() => filterToggle.click());
 
   await waitFor(() =>
     expect(mockDocument.querySelector('.iui-column-filter')).toBeTruthy(),
@@ -3287,9 +3285,16 @@ it('should stop resizing when mouse leaves the screen', () => {
       ],
     },
   ];
+  let resizeEndCount = 0;
   const { container } = renderComponent({
     columns,
     isResizable: true,
+    stateReducer: (newState, action) => {
+      if (action.type === actions.columnDoneResizing) {
+        resizeEndCount++;
+      }
+      return newState;
+    },
   });
 
   const rows = container.querySelectorAll('.iui-table-body .iui-row');
@@ -3301,7 +3306,9 @@ it('should stop resizing when mouse leaves the screen', () => {
   fireEvent.mouseDown(resizer, { clientX: 100 });
   fireEvent.mouseMove(resizer, { clientX: 150 });
   fireEvent.mouseLeave(resizer.ownerDocument);
+  fireEvent.mouseLeave(resizer.ownerDocument);
   fireEvent.mouseMove(resizer, { clientX: 50 });
+  fireEvent.mouseLeave(resizer.ownerDocument);
 
   const headerCells = container.querySelectorAll<HTMLDivElement>(
     '.iui-table-header .iui-cell',
@@ -3311,6 +3318,8 @@ it('should stop resizing when mouse leaves the screen', () => {
   expect(headerCells[0].style.width).toBe('150px');
   expect(headerCells[1].style.width).toBe('50px');
   expect(headerCells[2].style.width).toBe('100px');
+
+  expect(resizeEndCount).toBe(1);
 });
 
 it('should render zebra striped table', () => {

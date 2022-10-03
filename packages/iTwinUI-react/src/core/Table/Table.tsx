@@ -802,6 +802,8 @@ export const Table = <
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const isHeaderDirectClick = React.useRef(false);
+
   return (
     <>
       <div
@@ -876,7 +878,16 @@ export const Table = <
                             column.resizeWidth = el.getBoundingClientRect().width;
                           }
                         }}
-                        onMouseDown={onClick}
+                        onMouseDown={() => {
+                          isHeaderDirectClick.current = true;
+                        }}
+                        onClick={(e) => {
+                          // Prevents from triggering sort when resizing and mouse is released in the middle of header
+                          if (isHeaderDirectClick.current) {
+                            onClick?.(e);
+                            isHeaderDirectClick.current = false;
+                          }
+                        }}
                       >
                         {column.render('Header')}
                         {(showFilterButton(column) ||

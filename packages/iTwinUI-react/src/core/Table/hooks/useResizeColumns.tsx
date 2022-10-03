@@ -119,6 +119,10 @@ const defaultGetResizerProps = (
             'mouseup',
             handlersAndEvents.mouse.upHandler,
           );
+          ownerDocument.current?.removeEventListener(
+            'mouseleave',
+            handlersAndEvents.mouse.upHandler,
+          );
           dispatchEnd();
         },
       },
@@ -184,6 +188,10 @@ const defaultGetResizerProps = (
   return [
     props,
     {
+      onClick: (e: React.MouseEvent) => {
+        // Prevents from triggering sort
+        e.stopPropagation();
+      },
       onMouseDown: (e: React.MouseEvent) => {
         e.persist();
         // Prevents from triggering drag'n'drop
