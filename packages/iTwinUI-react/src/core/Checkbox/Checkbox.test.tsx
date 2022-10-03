@@ -120,7 +120,7 @@ it.each(['label', 'input'] as const)(
     );
 
     assertBaseElements(container);
-    expect(container.querySelector(el)).toHaveStyle('color: blue');
+    expect(container.querySelector(el)).toHaveStyle('color: blue;');
   },
 );
 it.each(['label', 'input'] as const)(
