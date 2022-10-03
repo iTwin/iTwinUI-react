@@ -11,8 +11,14 @@
       "import": "./esm/index.js",
       "require": "./cjs/index.js"
     },
+    "./": {
+      "import": "./esm/index.js",
+      "require": "./cjs/index.js"
+    },
     "./cjs/": "./cjs/",
-    "./esm/": "./esm/"
+    "./esm/": "./esm/",
+    "./cjs/core/utils": "./cjs/core/utils/index.js",
+    "./esm/core/utils": "./esm/core/utils/index.js"
   },
   "files": [
     "cjs",
