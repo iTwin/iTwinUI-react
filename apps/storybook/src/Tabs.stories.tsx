@@ -11,12 +11,12 @@ import {
   HorizontalTabsProps,
   VerticalTabsProps,
   Tab,
-  TabsProps,
 } from '@itwin/itwinui-react';
+import { Tabs, TabsProps } from '@itwin/itwinui-react/esm/core/Tabs/Tabs';
 
 export default {
   title: 'Core/Tabs',
-  component: HorizontalTabs,
+  component: Tabs,
   subcomponents: { Tab },
   args: {
     focusActivationMode: 'auto',
