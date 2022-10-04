@@ -124,11 +124,6 @@ export const TreeNode = (props: TreeNodeProps) => {
   const [isFocused, setIsFocused] = React.useState(false);
   const nodeRef = React.useRef<HTMLLIElement>(null);
 
-  const styleDepth = React.useMemo(
-    () => ({ '--level': nodeDepth } as React.CSSProperties),
-    [nodeDepth],
-  );
-
   const onKeyDown = (event: React.KeyboardEvent<HTMLLIElement>) => {
     const isNodeFocused =
       nodeRef.current === nodeRef.current?.ownerDocument.activeElement;
@@ -236,7 +231,7 @@ export const TreeNode = (props: TreeNodeProps) => {
             'iui-active': isSelected,
             'iui-disabled': isDisabled,
           })}
-          style={styleDepth}
+          style={{ '--level': nodeDepth } as React.CSSProperties}
           onClick={() => !isDisabled && onSelected?.(nodeId, !isSelected)}
         >
           {checkbox && React.isValidElement(checkbox)

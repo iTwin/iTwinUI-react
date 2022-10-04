@@ -69,10 +69,12 @@ export const Badge = (props: BadgeProps) => {
 
   useTheme();
 
-  const _style = backgroundColor && {
-    '--iui-badge-background-color': getBadgeColorValue(backgroundColor),
-    ...style,
-  };
+  const _style = backgroundColor
+    ? {
+        '--iui-badge-background-color': getBadgeColorValue(backgroundColor),
+        ...style,
+      }
+    : { ...style };
 
   return (
     <span className={cx('iui-badge', className)} style={_style} {...rest}>

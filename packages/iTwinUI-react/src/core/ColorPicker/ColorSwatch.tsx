@@ -38,11 +38,6 @@ export const ColorSwatch = React.forwardRef<HTMLDivElement, ColorSwatchProps>(
       [color],
     );
 
-    const _style = React.useMemo(
-      () => ({ '--iui-color-swatch-background': colorString, ...style }),
-      [colorString, style],
-    );
-
     return (
       <div
         className={cx(
@@ -50,7 +45,12 @@ export const ColorSwatch = React.forwardRef<HTMLDivElement, ColorSwatchProps>(
           { 'iui-active': isActive },
           className,
         )}
-        style={_style}
+        style={
+          {
+            '--iui-color-swatch-background': colorString,
+            ...style,
+          } as React.CSSProperties
+        }
         onClick={onClick}
         tabIndex={isActive ? 0 : -1}
         aria-selected={isActive}
