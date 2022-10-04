@@ -81,6 +81,91 @@ Basic.args = {
   setFocusHour: true,
 };
 
+export const CustomRenderers: Story<TimePickerProps> = (args) => {
+  const {
+    date = new Date(2021, 4, 11, 14, 55, 22),
+    setFocusHour = true,
+    use12Hours = false,
+    hourRenderer = (date: Date) => (
+      <>
+        {date.getHours() === 1
+          ? `${date.getHours()} hr`
+          : `${date.getHours()} hrs`}
+      </>
+    ),
+    minuteRenderer = (date: Date) => (
+      <>
+        {date.getMinutes() === 1
+          ? `${date.getMinutes()} min`
+          : `${date.getMinutes()} mins`}
+      </>
+    ),
+    ...rest
+  } = args;
+  const [opened, setOpened] = React.useState(false);
+  const [currentDate, setCurrentDate] = React.useState(new Date(date));
+  const onChange = (date: Date) => {
+    setCurrentDate(date);
+    action(`New Time value: ${date}`, { clearOnStoryChange: false })();
+  };
+
+  React.useEffect(() => {
+    setCurrentDate(new Date(date));
+    return () => action('', { clearOnStoryChange: true })();
+  }, [date]);
+  return (
+    <>
+      <LabeledInput
+        displayStyle='inline'
+        value={currentDate.toLocaleTimeString('en-US', { timeStyle: 'short' })}
+        svgIcon={
+          <IconButton
+            styleType='borderless'
+            onClick={() => setOpened((v) => !v)}
+          >
+            <SvgCalendar />
+          </IconButton>
+        }
+        style={{ width: 150 }}
+        readOnly
+        id='time-input'
+      />
+      {opened && (
+        <div>
+          <TimePicker
+            {...rest}
+            date={currentDate}
+            onChange={onChange}
+            setFocusHour={setFocusHour}
+            use12Hours={use12Hours}
+            hourRenderer={hourRenderer}
+            minuteRenderer={minuteRenderer}
+          />
+        </div>
+      )}
+    </>
+  );
+};
+
+CustomRenderers.args = {
+  date: new Date(2021, 4, 11, 14, 55, 22),
+  setFocusHour: true,
+  hourRenderer: (date: Date) => (
+    <>
+      {date.getHours() === 1
+        ? `${date.getHours()} hr`
+        : `${date.getHours()} hrs`}
+    </>
+  ),
+  minuteRenderer: (date: Date) => (
+    <>
+      {date.getMinutes() === 1
+        ? `${date.getMinutes()} min`
+        : `${date.getMinutes()} mins`}
+    </>
+  ),
+};
+
 export const Combined: Story<TimePickerProps> = (args) => {
   const {
     date = new Date(2021, 4, 11, 14, 55, 30),
