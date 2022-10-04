@@ -312,7 +312,7 @@ it('should activate thumb on pointerDown', () => {
   expect(thumb.classList).toContain('iui-active');
 });
 
-it.only('should process keystrokes when thumb has focus', () => {
+it('should process keystrokes when thumb has focus', () => {
   const handleOnUpdate = jest.fn();
   const handleOnChange = jest.fn();
   const { container } = render(
@@ -450,13 +450,18 @@ it('should limit keystrokes processing by min max when allow-crossing is set', (
     fireEvent.keyDown(thumb, { key: 'End' });
   });
   expect(thumb.getAttribute('aria-valuenow')).toEqual('100');
-  expect(handleOnChange).toHaveBeenCalledTimes(4);
+  expect(handleOnChange).toHaveBeenCalledTimes(0);
 
   // triggering an update with same value should not trigger callback
   act(() => {
     fireEvent.keyDown(thumb, { key: 'End' });
   });
-  expect(handleOnChange).toHaveBeenCalledTimes(4);
+  expect(handleOnChange).toHaveBeenCalledTimes(0);
+
+  act(() => {
+    fireEvent.keyUp(thumb, { key: 'End' });
+  });
+  expect(handleOnChange).toHaveBeenCalledTimes(1); // onChange called only after all keys released
 });
 
 it('should not process keystrokes when slider is disabled', () => {
