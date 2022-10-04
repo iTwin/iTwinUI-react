@@ -347,12 +347,12 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         if (currentValues[index] === value && !keyboardReleased) {
           return;
         }
-        const newValues = [...currentValues];
-        newValues[index] = value;
 
         if (keyboardReleased) {
-          onChange?.(newValues);
+          onChange?.(currentValues); // currentValues since key release should not change value
         } else {
+          const newValues = [...currentValues];
+          newValues[index] = value;
           onUpdate?.(newValues);
           setCurrentValues(newValues);
         }
