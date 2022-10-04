@@ -285,6 +285,8 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
     const updateThumbValue = React.useCallback(
       (event: PointerEvent, callbackType: 'onChange' | 'onUpdate') => {
         if (containerRef.current && undefined !== activeThumbIndex) {
+          // console.log('updateThumbValue: ', callbackType);
+
           const percent = getPercentageOfRectangle(
             containerRef.current.getBoundingClientRect(),
             event.clientX,
@@ -303,6 +305,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
               ? onChange?.(newValues)
               : onUpdate?.(newValues);
           } else if ('onChange' === callbackType) {
+            // onUpdate?.(currentValues);
             onChange?.(currentValues);
           }
         }
@@ -325,6 +328,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         if (activeThumbIndex === undefined) {
           return;
         }
+        // console.log('handle Pointer move');
         event.preventDefault();
         event.stopPropagation();
         updateThumbValue(event, 'onUpdate');
@@ -335,15 +339,18 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
     // function called by Thumb keyboard processing
     const onThumbValueChanged = React.useCallback(
       (index: number, value: number) => {
+        console.log('onThumbValueChanged');
+
         if (currentValues[index] === value) {
           return;
         }
         const newValues = [...currentValues];
         newValues[index] = value;
         setCurrentValues(newValues);
+        onUpdate?.(newValues);
         onChange?.(newValues);
       },
-      [currentValues, onChange],
+      [currentValues, onUpdate, onChange],
     );
 
     const onThumbActivated = React.useCallback((index: number) => {
@@ -352,9 +359,12 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
 
     const handlePointerUp = React.useCallback(
       (event: PointerEvent) => {
+        // console.log('handlePointerUp');
+
         if (activeThumbIndex === undefined) {
           return;
         }
+        // updateThumbValue(event, 'onUpdate');
         updateThumbValue(event, 'onChange');
         setActiveThumbIndex(undefined);
         event.preventDefault();

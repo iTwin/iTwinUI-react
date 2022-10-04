@@ -44,6 +44,8 @@ export const Basic: Story<SliderProps> = (args) => {
 
 Basic.args = {
   values: [50],
+  onUpdate: () => console.log('onUpdate'),
+  onChange: () => console.log('onChange'),
 };
 
 export const Range: Story<SliderProps> = (args) => {
