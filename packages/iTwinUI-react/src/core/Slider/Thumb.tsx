@@ -89,7 +89,6 @@ export const Thumb = (props: ThumbProps) => {
     orientation,
   } = props;
   const thumbRef = React.useRef<HTMLDivElement>(null);
-
   const handleOnKeyboardEvent = React.useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>, keyboardReleased: boolean) => {
       if (disabled || event.altKey) {

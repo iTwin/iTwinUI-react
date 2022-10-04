@@ -285,8 +285,6 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
     const updateThumbValue = React.useCallback(
       (event: PointerEvent, callbackType: 'onChange' | 'onUpdate') => {
         if (containerRef.current && undefined !== activeThumbIndex) {
-          // console.log('updateThumbValue: ', callbackType);
-
           const percent = getPercentageOfRectangle(
             containerRef.current.getBoundingClientRect(),
             event.clientX,
@@ -305,7 +303,6 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
               ? onChange?.(newValues)
               : onUpdate?.(newValues);
           } else if ('onChange' === callbackType) {
-            // onUpdate?.(currentValues);
             onChange?.(currentValues);
           }
         }
@@ -328,7 +325,6 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         if (activeThumbIndex === undefined) {
           return;
         }
-        // console.log('handle Pointer move');
         event.preventDefault();
         event.stopPropagation();
         updateThumbValue(event, 'onUpdate');
@@ -339,19 +335,14 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
     // function called by Thumb keyboard processing
     const onThumbValueChanged = React.useCallback(
       (index: number, value: number, keyboardReleased: boolean) => {
-        // console.log('onThumbValueChanged', index, value, keyboardReleased);
-
-        // If the value has not changed and still pressing the keyboard
-        // If keyboard released, need to call onChange, even if value didn't change
-
         if (currentValues[index] === value && !keyboardReleased) {
           return;
         }
 
         if (keyboardReleased) {
-          onChange?.(currentValues); // currentValues since key release should not change value
+          onChange?.(currentValues); // currentValues since key up should not change value but only stop continuous value selection
         } else {
-          const newValues = [...currentValues];
+          const newValues = [...currentValues]; // newValues since key down should change value
           newValues[index] = value;
           onUpdate?.(newValues);
           setCurrentValues(newValues);
@@ -366,12 +357,9 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
 
     const handlePointerUp = React.useCallback(
       (event: PointerEvent) => {
-        // console.log('handlePointerUp');
-
         if (activeThumbIndex === undefined) {
           return;
         }
-        // updateThumbValue(event, 'onUpdate');
         updateThumbValue(event, 'onChange');
         setActiveThumbIndex(undefined);
         event.preventDefault();
