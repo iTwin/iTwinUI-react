@@ -466,7 +466,6 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
           onSelectChange={onTimeClick}
           setFocus={setFocusHour}
           precision={precision}
-          useCombinedRenderer={useCombinedRenderer}
           valueRenderer={combinedRenderer}
         />
       )}
@@ -554,11 +553,6 @@ type TimePickerColumnProps<T = Date> = {
    * @default 'minutes'
    */
   precision?: Precision;
-  /**
-   * Use combined time renderer. Combines hour, minute, and seconds into one column.
-   * @default false
-   */
-  useCombinedRenderer?: boolean;
 } & ClassNameProps;
 
 const TimePickerColumn = <T,>(props: TimePickerColumnProps<T>): JSX.Element => {
@@ -571,7 +565,6 @@ const TimePickerColumn = <T,>(props: TimePickerColumnProps<T>): JSX.Element => {
     setFocus = false,
     valueRenderer,
     precision = 'minutes',
-    useCombinedRenderer = false,
     className = 'iui-time',
   } = props;
   const needFocus = React.useRef(setFocus);
@@ -650,9 +643,7 @@ const TimePickerColumn = <T,>(props: TimePickerColumnProps<T>): JSX.Element => {
                 onSelectChange(value);
               }}
             >
-              {useCombinedRenderer && precision && valueRenderer.length === 2
-                ? valueRenderer(value, precision)
-                : valueRenderer(value)}
+              {valueRenderer(value, precision)}
             </li>
           );
         })}

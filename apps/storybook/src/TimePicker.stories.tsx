@@ -23,12 +23,14 @@ export default {
     id: { control: { disable: true } },
     date: { control: { type: 'date' } },
   },
+  args: { use12Hours: false },
 } as Meta<TimePickerProps>;
 
 export const Basic: Story<TimePickerProps> = (args) => {
   const {
     date = new Date(2021, 4, 11, 14, 55, 22),
     setFocusHour = true,
+    use12Hours = false,
     ...rest
   } = args;
   const [opened, setOpened] = React.useState(false);
@@ -66,6 +68,7 @@ export const Basic: Story<TimePickerProps> = (args) => {
             date={currentDate}
             onChange={onChange}
             setFocusHour={setFocusHour}
+            use12Hours={use12Hours}
           />
         </div>
       )}
@@ -83,9 +86,11 @@ export const Combined: Story<TimePickerProps> = (args) => {
     date = new Date(2021, 4, 11, 14, 55, 30),
     setFocusHour = true,
     precision = 'seconds',
+    hourStep = 1,
     minuteStep = 1,
     secondStep = 15,
     use12Hours = true,
+    useCombinedRenderer = true,
     ...rest
   } = args;
   const [opened, setOpened] = React.useState(false);
@@ -127,8 +132,9 @@ export const Combined: Story<TimePickerProps> = (args) => {
             date={currentDate}
             onChange={onChange}
             setFocusHour={setFocusHour}
-            useCombinedRenderer={true}
+            useCombinedRenderer={useCombinedRenderer}
             precision={precision}
+            hourStep={hourStep}
             minuteStep={minuteStep}
             secondStep={secondStep}
             use12Hours={use12Hours}
@@ -143,7 +149,9 @@ Combined.args = {
   date: new Date(2021, 4, 11, 14, 55, 30),
   setFocusHour: true,
   precision: 'seconds',
+  hourStep: 1,
   minuteStep: 1,
   secondStep: 15,
   use12Hours: true,
+  useCombinedRenderer: true,
 };
