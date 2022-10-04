@@ -338,7 +338,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
 
     // function called by Thumb keyboard processing
     const onThumbValueChanged = React.useCallback(
-      (index: number, value: number) => {
+      (index: number, value: number, keyboardReleased: boolean) => {
         console.log('onThumbValueChanged');
 
         if (currentValues[index] === value) {
@@ -348,7 +348,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         newValues[index] = value;
         setCurrentValues(newValues);
         onUpdate?.(newValues);
-        onChange?.(newValues);
+        keyboardReleased && onChange?.(newValues);
       },
       [currentValues, onUpdate, onChange],
     );
