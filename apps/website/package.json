@@ -10,9 +10,9 @@
   },
   "devDependencies": {
     "@astrojs/react": "^1.1.4",
-    "@astrojs/mdx": "^0.11.1",
-    "@codesandbox/sandpack-react": "^1.8.0",
-    "@codesandbox/sandpack-themes": "^1.6.0",
+    "@astrojs/mdx": "^0.11.4",
+    "@codesandbox/sandpack-react": "^1.12.0",
+    "@codesandbox/sandpack-themes": "^1.12.0",
     "@fontsource/noto-sans": "^4.5.11",
     "@itwin/itwinui-react": "*",
     "@itwin/itwinui-variables": "^0.3.0",
@@ -20,16 +20,16 @@
     "@tippyjs/react": "4.2.6",
     "@types/react": "^18.0.0",
     "astro": "1.2.8",
-    "postcss-preset-env": "^7.7.2",
+    "postcss-preset-env": "^7.8.2",
     "prettier": "2.7.1",
-    "prettier-plugin-astro": "^0.5.4",
+    "prettier-plugin-astro": "^0.5.5",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-docgen": "^6.0.0-alpha.3",
     "react-docgen-typescript": "^2.2.2",
     "rehype-autolink-headings": "^6.1.1",
     "rehype-slug": "^5.0.1",
-    "sass": "^1.54.8",
+    "sass": "^1.55.0",
     "snarkdown": "2.0.0"
   }
 }
