@@ -236,7 +236,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     // When the dropdown opens
     if (isOpen) {
       inputRef.current?.focus(); // Focus the input
-      setFilteredOptions(optionsRef.current); // Reset the filtered list
+      !multiple && setFilteredOptions(optionsRef.current); // Reset the filtered list
       dispatch({ type: 'focus' });
     }
     // When the dropdown closes
@@ -310,7 +310,10 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       const indexes = valueProp.map((value) => {
         return options.findIndex((option) => option.value === value);
       });
-      dispatch({ type: 'multi-override', value: indexes });
+      dispatch({
+        type: 'multi-override',
+        value: indexes.filter((index) => index !== -1), // Add available options
+      });
     } else {
       dispatch({
         type: 'select',
