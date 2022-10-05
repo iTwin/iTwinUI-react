@@ -143,7 +143,6 @@ export const ComboBoxInput = React.forwardRef(
           }
           case 'Enter': {
             event.preventDefault();
-
             if (isOpen) {
               if (multiple) {
                 if (focusedIndexRef.current > -1) {
