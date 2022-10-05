@@ -145,12 +145,10 @@ export type TableProps<
   onSort?: (state: TableState<T>) => void;
   /**
    * Callback function when scroll reaches bottom. Can be used for lazy-loading the data.
-   * If you want to use it in older browsers e.g. IE, then you need to have IntersectionObserver polyfill.
    */
   onBottomReached?: () => void;
   /**
    * Callback function when row is in viewport.
-   * If you want to use it in older browsers e.g. IE, then you need to have IntersectionObserver polyfill.
    */
   onRowInViewport?: (rowData: T) => void;
   /**
@@ -233,8 +231,6 @@ export type TableProps<
   /**
    * Flag whether columns are resizable.
    * In order to disable resizing for specific column, set `disableResizing: true` for that column.
-   *
-   * If you want to use it in older browsers e.g. IE, then you need to have `ResizeObserver` polyfill.
    * @default false
    */
   isResizable?: boolean;
