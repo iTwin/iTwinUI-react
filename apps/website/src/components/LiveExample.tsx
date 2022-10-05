@@ -5,7 +5,7 @@
 import * as React from 'react';
 import * as SandpackReact from '@codesandbox/sandpack-react';
 import { nightOwl } from '@codesandbox/sandpack-themes';
-import { SandpackPreviewRef } from '@codesandbox/sandpack-react';
+import { type SandpackClient } from '@codesandbox/sandpack-client';
 
 const { SandpackProvider, SandpackThemeProvider, SandpackCodeEditor, SandpackPreview } =
   SandpackReact;
@@ -40,8 +40,7 @@ type Props = {
 
 export default ({ code = '', staticComponent, ...rest }: Props) => {
   const id = React.useId();
-  const previewRef = React.useRef<SandpackPreviewRef>();
-  const [, forceUpdate] = React.useReducer((x) => x + 1, 0);
+  const [sandpackClient, setSandpackClient] = React.useState<SandpackClient>();
   const [isDoneLoading, setIsDoneLoading] = React.useState(false);
 
   // if undefined, it means the user hasn't expanded the code even once
@@ -52,21 +51,16 @@ export default ({ code = '', staticComponent, ...rest }: Props) => {
   // TODO: Instead of waiting for "Show code", automatically load this in the background
   // and swap out the static component
   React.useEffect(() => {
-    const client = previewRef.current?.getClient();
-
-    if (isDoneLoading || !previewRef.current) {
+    if (isDoneLoading || !sandpackClient) {
       return;
     }
 
-    // keep re-rendering until we get the sandpack client
-    if (previewRef.current && !client) forceUpdate();
-
-    client?.listen((message) => {
+    return sandpackClient.listen((message) => {
       if (message.type === 'done') {
         setIsDoneLoading(true);
       }
     });
-  });
+  }, [isDoneLoading, sandpackClient]);
 
   // TODO: replace this with composition to have more control over the layout and styling
   return (
@@ -99,7 +93,9 @@ export default ({ code = '', staticComponent, ...rest }: Props) => {
       >
         <SandpackThemeProvider theme={nightOwl}>
           <SandpackPreview
-            ref={previewRef}
+            ref={(ref) => {
+              setSandpackClient(ref?.getClient());
+            }}
             style={{
               visibility: shouldShowStatic ? 'hidden' : 'visible',
               position: shouldShowStatic ? 'absolute' : 'relative',
