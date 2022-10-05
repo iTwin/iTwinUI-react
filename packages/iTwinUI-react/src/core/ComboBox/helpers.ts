@@ -30,7 +30,7 @@ export const comboBoxReducer = (
     | { type: 'open' }
     | { type: 'close' }
     | { type: 'select'; value: number }
-    | { type: 'focus'; value: number | undefined },
+    | { type: 'focus'; value?: number },
 ) => {
   switch (action.type) {
     case 'open': {
@@ -56,12 +56,19 @@ export const comboBoxReducer = (
       return { ...state, selected: action.value };
     }
     case 'multiselect': {
+      console.log(action.value);
+      // Check if selected is array
       if (!Array.isArray(state.selected)) {
+        return { ...state };
+      }
+      // Check if new value is valid
+      if (action.value === -1) {
         return { ...state };
       }
       const actionIndex = state.selected.findIndex(
         (item) => item === action.value,
       );
+      // If item exists in selected array - remove it
       if (actionIndex >= 0) {
         return {
           ...state,
@@ -70,7 +77,8 @@ export const comboBoxReducer = (
             (index) => index !== action.value,
           ) as number[],
         };
-      } else if (actionIndex === -1) {
+      } // If item does not exists in selected array - add it
+      else if (actionIndex === -1) {
         return {
           ...state,
           focusedIndex: action.value ?? state.focusedIndex,
@@ -85,6 +93,7 @@ export const comboBoxReducer = (
       if (Array.isArray(state.selected)) {
         return {
           ...state,
+          focusedIndex: action.value ?? -1,
         };
       }
       return {
