@@ -237,12 +237,12 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     if (isOpen) {
       inputRef.current?.focus(); // Focus the input
       setFilteredOptions(optionsRef.current); // Reset the filtered list
-      dispatch({ type: 'focus', value: undefined });
+      dispatch({ type: 'focus' });
     }
     // When the dropdown closes
     else {
       // Reset the focused index
-      dispatch({ type: 'focus', value: undefined });
+      dispatch({ type: 'focus' });
       // Reset the input value
       if (!isMultipleEnabled(selected, multiple)) {
         setInputValue(
@@ -275,7 +275,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     } else {
       setFilteredOptions(options);
     }
-    dispatch({ type: 'focus', value: undefined });
+    dispatch({ type: 'focus' });
     // Only need to call on options update
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [options]);

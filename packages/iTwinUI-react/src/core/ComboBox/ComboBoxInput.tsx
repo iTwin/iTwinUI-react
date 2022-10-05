@@ -143,20 +143,27 @@ export const ComboBoxInput = React.forwardRef(
           }
           case 'Enter': {
             event.preventDefault();
+
             if (isOpen) {
               if (multiple) {
-                dispatch({
-                  type: 'multiselect',
-                  value: focusedIndexRef.current,
-                });
+                if (focusedIndexRef.current > -1) {
+                  dispatch({
+                    type: 'multiselect',
+                    value: focusedIndexRef.current,
+                  });
+                  onChangeHandler && onChangeHandler(focusedIndexRef.current);
+                } else {
+                  dispatch({ type: 'close' });
+                }
               } else {
                 dispatch({ type: 'select', value: focusedIndexRef.current });
+                onChangeHandler && onChangeHandler(focusedIndexRef.current);
                 dispatch({ type: 'close' });
               }
-              onChangeHandler && onChangeHandler(focusedIndexRef.current);
             } else {
               dispatch({ type: 'open' });
             }
+
             break;
           }
           case 'Escape': {
