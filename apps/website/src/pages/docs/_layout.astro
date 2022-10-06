@@ -24,6 +24,12 @@ const currentPage = new URL(Astro.request.url).pathname;
 
       &.mobile-sidebar-toggle {
         grid-template: 'header' auto 'sidebar' 1fr / 100%;
+        .content-wrapper {
+          display: none;
+        }
+        .sidebar {
+          display: block;
+        }
       }
     }
 
@@ -39,10 +45,6 @@ const currentPage = new URL(Astro.request.url).pathname;
 
       @media (max-width: 50em) {
         display: none;
-      }
-
-      @nest :global(.mobile-sidebar-toggle) & {
-        display: block;
       }
     }
 

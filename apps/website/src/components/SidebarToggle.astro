@@ -1,0 +1,59 @@
+---
+---
+
+<button
+  type='button'
+  class='toggle-sidebar-button'
+  aria-pressed='false'
+  id='menu-toggle'
+  onclick='buttonOnClick()'
+  aria-label='Toggle sidebar'
+>
+  <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+    <path
+      stroke-linecap='round'
+      stroke-linejoin='round'
+      stroke-width='2'
+      d='M4 6h16M4 12h16M4 18h16'></path>
+  </svg>
+</button>
+
+<script is:inline>
+  const button = document.getElementById('menu-toggle');
+  const body = document.getElementsByTagName('body')[0];
+
+  function buttonOnClick() {
+    const sidebarVisible = button.ariaPressed === 'true';
+    sidebarVisible ? (button.ariaPressed = 'false') : (button.ariaPressed = 'true');
+    if (!sidebarVisible) {
+      body.classList.add('mobile-sidebar-toggle');
+    } else {
+      body.classList.remove('mobile-sidebar-toggle');
+    }
+  }
+</script>
+
+<style lang='scss'>
+  .toggle-sidebar-button {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    border-radius: var(--border-radius-1);
+    padding: var(--space-2) var(--space-3);
+    color: var(--color-text);
+    opacity: 0.9;
+    border: none;
+
+    &:hover {
+      opacity: 1;
+      background-color: var(--color-active);
+    }
+  }
+  .toggle-sidebar-button svg {
+    width: 2em;
+    height: 2em;
+    fill: none;
+    stroke: currentColor;
+  }
+</style>

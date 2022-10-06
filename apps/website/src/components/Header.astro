@@ -1,6 +1,6 @@
 ---
 import SkipLink from './utils/SkipLink.astro';
-import SidebarToggle from './SidebarToggle';
+import SidebarToggle from './SidebarToggle.astro';
 import VisuallyHidden from './utils/VisuallyHidden.astro';
 
 export type Props = { class?: string };
@@ -10,9 +10,9 @@ export type Props = { class?: string };
   <SkipLink />
 
   <!-- TODO: improve this mobile navbar. -->
-  <!-- <div class='menu-toggle'>
-    <SidebarToggle client:idle />
-  </div> -->
+  <div class='menu-toggle'>
+    <SidebarToggle />
+  </div>
 
   <a href='/' class='logo'>
     <VisuallyHidden>iTwinUI home</VisuallyHidden>
