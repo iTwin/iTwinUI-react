@@ -22,9 +22,9 @@ export default {
     className: { control: { disable: true } },
     style: { control: { disable: true } },
     id: { control: { disable: true } },
-    date: { control: { type: 'date' } },
+    date: { control: 'date' },
     precision: {
-      control: { type: 'radio' },
+      control: 'radio',
       options: ['hours', 'minutes', 'seconds'],
     },
   },

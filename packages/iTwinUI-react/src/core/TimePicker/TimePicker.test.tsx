@@ -27,10 +27,10 @@ it('should display passed time', () => {
 
 it('should not display selected time', () => {
   const { container } = render(<TimePicker />);
-  const time = container.querySelector(
+  const selectedTime = container.querySelector(
     '.iui-time .iui-selected',
   ) as HTMLElement;
-  expect(time).toBeFalsy();
+  expect(selectedTime).toBeFalsy();
 });
 
 it('should return selected time (seconds)', async () => {
@@ -466,11 +466,11 @@ it('should display passed time in combined renderer', () => {
     <TimePicker date={new Date(2020, 0, 5, 11, 55)} useCombinedRenderer />,
   );
   expect(container.querySelector('.iui-time-picker')).toBeTruthy();
-  const time = container.querySelector(
+  const selectedTime = container.querySelector(
     '.iui-time .iui-selected',
   ) as HTMLElement;
-  expect(time).toBeTruthy();
-  expect(time.textContent).toBe('11:55');
+  expect(selectedTime).toBeTruthy();
+  expect(selectedTime.textContent).toBe('11:55');
 });
 
 it('should return selected time in combined renderer (seconds)', async () => {
@@ -583,7 +583,7 @@ it('should navigate with keyboard in combined renderer', () => {
   // select
   fireEvent.keyDown(nextTime as Node, { key: 'Enter' });
   selectedTime = container.querySelector(
-    '.iui-time:first-child .iui-selected',
+    '.iui-time .iui-selected',
   ) as HTMLElement;
   expect(selectedTime.textContent).toBe('22:11:44');
   expect(document.activeElement).toEqual(selectedTime);
@@ -737,8 +737,9 @@ it('should show 12 hours in combined renderer (seconds)', async () => {
     />,
   );
   expect(container.querySelectorAll('.iui-time').length).toBe(1);
-  expect(container.querySelector('.iui-period')).toBeTruthy();
+  expect(container.querySelectorAll('.iui-period').length).toBe(1);
   expect(container.querySelectorAll('.iui-time li').length).toBe(12 * 60 * 60);
+  expect(container.querySelectorAll('.iui-period li').length).toBe(2);
   // select different meridiem
   let selectedMeridiem = container.querySelector(
     '.iui-period .iui-selected',
@@ -776,8 +777,9 @@ it('should show 12 hours in combined renderer (minutes)', async () => {
     />,
   );
   expect(container.querySelectorAll('.iui-time').length).toBe(1);
-  expect(container.querySelector('.iui-period')).toBeTruthy();
+  expect(container.querySelectorAll('.iui-period').length).toBe(1);
   expect(container.querySelectorAll('.iui-time li').length).toBe(12 * 60);
+  expect(container.querySelectorAll('.iui-period li').length).toBe(2);
   // select different meridiem
   let selectedMeridiem = container.querySelector(
     '.iui-period .iui-selected',
@@ -816,8 +818,9 @@ it('should show 12 hours in combined renderer (hours)', async () => {
     />,
   );
   expect(container.querySelectorAll('.iui-time').length).toBe(1);
-  expect(container.querySelector('.iui-period')).toBeTruthy();
+  expect(container.querySelectorAll('.iui-period').length).toBe(1);
   expect(container.querySelectorAll('.iui-time li').length).toBe(12);
+  expect(container.querySelectorAll('.iui-period li').length).toBe(2);
   // select different meridiem
   let selectedMeridiem = container.querySelector(
     '.iui-period .iui-selected',
@@ -869,12 +872,12 @@ it('should show values with applied steps in combined renderer', async () => {
   await userEvent.click(selectedTime);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 12, 50, 20));
   // select new time
-  let selectedTime2 = container.querySelector(
+  selectedTime = container.querySelector(
     '.iui-time .iui-selected',
   ) as HTMLElement;
-  expect(selectedTime2.textContent).toBe('12:50:20');
-  selectedTime2 = getByText('03:40:00', { selector: '.iui-time li' });
-  await userEvent.click(selectedTime2);
+  expect(selectedTime.textContent).toBe('12:50:20');
+  selectedTime = getByText('03:40:00', { selector: '.iui-time li' });
+  await userEvent.click(selectedTime);
   expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 3, 40, 0));
   // times should not exist
   expect(
