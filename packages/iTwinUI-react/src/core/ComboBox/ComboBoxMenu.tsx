@@ -20,7 +20,7 @@ type ComboBoxMenuProps = Omit<MenuProps, 'onClick'> &
 
 const VirtualizedComboBoxMenu = React.forwardRef(
   (
-    { children, style, ...rest }: ComboBoxMenuProps,
+    { children, className, style, ...rest }: ComboBoxMenuProps,
     forwardedRef: React.Ref<HTMLUListElement>,
   ) => {
     const {
@@ -85,6 +85,7 @@ const VirtualizedComboBoxMenu = React.forwardRef(
             setFocus={false}
             role='listbox'
             ref={mergeRefs(menuRef, innerProps.ref, forwardedRef)}
+            className={cx('iui-scroll', className)}
             style={innerProps.style}
           >
             {visibleChildren}
