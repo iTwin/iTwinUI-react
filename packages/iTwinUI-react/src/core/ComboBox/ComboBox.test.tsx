@@ -736,3 +736,88 @@ it('should update options (does not have selected option in new options list)', 
   rerender(<ComboBox options={options2} onChange={mockOnChange} value={2} />);
   expect(input).toHaveValue('');
 });
+
+it('should select multiple options', async () => {
+  const mockOnChange = jest.fn();
+  const options = [0, 1, 2, 3].map((value) => ({
+    value,
+    label: `Item ${value}`,
+  }));
+
+  const { container } = render(
+    <ComboBox options={options} onChange={mockOnChange} multiple />,
+  );
+
+  const inputContainer = container.querySelector(
+    '.iui-input-container',
+  ) as HTMLDivElement;
+  await userEvent.tab();
+  await userEvent.click(screen.getByText('Item 1'));
+  await userEvent.click(screen.getByText('Item 2'));
+  await userEvent.click(screen.getByText('Item 3'));
+
+  const tags = inputContainer.querySelectorAll('.iui-select-tag');
+  expect(tags.length).toBe(3);
+  expect(tags[0].querySelector('.iui-select-tag-label')).toHaveTextContent(
+    'Item 1',
+  );
+  expect(tags[1].querySelector('.iui-select-tag-label')).toHaveTextContent(
+    'Item 2',
+  );
+  expect(tags[2].querySelector('.iui-select-tag-label')).toHaveTextContent(
+    'Item 3',
+  );
+});
+
+it('should override multiple selected options', async () => {
+  const mockOnChange = jest.fn();
+  const options = [0, 1, 2, 3].map((value) => ({
+    value,
+    label: `Item ${value}`,
+  }));
+  const values = [0, 1];
+
+  const { container, rerender } = render(
+    <ComboBox
+      options={options}
+      onChange={mockOnChange}
+      value={values}
+      multiple
+    />,
+  );
+
+  const inputContainer = container.querySelector(
+    '.iui-input-container',
+  ) as HTMLDivElement;
+
+  const tags = inputContainer.querySelectorAll('.iui-select-tag');
+  expect(tags.length).toBe(2);
+  expect(tags[0].querySelector('.iui-select-tag-label')).toHaveTextContent(
+    'Item 0',
+  );
+  expect(tags[1].querySelector('.iui-select-tag-label')).toHaveTextContent(
+    'Item 1',
+  );
+
+  const values2 = [1, 2, 3];
+
+  rerender(
+    <ComboBox
+      options={options}
+      onChange={mockOnChange}
+      value={values2}
+      multiple
+    />,
+  );
+  const tags2 = inputContainer.querySelectorAll('.iui-select-tag');
+  expect(tags2.length).toBe(3);
+  expect(tags2[0].querySelector('.iui-select-tag-label')).toHaveTextContent(
+    'Item 1',
+  );
+  expect(tags2[1].querySelector('.iui-select-tag-label')).toHaveTextContent(
+    'Item 2',
+  );
+  expect(tags2[2].querySelector('.iui-select-tag-label')).toHaveTextContent(
+    'Item 3',
+  );
+});
