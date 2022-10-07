@@ -162,7 +162,6 @@ export const ComboBoxInput = React.forwardRef(
             } else {
               dispatch({ type: 'open' });
             }
-
             break;
           }
           case 'Escape': {
