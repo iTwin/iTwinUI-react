@@ -73,7 +73,6 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
     rootMargin: `${intersectionMargin}px`,
     root: intersectionRoot,
   });
-  console.log(rowProps);
   const userRowProps = rowProps?.(row) ?? {};
   const { status, ...restUserRowProps } = userRowProps;
   const mergedProps = {
