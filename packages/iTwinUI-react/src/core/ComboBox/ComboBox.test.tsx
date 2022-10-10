@@ -821,3 +821,90 @@ it('should override multiple selected options', async () => {
     'Item 3',
   );
 });
+
+it('should handle keyboard navigation when multiple is enabled', async () => {
+  const id = 'test-component';
+  const mockOnChange = jest.fn();
+  const { container } = renderComponent({
+    id,
+    multiple: true,
+    onChange: mockOnChange,
+  });
+
+  await userEvent.tab();
+
+  const input = assertBaseElement(container);
+  expect(input).toHaveAttribute('aria-controls', `${id}-list`);
+
+  let items = document.querySelectorAll('.iui-menu-item');
+
+  // focus index 0
+  await userEvent.keyboard('{ArrowDown}');
+  expect(input).toHaveAttribute('aria-activedescendant', `${id}-option-Item-0`);
+  items = document.querySelectorAll('.iui-menu-item');
+  expect(items[0]).toHaveClass('iui-focused');
+
+  // 0 -> 2
+  await userEvent.keyboard('{ArrowUp}');
+  items = document.querySelectorAll('.iui-menu-item');
+  expect(input).toHaveAttribute('aria-activedescendant', `${id}-option-Item-2`);
+  expect(items[2]).toHaveClass('iui-focused');
+
+  // 2 -> 1
+  await userEvent.keyboard('{ArrowUp}');
+  items = document.querySelectorAll('.iui-menu-item');
+  expect(input).toHaveAttribute('aria-activedescendant', `${id}-option-Item-1`);
+  expect(items[1]).toHaveClass('iui-focused');
+  expect(items[2]).not.toHaveClass('iui-focused');
+
+  // 1 -> 0
+  await userEvent.keyboard('{ArrowUp}');
+  items = document.querySelectorAll('.iui-menu-item');
+  expect(input).toHaveAttribute('aria-activedescendant', `${id}-option-Item-0`);
+  expect(items[0]).toHaveClass('iui-focused');
+
+  // select 0
+  await userEvent.keyboard('{Enter}');
+  items = document.querySelectorAll('.iui-menu-item');
+  expect(mockOnChange).toHaveBeenCalledWith(0, 'added');
+  expect(document.querySelector('.iui-menu')).toBeVisible();
+
+  // filter and focus item 2
+  await act(async () => {
+    input.select();
+    await userEvent.keyboard('2');
+  });
+
+  await act(async () => void (await userEvent.keyboard('{ArrowDown}')));
+  expect(screen.getByText('Item 2').closest('.iui-menu-item')).toHaveClass(
+    'iui-focused',
+  );
+  expect(input).toHaveAttribute('aria-activedescendant', `${id}-option-Item-2`);
+
+  // select 2
+  await userEvent.keyboard('{Enter}');
+  expect(mockOnChange).toHaveBeenCalledWith(2, 'added');
+  expect(document.querySelector('.iui-menu')).toBeVisible();
+
+  // close
+  await act(async () => void (await userEvent.keyboard('{Esc}')));
+  expect(document.querySelector('.iui-menu')).not.toBeVisible();
+
+  // reopen
+  await act(async () => void (await userEvent.keyboard('X')));
+  expect(document.querySelector('.iui-menu')).toBeVisible();
+
+  // deselect 2
+  await act(async () => {
+    input.select();
+    await userEvent.keyboard('2');
+  });
+
+  await act(async () => void (await userEvent.keyboard('{ArrowDown}')));
+  await userEvent.keyboard('{Enter}');
+  expect(mockOnChange).toHaveBeenCalledWith(2, 'removed');
+
+  // close
+  await userEvent.tab();
+  expect(document.querySelector('.iui-menu')).not.toBeVisible();
+});
