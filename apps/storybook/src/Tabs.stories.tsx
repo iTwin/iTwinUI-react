@@ -5,13 +5,7 @@
 import SvgStar from '@itwin/itwinui-icons-react/cjs/icons/Star';
 import { Meta, Story } from '@storybook/react/';
 import React from 'react';
-import {
-  VerticalTabs,
-  HorizontalTabs,
-  HorizontalTabsProps,
-  VerticalTabsProps,
-  Tab,
-} from '@itwin/itwinui-react';
+import { Tab } from '@itwin/itwinui-react';
 import { Tabs, TabsProps } from '@itwin/itwinui-react/esm/core/Tabs/Tabs';
 
 export default {
@@ -29,7 +23,7 @@ export default {
   },
 } as Meta<TabsProps>;
 
-export const DefaultTabs: Story<Partial<HorizontalTabsProps>> = (args) => {
+export const DefaultTabs: Story<Partial<TabsProps>> = (args) => {
   const [index, setIndex] = React.useState(0);
   const getContent = () => {
     switch (index) {
@@ -42,7 +36,7 @@ export const DefaultTabs: Story<Partial<HorizontalTabsProps>> = (args) => {
     }
   };
   return (
-    <HorizontalTabs
+    <Tabs
       labels={[
         <Tab key={1} label='Item1' />,
         <Tab key={2} label='Item2' />,
@@ -52,7 +46,7 @@ export const DefaultTabs: Story<Partial<HorizontalTabsProps>> = (args) => {
       onTabSelected={setIndex}
     >
       {getContent()}
-    </HorizontalTabs>
+    </Tabs>
   );
 };
 DefaultTabs.args = {
@@ -64,7 +58,7 @@ DefaultTabs.args = {
   ],
 };
 
-export const BorderlessTabs: Story<Partial<HorizontalTabsProps>> = (args) => {
+export const BorderlessTabs: Story<Partial<TabsProps>> = (args) => {
   const [index, setIndex] = React.useState(0);
   const getContent = () => {
     switch (index) {
@@ -77,7 +71,7 @@ export const BorderlessTabs: Story<Partial<HorizontalTabsProps>> = (args) => {
     }
   };
   return (
-    <HorizontalTabs
+    <Tabs
       labels={[
         <Tab key={1} label='Item1' />,
         <Tab key={2} label='Item2' />,
@@ -88,7 +82,7 @@ export const BorderlessTabs: Story<Partial<HorizontalTabsProps>> = (args) => {
       onTabSelected={setIndex}
     >
       {getContent()}
-    </HorizontalTabs>
+    </Tabs>
   );
 };
 BorderlessTabs.args = {
@@ -100,7 +94,7 @@ BorderlessTabs.args = {
   type: 'borderless',
 };
 
-export const PillTabs: Story<Partial<HorizontalTabsProps>> = (args) => {
+export const PillTabs: Story<Partial<TabsProps>> = (args) => {
   const [index, setIndex] = React.useState(0);
   const getContent = () => {
     switch (index) {
@@ -113,7 +107,7 @@ export const PillTabs: Story<Partial<HorizontalTabsProps>> = (args) => {
     }
   };
   return (
-    <HorizontalTabs
+    <Tabs
       labels={Array(3)
         .fill(null)
         .map((_, index) => (
@@ -124,7 +118,7 @@ export const PillTabs: Story<Partial<HorizontalTabsProps>> = (args) => {
       onTabSelected={setIndex}
     >
       {getContent()}
-    </HorizontalTabs>
+    </Tabs>
   );
 };
 PillTabs.args = {
@@ -134,9 +128,7 @@ PillTabs.args = {
   type: 'pill',
 };
 
-export const SublabelsAndIcons: Story<Partial<HorizontalTabsProps>> = (
-  args,
-) => {
+export const SublabelsAndIcons: Story<Partial<TabsProps>> = (args) => {
   const [index, setIndex] = React.useState(0);
   const getContent = () => {
     switch (index) {
@@ -149,7 +141,7 @@ export const SublabelsAndIcons: Story<Partial<HorizontalTabsProps>> = (
     }
   };
   return (
-    <HorizontalTabs
+    <Tabs
       labels={Array(3)
         .fill(null)
         .map((_, index) => (
@@ -166,7 +158,7 @@ export const SublabelsAndIcons: Story<Partial<HorizontalTabsProps>> = (
       onTabSelected={setIndex}
     >
       {getContent()}
-    </HorizontalTabs>
+    </Tabs>
   );
 };
 SublabelsAndIcons.args = {
@@ -184,7 +176,7 @@ SublabelsAndIcons.args = {
   type: 'borderless',
 };
 
-export const Vertical: Story<Partial<VerticalTabsProps>> = (args) => {
+export const Vertical: Story<Partial<TabsProps>> = (args) => {
   const [index, setIndex] = React.useState(0);
   const getContent = () => {
     switch (index) {
@@ -197,7 +189,8 @@ export const Vertical: Story<Partial<VerticalTabsProps>> = (args) => {
     }
   };
   return (
-    <VerticalTabs
+    <Tabs
+      orientation='vertical'
       type='borderless'
       labels={Array(3)
         .fill(null)
@@ -213,7 +206,7 @@ export const Vertical: Story<Partial<VerticalTabsProps>> = (args) => {
       onTabSelected={setIndex}
     >
       {getContent()}
-    </VerticalTabs>
+    </Tabs>
   );
 };
 Vertical.args = {

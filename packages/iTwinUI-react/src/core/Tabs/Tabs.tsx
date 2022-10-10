@@ -67,7 +67,13 @@ export type TabsProps = {
   children?: React.ReactNode;
 };
 
+/**
+ * @deprecated Use `TabsProps` instead.
+ */
 export type HorizontalTabsProps = Omit<TabsProps, 'orientation'>;
+/**
+ * @deprecated Use `TabsProps` instead.
+ */
 export type VerticalTabsProps = Omit<TabsProps, 'orientation' | 'type'> & {
   type?: 'default' | 'borderless';
 };
@@ -311,6 +317,7 @@ export const Tabs = (props: TabsProps) => {
 
 /**
  * Tabs organize and allow navigation between groups of content that are related and at the same level of hierarchy.
+ * @deprecated Use `Tabs` instead.
  * @example
  * const tabs = [
  *   <Tab label='Label 1' sublabel='First tab' />,
@@ -325,6 +332,7 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => (
 
 /**
  * Tabs organize and allow navigation between groups of content that are related and at the same level of hierarchy.
+ * @deprecated Use `Tabs` with attribute `orientation='vertical'` instead.
  * @example
  * const tabs = [
  *   <Tab label='Label 1' sublabel='First tab' />,
