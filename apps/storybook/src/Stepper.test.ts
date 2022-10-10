@@ -2,14 +2,14 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-describe('UserIconGroup', () => {
-  const storyPath = 'Core/UserIconGroup';
+describe('Stepper', () => {
+  const storyPath = 'Core/Stepper';
   const tests = [
     'Basic',
-    'Animated',
-    'Many Icons',
-    'Non Stacked',
-    'With Tooltip',
+    'Long',
+    'Localized Long',
+    'With Tooltips',
+    'Workflow Diagram',
   ];
 
   tests.forEach((testName) => {
@@ -18,7 +18,7 @@ describe('UserIconGroup', () => {
       cy.visit('iframe', { qs: { id } });
 
       if (testName.includes('Tooltip')) {
-        cy.get('.iui-user-icon-count').trigger('mouseenter'); // trigger tooltip
+        cy.get('.iui-stepper-step').first().trigger('mouseenter'); // trigger tooltip
       }
 
       cy.compareSnapshot(testName);

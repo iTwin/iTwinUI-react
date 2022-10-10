@@ -59,15 +59,15 @@ export type HeaderProps = {
    * User icon
    * It's size and transition will be handled between slim/not slim state of the
    * Header
-   * (expects `UserIcon`, can be wrapped in `IconButton` and `DropdownMenu` if needed)
+   * (expects `Avatar`, can be wrapped in `IconButton` and `DropdownMenu` if needed)
    * @example
    * <DropdownMenu menuItems={...}>
    *   <IconButton styleType='borderless'>
-   *     <UserIcon ... />
+   *     <Avatar ... />
    *   </IconButton>
    * </DropdownMenu>
    */
-  userIcon?: React.ReactNode;
+  avatar?: React.ReactNode;
   /**
    * Items in the more dropdown menu.
    * Pass a function that takes the `close` argument (to close the menu),
@@ -108,10 +108,10 @@ const defaultTranslations: HeaderTranslations = {
  *    </IconButton>
  *   </DropdownMenu>
  *  ]}
- *  userIcon={
+ *  avatar={
  *   <DropdownMenu menuItems={...}>
  *    <IconButton styleType='borderless'>
- *     <UserIcon ... />
+ *     <Avatar ... />
  *    </IconButton>
  *   </DropdownMenu>
  *  }
@@ -124,7 +124,7 @@ export const Header = (props: HeaderProps) => {
     breadcrumbs,
     isSlim = false,
     actions,
-    userIcon,
+    avatar,
     menuItems,
     translatedStrings,
     className,
@@ -146,7 +146,7 @@ export const Header = (props: HeaderProps) => {
       {children && <div className='iui-center'>{children}</div>}
       <div className='iui-right'>
         {actions}
-        {userIcon}
+        {avatar}
         {menuItems && (
           <DropdownMenu menuItems={menuItems}>
             <IconButton

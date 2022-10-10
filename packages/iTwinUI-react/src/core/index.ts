@@ -291,18 +291,27 @@ export type {
 } from './Typography';
 
 export { UserIcon } from './UserIcon';
-export type { UserIconProps, StatusTitles, UserIconStatus } from './UserIcon';
+export type { UserIconProps, UserIconStatus } from './UserIcon';
 
 export { UserIconGroup } from './UserIconGroup';
 export type { UserIconGroupProps } from './UserIconGroup';
 
+export { Avatar } from './Avatar';
+export type { AvatarProps, StatusTitles, AvatarStatus } from './Avatar';
+
+export { AvatarGroup } from './AvatarGroup';
+export type { AvatarGroupProps } from './AvatarGroup';
+
 export { Wizard } from './Wizard';
+export type { WizardProps, WizardType, WizardLocalization } from './Wizard';
+
+export { Stepper } from './Stepper';
 export type {
-  WizardProps,
+  StepperProps,
   StepProperties,
-  WizardType,
-  WizardLocalization,
-} from './Wizard';
+  StepperType,
+  StepperLocalization,
+} from './Stepper';
 
 export {
   getUserColor,

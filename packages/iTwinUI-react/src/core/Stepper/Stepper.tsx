@@ -5,14 +5,14 @@
 import cx from 'classnames';
 import React from 'react';
 import { useTheme } from '../utils';
-import '@itwin/itwinui-css/css/wizard.css';
-import { Step } from '../Stepper/Step';
+import '@itwin/itwinui-css/css/stepper.css';
+import { Step } from './Step';
 
-export type WizardLocalization = {
+export type StepperLocalization = {
   stepsCountLabel: (currentStep: number, totalSteps: number) => string;
 };
 
-export type WizardType = 'default' | 'long' | 'workflow';
+export type StepperType = 'default' | 'long' | 'workflow';
 
 export type StepProperties = {
   /**
@@ -25,7 +25,7 @@ export type StepProperties = {
   description?: string;
 };
 
-export type WizardProps = {
+export type StepperProps = {
   /**
    * Current step index, 0 - based.
    */
@@ -35,45 +35,45 @@ export type WizardProps = {
    */
   steps: StepProperties[];
   /**
-   *  The type of Wizard to display.
+   *  The type of Stepper to display.
    *  @default 'default'
    */
-  type?: WizardType;
+  type?: StepperType;
   /**
    *  Option to provide localized strings.
    */
-  localization?: WizardLocalization;
+  localization?: StepperLocalization;
   /**
    *  Click handler on completed step.
    */
   onStepClick?: (clickedIndex: number) => void;
 };
 
-const defaultWizardLocalization: WizardLocalization = {
+const defaultStepperLocalization: StepperLocalization = {
   stepsCountLabel: (currentStep, totalSteps) =>
     `Step ${currentStep} of ${totalSteps}:`,
 };
 
 /**
- * A wizard displays progress through a sequence of logical and numbered steps.
+ * A stepper displays progress through a sequence of logical and numbered steps.
  * It may also be used for navigation.
  *
  * The `type` can be set to 'long' to show labels under steps.
  *
  * @example
- * <Wizard
+ * <Stepper
  *  steps=[{name: "Step One"}, {name: "Step Two"}, {name: "Step Three"}]
  *  currentStep={0}
  *  type='long'
  *  />
  */
-export const Wizard = React.forwardRef<HTMLDivElement, WizardProps>(
+export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
   (props, ref) => {
     const {
       currentStep,
       steps,
       type = 'default',
-      localization = defaultWizardLocalization,
+      localization = defaultStepperLocalization,
       onStepClick,
       ...rest
     } = props;
@@ -87,7 +87,7 @@ export const Wizard = React.forwardRef<HTMLDivElement, WizardProps>(
 
     return (
       <div
-        className={cx('iui-wizard', {
+        className={cx('iui-stepper', {
           'iui-long': type === 'long',
           'iui-workflow': type === 'workflow',
         })}
@@ -109,7 +109,7 @@ export const Wizard = React.forwardRef<HTMLDivElement, WizardProps>(
           ))}
         </ol>
         {type === 'long' && (
-          <div className='iui-wizard-steps-label'>
+          <div className='iui-stepper-steps-label'>
             <span className='iui-steps-count'>
               {localization.stepsCountLabel(
                 boundedCurrentStep + 1,
@@ -124,7 +124,4 @@ export const Wizard = React.forwardRef<HTMLDivElement, WizardProps>(
   },
 );
 
-/**
- * @deprecated Use `Stepper` instead.
- */
-export default Wizard;
+export default Stepper;

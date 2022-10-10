@@ -17,7 +17,7 @@ import {
   Input,
   MenuExtraContent,
   MenuItem,
-  UserIcon,
+  Avatar,
   Text,
   Select,
   MenuDivider,
@@ -41,7 +41,7 @@ export default {
     appLogo: { control: { disable: true } },
     breadcrumbs: { control: { disable: true } },
     actions: { control: { disable: true } },
-    userIcon: { control: { disable: true } },
+    avatar: { control: { disable: true } },
     menuItems: { control: { disable: true } },
     children: { control: { disable: true } },
     style: { control: { disable: true } },
@@ -72,7 +72,7 @@ const buildMenu = (menu: string) => (close: () => void) => [
 export const Full: Story<HeaderProps> = (args) => {
   const [userType, setUserType] = useState('User');
 
-  const userIconMenuItems = (close: () => void) => [
+  const avatarMenuItems = (close: () => void) => [
     <MenuExtraContent key={0}>
       <>
         <Text variant='leading'>Terry Rivers</Text>
@@ -94,14 +94,14 @@ export const Full: Story<HeaderProps> = (args) => {
     <MenuItem
       key={2}
       value='View profile'
-      onClick={buildClickHandler('UserIcon', close)}
+      onClick={buildClickHandler('Avatar', close)}
     >
       View profile
     </MenuItem>,
     <MenuItem
       key={3}
       value='Sign out'
-      onClick={buildClickHandler('UserIcon', close)}
+      onClick={buildClickHandler('Avatar', close)}
     >
       Sign out
     </MenuItem>,
@@ -173,10 +173,10 @@ export const Full: Story<HeaderProps> = (args) => {
           </IconButton>
         </DropdownMenu>,
       ]}
-      userIcon={
-        <DropdownMenu menuItems={userIconMenuItems}>
+      avatar={
+        <DropdownMenu menuItems={avatarMenuItems}>
           <IconButton styleType='borderless'>
-            <UserIcon
+            <Avatar
               size='medium'
               abbreviation='TR'
               backgroundColor={getUserColor('Terry Rivers')}
@@ -242,8 +242,8 @@ export const Basic: Story<HeaderProps> = (args) => {
           ]}
         />
       }
-      userIcon={
-        <UserIcon
+      avatar={
+        <Avatar
           size='medium'
           abbreviation='TR'
           backgroundColor={getUserColor('Terry Rivers')}
@@ -303,8 +303,8 @@ export const CenterContent: Story<HeaderProps> = (args) => {
           ]}
         />
       }
-      userIcon={
-        <UserIcon
+      avatar={
+        <Avatar
           size='medium'
           abbreviation='TR'
           backgroundColor={getUserColor('Terry Rivers')}

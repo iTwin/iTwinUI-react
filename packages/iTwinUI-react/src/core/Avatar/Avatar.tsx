@@ -5,13 +5,13 @@
 import cx from 'classnames';
 import React from 'react';
 import { CommonProps, useTheme } from '../utils';
-import '@itwin/itwinui-css/css/user-icon.css';
+import '@itwin/itwinui-css/css/avatar.css';
 
-export type UserIconStatus = 'online' | 'busy' | 'away' | 'offline';
+export type AvatarStatus = 'online' | 'busy' | 'away' | 'offline';
 
-export type StatusTitles = { [key in Exclude<UserIconStatus, ''>]: string };
+export type StatusTitles = { [key in Exclude<AvatarStatus, ''>]: string };
 
-export type UserIconProps = {
+export type AvatarProps = {
   /**
    * Size of a user icon.
    * @default 'small'
@@ -20,7 +20,7 @@ export type UserIconProps = {
   /**
    * Status/Availability of a user.
    */
-  status?: UserIconStatus;
+  status?: AvatarStatus;
   /**
    * Text which will appear when hovering over the icon.
    */
@@ -55,18 +55,18 @@ export const defaultStatusTitles: StatusTitles = {
  * Basic user icon component
  * @example
  * <caption>Small icon with abbreviation</caption>
- * <UserIcon size='small' title='Terry Rivers' abbreviation='TR' backgroundColor='green'/>
+ * <Avatar size='small' title='Terry Rivers' abbreviation='TR' backgroundColor='green'/>
  * @example
  * <caption>Medium icon with image</caption>
- * <UserIcon size='medium' title='Terry Rivers' abbreviation='TR' backgroundColor='green' image={<img src="https://cdn.example.com/user/profile/pic.png" />}/>
+ * <Avatar size='medium' title='Terry Rivers' abbreviation='TR' backgroundColor='green' image={<img src="https://cdn.example.com/user/profile/pic.png" />}/>
  * @example
  * <caption>Large icon with status</caption>
- * <UserIcon size='large' title='Terry Rivers' abbreviation='TR' backgroundColor='green' status='online' />
+ * <Avatar size='large' title='Terry Rivers' abbreviation='TR' backgroundColor='green' status='online' />
  * @example
  * <caption>X-large icon with image</caption>
- * <UserIcon size='x-large' title='Terry Rivers' abbreviation='TR' backgroundColor='green' image={<img src="https://cdn.example.com/user/profile/pic.png" />}/>
+ * <Avatar size='x-large' title='Terry Rivers' abbreviation='TR' backgroundColor='green' image={<img src="https://cdn.example.com/user/profile/pic.png" />}/>
  */
-export const UserIcon = (props: UserIconProps) => {
+export const Avatar = (props: AvatarProps) => {
   const {
     size = 'small',
     status,
@@ -87,7 +87,7 @@ export const UserIcon = (props: UserIconProps) => {
   return (
     <span
       className={cx(
-        'iui-user-icon',
+        'iui-avatar',
         { [`iui-${size}`]: size !== 'medium' },
         className,
       )}
@@ -114,7 +114,4 @@ export const UserIcon = (props: UserIconProps) => {
   );
 };
 
-/**
- * @deprecated Use `Avatar` instead.
- */
-export default UserIcon;
+export default Avatar;

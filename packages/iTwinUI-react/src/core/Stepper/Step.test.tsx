@@ -6,7 +6,7 @@ import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import { Step } from './Step';
 
-describe('Wizard step (default)', () => {
+describe('Stepper step (default)', () => {
   it('should render step correctly (past)', () => {
     const mockedClick = jest.fn();
     const step = (
@@ -24,7 +24,7 @@ describe('Wizard step (default)', () => {
 
     // Renders as clickable
     const stepContainer = container.querySelector(
-      '.iui-wizard-step',
+      '.iui-stepper-step',
     ) as HTMLElement;
     expect(stepContainer).toBeTruthy();
     expect(stepContainer.className).toContain('iui-clickable');
@@ -44,12 +44,12 @@ describe('Wizard step (default)', () => {
 
     // Correct title
     const title = getByText('First step');
-    expect(title.className).toBe('iui-wizard-step-name');
+    expect(title.className).toBe('iui-stepper-step-name');
     // Circle
     const circle = getByText('1');
-    expect(circle.className).toBe('iui-wizard-circle');
+    expect(circle.className).toBe('iui-stepper-circle');
     // Main track content
-    expect(container.querySelector('.iui-wizard-track-content')).toBeTruthy();
+    expect(container.querySelector('.iui-stepper-track-content')).toBeTruthy();
   });
 
   it('should render step correctly (future)', () => {
@@ -69,7 +69,7 @@ describe('Wizard step (default)', () => {
 
     // Renders as non-clickable
     const stepContainer = container.querySelector(
-      '.iui-wizard-step',
+      '.iui-stepper-step',
     ) as HTMLElement;
     expect(stepContainer).toBeTruthy();
     expect(stepContainer.className).not.toContain('iui-clickable');
@@ -84,12 +84,12 @@ describe('Wizard step (default)', () => {
 
     // Correct title
     const title = getByText('Second step');
-    expect(title.className).toBe('iui-wizard-step-name');
+    expect(title.className).toBe('iui-stepper-step-name');
     // Circle
     const circle = getByText('2');
-    expect(circle.className).toBe('iui-wizard-circle');
+    expect(circle.className).toBe('iui-stepper-circle');
     // Main track content
-    expect(container.querySelector('.iui-wizard-track-content')).toBeTruthy();
+    expect(container.querySelector('.iui-stepper-track-content')).toBeTruthy();
   });
 
   it('should render step correctly (current)', () => {
@@ -108,7 +108,7 @@ describe('Wizard step (default)', () => {
 
     // Renders as active
     const stepContainer = container.querySelector(
-      '.iui-wizard-step.iui-current',
+      '.iui-stepper-step.iui-current',
     ) as HTMLElement;
     expect(stepContainer).toBeTruthy();
     expect(stepContainer.className).not.toContain('iui-clickable');
@@ -123,12 +123,12 @@ describe('Wizard step (default)', () => {
 
     // Correct title
     const title = getByText('Current step');
-    expect(title.className).toBe('iui-wizard-step-name');
+    expect(title.className).toBe('iui-stepper-step-name');
     // Circle
     const circle = getByText('1');
-    expect(circle.className).toBe('iui-wizard-circle');
+    expect(circle.className).toBe('iui-stepper-circle');
     // Main track content
-    expect(container.querySelector('.iui-wizard-track-content')).toBeTruthy();
+    expect(container.querySelector('.iui-stepper-track-content')).toBeTruthy();
   });
 
   it('should set dynamic inline width based on total steps', () => {
@@ -142,7 +142,7 @@ describe('Wizard step (default)', () => {
       />,
     );
 
-    const step1 = container1.querySelector('.iui-wizard-step') as HTMLElement;
+    const step1 = container1.querySelector('.iui-stepper-step') as HTMLElement;
     expect(step1).toBeTruthy();
     expect(step1.style.width).toEqual('25%');
 
@@ -156,13 +156,13 @@ describe('Wizard step (default)', () => {
       />,
     );
 
-    const step2 = container2.querySelector('.iui-wizard-step') as HTMLElement;
+    const step2 = container2.querySelector('.iui-stepper-step') as HTMLElement;
     expect(step2).toBeTruthy();
     expect(step2.style.width).toEqual('12.5%');
   });
 });
 
-describe.each(['long', 'workflow'] as const)('Wizard step (%s)', (type) => {
+describe.each(['long', 'workflow'] as const)('Stepper step (%s)', (type) => {
   it('should render correctly', () => {
     const mockedClick = jest.fn();
     const step = (
@@ -180,7 +180,7 @@ describe.each(['long', 'workflow'] as const)('Wizard step (%s)', (type) => {
 
     // Renders step
     const stepContainer = container.querySelector(
-      '.iui-wizard-step',
+      '.iui-stepper-step',
     ) as HTMLElement;
     expect(stepContainer).toBeTruthy();
 
@@ -194,13 +194,15 @@ describe.each(['long', 'workflow'] as const)('Wizard step (%s)', (type) => {
     expect(stepContainer).not.toHaveAttribute('tabindex');
 
     // No title
-    expect(container.querySelector('.iui-wizard-step-name')).toBeFalsy();
+    expect(container.querySelector('.iui-stepper-step-name')).toBeFalsy();
     // Circle
-    const circle = container.querySelector('.iui-wizard-circle') as HTMLElement;
+    const circle = container.querySelector(
+      '.iui-stepper-circle',
+    ) as HTMLElement;
     expect(circle).toBeTruthy();
     expect(circle.textContent).toBe(type === 'long' ? '2' : 'Second step');
     // Main track content
-    expect(container.querySelector('.iui-wizard-track-content')).toBeTruthy();
+    expect(container.querySelector('.iui-stepper-track-content')).toBeTruthy();
   });
 
   it('should not set dynamic inline width', () => {
@@ -214,7 +216,7 @@ describe.each(['long', 'workflow'] as const)('Wizard step (%s)', (type) => {
       />,
     );
 
-    const step = container.querySelector('.iui-wizard-step') as HTMLElement;
+    const step = container.querySelector('.iui-stepper-step') as HTMLElement;
     expect(step).toBeTruthy();
     expect(step.style.width).toBeFalsy(); // not 25%
   });
@@ -234,7 +236,7 @@ it('should add className and style props correctly', () => {
   );
 
   const step = container.querySelector(
-    '.iui-wizard-step.custom-class',
+    '.iui-stepper-step.custom-class',
   ) as HTMLElement;
   expect(step).toBeTruthy();
   expect(step.style.width).toEqual('50px');

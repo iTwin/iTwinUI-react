@@ -78,17 +78,14 @@ it('renders actions alone correctly', () => {
   expect(actions).toBeTruthy();
   expect(actions?.textContent).toEqual('ActionsContent');
 });
-it('renders userIcon alone correctly', () => {
+it('renders avatar alone correctly', () => {
   const { container } = render(
-    <Header
-      appLogo={<div>AppTitle</div>}
-      userIcon={<div>UserIconContent</div>}
-    />,
+    <Header appLogo={<div>AppTitle</div>} avatar={<div>AvatarContent</div>} />,
   );
 
-  const userIcon = container.querySelector('.iui-right > :first-child');
-  expect(userIcon).toBeTruthy();
-  expect(userIcon?.textContent).toEqual('UserIconContent');
+  const avatar = container.querySelector('.iui-right > :first-child');
+  expect(avatar).toBeTruthy();
+  expect(avatar?.textContent).toEqual('AvatarContent');
 });
 it('renders moreMenu alone correctly', async () => {
   // Summarized, as this is partly based on DropdownMenu, which is tested independently.
@@ -166,16 +163,16 @@ it('renders multiple right items in the correct order', () => {
     <Header
       appLogo={<div>AppTitle</div>}
       actions={[<div key='1'>ActionsContent</div>]}
-      userIcon={<div>UserIconContent</div>}
+      avatar={<div>AvatarContent</div>}
       menuItems={() => []}
     />,
   );
   const actions = container.querySelector('.iui-right > :first-child');
   expect(actions).toBeTruthy();
   expect(actions?.textContent).toEqual('ActionsContent');
-  const userIcon = container.querySelector('.iui-right > :nth-child(2)');
-  expect(userIcon).toBeTruthy();
-  expect(userIcon?.textContent).toEqual('UserIconContent');
+  const avatar = container.querySelector('.iui-right > :nth-child(2)');
+  expect(avatar).toBeTruthy();
+  expect(avatar?.textContent).toEqual('AvatarContent');
   const moreMenu = container.querySelector(
     '.iui-right > .iui-button.iui-borderless:last-child',
   ) as HTMLButtonElement;

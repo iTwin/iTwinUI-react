@@ -5,9 +5,9 @@
 import React from 'react';
 import cx from 'classnames';
 import { useTheme, CommonProps } from '../utils';
-import '@itwin/itwinui-css/css/user-icon.css';
+import '@itwin/itwinui-css/css/avatar.css';
 
-export type UserIconGroupProps = {
+export type AvatarGroupProps = {
   /**
    * Max number of icons unstacked.
    * @default 5
@@ -46,25 +46,25 @@ export type UserIconGroupProps = {
  * You can add custom User Count Icon behavior by using `countIconProps`.
  *
  * @example
- * <UserIconGroup iconSize='medium'>
- *  <UserIcon
+ * <AvatarGroup iconSize='medium'>
+ *  <Avatar
  *    abbreviation="TR"
  *    backgroundColor={getUserColor("Terry Rivers")}
  *    title="Terry Rivers"
  *  />
- *  <UserIcon
+ *  <Avatar
  *    abbreviation="RM"
  *    backgroundColor={getUserColor("Robin Mercer")}
  *    title="Robin Mercer"
  *  />
- *  <UserIcon
+ *  <Avatar
  *    abbreviation="JM"
  *    backgroundColor={getUserColor("Jean Mullins")}
  *    title="Jean Mullins"
  *  />
- * </UserIconGroup>
+ * </AvatarGroup>
  */
-export const UserIconGroup = (props: UserIconGroupProps) => {
+export const AvatarGroup = (props: AvatarGroupProps) => {
   const maxLength = 99;
   const {
     children,
@@ -82,7 +82,7 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
 
   useTheme();
 
-  const getUserIconList = (count: number) => {
+  const getAvatarList = (count: number) => {
     return childrenArray.slice(0, count).map((child) =>
       React.cloneElement(child as JSX.Element, {
         status: undefined,
@@ -95,7 +95,7 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
     <>
       <div
         className={cx(
-          'iui-user-icon-list',
+          'iui-avatar-list',
           {
             'iui-animated': animated,
             'iui-stacked': stacked,
@@ -104,17 +104,17 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
         )}
         {...rest}
       >
-        {childrenArray.length <= maxIcons + 1 && getUserIconList(maxIcons + 1)}
+        {childrenArray.length <= maxIcons + 1 && getAvatarList(maxIcons + 1)}
         {childrenArray.length > maxIcons + 1 && (
           <>
-            {getUserIconList(maxIcons)}
+            {getAvatarList(maxIcons)}
             ​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
             <div
               {...countIconProps}
               className={cx(
-                'iui-user-icon',
+                'iui-avatar',
                 { [`iui-${iconSize}`]: iconSize !== 'medium' },
-                'iui-user-icon-count',
+                'iui-avatar-count',
                 countIconProps?.className,
               )}
             >
@@ -133,7 +133,4 @@ export const UserIconGroup = (props: UserIconGroupProps) => {
   );
 };
 
-/**
- * @deprecated Use `AvatarGroup` instead.
- */
-export default UserIconGroup;
+export default AvatarGroup;

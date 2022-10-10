@@ -2,20 +2,25 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-describe('UserIcon', () => {
-  const storyPath = 'Core/UserIcon';
+describe('AvatarGroup', () => {
+  const storyPath = 'Core/AvatarGroup';
   const tests = [
     'Basic',
-    'Sizes',
-    'Statuses',
-    'With Image',
-    'Custom Status Translation',
+    'Animated',
+    'Many Icons',
+    'Non Stacked',
+    'With Tooltip',
   ];
 
   tests.forEach((testName) => {
     it(testName, function () {
       const id = Cypress.storyId(storyPath, testName);
       cy.visit('iframe', { qs: { id } });
+
+      if (testName.includes('Tooltip')) {
+        cy.get('.iui-avatar-count').trigger('mouseenter'); // trigger tooltip
+      }
+
       cy.compareSnapshot(testName);
     });
   });
