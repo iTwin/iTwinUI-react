@@ -35,6 +35,7 @@ import {
   SelectionColumn,
   ExpanderColumn,
   Input,
+  ProgressRadial,
 } from '@itwin/itwinui-react';
 import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
@@ -3568,6 +3569,13 @@ export const StatusAndCellIcons: Story<Partial<TableProps>> = (args) => {
   const data = useMemo(
     () => [
       {
+        name: 'alfa.mp3',
+        modified: 'Just now',
+        size: '62 KB',
+        endIcon: <ProgressRadial indeterminate />,
+        isLoading: true,
+      },
+      {
         name: 'beta.mp3',
         modified: 'Just now',
         size: '15 KB',
@@ -3610,10 +3618,12 @@ export const StatusAndCellIcons: Story<Partial<TableProps>> = (args) => {
         startIcon: JSX.Element;
         endIcon: JSX.Element;
         status: 'positive' | 'negative' | 'warning' | undefined;
+        isLoading: boolean;
       }>,
     ) => {
       return {
         status: row.original.status,
+        isLoading: row.original.isLoading,
       };
     },
     [],
