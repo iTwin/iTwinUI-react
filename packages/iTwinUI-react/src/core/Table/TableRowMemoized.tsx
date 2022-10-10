@@ -20,7 +20,6 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
     row: Row<T>,
   ) => React.ComponentPropsWithRef<'div'> & {
     status?: 'positive' | 'warning' | 'negative';
-    isLoading?: boolean;
   };
   isLast: boolean;
   onRowInViewport: React.MutableRefObject<((rowData: T) => void) | undefined>;
@@ -76,7 +75,7 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
   });
   console.log(rowProps);
   const userRowProps = rowProps?.(row) ?? {};
-  const { status, isLoading, ...restUserRowProps } = userRowProps;
+  const { status, ...restUserRowProps } = userRowProps;
   const mergedProps = {
     ...row.getRowProps({ style: { flex: `0 0 auto`, minWidth: '100%' } }),
     ...restUserRowProps,
@@ -86,7 +85,6 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
         {
           'iui-table-row-expanded': row.isExpanded && subComponent,
           [`iui-${status}`]: !!status,
-          'iui-loading': isLoading,
         },
         userRowProps?.className,
       ),
