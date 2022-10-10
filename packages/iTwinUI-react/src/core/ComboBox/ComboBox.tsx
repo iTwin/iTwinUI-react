@@ -237,7 +237,9 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     if (isOpen) {
       inputRef.current?.focus(); // Focus the input
       !multiple && setFilteredOptions(optionsRef.current); // Reset the filtered list
-      dispatch({ type: 'focus' });
+      if (!isMultipleEnabled(selected, multiple)) {
+        dispatch({ type: 'focus' });
+      }
     }
     // When the dropdown closes
     else {

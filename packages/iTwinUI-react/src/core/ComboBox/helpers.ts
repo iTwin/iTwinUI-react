@@ -56,7 +56,6 @@ export const comboBoxReducer = (
       return { ...state, selected: action.value };
     }
     case 'multiselect': {
-      console.log(action.value);
       // Check if selected is array
       if (!Array.isArray(state.selected)) {
         return { ...state };
