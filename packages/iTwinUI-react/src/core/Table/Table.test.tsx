@@ -4642,3 +4642,20 @@ it.each(['positive', 'warning', 'negative'] as const)(
     expect(rows[1]).not.toHaveClass(`iui-${rowStatus}`);
   },
 );
+
+it('should render row with loading status', () => {
+  const { container } = renderComponent({
+    rowProps: (row) => {
+      return {
+        isLoading: row.index === 0 ? true : undefined,
+      };
+    },
+  });
+
+  const tableBody = container.querySelector(
+    '.iui-table-body',
+  ) as HTMLDivElement;
+  const rows = tableBody.querySelectorAll('.iui-row');
+  expect(rows[0]).toHaveClass(`iui-loading`);
+  expect(rows[1]).not.toHaveClass(`iui-loading`);
+});

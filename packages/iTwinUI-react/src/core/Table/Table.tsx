@@ -204,6 +204,7 @@ export type TableProps<
     row: Row<T>,
   ) => React.ComponentPropsWithRef<'div'> & {
     status?: 'positive' | 'warning' | 'negative';
+    isLoading?: boolean;
   };
   /**
    * Modify the density of the table (adjusts the row height).
