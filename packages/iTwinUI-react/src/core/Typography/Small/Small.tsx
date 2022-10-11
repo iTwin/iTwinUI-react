@@ -17,6 +17,7 @@ export type SmallProps = {
 
 /**
  * Small text, renders a paragraph element
+ * @deprecated Use `Text` with attribute `variant='small'` instead.
  * @example
  * <Small>I'm some small text!</Small>
  * <Small isMuted>I'm some muted small text.</Small>
@@ -41,4 +42,7 @@ export const Small = React.forwardRef<HTMLParagraphElement, SmallProps>(
   },
 );
 
+/**
+ * @deprecated Use `Text` with attribute `variant='small'` instead.
+ */
 export default Small;

@@ -17,6 +17,7 @@ export type TitleProps = {
 
 /**
  * The second biggest title on the page, renders a h2 element
+ * @deprecated Use `Text` with attribute `variant='title'` instead.
  * @example
  * <Title>I'm a title!</Title>
  * <Title isMuted>I'm a muted title.</Title>
@@ -42,4 +43,7 @@ export const Title = React.forwardRef<HTMLHeadingElement, TitleProps>(
   },
 );
 
+/**
+ * @deprecated Use `Text` with attribute `variant='title'` instead.
+ */
 export default Title;

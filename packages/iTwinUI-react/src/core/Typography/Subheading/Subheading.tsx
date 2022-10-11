@@ -17,6 +17,7 @@ export type SubheadingProps = {
 
 /**
  * The third biggest title on the page, renders a h3 element
+ * @deprecated Use `Text` with attribute `variant='subheading'` instead.
  * @example
  * <Subheading>I'm a subheading!</Subheading>
  * <Subheading isMuted>I'm a muted subheading.</Subheading>
@@ -42,4 +43,7 @@ export const Subheading = React.forwardRef<HTMLHeadingElement, SubheadingProps>(
   },
 );
 
+/**
+ * @deprecated Use `Text` with attribute `variant='subheading'` instead.
+ */
 export default Subheading;

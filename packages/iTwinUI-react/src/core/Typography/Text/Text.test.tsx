@@ -43,3 +43,12 @@ it('should render as muted if isMuted is set', () => {
     container.querySelector('div.iui-text-block.iui-text-muted')?.textContent,
   ).toEqual('Some text');
 });
+
+it('should propagate className', () => {
+  const { container } = render(
+    <Text className='mockClassName'>Some text</Text>,
+  );
+  expect(
+    container.querySelector('div.iui-text-block.mockClassName')?.textContent,
+  ).toEqual('Some text');
+});

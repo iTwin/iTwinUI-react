@@ -22,6 +22,7 @@ export type BodyProps = {
 
 /**
  * Body text, renders a paragraph element
+ * @deprecated Use `Text` instead.
  * @example
  * <Body>I'm some body text!</Body>
  * <Body isMuted>I'm some muted body text.</Body>
@@ -50,4 +51,7 @@ export const Body = React.forwardRef<HTMLParagraphElement, BodyProps>(
   },
 );
 
+/**
+ * @deprecated Use `Text` instead.
+ */
 export default Body;

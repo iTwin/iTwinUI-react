@@ -17,6 +17,7 @@ export type LeadingProps = {
 
 /**
  * The third biggest title on the page, renders a h3 element
+ * @deprecated Use `Text` with attribute `variant='leading'` instead.
  * @example
  * <Leading>I'm a Leading!</Leading>
  * <Leading isMuted>I'm a muted Leading.</Leading>
@@ -42,4 +43,7 @@ export const Leading = React.forwardRef<HTMLHeadingElement, LeadingProps>(
   },
 );
 
+/**
+ * @deprecated Use `Text` with attribute `variant='leading'` instead.
+ */
 export default Leading;
