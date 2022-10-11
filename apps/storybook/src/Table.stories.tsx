@@ -3596,6 +3596,12 @@ export const StatusAndCellIcons: Story<Partial<TableProps>> = (args) => {
   const data = useMemo(
     () => [
       {
+        name: 'alfa.mp3',
+        modified: 'Just now',
+        size: '76 KB',
+        isLoading: true,
+      },
+      {
         name: 'beta.mp3',
         modified: 'Just now',
         size: '15 KB',
@@ -3638,10 +3644,12 @@ export const StatusAndCellIcons: Story<Partial<TableProps>> = (args) => {
         startIcon: JSX.Element;
         endIcon: JSX.Element;
         status: 'positive' | 'negative' | 'warning' | undefined;
+        isLoading: boolean | undefined;
       }>,
     ) => {
       return {
         status: row.original.status,
+        isLoading: row.original.isLoading,
       };
     },
     [],
