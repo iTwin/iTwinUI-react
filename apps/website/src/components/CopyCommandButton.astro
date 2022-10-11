@@ -60,6 +60,7 @@ const { command } = Astro.props;
     color: var(--color-text);
     font-family: ui-monospace, monospace;
     letter-spacing: -0.01em;
+    transition: box-shadow 0.4s ease;
 
     &:hover {
       box-shadow: 0 0 10px var(--color-highlight-1), 0 0 20px var(--color-highlight-2);
@@ -95,6 +96,7 @@ const { command } = Astro.props;
       width: 1rem;
       height: 1rem;
       fill: var(--color-subtext);
+      transition: fill var(--transition-speed) ease;
     }
 
     &:hover svg {

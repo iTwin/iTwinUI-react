@@ -249,6 +249,7 @@ const currentPage = new URL(Astro.request.url).pathname;
       background: var(--color-highlight-gradient);
       color: var(--color-background-1);
       font-weight: 500;
+      transition: box-shadow 0.4s ease;
     }
 
     .main-button:hover,
@@ -295,6 +296,7 @@ const currentPage = new URL(Astro.request.url).pathname;
       text-align: start;
       border: 1px solid var(--color-text);
       border-radius: var(--border-radius-1);
+      transition: box-shadow var(--transition-speed) ease;
     }
     .subheading {
       color: var(--color-subtext);
