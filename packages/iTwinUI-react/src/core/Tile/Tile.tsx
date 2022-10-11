@@ -74,6 +74,10 @@ export type TileProps = {
    */
   moreOptions?: React.ReactNode[];
   /**
+   * Status of the tile.
+   */
+  status?: 'positive' | 'warning' | 'negative';
+  /**
    * Whether the tile is selected or in "active" state.
    * Gets highlighted and shows a checkmark icon near tile name.
    */
@@ -96,6 +100,11 @@ export type TileProps = {
    * It becomes focusable and gets on hover styling.
    */
   isActionable?: boolean;
+  /**
+   * Display a loading state.
+   * @default false
+   */
+  isLoading?: boolean;
 } & React.ComponentPropsWithoutRef<'div'>;
 
 /**
@@ -132,6 +141,8 @@ export const Tile = (props: TileProps) => {
     variant = 'default',
     children,
     isActionable,
+    status,
+    isLoading,
     ...rest
   } = props;
 
@@ -150,6 +161,8 @@ export const Tile = (props: TileProps) => {
           'iui-new': isNew,
           'iui-selected': isSelected,
           'iui-actionable': isActionable,
+          [`iui-${status}`]: !!status,
+          'iui-loading': isLoading,
         },
         className,
       )}

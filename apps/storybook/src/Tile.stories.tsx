@@ -285,3 +285,75 @@ Folder.args = {
   badge: undefined,
   thumbnail: <SvgFolder />,
 };
+
+export const Status: Story<TileProps> = (props) => {
+  const {
+    name,
+    description,
+    metadata,
+    thumbnail,
+    moreOptions,
+    status,
+    ...rest
+  } = props;
+  return (
+    <Tile
+      name={name}
+      description={description}
+      metadata={metadata}
+      thumbnail={thumbnail}
+      moreOptions={moreOptions}
+      status={status}
+      {...rest}
+    />
+  );
+};
+Status.argTypes = {
+  ...Basic.argTypes,
+  thumbnail: { control: { disable: true } },
+};
+Status.args = {
+  ...Basic.args,
+  status: 'positive',
+  name: 'Tile name',
+  description: 'Description',
+  metadata: <span>Tile with status</span>,
+  badge: undefined,
+  thumbnail: <SvgImodelHollow />,
+};
+
+export const Loading: Story<TileProps> = (props) => {
+  const {
+    name,
+    description,
+    metadata,
+    thumbnail,
+    moreOptions,
+    isLoading,
+    ...rest
+  } = props;
+  return (
+    <Tile
+      name={name}
+      description={description}
+      metadata={metadata}
+      thumbnail={thumbnail}
+      moreOptions={moreOptions}
+      isLoading={isLoading}
+      {...rest}
+    />
+  );
+};
+Loading.argTypes = {
+  ...Basic.argTypes,
+  thumbnail: { control: { disable: true } },
+};
+Loading.args = {
+  ...Basic.args,
+  isLoading: true,
+  name: 'Tile name',
+  description: 'Description',
+  metadata: <span>Loading tile</span>,
+  badge: undefined,
+  thumbnail: <SvgImodelHollow />,
+};
