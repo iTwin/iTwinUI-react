@@ -352,10 +352,10 @@ it('should handle checkbox clicks', async () => {
   expect(onSelect).toHaveBeenCalledWith([mockedData()[1]], expect.any(Object));
 
   await userEvent.click(checkboxCells[0]);
-  expect(onSelect).toHaveBeenCalledWith(mockedData(), expect.any(Object));
+  expect(onSelect).toHaveBeenCalledWith([], expect.any(Object));
 
   await userEvent.click(checkboxCells[0]);
-  expect(onSelect).toHaveBeenCalledWith([], expect.any(Object));
+  expect(onSelect).toHaveBeenCalledWith(mockedData(), expect.any(Object));
 });
 
 it('should handle row clicks', async () => {
@@ -1853,6 +1853,12 @@ it('should disable row and handle selection accordingly', async () => {
   expect(headerCheckbox.indeterminate).toBe(true);
   expect(headerCheckbox.checked).toBe(false);
 
+  // Deselect all
+  await userEvent.click(checkboxCells[0]);
+  expect(onSelect).toHaveBeenCalledWith([], expect.any(Object));
+  expect(headerCheckbox.indeterminate).toBe(false);
+  expect(headerCheckbox.checked).toBe(false);
+
   // Select all
   await userEvent.click(checkboxCells[0]);
   expect(onSelect).toHaveBeenCalledWith(
@@ -1861,12 +1867,6 @@ it('should disable row and handle selection accordingly', async () => {
   );
   expect(headerCheckbox.indeterminate).toBe(false);
   expect(headerCheckbox.checked).toBe(true);
-
-  // Deselect all
-  await userEvent.click(checkboxCells[0]);
-  expect(onSelect).toHaveBeenCalledWith([], expect.any(Object));
-  expect(headerCheckbox.indeterminate).toBe(false);
-  expect(headerCheckbox.checked).toBe(false);
 });
 
 it('should select and filter rows', async () => {
@@ -2966,7 +2966,7 @@ it('should handle table resize only when some columns were resized', () => {
       triggerResize = onResize;
       return [
         jest.fn(),
-        { disconnect: jest.fn() } as unknown as ResizeObserver,
+        ({ disconnect: jest.fn() } as unknown) as ResizeObserver,
       ];
     });
   const columns: Column<TestDataType>[] = [
@@ -3092,7 +3092,7 @@ it('should resize current and closest column when table width would decrease whe
       triggerResize = onResize;
       return [
         jest.fn(),
-        { disconnect: jest.fn() } as unknown as ResizeObserver,
+        ({ disconnect: jest.fn() } as unknown) as ResizeObserver,
       ];
     });
   const columns: Column<TestDataType>[] = [
@@ -3160,7 +3160,7 @@ it('should resize last and closest column on the left when table width would dec
       triggerResize = onResize;
       return [
         jest.fn(),
-        { disconnect: jest.fn() } as unknown as ResizeObserver,
+        ({ disconnect: jest.fn() } as unknown) as ResizeObserver,
       ];
     });
   const columns: Column<TestDataType>[] = [
@@ -3615,8 +3615,9 @@ it('should render action column with column manager', async () => {
   });
 
   expect(container.querySelectorAll('[role="columnheader"]').length).toBe(3);
-  const actionColumn =
-    container.querySelectorAll<HTMLInputElement>('.iui-slot');
+  const actionColumn = container.querySelectorAll<HTMLInputElement>(
+    '.iui-slot',
+  );
   expect(
     actionColumn[0].firstElementChild?.className.includes(
       'iui-button iui-borderless',
@@ -3739,8 +3740,9 @@ it('should hide column when deselected in column manager', async () => {
 
   const columnManager = container.querySelector('.iui-button') as HTMLElement;
   await userEvent.click(columnManager);
-  const columnManagerColumns =
-    document.querySelectorAll<HTMLLIElement>('.iui-menu-item');
+  const columnManagerColumns = document.querySelectorAll<HTMLLIElement>(
+    '.iui-menu-item',
+  );
   await userEvent.click(columnManagerColumns[1]);
 
   headerCells = container.querySelectorAll<HTMLDivElement>(
@@ -3784,8 +3786,9 @@ it('should be disabled in column manager if `disableToggleVisibility` is true', 
   const columnManager = container.querySelector('.iui-button') as HTMLElement;
 
   await userEvent.click(columnManager);
-  const columnManagerColumns =
-    document.querySelectorAll<HTMLLIElement>('.iui-menu-item');
+  const columnManagerColumns = document.querySelectorAll<HTMLLIElement>(
+    '.iui-menu-item',
+  );
   expect(columnManagerColumns[0].classList).toContain('iui-disabled');
 
   expect(
@@ -3871,8 +3874,9 @@ it('should add expander column manually', () => {
   const rows = container.querySelectorAll('.iui-table-body .iui-row');
   expect(rows.length).toBe(3);
 
-  const expanders =
-    container.querySelectorAll<HTMLButtonElement>('.iui-row-expander');
+  const expanders = container.querySelectorAll<HTMLButtonElement>(
+    '.iui-row-expander',
+  );
   expect(expanders.length).toBe(3);
   expect(expanders[0].disabled).toBe(false);
   expect(expanders[1].disabled).toBe(true);
