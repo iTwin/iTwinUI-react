@@ -236,7 +236,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     // When the dropdown opens
     if (isOpen) {
       inputRef.current?.focus(); // Focus the input
-      !multiple && setFilteredOptions(optionsRef.current); // Reset the filtered list
+      // Reset the filtered list (does not reset when multiple enabled)
+      !multiple && setFilteredOptions(optionsRef.current);
       if (!isMultipleEnabled(selected, multiple)) {
         dispatch({ type: 'focus' });
       }
@@ -245,7 +246,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     else {
       // Reset the focused index
       dispatch({ type: 'focus' });
-      // Reset the input value
+      // Reset the input value if not multiple
       if (!isMultipleEnabled(selected, multiple)) {
         setInputValue(
           selected != undefined && selected >= 0
@@ -348,14 +349,13 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     },
     [isMenuItemSelected, multiple, onChangeProp, optionsRef],
   );
-
+  console.log(focusedIndex);
   const onClickHandler = React.useCallback(
     (__originalIndex: number) => {
       if (isMultipleEnabled(selected, multiple)) {
         dispatch({ type: 'multiselect', value: __originalIndex });
       } else {
         dispatch({ type: 'select', value: __originalIndex });
-
         dispatch({ type: 'close' });
       }
       onChangeHandler(__originalIndex);
