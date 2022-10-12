@@ -7,7 +7,7 @@ const contentTitle = content.title ? `${content.title} | iTwinUI` : 'iTwinUI';
 const contentDescription = `An open-source design system for building consistent, accessible experiences.`;
 
 const canonicalUrl = 'https://www.itwinui.com';
-const deployUrl = import.meta.env.DEPLOY_PRIME_URL || Astro.request.url.origin;
+const deployUrl = import.meta.env.DEPLOY_PRIME_URL || Astro.request.url;
 ---
 
 <title>{contentTitle}</title>
