@@ -53,6 +53,7 @@ export const defaultStatusTitles: StatusTitles = {
 
 /**
  * Basic user icon component
+ * @deprecated Use `Avatar` instead.
  * @example
  * <caption>Small icon with abbreviation</caption>
  * <UserIcon size='small' title='Terry Rivers' abbreviation='TR' backgroundColor='green'/>

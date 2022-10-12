@@ -37,6 +37,7 @@ export type UserIconGroupProps = {
    */
   countIconProps?: React.ComponentPropsWithRef<'div'>;
 } & Omit<CommonProps, 'title'>;
+
 /**
  * Group User Icons together.
  *
@@ -45,6 +46,7 @@ export type UserIconGroupProps = {
  *
  * You can add custom User Count Icon behavior by using `countIconProps`.
  *
+ * @deprecated Use `AvatarGroup` instead.
  * @example
  * <UserIconGroup iconSize='medium'>
  *  <UserIcon

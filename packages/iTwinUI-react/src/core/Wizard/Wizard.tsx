@@ -60,6 +60,7 @@ const defaultWizardLocalization: WizardLocalization = {
  *
  * The `type` can be set to 'long' to show labels under steps.
  *
+ * @deprecated Use `Stepper` instead.
  * @example
  * <Wizard
  *  steps=[{name: "Step One"}, {name: "Step Two"}, {name: "Step Three"}]
