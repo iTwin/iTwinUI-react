@@ -26,10 +26,10 @@ const currentPage = new URL(Astro.request.url).pathname;
       <div class='hero-box'>
         <div>
           <h1>For a <span class='highlight-text'>unified</span> experience</h1>
-          <p class='subheading'>
+          <h2 class='subheading'>
             iTwinUI delivers common UI components and UI layouts bundled with accessibility best
             practices, theming, and responsive design.
-          </p>
+          </h2>
           <div class='button-area'>
             <a class='main-button' href='/docs'>Documentation</a>
             <CopyCommandButton command='npm i @itwin/itwinui-react' />
@@ -298,16 +298,20 @@ const currentPage = new URL(Astro.request.url).pathname;
       border-radius: var(--border-radius-1);
       transition: box-shadow var(--transition-speed) ease;
     }
+    h1 {
+      font-size: calc(var(--type-3) * 1.5);
+      letter-spacing: -0.01em;
+      margin-bottom: var(--space-2);
+    }
     .subheading {
+      font-size: var(--type-2);
+      font-weight: 400;
       color: var(--color-subtext);
       padding-bottom: var(--space-7);
-      max-width: 60ch;
+      max-width: 50ch;
     }
     p {
       font-size: var(--type-0);
-    }
-    h1 {
-      margin-bottom: var(--space-2);
     }
     h2 {
       font-size: var(--type-4);
