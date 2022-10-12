@@ -24,8 +24,6 @@ export const DialogBackdrop = React.forwardRef<
   HTMLDivElement,
   DialogBackdropProps
 >((props, ref) => {
-  const { className } = props;
-
   const dialogContext = useDialogContext();
   const {
     isVisible = dialogContext.isOpen,
@@ -34,6 +32,7 @@ export const DialogBackdrop = React.forwardRef<
     closeOnExternalClick = dialogContext.closeOnExternalClick,
     relativeTo = dialogContext.relativeTo,
     onMouseDown,
+    className,
     style,
     ...rest
   } = props;
