@@ -8,7 +8,7 @@ const { command } = Astro.props;
 ---
 
 <copy-command-button>
-  <span>{command}</span>
+  <code>{command}</code>
 
   <button aria-label='Copy to clipboard'>
     <CopyIcon aria-hidden='true' data-icon-name='copy' />
@@ -50,16 +50,14 @@ const { command } = Astro.props;
 <style lang='scss'>
   copy-command-button {
     position: relative;
-    padding: var(--space-2) var(--space-3);
+    padding: var(--space-2) var(--space-4);
     border-radius: var(--border-radius-1);
     box-shadow: 0 0 1px var(--color-highlight-1), 0 0 10px var(--color-highlight-2);
     outline: 1px solid transparent;
     display: flex;
-    gap: var(--space-2);
+    gap: var(--space-3);
     align-items: center;
     color: var(--color-text);
-    font-family: ui-monospace, monospace;
-    letter-spacing: -0.01em;
     transition: box-shadow 0.4s ease;
 
     &:hover {
@@ -79,11 +77,17 @@ const { command } = Astro.props;
     display: none;
   }
 
+  code {
+    letter-spacing: -0.01em;
+    transform: translateY(-0.1ex); // visual adjustment
+  }
+
   button {
     display: flex;
     align-items: center;
     border: 1px solid transparent;
     background-color: transparent;
+    padding: 0;
     cursor: pointer;
 
     &::before {

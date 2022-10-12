@@ -3,6 +3,7 @@
 
 import HeadSEO from '~/components/HeadSEO.astro';
 import '@fontsource/noto-sans';
+import '@fontsource/noto-sans-mono';
 import '@fontsource/noto-sans/400-italic.css';
 import '@fontsource/noto-sans/600.css';
 import '@fontsource/noto-sans/300.css';
@@ -63,6 +64,10 @@ const { content = {} } = Astro.props;
 
       :where(h1, h2) {
         line-height: 1.2;
+      }
+
+      :where(code, pre) {
+        font-family: var(--font-mono);
       }
     </style>
 
