@@ -52,8 +52,6 @@ export const DialogBackdrop = React.forwardRef<
     onMouseDown?.(event);
   };
 
-  console.log('className: ', className);
-
   return (
     <Backdrop
       isVisible={isVisible}
