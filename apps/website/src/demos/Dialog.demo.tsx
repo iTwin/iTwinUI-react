@@ -11,29 +11,31 @@ export default () => {
   const closeModal = () => setIsModalOpen(false);
 
   return (
-    <>
-      <Dialog.Main
-        isOpen={isModalOpen}
-        onClose={() => closeModal()}
-        style={{
-          position: 'static',
-          transform: 'none',
-          maxWidth: '80%',
-          minWidth: 0,
-        }}
-        trapFocus={false}
-      >
-        <Dialog.TitleBar isDismissible>Listen</Dialog.TitleBar>
-        <ModalContent>
-          A dialog informs users about a task and can contain critical information, require
-          decisions, or involve multiple tasks.
-        </ModalContent>
-        <ModalButtonBar>
-          <Button styleType='high-visibility' onClick={() => closeModal()}>
-            Sounds good
-          </Button>
-        </ModalButtonBar>
-      </Dialog.Main>
-    </>
+    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+      <Dialog relativeTo='container' isOpen={isModalOpen}>
+        <Dialog.Main
+          onClose={() => closeModal()}
+          trapFocus={false}
+          style={{
+            width: '80%',
+            minWidth: '80%',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+          }}
+        >
+          <Dialog.TitleBar isDismissible>Listen</Dialog.TitleBar>
+          <ModalContent>
+            A dialog informs users about a task and can contain critical information, require
+            decisions, or involve multiple tasks.
+          </ModalContent>
+          <ModalButtonBar>
+            <Button styleType='high-visibility' onClick={() => closeModal()}>
+              Sounds good
+            </Button>
+          </ModalButtonBar>
+        </Dialog.Main>
+      </Dialog>
+    </div>
   );
 };
