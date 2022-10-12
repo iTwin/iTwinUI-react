@@ -52,13 +52,17 @@ export const DialogBackdrop = React.forwardRef<
     onMouseDown?.(event);
   };
 
+  console.log('className: ', className);
+
   return (
     <Backdrop
       isVisible={isVisible}
-      className={cx({
-        'iui-backdrop-fixed': relativeTo === 'viewport',
+      className={cx(
+        {
+          'iui-backdrop-fixed': relativeTo === 'viewport',
+        },
         className,
-      })}
+      )}
       ref={refs}
       onMouseDown={handleMouseDown}
       style={{
