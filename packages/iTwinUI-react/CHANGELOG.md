@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.47.2](https://www.github.com/iTwin/iTwinUI-react/compare/v1.47.1...v1.47.2) (2022-10-12)
+
+
+### Fixes
+
+* **Slider:** `onUpdate` called on thumb keyboard press, keyboard `onChange` called onKeyUp ([#857](https://www.github.com/iTwin/iTwinUI-react/issues/857)) ([e881387](https://www.github.com/iTwin/iTwinUI-react/commit/e881387b3bf01163c74d4b5dbd945c20616fd237))
+
 ### [1.47.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.47.0...v1.47.1) (2022-10-10)
 
 ### Fixes
