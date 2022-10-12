@@ -5,14 +5,15 @@
             .exterior{fill:#231f20;}
             @media (prefers-color-scheme: dark) {
                 .interior{fill:url(#gradient-dark-theme);}
-                .exterior{fill:#f1f2f2;}
+                .exterior{fill:#f3f3f3;}
             }
         </style>
         <linearGradient id="gradient-light-theme" x1="3.30886" y1="3.38765" x2="12.69426" y2="12.77304" gradientUnits="userSpaceOnUse">
             <stop offset="0" stop-color="#ffb5fb"/><stop offset="1" stop-color="#82a3ff"/>
         </linearGradient>
         <linearGradient id="gradient-dark-theme" x1="3.30886" y1="3.38765" x2="12.69426" y2="12.77304" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="#ff82f9"/><stop offset="1" stop-color="#4369ff"/>
+            <stop offset="0" stop-color="#f848f6"/>
+            <stop offset="1" stop-color="#354fff"/>
         </linearGradient>
     </defs>
     <path class="exterior" d="M7.99995,.14286c-.3597,0-.71347,.09681-1.02307,.27996L2.01764,3.35669c-.62771,.37138-1.01764,1.05512-1.01764,1.78442v5.87821c0,.72742,.38837,1.41034,1.01356,1.78227l3.5312,2.10022c.23926,.14005,.50486,.21218,.77417,.21218,.16468,0,.32585-.02691,.47808-.07755,.15217,.2246,.35416,.41684,.59753,.56179,.29174,.17075,.61597,.25892,.94429,.25892,.33148,0,.65765-.08928,.94325-.25819l4.71423-2.80325c.61913-.36825,1.00369-1.04439,1.00369-1.76461V5.12998c0-.72239-.38623-1.3997-1.00797-1.76762L9.02305,.42282c-.30967-.18317-.66343-.27996-1.0231-.27996h0Z"/>
