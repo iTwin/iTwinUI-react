@@ -1,16 +1,6 @@
----
----
-
 <sidebar-toggle>
-  <button
-    type='button'
-    class='toggle-sidebar-button'
-    aria-pressed='false'
-    id='menu-toggle'
-    onclick='buttonOnClick()'
-    aria-label='Toggle sidebar'
-  >
-    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+  <button type='button' aria-pressed='false' id='sidebar-toggle' aria-label='Toggle sidebar'>
+    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' aria-hidden='true'>
       <path
         stroke-linecap='round'
         stroke-linejoin='round'
@@ -29,7 +19,6 @@
         const sidebar = document.querySelector('.sidebar') as HTMLElement;
 
         button.addEventListener('click', () => {
-          console.log(sidebar);
           sidebar.dataset.visible = sidebar.dataset.visible === 'true' ? 'false' : 'true';
         });
       }
@@ -38,7 +27,7 @@
 </script>
 
 <style lang='scss'>
-  .toggle-sidebar-button {
+  button {
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -54,7 +43,8 @@
       background-color: var(--color-active);
     }
   }
-  .toggle-sidebar-button svg {
+
+  svg {
     width: 2em;
     height: 2em;
     fill: none;
