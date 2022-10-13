@@ -1,5 +1,11 @@
 <sidebar-toggle>
-  <button type='button' aria-pressed='false' id='sidebar-toggle' aria-label='Toggle sidebar'>
+  <button
+    type='button'
+    aria-controls='main-navigation-list'
+    aria-expanded='false'
+    id='sidebar-toggle'
+    aria-label='Toggle sidebar'
+  >
     <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' aria-hidden='true'>
       <path
         stroke-linecap='round'
@@ -19,7 +25,10 @@
         const sidebar = document.querySelector('.sidebar') as HTMLElement;
 
         button.addEventListener('click', () => {
-          sidebar.dataset.visible = sidebar.dataset.visible === 'true' ? 'false' : 'true';
+          const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+          button.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
+          sidebar.dataset.visible = isExpanded ? 'false' : 'true';
         });
       }
     }
