@@ -46,10 +46,15 @@
     color: var(--color-text);
     opacity: 0.9;
     border: none;
+    display: none;
 
     &:hover {
       opacity: 1;
       background-color: var(--color-active);
+    }
+
+    @media (max-width: 50em) {
+      display: block;
     }
   }
 

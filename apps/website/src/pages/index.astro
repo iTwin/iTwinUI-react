@@ -331,6 +331,10 @@ const currentPage = new URL(Astro.request.url).pathname;
       grid-area: main;
       display: grid;
       padding: var(--space-7);
+
+      @media (max-width: 50em) {
+        padding: var(--space-5);
+      }
     }
     main > * {
       max-width: 1200px;
