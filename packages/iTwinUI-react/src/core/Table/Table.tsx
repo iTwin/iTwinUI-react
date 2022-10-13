@@ -673,9 +673,7 @@ export const Table = <
       onPageChange: gotoPage,
       onPageSizeChange: setPageSize,
       totalSelectedRowsCount:
-        selectionMode === 'single'
-          ? 0
-          : instance.flatRows.filter((row) => row.isSelected).length,
+        selectionMode === 'single' ? 0 : instance.selectedFlatRows.length,
     }),
     [
       density,
@@ -685,7 +683,7 @@ export const Table = <
       setPageSize,
       state.pageIndex,
       state.pageSize,
-      instance.flatRows,
+      instance.selectedFlatRows,
       selectionMode,
     ],
   );
