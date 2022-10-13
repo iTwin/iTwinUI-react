@@ -9,7 +9,7 @@ const currentPage = new URL(Astro.request.url).pathname;
 
 <Global content={content} currentPage={currentPage}>
   <Header class='header' />
-  <aside class='sidebar' aria-label='Main navigation'>
+  <aside class='sidebar' data-visible='false' aria-label='Main navigation'>
     <LeftSidebar />
   </aside>
   <div class='content-wrapper'>
@@ -22,14 +22,8 @@ const currentPage = new URL(Astro.request.url).pathname;
       display: grid;
       grid-template: 'header header' auto 'sidebar content' 1fr / auto 1fr;
 
-      &.mobile-sidebar-toggle {
-        grid-template: 'header' auto 'sidebar' 1fr / 100%;
-        .content-wrapper {
-          display: none;
-        }
-        .sidebar {
-          display: block;
-        }
+      @media (max-width: 50em) {
+        grid-template: 'header' auto 'content' 1fr / auto;
       }
     }
 
@@ -38,19 +32,26 @@ const currentPage = new URL(Astro.request.url).pathname;
     }
 
     .sidebar {
+      background-color: var(--color-background-2);
+      z-index: 1;
       grid-area: sidebar;
       border-right: 1px solid var(--color-line-2);
       overflow-y: auto;
       overflow: hidden overlay; // need "hidden" on x for safari
 
       @media (max-width: 50em) {
-        display: none;
+        grid-area: content;
+
+        &[data-visible='false'] {
+          display: none;
+        }
       }
     }
 
     :where(.content-wrapper) {
       --_content-width: min(100%, 70ch);
       grid-area: content;
+      isolation: isolate;
       overflow: auto;
       overflow: overlay;
       scrollbar-gutter: stable;
