@@ -29,6 +29,7 @@
 
           button.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
           sidebar.dataset.visible = isExpanded ? 'false' : 'true';
+          document.body.toggleAttribute('inert', isExpanded);
         });
       }
     }
