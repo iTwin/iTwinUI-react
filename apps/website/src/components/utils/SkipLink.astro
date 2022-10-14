@@ -6,13 +6,11 @@ export type Props = {
 };
 ---
 
-<VisuallyHidden>
-  <a href='#article'>
-    <slot>
-      <span>Skip to Content</span>
-    </slot>
-  </a>
-</VisuallyHidden>
+<a class='visually-hidden' href='#article'>
+  <slot>
+    <span>Skip to Content</span>
+  </slot>
+</a>
 
 <style lang='scss'>
   a {
