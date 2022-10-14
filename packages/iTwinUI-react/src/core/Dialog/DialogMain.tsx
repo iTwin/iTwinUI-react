@@ -200,6 +200,7 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
         style={{
           transform,
           overflow: 'unset',
+          maxWidth: '100%',
           ...style,
           ...propStyle,
         }}
