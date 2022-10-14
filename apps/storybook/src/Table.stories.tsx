@@ -1273,7 +1273,7 @@ export const InitialState: Story<Partial<TableProps>> = (args) => {
       isSelectable
       initialState={{
         filters: [{ id: 'name', value: '1' }],
-        selectedRowIds: { '0': true, '1': true, '4': true },
+        selectedRowIds: { '0': true, '1': true, '4': true, '5': true },
       }}
       {...args}
     />
@@ -1291,7 +1291,7 @@ InitialState.args = {
   ],
   initialState: {
     filters: [{ id: 'name', value: '1' }],
-    selectedRowIds: { '0': true, '1': true, '4': true },
+    selectedRowIds: { '0': true, '1': true, '4': true, '5': true },
   },
 };
 InitialState.argTypes = {
