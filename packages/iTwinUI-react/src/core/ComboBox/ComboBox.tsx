@@ -307,7 +307,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     [filterFunction, focusedIndex, inputProps, optionsRef],
   );
 
-  // When the value prop changes, update the selected
+  // When the value prop changes, update the selected index/indices
   React.useEffect(() => {
     if (isMultipleEnabled(valueProp, multiple) && !!valueProp) {
       const indexes = valueProp.map((value) => {
@@ -349,7 +349,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     },
     [isMenuItemSelected, multiple, onChangeProp, optionsRef],
   );
-  console.log(focusedIndex);
+
   const onClickHandler = React.useCallback(
     (__originalIndex: number) => {
       if (isMultipleEnabled(selected, multiple)) {
