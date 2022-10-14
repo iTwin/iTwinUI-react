@@ -200,7 +200,6 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
         style={{
           transform,
           overflow: 'unset',
-          maxWidth: '100%',
           ...style,
           ...propStyle,
         }}
@@ -210,6 +209,7 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
           <Resizer
             elementRef={dialogRef}
             containerRef={dialogContext.dialogRootRef}
+            onResizeStart={() => setResizeStyle({ maxWidth: '100%' })}
             onResizeEnd={setResizeStyle}
           />
         )}
