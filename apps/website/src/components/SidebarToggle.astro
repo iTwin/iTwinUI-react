@@ -23,13 +23,14 @@
       connectedCallback() {
         const button = this.querySelector('button');
         const sidebar = document.querySelector('.sidebar') as HTMLElement;
+        const main = document.querySelector('main') as HTMLElement;
 
         button.addEventListener('click', () => {
-          const isExpanded = button.getAttribute('aria-expanded') === 'true';
+          const isCurrentlyExpanded = button.getAttribute('aria-expanded') === 'true';
 
-          button.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
-          sidebar.dataset.visible = isExpanded ? 'false' : 'true';
-          document.body.toggleAttribute('inert', isExpanded);
+          button.setAttribute('aria-expanded', isCurrentlyExpanded ? 'false' : 'true');
+          sidebar.dataset.visible = isCurrentlyExpanded ? 'false' : 'true';
+          main.toggleAttribute('inert', !isCurrentlyExpanded);
         });
       }
     }
