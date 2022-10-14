@@ -1229,6 +1229,88 @@ NoData.args = {
   data: [],
 };
 
+export const InitialState: Story<Partial<TableProps>> = (args) => {
+  const onClickHandler = (
+    props: CellProps<{ name: string; description: string }>,
+  ) => action(props.row.original.name)();
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+            Filter: tableFilters.TextFilter(),
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+          },
+          {
+            id: 'click-me',
+            Header: 'Click',
+            width: 100,
+            Cell: (props: CellProps<{ name: string; description: string }>) => {
+              const onClick = () => onClickHandler(props);
+              return <Anchor onClick={onClick}>Click me!</Anchor>;
+            },
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const data6 = useMemo(
+    () => [
+      { name: 'Name17', description: 'Description17' },
+      { name: 'Name18', description: 'Description18' },
+      { name: 'Name19', description: 'Description19' },
+      { name: 'Name20', description: 'Description20' },
+      { name: 'Name21', description: 'Description21' },
+      { name: 'Name22', description: 'Description22' },
+    ],
+    [],
+  );
+
+  return (
+    <Table
+      columns={columns}
+      data={data6}
+      emptyTableContent='No data.'
+      isSelectable
+      initialState={{
+        filters: [{ id: 'name', value: '1' }],
+        selectedRowIds: { '0': true, '1': true, '4': true },
+      }}
+      {...args}
+    />
+  );
+};
+
+InitialState.args = {
+  data: [
+    { name: 'Name17', description: 'Description17' },
+    { name: 'Name18', description: 'Description18' },
+    { name: 'Name19', description: 'Description19' },
+    { name: 'Name20', description: 'Description20' },
+    { name: 'Name21', description: 'Description21' },
+    { name: 'Name22', description: 'Description22' },
+  ],
+  initialState: {
+    filters: [{ id: 'name', value: '1' }],
+    selectedRowIds: { '0': true, '1': true, '4': true },
+  },
+};
+InitialState.argTypes = {
+  initialState: { table: { disable: false } },
+};
+
 export const ControlledState: Story<Partial<TableProps>> = (args) => {
   const [selectedRows, setSelectedRows] = useState<Record<string, boolean>>({});
 
