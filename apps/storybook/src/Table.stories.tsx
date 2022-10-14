@@ -1230,10 +1230,6 @@ NoData.args = {
 };
 
 export const InitialState: Story<Partial<TableProps>> = (args) => {
-  const onClickHandler = (
-    props: CellProps<{ name: string; description: string }>,
-  ) => action(props.row.original.name)();
-
   const columns = useMemo(
     () => [
       {
@@ -1250,15 +1246,6 @@ export const InitialState: Story<Partial<TableProps>> = (args) => {
             Header: 'Description',
             accessor: 'description',
             maxWidth: 200,
-          },
-          {
-            id: 'click-me',
-            Header: 'Click',
-            width: 100,
-            Cell: (props: CellProps<{ name: string; description: string }>) => {
-              const onClick = () => onClickHandler(props);
-              return <Anchor onClick={onClick}>Click me!</Anchor>;
-            },
           },
         ],
       },
