@@ -33,13 +33,6 @@ import { ComboBoxMenu } from './ComboBoxMenu';
 import { ComboBoxMenuItem } from './ComboBoxMenuItem';
 import { ComboBoxMultipleContainer } from './ComboBoxMultipleContainer';
 
-const isMultipleEnabled = <T,>(
-  variable: (T | undefined) | (T[] | undefined),
-  multiple: boolean,
-): variable is T[] | undefined => {
-  return multiple;
-};
-
 // Type guard for multiple did not work
 const isSingleOnChange = <T,>(
   onChange:
@@ -211,13 +204,15 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   // Get indices of selected elements in options array when we have selected values.
   const getSelectedIndexes = React.useCallback(() => {
-    const indexArray: number[] = [];
-    if (isMultipleEnabled(valueProp, multiple) && !!valueProp) {
+    if (multiple && Array.isArray(valueProp)) {
+      const indexArray: number[] = [];
       valueProp.forEach((value) => {
         indexArray.push(options.findIndex((option) => option.value === value));
       });
+      return indexArray;
+    } else {
+      return options.findIndex((option) => option.value === valueProp);
     }
-    return indexArray;
   }, [multiple, options, valueProp]);
 
   // Reducer where all the component-wide state is stored
@@ -225,9 +220,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     comboBoxReducer,
     {
       isOpen: false,
-      selected: isMultipleEnabled(valueProp, multiple)
-        ? getSelectedIndexes()
-        : optionsRef.current.findIndex((option) => option.value === valueProp),
+      selected: getSelectedIndexes(),
       focusedIndex: -1,
     },
   );
@@ -237,7 +230,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     if (isOpen) {
       inputRef.current?.focus(); // Focus the input
       // Reset the filtered list (does not reset when multiple enabled)
-      if (!isMultipleEnabled(selected, multiple)) {
+      if (!multiple) {
         setFilteredOptions(optionsRef.current);
         dispatch({ type: 'focus' });
       }
@@ -247,7 +240,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       // Reset the focused index
       dispatch({ type: 'focus' });
       // Reset the input value if not multiple
-      if (!isMultipleEnabled(selected, multiple)) {
+      if (!Array.isArray(selected) && !multiple) {
         setInputValue(
           selected != undefined && selected >= 0
             ? optionsRef.current[selected]?.label
@@ -309,7 +302,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   // When the value prop changes, update the selected index/indices
   React.useEffect(() => {
-    if (isMultipleEnabled(valueProp, multiple) && !!valueProp) {
+    if (multiple && Array.isArray(valueProp)) {
       const indexes = valueProp.map((value) => {
         return options.findIndex((option) => option.value === value);
       });
@@ -327,7 +320,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   const isMenuItemSelected = React.useCallback(
     (index: number) => {
-      if (isMultipleEnabled(selected, multiple)) {
+      if (multiple && Array.isArray(selected)) {
         return !!selected.includes(index as number);
       } else {
         return selected === index;
@@ -352,7 +345,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   const onClickHandler = React.useCallback(
     (__originalIndex: number) => {
-      if (isMultipleEnabled(selected, multiple)) {
+      if (multiple && Array.isArray(selected)) {
         dispatch({ type: 'multiselect', value: __originalIndex });
       } else {
         dispatch({ type: 'select', value: __originalIndex });
@@ -462,7 +455,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             <>
               <ComboBoxInput
                 style={
-                  isMultipleEnabled(selected, multiple)
+                  multiple
                     ? {
                         paddingLeft: tagContainerWidth + 18,
                       }
@@ -472,7 +465,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
                 {...inputProps}
                 onChange={handleOnInput}
               />
-              {isMultipleEnabled(selected, multiple) && (
+              {multiple && (
                 <ComboBoxMultipleContainer
                   ref={tagContainerWidthRef}
                   selectedItems={(selected as number[]).map(
