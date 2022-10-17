@@ -213,7 +213,6 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
             onResizeStart={() => {
               if (!hasBeenResized.current) {
                 hasBeenResized.current = true;
-                console.log('HERE');
                 setResizeStyle({ maxWidth: '100%' });
               }
             }}
