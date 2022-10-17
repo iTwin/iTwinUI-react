@@ -1253,28 +1253,11 @@ export const InitialState: Story<Partial<TableProps>> = (args) => {
     [],
   );
 
-  const data6 = useMemo(
-    () => [
-      { name: 'Name17', description: 'Description17' },
-      { name: 'Name18', description: 'Description18' },
-      { name: 'Name19', description: 'Description19' },
-      { name: 'Name20', description: 'Description20' },
-      { name: 'Name21', description: 'Description21' },
-      { name: 'Name22', description: 'Description22' },
-    ],
-    [],
-  );
-
   return (
     <Table
       columns={columns}
-      data={data6}
       emptyTableContent='No data.'
       isSelectable
-      initialState={{
-        filters: [{ id: 'name', value: '1' }],
-        selectedRowIds: { '0': true, '1': true, '4': true, '5': true },
-      }}
       {...args}
     />
   );
