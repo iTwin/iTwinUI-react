@@ -75,6 +75,30 @@ const setHours = (hour: number, date: Date) => {
   );
 };
 
+const defaultCombinedRenderer = (date: Date, precision: Precision) => {
+  let dateString = '';
+  switch (precision) {
+    case 'seconds':
+      dateString =
+        ':' +
+        date
+          .getSeconds()
+          .toLocaleString(undefined, { minimumIntegerDigits: 2 });
+    case 'minutes':
+      dateString =
+        ':' +
+        date
+          .getMinutes()
+          .toLocaleString(undefined, { minimumIntegerDigits: 2 }) +
+        dateString;
+    case 'hours':
+      dateString =
+        date.getHours().toLocaleString(undefined, { minimumIntegerDigits: 2 }) +
+        dateString;
+  }
+  return dateString;
+};
+
 export type MeridiemType = 'AM' | 'PM';
 export type Precision = 'hours' | 'minutes' | 'seconds';
 
@@ -184,31 +208,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
       date.getSeconds().toLocaleString(undefined, { minimumIntegerDigits: 2 }),
     meridiemRenderer = (meridiem: MeridiemType) => meridiem,
     useCombinedRenderer = false,
-    combinedRenderer = (date: Date, precision: Precision) => {
-      let dateString = '';
-      switch (precision) {
-        case 'seconds':
-          dateString =
-            ':' +
-            date
-              .getSeconds()
-              .toLocaleString(undefined, { minimumIntegerDigits: 2 });
-        case 'minutes':
-          dateString =
-            ':' +
-            date
-              .getMinutes()
-              .toLocaleString(undefined, { minimumIntegerDigits: 2 }) +
-            dateString;
-        case 'hours':
-          dateString =
-            date
-              .getHours()
-              .toLocaleString(undefined, { minimumIntegerDigits: 2 }) +
-            dateString;
-      }
-      return dateString;
-    },
+    combinedRenderer = defaultCombinedRenderer,
     className,
     ...rest
   } = props;
