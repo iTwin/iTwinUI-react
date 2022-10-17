@@ -332,61 +332,60 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
 
   const time = React.useMemo(() => {
     const time = selectedTime ?? new Date();
-    const numHours = use12Hours ? 12 : 24;
-    const numMinutes = 60;
-    const numSeconds = 60;
+    const data: Date[] = [];
+    const hoursArray = Array.from(Array(use12Hours ? 12 : 24).keys())
+      .filter((i) => i % hourStep === 0)
+      .map((i) => (use12Hours && i === 0 ? 12 : i));
+    const minutesArray = Array.from(Array(60).keys()).filter(
+      (i) => i % minuteStep === 0,
+    );
+    const secondsArray = Array.from(Array(60).keys()).filter(
+      (i) => i % secondStep === 0,
+    );
 
-    const isTimeFound = (timeArray: Date[], timeToFind: Date) => {
-      return isSameTime(timeArray[timeArray.length - 1], timeToFind, precision);
-    };
-
-    const data = [];
-    for (let i = 0; i < numHours; i++) {
-      if (i % hourStep === 0) {
+    hoursArray.forEach((hour) => {
+      if (precision === 'hours') {
         data.push(
           new Date(
             time.getFullYear(),
             time.getMonth(),
             time.getDate(),
-            use12Hours && i === 0 ? 12 : i,
-            precision !== 'hours' ? 0 : time.getMinutes(),
-            precision !== 'hours' ? 0 : time.getSeconds(),
+            hour,
+            time.getMinutes(),
+            time.getSeconds(),
           ),
         );
-        if (precision !== 'hours') {
-          for (let j = 0; j < numMinutes; j++) {
-            const newTime = new Date(
-              time.getFullYear(),
-              time.getMonth(),
-              time.getDate(),
-              use12Hours && i === 0 ? 12 : i,
-              j,
-              precision === 'seconds' ? 0 : time.getSeconds(),
+      } else {
+        minutesArray.forEach((minute) => {
+          if (precision === 'minutes') {
+            data.push(
+              new Date(
+                time.getFullYear(),
+                time.getMonth(),
+                time.getDate(),
+                hour,
+                minute,
+                time.getSeconds(),
+              ),
             );
-            if (j % minuteStep === 0) {
-              if (!isTimeFound(data, newTime)) {
-                data.push(newTime);
-              }
-              if (precision === 'seconds') {
-                for (let k = 0; k < numSeconds; k++) {
-                  const newTime = new Date(
-                    time.getFullYear(),
-                    time.getMonth(),
-                    time.getDate(),
-                    use12Hours && i === 0 ? 12 : i,
-                    j,
-                    k,
-                  );
-                  if (k % secondStep === 0 && !isTimeFound(data, newTime)) {
-                    data.push(newTime);
-                  }
-                }
-              }
-            }
+          } else {
+            secondsArray.forEach((second) => {
+              data.push(
+                new Date(
+                  time.getFullYear(),
+                  time.getMonth(),
+                  time.getDate(),
+                  hour,
+                  minute,
+                  second,
+                ),
+              );
+            });
           }
-        }
+        });
       }
-    }
+    });
+
     return data;
   }, [hourStep, minuteStep, secondStep, selectedTime, use12Hours, precision]);
 
