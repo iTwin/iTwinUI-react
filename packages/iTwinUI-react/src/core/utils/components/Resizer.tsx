@@ -19,7 +19,7 @@ export type ResizerProps = {
    * Callback that is being called on resize start.
    * Useful to set state, style, or other properties when resizing is started.
    */
-  onResizeStart?: (style: React.CSSProperties) => void;
+  onResizeStart?: () => void;
   /**
    * Callback that is being called on resize end.
    * Useful to preserve state if element is being closed.
@@ -83,11 +83,7 @@ export const Resizer = (props: ResizerProps) => {
 
       if (!isResizing.current) {
         isResizing.current = true;
-        onResizeStart?.({
-          width,
-          height,
-          transform: `translate(${translateX}px, ${translateY}px)`,
-        });
+        onResizeStart?.();
       }
 
       const containerRect = containerRef?.current?.getBoundingClientRect();
