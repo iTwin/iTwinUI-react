@@ -46,7 +46,7 @@ import {
 import {
   onExpandHandler,
   onFilterHandler,
-  onSelectHandler,
+  onToggleHandler,
   onShiftSelectHandler,
   onSingleSelectHandler,
   onTableResizeEnd,
@@ -55,6 +55,7 @@ import {
 import VirtualScroll from '../utils/components/VirtualScroll';
 import { SELECTION_CELL_ID } from './columns';
 
+const toggleRowSelectedAction = 'toggleRowSelected';
 const singleRowSelectedAction = 'singleRowSelected';
 const shiftRowSelectedAction = 'shiftRowSelected';
 export const tableResizeStartAction = 'tableResizeStart';
@@ -492,8 +493,9 @@ export const Table = <
         case TableActions.toggleRowSelected:
         case TableActions.toggleAllRowsSelected:
         case TableActions.toggleAllPageRowsSelected: {
-          onSelectHandler(
+          onToggleHandler(
             newState,
+            action,
             instance,
             onSelect,
             // If it has manual selection column, then we can't check whether row is disabled
@@ -635,7 +637,10 @@ export const Table = <
             id: row.id,
           });
         } else {
-          row.toggleRowSelected(!row.isSelected);
+          dispatch({
+            type: toggleRowSelectedAction,
+            id: row.id,
+          });
         }
       }
     },
