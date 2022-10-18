@@ -163,6 +163,8 @@ export type TimePickerProps = {
   meridiemRenderer?: (meridiem: MeridiemType) => React.ReactNode;
   /**
    * Use combined time renderer. Combines hour, minute, and seconds into one column.
+   * **WARNING**: Using the combined renderer with a `precision` of 'seconds' along with
+   * small time steps (`hourStep`, `minuteStep`, and especially `secondStep`) can result in slow performance!
    * @default false
    */
   useCombinedRenderer?: boolean;
