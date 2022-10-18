@@ -11,6 +11,7 @@
   "dependencies": {
     "@astrojs/mdx": "^0.11.4",
     "@astrojs/react": "^1.2.1",
+    "@astrojs/sitemap": "^1.0.0",
     "@codesandbox/sandpack-react": "^1.15.1",
     "@codesandbox/sandpack-themes": "^1.15.1",
     "@fontsource/noto-sans": "^4.5.11",
