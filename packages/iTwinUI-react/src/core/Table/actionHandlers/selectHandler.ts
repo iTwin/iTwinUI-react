@@ -121,7 +121,6 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     endIndex = temp;
   }
 
-  console.log('shiftpressed', action.ctrlPressed);
   const selectedRowIds: Record<string, boolean> = !!action.ctrlPressed
     ? state.selectedRowIds
     : {};

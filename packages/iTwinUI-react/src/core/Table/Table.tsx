@@ -492,7 +492,6 @@ export const Table = <
         case TableActions.toggleRowSelected:
         case TableActions.toggleAllRowsSelected:
         case TableActions.toggleAllPageRowsSelected: {
-          newState.lastSelectedRowId = action.id;
           onSelectHandler(
             newState,
             instance,
