@@ -492,6 +492,7 @@ export const Table = <
         case TableActions.toggleRowSelected:
         case TableActions.toggleAllRowsSelected:
         case TableActions.toggleAllPageRowsSelected: {
+          newState.lastSelectedRowId = action.id;
           onSelectHandler(
             newState,
             instance,
@@ -625,6 +626,7 @@ export const Table = <
           dispatch({
             type: shiftRowSelectedAction,
             id: row.id,
+            ctrlPressed: event.ctrlKey,
           });
         } else if (
           !row.isSelected &&
