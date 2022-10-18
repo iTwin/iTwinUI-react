@@ -24,8 +24,6 @@ export const DialogBackdrop = React.forwardRef<
   HTMLDivElement,
   DialogBackdropProps
 >((props, ref) => {
-  const { className } = props;
-
   const dialogContext = useDialogContext();
   const {
     isVisible = dialogContext.isOpen,
@@ -34,6 +32,7 @@ export const DialogBackdrop = React.forwardRef<
     closeOnExternalClick = dialogContext.closeOnExternalClick,
     relativeTo = dialogContext.relativeTo,
     onMouseDown,
+    className,
     style,
     ...rest
   } = props;
@@ -56,10 +55,12 @@ export const DialogBackdrop = React.forwardRef<
   return (
     <Backdrop
       isVisible={isVisible}
-      className={cx({
-        'iui-backdrop-fixed': relativeTo === 'viewport',
+      className={cx(
+        {
+          'iui-backdrop-fixed': relativeTo === 'viewport',
+        },
         className,
-      })}
+      )}
       ref={refs}
       onMouseDown={handleMouseDown}
       style={{

@@ -82,8 +82,8 @@ it('should have position correctly dependant on viewport', async () => {
     '.iui-backdrop',
   ) as HTMLElement;
 
-  expect(dialogWrapperViewport).toHaveStyle('position: fixed');
-  expect(dialogWrapperContainer).toHaveStyle('position: absolute');
+  expect(dialogWrapperViewport).toHaveAttribute('data-iui-relative', 'false');
+  expect(dialogWrapperContainer).toHaveAttribute('data-iui-relative', 'true');
   expect(backdropViewport).toHaveClass('iui-backdrop-fixed');
   expect(backdropContainer).not.toHaveClass('iui-backdrop-fixed');
 });
