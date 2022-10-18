@@ -3,7 +3,13 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { fireEvent, render, screen, act } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  screen,
+  act,
+  prettyDOM,
+} from '@testing-library/react';
 import { ComboBox, ComboBoxProps } from './ComboBox';
 import { SvgCaretDownSmall } from '@itwin/itwinui-icons-react';
 import { MenuItem } from '../Menu';
@@ -744,17 +750,24 @@ it('should select multiple options', async () => {
     label: `Item ${value}`,
   }));
 
-  const { container } = render(
-    <ComboBox options={options} onChange={mockOnChange} multiple />,
-  );
-
+  const { container } = renderComponent({
+    options: options,
+    onChange: mockOnChange,
+    multiple: true,
+  });
   const inputContainer = container.querySelector(
     '.iui-input-container',
   ) as HTMLDivElement;
+
   await userEvent.tab();
+
+  expect(container.querySelector('.iui-menu')).toBeTruthy();
+
   await userEvent.click(screen.getByText('Item 1'));
   await userEvent.click(screen.getByText('Item 2'));
   await userEvent.click(screen.getByText('Item 3'));
+
+  console.log(prettyDOM(inputContainer));
 
   const tags = inputContainer.querySelectorAll('.iui-select-tag');
   expect(tags.length).toBe(3);
@@ -777,19 +790,16 @@ it('should override multiple selected options', async () => {
   }));
   const values = [0, 1];
 
-  const { container, rerender } = render(
-    <ComboBox
-      options={options}
-      onChange={mockOnChange}
-      value={values}
-      multiple
-    />,
-  );
+  const { container, rerender } = renderComponent({
+    options: options,
+    onChange: mockOnChange,
+    value: values,
+    multiple: true,
+  });
 
   const inputContainer = container.querySelector(
     '.iui-input-container',
   ) as HTMLDivElement;
-
   const tags = inputContainer.querySelectorAll('.iui-select-tag');
   expect(tags.length).toBe(2);
   expect(tags[0].querySelector('.iui-select-tag-label')).toHaveTextContent(
