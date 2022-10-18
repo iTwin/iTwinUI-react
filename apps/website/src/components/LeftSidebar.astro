@@ -1,5 +1,7 @@
 ---
-const currentPage = new URL(Astro.request.url).pathname;
+const currentPage = Astro.url.pathname.endsWith('/')
+  ? Astro.url.pathname.slice(0, -1)
+  : Astro.url.pathname;
 
 const docsPages = (await Astro.glob('../pages/docs/*.mdx')).map(({ url, frontmatter }) => ({
   url,
