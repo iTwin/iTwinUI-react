@@ -5,6 +5,14 @@
 import React from 'react';
 import { SelectOption } from '../Select/Select';
 
+type ComboBoxAction =
+  | { type: 'multiselect'; value: number }
+  | { type: 'multi-override'; value: number[] }
+  | { type: 'open' }
+  | { type: 'close' }
+  | { type: 'select'; value: number }
+  | { type: 'focus'; value?: number };
+
 export const ComboBoxRefsContext = React.createContext<
   | {
       inputRef: React.RefObject<HTMLInputElement>;
@@ -24,13 +32,7 @@ export const comboBoxReducer = (
     selected: number | number[];
     focusedIndex: number;
   },
-  action:
-    | { type: 'multiselect'; value: number }
-    | { type: 'multi-override'; value: number[] }
-    | { type: 'open' }
-    | { type: 'close' }
-    | { type: 'select'; value: number }
-    | { type: 'focus'; value?: number },
+  action: ComboBoxAction,
 ) => {
   switch (action.type) {
     case 'open': {
@@ -124,15 +126,6 @@ export const ComboBoxStateContext = React.createContext<
 ComboBoxStateContext.displayName = 'ComboBoxStateContext';
 
 export const ComboBoxActionContext = React.createContext<
-  | ((
-      x:
-        | { type: 'multiselect'; value: number }
-        | { type: 'multi-override'; value: number[] }
-        | { type: 'open' }
-        | { type: 'close' }
-        | { type: 'select'; value: number }
-        | { type: 'focus'; value: number | undefined },
-    ) => void)
-  | undefined
+  ((x: ComboBoxAction) => void) | undefined
 >(undefined);
 ComboBoxActionContext.displayName = 'ComboBoxActionContext';

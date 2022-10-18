@@ -150,13 +150,13 @@ export const ComboBoxInput = React.forwardRef(
                     type: 'multiselect',
                     value: focusedIndexRef.current,
                   });
-                  onChangeHandler && onChangeHandler(focusedIndexRef.current);
+                  onChangeHandler?.(focusedIndexRef.current);
                 } else {
                   dispatch({ type: 'close' });
                 }
               } else {
                 dispatch({ type: 'select', value: focusedIndexRef.current });
-                onChangeHandler && onChangeHandler(focusedIndexRef.current);
+                onChangeHandler?.(focusedIndexRef.current);
                 dispatch({ type: 'close' });
               }
             } else {
