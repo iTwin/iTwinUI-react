@@ -361,62 +361,100 @@ it('should handle checkbox clicks', async () => {
 it('should handle row clicks', async () => {
   const onSelect = jest.fn();
   const onRowClick = jest.fn();
+  const user = userEvent.setup();
+  const data = mockedData(5);
+
   const { container, getByText } = renderComponent({
     isSelectable: true,
     onSelect,
     onRowClick,
+    data,
   });
 
   expect(screen.queryByText('Header name')).toBeFalsy();
   const rows = container.querySelectorAll('.iui-table-body .iui-row');
-  expect(rows.length).toBe(3);
+  expect(rows.length).toBe(5);
 
-  const user = userEvent.setup();
-
-  // Shift click test #1
+  // Shift click special case test #1
   // By default, when no row is selected before shift click, start selecting from first row to clicked row
-  await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
-  await user.click(getByText(mockedData()[1].name)); // [shiftKey: true]
+  await user.keyboard('[ShiftLeft>]'); // Hold Shift
+  await user.click(getByText(data[2].name));
 
   expect(rows[0].classList).toContain('iui-selected');
   expect(rows[1].classList).toContain('iui-selected');
-  expect(rows[2].classList).not.toContain('iui-selected');
+  expect(rows[2].classList).toContain('iui-selected');
+  expect(rows[3].classList).not.toContain('iui-selected');
   expect(onSelect).toHaveBeenCalledTimes(1);
   expect(onRowClick).toHaveBeenCalledTimes(1);
 
-  await userEvent.click(getByText(mockedData()[1].name)); // Deselect
+  await userEvent.click(getByText(data[1].name)); // Deselect; lastSelectedRowId = undefined -> 1
+
   expect(rows[0].classList).toContain('iui-selected');
   expect(rows[1].classList).not.toContain('iui-selected');
-  expect(rows[2].classList).not.toContain('iui-selected');
+  expect(rows[2].classList).toContain('iui-selected');
+  expect(rows[3].classList).not.toContain('iui-selected');
   expect(onSelect).toHaveBeenCalledTimes(2);
   expect(onRowClick).toHaveBeenCalledTimes(2);
 
-  await userEvent.click(getByText(mockedData()[1].name)); // Reselect; lastSelectedRowId = undefined -> 1
-  expect(rows[0].classList).not.toContain('iui-selected');
-  expect(rows[1].classList).toContain('iui-selected');
-  expect(rows[2].classList).not.toContain('iui-selected');
-  expect(onSelect).toHaveBeenCalledTimes(3);
-  expect(onRowClick).toHaveBeenCalledTimes(3);
-
-  await user.keyboard('[ControlLeft>]'); // Press Control (without releasing it)
-  await user.click(getByText(mockedData()[2].name)); // Perform a click with `ctrlKey: true`
-  expect(rows[0].classList).not.toContain('iui-selected');
-  expect(rows[1].classList).toContain('iui-selected');
-  expect(rows[2].classList).toContain('iui-selected');
-  expect(onSelect).toHaveBeenCalledTimes(4);
-  expect(onRowClick).toHaveBeenCalledTimes(4);
-
-  // Shift click test #2
+  // Shift click special case test #2
   // When a row is clicked before shift click (lastSelectedRowId), selection starts from that row and ends at the currently clicked row
   // But if the startIndex > endIndex, then startIndex and endIndex are swapped
-  await user.keyboard('[/ControlLeft][ShiftLeft>]'); // Release Ctrl and Press Shift (without releasing it)
-  await user.click(getByText(mockedData()[0].name)); // Perform a click with `shiftKey: true`
+  // (Here startIndex = 1, endIndex = 0)
+  await user.click(getByText(data[0].name)); // Shift still pressed
 
   expect(rows[0].classList).toContain('iui-selected');
   expect(rows[1].classList).toContain('iui-selected');
   expect(rows[2].classList).not.toContain('iui-selected');
+  expect(rows[3].classList).not.toContain('iui-selected');
+  expect(onSelect).toHaveBeenCalledTimes(3);
+  expect(onRowClick).toHaveBeenCalledTimes(3);
+
+  await user.keyboard('[ShiftLeft/][ControlLeft>]'); // Release Shift & Hold Control
+  await user.click(getByText(data[3].name)); // lastSelectedRowId = 1 -> 3 (Ctrl click updates lastSelectedRowId)
+  expect(rows[0].classList).toContain('iui-selected');
+  expect(rows[1].classList).toContain('iui-selected');
+  expect(rows[2].classList).not.toContain('iui-selected');
+  expect(rows[3].classList).toContain('iui-selected');
+  expect(onSelect).toHaveBeenCalledTimes(4);
+  expect(onRowClick).toHaveBeenCalledTimes(4);
+
+  await user.keyboard('[ControlLeft/][ShiftLeft>]'); // Release Control & Hold Shift
+  await user.click(getByText(data[4].name));
+
+  expect(rows[0].classList).not.toContain('iui-selected');
+  expect(rows[1].classList).not.toContain('iui-selected');
+  expect(rows[2].classList).not.toContain('iui-selected');
+  expect(rows[3].classList).toContain('iui-selected');
+  expect(rows[4].classList).toContain('iui-selected');
   expect(onSelect).toHaveBeenCalledTimes(5);
   expect(onRowClick).toHaveBeenCalledTimes(5);
+
+  const checkboxes = container.querySelectorAll<HTMLInputElement>(
+    '.iui-table-body .iui-checkbox',
+  );
+  expect(checkboxes.length).toBe(5);
+
+  await user.keyboard('[ShiftLeft/]'); // Release Shift
+  await user.click(checkboxes[1]); // lastSelectedRowId = 3 -> 1 (Checkbox click updates lastSelectedRowId)
+
+  expect(rows[0].classList).not.toContain('iui-selected');
+  expect(rows[1].classList).toContain('iui-selected');
+  expect(rows[2].classList).not.toContain('iui-selected');
+  expect(rows[3].classList).toContain('iui-selected');
+  expect(rows[4].classList).toContain('iui-selected');
+  expect(onSelect).toHaveBeenCalledTimes(6);
+  expect(onRowClick).toHaveBeenCalledTimes(5);
+
+  await user.keyboard('[ShiftLeft>]'); // Hold Shift
+  await user.click(getByText(data[3].name));
+
+  expect(rows[0].classList).not.toContain('iui-selected');
+  expect(rows[1].classList).toContain('iui-selected');
+  expect(rows[2].classList).toContain('iui-selected');
+  expect(rows[3].classList).toContain('iui-selected');
+  expect(rows[4].classList).not.toContain('iui-selected');
+  expect(onSelect).toHaveBeenCalledTimes(7);
+  expect(onRowClick).toHaveBeenCalledTimes(6);
 });
 
 it('should handle sub-rows shift click selection', async () => {
