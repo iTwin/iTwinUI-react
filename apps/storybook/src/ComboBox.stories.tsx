@@ -584,13 +584,12 @@ export const MultipleSelect: Story<Partial<ComboBoxProps<string>>> = (args) => {
     <ComboBox
       options={options}
       inputProps={{ placeholder: 'Select a country' }}
-      onChange={(value: string, event: string) => {
-        action(value + ' ' + event ?? '')();
-        setSelectedOptions((prev) =>
-          event === 'removed'
-            ? prev.filter((item) => item !== value)
-            : [...prev, value],
-        );
+      onChange={(
+        selected: string[],
+        event: { value: string; type: 'added' | 'removed' },
+      ) => {
+        action(event.value + ' ' + event.type ?? '')();
+        setSelectedOptions(selected);
       }}
       multiple={true}
       value={selectedOptions}
