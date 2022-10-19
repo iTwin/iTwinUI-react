@@ -121,7 +121,9 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     endIndex = temp;
   }
 
-  const selectedRowIds: Record<string, boolean> = {};
+  const selectedRowIds: Record<string, boolean> = !!action.ctrlPressed
+    ? state.selectedRowIds
+    : {};
 
   // 1. Select all rows between start and end
   instance.flatRows
