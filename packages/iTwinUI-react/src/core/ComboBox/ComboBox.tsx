@@ -6,7 +6,7 @@ import React from 'react';
 import cx from 'classnames';
 import { InputProps } from '../Input';
 import { MenuExtraContent } from '../Menu';
-import { SelectOption } from '../Select';
+import { SelectOption, SelectValueChangeEvent } from '../Select';
 import { Text } from '../Typography';
 import {
   useTheme,
@@ -33,6 +33,16 @@ import { ComboBoxMenu } from './ComboBoxMenu';
 import { ComboBoxMenuItem } from './ComboBoxMenuItem';
 import { ComboBoxMultipleContainer } from './ComboBoxMultipleContainer';
 
+// Type guard for multiple did not work
+const isSingleOnChange = <T,>(
+  onChange:
+    | (((value: T) => void) | undefined)
+    | (((value: T, event: SelectValueChangeEvent) => void) | undefined),
+  multiple: boolean,
+): onChange is ((value: T) => void) | undefined => {
+  return !multiple;
+};
+
 type ComboboxMultipleTypeProps<T> = {
   /**
    * Enable multiple selection.
@@ -47,10 +57,9 @@ type ComboboxMultipleTypeProps<T> = {
   /**
    * Callback fired when selected value changes.
    */
-  onChange?: (
-    value: T | T[],
-    event?: { value: T; type: 'added' | 'removed' },
-  ) => void;
+  onChange?:
+    | ((value: T) => void)
+    | ((value: T, event: SelectValueChangeEvent) => void);
 };
 
 export type ComboBoxProps<T> = {
@@ -309,20 +318,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     }
   }, [valueProp, options, multiple]);
 
-  const getSelectedValues = React.useCallback(() => {
-    if (multiple && Array.isArray(selected)) {
-      console.log('selected', selected);
-      const valueArray: T[] = [];
-      selected.forEach((index) => {
-        console.log(options[index].value);
-        valueArray.push(options[index].value);
-      });
-      return valueArray;
-    } else {
-      return [];
-    }
-  }, [multiple, options, selected]);
-
   const isMenuItemSelected = React.useCallback(
     (index: number) => {
       if (multiple && Array.isArray(selected)) {
@@ -336,17 +331,16 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   const onChangeHandler = React.useCallback(
     (__originalIndex: number) => {
-      if (!multiple) {
+      if (isSingleOnChange(onChangeProp.current, multiple)) {
         onChangeProp.current?.(optionsRef.current[__originalIndex]?.value);
       } else {
-        console.log(getSelectedValues());
-        onChangeProp.current?.(getSelectedValues(), {
-          value: optionsRef.current[__originalIndex]?.value,
-          type: isMenuItemSelected(__originalIndex) ? 'removed' : 'added',
-        });
+        onChangeProp.current?.(
+          optionsRef.current[__originalIndex]?.value,
+          isMenuItemSelected(__originalIndex) ? 'removed' : 'added',
+        );
       }
     },
-    [getSelectedValues, isMenuItemSelected, multiple, onChangeProp, optionsRef],
+    [isMenuItemSelected, multiple, onChangeProp, optionsRef],
   );
 
   const onClickHandler = React.useCallback(
@@ -361,8 +355,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     },
     [multiple, onChangeHandler, selected],
   );
-
-  console.log('selected value', selected);
 
   const getMenuItem = React.useCallback(
     (option: SelectOption<T>, filteredIndex?: number) => {
@@ -473,10 +465,10 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
                 {...inputProps}
                 onChange={handleOnInput}
               />
-              {multiple && Array.isArray(selected) && (
+              {multiple && (
                 <ComboBoxMultipleContainer
                   ref={tagContainerWidthRef}
-                  selectedItems={selected.map(
+                  selectedItems={(selected as number[]).map(
                     (index) => optionsRef.current[index],
                   )}
                 />
