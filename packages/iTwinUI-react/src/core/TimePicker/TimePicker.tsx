@@ -444,7 +444,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
 
   return (
     <div className={cx('iui-time-picker', className)} {...rest}>
-      {useCombinedRenderer && (
+      {useCombinedRenderer ? (
         <TimePickerColumn
           data={time}
           isSameFocused={(val) =>
@@ -469,41 +469,42 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
           precision={precision}
           valueRenderer={combinedRenderer}
         />
-      )}
-      {!useCombinedRenderer && (
-        <TimePickerColumn
-          data={hours}
-          isSameFocused={(val) =>
-            isSameHour(val, focusedTime, use12Hours ? meridiem : undefined)
-          }
-          isSameSelected={(val) =>
-            isSameHour(val, selectedTime, use12Hours ? meridiem : undefined)
-          }
-          onFocusChange={onHourFocus}
-          onSelectChange={onHourClick}
-          setFocus={setFocusHour}
-          valueRenderer={hourRenderer}
-        />
-      )}
-      {!useCombinedRenderer && precision != 'hours' && (
-        <TimePickerColumn
-          data={minutes}
-          isSameFocused={(val) => isSameMinute(val, focusedTime)}
-          isSameSelected={(val) => isSameMinute(val, selectedTime)}
-          onFocusChange={(date) => setFocusedTime(date)}
-          onSelectChange={(date) => updateCurrentTime(date)}
-          valueRenderer={minuteRenderer}
-        />
-      )}
-      {!useCombinedRenderer && precision == 'seconds' && (
-        <TimePickerColumn
-          data={seconds}
-          isSameFocused={(val) => isSameSecond(val, focusedTime)}
-          isSameSelected={(val) => isSameSecond(val, selectedTime)}
-          onFocusChange={(date) => setFocusedTime(date)}
-          onSelectChange={(date) => updateCurrentTime(date)}
-          valueRenderer={secondRenderer}
-        />
+      ) : (
+        <>
+          <TimePickerColumn
+            data={hours}
+            isSameFocused={(val) =>
+              isSameHour(val, focusedTime, use12Hours ? meridiem : undefined)
+            }
+            isSameSelected={(val) =>
+              isSameHour(val, selectedTime, use12Hours ? meridiem : undefined)
+            }
+            onFocusChange={onHourFocus}
+            onSelectChange={onHourClick}
+            setFocus={setFocusHour}
+            valueRenderer={hourRenderer}
+          />
+          {precision != 'hours' && (
+            <TimePickerColumn
+              data={minutes}
+              isSameFocused={(val) => isSameMinute(val, focusedTime)}
+              isSameSelected={(val) => isSameMinute(val, selectedTime)}
+              onFocusChange={(date) => setFocusedTime(date)}
+              onSelectChange={(date) => updateCurrentTime(date)}
+              valueRenderer={minuteRenderer}
+            />
+          )}
+          {precision == 'seconds' && (
+            <TimePickerColumn
+              data={seconds}
+              isSameFocused={(val) => isSameSecond(val, focusedTime)}
+              isSameSelected={(val) => isSameSecond(val, selectedTime)}
+              onFocusChange={(date) => setFocusedTime(date)}
+              onSelectChange={(date) => updateCurrentTime(date)}
+              valueRenderer={secondRenderer}
+            />
+          )}
+        </>
       )}
       {use12Hours && (
         <TimePickerColumn<MeridiemType>
