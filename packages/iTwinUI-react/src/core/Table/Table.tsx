@@ -55,7 +55,6 @@ import {
 import VirtualScroll from '../utils/components/VirtualScroll';
 import { SELECTION_CELL_ID } from './columns';
 
-const toggleRowSelectedAction = 'toggleRowSelected';
 const singleRowSelectedAction = 'singleRowSelected';
 const shiftRowSelectedAction = 'shiftRowSelected';
 export const tableResizeStartAction = 'tableResizeStart';
@@ -637,10 +636,7 @@ export const Table = <
             id: row.id,
           });
         } else {
-          dispatch({
-            type: toggleRowSelectedAction,
-            id: row.id,
-          });
+          row.toggleRowSelected(!row.isSelected);
         }
       }
     },
