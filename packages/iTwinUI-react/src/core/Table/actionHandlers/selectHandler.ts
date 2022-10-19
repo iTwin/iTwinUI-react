@@ -7,7 +7,7 @@ import { ActionType, Row, TableInstance, TableState } from 'react-table';
 /**
  * Handles selection when clicked on a checkbox.
  */
-export const onSelectHandler = <T extends Record<string, unknown>>(
+const onSelectHandler = <T extends Record<string, unknown>>(
   newState: TableState<T>,
   instance?: TableInstance<T>,
   onSelect?: (
@@ -54,6 +54,20 @@ export const onSelectHandler = <T extends Record<string, unknown>>(
 
   newState.selectedRowIds = newSelectedRowIds;
   onSelect?.(selectedData, newState);
+};
+
+export const onToggleHandler = <T extends Record<string, unknown>>(
+  newState: TableState<T>,
+  action: ActionType,
+  instance?: TableInstance<T>,
+  onSelect?: (
+    selectedData: T[] | undefined,
+    tableState?: TableState<T>,
+  ) => void,
+  isRowDisabled?: (rowData: T) => boolean,
+) => {
+  onSelectHandler(newState, instance, onSelect, isRowDisabled);
+  newState.lastSelectedRowId = action.id;
 };
 
 /**
