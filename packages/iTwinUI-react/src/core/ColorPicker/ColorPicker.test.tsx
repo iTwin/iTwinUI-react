@@ -560,7 +560,6 @@ it('should render color picker and handle onChangeCompleted when alpha is false'
 
   // Should handle hue slider change
   fireEvent.keyDown(sliderDot, { key: 'ArrowRight' });
-  fireEvent.keyUp(sliderDot, { key: 'ArrowRight' }); // Releasing keyboard triggers calling onChangeCompleted
   expect(handleOnChange).toHaveBeenCalledWith(
     ColorValue.create({ h: 1, s: 100, l: 50 }),
   );
