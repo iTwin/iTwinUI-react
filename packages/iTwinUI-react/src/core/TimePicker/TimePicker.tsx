@@ -4,7 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 import cx from 'classnames';
 import React from 'react';
-import { useTheme, ClassNameProps, StylingProps } from '../utils';
+import {
+  useTheme,
+  ClassNameProps,
+  StylingProps,
+  VirtualScroll,
+} from '../utils';
 import '@itwin/itwinui-css/css/time-picker.css';
 
 const isSameHour = (
@@ -163,8 +168,6 @@ export type TimePickerProps = {
   meridiemRenderer?: (meridiem: MeridiemType) => React.ReactNode;
   /**
    * Use combined time renderer. Combines hour, minute, and seconds into one column.
-   * **WARNING**: Using the combined renderer with a `precision` of 'seconds' along with
-   * small time steps (`hourStep`, `minuteStep`, and especially `secondStep`) can result in slow performance!
    * @default false
    */
   useCombinedRenderer?: boolean;
@@ -616,39 +619,95 @@ const TimePickerColumn = <T,>(props: TimePickerColumnProps<T>): JSX.Element => {
     }
   };
 
+  const virtualizedItemRenderer = React.useCallback(
+    (index: number) => {
+      const value = data[index];
+      const isSameFocus = isSameFocused(value);
+      return (
+        <li
+          onKeyDown={(event) => {
+            handleTimeKeyDown(
+              event,
+              data.length - 1,
+              (index) => onFocusChange(data[index]),
+              (index) => onSelectChange(data[index]),
+              index,
+            );
+          }}
+          className={cx({
+            'iui-selected': isSameSelected(value),
+          })}
+          key={index}
+          tabIndex={isSameFocus ? 0 : undefined}
+          onClick={() => {
+            onSelectChange(value);
+          }}
+        >
+          {valueRenderer(value, precision)}
+        </li>
+      );
+    },
+    [
+      data,
+      isSameFocused,
+      isSameSelected,
+      onFocusChange,
+      onSelectChange,
+      precision,
+      valueRenderer,
+    ],
+  );
+
+  const currentDateIndex = () => {
+    for (let i = 0; i < data.length; i++) {
+      if (isSameSelected(data[i])) {
+        return i;
+      }
+    }
+    return -1;
+  };
+
   return (
     <div className={className}>
       <ol>
-        {data.map((value, index) => {
-          const isSameFocus = isSameFocused(value);
-          return (
-            <li
-              onKeyDown={(event) => {
-                handleTimeKeyDown(
-                  event,
-                  data.length - 1,
-                  (index) => onFocusChange(data[index]),
-                  (index) => onSelectChange(data[index]),
-                  index,
-                );
-              }}
-              className={cx({
-                'iui-selected': isSameSelected(value),
-              })}
-              key={index}
-              tabIndex={isSameFocus ? 0 : undefined}
-              ref={(ref) => {
-                scrollIntoView(ref, isSameFocus);
-                needFocus.current && isSameFocus && ref?.focus();
-              }}
-              onClick={() => {
-                onSelectChange(value);
-              }}
-            >
-              {valueRenderer(value, precision)}
-            </li>
-          );
-        })}
+        {data.length > 500 ? (
+          <VirtualScroll
+            itemsLength={data.length}
+            itemRenderer={virtualizedItemRenderer}
+            scrollToIndex={currentDateIndex()}
+          />
+        ) : (
+          data.map((value, index) => {
+            const isSameFocus = isSameFocused(value);
+            return (
+              <li
+                onKeyDown={(event) => {
+                  handleTimeKeyDown(
+                    event,
+                    data.length - 1,
+                    (index) => onFocusChange(data[index]),
+                    (index) => onSelectChange(data[index]),
+                    index,
+                  );
+                }}
+                className={cx({
+                  'iui-selected': isSameSelected(value),
+                })}
+                key={index}
+                tabIndex={isSameFocus ? 0 : undefined}
+                ref={(ref) => {
+                  scrollIntoView(ref, isSameFocus);
+                  needFocus.current && isSameFocus && ref?.focus();
+                }}
+                onClick={() => {
+                  onSelectChange(value);
+                }}
+              >
+                {valueRenderer(value, precision)}
+              </li>
+            );
+          })
+        )}
       </ol>
     </div>
   );
