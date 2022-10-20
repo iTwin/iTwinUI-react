@@ -43,7 +43,6 @@ export const SelectionColumn = <T extends Record<string, unknown>>(
     cellClassName: 'iui-slot',
     Header: ({
       getToggleAllRowsSelectedProps,
-      toggleAllRowsSelected,
       rows,
       initialRows,
       state,
@@ -52,17 +51,16 @@ export const SelectionColumn = <T extends Record<string, unknown>>(
       const checked = initialRows.every(
         (row) => state.selectedRowIds[row.id] || isDisabled?.(row.original),
       );
-      const indeterminate =
-        !checked && Object.keys(state.selectedRowIds).length > 0;
       return (
         <Checkbox
           {...getToggleAllRowsSelectedProps()}
           style={{}} // Removes pointer cursor as we have it in CSS and it is also showing pointer when disabled
           title='' // Removes default title that comes from react-table
           checked={checked && !disabled}
-          indeterminate={indeterminate}
+          indeterminate={
+            !checked && Object.keys(state.selectedRowIds).length > 0
+          }
           disabled={disabled}
-          onChange={() => toggleAllRowsSelected(!checked && !indeterminate)}
         />
       );
     },

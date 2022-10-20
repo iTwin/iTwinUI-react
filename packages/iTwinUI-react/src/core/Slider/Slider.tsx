@@ -334,21 +334,16 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
 
     // function called by Thumb keyboard processing
     const onThumbValueChanged = React.useCallback(
-      (index: number, value: number, keyboardReleased: boolean) => {
-        if (currentValues[index] === value && !keyboardReleased) {
+      (index: number, value: number) => {
+        if (currentValues[index] === value) {
           return;
         }
-
-        if (keyboardReleased) {
-          onChange?.(currentValues); // currentValues since key up should not change value but only stop continuous value selection
-        } else {
-          const newValues = [...currentValues]; // newValues since key down should change value
-          newValues[index] = value;
-          onUpdate?.(newValues);
-          setCurrentValues(newValues);
-        }
+        const newValues = [...currentValues];
+        newValues[index] = value;
+        setCurrentValues(newValues);
+        onChange?.(newValues);
       },
-      [currentValues, onUpdate, onChange],
+      [currentValues, onChange],
     );
 
     const onThumbActivated = React.useCallback((index: number) => {
