@@ -44,9 +44,10 @@ const isSingleOnChange = <T,>(
   return !multiple;
 };
 
+type ActionType = 'added' | 'removed';
 type MultipleOnChangeProps<T> = {
   value: T;
-  type: 'added' | 'removed';
+  type: ActionType;
 };
 
 type ComboboxMultipleTypeProps<T> = {
@@ -313,7 +314,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
         return options.findIndex((option) => option.value === value);
       });
       dispatch({
-        type: 'multi-override',
+        type: 'multiselect',
         value: indexes.filter((index) => index !== -1), // Add available options
       });
     } else {
@@ -335,8 +336,9 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     [multiple, selected],
   );
 
-  const figureOutNewArray = React.useCallback(
-    (__originalIndex: number, action: 'added' | 'removed') => {
+  // Generates new array when item is added or removed
+  const selectedChangeHandler = React.useCallback(
+    (__originalIndex: number, action: ActionType) => {
       if (action === 'added') {
         return [...(selected as number[]), __originalIndex];
       } else {
@@ -348,24 +350,24 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     [selected],
   );
 
+  // Calls user defined onChange
   const onChangeHandler = React.useCallback(
-    (__originalIndex: number, newArray?: number[]) => {
+    (__originalIndex: number, actionType?: ActionType, newArray?: number[]) => {
       if (isSingleOnChange(onChangeProp.current, multiple)) {
         onChangeProp.current?.(optionsRef.current[__originalIndex]?.value);
       } else {
-        const actionType = isMenuItemSelected(__originalIndex)
-          ? 'removed'
-          : 'added';
-        onChangeProp.current?.(
-          newArray?.map((item) => optionsRef.current[item]?.value) ?? [],
-          {
-            value: optionsRef.current[__originalIndex]?.value,
-            type: actionType,
-          },
-        );
+        actionType &&
+          newArray &&
+          onChangeProp.current?.(
+            newArray?.map((item) => optionsRef.current[item]?.value),
+            {
+              value: optionsRef.current[__originalIndex]?.value,
+              type: actionType,
+            },
+          );
       }
     },
-    [isMenuItemSelected, multiple, onChangeProp, optionsRef],
+    [multiple, onChangeProp, optionsRef],
   );
 
   const onClickHandler = React.useCallback(
@@ -374,9 +376,10 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
         const actionType = isMenuItemSelected(__originalIndex)
           ? 'removed'
           : 'added';
-        const newArray = figureOutNewArray(__originalIndex, actionType);
-        dispatch({ type: 'multi-override', value: newArray });
-        onChangeHandler(__originalIndex, newArray);
+        const newArray = selectedChangeHandler(__originalIndex, actionType);
+        console.log('onCLick', actionType, __originalIndex);
+        dispatch({ type: 'multiselect', value: newArray });
+        onChangeHandler(__originalIndex, actionType, newArray);
       } else {
         dispatch({ type: 'select', value: __originalIndex });
         dispatch({ type: 'close' });
@@ -384,7 +387,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
       }
     },
     [
-      figureOutNewArray,
+      selectedChangeHandler,
       isMenuItemSelected,
       multiple,
       onChangeHandler,
@@ -480,7 +483,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             minWidth,
             isOpen,
             focusedIndex,
-            onChangeHandler,
+            onChangeHandler: onClickHandler,
             enableVirtualization,
             filteredOptions,
             getMenuItem,
@@ -501,7 +504,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
                 {...inputProps}
                 onChange={handleOnInput}
               />
-              {multiple && (
+              {multiple && Array.isArray(selected) && (
                 <ComboBoxMultipleContainer
                   ref={tagContainerWidthRef}
                   selectedItems={(selected as number[]).map(
