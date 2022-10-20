@@ -3,7 +3,13 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { fireEvent, render, screen, act } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  screen,
+  act,
+  prettyDOM,
+} from '@testing-library/react';
 import { ComboBox, ComboBoxProps } from './ComboBox';
 import { SvgCaretDownSmall } from '@itwin/itwinui-icons-react';
 import { MenuItem } from '../Menu';
@@ -752,6 +758,8 @@ it('should select multiple options', async () => {
     '.iui-input-container',
   ) as HTMLDivElement;
   await userEvent.tab();
+  console.log(prettyDOM(container));
+  expect(container.querySelector('.iui-menu')).toBeTruthy();
   await userEvent.click(screen.getByText('Item 1'));
   await userEvent.click(screen.getByText('Item 2'));
   await userEvent.click(screen.getByText('Item 3'));
