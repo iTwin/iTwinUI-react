@@ -670,7 +670,7 @@ const TimePickerColumn = <T,>(props: TimePickerColumnProps<T>): JSX.Element => {
   return (
     <div className={className}>
       <ol>
-        {data.length > 500 ? (
+        {data.length > 500 ? ( // around 500 is when rendering becomes slow
           <VirtualScroll
             itemsLength={data.length}
             itemRenderer={virtualizedItemRenderer}
