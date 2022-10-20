@@ -6,8 +6,7 @@ import React from 'react';
 import { SelectOption } from '../Select/Select';
 
 type ComboBoxAction =
-  | { type: 'multiselect'; value: number }
-  | { type: 'multi-override'; value: number[] }
+  | { type: 'multiselect'; value: number[] }
   | { type: 'open' }
   | { type: 'close' }
   | { type: 'select'; value: number }
@@ -51,44 +50,11 @@ export const comboBoxReducer = (
         focusedIndex: action.value ?? state.focusedIndex,
       };
     }
-    case 'multi-override': {
+    case 'multiselect': {
       if (!Array.isArray(state.selected)) {
         return { ...state };
       }
       return { ...state, selected: action.value };
-    }
-    case 'multiselect': {
-      // Check if selected is array
-      if (!Array.isArray(state.selected)) {
-        return { ...state };
-      }
-      // Check if new value is valid
-      if (action.value === -1) {
-        return { ...state };
-      }
-      const actionIndex = state.selected.findIndex(
-        (item) => item === action.value,
-      );
-      // If item exists in selected array - remove it
-      if (actionIndex >= 0) {
-        return {
-          ...state,
-          focusedIndex: action.value ?? state.focusedIndex,
-          selected: state.selected.filter(
-            (index) => index !== action.value,
-          ) as number[],
-        };
-      } // If item does not exists in selected array - add it
-      else if (actionIndex === -1) {
-        return {
-          ...state,
-          focusedIndex: action.value ?? state.focusedIndex,
-          selected:
-            action.value != null
-              ? [...state.selected, action.value]
-              : state.selected,
-        };
-      }
     }
     case 'focus': {
       if (Array.isArray(state.selected)) {
