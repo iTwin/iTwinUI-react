@@ -10,20 +10,7 @@ type ComboBoxAction =
   | { type: 'open' }
   | { type: 'close' }
   | { type: 'select'; value: number }
-  | { type: 'focus'; value?: number };
-
-export const ComboBoxRefsContext = React.createContext<
-  | {
-      inputRef: React.RefObject<HTMLInputElement>;
-      menuRef: React.RefObject<HTMLUListElement>;
-      toggleButtonRef: React.RefObject<HTMLSpanElement>;
-      optionsExtraInfoRef: React.MutableRefObject<
-        Record<string, { __originalIndex: number }>
-      >;
-    }
-  | undefined
->(undefined);
-ComboBoxRefsContext.displayName = 'ComboBoxRefsContext';
+  | { type: 'focus'; value: number | undefined };
 
 export const comboBoxReducer = (
   state: {
@@ -73,6 +60,19 @@ export const comboBoxReducer = (
     }
   }
 };
+
+export const ComboBoxRefsContext = React.createContext<
+  | {
+      inputRef: React.RefObject<HTMLInputElement>;
+      menuRef: React.RefObject<HTMLUListElement>;
+      toggleButtonRef: React.RefObject<HTMLSpanElement>;
+      optionsExtraInfoRef: React.MutableRefObject<
+        Record<string, { __originalIndex: number }>
+      >;
+    }
+  | undefined
+>(undefined);
+ComboBoxRefsContext.displayName = 'ComboBoxRefsContext';
 
 type ComboBoxStateContextProps<T = unknown> = {
   isOpen: boolean;
