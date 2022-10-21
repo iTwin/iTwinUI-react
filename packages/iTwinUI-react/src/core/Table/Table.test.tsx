@@ -387,6 +387,7 @@ it('should handle row clicks', async () => {
   expect(onSelect).toHaveBeenCalledTimes(1);
   expect(onRowClick).toHaveBeenCalledTimes(1);
 
+  await user.keyboard('[ShiftLeft/]'); // Release Shift
   await userEvent.click(getByText(data[1].name)); // Deselect; lastSelectedRowId = undefined -> 1
 
   expect(rows[0].classList).toContain('iui-selected');
@@ -400,7 +401,8 @@ it('should handle row clicks', async () => {
   // When a row is clicked before shift click (lastSelectedRowId), selection starts from that row and ends at the currently clicked row
   // But if the startIndex > endIndex, then startIndex and endIndex are swapped
   // (Here startIndex = 1, endIndex = 0)
-  await user.click(getByText(data[0].name)); // Shift still pressed
+  await user.keyboard('[ShiftLeft>]'); // Hold Shift
+  await user.click(getByText(data[0].name));
 
   expect(rows[0].classList).toContain('iui-selected');
   expect(rows[1].classList).toContain('iui-selected');
