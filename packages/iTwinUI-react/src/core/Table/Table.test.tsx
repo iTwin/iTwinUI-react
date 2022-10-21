@@ -3117,10 +3117,10 @@ it('should resize only the current column when resize mode is expand', () => {
     columnResizeMode: 'expand',
   });
 
-  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  const rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(3);
 
-  const resizers = container.querySelectorAll('.iui-resizer');
+  const resizers = container.querySelectorAll('.iui-table-resizer');
   // Every column should have a resizer
   expect(resizers.length).toBe(3);
 
@@ -3129,7 +3129,7 @@ it('should resize only the current column when resize mode is expand', () => {
   fireEvent.mouseUp(resizers[0]);
 
   const headerCells = container.querySelectorAll<HTMLDivElement>(
-    '.iui-table-header .iui-cell',
+    '.iui-table-header .iui-table-cell',
   );
   expect(headerCells).toHaveLength(3);
 
@@ -3183,10 +3183,12 @@ it('should resize current and closest column when table width would decrease whe
   // Initial render
   triggerResize({ width: 300 } as DOMRectReadOnly);
 
-  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  const rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(3);
 
-  const resizer = container.querySelector('.iui-resizer') as HTMLDivElement;
+  const resizer = container.querySelector(
+    '.iui-table-resizer',
+  ) as HTMLDivElement;
   expect(resizer).toBeTruthy();
 
   // Resize past table width
@@ -3196,7 +3198,7 @@ it('should resize current and closest column when table width would decrease whe
   fireEvent.mouseUp(resizer);
 
   const headerCells = container.querySelectorAll<HTMLDivElement>(
-    '.iui-table-header .iui-cell',
+    '.iui-table-header .iui-table-cell',
   );
   expect(headerCells).toHaveLength(3);
 
@@ -3251,10 +3253,10 @@ it('should resize last and closest column on the left when table width would dec
   // Initial render
   triggerResize({ width: 300 } as DOMRectReadOnly);
 
-  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  const rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(3);
 
-  const resizers = container.querySelectorAll('.iui-resizer');
+  const resizers = container.querySelectorAll('.iui-table-resizer');
   expect(resizers.length).toBe(3);
 
   // Resize past table width
@@ -3264,7 +3266,7 @@ it('should resize last and closest column on the left when table width would dec
   fireEvent.mouseUp(resizers[2]);
 
   const headerCells = container.querySelectorAll<HTMLDivElement>(
-    '.iui-table-header .iui-cell',
+    '.iui-table-header .iui-table-cell',
   );
   expect(headerCells).toHaveLength(3);
 
@@ -3307,7 +3309,7 @@ it('should not show resizer when column has disabled resizing when resize mode i
     columnResizeMode: 'expand',
   });
 
-  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  const rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(3);
 
   const descriptionResizer = container.querySelector(
@@ -3354,10 +3356,12 @@ it('should stop resizing when mouse leaves the screen', () => {
     },
   });
 
-  const rows = container.querySelectorAll('.iui-table-body .iui-row');
+  const rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(3);
 
-  const resizer = container.querySelector('.iui-resizer') as HTMLDivElement;
+  const resizer = container.querySelector(
+    '.iui-table-resizer',
+  ) as HTMLDivElement;
   expect(resizer).toBeTruthy();
 
   fireEvent.mouseDown(resizer, { clientX: 100 });
@@ -3368,7 +3372,7 @@ it('should stop resizing when mouse leaves the screen', () => {
   fireEvent.mouseLeave(resizer.ownerDocument);
 
   const headerCells = container.querySelectorAll<HTMLDivElement>(
-    '.iui-table-header .iui-cell',
+    '.iui-table-header .iui-table-cell',
   );
   expect(headerCells).toHaveLength(3);
 
