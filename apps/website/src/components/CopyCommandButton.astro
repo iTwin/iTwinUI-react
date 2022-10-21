@@ -58,7 +58,7 @@ const { command } = Astro.props;
     gap: var(--space-3);
     align-items: center;
     color: var(--color-text);
-    transition: box-shadow 0.4s ease;
+    transition: box-shadow var(--transition-speed) ease;
 
     &:hover {
       box-shadow: 0 0 10px var(--color-highlight-1), 0 0 20px var(--color-highlight-2);

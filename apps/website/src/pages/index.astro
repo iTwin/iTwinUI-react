@@ -24,7 +24,7 @@ const currentPage = new URL(Astro.request.url).pathname;
   <main>
     <div class='title-box'>
       <div class='hero-box'>
-        <div>
+        <div class='hero-text'>
           <h1>For a <span class='highlight-text'>unified</span> experience</h1>
           <h2 class='subheading'>
             iTwinUI delivers common UI components and UI layouts bundled with accessibility best
@@ -164,6 +164,7 @@ const currentPage = new URL(Astro.request.url).pathname;
       gap: var(--space-6);
       @media (max-width: 50em) {
         grid-template-columns: 1fr;
+        gap: var(--space-5);
       }
     }
     .animated-logo-wrapper {
@@ -172,11 +173,17 @@ const currentPage = new URL(Astro.request.url).pathname;
       perspective: 1000px;
       transform-style: preserve-3d;
       @media (max-width: 50em) {
-        display: none;
+        order: 1;
+        width: calc(var(--space-6) * 8);
       }
 
       :global(svg) {
         overflow: visible;
+      }
+    }
+    .hero-text {
+      @media (max-width: 50em) {
+        order: 2;
       }
     }
     .hexagon-bg {
@@ -210,6 +217,10 @@ const currentPage = new URL(Astro.request.url).pathname;
       :global(> *) {
         flex: 0;
       }
+
+      @media (max-width: 50em) {
+        margin-block: calc(var(--space-7) * 2);
+      }
     }
 
     .demo-wrapper {
@@ -236,11 +247,19 @@ const currentPage = new URL(Astro.request.url).pathname;
       display: grid;
       justify-self: center;
       align-items: center;
+      @media (max-width: 50em) {
+        margin-top: calc(var(--space-7) * 2);
+      }
     }
     .button-area {
       display: flex;
       gap: var(--space-5);
       flex-wrap: wrap;
+
+      @media (max-width: 50em) {
+        flex-direction: column-reverse;
+        align-items: flex-start;
+      }
     }
     .main-button {
       font-size: var(--type-1);
@@ -250,7 +269,7 @@ const currentPage = new URL(Astro.request.url).pathname;
       background: var(--color-highlight-gradient);
       color: var(--color-background-1);
       font-weight: 500;
-      transition: box-shadow 0.4s ease;
+      transition: box-shadow var(--transition-speed) ease;
     }
 
     .main-button:hover,
