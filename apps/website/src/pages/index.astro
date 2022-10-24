@@ -255,11 +255,6 @@ const currentPage = new URL(Astro.request.url).pathname;
       display: flex;
       gap: var(--space-5);
       flex-wrap: wrap;
-
-      @media (max-width: 50em) {
-        flex-direction: column-reverse;
-        align-items: flex-start;
-      }
     }
     .main-button {
       font-size: var(--type-1);
