@@ -2538,13 +2538,15 @@ it('should change page size', async () => {
   );
 });
 
-it('should render number of rows selected for paginator', () => {
+it('should render number of rows selected for paginator', async () => {
   const { container } = renderComponent({
-    data: mockedData(100),
-    pageSize: 10,
+    data: mockedSubRowsData(),
+    pageSize: 2,
     paginatorRenderer: (props) => <TablePaginator {...props} />,
     isSelectable: true,
   });
+
+  await expandAll(container);
 
   const rowCheckboxes = container.querySelectorAll(
     '.iui-table-body .iui-table-row .iui-checkbox',
@@ -2552,14 +2554,14 @@ it('should render number of rows selected for paginator', () => {
 
   expect(container.querySelector('.iui-left span')).toBeNull();
 
-  fireEvent.click(rowCheckboxes[0]);
+  fireEvent.click(rowCheckboxes[1]); // selects row 1.1
   expect(container.querySelector('.iui-left span')?.textContent).toBe(
     '1 row selected',
   );
 
-  fireEvent.click(rowCheckboxes[1]);
+  fireEvent.click(rowCheckboxes[2]); // selects rows 1.2, 1.2.1, and 1.2.2
   expect(container.querySelector('.iui-left span')?.textContent).toBe(
-    '2 rows selected',
+    '4 rows selected',
   );
 });
 
