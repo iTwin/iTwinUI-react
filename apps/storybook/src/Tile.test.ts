@@ -11,6 +11,8 @@ describe('Tile', () => {
     'Condensed',
     'Folder',
     'With User Icon',
+    'Status',
+    'Loading',
   ];
 
   tests.forEach((testName) => {
