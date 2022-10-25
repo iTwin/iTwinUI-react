@@ -3664,3 +3664,90 @@ StatusAndCellIcons.args = {
   isSelectable: true,
   selectionMode: 'multi',
 };
+
+export const GroupedHeaders: Story<Partial<TableProps>> = (args) => {
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Name',
+        columns: [
+          {
+            id: 'firstName',
+            Header: 'First Name',
+            accessor: 'firstName',
+          },
+          {
+            id: 'lastName',
+            Header: 'Last Name',
+            accessor: 'lastName',
+          },
+        ],
+      },
+      {
+        Header: 'Info',
+        columns: [
+          {
+            id: 'age',
+            Header: 'Age',
+            accessor: 'age',
+          },
+          {
+            id: 'visits',
+            Header: 'Visits',
+            accessor: 'visits',
+          },
+          {
+            id: 'status',
+            Header: 'Status',
+            accessor: 'status',
+          },
+          {
+            id: 'progress',
+            Header: 'Profile Progress',
+            accessor: 'progress',
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const data = useMemo(
+    () => [
+      {
+        firstName: 'FirstName1',
+        lastName: 'LastName1',
+        age: '1',
+        visits: 'Visits1',
+        status: 'Status1',
+        progress: 'Progress1',
+      },
+      {
+        firstName: 'FirstName2',
+        lastName: 'LastName2',
+        age: '2',
+        visits: 'Visits2',
+        status: 'Status2',
+        progress: 'Progress2',
+      },
+      {
+        firstName: 'FirstName3',
+        lastName: 'LastName3',
+        age: '3',
+        visits: 'Visits3',
+        status: 'Status3',
+        progress: 'Progress3',
+      },
+    ],
+    [],
+  );
+
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      emptyTableContent='No data.'
+      {...args}
+    />
+  );
+};

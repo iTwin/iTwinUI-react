@@ -820,22 +820,23 @@ export const Table = <
         data-iui-size={density === 'default' ? undefined : density}
         {...ariaDataAttributes}
       >
-        <div
-          className='iui-table-header-wrapper'
-          ref={headerRef}
-          onScroll={() => {
-            if (headerRef.current && bodyRef.current) {
-              bodyRef.current.scrollLeft = headerRef.current.scrollLeft;
-              updateStickyState();
-            }
-          }}
-        >
-          <div className='iui-table-header'>
-            {headerGroups.slice(1).map((headerGroup: HeaderGroup<T>) => {
-              const headerGroupProps = headerGroup.getHeaderGroupProps({
-                className: 'iui-table-row',
-              });
-              return (
+        {headerGroups.slice(1).map((headerGroup: HeaderGroup<T>) => {
+          const headerGroupProps = headerGroup.getHeaderGroupProps({
+            className: 'iui-table-row',
+          });
+          return (
+            <div
+              className='iui-table-header-wrapper'
+              ref={headerRef}
+              onScroll={() => {
+                if (headerRef.current && bodyRef.current) {
+                  bodyRef.current.scrollLeft = headerRef.current.scrollLeft;
+                  updateStickyState();
+                }
+              }}
+              key={headerGroupProps.key}
+            >
+              <div className='iui-table-header' key={headerGroupProps.key}>
                 <div {...headerGroupProps} key={headerGroupProps.key}>
                   {headerGroup.headers.map((column, index) => {
                     const {
@@ -940,10 +941,11 @@ export const Table = <
                     );
                   })}
                 </div>
-              );
-            })}
-          </div>
-        </div>
+              </div>
+            </div>
+          );
+        })}
+
         <div
           {...getTableBodyProps({
             className: cx('iui-table-body', {
