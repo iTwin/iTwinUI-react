@@ -1415,10 +1415,10 @@
   resolved "https://registry.yarnpkg.com/@istanbuljs/schema/-/schema-0.1.3.tgz#e45e384e4b8ec16bce2fd903af78450f6bf7ec98"
   integrity sha512-ZXRY4jNvVgSVQ8DL3LTcakaAtXwTVUxE81hslsyD2AtoXW/wVob10HkOJ1X/pAlcI7D+2YoZKg5do8G/w6RYgA==
 
-"@itwin/itwinui-css@^0.63.0":
-  version "0.63.0"
-  resolved "https://registry.yarnpkg.com/@itwin/itwinui-css/-/itwinui-css-0.63.0.tgz#96e921305d17c6fee45909c98b3df9023a1eff09"
-  integrity sha512-7nGl+wtQYSOAi2j6YCxHvOvuuGIQzo9kN1USfGk0XXLovsPydnXx6Hc9jXwPGdfYLUohAbybJUoci8JW9R2OUg==
+"@itwin/itwinui-css@1.0.0-dev.10":
+  version "1.0.0-dev.10"
+  resolved "https://registry.yarnpkg.com/@itwin/itwinui-css/-/itwinui-css-1.0.0-dev.10.tgz#29dd73c6eaaeca718345246d4335530cbd534a31"
+  integrity sha512-02L/56I0f62KD+g2zyxWJLHOdIaZ24ml/fWBJDbBszv8o1wvGxaQvwc9hqCSaxgNPxTOtIdlaCkoDbInM2wBMw==
 
 "@itwin/itwinui-icons-react@^1.10.1":
   version "1.10.1"
@@ -1429,6 +1429,11 @@
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/@itwin/itwinui-illustrations-react/-/itwinui-illustrations-react-1.3.1.tgz#f534fa1da707272a4351f3b2bbc240c9ea8e3ae6"
   integrity sha512-hIZwYwd1qmyjt5yiL8Lg6E3CpgeLxGOnb4dVktoM+h3h5zSmgjhm2qFk+RqgsqV+dy0Fb2cs1jH4Jup9jWY9pA==
+
+"@itwin/itwinui-variables@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@itwin/itwinui-variables/-/itwinui-variables-0.3.0.tgz#90189b43cc4624563273612772735b063d9f3ee7"
+  integrity sha512-OX/Dje/VxR/YcYtUvmawqHQ4vjpBTsKWux0T9Wa8T2GGiOW+lD51dOkAAfoXgNALUa9YUXb9/F7pbaGMlm5tbg==
 
 "@jest/console@^28.1.0":
   version "28.1.0"
@@ -1828,9 +1833,9 @@
     source-map "^0.7.3"
 
 "@popperjs/core@^2.9.0":
-  version "2.11.5"
-  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.5.tgz#db5a11bf66bdab39569719555b0f76e138d7bd64"
-  integrity sha512-9X2obfABZuDVLCgPK9aX0a/x4jaOEweTTWE2+9sr0Qqqevj2Uv5XorvusThmc9XGYpS9yI+fhh8RTafBtGposw==
+  version "2.11.6"
+  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.6.tgz#cee20bd55e68a1720bdab363ecf0c821ded4cd45"
+  integrity sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==
 
 "@rollup/pluginutils@^4.2.1":
   version "4.2.1"
@@ -2882,7 +2887,7 @@
   resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-14.2.0.tgz#8293560f8f80a00383d6c755ec3e0b918acb1683"
   integrity sha512-+hIlG4nJS6ivZrKnOP7OGsDu9Fxmryj9vCl8x0ZINtTJcCHs2zLsYif5GzuRiBF2ck5GZG2aQr7Msg+EHlnYVQ==
 
-"@tippyjs/react@^4.2.5":
+"@tippyjs/react@^4.2.6":
   version "4.2.6"
   resolved "https://registry.yarnpkg.com/@tippyjs/react/-/react-4.2.6.tgz#971677a599bf663f20bb1c60a62b9555b749cc71"
   integrity sha512-91RicDR+H7oDSyPycI13q3b7o4O60wa2oRbjlz2fyRLmHImc4vyDwuUP8NtZaN0VARJY5hybvDYrFzhY9+Lbyw==
@@ -12577,7 +12582,7 @@ timers-browserify@^2.0.4:
   dependencies:
     setimmediate "^1.0.4"
 
-tippy.js@^6.3.1:
+tippy.js@^6.3.1, tippy.js@^6.3.7:
   version "6.3.7"
   resolved "https://registry.yarnpkg.com/tippy.js/-/tippy.js-6.3.7.tgz#8ccfb651d642010ed9a32ff29b0e9e19c5b8c61c"
   integrity sha512-E1d3oP2emgJ9dRQZdf3Kkn0qJgI6ZLpyS5z6ZkY1DF3kaQaBsGZsndEpHwx+eC+tYM41HaSNvNtLx8tU57FzTQ==
