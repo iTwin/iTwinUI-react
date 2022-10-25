@@ -3669,42 +3669,41 @@ export const GroupedHeaders: Story<Partial<TableProps>> = (args) => {
   const columns = useMemo(
     () => [
       {
-        Header: 'Name',
+        Header: 'Table',
         columns: [
           {
-            id: 'firstName',
-            Header: 'First Name',
-            accessor: 'firstName',
+            Header: 'Name',
+            columns: [
+              {
+                Header: 'First Name',
+                accessor: 'firstName',
+              },
+              {
+                Header: 'Last Name',
+                accessor: 'lastName',
+              },
+            ],
           },
           {
-            id: 'lastName',
-            Header: 'Last Name',
-            accessor: 'lastName',
-          },
-        ],
-      },
-      {
-        Header: 'Info',
-        columns: [
-          {
-            id: 'age',
-            Header: 'Age',
-            accessor: 'age',
-          },
-          {
-            id: 'visits',
-            Header: 'Visits',
-            accessor: 'visits',
-          },
-          {
-            id: 'status',
-            Header: 'Status',
-            accessor: 'status',
-          },
-          {
-            id: 'progress',
-            Header: 'Profile Progress',
-            accessor: 'progress',
+            Header: 'Info',
+            columns: [
+              {
+                Header: 'Age',
+                accessor: 'age',
+              },
+              {
+                Header: 'Visits',
+                accessor: 'visits',
+              },
+              {
+                Header: 'Status',
+                accessor: 'status',
+              },
+              {
+                Header: 'Profile Progress',
+                accessor: 'progress',
+              },
+            ],
           },
         ],
       },
