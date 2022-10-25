@@ -2538,7 +2538,7 @@ it('should change page size', async () => {
   );
 });
 
-it('should render number of rows selected for paginator', async () => {
+it('should render number of rows selected for paginator', () => {
   const { container } = renderComponent({
     data: mockedData(100),
     pageSize: 10,
@@ -2547,7 +2547,7 @@ it('should render number of rows selected for paginator', async () => {
   });
 
   const rowCheckboxes = container.querySelectorAll(
-    '.iui-table-body .iui-row .iui-checkbox',
+    '.iui-table-body .iui-table-row .iui-checkbox',
   );
 
   expect(container.querySelector('.iui-left span')).toBeNull();
