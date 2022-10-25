@@ -146,8 +146,9 @@ export const TablePaginator = (props: TablePaginatorProps) => {
     // Checking `needFocus.current` prevents from focusing page when clicked on previous/next page.
     if (isMounted.current && needFocus.current) {
       const buttonToFocus = Array.from(
-        pageListRef.current?.querySelectorAll('.iui-paginator-page-button') ??
-          [],
+        pageListRef.current?.querySelectorAll(
+          '.iui-table-paginator-page-button',
+        ) ?? [],
       ).find((el) => el.textContent?.trim() === (focusedIndex + 1).toString());
       (buttonToFocus as HTMLButtonElement | undefined)?.focus();
       needFocus.current = false;
@@ -161,10 +162,10 @@ export const TablePaginator = (props: TablePaginatorProps) => {
     (index: number, tabIndex = index === focusedIndex ? 0 : -1) => (
       <button
         key={index}
-        className={cx('iui-paginator-page-button', {
-          'iui-active': index === currentPage,
-          'iui-paginator-page-button-small': buttonSize === 'small',
+        className={cx('iui-table-paginator-page-button', {
+          'iui-table-paginator-page-button-small': buttonSize === 'small',
         })}
+        data-iui-active={index === currentPage}
         onClick={() => onPageChange(index)}
         aria-current={index === currentPage}
         aria-label={localization.goToPageLabel(index + 1)}
@@ -252,8 +253,8 @@ export const TablePaginator = (props: TablePaginatorProps) => {
 
   const ellipsis = (
     <span
-      className={cx('iui-paginator-ellipsis', {
-        'iui-paginator-ellipsis-small': size === 'small',
+      className={cx('iui-table-paginator-ellipsis', {
+        'iui-table-paginator-ellipsis-small': size === 'small',
       })}
     >
       …
@@ -278,7 +279,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
 
   return (
     <div
-      className={cx('iui-paginator', className)}
+      className={cx('iui-table-paginator', className)}
       ref={paginatorResizeRef}
       {...rest}
     >
@@ -303,7 +304,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
             <SvgChevronLeft />
           </IconButton>
           <span
-            className='iui-paginator-pages-group'
+            className='iui-table-paginator-pages-group'
             onKeyDown={onKeyDown}
             ref={pageListRef}
           >
@@ -355,7 +356,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
           <>
             {localization.rowsPerPageLabel !== null &&
               paginatorWidth >= 1024 && (
-                <span className='iui-paginator-page-size-label'>
+                <span className='iui-table-paginator-page-size-label'>
                   {localization.rowsPerPageLabel}
                 </span>
               )}
