@@ -667,7 +667,7 @@ export const Table = <
       onPageChange: gotoPage,
       onPageSizeChange: setPageSize,
       totalSelectedRowsCount:
-        selectionMode === 'single' ? 0 : instance.selectedFlatRows.length,
+        selectionMode === 'single' ? 0 : instance.selectedFlatRows.length, // 0 when selectionMode = 'single' since totalSelectedRowCount is for multi-selection mode only
     }),
     [
       density,
