@@ -142,7 +142,7 @@ export const Tile = (props: TileProps) => {
     children,
     isActionable,
     status,
-    isLoading,
+    isLoading = false,
     ...rest
   } = props;
 
