@@ -3743,10 +3743,10 @@ export const GroupedHeaders: Story<Partial<TableProps>> = (args) => {
 
   return (
     <Table
+      {...args}
       columns={columns}
       data={data}
       emptyTableContent='No data.'
-      {...args}
     />
   );
 };
