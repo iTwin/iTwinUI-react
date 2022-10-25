@@ -4718,7 +4718,7 @@ it('should render row with loading status', () => {
   const tableBody = container.querySelector(
     '.iui-table-body',
   ) as HTMLDivElement;
-  const rows = tableBody.querySelectorAll('.iui-row');
+  const rows = tableBody.querySelectorAll('.iui-table-row');
   expect(rows[0]).toHaveClass(`iui-loading`);
   expect(rows[1]).not.toHaveClass(`iui-loading`);
 });
