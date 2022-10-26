@@ -377,7 +377,7 @@ it('should handle row clicks', async () => {
 
   // Shift click special case test #1
   // By default, when no row is selected before shift click, start selecting from first row to clicked row
-  await user.keyboard('[ShiftLeft>]'); // Hold Shift
+  await user.keyboard('{Shift>}'); // Hold Shift
   await user.click(getByText(data[2].name));
 
   expect(rows[0].classList).toContain('iui-selected');
@@ -387,7 +387,7 @@ it('should handle row clicks', async () => {
   expect(onSelect).toHaveBeenCalledTimes(1);
   expect(onRowClick).toHaveBeenCalledTimes(1);
 
-  await user.keyboard('[/ShiftLeft]'); // Release Shift
+  await user.keyboard('{/Shift}'); // Release Shift
   await userEvent.click(getByText(data[1].name)); // Deselect; lastSelectedRowId = undefined -> 1
 
   expect(rows[0].classList).toContain('iui-selected');
@@ -401,7 +401,7 @@ it('should handle row clicks', async () => {
   // When a row is clicked before shift click (lastSelectedRowId), selection starts from that row and ends at the currently clicked row
   // But if the startIndex > endIndex, then startIndex and endIndex are swapped
   // (Here startIndex = 1, endIndex = 0)
-  await user.keyboard('[ShiftLeft>]'); // Hold Shift
+  await user.keyboard('{Shift>}'); // Hold Shift
   await user.click(getByText(data[0].name));
 
   expect(rows[0].classList).toContain('iui-selected');
@@ -411,7 +411,7 @@ it('should handle row clicks', async () => {
   expect(onSelect).toHaveBeenCalledTimes(3);
   expect(onRowClick).toHaveBeenCalledTimes(3);
 
-  await user.keyboard('[/ShiftLeft][ControlLeft>]'); // Release Shift & Hold Control
+  await user.keyboard('{/Shift}{Control>}'); // Release Shift & Hold Control
   await user.click(getByText(data[3].name)); // lastSelectedRowId = 1 -> 3 (Ctrl click updates lastSelectedRowId)
   expect(rows[0].classList).toContain('iui-selected');
   expect(rows[1].classList).toContain('iui-selected');
@@ -420,7 +420,7 @@ it('should handle row clicks', async () => {
   expect(onSelect).toHaveBeenCalledTimes(4);
   expect(onRowClick).toHaveBeenCalledTimes(4);
 
-  await user.keyboard('[/ControlLeft][ShiftLeft>]'); // Release Control & Hold Shift
+  await user.keyboard('{/Control}{Shift>}'); // Release Control & Hold Shift
   await user.click(getByText(data[4].name));
 
   expect(rows[0].classList).not.toContain('iui-selected');
@@ -436,7 +436,7 @@ it('should handle row clicks', async () => {
   );
   expect(checkboxes.length).toBe(5);
 
-  await user.keyboard('[/ShiftLeft]'); // Release Shift
+  await user.keyboard('{/Shift}'); // Release Shift
   await user.click(checkboxes[1]); // lastSelectedRowId = 3 -> 1 (Checkbox click updates lastSelectedRowId)
 
   expect(rows[0].classList).not.toContain('iui-selected');
@@ -447,7 +447,7 @@ it('should handle row clicks', async () => {
   expect(onSelect).toHaveBeenCalledTimes(6);
   expect(onRowClick).toHaveBeenCalledTimes(5);
 
-  await user.keyboard('[ShiftLeft>]'); // Hold Shift
+  await user.keyboard('{Shift>}'); // Hold Shift
   await user.click(getByText(data[3].name));
 
   expect(rows[0].classList).not.toContain('iui-selected');
@@ -499,20 +499,20 @@ it('should handle sub-rows shift click selection', async () => {
   expect(onRowClick).toHaveBeenCalledTimes(1);
   testIfCheckboxesChecked(checkboxes, [1], [0]);
 
-  await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
+  await user.keyboard('{Shift>}'); // Press Shift (without releasing it)
   await user.click(getByText(data[0].subRows[1].subRows[0].name)); // [shiftKey: true]
   expect(onSelect).toHaveBeenCalledTimes(2);
   expect(onRowClick).toHaveBeenCalledTimes(2);
   testIfCheckboxesChecked(checkboxes, [1, 3], [0, 2]);
 
-  await user.keyboard('[/ShiftLeft]'); // Release Shift
+  await user.keyboard('{/Shift}'); // Release Shift
   await user.click(getByText(data[1].subRows[0].name)); // [shiftKey = true]; lastSelectedRowId = undefined -> 1.0
   expect(onSelect).toHaveBeenCalledTimes(3);
   expect(onRowClick).toHaveBeenCalledTimes(3);
   testIfCheckboxesChecked(checkboxes, [7], [6]);
 
   // When startIndex > endIndex, then startIndex and endIndex are swapped
-  await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
+  await user.keyboard('{Shift>}'); // Press Shift (without releasing it)
   await user.click(getByText(data[0].subRows[1].subRows[1].name)); // [shiftKey = true]
   expect(onSelect).toHaveBeenCalledTimes(4);
   expect(onRowClick).toHaveBeenCalledTimes(4);
