@@ -6,7 +6,7 @@ import cx from 'classnames';
 import React from 'react';
 
 import { useMergedRefs, useTheme } from '../utils';
-import '@itwin/itwinui-css/css/inputs.css';
+import '@itwin/itwinui-css/css/radio.css';
 
 export type RadioProps = {
   /**
@@ -17,20 +17,6 @@ export type RadioProps = {
    * Status of the radio.
    */
   status?: 'positive' | 'warning' | 'negative';
-  /**
-   * Custom CSS class name for the checkmark element.
-   *
-   * @deprecated As of 1.32.0, this is applied on the actual radio `<input>` element.
-   * The checkmark has been moved into a pseudo-element.
-   */
-  checkmarkClassName?: string;
-  /**
-   * Custom CSS Style for the checkmark element.
-   *
-   * @deprecated As of 1.32.0, this is applied on the actual radio `<input>` element.
-   * The checkmark has been moved into a pseudo-element.
-   */
-  checkmarkStyle?: React.CSSProperties;
   /**
    * Set focus on radio element.
    * @default false
@@ -56,8 +42,6 @@ export const Radio = React.forwardRef<HTMLInputElement, RadioProps>(
       label,
       status,
       style,
-      checkmarkClassName,
-      checkmarkStyle,
       setFocus = false,
       ...rest
     } = props;
@@ -75,12 +59,8 @@ export const Radio = React.forwardRef<HTMLInputElement, RadioProps>(
 
     const radio = (
       <input
-        className={cx(
-          'iui-radio',
-          className && { [className]: !label },
-          checkmarkClassName,
-        )}
-        style={{ ...(!label && style), ...checkmarkStyle }}
+        className={cx('iui-radio', className && { [className]: !label })}
+        style={!label ? style : undefined}
         disabled={disabled}
         type='radio'
         ref={refs}
