@@ -25,7 +25,7 @@ import {
   useGlobalFilter,
 } from 'react-table';
 import { ProgressRadial } from '../ProgressIndicators';
-import { useTheme, CommonProps, useResizeObserver, mergeRefs } from '../utils';
+import { useTheme, CommonProps, useResizeObserver } from '../utils';
 import '@itwin/itwinui-css/css/table.css';
 import SvgSortDown from '@itwin/itwinui-icons-react/cjs/icons/SortDown';
 import SvgSortUp from '@itwin/itwinui-icons-react/cjs/icons/SortUp';
@@ -145,12 +145,10 @@ export type TableProps<
   onSort?: (state: TableState<T>) => void;
   /**
    * Callback function when scroll reaches bottom. Can be used for lazy-loading the data.
-   * If you want to use it in older browsers e.g. IE, then you need to have IntersectionObserver polyfill.
    */
   onBottomReached?: () => void;
   /**
    * Callback function when row is in viewport.
-   * If you want to use it in older browsers e.g. IE, then you need to have IntersectionObserver polyfill.
    */
   onRowInViewport?: (rowData: T) => void;
   /**
@@ -233,8 +231,6 @@ export type TableProps<
   /**
    * Flag whether columns are resizable.
    * In order to disable resizing for specific column, set `disableResizing: true` for that column.
-   *
-   * If you want to use it in older browsers e.g. IE, then you need to have `ResizeObserver` polyfill.
    * @default false
    */
   isResizable?: boolean;
@@ -390,7 +386,7 @@ export const Table = <
 
   useTheme();
 
-  const [ownerDocument, setOwnerDocument] = React.useState<Document>();
+  const ownerDocument = React.useRef<Document | undefined>();
 
   const defaultColumn = React.useMemo(
     () => ({
@@ -414,36 +410,32 @@ export const Table = <
     return flatColumns.some((column) => column.id === SELECTION_CELL_ID);
   }, [columns]);
 
-  const disableUserSelect = React.useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === 'Shift') {
-        ownerDocument &&
-          (ownerDocument.documentElement.style.userSelect = 'none');
-      }
-    },
-    [ownerDocument],
-  );
+  const disableUserSelect = React.useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Shift') {
+      ownerDocument.current &&
+        (ownerDocument.current.documentElement.style.userSelect = 'none');
+    }
+  }, []);
 
-  const enableUserSelect = React.useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === 'Shift') {
-        ownerDocument && (ownerDocument.documentElement.style.userSelect = '');
-      }
-    },
-    [ownerDocument],
-  );
+  const enableUserSelect = React.useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Shift') {
+      ownerDocument.current &&
+        (ownerDocument.current.documentElement.style.userSelect = '');
+    }
+  }, []);
 
   React.useEffect(() => {
     if (!isSelectable || selectionMode !== 'multi') {
       return;
     }
 
-    ownerDocument?.addEventListener('keydown', disableUserSelect);
-    ownerDocument?.addEventListener('keyup', enableUserSelect);
+    const ownerDoc = ownerDocument.current;
+    ownerDoc?.addEventListener('keydown', disableUserSelect);
+    ownerDoc?.addEventListener('keyup', enableUserSelect);
 
     return () => {
-      ownerDocument?.removeEventListener('keydown', disableUserSelect);
-      ownerDocument?.removeEventListener('keyup', enableUserSelect);
+      ownerDoc?.removeEventListener('keydown', disableUserSelect);
+      ownerDoc?.removeEventListener('keyup', enableUserSelect);
     };
   }, [
     isSelectable,
@@ -730,10 +722,6 @@ export const Table = <
 
   const headerRef = React.useRef<HTMLDivElement>(null);
   const bodyRef = React.useRef<HTMLDivElement>(null);
-  // Using `useState` to rerender rows when table body ref is available
-  const [bodyRefState, setBodyRefState] = React.useState<HTMLDivElement | null>(
-    null,
-  );
 
   const getPreparedRow = React.useCallback(
     (index: number) => {
@@ -755,7 +743,7 @@ export const Table = <
           tableHasSubRows={hasAnySubRows}
           tableInstance={instance}
           expanderCell={expanderCell}
-          bodyRef={bodyRefState}
+          bodyRef={bodyRef.current}
           tableRowRef={enableVirtualization ? undefined : tableRowRef(row)}
         />
       );
@@ -772,7 +760,6 @@ export const Table = <
       hasAnySubRows,
       instance,
       expanderCell,
-      bodyRefState,
       enableVirtualization,
       tableRowRef,
     ],
@@ -811,27 +798,26 @@ export const Table = <
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const isHeaderDirectClick = React.useRef(false);
+
   return (
     <>
       <div
         ref={(element) => {
-          setOwnerDocument(element?.ownerDocument);
+          ownerDocument.current = element?.ownerDocument;
           if (isResizable) {
             resizeRef(element);
           }
         }}
         id={id}
         {...getTableProps({
-          className: cx(
-            'iui-table',
-            { [`iui-${density}`]: density !== 'default' },
-            className,
-          ),
+          className: cx('iui-table', className),
           style: {
             minWidth: 0, // Overrides the min-width set by the react-table but when we support horizontal scroll it is not needed
             ...style,
           },
         })}
+        data-iui-size={density === 'default' ? undefined : density}
         {...ariaDataAttributes}
       >
         <div
@@ -847,19 +833,23 @@ export const Table = <
           <div className='iui-table-header'>
             {headerGroups.slice(1).map((headerGroup: HeaderGroup<T>) => {
               const headerGroupProps = headerGroup.getHeaderGroupProps({
-                className: 'iui-row',
+                className: 'iui-table-row',
               });
               return (
                 <div {...headerGroupProps} key={headerGroupProps.key}>
                   {headerGroup.headers.map((column, index) => {
+                    const {
+                      onClick,
+                      ...restSortProps
+                    } = column.getSortByToggleProps();
                     const columnProps = column.getHeaderProps({
-                      ...column.getSortByToggleProps(),
+                      ...restSortProps,
                       className: cx(
-                        'iui-cell',
+                        'iui-table-cell',
                         {
                           'iui-actionable': column.canSort,
                           'iui-sorted': column.isSorted,
-                          'iui-cell-sticky': !!column.sticky,
+                          'iui-table-cell-sticky': !!column.sticky,
                         },
                         column.columnClassName,
                       ),
@@ -881,28 +871,41 @@ export const Table = <
                             column.resizeWidth = el.getBoundingClientRect().width;
                           }
                         }}
+                        onMouseDown={() => {
+                          isHeaderDirectClick.current = true;
+                        }}
+                        onClick={(e) => {
+                          // Prevents from triggering sort when resizing and mouse is released in the middle of header
+                          if (isHeaderDirectClick.current) {
+                            onClick?.(e);
+                            isHeaderDirectClick.current = false;
+                          }
+                        }}
+                        tabIndex={showSortButton(column) ? 0 : undefined}
+                        onKeyDown={(e) => {
+                          if (e.key == 'Enter' && showSortButton(column)) {
+                            column.toggleSortBy();
+                          }
+                        }}
                       >
                         {column.render('Header')}
                         {(showFilterButton(column) ||
                           showSortButton(column)) && (
                           <div className='iui-table-header-actions-container'>
                             {showFilterButton(column) && (
-                              <FilterToggle
-                                column={column}
-                                ownerDocument={ownerDocument}
-                              />
+                              <FilterToggle column={column} />
                             )}
                             {showSortButton(column) && (
-                              <div className='iui-cell-end-icon'>
+                              <div className='iui-table-cell-end-icon'>
                                 {column.isSortedDesc ||
                                 (!column.isSorted && column.sortDescFirst) ? (
                                   <SvgSortDown
-                                    className='iui-icon iui-sort'
+                                    className='iui-icon iui-table-sort'
                                     aria-hidden
                                   />
                                 ) : (
                                   <SvgSortUp
-                                    className='iui-icon iui-sort'
+                                    className='iui-icon iui-table-sort'
                                     aria-hidden
                                   />
                                 )}
@@ -916,22 +919,22 @@ export const Table = <
                             columnResizeMode === 'expand') && (
                             <div
                               {...column.getResizerProps()}
-                              className='iui-resizer'
+                              className='iui-table-resizer'
                             >
-                              <div className='iui-resizer-bar' />
+                              <div className='iui-table-resizer-bar' />
                             </div>
                           )}
                         {enableColumnReordering &&
                           !column.disableReordering && (
-                            <div className='iui-reorder-bar' />
+                            <div className='iui-table-reorder-bar' />
                           )}
                         {column.sticky === 'left' &&
                           state.sticky.isScrolledToRight && (
-                            <div className='iui-cell-shadow-right' />
+                            <div className='iui-table-cell-shadow-right' />
                           )}
                         {column.sticky === 'right' &&
                           state.sticky.isScrolledToLeft && (
-                            <div className='iui-cell-shadow-left' />
+                            <div className='iui-table-cell-shadow-left' />
                           )}
                       </div>
                     );
@@ -948,7 +951,7 @@ export const Table = <
             }),
             style: { outline: 0 },
           })}
-          ref={mergeRefs(bodyRef, setBodyRefState)}
+          ref={bodyRef}
           onScroll={() => {
             if (headerRef.current && bodyRef.current) {
               headerRef.current.scrollLeft = bodyRef.current.scrollLeft;
@@ -956,6 +959,9 @@ export const Table = <
             }
           }}
           tabIndex={-1}
+          aria-multiselectable={
+            (isSelectable && selectionMode === 'multi') || undefined
+          }
         >
           {data.length !== 0 && (
             <>
@@ -976,8 +982,11 @@ export const Table = <
             </div>
           )}
           {isLoading && data.length !== 0 && (
-            <div className='iui-row'>
-              <div className='iui-cell' style={{ justifyContent: 'center' }}>
+            <div className='iui-table-row'>
+              <div
+                className='iui-table-cell'
+                style={{ justifyContent: 'center' }}
+              >
                 <ProgressRadial
                   indeterminate={true}
                   size='small'
