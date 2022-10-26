@@ -1,5 +1,34 @@
 # Changelog
 
+### [1.48.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.48.0...v1.48.1) (2022-10-24)
+
+### Fixes
+
+* **Modal:** Apply z-index on dialog wrapper ([#892](https://www.github.com/iTwin/iTwinUI-react/issues/892)) ([0637b54](https://www.github.com/iTwin/iTwinUI-react/commit/0637b54769f14b48075460d94cf64937f90a9ee3))
+
+## [1.48.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.47.1...v1.48.0) (2022-10-18)
+
+### Fixes
+
+* **Slider:** `onUpdate` called on thumb keyboard press, keyboard `onChange` called onKeyUp ([#857](https://www.github.com/iTwin/iTwinUI-react/issues/857)) ([e881387](https://www.github.com/iTwin/iTwinUI-react/commit/e881387b3bf01163c74d4b5dbd945c20616fd237))
+* **Table:** Fix "un/select all rows" behavior when a filter is applied ([81a54f7](https://www.github.com/iTwin/iTwinUI-react/commit/81a54f794afcc7490799da03914ffa156fa1055f))
+
+### [1.47.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.47.0...v1.47.1) (2022-10-10)
+
+### Fixes
+
+* Add `tippy.js` as a direct dependency ([#865](https://www.github.com/iTwin/iTwinUI-react/issues/865)) ([7220ba2](https://www.github.com/iTwin/iTwinUI-react/commit/7220ba278dd34a2ef4bea3e2b25446ad9b0a7d38))
+
+## [1.47.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.46.0...v1.47.0) (2022-10-03)
+
+### What's new
+
+* **Table:** Column resize modes ([#835](https://www.github.com/iTwin/iTwinUI-react/issues/835)) ([771a517](https://www.github.com/iTwin/iTwinUI-react/commit/771a517aa2031d5936521764a09613b6433ff283))
+
+### Fixes
+
+* **Table:** Fixed when fast resizing caused Table to throw an error ([#848](https://www.github.com/iTwin/iTwinUI-react/issues/848)) ([058ad3a](https://www.github.com/iTwin/iTwinUI-react/commit/058ad3a7c1bb4a3198a4dde1105cca47a2ef2998))
+
 ## [1.46.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.45.0...v1.46.0) (2022-09-20)
 
 ### What's new
