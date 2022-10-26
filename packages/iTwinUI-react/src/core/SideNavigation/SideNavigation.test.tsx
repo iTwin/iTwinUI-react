@@ -116,10 +116,13 @@ it('should render expand button svg correctly', () => {
 
   const {
     container: { firstChild: expandIcon },
-  } = render(<SvgChevronRight className='iui-button-icon' aria-hidden />);
-  expect(container.querySelector('.iui-expand .iui-button-icon')).toEqual(
-    expandIcon,
-  );
+  } = render(<SvgChevronRight />);
+
+  const buttonIcon = container.querySelector('.iui-expand .iui-button-icon');
+  const svg = buttonIcon?.querySelector('svg');
+
+  expect(buttonIcon).toHaveAttribute('aria-hidden', 'true');
+  expect(svg).toEqual(expandIcon);
 });
 
 it('should handle clicking on expand button', async () => {
