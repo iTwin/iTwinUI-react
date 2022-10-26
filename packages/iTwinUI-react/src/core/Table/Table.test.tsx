@@ -387,7 +387,7 @@ it('should handle row clicks', async () => {
   expect(onSelect).toHaveBeenCalledTimes(1);
   expect(onRowClick).toHaveBeenCalledTimes(1);
 
-  await user.keyboard('[ShiftLeft/]'); // Release Shift
+  await user.keyboard('[/ShiftLeft]'); // Release Shift
   await userEvent.click(getByText(data[1].name)); // Deselect; lastSelectedRowId = undefined -> 1
 
   expect(rows[0].classList).toContain('iui-selected');
@@ -411,7 +411,7 @@ it('should handle row clicks', async () => {
   expect(onSelect).toHaveBeenCalledTimes(3);
   expect(onRowClick).toHaveBeenCalledTimes(3);
 
-  await user.keyboard('[ShiftLeft/][ControlLeft>]'); // Release Shift & Hold Control
+  await user.keyboard('[/ShiftLeft][ControlLeft>]'); // Release Shift & Hold Control
   await user.click(getByText(data[3].name)); // lastSelectedRowId = 1 -> 3 (Ctrl click updates lastSelectedRowId)
   expect(rows[0].classList).toContain('iui-selected');
   expect(rows[1].classList).toContain('iui-selected');
@@ -420,7 +420,7 @@ it('should handle row clicks', async () => {
   expect(onSelect).toHaveBeenCalledTimes(4);
   expect(onRowClick).toHaveBeenCalledTimes(4);
 
-  await user.keyboard('[ControlLeft/][ShiftLeft>]'); // Release Control & Hold Shift
+  await user.keyboard('[/ControlLeft][ShiftLeft>]'); // Release Control & Hold Shift
   await user.click(getByText(data[4].name));
 
   expect(rows[0].classList).not.toContain('iui-selected');
@@ -436,7 +436,7 @@ it('should handle row clicks', async () => {
   );
   expect(checkboxes.length).toBe(5);
 
-  await user.keyboard('[ShiftLeft/]'); // Release Shift
+  await user.keyboard('[/ShiftLeft]'); // Release Shift
   await user.click(checkboxes[1]); // lastSelectedRowId = 3 -> 1 (Checkbox click updates lastSelectedRowId)
 
   expect(rows[0].classList).not.toContain('iui-selected');
