@@ -3643,8 +3643,8 @@ export const StatusAndCellIcons: Story<Partial<TableProps>> = (args) => {
         size: string;
         startIcon: JSX.Element;
         endIcon: JSX.Element;
-        status: 'positive' | 'negative' | 'warning' | undefined;
-        isLoading: boolean | undefined;
+        status?: 'positive' | 'negative' | 'warning';
+        isLoading?: boolean;
       }>,
     ) => {
       return {
