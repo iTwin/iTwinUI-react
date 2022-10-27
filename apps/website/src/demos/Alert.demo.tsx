@@ -3,16 +3,18 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import * as React from 'react';
-import { Alert } from '@itwin/itwinui-react';
+import { Alert, ThemeProvider } from '@itwin/itwinui-react';
 
 export default function AlertDemo() {
   return (
-    <Alert
-      onClose={() => console.log('CLOSED')}
-      clickableText='Learn more'
-      style={{ minWidth: 350 }}
-    >
-      This is an alert
-    </Alert>
+    <ThemeProvider theme='dark'>
+      <Alert
+        onClose={() => console.log('CLOSED')}
+        clickableText='Learn more'
+        style={{ minWidth: 280 }}
+      >
+        This is an alert
+      </Alert>
+    </ThemeProvider>
   );
 }

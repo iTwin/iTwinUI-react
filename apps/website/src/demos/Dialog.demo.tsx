@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import * as React from 'react';
-import { Button, ModalContent, ModalButtonBar } from '@itwin/itwinui-react';
+import { Button, ModalContent, ModalButtonBar, ThemeProvider } from '@itwin/itwinui-react';
 import { Dialog } from '@itwin/itwinui-react/esm/core/Dialog';
 
 export default () => {
@@ -11,7 +11,7 @@ export default () => {
   const closeModal = () => setIsModalOpen(false);
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+    <ThemeProvider theme='dark' style={{ position: 'relative', width: '100%', height: '100%' }}>
       <Dialog relativeTo='container' isOpen={isModalOpen}>
         <Dialog.Main
           onClose={() => closeModal()}
@@ -36,6 +36,6 @@ export default () => {
           </ModalButtonBar>
         </Dialog.Main>
       </Dialog>
-    </div>
+    </ThemeProvider>
   );
 };

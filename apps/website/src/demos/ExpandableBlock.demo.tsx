@@ -3,14 +3,14 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import * as React from 'react';
-import { ExpandableBlock } from '@itwin/itwinui-react';
+import { ExpandableBlock, ThemeProvider } from '@itwin/itwinui-react';
 
 export default () => {
   return (
-    <div>
+    <ThemeProvider theme='dark'>
       <ExpandableBlock title='Basic Block #1'>Content in block!</ExpandableBlock>
       <ExpandableBlock title='Basic Block #2'>Content in block!</ExpandableBlock>
       <ExpandableBlock title='Basic Block #3'>Content in block!</ExpandableBlock>
-    </div>
+    </ThemeProvider>
   );
 };

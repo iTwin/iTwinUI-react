@@ -48,10 +48,6 @@ const { content = {} } = Astro.props;
         box-sizing: border-box;
       }
 
-      :where(body) {
-        line-height: 1.5 !important; // needs to override iui-body
-      }
-
       :where(a) {
         color: var(--color-highlight-2);
       }
@@ -176,17 +172,16 @@ const { content = {} } = Astro.props;
       body {
         height: 100%;
         overflow: auto;
-        font-family: var(--font-body) !important;
-
-        // these need to override iui-body
-        background-color: var(--color-background-2) !important;
-        color: var(--color-text) !important;
-        font-size: var(--type-0) !important;
+        line-height: 1.5;
+        font-family: var(--font-body);
+        background-color: var(--color-background-2);
+        color: var(--color-text);
+        font-size: var(--type-0);
       }
     </style>
   </head>
 
-  <body class='iui-body'>
+  <body>
     <slot />
 
     <!--

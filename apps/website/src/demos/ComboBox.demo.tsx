@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import * as React from 'react';
-import { ComboBox } from '@itwin/itwinui-react';
+import { ComboBox, ThemeProvider } from '@itwin/itwinui-react';
 import 'tippy.js/animations/shift-away.css';
 
 export default function ComboBoxDemo() {
@@ -19,5 +19,13 @@ export default function ComboBoxDemo() {
     []
   );
 
-  return <ComboBox options={options} inputProps={{ placeholder: 'Pick a fruit, any fruit' }} />;
+  return (
+    <ThemeProvider theme='dark'>
+      <ComboBox
+        options={options}
+        inputProps={{ placeholder: 'Pick a fruit, any fruit' }}
+        dropdownMenuProps={{ appendTo: 'parent' }}
+      />
+    </ThemeProvider>
+  );
 }

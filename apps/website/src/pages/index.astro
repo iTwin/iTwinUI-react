@@ -40,7 +40,7 @@ const currentPage = new URL(Astro.request.url).pathname;
         </div>
       </div>
 
-      <div class='demo-carousel-list iui-body'>
+      <div class='demo-carousel-list'>
         <div class='demo-wrapper'>
           <div class='demo-box'><AlertDemo client:only='react' /></div>
           <h3>Alert</h3>
@@ -208,11 +208,6 @@ const currentPage = new URL(Astro.request.url).pathname;
       padding-block: var(--space-7);
       overflow-x: auto;
       max-width: 90vw;
-      background: unset !important;
-
-      :global(.iui-alert) {
-        min-width: 280px !important;
-      }
 
       :global(> *) {
         flex: 0;
