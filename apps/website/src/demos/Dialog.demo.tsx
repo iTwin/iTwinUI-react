@@ -8,13 +8,17 @@ import { Dialog } from '@itwin/itwinui-react/esm/core/Dialog';
 
 export default () => {
   const [isModalOpen, setIsModalOpen] = React.useState(true);
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    window.setTimeout(() => {
+      setIsModalOpen(true); // bring it back so the user can play with it again
+    }, 2500);
+  };
 
   return (
     <ThemeProvider theme='dark' style={{ position: 'relative', width: '100%', height: '100%' }}>
-      <Dialog relativeTo='container' isOpen={isModalOpen}>
+      <Dialog relativeTo='container' isOpen={isModalOpen} onClose={() => closeModal()}>
         <Dialog.Main
-          onClose={() => closeModal()}
           trapFocus={false}
           style={{
             width: '80%',
@@ -24,7 +28,7 @@ export default () => {
             transform: 'translate(-50%, -50%)',
           }}
         >
-          <Dialog.TitleBar isDismissible>Listen</Dialog.TitleBar>
+          <Dialog.TitleBar titleText='Listen' />
           <ModalContent>
             A dialog informs users about a task and can contain critical information, require
             decisions, or involve multiple tasks.
