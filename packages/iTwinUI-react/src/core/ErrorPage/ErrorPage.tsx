@@ -2,15 +2,15 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import Svg401 from '@itwin/itwinui-illustrations-react/cjs/illustrations/401';
-import Svg403 from '@itwin/itwinui-illustrations-react/cjs/illustrations/403';
-import Svg404 from '@itwin/itwinui-illustrations-react/cjs/illustrations/404';
-import Svg500 from '@itwin/itwinui-illustrations-react/cjs/illustrations/500';
-import Svg502 from '@itwin/itwinui-illustrations-react/cjs/illustrations/502';
-import Svg503 from '@itwin/itwinui-illustrations-react/cjs/illustrations/503';
-import SvgError from '@itwin/itwinui-illustrations-react/cjs/illustrations/Error';
-import SvgRedirect from '@itwin/itwinui-illustrations-react/cjs/illustrations/Redirect';
-import SvgTimedOut from '@itwin/itwinui-illustrations-react/cjs/illustrations/TimedOut';
+import { Svg401 } from '@itwin/itwinui-illustrations-react';
+import { Svg403 } from '@itwin/itwinui-illustrations-react';
+import { Svg404 } from '@itwin/itwinui-illustrations-react';
+import { Svg500 } from '@itwin/itwinui-illustrations-react';
+import { Svg502 } from '@itwin/itwinui-illustrations-react';
+import { Svg503 } from '@itwin/itwinui-illustrations-react';
+import { SvgError } from '@itwin/itwinui-illustrations-react';
+import { SvgRedirect } from '@itwin/itwinui-illustrations-react';
+import { SvgTimedOut } from '@itwin/itwinui-illustrations-react';
 import React from 'react';
 import { Button } from '../Buttons/Button';
 import { CommonProps, useTheme } from '../utils';

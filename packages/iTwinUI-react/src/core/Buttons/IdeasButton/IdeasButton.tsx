@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 
-import SvgSmileyHappy from '@itwin/itwinui-icons-react/cjs/icons/SmileyHappy';
+import { SvgSmileyHappy } from '@itwin/itwinui-icons-react';
 import { useTheme } from '../../utils';
 import { Button } from '../Button';
 

@@ -5,7 +5,7 @@
 import React from 'react';
 import cx from 'classnames';
 import { useTheme, CommonProps, WithCSSTransition } from '../utils';
-import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
+import { SvgChevronRight } from '@itwin/itwinui-icons-react';
 import { IconButton } from '../Buttons';
 import { Tooltip } from '../Tooltip';
 import '@itwin/itwinui-css/css/side-navigation.css';

@@ -2,8 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import Positive from '@itwin/itwinui-icons-react/cjs/icons/CheckmarkSmall';
-import Negative from '@itwin/itwinui-icons-react/cjs/icons/ImportantSmall';
+import { SvgStatusSuccess } from '@itwin/itwinui-icons-react';
+import { SvgStatusError } from '@itwin/itwinui-icons-react';
 import cx from 'classnames';
 import React from 'react';
 import { CommonProps, useTheme } from '../../utils';
@@ -66,8 +66,8 @@ export const ProgressRadial = (props: ProgressRadialProps) => {
   useTheme();
 
   const statusMap = {
-    negative: <Negative aria-hidden />,
-    positive: <Positive aria-hidden />,
+    negative: <SvgStatusError aria-hidden />,
+    positive: <SvgStatusSuccess aria-hidden />,
   };
 
   const fillStyle: React.CSSProperties = {

@@ -14,7 +14,7 @@ import {
   useOverflow,
 } from '../utils';
 import '@itwin/itwinui-css/css/select.css';
-import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
+import { SvgCaretDownSmall } from '@itwin/itwinui-icons-react';
 import SelectTag from './SelectTag';
 
 const isMultipleEnabled = <T,>(

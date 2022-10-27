@@ -4,9 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import SvgCheckmark from '@itwin/itwinui-icons-react/cjs/icons/Checkmark';
-import SvgMore from '@itwin/itwinui-icons-react/cjs/icons/More';
-import SvgNew from '@itwin/itwinui-icons-react/cjs/icons/New';
+import { SvgCheckmark } from '@itwin/itwinui-icons-react';
+import { SvgMore } from '@itwin/itwinui-icons-react';
+import { SvgNew } from '@itwin/itwinui-icons-react';
 import { useTheme } from '../utils';
 import '@itwin/itwinui-css/css/tile.css';
 import { DropdownMenu } from '../DropdownMenu';

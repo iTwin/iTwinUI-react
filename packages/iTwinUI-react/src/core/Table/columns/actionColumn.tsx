@@ -5,7 +5,7 @@
 import React from 'react';
 import { HeaderProps } from 'react-table';
 import { Checkbox } from '../../Checkbox';
-import SvgColumnManager from '@itwin/itwinui-icons-react/cjs/icons/ColumnManager';
+import { SvgColumnManager } from '@itwin/itwinui-icons-react';
 import { DropdownMenu, DropdownMenuProps } from '../../DropdownMenu';
 import { IconButton } from '../../Buttons/IconButton';
 import { MenuItem } from '../../Menu';

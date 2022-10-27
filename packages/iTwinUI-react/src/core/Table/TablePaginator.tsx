@@ -5,8 +5,8 @@
 import React from 'react';
 import cx from 'classnames';
 import '@itwin/itwinui-css/css/table.css';
-import SvgChevronLeft from '@itwin/itwinui-icons-react/cjs/icons/ChevronLeft';
-import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
+import { SvgChevronLeft } from '@itwin/itwinui-icons-react';
+import { SvgChevronRight } from '@itwin/itwinui-icons-react';
 import { IconButton, Button, DropdownButton } from '../Buttons';
 import { ProgressRadial } from '../ProgressIndicators';
 import { MenuItem } from '../Menu';

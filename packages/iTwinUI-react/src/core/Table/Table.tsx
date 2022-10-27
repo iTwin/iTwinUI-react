@@ -27,8 +27,8 @@ import {
 import { ProgressRadial } from '../ProgressIndicators';
 import { useTheme, CommonProps, useResizeObserver } from '../utils';
 import '@itwin/itwinui-css/css/table.css';
-import SvgSortDown from '@itwin/itwinui-icons-react/cjs/icons/SortDown';
-import SvgSortUp from '@itwin/itwinui-icons-react/cjs/icons/SortUp';
+import { SvgSortDown } from '@itwin/itwinui-icons-react';
+import { SvgSortUp } from '@itwin/itwinui-icons-react';
 import { getCellStyle, getStickyStyle } from './utils';
 import { TableRowMemoized } from './TableRowMemoized';
 import { FilterToggle, TableFilterValue } from './filters';

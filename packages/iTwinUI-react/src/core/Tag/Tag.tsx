@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import cx from 'classnames';
 import React from 'react';
-import SvgCloseSmall from '@itwin/itwinui-icons-react/cjs/icons/CloseSmall';
+import { SvgCloseSmall } from '@itwin/itwinui-icons-react';
 import { useTheme, CommonProps } from '../utils';
 import '@itwin/itwinui-css/css/tag.css';
 import { IconButton } from '../Buttons';

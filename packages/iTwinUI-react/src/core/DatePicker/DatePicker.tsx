@@ -2,10 +2,10 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import SvgChevronLeft from '@itwin/itwinui-icons-react/cjs/icons/ChevronLeft';
-import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
-import SvgChevronLeftDouble from '@itwin/itwinui-icons-react/cjs/icons/ChevronLeftDouble';
-import SvgChevronRightDouble from '@itwin/itwinui-icons-react/cjs/icons/ChevronRightDouble';
+import { SvgChevronLeft } from '@itwin/itwinui-icons-react';
+import { SvgChevronRight } from '@itwin/itwinui-icons-react';
+import { SvgChevronLeftDouble } from '@itwin/itwinui-icons-react';
+import { SvgChevronRightDouble } from '@itwin/itwinui-icons-react';
 import cx from 'classnames';
 import React from 'react';
 import { useTheme } from '../utils';

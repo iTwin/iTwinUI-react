@@ -2,10 +2,10 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import SvgInfoCircular from '@itwin/itwinui-icons-react/cjs/icons/InfoCircular';
-import SvgStatusError from '@itwin/itwinui-icons-react/cjs/icons/StatusError';
-import SvgStatusSuccess from '@itwin/itwinui-icons-react/cjs/icons/StatusSuccess';
-import SvgStatusWarning from '@itwin/itwinui-icons-react/cjs/icons/StatusWarning';
+import { SvgInfoCircular } from '@itwin/itwinui-icons-react';
+import { SvgStatusError } from '@itwin/itwinui-icons-react';
+import { SvgStatusSuccess } from '@itwin/itwinui-icons-react';
+import { SvgStatusWarning } from '@itwin/itwinui-icons-react';
 import React from 'react';
 import { CommonProps } from '../props';
 

@@ -6,7 +6,7 @@ import cx from 'classnames';
 import React from 'react';
 import { useSafeContext, useMergedRefs } from '../utils';
 import { ComboBoxActionContext, ComboBoxRefsContext } from './helpers';
-import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
+import { SvgCaretDownSmall } from '@itwin/itwinui-icons-react';
 
 type ComboBoxEndIconProps = React.ComponentPropsWithoutRef<'span'> & {
   disabled?: boolean;

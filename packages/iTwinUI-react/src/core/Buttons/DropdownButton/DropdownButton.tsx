@@ -6,8 +6,8 @@ import React from 'react';
 import cx from 'classnames';
 import { Button, ButtonProps } from '../Button';
 import { DropdownMenu } from '../../DropdownMenu';
-import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
-import SvgCaretUpSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretUpSmall';
+import { SvgCaretDownSmall } from '@itwin/itwinui-icons-react';
+import { SvgCaretUpSmall } from '@itwin/itwinui-icons-react';
 
 import { useTheme, useMergedRefs } from '../../utils';
 import '@itwin/itwinui-css/css/button.css';
