@@ -67,6 +67,10 @@ export type TileProps = {
    */
   rightIcon?: React.ReactNode;
   /**
+   * Custom icon. Will override status and loading icon if specified.
+   */
+  titleIcon?: JSX.Element;
+  /**
    * Upto two buttons shown at the bottom of the tile.
    */
   buttons?: [React.ReactNode?, React.ReactNode?];
@@ -78,10 +82,6 @@ export type TileProps = {
    * Status of the tile.
    */
   status?: 'positive' | 'warning' | 'negative';
-  /**
-   * Custom icon. Will override status and loading icon if specified.
-   */
-  titleIcon?: JSX.Element;
   /**
    * Whether the tile is selected or in "active" state.
    * Gets highlighted and shows a checkmark icon near tile name.
@@ -139,6 +139,7 @@ export const Tile = (props: TileProps) => {
     buttons,
     leftIcon,
     rightIcon,
+    titleIcon,
     badge,
     isNew,
     isSelected,
@@ -148,7 +149,6 @@ export const Tile = (props: TileProps) => {
     isActionable,
     status,
     isLoading = false,
-    titleIcon,
     ...rest
   } = props;
 
