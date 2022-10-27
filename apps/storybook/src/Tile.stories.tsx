@@ -313,6 +313,7 @@ Status.argTypes = {
   ...Basic.argTypes,
   thumbnail: { control: { disable: true } },
   status: { control: 'radio', options: ['positive', 'warning', 'negative'] },
+  variant: { control: 'radio', options: ['default', 'folder'] },
 };
 Status.args = {
   ...Basic.args,
@@ -349,6 +350,7 @@ export const Loading: Story<TileProps> = (props) => {
 Loading.argTypes = {
   ...Basic.argTypes,
   thumbnail: { control: { disable: true } },
+  variant: { control: 'radio', options: ['default', 'folder'] },
 };
 Loading.args = {
   ...Basic.args,
@@ -387,6 +389,7 @@ export const CustomLoadingIcon: Story<TileProps> = (props) => {
 CustomLoadingIcon.argTypes = {
   ...Basic.argTypes,
   thumbnail: { control: { disable: true } },
+  variant: { control: 'radio', options: ['default', 'folder'] },
 };
 CustomLoadingIcon.args = {
   ...Basic.args,
