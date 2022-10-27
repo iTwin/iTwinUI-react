@@ -188,6 +188,10 @@ const { content = {} } = Astro.props;
       Scrollable a11y code helper.
       TODO: remove the need for this script by creating a CodeBlock component.
     -->
-    <script src='/make-scrollable-code-focusable.js' is:inline></script>
+    <script is:inline>
+      Array.from(document.getElementsByTagName('pre')).forEach((element) => {
+        element.setAttribute('tabindex', '0');
+      });
+    </script>
   </body>
 </html>
