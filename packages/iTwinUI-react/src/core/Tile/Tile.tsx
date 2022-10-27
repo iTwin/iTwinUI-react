@@ -7,10 +7,11 @@ import cx from 'classnames';
 import SvgCheckmark from '@itwin/itwinui-icons-react/cjs/icons/Checkmark';
 import SvgMore from '@itwin/itwinui-icons-react/cjs/icons/More';
 import SvgNew from '@itwin/itwinui-icons-react/cjs/icons/New';
-import { useTheme } from '../utils';
+import { StatusIconMap, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/tile.css';
 import { DropdownMenu } from '../DropdownMenu';
 import { IconButton } from '../Buttons';
+import { ProgressRadial } from '../ProgressIndicators';
 
 export type TileProps = {
   /**
@@ -78,6 +79,10 @@ export type TileProps = {
    */
   status?: 'positive' | 'warning' | 'negative';
   /**
+   * Custom icon. Will override status and loading icon if specified.
+   */
+  titleIcon?: JSX.Element;
+  /**
    * Whether the tile is selected or in "active" state.
    * Gets highlighted and shows a checkmark icon near tile name.
    */
@@ -143,6 +148,7 @@ export const Tile = (props: TileProps) => {
     isActionable,
     status,
     isLoading = false,
+    titleIcon,
     ...rest
   } = props;
 
@@ -151,6 +157,31 @@ export const Tile = (props: TileProps) => {
   const [isMenuVisible, setIsMenuVisible] = React.useState(false);
   const showMenu = React.useCallback(() => setIsMenuVisible(true), []);
   const hideMenu = React.useCallback(() => setIsMenuVisible(false), []);
+
+  const renderTitleIcon = () => {
+    if (!!titleIcon) {
+      return React.cloneElement(titleIcon, {
+        className: cx('iui-tile-status-icon', titleIcon.props?.className),
+      });
+    }
+    if (isSelected) {
+      return <SvgCheckmark className='iui-tile-status-icon' aria-hidden />;
+    }
+    if (isLoading) {
+      return (
+        <ProgressRadial
+          className='iui-tile-status-icon'
+          aria-hidden
+          indeterminate
+        />
+      );
+    }
+    if (!!status) {
+      return StatusIconMap[status]({ className: `iui-tile-status-icon` });
+    }
+
+    return null;
+  };
 
   return (
     <div
@@ -208,9 +239,8 @@ export const Tile = (props: TileProps) => {
 
       <div className='iui-tile-content'>
         <div className='iui-tile-name'>
-          {isSelected && (
-            <SvgCheckmark className='iui-tile-status-icon' aria-hidden />
-          )}
+          {renderTitleIcon()}
+
           {isNew && <SvgNew className='iui-tile-status-icon' aria-hidden />}
           <span className='iui-tile-name-label'>{name}</span>
         </div>
