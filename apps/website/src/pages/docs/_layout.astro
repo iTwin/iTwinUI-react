@@ -12,6 +12,7 @@ const currentPage = new URL(Astro.request.url).pathname;
   <aside class='sidebar' aria-label='Main navigation'>
     <LeftSidebar />
   </aside>
+  <div class='sidebar-backdrop' aria-hidden='true'></div>
   <div class='content-wrapper'>
     <h1 id='overview'>{content.title}</h1>
     <slot />
@@ -29,11 +30,13 @@ const currentPage = new URL(Astro.request.url).pathname;
 
     .header {
       grid-area: header;
+      z-index: 2;
+      background: inherit;
     }
 
     .sidebar {
       background-color: var(--color-background-2);
-      z-index: 1;
+      z-index: 3;
       grid-area: sidebar;
       border-right: 1px solid var(--color-line-2);
       overflow-y: auto;
@@ -42,6 +45,7 @@ const currentPage = new URL(Astro.request.url).pathname;
 
       @media (max-width: 50em) {
         grid-area: content;
+        border-right: none;
 
         // collapsed by default
         visibility: hidden;
@@ -57,6 +61,17 @@ const currentPage = new URL(Astro.request.url).pathname;
         &[data-visible='true'] {
           visibility: visible;
           transform: translateX(0);
+
+          + .sidebar-backdrop {
+            content: '';
+            z-index: 1;
+            position: absolute;
+            inset: 0;
+            background-color: hsl(0deg 0% 0% / 0.2);
+            backdrop-filter: blur(5px);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition-property: background-color, backdrop-filter;
+          }
         }
       }
     }
