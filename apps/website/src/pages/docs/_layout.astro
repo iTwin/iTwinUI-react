@@ -9,7 +9,7 @@ const currentPage = new URL(Astro.request.url).pathname;
 
 <Global content={content} currentPage={currentPage}>
   <Header class='header' />
-  <aside class='sidebar' data-visible='false' aria-label='Main navigation'>
+  <aside class='sidebar' aria-label='Main navigation'>
     <LeftSidebar />
   </aside>
   <div class='content-wrapper'>
@@ -42,13 +42,16 @@ const currentPage = new URL(Astro.request.url).pathname;
 
       @media (max-width: 50em) {
         grid-area: content;
-        @media (prefers-reduced-motion: no-preference) {
-          transition: calc(var(--transition-speed) * 2) cubic-bezier(0.4, 0, 0.2, 1);
-        }
 
-        &[data-visible='false'] {
-          visibility: hidden;
-          transform: translateX(-100%);
+        // collapsed by default
+        visibility: hidden;
+        transform: translateX(-100%);
+
+        // transition only when the this attribute is present (see SidebarToggle.astro)
+        &[data-visible] {
+          @media (prefers-reduced-motion: no-preference) {
+            transition: calc(var(--transition-speed) * 2) cubic-bezier(0.4, 0, 0.2, 1);
+          }
         }
 
         &[data-visible='true'] {

@@ -32,6 +32,13 @@
           sidebar.dataset.visible = isCurrentlyExpanded ? 'false' : 'true';
           main.toggleAttribute('inert', !isCurrentlyExpanded);
         });
+
+        window.matchMedia('(max-width: 50em)').addEventListener('change', ({ matches: isSmol }) => {
+          // remove the attribute completely when on desktop, to prevent undesired transition when resizing the window
+          if (!isSmol) {
+            sidebar.removeAttribute('data-visible');
+          }
+        });
       }
     }
   );
