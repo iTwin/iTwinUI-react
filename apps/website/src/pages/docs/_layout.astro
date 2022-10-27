@@ -47,11 +47,12 @@ const currentPage = new URL(Astro.request.url).pathname;
 
         &[data-visible='false'] {
           visibility: hidden;
-          width: 0;
+          transform: translateX(-100%);
         }
 
         &[data-visible='true'] {
-          width: 100%;
+          visibility: visible;
+          transform: translateX(0);
         }
       }
     }
