@@ -4,9 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { CommonProps, useTheme, getContainer, getDocument } from '../utils';
+import { CommonProps, useTheme, getContainer } from '../utils';
 import '@itwin/itwinui-css/css/dialog.css';
 import { Dialog, DialogMainProps } from '../Dialog';
+import { ThemeContext } from '../ThemeProvider/ThemeProvider';
 
 export type ModalProps = {
   /**
@@ -85,13 +86,18 @@ export const Modal = (props: ModalProps) => {
     title,
     children,
     modalRootId = 'iui-react-portal-container',
-    ownerDocument = getDocument(),
+    ownerDocument,
     ...rest
   } = props;
 
   useTheme();
 
-  const container = getContainer(modalRootId, ownerDocument);
+  const themeInfo = React.useContext(ThemeContext);
+
+  const container = getContainer(
+    modalRootId,
+    ownerDocument?.body || themeInfo?.rootRef.current,
+  );
 
   return !!container ? (
     ReactDOM.createPortal(

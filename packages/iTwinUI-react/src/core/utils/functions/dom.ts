@@ -8,18 +8,19 @@
  * Mostly used for dynamic components like Modal or Toast.
  *
  * @param containerId id of the container to find or create
- * @param ownerDocument Can be changed if the container should be in a different document (e.g. in popup).
+ * @param root Root element under which the container will be created.
+ * Can be changed if the container should be in a different scoped root or document (e.g. in popup).
  */
 export const getContainer = (
   containerId: string,
-  ownerDocument = getDocument(),
+  root = getDocument()?.body || null,
 ) => {
-  let container = ownerDocument?.getElementById(containerId) ?? undefined;
-  if (container == null && !!ownerDocument) {
-    container = ownerDocument.createElement('div');
+  let container = root?.querySelector(`#${containerId}`) ?? undefined;
+  if (container == null && !!root) {
+    container = root.ownerDocument.createElement('div');
     container.setAttribute('id', containerId);
     container.innerHTML = `<style>:where(.iui-dialog-wrapper) { z-index: 999; }</style>`; // TODO: move to css
-    ownerDocument.body.appendChild(container);
+    root.appendChild(container);
   }
   return container;
 };
