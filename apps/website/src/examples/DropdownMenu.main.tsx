@@ -13,8 +13,7 @@ import {
   IconButton,
   ButtonGroup,
 } from '@itwin/itwinui-react';
-import _icons from '@itwin/itwinui-icons-react';
-const { SvgPlaceholder, SvgMore } = _icons;
+import { SvgPlaceholder, SvgMore } from '@itwin/itwinui-icons-react/esm';
 
 export default () => {
   const [userType, setUserType] = React.useState('User');

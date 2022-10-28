@@ -4,8 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import * as React from 'react';
 import { RadioTileGroup, RadioTile } from '@itwin/itwinui-react';
-import _icons from '@itwin/itwinui-icons-react';
-const { SvgNetwork, SvgWindows } = _icons;
+import { SvgNetwork, SvgWindows } from '@itwin/itwinui-icons-react/esm';
 
 export default () => {
   return (
