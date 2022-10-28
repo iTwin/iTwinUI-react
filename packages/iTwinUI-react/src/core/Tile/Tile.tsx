@@ -67,7 +67,7 @@ export type TileProps = {
    */
   rightIcon?: React.ReactNode;
   /**
-   * Custom icon. Will override status and loading icon if specified.
+   * Icon before title. Will override status and loading icon if specified.
    */
   titleIcon?: JSX.Element;
   /**
