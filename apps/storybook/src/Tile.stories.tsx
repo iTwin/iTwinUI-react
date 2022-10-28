@@ -30,6 +30,7 @@ export default {
     className: { control: { disable: true } },
     style: { control: { disable: true } },
     id: { control: { disable: true } },
+    variant: { control: 'radio', options: ['default', 'folder'] },
   },
   args: {
     variant: 'default',
@@ -130,7 +131,10 @@ export const AllProps: Story<TileProps> = (props) => {
     />
   );
 };
-AllProps.argTypes = { ...Basic.argTypes };
+AllProps.argTypes = {
+  ...Basic.argTypes,
+  variant: { control: { disable: true } },
+};
 AllProps.args = {
   ...Basic.args,
   isSelected: true,
@@ -276,6 +280,7 @@ export const Folder: Story<TileProps> = (props) => {
 Folder.argTypes = {
   ...Basic.argTypes,
   thumbnail: { control: { disable: true } },
+  variant: { control: { disable: true } },
 };
 Folder.args = {
   ...Basic.args,
@@ -313,7 +318,6 @@ Status.argTypes = {
   ...Basic.argTypes,
   thumbnail: { control: { disable: true } },
   status: { control: 'radio', options: ['positive', 'warning', 'negative'] },
-  variant: { control: 'radio', options: ['default', 'folder'] },
 };
 Status.args = {
   ...Basic.args,
@@ -350,7 +354,6 @@ export const Loading: Story<TileProps> = (props) => {
 Loading.argTypes = {
   ...Basic.argTypes,
   thumbnail: { control: { disable: true } },
-  variant: { control: 'radio', options: ['default', 'folder'] },
 };
 Loading.args = {
   ...Basic.args,
@@ -389,7 +392,7 @@ export const CustomLoadingIcon: Story<TileProps> = (props) => {
 CustomLoadingIcon.argTypes = {
   ...Basic.argTypes,
   thumbnail: { control: { disable: true } },
-  variant: { control: 'radio', options: ['default', 'folder'] },
+  titleIcon: { control: { disable: true } },
 };
 CustomLoadingIcon.args = {
   ...Basic.args,
