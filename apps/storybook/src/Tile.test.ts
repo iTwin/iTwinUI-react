@@ -13,7 +13,7 @@ describe('Tile', () => {
     'With User Icon',
     'Status',
     'Loading',
-    'Custom Loading Icon',
+    'Disabled',
   ];
 
   tests.forEach((testName) => {
