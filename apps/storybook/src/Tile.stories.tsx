@@ -34,6 +34,8 @@ export default {
   args: {
     variant: 'default',
     isDisabled: false,
+    isNew: false,
+    isLoading: false,
   },
   title: 'Core/Tile',
 } as Meta<TileProps>;
@@ -354,6 +356,8 @@ export const Loading: Story<TileProps> = (props) => {
 Loading.argTypes = {
   ...Basic.argTypes,
   thumbnail: { control: { disable: true } },
+  isNew: { control: { disable: true } },
+  isDisabled: { control: { disable: true } },
 };
 Loading.args = {
   ...Basic.args,
@@ -392,9 +396,11 @@ export const Disabled: Story<TileProps> = (props) => {
 Disabled.argTypes = {
   ...Basic.argTypes,
   thumbnail: { control: { disable: true } },
+  isLoading: { control: { disable: true } },
 };
 Disabled.args = {
   ...Basic.args,
+  thumbnail: <SvgImodelHollow />,
   buttons: <Button disabled>Button</Button>,
   isDisabled: true,
 };

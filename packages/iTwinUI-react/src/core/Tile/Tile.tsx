@@ -161,9 +161,6 @@ export const Tile = (props: TileProps) => {
   const hideMenu = React.useCallback(() => setIsMenuVisible(false), []);
 
   const renderTitleIcon = () => {
-    if (isSelected) {
-      return <SvgCheckmark className='iui-tile-status-icon' aria-hidden />;
-    }
     if (isLoading) {
       return (
         <ProgressRadial
@@ -172,6 +169,12 @@ export const Tile = (props: TileProps) => {
           indeterminate
         />
       );
+    }
+    if (isSelected) {
+      return <SvgCheckmark className='iui-tile-status-icon' aria-hidden />;
+    }
+    if (isNew) {
+      return <SvgNew className='iui-tile-status-icon' aria-hidden />;
     }
     if (!!status) {
       return StatusIconMap[status]({ className: `iui-tile-status-icon` });
@@ -239,7 +242,6 @@ export const Tile = (props: TileProps) => {
         <div className='iui-tile-name'>
           {renderTitleIcon()}
 
-          {isNew && <SvgNew className='iui-tile-status-icon' aria-hidden />}
           <span className='iui-tile-name-label'>{name}</span>
         </div>
 
