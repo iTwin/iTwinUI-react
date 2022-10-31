@@ -240,3 +240,10 @@ it('should render tile with loading status', () => {
   const { container } = render(<Tile isLoading={true} name='test-name' />);
   expect(container.querySelector(`.iui-tile.iui-loading`)).toBeTruthy();
 });
+
+it('should render tile with disabled status', () => {
+  const { container } = render(<Tile isDisabled={true} name='test-name' />);
+  const tile = container.querySelector(`.iui-tile`) as HTMLElement;
+  expect(tile).toBeTruthy();
+  expect(tile).toHaveAttribute('aria-disabled', 'true');
+});

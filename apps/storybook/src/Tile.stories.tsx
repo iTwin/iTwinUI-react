@@ -16,7 +16,6 @@ import {
   Tile,
   TileProps,
   UserIcon,
-  ProgressRadial,
 } from '@itwin/itwinui-react';
 import SvgFolder from '@itwin/itwinui-icons-react/cjs/icons/Folder';
 import SvgImodelHollow from '@itwin/itwinui-icons-react/cjs/icons/ImodelHollow';
@@ -34,6 +33,7 @@ export default {
   },
   args: {
     variant: 'default',
+    isDisabled: false,
   },
   title: 'Core/Tile',
 } as Meta<TileProps>;
@@ -365,15 +365,15 @@ Loading.args = {
   thumbnail: <SvgImodelHollow />,
 };
 
-export const CustomLoadingIcon: Story<TileProps> = (props) => {
+export const Disabled: Story<TileProps> = (props) => {
   const {
     name,
     description,
     metadata,
     thumbnail,
     moreOptions,
-    isLoading,
-    titleIcon,
+    isDisabled,
+    buttons,
     ...rest
   } = props;
   return (
@@ -383,24 +383,18 @@ export const CustomLoadingIcon: Story<TileProps> = (props) => {
       metadata={metadata}
       thumbnail={thumbnail}
       moreOptions={moreOptions}
-      isLoading={isLoading}
-      titleIcon={titleIcon}
+      isDisabled={isDisabled}
+      buttons={buttons}
       {...rest}
     />
   );
 };
-CustomLoadingIcon.argTypes = {
+Disabled.argTypes = {
   ...Basic.argTypes,
   thumbnail: { control: { disable: true } },
-  titleIcon: { control: { disable: true } },
 };
-CustomLoadingIcon.args = {
+Disabled.args = {
   ...Basic.args,
-  isLoading: true,
-  name: 'Tile name',
-  description: 'Description',
-  metadata: <span>Loading tile</span>,
-  badge: undefined,
-  thumbnail: <SvgImodelHollow />,
-  titleIcon: <ProgressRadial value={20} />,
+  buttons: <Button disabled>Button</Button>,
+  isDisabled: true,
 };

@@ -67,10 +67,6 @@ export type TileProps = {
    */
   rightIcon?: React.ReactNode;
   /**
-   * Icon before title. Will override status and loading icon if specified.
-   */
-  titleIcon?: JSX.Element;
-  /**
    * Upto two buttons shown at the bottom of the tile.
    */
   buttons?: [React.ReactNode?, React.ReactNode?];
@@ -110,6 +106,12 @@ export type TileProps = {
    * @default false
    */
   isLoading?: boolean;
+  /**
+   * Flag whether the tile is disabled.
+   * Users should change buttons and icon buttons to disabled ones when this flag is set.
+   * @default false
+   */
+  isDisabled?: boolean;
 } & React.ComponentPropsWithoutRef<'div'>;
 
 /**
@@ -139,7 +141,6 @@ export const Tile = (props: TileProps) => {
     buttons,
     leftIcon,
     rightIcon,
-    titleIcon,
     badge,
     isNew,
     isSelected,
@@ -149,6 +150,7 @@ export const Tile = (props: TileProps) => {
     isActionable,
     status,
     isLoading = false,
+    isDisabled = false,
     ...rest
   } = props;
 
@@ -159,11 +161,6 @@ export const Tile = (props: TileProps) => {
   const hideMenu = React.useCallback(() => setIsMenuVisible(false), []);
 
   const renderTitleIcon = () => {
-    if (!!titleIcon) {
-      return React.cloneElement(titleIcon, {
-        className: cx('iui-tile-status-icon', titleIcon.props?.className),
-      });
-    }
     if (isSelected) {
       return <SvgCheckmark className='iui-tile-status-icon' aria-hidden />;
     }
@@ -197,6 +194,7 @@ export const Tile = (props: TileProps) => {
         },
         className,
       )}
+      aria-disabled={isDisabled}
       tabIndex={isActionable ? 0 : undefined}
       {...rest}
     >
