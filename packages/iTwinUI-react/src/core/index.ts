@@ -285,8 +285,8 @@ export type {
   TextProps,
 } from './Typography';
 
-export { UserIcon } from './UserIcon';
-export type { UserIconProps, StatusTitles, UserIconStatus } from './UserIcon';
+export { UserIcon } from './Avatar';
+export type { UserIconProps, StatusTitles, UserIconStatus } from './Avatar';
 
 export { UserIconGroup } from './UserIconGroup';
 export type { UserIconGroupProps } from './UserIconGroup';

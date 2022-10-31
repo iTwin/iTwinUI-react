@@ -7,20 +7,11 @@ import React from 'react';
 import { CommonProps, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/avatar.css';
 
-/**
- * @deprecated Use AvatarStatus instead
- */
-export type UserIconStatus = 'online' | 'busy' | 'away' | 'offline';
+export type AvatarStatus = 'online' | 'busy' | 'away' | 'offline';
 
-/**
- * @deprecated Use Avatar's StatusTitles instead
- */
-export type StatusTitles = { [key in Exclude<UserIconStatus, ''>]: string };
+export type StatusTitles = { [key in Exclude<AvatarStatus, ''>]: string };
 
-/**
- * @deprecated Use AvatarProps instead
- */
-export type UserIconProps = {
+export type AvatarProps = {
   /**
    * Size of a user icon.
    * @default 'small'
@@ -29,7 +20,7 @@ export type UserIconProps = {
   /**
    * Status/Availability of a user.
    */
-  status?: UserIconStatus;
+  status?: AvatarStatus;
   /**
    * Text which will appear when hovering over the icon.
    */
@@ -53,9 +44,6 @@ export type UserIconProps = {
   translatedStatusTitles?: StatusTitles;
 } & Omit<CommonProps, 'title'>;
 
-/**
- * @deprecated Use Avatar's defaultStatusTitles instead
- */
 export const defaultStatusTitles: StatusTitles = {
   away: 'Away',
   busy: 'Busy',
@@ -64,22 +52,21 @@ export const defaultStatusTitles: StatusTitles = {
 };
 
 /**
- * Basic user icon component
- * @deprecated Since v2, this has been renamed to Avatar.
+ * Basic avatar component
  * @example
  * <caption>Small icon with abbreviation</caption>
- * <UserIcon size='small' title='Terry Rivers' abbreviation='TR' backgroundColor='green'/>
+ * <Avatar size='small' title='Terry Rivers' abbreviation='TR' backgroundColor='green'/>
  * @example
  * <caption>Medium icon with image</caption>
- * <UserIcon size='medium' title='Terry Rivers' abbreviation='TR' backgroundColor='green' image={<img src="https://cdn.example.com/user/profile/pic.png" />}/>
+ * <Avatar size='medium' title='Terry Rivers' abbreviation='TR' backgroundColor='green' image={<img src="https://cdn.example.com/user/profile/pic.png" />}/>
  * @example
  * <caption>Large icon with status</caption>
- * <UserIcon size='large' title='Terry Rivers' abbreviation='TR' backgroundColor='green' status='online' />
+ * <Avatar size='large' title='Terry Rivers' abbreviation='TR' backgroundColor='green' status='online' />
  * @example
  * <caption>X-large icon with image</caption>
- * <UserIcon size='x-large' title='Terry Rivers' abbreviation='TR' backgroundColor='green' image={<img src="https://cdn.example.com/user/profile/pic.png" />}/>
+ * <Avatar size='x-large' title='Terry Rivers' abbreviation='TR' backgroundColor='green' image={<img src="https://cdn.example.com/user/profile/pic.png" />}/>
  */
-export const UserIcon = (props: UserIconProps) => {
+export const Avatar = (props: AvatarProps) => {
   const {
     size = 'small',
     status,
@@ -127,4 +114,4 @@ export const UserIcon = (props: UserIconProps) => {
   );
 };
 
-export default UserIcon;
+export default Avatar;
