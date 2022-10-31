@@ -5,6 +5,9 @@
 export { Alert } from './Alert';
 export type { AlertProps } from './Alert';
 
+export { Avatar } from './Avatar';
+export type { AvatarProps, StatusTitles, AvatarStatus } from './Avatar';
+
 export { Backdrop } from './Backdrop';
 export type { BackdropProps } from './Backdrop';
 
@@ -285,8 +288,8 @@ export type {
   TextProps,
 } from './Typography';
 
-export { UserIcon } from './Avatar';
-export type { UserIconProps, StatusTitles, UserIconStatus } from './Avatar';
+export { UserIcon } from './UserIcon';
+export type { UserIconProps, UserIconStatus } from './UserIcon';
 
 export { UserIconGroup } from './UserIconGroup';
 export type { UserIconGroupProps } from './UserIconGroup';
