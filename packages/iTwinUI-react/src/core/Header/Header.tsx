@@ -38,7 +38,7 @@ export type HeaderProps = {
    */
   breadcrumbs?: React.ReactNode;
   /**
-   * Content displayed to the left of the user icon
+   * Content displayed to the left of the avatar
    * (expects array of `IconButton`, potentially wrapped in a `DropdownMenu`)
    * @example
    * [
@@ -57,6 +57,8 @@ export type HeaderProps = {
   children?: React.ReactNode;
   /**
    * User icon
+   * @deprecated Use `avatar` instead
+   *
    * It's size and transition will be handled between slim/not slim state of the
    * Header
    * (expects `UserIcon`, can be wrapped in `IconButton` and `DropdownMenu` if needed)
@@ -68,6 +70,19 @@ export type HeaderProps = {
    * </DropdownMenu>
    */
   userIcon?: React.ReactNode;
+  /**
+   * Avatar
+   * It's size and transition will be handled between slim/not slim state of the
+   * Header
+   * (expects `Avatar`, can be wrapped in `IconButton` and `DropdownMenu` if needed)
+   * @example
+   * <DropdownMenu menuItems={...}>
+   *   <IconButton styleType='borderless'>
+   *     <Avatar ... />
+   *   </IconButton>
+   * </DropdownMenu>
+   */
+  avatar?: React.ReactNode;
   /**
    * Items in the more dropdown menu.
    * Pass a function that takes the `close` argument (to close the menu),
@@ -108,10 +123,10 @@ const defaultTranslations: HeaderTranslations = {
  *    </IconButton>
  *   </DropdownMenu>
  *  ]}
- *  userIcon={
+ *  avatarIcon={
  *   <DropdownMenu menuItems={...}>
  *    <IconButton styleType='borderless'>
- *     <UserIcon ... />
+ *     <AvatarIcon ... />
  *    </IconButton>
  *   </DropdownMenu>
  *  }
@@ -124,7 +139,7 @@ export const Header = (props: HeaderProps) => {
     breadcrumbs,
     isSlim = false,
     actions,
-    userIcon,
+    avatar,
     menuItems,
     translatedStrings,
     className,
@@ -146,7 +161,7 @@ export const Header = (props: HeaderProps) => {
       {children && <div className='iui-page-header-center'>{children}</div>}
       <div className='iui-page-header-right'>
         {actions}
-        {userIcon}
+        {avatar}
         {menuItems && (
           <DropdownMenu menuItems={menuItems}>
             <IconButton
