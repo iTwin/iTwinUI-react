@@ -108,7 +108,10 @@ export type TileProps = {
   isLoading?: boolean;
   /**
    * Flag whether the tile is disabled.
-   * Users should change buttons and icon buttons to disabled ones when this flag is set.
+  *
+  * Note: This only affects the tile. You need to manually disable
+  * the buttons and other interactive elements inside the tile.
+  *
    * @default false
    */
   isDisabled?: boolean;
