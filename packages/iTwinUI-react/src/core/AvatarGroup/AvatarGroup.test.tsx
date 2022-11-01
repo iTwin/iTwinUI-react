@@ -69,7 +69,7 @@ it('should render in its most basic state', () => {
 
 it('should render animated', () => {
   const { container } = render(
-    <AvatarGroup avatarSize='medium' animated={true}>
+    <AvatarGroup iconSize='medium' animated={true}>
       {generateAvatars(7)}
     </AvatarGroup>,
   );
@@ -78,7 +78,7 @@ it('should render animated', () => {
 
 it('should render without count avatar', () => {
   const { container } = render(
-    <AvatarGroup avatarSize='medium'>{generateAvatars(6)}</AvatarGroup>,
+    <AvatarGroup iconSize='medium'>{generateAvatars(6)}</AvatarGroup>,
   );
   const avatarGroup = container.querySelector(
     '.iui-avatar-list.iui-stacked',
@@ -99,7 +99,7 @@ it('should render without count avatar', () => {
 
 it('should render different length', () => {
   const { container } = render(
-    <AvatarGroup avatarSize='medium' maxAvatars={3}>
+    <AvatarGroup iconSize='medium' maxIcons={3}>
       {generateAvatars(7)}
     </AvatarGroup>,
   );
@@ -124,7 +124,7 @@ it('should render different length', () => {
 
 it('should render animated', () => {
   const { container } = render(
-    <AvatarGroup avatarSize='medium' animated={true}>
+    <AvatarGroup iconSize='medium' animated={true}>
       {generateAvatars(7)}
     </AvatarGroup>,
   );
@@ -133,7 +133,7 @@ it('should render animated', () => {
 
 it('should render many avatars', () => {
   const { container } = render(
-    <AvatarGroup avatarSize='medium'>{generateAvatars(105)}</AvatarGroup>,
+    <AvatarGroup iconSize='medium'>{generateAvatars(105)}</AvatarGroup>,
   );
   expect(container.querySelector('.iui-avatar-list.iui-stacked')).toBeTruthy();
   expect(
@@ -147,7 +147,7 @@ it('should render many avatars', () => {
 
 it('should render not stacked', () => {
   const { container } = render(
-    <AvatarGroup avatarSize='medium' stacked={false}>
+    <AvatarGroup iconSize='medium' stacked={false}>
       {generateAvatars(7)}
     </AvatarGroup>,
   );
@@ -159,7 +159,7 @@ it.each(['small', 'medium', 'large', 'x-large'] as Array<
   'small' | 'medium' | 'large' | 'x-large'
 >)('should render with %s size', (size) => {
   const { container } = render(
-    <AvatarGroup avatarSize={size} stacked={false}>
+    <AvatarGroup iconSize={size} stacked={false}>
       {generateAvatars(7)}
     </AvatarGroup>,
   );
@@ -175,11 +175,7 @@ it.each(['small', 'medium', 'large', 'x-large'] as Array<
 
 it('should render custom classname', () => {
   const { container } = render(
-    <AvatarGroup
-      avatarSize='medium'
-      className='custom-classname'
-      stacked={false}
-    >
+    <AvatarGroup iconSize='medium' className='custom-classname' stacked={false}>
       {generateAvatars(7)}
     </AvatarGroup>,
   );
@@ -192,8 +188,8 @@ it('should render custom classname', () => {
 it('should render custom classname for count avatar', () => {
   const { container } = render(
     <AvatarGroup
-      avatarSize='medium'
-      countAvatarProps={{ className: 'custom-classname' }}
+      iconSize='medium'
+      countIconProps={{ className: 'custom-classname' }}
       stacked={false}
     >
       {generateAvatars(7)}

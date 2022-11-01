@@ -12,7 +12,7 @@ export type AvatarGroupProps = {
    * Max number of avatars unstacked.
    * @default 5
    */
-  maxAvatars?: number;
+  maxIcons?: number;
   /**
    * If true, group will be stacked to take less space.
    * @default true
@@ -27,7 +27,7 @@ export type AvatarGroupProps = {
    * Size of avatars and count avatars.
    * @default 'small'
    */
-  avatarSize?: 'small' | 'medium' | 'large' | 'x-large';
+  iconSize?: 'small' | 'medium' | 'large' | 'x-large';
   /**
    * Avatars in the group.
    */
@@ -35,7 +35,7 @@ export type AvatarGroupProps = {
   /**
    * Count Avatar props.
    */
-  countAvatarProps?: React.ComponentPropsWithRef<'div'>;
+  countIconProps?: React.ComponentPropsWithRef<'div'>;
 } & Omit<CommonProps, 'title'>;
 
 /**
@@ -76,9 +76,9 @@ export const AvatarGroup = (props: AvatarGroupProps) => {
     children,
     animated = false,
     stacked = true,
-    maxAvatars = 5,
-    avatarSize = 'small',
-    countAvatarProps,
+    maxIcons = 5,
+    iconSize = 'small',
+    countIconProps,
     className,
     ...rest
   } = props;
@@ -92,7 +92,7 @@ export const AvatarGroup = (props: AvatarGroupProps) => {
     return childrenArray.slice(0, count).map((child) =>
       React.cloneElement(child as JSX.Element, {
         status: undefined,
-        size: avatarSize,
+        size: iconSize,
       }),
     );
   };
@@ -110,24 +110,23 @@ export const AvatarGroup = (props: AvatarGroupProps) => {
         )}
         {...rest}
       >
-        {childrenArray.length <= maxAvatars + 1 &&
-          getAvatarList(maxAvatars + 1)}
-        {childrenArray.length > maxAvatars + 1 && (
+        {childrenArray.length <= maxIcons + 1 && getAvatarList(maxIcons + 1)}
+        {childrenArray.length > maxIcons + 1 && (
           <>
-            {getAvatarList(maxAvatars)}
+            {getAvatarList(maxIcons)}
             ​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
             <div
-              {...countAvatarProps}
+              {...countIconProps}
               className={cx(
                 'iui-avatar',
-                { [`iui-${avatarSize}`]: avatarSize !== 'medium' },
+                { [`iui-${iconSize}`]: iconSize !== 'medium' },
                 'iui-avatar-count',
-                countAvatarProps?.className,
+                countIconProps?.className,
               )}
             >
               <abbr className='iui-initials'>
                 {childrenLength <= maxLength
-                  ? `${childrenLength - maxAvatars}`
+                  ? `${childrenLength - maxIcons}`
                   : `${maxLength}+`}
               </abbr>
               <span className='iui-stroke' />
