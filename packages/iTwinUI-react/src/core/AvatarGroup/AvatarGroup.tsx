@@ -37,6 +37,12 @@ export type AvatarGroupProps = {
    */
   countAvatarProps?: React.ComponentPropsWithRef<'div'>;
 } & Omit<CommonProps, 'title'>;
+
+/**
+ * @deprecated Since v2, this has been renamed to `AvatarGroupProps` (Use with `AvatarGroup`)
+ */
+export type UserIconGroupProps = AvatarGroupProps;
+
 /**
  * Group Avatars together.
  *
@@ -133,5 +139,10 @@ export const AvatarGroup = (props: AvatarGroupProps) => {
     </>
   );
 };
+
+/**
+ * @deprecated Since v2, this has been renamed to `AvatarGroup`
+ */
+export const UserIconGroup = AvatarGroup;
 
 export default AvatarGroup;

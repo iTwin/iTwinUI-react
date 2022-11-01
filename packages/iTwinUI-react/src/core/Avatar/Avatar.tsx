@@ -9,6 +9,11 @@ import '@itwin/itwinui-css/css/avatar.css';
 
 export type AvatarStatus = 'online' | 'busy' | 'away' | 'offline';
 
+/**
+ * @deprecated Since v2, this has been renamed to `AvatarStatus` (Use with `Avatar`)
+ */
+export type UserIconStatus = AvatarStatus;
+
 export type StatusTitles = { [key in Exclude<AvatarStatus, ''>]: string };
 
 export type AvatarProps = {
@@ -43,6 +48,11 @@ export type AvatarProps = {
    */
   translatedStatusTitles?: StatusTitles;
 } & Omit<CommonProps, 'title'>;
+
+/**
+ * @deprecated Since v2, this has been renamed to `AvatarProps` (Use with `Avatar`)
+ */
+export type UserIconProps = AvatarProps;
 
 export const defaultStatusTitles: StatusTitles = {
   away: 'Away',
@@ -113,5 +123,10 @@ export const Avatar = (props: AvatarProps) => {
     </span>
   );
 };
+
+/**
+ * @deprecated Since v2, this has been renamed to `Avatar`
+ */
+export const UserIcon = Avatar;
 
 export default Avatar;

@@ -5,11 +5,17 @@
 export { Alert } from './Alert';
 export type { AlertProps } from './Alert';
 
-export { Avatar } from './Avatar';
-export type { AvatarProps, StatusTitles, AvatarStatus } from './Avatar';
+export { Avatar, UserIcon } from './Avatar';
+export type {
+  AvatarProps,
+  StatusTitles,
+  AvatarStatus,
+  UserIconProps,
+  UserIconStatus,
+} from './Avatar';
 
-export { AvatarGroup } from './AvatarGroup';
-export type { AvatarGroupProps } from './AvatarGroup';
+export { AvatarGroup, UserIconGroup } from './AvatarGroup';
+export type { AvatarGroupProps, UserIconGroupProps } from './AvatarGroup';
 
 export { Backdrop } from './Backdrop';
 export type { BackdropProps } from './Backdrop';
@@ -290,12 +296,6 @@ export type {
   KbdProps,
   TextProps,
 } from './Typography';
-
-export { UserIcon } from './UserIcon';
-export type { UserIconProps, UserIconStatus } from './UserIcon';
-
-export { UserIconGroup } from './UserIconGroup';
-export type { UserIconGroupProps } from './UserIconGroup';
 
 export { Wizard } from './Wizard';
 export type {
