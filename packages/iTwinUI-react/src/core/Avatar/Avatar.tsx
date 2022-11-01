@@ -18,7 +18,7 @@ export type StatusTitles = { [key in Exclude<AvatarStatus, ''>]: string };
 
 export type AvatarProps = {
   /**
-   * Size of a user icon.
+   * Size of a avatar.
    * @default 'small'
    */
   size?: 'small' | 'medium' | 'large' | 'x-large';

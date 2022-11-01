@@ -54,7 +54,7 @@ export const Basic: Story<AvatarGroupProps> = (args) => {
 
 Basic.args = {
   animated: false,
-  avatarSize: 'medium',
+  iconSize: 'medium',
 };
 
 export const Animated: Story<AvatarGroupProps> = (args) => {
@@ -85,7 +85,7 @@ export const Animated: Story<AvatarGroupProps> = (args) => {
 
 Animated.args = {
   animated: true,
-  avatarSize: 'medium',
+  iconSize: 'medium',
 };
 
 export const ManyAvatars: Story<AvatarGroupProps> = (args) => {
@@ -131,7 +131,7 @@ export const ManyAvatars: Story<AvatarGroupProps> = (args) => {
 
 ManyAvatars.args = {
   animated: false,
-  avatarSize: 'large',
+  iconSize: 'large',
 };
 
 export const NonStacked: Story<AvatarGroupProps> = (args) => {
@@ -166,7 +166,7 @@ export const NonStacked: Story<AvatarGroupProps> = (args) => {
 NonStacked.args = {
   animated: false,
   stacked: false,
-  avatarSize: 'medium',
+  iconSize: 'medium',
 };
 
 export const WithTooltip: Story<AvatarGroupProps> = (args) => {
@@ -186,13 +186,13 @@ export const WithTooltip: Story<AvatarGroupProps> = (args) => {
    */
   const avatarRef = React.useRef<HTMLDivElement>(null);
 
-  const arrayLength = args.maxAvatars;
+  const arrayLength = args.maxIcons;
   const usersSubArray = userNames.slice(arrayLength);
   const tooltipContent = usersSubArray.join(`\n`) as string;
 
   return (
     <>
-      <AvatarGroup {...args} countAvatarProps={{ ref: avatarRef }}>
+      <AvatarGroup {...args} countIconProps={{ ref: avatarRef }}>
         {userNames.map((name, index) => (
           <Avatar
             key={`${name}-${index}`}
@@ -217,5 +217,5 @@ export const WithTooltip: Story<AvatarGroupProps> = (args) => {
 
 WithTooltip.args = {
   animated: false,
-  avatarSize: 'medium',
+  iconSize: 'medium',
 };
