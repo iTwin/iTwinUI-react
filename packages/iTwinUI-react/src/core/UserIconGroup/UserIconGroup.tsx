@@ -7,6 +7,9 @@ import cx from 'classnames';
 import { useTheme, CommonProps } from '../utils';
 import '@itwin/itwinui-css/css/avatar.css';
 
+/**
+ * @deprecated Since v2, this has been renamed to `AvatarGroupProps` (Use with `AvatarGroup`)
+ */
 export type UserIconGroupProps = {
   /**
    * Max number of icons unstacked.
@@ -38,6 +41,8 @@ export type UserIconGroupProps = {
   countIconProps?: React.ComponentPropsWithRef<'div'>;
 } & Omit<CommonProps, 'title'>;
 /**
+ * @deprecated Since v2, this has been renamed to `AvatarGroup`
+ *
  * Group User Icons together.
  *
  * User Icons stacking is based on `maxIcons` count. If you provide 8 User Icons and keep default 5 `maxIcons` count,

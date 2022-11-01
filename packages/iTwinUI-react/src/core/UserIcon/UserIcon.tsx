@@ -8,17 +8,17 @@ import { CommonProps, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/avatar.css';
 
 /**
- * @deprecated Use AvatarStatus instead
+ * @deprecated Since v2, this has been renamed to `AvatarStatus` (Use with `Avatar`)
  */
 export type UserIconStatus = 'online' | 'busy' | 'away' | 'offline';
 
 /**
- * @deprecated Use Avatar's StatusTitles instead
+ * @deprecated Since v2, this has been replaced with `Avatar`'s `StatusTitles` (Use with `Avatar`)
  */
 export type StatusTitles = { [key in Exclude<UserIconStatus, ''>]: string };
 
 /**
- * @deprecated Use AvatarProps instead
+ * @deprecated Since v2, this has been renamed to `AvatarProps` (Use with `Avatar`)
  */
 export type UserIconProps = {
   /**
@@ -54,7 +54,7 @@ export type UserIconProps = {
 } & Omit<CommonProps, 'title'>;
 
 /**
- * @deprecated Use Avatar's defaultStatusTitles instead
+ * @deprecated Since v2, this has been replaced with `Avatar`'s `defaultStatusTitles` (Use with `Avatar`)
  */
 export const defaultStatusTitles: StatusTitles = {
   away: 'Away',
@@ -64,8 +64,9 @@ export const defaultStatusTitles: StatusTitles = {
 };
 
 /**
+ * @deprecated Since v2, this has been renamed to `Avatar`
+ *
  * Basic user icon component
- * @deprecated Since v2, this has been renamed to `Avatar`.
  * @example
  * <caption>Small icon with abbreviation</caption>
  * <UserIcon size='small' title='Terry Rivers' abbreviation='TR' backgroundColor='green'/>
