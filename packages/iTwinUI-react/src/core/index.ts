@@ -291,12 +291,15 @@ export type { UserIconProps, StatusTitles, UserIconStatus } from './UserIcon';
 export { UserIconGroup } from './UserIconGroup';
 export type { UserIconGroupProps } from './UserIconGroup';
 
-export { Wizard } from './Wizard';
+export { Wizard, Stepper, WorkflowDiagram } from './Wizard';
 export type {
   WizardProps,
   StepProperties,
   WizardType,
   WizardLocalization,
+  StepperProps,
+  StepperLocalization,
+  WorkflowDiagramProps,
 } from './Wizard';
 
 export {
