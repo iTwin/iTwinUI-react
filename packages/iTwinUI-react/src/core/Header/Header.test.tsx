@@ -90,7 +90,10 @@ it('renders actions alone correctly', () => {
 });
 it('renders avatar alone correctly', () => {
   const { container } = render(
-    <Header appLogo={<div>AppTitle</div>} avatar={<div>AvatarContent</div>} />,
+    <Header
+      appLogo={<div>AppTitle</div>}
+      actions={[<div key='1'>AvatarContent</div>]}
+    />,
   );
 
   const avatar = container.querySelector(
@@ -174,8 +177,10 @@ it('renders multiple right items in the correct order', () => {
   const { container } = render(
     <Header
       appLogo={<div>AppTitle</div>}
-      actions={[<div key='1'>ActionsContent</div>]}
-      avatar={<div>AvatarContent</div>}
+      actions={[
+        <div key='1'>ActionsContent</div>,
+        <div key='2'>AvatarContent</div>,
+      ]}
       menuItems={() => []}
     />,
   );

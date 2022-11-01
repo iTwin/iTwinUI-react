@@ -38,7 +38,7 @@ export type HeaderProps = {
    */
   breadcrumbs?: React.ReactNode;
   /**
-   * Content displayed to the left of the avatar
+   * Content displayed to the left of the `menuItems`
    * (expects array of `IconButton`, potentially wrapped in a `DropdownMenu`)
    * @example
    * [
@@ -56,7 +56,7 @@ export type HeaderProps = {
    */
   children?: React.ReactNode;
   /**
-   * @deprecated Since v2, this has been replaced with `avatar`
+   * @deprecated Since v2, add your `UserIcon` to the end of `actions` itself.
    *
    * User icon
    *
@@ -71,20 +71,6 @@ export type HeaderProps = {
    * </DropdownMenu>
    */
   userIcon?: React.ReactNode;
-  /**
-   * Avatar
-   *
-   * It's size and transition will be handled between slim/not slim state of the
-   * Header
-   * (expects `Avatar`, can be wrapped in `IconButton` and `DropdownMenu` if needed)
-   * @example
-   * <DropdownMenu menuItems={...}>
-   *   <IconButton styleType='borderless'>
-   *     <Avatar ... />
-   *   </IconButton>
-   * </DropdownMenu>
-   */
-  avatar?: React.ReactNode;
   /**
    * Items in the more dropdown menu.
    * Pass a function that takes the `close` argument (to close the menu),
@@ -123,15 +109,13 @@ const defaultTranslations: HeaderTranslations = {
  *    <IconButton>
  *     <SvgHelpCircularHollow />
  *    </IconButton>
- *   </DropdownMenu>
- *  ]}
- *  avatarIcon={
+ *   </DropdownMenu>,
  *   <DropdownMenu menuItems={...}>
  *    <IconButton styleType='borderless'>
  *     <Avatar ... />
  *    </IconButton>
  *   </DropdownMenu>
- *  }
+ *  ]}
  *  isSlim
  * />
  */
@@ -141,7 +125,6 @@ export const Header = (props: HeaderProps) => {
     breadcrumbs,
     isSlim = false,
     actions,
-    avatar,
     menuItems,
     translatedStrings,
     className,
@@ -163,7 +146,6 @@ export const Header = (props: HeaderProps) => {
       {children && <div className='iui-page-header-center'>{children}</div>}
       <div className='iui-page-header-right'>
         {actions}
-        {avatar}
         {menuItems && (
           <DropdownMenu menuItems={menuItems}>
             <IconButton

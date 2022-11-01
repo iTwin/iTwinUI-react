@@ -41,7 +41,6 @@ export default {
     appLogo: { control: { disable: true } },
     breadcrumbs: { control: { disable: true } },
     actions: { control: { disable: true } },
-    avatar: { control: { disable: true } },
     menuItems: { control: { disable: true } },
     children: { control: { disable: true } },
     style: { control: { disable: true } },
@@ -173,9 +172,7 @@ export const Full: Story<HeaderProps> = (args) => {
             <SvgHelpCircularHollow />
           </IconButton>
         </DropdownMenu>,
-      ]}
-      avatar={
-        <DropdownMenu menuItems={avatarMenuItems}>
+        <DropdownMenu key='avatar' menuItems={avatarMenuItems}>
           <IconButton styleType='borderless'>
             <Avatar
               size='medium'
@@ -187,8 +184,8 @@ export const Full: Story<HeaderProps> = (args) => {
               title='Terry Rivers'
             />
           </IconButton>
-        </DropdownMenu>
-      }
+        </DropdownMenu>,
+      ]}
       menuItems={buildMenu('More')}
     />
   );
@@ -243,14 +240,15 @@ export const Basic: Story<HeaderProps> = (args) => {
           ]}
         />
       }
-      avatar={
+      actions={[
         <Avatar
+          key='avatar'
           size='medium'
           abbreviation='TR'
           backgroundColor={getUserColor('Terry Rivers')}
           title='Terry Rivers'
-        />
-      }
+        />,
+      ]}
     />
   );
 };
@@ -304,14 +302,15 @@ export const CenterContent: Story<HeaderProps> = (args) => {
           ]}
         />
       }
-      avatar={
+      actions={[
         <Avatar
+          key='avatar'
           size='medium'
           abbreviation='TR'
           backgroundColor={getUserColor('Terry Rivers')}
           title='Terry Rivers'
-        />
-      }
+        />,
+      ]}
       menuItems={buildMenu('More')}
     >
       {searchBar}
