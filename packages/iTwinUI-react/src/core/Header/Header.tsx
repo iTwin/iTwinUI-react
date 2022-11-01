@@ -56,7 +56,7 @@ export type HeaderProps = {
    */
   children?: React.ReactNode;
   /**
-   * @deprecated Since v2, add your `UserIcon` to the end of `actions` itself.
+   * @deprecated Since v2, add your `UserIcon` (called `Avatar` since v2) to the end of `actions` itself
    *
    * User icon
    *
