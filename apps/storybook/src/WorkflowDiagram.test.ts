@@ -2,15 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-describe('Wizard', () => {
-  const storyPath = 'Core/Wizard';
-  const tests = [
-    'Basic',
-    'Long',
-    'Localized Long',
-    'With Tooltips',
-    'Workflow Diagram',
-  ];
+describe('WorkflowDiagram', () => {
+  const storyPath = 'Core/WorkflowDiagram';
+  const tests = ['Basic', 'With Tooltips'];
 
   tests.forEach((testName) => {
     it(testName, function () {
