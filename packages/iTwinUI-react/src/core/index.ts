@@ -8,6 +8,9 @@ export type { AlertProps } from './Alert';
 export { Avatar } from './Avatar';
 export type { AvatarProps, StatusTitles, AvatarStatus } from './Avatar';
 
+export { AvatarGroup } from './AvatarGroup';
+export type { AvatarGroupProps } from './AvatarGroup';
+
 export { Backdrop } from './Backdrop';
 export type { BackdropProps } from './Backdrop';
 
