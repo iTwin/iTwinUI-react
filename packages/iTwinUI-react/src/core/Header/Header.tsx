@@ -56,8 +56,9 @@ export type HeaderProps = {
    */
   children?: React.ReactNode;
   /**
+   * @deprecated Since v2, this has been replaced with `avatar`
+   *
    * User icon
-   * @deprecated Use `avatar` instead
    *
    * It's size and transition will be handled between slim/not slim state of the
    * Header
@@ -72,6 +73,7 @@ export type HeaderProps = {
   userIcon?: React.ReactNode;
   /**
    * Avatar
+   *
    * It's size and transition will be handled between slim/not slim state of the
    * Header
    * (expects `Avatar`, can be wrapped in `IconButton` and `DropdownMenu` if needed)
@@ -126,7 +128,7 @@ const defaultTranslations: HeaderTranslations = {
  *  avatarIcon={
  *   <DropdownMenu menuItems={...}>
  *    <IconButton styleType='borderless'>
- *     <AvatarIcon ... />
+ *     <Avatar ... />
  *    </IconButton>
  *   </DropdownMenu>
  *  }
