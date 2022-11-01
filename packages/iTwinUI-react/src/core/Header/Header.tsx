@@ -40,6 +40,10 @@ export type HeaderProps = {
   /**
    * Content displayed to the left of the `menuItems`
    * (expects array of `IconButton`, potentially wrapped in a `DropdownMenu`)
+   *
+   * Since v2, `userIcon` is deprecated.
+   * The new recommendation is to add `Avatar` (Called `UserIcon` before v2) to the end of `actions`.
+   * `Avatar` can be wrapped in `IconButton` and `DropdownMenu` if needed.
    * @example
    * [
    *  <IconButton><SvgNotification /></IconButton>,
@@ -47,6 +51,11 @@ export type HeaderProps = {
    *   <IconButton>
    *    <SvgHelpCircularHollow />
    *   </IconButton>
+   *  </DropdownMenu>,
+   *  <DropdownMenu menuItems={...}>
+   *    <IconButton styleType='borderless'>
+   *      <Avatar ... />
+   *    </IconButton>
    *  </DropdownMenu>
    * ]
    */
@@ -125,6 +134,7 @@ export const Header = (props: HeaderProps) => {
     breadcrumbs,
     isSlim = false,
     actions,
+    userIcon,
     menuItems,
     translatedStrings,
     className,
@@ -146,6 +156,7 @@ export const Header = (props: HeaderProps) => {
       {children && <div className='iui-page-header-center'>{children}</div>}
       <div className='iui-page-header-right'>
         {actions}
+        {userIcon}
         {menuItems && (
           <DropdownMenu menuItems={menuItems}>
             <IconButton
