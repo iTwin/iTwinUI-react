@@ -40,6 +40,10 @@ export type TabsProps = {
   color?: 'blue' | 'green';
   /**
    * Type of the tabs.
+   *
+   * Supported values:
+   * - `orientation=horizontal`: `default` | `borderless` | `pill`
+   * - `orientation=vertical`: `default` | `borderless`
    * @default 'default'
    */
   type?: 'default' | 'borderless' | 'pill';
@@ -66,7 +70,14 @@ export type TabsProps = {
   children?: React.ReactNode;
 };
 
+/**
+ * @deprecated Since v2, use `TabProps` with `Tabs`
+ */
 export type HorizontalTabsProps = Omit<TabsProps, 'orientation'>;
+
+/**
+ * @deprecated Since v2, use `TabProps` with `Tabs`
+ */
 export type VerticalTabsProps = Omit<TabsProps, 'orientation' | 'type'> & {
   type?: 'default' | 'borderless';
 };
@@ -94,6 +105,10 @@ export type VerticalTabsProps = Omit<TabsProps, 'orientation' | 'type'> & {
  *   <Tab label='Label 2' icon={<SvgPlaceholder />} />,
  * ];
  * <Tabs labels={tabsWithIcons} type='pill' />
+ *
+ * @example
+ * // Vertical Tabs
+ * <Tabs orientation='vertical' labels={tabs} />
  */
 export const Tabs = (props: TabsProps) => {
   const {
@@ -306,6 +321,8 @@ export const Tabs = (props: TabsProps) => {
 };
 
 /**
+ * @deprecated Since v2, directly use `Tabs` with `orientation: 'horizontal'`
+ *
  * Tabs organize and allow navigation between groups of content that are related and at the same level of hierarchy.
  * @example
  * const tabs = [
@@ -320,12 +337,14 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => (
 );
 
 /**
+ * @deprecated Since v2, directly use `Tabs` with `orientation: 'vertical'`
+ *
  * Tabs organize and allow navigation between groups of content that are related and at the same level of hierarchy.
  * @example
  * const tabs = [
  *   <Tab label='Label 1' sublabel='First tab' />,
  *   <Tab label='Label 2' sublabel='Active tab' />,
- *   <Tab label='Label 3'  sublabel='Disabled tab' disabled icon={<SvgPlaceholder />} />,
+ *   <Tab label='Label 3' sublabel='Disabled tab' disabled icon={<SvgPlaceholder />} />,
  * ];
  * <VerticalTabs labels={tabs} activeIndex={1}>Tabpanel content</VerticalTabs>
  */
