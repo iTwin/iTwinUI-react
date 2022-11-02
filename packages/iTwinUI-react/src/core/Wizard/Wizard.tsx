@@ -15,12 +15,12 @@ import { WorkflowDiagram } from './WorkflowDiagram';
 export type WizardType = 'default' | 'long' | 'workflow';
 
 /**
- * @deprecated Since v2, this has been renamed to `StepperLocalization` (Use with `Stepper`) or
+ * @deprecated Since v2, use `StepperLocalization` with `Stepper`
  */
 export type WizardLocalization = StepperLocalization;
 
 /**
- * @deprecated Since v2, this has been renamed to `StepperProps` (Use with `Stepper`)
+ * @deprecated Since v2, use `StepperProps` with `Stepper` or `WorkflowDiagramProps` with `WorkflowDiagram`
  */
 export type WizardProps = {
   /**
