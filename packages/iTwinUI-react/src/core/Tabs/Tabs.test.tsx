@@ -5,7 +5,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 import { Tab } from './Tab';
-import { Tabs, VerticalTabs, TabsProps } from './Tabs';
+import { Tabs, TabsProps } from './Tabs';
 
 const renderComponent = (
   initialProps?: Partial<TabsProps>,
@@ -56,7 +56,8 @@ it('should render pill tabs', () => {
 
 it('should render vertical tabs', () => {
   const { container, queryByText } = render(
-    <VerticalTabs
+    <Tabs
+      orientation='vertical'
       labels={[
         <Tab key={1} label='Label 1' />,
         <Tab key={2} label='Label 2' />,
@@ -64,7 +65,7 @@ it('should render vertical tabs', () => {
       ]}
     >
       Test content
-    </VerticalTabs>,
+    </Tabs>,
   );
 
   expect(
