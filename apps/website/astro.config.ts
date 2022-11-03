@@ -11,6 +11,8 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
+const isDev = process.env.NODE_ENV === 'development';
+
 // https://astro.build/config
 export default defineConfig({
   integrations: [react(), mdx(), sitemap()],
@@ -27,11 +29,11 @@ export default defineConfig({
         '@codesandbox/sandpack-react',
         '@codesandbox/sandpack-client',
         '@tippyjs/react',
-        '@itwin/itwinui-icons-react',
+        !isDev && '@itwin/itwinui-icons-react',
         // '@itwin/itwinui-illustrations-react',
         // 'react',
         // 'react-dom',
-      ],
+      ].filter(Boolean),
     },
   },
 });
