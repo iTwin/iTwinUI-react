@@ -36,6 +36,7 @@ import {
   ExpanderColumn,
   Input,
   Radio,
+  ProgressRadial,
 } from '@itwin/itwinui-react';
 import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
@@ -3560,7 +3561,13 @@ export const StatusAndCellIcons: Story<Partial<TableProps>> = (args) => {
               <DefaultCell
                 {...props}
                 startIcon={props.cellProps.row.original.startIcon}
-                endIcon={props.cellProps.row.original.endIcon}
+                endIcon={
+                  props.cellProps.row.original.isLoading ? (
+                    <ProgressRadial value={40} />
+                  ) : (
+                    props.cellProps.row.original.endIcon
+                  )
+                }
               />
             ),
           },
@@ -3596,6 +3603,12 @@ export const StatusAndCellIcons: Story<Partial<TableProps>> = (args) => {
 
   const data = useMemo(
     () => [
+      {
+        name: 'alfa.mp3',
+        modified: 'Just now',
+        size: '76 KB',
+        isLoading: true,
+      },
       {
         name: 'beta.mp3',
         modified: 'Just now',
@@ -3638,11 +3651,13 @@ export const StatusAndCellIcons: Story<Partial<TableProps>> = (args) => {
         size: string;
         startIcon: JSX.Element;
         endIcon: JSX.Element;
-        status: 'positive' | 'negative' | 'warning' | undefined;
+        status?: 'positive' | 'negative' | 'warning';
+        isLoading?: boolean;
       }>,
     ) => {
       return {
         status: row.original.status,
+        isLoading: row.original.isLoading,
       };
     },
     [],

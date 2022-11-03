@@ -91,6 +91,10 @@ export type TablePaginatorRendererProps = {
    * @default false
    */
   isLoading?: boolean;
+  /**
+   * Total number of rows selected (for mutli-selection mode only)
+   */
+  totalSelectedRowsCount?: number;
 };
 
 /**
@@ -200,6 +204,7 @@ export type TableProps<
    */
   rowProps?: (row: Row<T>) => React.ComponentPropsWithRef<'div'> & {
     status?: 'positive' | 'warning' | 'negative';
+    isLoading?: boolean;
   };
   /**
    * Modify the density of the table (adjusts the row height).
@@ -659,6 +664,8 @@ export const Table = <
       isLoading,
       onPageChange: gotoPage,
       onPageSizeChange: setPageSize,
+      totalSelectedRowsCount:
+        selectionMode === 'single' ? 0 : instance.selectedFlatRows.length, // 0 when selectionMode = 'single' since totalSelectedRowCount is for multi-selection mode only
     }),
     [
       density,
@@ -668,6 +675,8 @@ export const Table = <
       setPageSize,
       state.pageIndex,
       state.pageSize,
+      instance.selectedFlatRows,
+      selectionMode,
     ],
   );
 
