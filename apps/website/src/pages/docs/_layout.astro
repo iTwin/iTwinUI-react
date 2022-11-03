@@ -43,6 +43,11 @@ const currentPage = new URL(Astro.request.url).pathname;
       overflow: hidden overlay; // need "hidden" on x for safari
       --scrollbar-right-offset: 5px;
 
+      &:not(:hover, :focus-within) {
+        --scrollbar-color: transparent;
+        --scrollbar-color-hover: transparent;
+      }
+
       @media (max-width: 50em) {
         grid-area: content;
         border-right: none;
