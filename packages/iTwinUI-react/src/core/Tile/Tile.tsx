@@ -108,10 +108,10 @@ export type TileProps = {
   isLoading?: boolean;
   /**
    * Flag whether the tile is disabled.
-  *
-  * Note: This only affects the tile. You need to manually disable
-  * the buttons and other interactive elements inside the tile.
-  *
+   *
+   * Note: This only affects the tile. You need to manually disable
+   * the buttons and other interactive elements inside the tile.
+   *
    * @default false
    */
   isDisabled?: boolean;
@@ -162,29 +162,6 @@ export const Tile = (props: TileProps) => {
   const [isMenuVisible, setIsMenuVisible] = React.useState(false);
   const showMenu = React.useCallback(() => setIsMenuVisible(true), []);
   const hideMenu = React.useCallback(() => setIsMenuVisible(false), []);
-
-  const renderTitleIcon = () => {
-    if (isLoading) {
-      return (
-        <ProgressRadial
-          className='iui-tile-status-icon'
-          aria-hidden
-          indeterminate
-        />
-      );
-    }
-    if (isSelected) {
-      return <SvgCheckmark className='iui-tile-status-icon' aria-hidden />;
-    }
-    if (isNew) {
-      return <SvgNew className='iui-tile-status-icon' aria-hidden />;
-    }
-    if (!!status) {
-      return StatusIconMap[status]({ className: `iui-tile-status-icon` });
-    }
-
-    return null;
-  };
 
   return (
     <div
@@ -243,7 +220,12 @@ export const Tile = (props: TileProps) => {
 
       <div className='iui-tile-content'>
         <div className='iui-tile-name'>
-          {renderTitleIcon()}
+          <TitleIcon
+            isLoading={isLoading}
+            isSelected={isSelected}
+            isNew={isNew}
+            status={status}
+          />
 
           <span className='iui-tile-name-label'>{name}</span>
         </div>
@@ -293,6 +275,42 @@ export const Tile = (props: TileProps) => {
       {buttons && <div className='iui-tile-buttons'>{buttons}</div>}
     </div>
   );
+};
+
+type TitleIconProps = {
+  isLoading?: boolean;
+  isSelected?: boolean;
+  isNew?: boolean;
+  status?: 'positive' | 'warning' | 'negative';
+};
+
+const TitleIcon = ({
+  isLoading = false,
+  isSelected = false,
+  isNew = false,
+  status,
+}: TitleIconProps) => {
+  const StatusIcon = !!status && StatusIconMap[status];
+
+  if (isLoading) {
+    return (
+      <ProgressRadial
+        className='iui-tile-status-icon'
+        aria-hidden
+        indeterminate
+      />
+    );
+  }
+  if (isSelected) {
+    return <SvgCheckmark className='iui-tile-status-icon' aria-hidden />;
+  }
+  if (isNew) {
+    return <SvgNew className='iui-tile-status-icon' aria-hidden />;
+  }
+  if (StatusIcon) {
+    return <StatusIcon className='iui-tile-status-icon' />;
+  }
+  return null;
 };
 
 export default Tile;
