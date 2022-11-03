@@ -185,6 +185,12 @@ const currentPage = new URL(Astro.request.url).pathname;
     .hero-text {
       @media (max-width: 50em) {
         order: 2;
+        display: grid;
+        justify-items: center;
+
+        > * {
+          justify-content: center;
+        }
       }
     }
     .hexagon-bg {
