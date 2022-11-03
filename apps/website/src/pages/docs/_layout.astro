@@ -273,12 +273,12 @@ const currentPage = new URL(Astro.request.url).pathname;
     let alreadySet = false;
     for (const heading of allHeadings) {
       const id = heading.id;
-      const listItem = document.querySelector(`nav li a[href='#${id}']`).parentElement;
+      const listItem = document.querySelector(`nav li a[href='#${id}']`)?.parentElement;
       if (currentlyInteresecting.has(id) && !alreadySet) {
-        listItem.setAttribute('data-active', 'true');
+        listItem?.setAttribute('data-active', 'true');
         alreadySet = true;
       } else if (currentlyInteresecting.size > 0) {
-        listItem.removeAttribute('data-active');
+        listItem?.removeAttribute('data-active');
       }
     }
   };
