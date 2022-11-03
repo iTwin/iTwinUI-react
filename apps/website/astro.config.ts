@@ -29,6 +29,7 @@ export default defineConfig({
         '@codesandbox/sandpack-react',
         '@codesandbox/sandpack-client',
         '@tippyjs/react',
+        '@itwin/itwinui-react',
         !isDev && '@itwin/itwinui-icons-react',
         // '@itwin/itwinui-illustrations-react',
         // 'react',

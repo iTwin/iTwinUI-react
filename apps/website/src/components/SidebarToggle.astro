@@ -17,27 +17,17 @@
 </sidebar-toggle>
 
 <script>
+  import { isSidebarOpen } from '~/stores/sidebar.store';
+
   customElements.define(
     'sidebar-toggle',
     class extends HTMLElement {
       connectedCallback() {
         const button = this.querySelector('button');
-        const sidebar = document.querySelector('.sidebar') as HTMLElement;
-        const main = document.querySelector('main') as HTMLElement;
 
         button.addEventListener('click', () => {
           const isCurrentlyExpanded = button.getAttribute('aria-expanded') === 'true';
-
-          button.setAttribute('aria-expanded', isCurrentlyExpanded ? 'false' : 'true');
-          sidebar.dataset.visible = isCurrentlyExpanded ? 'false' : 'true';
-          main.toggleAttribute('inert', !isCurrentlyExpanded);
-        });
-
-        window.matchMedia('(max-width: 50em)').addEventListener('change', ({ matches: isSmol }) => {
-          // remove the attribute completely when on desktop, to prevent undesired transition when resizing the window
-          if (!isSmol) {
-            sidebar.removeAttribute('data-visible');
-          }
+          isSidebarOpen.set(!isCurrentlyExpanded);
         });
       }
     }
