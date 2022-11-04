@@ -3,8 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import * as React from 'react';
-import { Button, ModalContent, ModalButtonBar, ThemeProvider } from '@itwin/itwinui-react';
-import { Dialog } from '@itwin/itwinui-react/esm/core/Dialog';
+import { Button, ModalContent, ModalButtonBar, ThemeProvider, Dialog } from '@itwin/itwinui-react';
 
 export default () => {
   const [isModalOpen, setIsModalOpen] = React.useState(true);
