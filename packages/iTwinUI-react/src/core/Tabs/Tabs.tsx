@@ -13,6 +13,26 @@ import {
 import '@itwin/itwinui-css/css/tabs.css';
 import { Tab } from './Tab';
 
+export type TabsOrientationProps =
+  | {
+      /**
+       * Orientation of the tabs.
+       * @default 'horizontal'
+       */
+      orientation?: 'horizontal';
+      /**
+       * Type of the tabs.
+       *
+       * If `orientation = 'vertical'`, `pill` is not applicable.
+       * @default 'default'
+       */
+      type?: 'default' | 'borderless' | 'pill';
+    }
+  | {
+      orientation: 'vertical';
+      type?: 'default' | 'borderless';
+    };
+
 export type TabsProps = {
   /**
    * Elements shown for each tab.
@@ -39,20 +59,6 @@ export type TabsProps = {
    */
   color?: 'blue' | 'green';
   /**
-   * Type of the tabs.
-   *
-   * Supported values:
-   * - `orientation=horizontal`: `default` | `borderless` | `pill`
-   * - `orientation=vertical`: `default` | `borderless`
-   * @default 'default'
-   */
-  type?: 'default' | 'borderless' | 'pill';
-  /**
-   * Orientation of the tabs.
-   * @default 'horizontal'
-   */
-  orientation?: 'horizontal' | 'vertical';
-  /**
    * Custom CSS class name for tabs.
    */
   tabsClassName?: string;
@@ -68,7 +74,7 @@ export type TabsProps = {
    * Content inside the tab panel.
    */
   children?: React.ReactNode;
-};
+} & TabsOrientationProps;
 
 /**
  * @deprecated Since v2, use `TabProps` with `Tabs`
