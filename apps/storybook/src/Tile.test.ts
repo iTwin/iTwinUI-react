@@ -10,7 +10,7 @@ describe('Tile', () => {
     'Actionable',
     'Condensed',
     'Folder',
-    'With User Icon',
+    'With Avatar',
     'Status',
     'Loading',
     'Disabled',
