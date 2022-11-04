@@ -1,6 +1,7 @@
 ---
+import __dirname from '__dirname';
 import fs from 'fs';
-import { createRequire } from 'module';
+import path from 'path';
 import { parse as docgenTsParse } from 'react-docgen-typescript';
 import {
   parse as docgenParse,
@@ -19,15 +20,20 @@ const defaultHandlers = Object.values(docgenHandlers).map((handler) => handler);
 const defaultResolver = docgenResolver.findAllExportedComponentDefinitions;
 const defaultImporter = docgenImporters.makeFsImporter();
 
-const path = createRequire(import.meta.url).resolve(Astro.props.path);
-const componentName = [...path.split('/')].pop().split('.')[0];
-const src = fs.readFileSync(path, 'utf8');
+const relativePath = Astro.props.path.replace(
+  '@itwin/itwinui-react',
+  '../../packages/iTwinUI-react' // relative from root of `website` workspace
+);
 
-const docgenResults = path.endsWith('.tsx')
+const componentPath = path.join(__dirname, relativePath);
+const componentName = [...componentPath.split('/')].pop().split('.')[0];
+const src = fs.readFileSync(componentPath, 'utf8');
+
+const docgenResults = componentPath.endsWith('.tsx')
   ? (docgenParse(src, defaultResolver, defaultHandlers, {
       importer: defaultImporter,
     }) as DocumentationObject[])
-  : docgenTsParse(path);
+  : docgenTsParse(componentPath);
 
 const { props } = [...docgenResults].find((docs) => docs['displayName'] === componentName);
 ---
