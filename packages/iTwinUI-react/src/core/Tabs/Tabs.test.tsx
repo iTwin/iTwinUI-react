@@ -114,7 +114,7 @@ it('should not fail with invalid active tab and set the closest one', () => {
   expect(tabs[2].className).toContain('iui-tab iui-active'); // 2 is closest to 100
 });
 
-it('should render strings in HorizontalTab child component', () => {
+it('should render strings in child component', () => {
   const { container } = renderComponent({
     labels: ['item0', 'item1', 'item2'],
   });
@@ -128,7 +128,7 @@ it('should render strings in HorizontalTab child component', () => {
   });
 });
 
-it('should add .iui-large if HorizontalTab has sublabel', () => {
+it('should add .iui-large if has sublabel', () => {
   const { container } = renderComponent({
     labels: [
       <Tab key={0} label='item0' sublabel='Sublabel0' />,
