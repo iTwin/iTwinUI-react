@@ -18,7 +18,7 @@ const renderComponent = (
       <Tab key={3} label='Label 3' />,
     ],
   };
-  const props = { ...defaultProps, ...initialProps };
+  const props: TabsProps = { ...defaultProps, ...initialProps } as TabsProps;
   const children = initialChildren ?? 'Test content';
   return render(<Tabs {...props}>{children}</Tabs>);
 };
