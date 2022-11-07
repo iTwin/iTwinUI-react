@@ -19,6 +19,8 @@ import {
 } from '@itwin/itwinui-react';
 
 export default () => {
+  console.log('dummy change');
+
   const buildMenu = (menu: string) => (close: () => void) =>
     [
       <MenuItem key={1} value={'Item #1'} onClick={close}>
