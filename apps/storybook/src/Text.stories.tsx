@@ -32,8 +32,18 @@ const TextStory: Story<TextProps> = (args) => {
   return <Text {...rest}>{children}</Text>;
 };
 
-export const Basic: Story<TextProps> = TextStory.bind({});
-Basic.args = { variant: 'body' };
+export const Body: Story<TextProps> = TextStory.bind({});
+Body.args = { variant: 'body' };
+export const Small: Story<TextProps> = TextStory.bind({});
+Small.args = { variant: 'small' };
+export const Leading: Story<TextProps> = TextStory.bind({});
+Leading.args = { variant: 'leading' };
+export const Subheading: Story<TextProps> = TextStory.bind({});
+Subheading.args = { variant: 'subheading' };
+export const Title: Story<TextProps> = TextStory.bind({});
+Title.args = { variant: 'title' };
+export const Headline: Story<TextProps> = TextStory.bind({});
+Headline.args = { variant: 'headline' };
 
 export const Polymorphic: Story<TextProps<'h4'>> = ({ children, ...rest }) => {
   return (
