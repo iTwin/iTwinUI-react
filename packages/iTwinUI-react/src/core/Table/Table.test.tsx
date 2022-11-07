@@ -2539,6 +2539,33 @@ it('should change page size', async () => {
   );
 });
 
+it('should render number of rows selected for paginator', async () => {
+  const { container } = renderComponent({
+    data: mockedSubRowsData(),
+    pageSize: 2,
+    paginatorRenderer: (props) => <TablePaginator {...props} />,
+    isSelectable: true,
+  });
+
+  await expandAll(container);
+
+  const rowCheckboxes = container.querySelectorAll(
+    '.iui-table-body .iui-table-row .iui-checkbox',
+  );
+
+  expect(container.querySelector('.iui-left span')).toBeNull();
+
+  fireEvent.click(rowCheckboxes[1]); // selects row 1.1
+  expect(container.querySelector('.iui-left span')?.textContent).toBe(
+    '1 row selected',
+  );
+
+  fireEvent.click(rowCheckboxes[2]); // selects rows 1.2, 1.2.1, and 1.2.2
+  expect(container.querySelector('.iui-left span')?.textContent).toBe(
+    '4 rows selected',
+  );
+});
+
 it('should handle resize by increasing width of current column and decreasing the next ones', () => {
   jest
     .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
@@ -3020,7 +3047,7 @@ it('should handle table resize only when some columns were resized', () => {
       triggerResize = onResize;
       return [
         jest.fn(),
-        ({ disconnect: jest.fn() } as unknown) as ResizeObserver,
+        { disconnect: jest.fn() } as unknown as ResizeObserver,
       ];
     });
   const columns: Column<TestDataType>[] = [
@@ -3150,7 +3177,7 @@ it('should resize current and closest column when table width would decrease whe
       triggerResize = onResize;
       return [
         jest.fn(),
-        ({ disconnect: jest.fn() } as unknown) as ResizeObserver,
+        { disconnect: jest.fn() } as unknown as ResizeObserver,
       ];
     });
   const columns: Column<TestDataType>[] = [
@@ -3220,7 +3247,7 @@ it('should resize last and closest column on the left when table width would dec
       triggerResize = onResize;
       return [
         jest.fn(),
-        ({ disconnect: jest.fn() } as unknown) as ResizeObserver,
+        { disconnect: jest.fn() } as unknown as ResizeObserver,
       ];
     });
   const columns: Column<TestDataType>[] = [
@@ -3675,9 +3702,8 @@ it('should render action column with column manager', async () => {
   });
 
   expect(container.querySelectorAll('[role="columnheader"]').length).toBe(3);
-  const actionColumn = container.querySelectorAll<HTMLInputElement>(
-    '.iui-slot',
-  );
+  const actionColumn =
+    container.querySelectorAll<HTMLInputElement>('.iui-slot');
   expect(
     actionColumn[0].firstElementChild?.className.includes('iui-button'),
   ).toBeTruthy();
@@ -3800,9 +3826,8 @@ it('should hide column when deselected in column manager', async () => {
 
   const columnManager = container.querySelector('.iui-button') as HTMLElement;
   await userEvent.click(columnManager);
-  const columnManagerColumns = document.querySelectorAll<HTMLLIElement>(
-    '.iui-menu-item',
-  );
+  const columnManagerColumns =
+    document.querySelectorAll<HTMLLIElement>('.iui-menu-item');
   await userEvent.click(columnManagerColumns[1]);
 
   headerCells = container.querySelectorAll<HTMLDivElement>(
@@ -3846,9 +3871,8 @@ it('should be disabled in column manager if `disableToggleVisibility` is true', 
   const columnManager = container.querySelector('.iui-button') as HTMLElement;
 
   await userEvent.click(columnManager);
-  const columnManagerColumns = document.querySelectorAll<HTMLLIElement>(
-    '.iui-menu-item',
-  );
+  const columnManagerColumns =
+    document.querySelectorAll<HTMLLIElement>('.iui-menu-item');
   expect(columnManagerColumns[0]).toHaveAttribute('aria-disabled', 'true');
 
   expect(
@@ -4706,6 +4730,23 @@ it.each(['positive', 'warning', 'negative'] as const)(
     expect(rows[1]).not.toHaveAttribute('data-iui-status', rowStatus);
   },
 );
+
+it('should render row with loading status', () => {
+  const { container } = renderComponent({
+    rowProps: (row) => {
+      return {
+        isLoading: row.index === 0 ? true : undefined,
+      };
+    },
+  });
+
+  const tableBody = container.querySelector(
+    '.iui-table-body',
+  ) as HTMLDivElement;
+  const rows = tableBody.querySelectorAll('.iui-table-row');
+  expect(rows[0]).toHaveClass(`iui-loading`);
+  expect(rows[1]).not.toHaveClass(`iui-loading`);
+});
 
 it('should navigate through table sorting with the keyboard', async () => {
   const onSort = jest.fn();
