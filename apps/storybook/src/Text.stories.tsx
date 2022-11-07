@@ -20,6 +20,10 @@ export default {
     style: { control: { disable: true } },
     id: { control: { disable: true } },
     title: { control: { disable: true } },
+    variant: {
+      control: 'radio',
+      options: ['small', 'body', 'leading', 'subheading', 'title', 'headline'],
+    },
   },
 } as Meta<TextProps>;
 
@@ -29,7 +33,7 @@ const TextStory: Story<TextProps> = (args) => {
 };
 
 export const Basic: Story<TextProps> = TextStory.bind({});
-Basic.args = {} as TextProps;
+Basic.args = { variant: 'body' };
 
 export const Polymorphic: Story<TextProps<'h4'>> = ({ children, ...rest }) => {
   return (
