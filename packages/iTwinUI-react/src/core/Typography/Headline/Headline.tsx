@@ -18,7 +18,7 @@ export type HeadlineProps = {
 /**
  * @deprecated Since v2, use `Text` with variant 'headline'.
  * @example
- * <Text variant='headline'>I'm a headline!</Text>
+ * <Text variant='headline' as='h1'>I'm a headline!</Text>
  */
 export const Headline = React.forwardRef(
   (props: HeadlineProps, ref: React.RefObject<HTMLHeadingElement>) => {

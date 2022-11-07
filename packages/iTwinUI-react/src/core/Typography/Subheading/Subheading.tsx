@@ -18,7 +18,7 @@ export type SubheadingProps = {
 /**
  * @deprecated Since v2, use `Text` with variant 'subheading'.
  * @example
- * <Text variant='subheading'>I'm a subheading!</Text>
+ * <Text variant='subheading' as='h3'>I'm a subheading!</Text>
  */
 export const Subheading = React.forwardRef(
   (props: SubheadingProps, ref: React.RefObject<HTMLHeadingElement>) => {

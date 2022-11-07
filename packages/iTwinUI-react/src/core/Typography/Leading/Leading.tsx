@@ -18,7 +18,7 @@ export type LeadingProps = {
 /**
  * @deprecated Since v2, use `Text` with variant 'leading'.
  * @example
- * <Text variant='leading'>I'm a leading!</Text>
+ * <Text variant='leading' as='h4'>I'm a leading!</Text>
  */
 export const Leading = React.forwardRef(
   (props: LeadingProps, ref: React.RefObject<HTMLHeadingElement>) => {

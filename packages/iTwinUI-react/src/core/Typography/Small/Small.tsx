@@ -18,7 +18,7 @@ export type SmallProps = {
 /**
  * @deprecated Since v2, use `Text` with variant 'small'.
  * @example
- * <Text variant='small'>I'm some small text!</Text>
+ * <Text variant='small' as='small'>I'm some small text!</Text>
  */
 export const Small = React.forwardRef(
   (props: SmallProps, ref: React.RefObject<HTMLParagraphElement>) => {

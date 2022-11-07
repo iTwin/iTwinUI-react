@@ -39,7 +39,7 @@ export const Body: Story<TextProps> = TextStory.bind({});
 Body.args = { variant: 'body', as: 'p' } as TextProps<'p'>;
 
 export const Small: Story<TextProps> = TextStory.bind({});
-Small.args = { variant: 'small', as: 'p' } as TextProps<'p'>;
+Small.args = { variant: 'small', as: 'small' } as TextProps<'small'>;
 
 export const Leading: Story<TextProps> = TextStory.bind({});
 Leading.args = { variant: 'leading', as: 'h4' } as TextProps<'h4'>;

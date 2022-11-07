@@ -26,7 +26,7 @@ export type BodyProps = {
 /**
  * @deprecated Since v2, use `Text` with variant 'body'.
  * @example
- * <Text variant='body'>I'm some body text!</Text>
+ * <Text variant='body' as='p'>I'm some body text!</Text>
  */
 export const Body = React.forwardRef(
   (props: BodyProps, ref: React.RefObject<HTMLParagraphElement>) => {
