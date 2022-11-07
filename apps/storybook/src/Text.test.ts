@@ -5,6 +5,7 @@
 describe('Text', () => {
   const storyPath = 'Typography/Text';
   const tests = [
+    'Basic',
     'Body',
     'Small',
     'Leading',
