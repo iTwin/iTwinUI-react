@@ -15,7 +15,7 @@ import {
   TagContainer,
   Tile,
   TileProps,
-  UserIcon,
+  Avatar,
 } from '@itwin/itwinui-react';
 import SvgFolder from '@itwin/itwinui-icons-react/cjs/icons/Folder';
 import SvgImodelHollow from '@itwin/itwinui-icons-react/cjs/icons/ImodelHollow';
@@ -29,9 +29,13 @@ export default {
     className: { control: { disable: true } },
     style: { control: { disable: true } },
     id: { control: { disable: true } },
+    variant: { control: 'radio', options: ['default', 'folder'] },
   },
   args: {
     variant: 'default',
+    isDisabled: false,
+    isNew: false,
+    isLoading: false,
   },
   title: 'Core/Tile',
 } as Meta<TileProps>;
@@ -129,7 +133,10 @@ export const AllProps: Story<TileProps> = (props) => {
     />
   );
 };
-AllProps.argTypes = { ...Basic.argTypes };
+AllProps.argTypes = {
+  ...Basic.argTypes,
+  variant: { control: { disable: true } },
+};
 AllProps.args = {
   ...Basic.args,
   isSelected: true,
@@ -214,7 +221,7 @@ Condensed.args = {
   thumbnail: <SvgImodelHollow />,
 };
 
-export const WithUserIcon: Story<TileProps> = (props) => {
+export const WithAvatar: Story<TileProps> = (props) => {
   const { name, description, badge, thumbnail, moreOptions, ...rest } = props;
   return (
     <Tile
@@ -227,17 +234,17 @@ export const WithUserIcon: Story<TileProps> = (props) => {
     />
   );
 };
-WithUserIcon.argTypes = {
+WithAvatar.argTypes = {
   ...Basic.argTypes,
   thumbnail: { control: { disable: true } },
 };
-WithUserIcon.args = {
+WithAvatar.args = {
   ...Basic.args,
   name: 'Some User',
   description: 'User description',
   metadata: undefined,
   thumbnail: (
-    <UserIcon
+    <Avatar
       size='x-large'
       status='online'
       abbreviation='TR'
@@ -275,6 +282,7 @@ export const Folder: Story<TileProps> = (props) => {
 Folder.argTypes = {
   ...Basic.argTypes,
   thumbnail: { control: { disable: true } },
+  variant: { control: { disable: true } },
 };
 Folder.args = {
   ...Basic.args,
@@ -284,4 +292,115 @@ Folder.args = {
   metadata: <span>Folder metadata</span>,
   badge: undefined,
   thumbnail: <SvgFolder />,
+};
+
+export const Status: Story<TileProps> = (props) => {
+  const {
+    name,
+    description,
+    metadata,
+    thumbnail,
+    moreOptions,
+    status,
+    ...rest
+  } = props;
+  return (
+    <Tile
+      name={name}
+      description={description}
+      metadata={metadata}
+      thumbnail={thumbnail}
+      moreOptions={moreOptions}
+      status={status}
+      {...rest}
+    />
+  );
+};
+Status.argTypes = {
+  ...Basic.argTypes,
+  thumbnail: { control: { disable: true } },
+  status: { control: 'radio', options: ['positive', 'warning', 'negative'] },
+};
+Status.args = {
+  ...Basic.args,
+  status: 'positive',
+  name: 'Tile name',
+  description: 'Description',
+  metadata: <span>Tile with status</span>,
+  badge: undefined,
+  thumbnail: <SvgImodelHollow />,
+};
+
+export const Loading: Story<TileProps> = (props) => {
+  const {
+    name,
+    description,
+    metadata,
+    thumbnail,
+    moreOptions,
+    isLoading,
+    ...rest
+  } = props;
+  return (
+    <Tile
+      name={name}
+      description={description}
+      metadata={metadata}
+      thumbnail={thumbnail}
+      moreOptions={moreOptions}
+      isLoading={isLoading}
+      {...rest}
+    />
+  );
+};
+Loading.argTypes = {
+  ...Basic.argTypes,
+  thumbnail: { control: { disable: true } },
+  isNew: { control: { disable: true } },
+  isDisabled: { control: { disable: true } },
+};
+Loading.args = {
+  ...Basic.args,
+  isLoading: true,
+  name: 'Tile name',
+  description: 'Description',
+  metadata: <span>Loading tile</span>,
+  badge: undefined,
+  thumbnail: <SvgImodelHollow />,
+};
+
+export const Disabled: Story<TileProps> = (props) => {
+  const {
+    name,
+    description,
+    metadata,
+    thumbnail,
+    moreOptions,
+    isDisabled,
+    buttons,
+    ...rest
+  } = props;
+  return (
+    <Tile
+      name={name}
+      description={description}
+      metadata={metadata}
+      thumbnail={thumbnail}
+      moreOptions={moreOptions}
+      isDisabled={isDisabled}
+      buttons={buttons}
+      {...rest}
+    />
+  );
+};
+Disabled.argTypes = {
+  ...Basic.argTypes,
+  thumbnail: { control: { disable: true } },
+  isLoading: { control: { disable: true } },
+};
+Disabled.args = {
+  ...Basic.args,
+  thumbnail: <SvgImodelHollow />,
+  buttons: <Button disabled>Button</Button>,
+  isDisabled: true,
 };
