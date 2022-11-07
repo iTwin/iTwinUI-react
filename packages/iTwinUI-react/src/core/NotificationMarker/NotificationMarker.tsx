@@ -5,7 +5,7 @@
 import React from 'react';
 import { CommonProps, useTheme } from '../utils';
 import cx from 'classnames';
-import '@itwin/itwinui-css/css/notification-marker.css';
+import '@itwin/itwinui-css/css/utils.css';
 
 export type NotificationMarkerProps = {
   /**
@@ -64,12 +64,15 @@ export const NotificationMarker = (props: NotificationMarkerProps) => {
   return (
     <span
       className={cx(
+        'iui-notification-marker',
         {
           [`iui-notification-${status}`]: enabled,
           'iui-urgent': enabled && pulsing,
         },
         className,
       )}
+      data-iui-variant={status}
+      data-iui-urgent={pulsing}
       {...rest}
     >
       {children}
