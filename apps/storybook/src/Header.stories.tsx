@@ -17,7 +17,7 @@ import {
   Input,
   MenuExtraContent,
   MenuItem,
-  UserIcon,
+  Avatar,
   Text,
   Select,
   MenuDivider,
@@ -41,7 +41,6 @@ export default {
     appLogo: { control: { disable: true } },
     breadcrumbs: { control: { disable: true } },
     actions: { control: { disable: true } },
-    userIcon: { control: { disable: true } },
     menuItems: { control: { disable: true } },
     children: { control: { disable: true } },
     style: { control: { disable: true } },
@@ -50,29 +49,41 @@ export default {
   },
 } as Meta<HeaderProps>;
 
-const buildClickHandler = (menu: string, close: () => void) => (
-  item: string,
-) => {
-  action(`Menu '${menu}', ${item} clicked!`)();
-  close();
-};
+const buildClickHandler =
+  (menu: string, close: () => void) => (item: string) => {
+    action(`Menu '${menu}', ${item} clicked!`)();
+    close();
+  };
 
-const buildMenu = (menu: string) => (close: () => void) => [
-  <MenuItem key={1} value={'Item #1'} onClick={buildClickHandler(menu, close)}>
-    {menu} item #1
-  </MenuItem>,
-  <MenuItem key={2} value={'Item #2'} onClick={buildClickHandler(menu, close)}>
-    {menu} item #2
-  </MenuItem>,
-  <MenuItem key={3} value={'Item #3'} onClick={buildClickHandler(menu, close)}>
-    {menu} item #3
-  </MenuItem>,
-];
+const buildMenu = (menu: string) => (close: () => void) =>
+  [
+    <MenuItem
+      key={1}
+      value={'Item #1'}
+      onClick={buildClickHandler(menu, close)}
+    >
+      {menu} item #1
+    </MenuItem>,
+    <MenuItem
+      key={2}
+      value={'Item #2'}
+      onClick={buildClickHandler(menu, close)}
+    >
+      {menu} item #2
+    </MenuItem>,
+    <MenuItem
+      key={3}
+      value={'Item #3'}
+      onClick={buildClickHandler(menu, close)}
+    >
+      {menu} item #3
+    </MenuItem>,
+  ];
 
 export const Full: Story<HeaderProps> = (args) => {
   const [userType, setUserType] = useState('User');
 
-  const userIconMenuItems = (close: () => void) => [
+  const avatarMenuItems = (close: () => void) => [
     <MenuExtraContent key={0}>
       <>
         <Text variant='leading'>Terry Rivers</Text>
@@ -94,14 +105,14 @@ export const Full: Story<HeaderProps> = (args) => {
     <MenuItem
       key={2}
       value='View profile'
-      onClick={buildClickHandler('UserIcon', close)}
+      onClick={buildClickHandler('Avatar', close)}
     >
       View profile
     </MenuItem>,
     <MenuItem
       key={3}
       value='Sign out'
-      onClick={buildClickHandler('UserIcon', close)}
+      onClick={buildClickHandler('Avatar', close)}
     >
       Sign out
     </MenuItem>,
@@ -173,11 +184,9 @@ export const Full: Story<HeaderProps> = (args) => {
             <SvgHelpCircularHollow />
           </IconButton>
         </DropdownMenu>,
-      ]}
-      userIcon={
-        <DropdownMenu menuItems={userIconMenuItems}>
+        <DropdownMenu key='avatar' menuItems={avatarMenuItems}>
           <IconButton styleType='borderless'>
-            <UserIcon
+            <Avatar
               size='medium'
               abbreviation='TR'
               backgroundColor={getUserColor('Terry Rivers')}
@@ -187,8 +196,8 @@ export const Full: Story<HeaderProps> = (args) => {
               title='Terry Rivers'
             />
           </IconButton>
-        </DropdownMenu>
-      }
+        </DropdownMenu>,
+      ]}
       menuItems={buildMenu('More')}
     />
   );
@@ -243,14 +252,15 @@ export const Basic: Story<HeaderProps> = (args) => {
           ]}
         />
       }
-      userIcon={
-        <UserIcon
+      actions={[
+        <Avatar
+          key='avatar'
           size='medium'
           abbreviation='TR'
           backgroundColor={getUserColor('Terry Rivers')}
           title='Terry Rivers'
-        />
-      }
+        />,
+      ]}
     />
   );
 };
@@ -304,14 +314,15 @@ export const CenterContent: Story<HeaderProps> = (args) => {
           ]}
         />
       }
-      userIcon={
-        <UserIcon
+      actions={[
+        <Avatar
+          key='avatar'
           size='medium'
           abbreviation='TR'
           backgroundColor={getUserColor('Terry Rivers')}
           title='Terry Rivers'
-        />
-      }
+        />,
+      ]}
       menuItems={buildMenu('More')}
     >
       {searchBar}
