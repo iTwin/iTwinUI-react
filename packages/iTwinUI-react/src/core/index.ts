@@ -291,7 +291,7 @@ export type { UserIconProps, StatusTitles, UserIconStatus } from './UserIcon';
 export { UserIconGroup } from './UserIconGroup';
 export type { UserIconGroupProps } from './UserIconGroup';
 
-export { Wizard, Stepper, WorkflowDiagram } from './Wizard';
+export { Wizard, Stepper, WorkflowDiagram } from './Stepper';
 export type {
   WizardProps,
   StepProperties,
@@ -300,7 +300,7 @@ export type {
   StepperProps,
   StepperLocalization,
   WorkflowDiagramProps,
-} from './Wizard';
+} from './Stepper';
 
 export {
   getUserColor,
