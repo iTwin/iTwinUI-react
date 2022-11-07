@@ -15,6 +15,7 @@ export default {
   args: {
     focusActivationMode: 'auto',
     color: 'blue',
+    orientation: 'horizontal',
   },
   argTypes: {
     children: { control: { disable: true } },
@@ -127,6 +128,9 @@ PillTabs.args = {
     .map((_, index) => <Tab key={index} startIcon={<SvgStar />} />),
   type: 'pill',
 };
+PillTabs.argTypes = {
+  orientation: { control: { disable: true } },
+};
 
 export const SublabelsAndIcons: Story<Partial<TabsProps>> = (args) => {
   const [index, setIndex] = React.useState(0);
@@ -223,4 +227,7 @@ Vertical.args = {
     )),
   type: 'borderless',
 };
-Vertical.argTypes = { type: { options: ['default', 'borderless'] } };
+Vertical.argTypes = {
+  type: { options: ['default', 'borderless'] },
+  orientation: { control: { disable: true } },
+};
