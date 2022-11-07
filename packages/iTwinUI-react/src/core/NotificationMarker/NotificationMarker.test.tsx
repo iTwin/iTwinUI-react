@@ -14,7 +14,9 @@ it('should render in its most basic state', () => {
   const notificationMarker = container.querySelector('span');
 
   expect(notificationMarker).toBeTruthy();
-  expect(notificationMarker).toHaveClass('iui-notification-primary');
+  expect(notificationMarker).toHaveClass('iui-notification-marker');
+  expect(notificationMarker).toHaveAttribute('data-iui-variant', 'primary');
+  expect(notificationMarker).toHaveAttribute('data-iui-urgent', 'false');
   expect(notificationMarker).toHaveTextContent('Demo');
 });
 
@@ -26,8 +28,9 @@ it('should propagate pertinent props', () => {
   );
   const notificationMarker = container.querySelector('span');
   expect(notificationMarker).toBeTruthy();
-  expect(notificationMarker).toHaveClass('iui-notification-positive');
-  expect(notificationMarker).toHaveClass('iui-urgent');
+  expect(notificationMarker).toHaveClass('iui-notification-marker');
+  expect(notificationMarker).toHaveAttribute('data-iui-variant', 'positive');
+  expect(notificationMarker).toHaveAttribute('data-iui-urgent', 'true');
   expect(notificationMarker).toHaveTextContent('Demo');
 });
 
@@ -55,8 +58,9 @@ it('should display notification circle only when enabled', () => {
     </NotificationMarker>,
   );
   const notificationMarker = container.querySelector('span');
-  expect(notificationMarker).not.toHaveClass('iui-notification-negative');
-  expect(notificationMarker).not.toHaveClass('iui-urgent');
+  expect(notificationMarker).toHaveClass('iui-notification-marker');
+  expect(notificationMarker).toHaveAttribute('data-iui-variant', 'negative');
+  expect(notificationMarker).toHaveAttribute('data-iui-urgent', 'true');
   expect(notificationMarker).toHaveTextContent('🔔');
 });
 
@@ -67,8 +71,9 @@ it('should support all kinds of children', () => {
     </NotificationMarker>,
   );
   let notificationMarker = container.container.querySelector('span');
-  expect(notificationMarker).toHaveClass('iui-notification-warning');
-  expect(notificationMarker).toHaveClass('iui-urgent');
+  expect(notificationMarker).toHaveClass('iui-notification-marker');
+  expect(notificationMarker).toHaveAttribute('data-iui-variant', 'warning');
+  expect(notificationMarker).toHaveAttribute('data-iui-urgent', 'true');
   expect(notificationMarker).toHaveTextContent('Demo');
 
   container = render(
@@ -77,8 +82,9 @@ it('should support all kinds of children', () => {
     </NotificationMarker>,
   );
   notificationMarker = container.container.querySelector('span');
-  expect(notificationMarker).toHaveClass('iui-notification-warning');
-  expect(notificationMarker).toHaveClass('iui-urgent');
+  expect(notificationMarker).toHaveClass('iui-notification-marker');
+  expect(notificationMarker).toHaveAttribute('data-iui-variant', 'warning');
+  expect(notificationMarker).toHaveAttribute('data-iui-urgent', 'true');
   expect(notificationMarker).toHaveTextContent('🔔');
 
   container = render(
@@ -87,8 +93,9 @@ it('should support all kinds of children', () => {
     </NotificationMarker>,
   );
   notificationMarker = container.container.querySelector('span');
-  expect(notificationMarker).toHaveClass('iui-notification-warning');
-  expect(notificationMarker).toHaveClass('iui-urgent');
+  expect(notificationMarker).toHaveClass('iui-notification-marker');
+  expect(notificationMarker).toHaveAttribute('data-iui-variant', 'warning');
+  expect(notificationMarker).toHaveAttribute('data-iui-urgent', 'true');
   expect(notificationMarker).toHaveTextContent('1 warning');
 
   const anchor = notificationMarker?.querySelector('a') as HTMLAnchorElement;
@@ -105,7 +112,8 @@ it('should support all kinds of children', () => {
     </NotificationMarker>,
   );
   notificationMarker = container.container.querySelector('span');
-  expect(notificationMarker).toHaveClass('iui-notification-warning');
-  expect(notificationMarker).toHaveClass('iui-urgent');
+  expect(notificationMarker).toHaveClass('iui-notification-marker');
+  expect(notificationMarker).toHaveAttribute('data-iui-variant', 'warning');
+  expect(notificationMarker).toHaveAttribute('data-iui-urgent', 'true');
   expect(notificationMarker?.querySelector('svg')).toEqual(notificationIcon);
 });
