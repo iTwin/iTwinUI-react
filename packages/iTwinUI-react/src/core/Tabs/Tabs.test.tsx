@@ -128,7 +128,7 @@ it('should render strings in child component', () => {
   });
 });
 
-it('should add .iui-large if has sublabel', () => {
+it('should add .iui-large if tabs have sublabel', () => {
   const { container } = renderComponent({
     labels: [
       <Tab key={0} label='item0' sublabel='Sublabel0' />,
