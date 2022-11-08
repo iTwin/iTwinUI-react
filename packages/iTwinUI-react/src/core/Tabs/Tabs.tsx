@@ -99,6 +99,9 @@ export type VerticalTabsProps = Omit<TabsProps, 'orientation' | 'type'> & {
  * <Tabs labels={tabs} />
  *
  * @example
+ * <Tabs orientation='vertical' labels={tabs} />
+ *
+ * @example
  * const tabsWithSublabels = [
  *   <Tab label='Label 1' sublabel='First tab' />,
  *   <Tab label='Label 2' sublabel='Active tab' />,
@@ -111,10 +114,6 @@ export type VerticalTabsProps = Omit<TabsProps, 'orientation' | 'type'> & {
  *   <Tab label='Label 2' icon={<SvgPlaceholder />} />,
  * ];
  * <Tabs labels={tabsWithIcons} type='pill' />
- *
- * @example
- * // Vertical Tabs
- * <Tabs orientation='vertical' labels={tabs} />
  */
 export const Tabs = (props: TabsProps) => {
   const {
