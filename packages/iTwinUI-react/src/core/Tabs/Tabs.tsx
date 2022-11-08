@@ -13,7 +13,7 @@ import {
 import '@itwin/itwinui-css/css/tabs.css';
 import { Tab } from './Tab';
 
-export type TabsOrientationProps =
+type TabsOrientationProps =
   | {
       /**
        * Orientation of the tabs.
