@@ -5,7 +5,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import { SvgSettings } from '@itwin/itwinui-icons-react';
+import { SvgSettings } from '../utils';
 import { IconButton } from '../Buttons';
 import { SidenavSubmenu } from './SidenavSubmenu';
 import { SidenavSubmenuHeader } from './SidenavSubmenuHeader';
