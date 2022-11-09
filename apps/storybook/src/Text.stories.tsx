@@ -42,7 +42,7 @@ export const Small: Story<TextProps> = TextStory.bind({});
 Small.args = { variant: 'small', as: 'small' } as TextProps<'small'>;
 
 export const Leading: Story<TextProps> = TextStory.bind({});
-Leading.args = { variant: 'leading', as: 'h3' } as TextProps<'h3'>;
+Leading.args = { variant: 'leading', as: 'h4' } as TextProps<'h4'>;
 
 export const Subheading: Story<TextProps> = TextStory.bind({});
 Subheading.args = { variant: 'subheading', as: 'h3' } as TextProps<'h3'>;

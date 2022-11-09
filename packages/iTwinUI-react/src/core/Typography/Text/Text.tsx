@@ -37,9 +37,8 @@ type TextOwnProps = {
   isSkeleton?: boolean;
 };
 
-export type TextProps<
-  T extends React.ElementType = 'div'
-> = PolymorphicComponentProps<T, TextOwnProps>;
+export type TextProps<T extends React.ElementType = 'div'> =
+  PolymorphicComponentProps<T, TextOwnProps>;
 
 type TextComponent = PolymorphicForwardRefComponent<'div', TextOwnProps>;
 
@@ -48,10 +47,12 @@ type TextComponent = PolymorphicForwardRefComponent<'div', TextOwnProps>;
  * @example
  * <Text>Some normal paragraph text rendered as a div</Text>
  * @example
- * <Text variant='title' as='h3'>I'm some h2 text rendered as an h3 element!</Text>
- * @example
  * <Text isMuted>Some muted text.</Text>
  * <Text isSkeleton>Skeleton text</Text>
+ *
+ * Users should decide which element to render based on the context of their app. Link to heading levels docs: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements
+ * @example
+ * <Text variant='title' as='h3'>I'm some h2 text rendered as an h3 element!</Text>
  */
 export const Text: TextComponent = React.forwardRef((props, ref) => {
   const {
