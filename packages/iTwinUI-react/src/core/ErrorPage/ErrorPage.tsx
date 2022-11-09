@@ -2,20 +2,40 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import Svg401 from '@itwin/itwinui-illustrations-react/cjs/illustrations/401';
-import Svg403 from '@itwin/itwinui-illustrations-react/cjs/illustrations/403';
-import Svg404 from '@itwin/itwinui-illustrations-react/cjs/illustrations/404';
-import Svg500 from '@itwin/itwinui-illustrations-react/cjs/illustrations/500';
-import Svg502 from '@itwin/itwinui-illustrations-react/cjs/illustrations/502';
-import Svg503 from '@itwin/itwinui-illustrations-react/cjs/illustrations/503';
-import SvgError from '@itwin/itwinui-illustrations-react/cjs/illustrations/Error';
-import SvgRedirect from '@itwin/itwinui-illustrations-react/cjs/illustrations/Redirect';
-import SvgTimedOut from '@itwin/itwinui-illustrations-react/cjs/illustrations/TimedOut';
 import React from 'react';
 import { Button } from '../Buttons/Button';
 import { CommonProps, useTheme } from '../utils';
 import cx from 'classnames';
 import '@itwin/itwinui-css/css/non-ideal-state.css';
+import { ProgressRadial } from '../ProgressIndicators/ProgressRadial';
+
+const Svg401 = React.lazy(
+  () => import('@itwin/itwinui-illustrations-react/esm/illustrations/401'),
+);
+const Svg403 = React.lazy(
+  () => import('@itwin/itwinui-illustrations-react/esm/illustrations/403'),
+);
+const Svg404 = React.lazy(
+  () => import('@itwin/itwinui-illustrations-react/esm/illustrations/404'),
+);
+const Svg500 = React.lazy(
+  () => import('@itwin/itwinui-illustrations-react/esm/illustrations/500'),
+);
+const Svg502 = React.lazy(
+  () => import('@itwin/itwinui-illustrations-react/esm/illustrations/502'),
+);
+const Svg503 = React.lazy(
+  () => import('@itwin/itwinui-illustrations-react/esm/illustrations/503'),
+);
+const SvgError = React.lazy(
+  () => import('@itwin/itwinui-illustrations-react/esm/illustrations/Error'),
+);
+const SvgRedirect = React.lazy(
+  () => import('@itwin/itwinui-illustrations-react/esm/illustrations/Redirect'),
+);
+const SvgTimedOut = React.lazy(
+  () => import('@itwin/itwinui-illustrations-react/esm/illustrations/TimedOut'),
+);
 
 export type ErrorPageType =
   | '300'
@@ -252,7 +272,9 @@ export const ErrorPage = (props: ErrorPageProps): JSX.Element => {
 
   return (
     <div className={cx('iui-non-ideal-state', className)} {...rest}>
-      {getErrorIcon()}
+      <React.Suspense fallback={<ProgressRadial indeterminate />}>
+        {getErrorIcon()}
+      </React.Suspense>
       <div className='iui-non-ideal-state-title'>{getHeadingMessage()}</div>
       {errorMessage && (
         <div className='iui-non-ideal-state-description'>{errorMessage}</div>
