@@ -63,7 +63,7 @@ it('renders sticky alert correctly', () => {
 
   const alert = container.querySelector('.iui-alert') as HTMLElement;
   expect(alert).toBeTruthy();
-  expect(alert).toHaveAttribute('data-iui-sticky', 'true');
+  expect(alert).toHaveAttribute('data-iui-variant', 'sticky');
   getByText('This is sticky alert.');
 });
 
@@ -81,7 +81,7 @@ it('renders sticky alert correctly', () => {
     );
     const alert = container.querySelector('.iui-alert') as HTMLElement;
     expect(alert).toBeTruthy();
-    expect(alert).toHaveAttribute('data-iui-variant', `${type}`);
+    expect(alert).toHaveAttribute('data-iui-status', `${type}`);
     expect(container.querySelector(`.iui-alert-icon`)).toBeTruthy();
     expect(
       container.querySelector('.iui-alert-message > .iui-alert-link'),
