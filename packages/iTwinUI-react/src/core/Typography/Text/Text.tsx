@@ -37,8 +37,9 @@ type TextOwnProps = {
   isSkeleton?: boolean;
 };
 
-export type TextProps<T extends React.ElementType = 'div'> =
-  PolymorphicComponentProps<T, TextOwnProps>;
+export type TextProps<
+  T extends React.ElementType = 'div'
+> = PolymorphicComponentProps<T, TextOwnProps>;
 
 type TextComponent = PolymorphicForwardRefComponent<'div', TextOwnProps>;
 
