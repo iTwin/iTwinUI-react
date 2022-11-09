@@ -47,6 +47,9 @@ export default {
     className: { control: { disable: true } },
     id: { control: { disable: true } },
   },
+  args: {
+    isSlim: false,
+  },
 } as Meta<HeaderProps>;
 
 const buildClickHandler =
@@ -203,6 +206,10 @@ export const Full: Story<HeaderProps> = (args) => {
   );
 };
 
+Full.args = {
+  isSlim: false,
+};
+
 export const Basic: Story<HeaderProps> = (args) => {
   return (
     <Header
@@ -263,6 +270,15 @@ export const Basic: Story<HeaderProps> = (args) => {
       ]}
     />
   );
+};
+
+Basic.args = {
+  isSlim: false,
+};
+
+export const Slim: Story<HeaderProps> = Basic.bind({});
+Slim.args = {
+  isSlim: true,
 };
 
 export const CenterContent: Story<HeaderProps> = (args) => {
@@ -328,4 +344,8 @@ export const CenterContent: Story<HeaderProps> = (args) => {
       {searchBar}
     </Header>
   );
+};
+
+CenterContent.args = {
+  isSlim: false,
 };
