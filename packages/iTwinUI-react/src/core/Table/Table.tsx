@@ -302,30 +302,25 @@ const flattenColumns = (columns: ColumnType[]): ColumnType[] => {
  * Table based on [react-table](https://react-table.tanstack.com/docs/api/overview).
  * @example
  * const columns = React.useMemo(() => [
- *  {
- *    Header: 'Header name',
- *    columns: [
- *      {
- *        id: 'name',
- *        Header: 'Name',
- *        accessor: 'name',
- *        width: 90,
- *      },
- *      {
- *        id: 'description',
- *        Header: 'description',
- *        accessor: 'description',
- *        maxWidth: 200,
- *      },
- *      {
- *        id: 'view',
- *        Header: 'view',
- *        Cell: () => {
- *          return <span onClick={onViewClick}>View</span>
- *        },
- *      },
- *    ],
- *  },
+ *   {
+ *     id: 'name',
+ *     Header: 'Name',
+ *     accessor: 'name',
+ *     width: 90,
+ *   },
+ *   {
+ *     id: 'description',
+ *     Header: 'description',
+ *     accessor: 'description',
+ *     maxWidth: 200,
+ *   },
+ *   {
+ *     id: 'view',
+ *     Header: 'view',
+ *     Cell: () => {
+ *       return <span onClick={onViewClick}>View</span>
+ *     },
+ *   },
  * ], [onViewClick])
  * const data = [
  *  { name: 'Name1', description: 'Description1' },
@@ -585,7 +580,6 @@ export const Table = <
     visibleColumns,
     setGlobalFilter,
   } = instance;
-
   const ariaDataAttributes = Object.entries(rest).reduce(
     (result, [key, value]) => {
       if (key.startsWith('data-') || key.startsWith('aria-')) {
@@ -824,7 +818,12 @@ export const Table = <
         data-iui-size={density === 'default' ? undefined : density}
         {...ariaDataAttributes}
       >
-        {headerGroups.slice(1).map((headerGroup: HeaderGroup<T>) => {
+        {headerGroups.map((headerGroup: HeaderGroup<T>) => {
+          headerGroup.headers = headerGroup.headers.filter(
+            (header) =>
+              !header.id.includes('iui-table-checkbox-selector_placeholder') &&
+              !header.id.includes('iui-table-expander_placeholder'),
+          );
           const headerGroupProps = headerGroup.getHeaderGroupProps({
             className: 'iui-table-row',
           });
@@ -840,8 +839,8 @@ export const Table = <
               }}
               key={headerGroupProps.key}
             >
-              <div className='iui-table-header' key={headerGroupProps.key}>
-                <div {...headerGroupProps} key={headerGroupProps.key}>
+              <div className='iui-table-header'>
+                <div {...headerGroupProps}>
                   {headerGroup.headers.map((column, index) => {
                     const { onClick, ...restSortProps } =
                       column.getSortByToggleProps();
