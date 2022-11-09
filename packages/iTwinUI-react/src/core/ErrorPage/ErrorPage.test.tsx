@@ -2,18 +2,20 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { ErrorPage, ErrorPageType } from './ErrorPage';
-import Svg401 from '@itwin/itwinui-illustrations-react/cjs/illustrations/401';
-import Svg403 from '@itwin/itwinui-illustrations-react/cjs/illustrations/403';
-import Svg404 from '@itwin/itwinui-illustrations-react/cjs/illustrations/404';
-import Svg500 from '@itwin/itwinui-illustrations-react/cjs/illustrations/500';
-import Svg502 from '@itwin/itwinui-illustrations-react/cjs/illustrations/502';
-import Svg503 from '@itwin/itwinui-illustrations-react/cjs/illustrations/503';
-import SvgError from '@itwin/itwinui-illustrations-react/cjs/illustrations/Error';
-import SvgRedirect from '@itwin/itwinui-illustrations-react/cjs/illustrations/Redirect';
-import SvgTimedOut from '@itwin/itwinui-illustrations-react/cjs/illustrations/TimedOut';
+import {
+  Svg401,
+  Svg403,
+  Svg404,
+  Svg500,
+  Svg502,
+  Svg503,
+  SvgError,
+  SvgRedirect,
+  SvgTimedOut,
+} from '@itwin/itwinui-illustrations-react';
 
 describe(ErrorPage, () => {
   const defaultTests = [
@@ -129,15 +131,19 @@ describe(ErrorPage, () => {
   }[];
 
   defaultTests.forEach((test) => {
-    it(`displays ${test.errorType} error with default message`, () => {
+    it(`displays ${test.errorType} error with default message`, async () => {
       const { container } = render(<ErrorPage errorType={test.errorType} />);
       screen.getByText(test.errorName);
+
       const {
         container: { firstChild: illustration },
       } = render(test.illustration);
-      expect(
-        container.querySelector('.iui-non-ideal-state-illustration'),
-      ).toEqual(illustration);
+
+      await waitFor(() =>
+        expect(
+          container.querySelector('.iui-non-ideal-state-illustration'),
+        ).toEqual(illustration),
+      );
     });
   });
 

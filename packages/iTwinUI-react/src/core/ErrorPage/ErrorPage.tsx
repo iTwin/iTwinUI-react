@@ -9,32 +9,18 @@ import cx from 'classnames';
 import '@itwin/itwinui-css/css/non-ideal-state.css';
 import { ProgressRadial } from '../ProgressIndicators/ProgressRadial';
 
-const Svg401 = React.lazy(
-  () => import('@itwin/itwinui-illustrations-react/esm/illustrations/401'),
-);
-const Svg403 = React.lazy(
-  () => import('@itwin/itwinui-illustrations-react/esm/illustrations/403'),
-);
-const Svg404 = React.lazy(
-  () => import('@itwin/itwinui-illustrations-react/esm/illustrations/404'),
-);
-const Svg500 = React.lazy(
-  () => import('@itwin/itwinui-illustrations-react/esm/illustrations/500'),
-);
-const Svg502 = React.lazy(
-  () => import('@itwin/itwinui-illustrations-react/esm/illustrations/502'),
-);
-const Svg503 = React.lazy(
-  () => import('@itwin/itwinui-illustrations-react/esm/illustrations/503'),
-);
-const SvgError = React.lazy(
-  () => import('@itwin/itwinui-illustrations-react/esm/illustrations/Error'),
-);
+const Svg401 = React.lazy(() => import('../utils/illustrations/Svg401'));
+const Svg403 = React.lazy(() => import('../utils/illustrations/Svg403'));
+const Svg404 = React.lazy(() => import('../utils/illustrations/Svg404'));
+const Svg500 = React.lazy(() => import('../utils/illustrations/Svg500'));
+const Svg502 = React.lazy(() => import('../utils/illustrations/Svg502'));
+const Svg503 = React.lazy(() => import('../utils/illustrations/Svg503'));
+const SvgError = React.lazy(() => import('../utils/illustrations/SvgError'));
 const SvgRedirect = React.lazy(
-  () => import('@itwin/itwinui-illustrations-react/esm/illustrations/Redirect'),
+  () => import('../utils/illustrations/SvgRedirect'),
 );
 const SvgTimedOut = React.lazy(
-  () => import('@itwin/itwinui-illustrations-react/esm/illustrations/TimedOut'),
+  () => import('../utils/illustrations/SvgTimedOut'),
 );
 
 export type ErrorPageType =
