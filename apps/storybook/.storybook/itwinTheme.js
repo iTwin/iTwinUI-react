@@ -11,13 +11,13 @@ export const lightTheme = create({
   brandTitle: 'iTwinUI',
   brandImage: itwinImage,
 
-  colorPrimary: '#008BE1',
-  colorSecondary: '#008BE1',
+  colorPrimary: '#0071B8',
+  colorSecondary: '#0071B8',
 
   // UI
-  appBg: '#EEF0F3',
-  appContentBg: '#F8F9FB',
-  appBorderColor: '#C7CCD1',
+  appBg: '#eef0f1',
+  appContentBg: '#FFFFFF',
+  appBorderColor: '#b3bcc1',
   appBorderRadius: 9,
 
   // Typography
@@ -27,17 +27,17 @@ export const lightTheme = create({
     '"Noto Sans Mono", ui-monospace, "SF Mono", SFMono-Regular, "DejaVu Sans Mono", Menlo, Consolas, monospace',
 
   // Text colors
-  textColor: 'rgba(000,000,000,0.8)',
+  textColor: '#242424',
 
   // Toolbar default and active colors
-  barTextColor: 'rgba(000,000,000,0.8)',
-  barSelectedColor: '#008BE1',
-  barBg: '#F8F9FB',
+  barTextColor: '#242424',
+  barSelectedColor: '#0071B8',
+  barBg: '#FFFFFF',
 
   // Form colors
   inputBg: '#FFFFFF',
-  inputBorder: 'rgba(000,000,000,0.4)',
-  inputTextColor: 'rgba(000,000,000,0.8)',
+  inputBorder: '#b3bcc1',
+  inputTextColor: '#242424',
   inputBorderRadius: 3,
 });
 
@@ -46,13 +46,13 @@ export const darkTheme = create({
   brandTitle: 'iTwinUI',
   brandImage: itwinImageDark,
 
-  colorPrimary: '#A5D7F5',
-  colorSecondary: '#A5D7F5',
+  colorPrimary: '#0071B8',
+  colorSecondary: '#0071B8',
 
   // UI
-  appBg: '#2D373C',
-  appContentBg: '#5A6973', // background-1
-  appBorderColor: '#2D373C',
+  appBg: '#242b2e',
+  appContentBg: '#333c41', // background-1
+  appBorderColor: '#49555d',
   appBorderRadius: 9,
 
   // Typography
@@ -62,16 +62,16 @@ export const darkTheme = create({
     '"Noto Sans Mono", ui-monospace, "SF Mono", SFMono-Regular, "DejaVu Sans Mono", Menlo, Consolas, monospace',
 
   // Text colors
-  textColor: 'rgba(255,255,255,0.85)',
+  textColor: '#dbdbdb',
 
   // Toolbar default and active colors
-  barTextColor: 'rgba(255,255,255,0.85)',
-  barSelectedColor: '#A5D7F5',
-  barBg: '#4F5D65',
+  barTextColor: '#dbdbdb',
+  barSelectedColor: '#008ee0',
+  barBg: '#333c41',
 
   // Form colors
-  inputBg: '#5A6973',
-  inputBorder: 'rgba(255,255,255,0.45)',
-  inputTextColor: 'rgba(255,255,255,0.85)',
+  inputBg: '#333c41',
+  inputBorder: '#49555d',
+  inputTextColor: '#dbdbdb',
   inputBorderRadius: 3,
 });
