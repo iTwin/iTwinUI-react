@@ -39,10 +39,10 @@ export const parameters = {
     grid: { disable: true },
     default: 'background-backdrop',
     values: [
-      { name: 'background', value: 'var(--iui-color-background)' },
+      { name: 'background', value: 'var(--iui-color-background, #fff)' },
       {
         name: 'background-backdrop',
-        value: 'var(--iui-color-background-backdrop)',
+        value: 'var(--iui-color-background-backdrop, #eef0f1)',
       },
     ],
   },
