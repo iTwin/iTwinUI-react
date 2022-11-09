@@ -61,18 +61,18 @@ export const NotificationMarker = (props: NotificationMarkerProps) => {
     ...rest
   } = props;
   useTheme();
+
+  const notificationAttributes = enabled
+    ? {
+        'data-iui-variant': status,
+        'data-iui-urgent': pulsing,
+      }
+    : {};
+
   return (
     <span
-      className={cx(
-        'iui-notification-marker',
-        {
-          [`iui-notification-${status}`]: enabled,
-          'iui-urgent': enabled && pulsing,
-        },
-        className,
-      )}
-      data-iui-variant={status}
-      data-iui-urgent={pulsing}
+      className={cx({ 'iui-notification-marker': enabled }, className)}
+      {...notificationAttributes}
       {...rest}
     >
       {children}
