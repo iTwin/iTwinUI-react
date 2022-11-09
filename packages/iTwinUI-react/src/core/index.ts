@@ -110,7 +110,7 @@ export type {
   HeaderLogoProps,
 } from './Header';
 
-export { VerticalTabs, Tab, HorizontalTabs } from './Tabs';
+export { VerticalTabs, Tabs, Tab, HorizontalTabs } from './Tabs';
 export type { VerticalTabsProps, TabProps, HorizontalTabsProps } from './Tabs';
 
 export {
@@ -297,13 +297,16 @@ export type {
   TextProps,
 } from './Typography';
 
-export { Wizard } from './Wizard';
+export { Wizard, Stepper, WorkflowDiagram } from './Stepper';
 export type {
   WizardProps,
   StepProperties,
   WizardType,
   WizardLocalization,
-} from './Wizard';
+  StepperProps,
+  StepperLocalization,
+  WorkflowDiagramProps,
+} from './Stepper';
 
 export {
   getUserColor,
