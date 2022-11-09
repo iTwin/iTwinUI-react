@@ -7,8 +7,7 @@ import { fireEvent, render } from '@testing-library/react';
 import { ColorPalette } from './ColorPalette';
 import { ColorPicker } from './ColorPicker';
 import { IconButton } from '../Buttons';
-import { ColorValue } from '../utils';
-import { SvgMore } from '../utils';
+import { ColorValue, SvgMore } from '../utils';
 
 it('should render in its most basic state', () => {
   const colors = [

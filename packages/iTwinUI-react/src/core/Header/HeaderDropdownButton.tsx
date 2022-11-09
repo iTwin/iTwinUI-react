@@ -5,9 +5,14 @@
 import cx from 'classnames';
 import React from 'react';
 import { DropdownMenu } from '../DropdownMenu';
-import { PolymorphicForwardRefComponent, useTheme } from '../utils';
+import {
+  PolymorphicForwardRefComponent,
+  useTheme,
+  useMergedRefs,
+  SvgCaretDownSmall,
+  SvgCaretUpSmall,
+} from '../utils';
 import { DropdownButtonProps } from '../Buttons';
-import { useMergedRefs, SvgCaretDownSmall, SvgCaretUpSmall } from '../utils';
 import { HeaderBasicButton } from './HeaderBasicButton';
 
 export type HeaderDropdownButtonProps = DropdownButtonProps;

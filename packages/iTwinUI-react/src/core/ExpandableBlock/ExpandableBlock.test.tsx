@@ -4,8 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
-import { StatusIconMap } from '../utils';
-import { SvgMore as SvgPlaceholder } from '../utils';
+import { StatusIconMap, SvgMore as SvgPlaceholder } from '../utils';
 
 import { ExpandableBlock } from './ExpandableBlock';
 
