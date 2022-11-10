@@ -3,5 +3,10 @@
     "file": "css",
     "replace": "rotate(0deg)",
     "with": "rotate(360deg)"
+  },
+  {
+    "file": "css",
+    "replace": "var(--iui-xl)",
+    "with": "var(--iui-size-xl)"
   }
 ]
