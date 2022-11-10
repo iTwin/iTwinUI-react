@@ -78,7 +78,7 @@ export const Button: ButtonComponent = React.forwardRef((props, ref) => {
       {...rest}
     >
       {startIcon && (
-        <span className='iui-button-icon' aria-hidden={true}>
+        <span className='iui-button-icon' aria-hidden>
           {startIcon}
         </span>
       )}
@@ -86,7 +86,7 @@ export const Button: ButtonComponent = React.forwardRef((props, ref) => {
       {children && <span>{children}</span>}
 
       {endIcon && (
-        <span className='iui-button-icon' aria-hidden={true}>
+        <span className='iui-button-icon' aria-hidden>
           {endIcon}
         </span>
       )}
