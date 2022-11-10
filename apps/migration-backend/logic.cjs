@@ -35,6 +35,12 @@ const readFile = (fileName) => {
 const readFileGetLines = async (fileName) => {
   const fileContents = await readFile(fileName);
   // console.log(fileContents.split('\n').length);
+
+  const fileExtension = fileName.split('.').pop();
+  // if (fileExtension === 'jpg') {
+  //   console.log('jpg', fileContents);
+  // }
+
   return fileContents.split('\n');
 };
 
@@ -64,16 +70,18 @@ const getLineMatches = async (fileName) => {
     fileName: fileName,
     matchLines: matches,
   };
-  if (matches.length > 0) {
-    console.log(matchObject);
-  }
-  return matchObject;
+  // if (matches.length > 0) {
+  //   console.log(matchObject);
+  // }
+  return [matchObject, fileLines.length];
 };
 
 const getFileMatches = async (fileNames) => {
   const fileMatches = [];
   const fileExtensions = [];
+
   let numFilesScanned = 0;
+  let numLinesScanned = 0;
 
   for (const fileName of fileNames) {
     const fileExtension = fileName.split('.').pop();
@@ -81,28 +89,79 @@ const getFileMatches = async (fileNames) => {
       fileExtensions.push(fileExtension);
     }
 
-    if (
-      ![
-        'tsx',
-        'ts',
-        'js',
-        'html',
-        'md',
-        'css',
-        'scss',
-        'json',
-        'svg',
-        'txt',
-        `mdx`,
-        `nvmrc`,
-        `yml`,
-      ].includes(fileExtension)
-    ) {
+    if (fileExtension === '        ') {
+      console.log('failing file', fileName);
       continue;
     }
 
+    if (['png', 'jpg', 'gif', 'PNG'].includes(fileExtension)) {
+      continue;
+    }
+
+    // if (
+    //   ![
+    //     'tsx',
+    //     'ts',
+    //     'js',
+    //     'html',
+    //     'md',
+    //     'css',
+    //     'scss',
+    //     'json',
+    //     'svg',
+    //     'txt',
+    //     `mdx`,
+    //     `nvmrc`,
+    //     `yml`,
+    //     `snap`,
+    //     'gitignore',
+    //     `xlsx`,
+    //     `png`,
+    //   ].includes(fileExtension)
+    // ) {
+    // if (
+    //   ![
+    //     'gitignore',
+    //     'json',
+    //     'md',
+    //     'xlsx',
+    //     'txt',
+    //     'html',
+    //     'png',
+    //     'jpg',
+    //     'webm',
+    //     'svg',
+    //     'gif',
+    //     'PNG',
+    //     'ico',
+    //     'mdx',
+    //     'ts',
+    //     'npmrc',
+    //     'js',
+    //     'eslintrc',
+    //     'scss',
+    //     'tsx',
+    //     'liquid',
+    //     'snap',
+    //     'nvmrc',
+    //     'babelrc',
+    //     'prettierrc',
+    //     'yml',
+    //     'ps1',
+    //     'bicep',
+    //     'xml',
+    //     'gitmodules',
+    //     'gitattributes',
+    //     'dgn',
+    //   ].includes(fileExtension)
+    // ) {
+    //   // if (['png', 'xlsx', 'gif', 'jpg', 'PNG', `ico`, ].includes(fileExtension)) {
+    //   continue;
+    // }
+
+    const [fileMatch, numLines] = await getLineMatches(fileName);
     numFilesScanned++;
-    const fileMatch = await getLineMatches(fileName);
+    numLinesScanned += numLines;
 
     // Push only if at least one match is found in the file
     if (fileMatch.matchLines.length > 0) {
@@ -110,10 +169,10 @@ const getFileMatches = async (fileNames) => {
     }
   }
 
-  console.log(fileMatches);
+  // console.log(fileMatches);
   console.log(
-    `getFileMatches request complete (${numFilesScanned} files scanned): `,
-    fileExtensions,
+    `getFileMatches request complete (${numFilesScanned} files and ${numLinesScanned} lines scanned)`,
+    // fileExtensions,
   );
 
   return fileMatches;

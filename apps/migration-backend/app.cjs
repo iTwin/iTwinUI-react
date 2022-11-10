@@ -2074,7 +2074,7 @@ app.get('/all_matches', async (req, res) => {
   );
 
   const endTime = performance.now();
-  console.log(`Call to doSomething took ${endTime - startTime} milliseconds`);
+  console.log(`Time taken: ${endTime - startTime} milliseconds`);
 });
 
 app.listen(5000, () => console.log('Running on port 5000'));
