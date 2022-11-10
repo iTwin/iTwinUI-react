@@ -2,8 +2,6 @@ name: manual-publish
 
 on:
   workflow_dispatch:
-  push:
-    branches: [greta/dev-release]
 
 jobs:
   publish:
