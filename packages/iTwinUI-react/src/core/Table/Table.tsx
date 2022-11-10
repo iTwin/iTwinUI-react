@@ -25,10 +25,14 @@ import {
   useGlobalFilter,
 } from 'react-table';
 import { ProgressRadial } from '../ProgressIndicators';
-import { useTheme, CommonProps, useResizeObserver } from '../utils';
+import {
+  useTheme,
+  CommonProps,
+  useResizeObserver,
+  SvgSortDown,
+  SvgSortUp,
+} from '../utils';
 import '@itwin/itwinui-css/css/table.css';
-import SvgSortDown from '@itwin/itwinui-icons-react/cjs/icons/SortDown';
-import SvgSortUp from '@itwin/itwinui-icons-react/cjs/icons/SortUp';
 import { getCellStyle, getStickyStyle } from './utils';
 import { TableRowMemoized } from './TableRowMemoized';
 import { FilterToggle, TableFilterValue } from './filters';
@@ -903,12 +907,12 @@ export const Table = <
                                 {column.isSortedDesc ||
                                 (!column.isSorted && column.sortDescFirst) ? (
                                   <SvgSortDown
-                                    className='iui-icon iui-table-sort'
+                                    className='iui-table-sort'
                                     aria-hidden
                                   />
                                 ) : (
                                   <SvgSortUp
-                                    className='iui-icon iui-table-sort'
+                                    className='iui-table-sort'
                                     aria-hidden
                                   />
                                 )}
