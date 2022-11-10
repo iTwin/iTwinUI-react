@@ -2837,6 +2837,11 @@
   resolved "https://registry.npmjs.org/@itwin/itwinui-css/-/itwinui-css-1.0.0-dev.12.tgz"
   integrity sha512-hrr0UOBxnVj7gik8qfgXqIttDoato6QaOjMaBSQDOmhQpZFGs4SaDG6FV9iads7DSBzrlmR2K2FiLXJdmyX29w==
 
+"@itwin/itwinui-css@1.0.0-dev.13":
+  version "1.0.0-dev.13"
+  resolved "https://registry.yarnpkg.com/@itwin/itwinui-css/-/itwinui-css-1.0.0-dev.13.tgz#b45aa3ae3ec535fc742bdcd5282ca98badf173fe"
+  integrity sha512-Wk7gFc4JP7T6Yv1ta8fDf7Hwz/VW2aT8ctCdLAlrod8SzcERApc5WvYzkEjRvygWY6CU0mghDUWckJATnhvM+g==
+
 "@itwin/itwinui-icons-react@^1.10.1":
   version "1.10.1"
   resolved "https://registry.npmjs.org/@itwin/itwinui-icons-react/-/itwinui-icons-react-1.10.1.tgz"
@@ -2852,10 +2857,31 @@
   resolved "https://registry.npmjs.org/@itwin/itwinui-illustrations-react/-/itwinui-illustrations-react-1.3.1.tgz"
   integrity sha512-hIZwYwd1qmyjt5yiL8Lg6E3CpgeLxGOnb4dVktoM+h3h5zSmgjhm2qFk+RqgsqV+dy0Fb2cs1jH4Jup9jWY9pA==
 
+"@itwin/itwinui-react@2.0.0-dev.0":
+  version "2.0.0-dev.0"
+  resolved "https://registry.yarnpkg.com/@itwin/itwinui-react/-/itwinui-react-2.0.0-dev.0.tgz#e835dc8fe1990320e48d66dc4541562fa36cc1c0"
+  integrity sha512-A281Muwdjt7saHQ70QRutRh5SY4+CR/IzOy43l17IZjjT+J3cCd9Rs4ZXG4ckvbNfsTJRIL5H+mpYyjW/FFpFg==
+  dependencies:
+    "@itwin/itwinui-css" "1.0.0-dev.13"
+    "@itwin/itwinui-icons-react" "^1.10.1"
+    "@itwin/itwinui-illustrations-react" "^1.3.1"
+    "@itwin/itwinui-variables" "1.0.0-dev.0"
+    "@tippyjs/react" "^4.2.6"
+    "@types/react-table" "^7.0.18"
+    classnames "^2.2.6"
+    react-table "^7.1.0"
+    react-transition-group "^4.4.2"
+    tippy.js "^6.3.7"
+
 "@itwin/itwinui-variables@0.3.0":
   version "0.3.0"
   resolved "https://registry.npmjs.org/@itwin/itwinui-variables/-/itwinui-variables-0.3.0.tgz"
   integrity sha512-OX/Dje/VxR/YcYtUvmawqHQ4vjpBTsKWux0T9Wa8T2GGiOW+lD51dOkAAfoXgNALUa9YUXb9/F7pbaGMlm5tbg==
+
+"@itwin/itwinui-variables@1.0.0-dev.0":
+  version "1.0.0-dev.0"
+  resolved "https://registry.yarnpkg.com/@itwin/itwinui-variables/-/itwinui-variables-1.0.0-dev.0.tgz#5feb762cd8c1d2b8e1a9b18a720c5e3b3ed964a2"
+  integrity sha512-YoR+cUzJI2qHmOeUjPs65ZhYLfLZRB3kq7o3pdPY6YMr0iFenQ1UODTkU1hiqgLfsH3RzHWYzEimu0x72p4AKw==
 
 "@jest/console@^27.5.1":
   version "27.5.1"

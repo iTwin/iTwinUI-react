@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@itwin/itwinui-icons": "^1.16.0",
-    "@itwin/itwinui-react": "^1.48.1",
+    "@itwin/itwinui-react": "2.0.0-dev.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
