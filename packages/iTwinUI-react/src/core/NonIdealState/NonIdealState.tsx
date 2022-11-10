@@ -20,7 +20,7 @@ export type NonIdealStateProps = {
   /**
    * Primary heading for the error page
    */
-  heading?: string;
+  heading?: React.ReactNode;
 
   /**
    * Secondary text to explain the error
@@ -59,7 +59,7 @@ export const NonIdealState = (props: NonIdealStateProps): JSX.Element => {
 
   return (
     <div className={cx('iui-non-ideal-state', className)} {...rest}>
-      <div className='iui-non-ideal-state-illustration'>{svg}</div>
+      {heading && <div className='iui-non-ideal-state-illustration'>{svg}</div>}
       <div className='iui-non-ideal-state-title'>{heading}</div>
       {description && (
         <div className='iui-non-ideal-state-description'>{description}</div>
