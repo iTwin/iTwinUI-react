@@ -1,3 +1,17 @@
 .FileCard {
   padding: 10px;
+
+  .header {
+    display: flex;
+    align-items: center;
+
+    .status-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .title {
+      margin-left: 10px;
+    }
+  }
 }
