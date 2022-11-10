@@ -1,0 +1,6 @@
+{
+  "name": "migration-backend",
+  "version": "0.0.1",
+  "description": "Backend server to read local project files, identify migration issues, and help solve these migration issues.",
+  "main": "index.js"
+}
