@@ -11,13 +11,13 @@ export const lightTheme = create({
   brandTitle: 'iTwinUI',
   brandImage: itwinImage,
 
-  colorPrimary: '#0071B8',
-  colorSecondary: '#0071B8',
+  colorPrimary: '#0071B8', // --iui-color-background-accent
+  colorSecondary: '#0071B8', // --iui-color-background-accent
 
   // UI
-  appBg: '#eef0f1',
-  appContentBg: '#FFFFFF',
-  appBorderColor: '#b3bcc1',
+  appBg: '#eef0f1', // --iui-color-background-backdrop
+  appContentBg: '#FFFFFF', // --iui-color-background
+  appBorderColor: '#b3bcc1', // --iui-color-border
   appBorderRadius: 9,
 
   // Typography
@@ -27,17 +27,17 @@ export const lightTheme = create({
     '"Noto Sans Mono", ui-monospace, "SF Mono", SFMono-Regular, "DejaVu Sans Mono", Menlo, Consolas, monospace',
 
   // Text colors
-  textColor: '#242424',
+  textColor: '#242424', //--iui-color-text
 
   // Toolbar default and active colors
-  barTextColor: '#242424',
-  barSelectedColor: '#0071B8',
-  barBg: '#FFFFFF',
+  barTextColor: '#242424', //--iui-color-text
+  barSelectedColor: '#0071B8', // --iui-color-background-accent
+  barBg: '#FFFFFF', // --iui-color-background
 
   // Form colors
-  inputBg: '#FFFFFF',
-  inputBorder: '#b3bcc1',
-  inputTextColor: '#242424',
+  inputBg: '#FFFFFF', // --iui-color-background
+  inputBorder: '#b3bcc1', // --iui-color-border
+  inputTextColor: '#242424', //--iui-color-text
   inputBorderRadius: 3,
 });
 
@@ -46,13 +46,13 @@ export const darkTheme = create({
   brandTitle: 'iTwinUI',
   brandImage: itwinImageDark,
 
-  colorPrimary: '#0071B8',
-  colorSecondary: '#0071B8',
+  colorPrimary: '#0071B8', // --iui-color-background-accent
+  colorSecondary: '#0071B8', // --iui-color-background-accent
 
   // UI
-  appBg: '#242b2e',
-  appContentBg: '#333c41', // background-1
-  appBorderColor: '#49555d',
+  appBg: '#242b2e', // --iui-color-background-backdrop
+  appContentBg: '#333c41', // --iui-color-background
+  appBorderColor: '#49555d', // --iui-color-border
   appBorderRadius: 9,
 
   // Typography
@@ -62,16 +62,16 @@ export const darkTheme = create({
     '"Noto Sans Mono", ui-monospace, "SF Mono", SFMono-Regular, "DejaVu Sans Mono", Menlo, Consolas, monospace',
 
   // Text colors
-  textColor: '#dbdbdb',
+  textColor: '#dbdbdb', //--iui-color-text
 
   // Toolbar default and active colors
-  barTextColor: '#dbdbdb',
-  barSelectedColor: '#008ee0',
-  barBg: '#333c41',
+  barTextColor: '#dbdbdb', //--iui-color-text
+  barSelectedColor: '#e4f3fc', // --iui-color-background-informational-muted
+  barBg: '#333c41', // --iui-color-background
 
   // Form colors
-  inputBg: '#333c41',
-  inputBorder: '#49555d',
-  inputTextColor: '#dbdbdb',
+  inputBg: '#333c41', // --iui-color-background
+  inputBorder: '#49555d', // --iui-color-border
+  inputTextColor: '#dbdbdb', //--iui-color-text
   inputBorderRadius: 3,
 });
