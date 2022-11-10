@@ -21,10 +21,10 @@ const getAllFilesAndFoldersJSON = (filesList) => {
 const readFile = (fileName) => {
   return new Promise((resolve, reject) => {
     fs.readFile(fileName, 'utf8', (err, data) => {
-      // if (err) {
-      //   console.error(err);
-      //   rejec
-      // }
+      if (err) {
+        console.error(err);
+        // rejec
+      }
       // console.log('FILE CONTENTS:');
       // console.log(data);
       resolve(data);
@@ -72,8 +72,34 @@ const getLineMatches = async (fileName) => {
 
 const getFileMatches = async (fileNames) => {
   const fileMatches = [];
+  const fileExtensions = [];
 
   for (const fileName of fileNames) {
+    const fileExtension = fileName.split('.').pop();
+    if (!fileExtensions.includes(fileExtension)) {
+      fileExtensions.push(fileExtension);
+    }
+
+    if (
+      ![
+        'tsx',
+        'ts',
+        'js',
+        'html',
+        'md',
+        'css',
+        'scss',
+        'json',
+        'svg',
+        'txt',
+        `mdx`,
+        `nvmrc`,
+        `yml`,
+      ].includes(fileExtension)
+    ) {
+      continue;
+    }
+
     const fileMatch = await getLineMatches(fileName);
 
     // Push only if at least one match is found in the file
@@ -83,7 +109,7 @@ const getFileMatches = async (fileNames) => {
   }
 
   console.log(fileMatches);
-  console.log('getFileMatches request complete');
+  console.log('getFileMatches request complete: ', fileExtensions);
 
   return fileMatches;
 };
