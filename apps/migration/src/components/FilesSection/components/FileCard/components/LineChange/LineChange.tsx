@@ -2,16 +2,35 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Code, Text, Avatar } from '@itwin/itwinui-react';
+import { Code, Text, Avatar, IconButton } from '@itwin/itwinui-react';
 // import { StatusIconMap } from '@itwin/itwinui-react';
 import SvgCheckmark from '@itwin/itwinui-icons-react/cjs/icons/Checkmark';
 import SvgStatusSuccess from '@itwin/itwinui-icons-react/cjs/icons/StatusSuccess';
+import SvgStatusError from '@itwin/itwinui-icons-react/cjs/icons/StatusError';
+import SvgUndo from '@itwin/itwinui-icons-react/cjs/icons/Undo';
 // import React from 'react';
 import './LineChange.scss';
+import React from 'react';
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css'; // optional
 
 export const LineChange = () => {
+  const [isChanged, setIsChanged] = React.useState(false);
+
   const StatusIcon = () => (
-    <SvgStatusSuccess className='status-icon' fill='green' aria-hidden />
+    <Tippy
+      content={isChanged ? 'Revert change' : 'Make change'}
+      delay={0}
+      duration={100}
+    >
+      <IconButton size='small' onClick={() => setIsChanged((prev) => !prev)}>
+        {isChanged ? (
+          <SvgStatusSuccess className='status-icon-success' aria-hidden />
+        ) : (
+          <SvgStatusError className='status-icon-error' aria-hidden />
+        )}
+      </IconButton>
+    </Tippy>
   );
 
   return (

@@ -1,5 +1,5 @@
 .FileCard {
-  padding: 10px;
+  // padding: 10px;
 
   .header {
     display: flex;
@@ -13,5 +13,11 @@
     .title {
       margin-left: 10px;
     }
+  }
+
+  .iui-expandable-content > div {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
   }
 }

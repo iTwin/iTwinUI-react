@@ -8,6 +8,18 @@
     align-items: center;
 
     .status-icon {
+      transition: 200ms;
+
+      &-success {
+        fill: green;
+      }
+
+      &-error {
+        fill: orange;
+      }
+    }
+
+    .status-icon {
       width: 16px;
       height: 16px;
     }
