@@ -9,7 +9,7 @@ import { InformationPanel } from './InformationPanel';
 import { InformationPanelWrapper } from './InformationPanelWrapper';
 import { InformationPanelHeader } from './InformationPanelHeader';
 import { InformationPanelBody } from './InformationPanelBody';
-import { SvgCloseSmall, SvgEdit } from '@itwin/itwinui-icons-react';
+import { SvgCloseSmall, SvgMore } from '../utils';
 import { IconButton } from '../Buttons';
 
 const getBoundingClientRect = HTMLElement.prototype.getBoundingClientRect;
@@ -94,13 +94,18 @@ it('should render close icon correctly', () => {
 
   const {
     container: { firstChild: closeSvg },
-  } = render(<SvgCloseSmall className='iui-button-icon' aria-hidden />);
+  } = render(<SvgCloseSmall aria-hidden />);
 
   const closeButton = infoPanel.querySelector(
     '.iui-information-header > .iui-information-header-actions > .iui-button[data-iui-variant="borderless"]',
   ) as HTMLButtonElement;
-  expect(closeButton.firstElementChild).toEqual(closeSvg);
+  const closeButtonIcon = closeButton.firstElementChild;
+  const closeButtonIconSvg = closeButtonIcon?.firstElementChild;
+
   expect(closeButton).toHaveAttribute('aria-label', 'Close');
+  expect(closeButtonIcon).toHaveClass('iui-button-icon');
+  expect(closeButtonIcon).toHaveAttribute('aria-hidden', 'true');
+  expect(closeButtonIconSvg).toEqual(closeSvg);
 
   expect(mockOnClose).not.toHaveBeenCalled();
   closeButton.click();
@@ -112,7 +117,7 @@ it('should render custom header actions', () => {
     container: { firstChild: editButton },
   } = render(
     <IconButton styleType='borderless'>
-      <SvgEdit />
+      <SvgMore />
     </IconButton>,
   );
   const { container } = render(
@@ -121,7 +126,7 @@ it('should render custom header actions', () => {
         onClose={jest.fn()}
         actions={
           <IconButton styleType='borderless'>
-            <SvgEdit />
+            <SvgMore />
           </IconButton>
         }
       />
