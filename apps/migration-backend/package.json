@@ -3,8 +3,11 @@
   "version": "0.0.1",
   "description": "Backend server to read local project files, identify migration issues, and help solve these migration issues.",
   "main": "index.js",
-  "type": "module",
+  "type": "commonjs",
   "dependencies": {
-    "express": "^4.18.2"
+    "@types/node": "^18.11.9",
+    "@types/node-fetch": "^2.6.2",
+    "express": "^4.18.2",
+    "typescript": "^4.8.4"
   }
 }

@@ -29,17 +29,32 @@
 //   }
 // });
 
-import Express from 'express';
-import { getAllFilesAndFolders } from './logic.js';
+// import Express from 'express';
+// import { getAllFilesAndFolders } from './logic.cjs';
 
-const app = Express();
+const express = require('express');
+const { getRuleMatches } = require('./logic.cjs');
+const app = express();
 
 app.get('/', (req, res) => {
   res.send('Hello world');
 });
 
 app.get('/files', async (req, res) => {
-  res.send(await getAllFilesAndFolders());
+  // res.send(await getAllFilesAndFolders());
+});
+
+app.get('/matches', async (req, res) => {
+  res.send(
+    // `${await getRuleMatches(
+    //   `/home/rohan/Documents/iTwinUI-react/apps/migration/src/App.css`,
+    // )}`,
+    JSON.stringify(
+      await getRuleMatches(
+        `/home/rohan/Documents/iTwinUI-react/apps/migration/src/App.css`,
+      ),
+    ),
+  );
 });
 
 app.listen(5000, () => console.log('Running on port 5000'));

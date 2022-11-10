@@ -1,0 +1,7 @@
+[
+  {
+    "file": "css",
+    "replace": "rotate(0deg)",
+    "with": "rotate(360deg)"
+  }
+]
