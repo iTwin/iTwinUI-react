@@ -823,6 +823,7 @@ export const Table = <
         {...ariaDataAttributes}
       >
         {headerGroups.map((headerGroup: HeaderGroup<T>) => {
+          // There may be a better solution for this, but for now I'm filtering out the placeholder cells using header.id
           headerGroup.headers = headerGroup.headers.filter(
             (header) =>
               !header.id.includes('iui-table-checkbox-selector_placeholder') &&

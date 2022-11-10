@@ -4426,3 +4426,24 @@ it('should navigate through table filtering with the keyboard', async () => {
     expect.objectContaining({ filters: [{ id: 'name', value: '2' }] }),
   );
 });
+
+it('should render table with table header', () => {
+  const { container } = renderComponent({
+    columns: [
+      {
+        Header: 'Table Header',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+          },
+        ],
+      },
+    ],
+  });
+
+  const headers = container.querySelectorAll('.iui-table-header');
+  expect(headers.length).toBe(2);
+  expect(headers[0].textContent).toBe('Table Header');
+});

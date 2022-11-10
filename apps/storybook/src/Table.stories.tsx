@@ -3585,3 +3585,58 @@ StatusAndCellIcons.args = {
   isSelectable: true,
   selectionMode: 'multi',
 };
+
+export const TableHeader: Story<Partial<TableProps>> = (args) => {
+  const onClickHandler = (
+    props: CellProps<{ name: string; description: string }>,
+  ) => action(props.row.original.name)();
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Table Name',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+          },
+          {
+            id: 'click-me',
+            Header: 'Click',
+            width: 100,
+            Cell: (props: CellProps<{ name: string; description: string }>) => {
+              const onClick = () => onClickHandler(props);
+              return <Anchor onClick={onClick}>Click me!</Anchor>;
+            },
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const data = useMemo(
+    () => [
+      { name: 'Name1', description: 'Description1' },
+      { name: 'Name2', description: 'Description2' },
+      { name: 'Name3', description: 'Description3' },
+    ],
+    [],
+  );
+
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      emptyTableContent='No data.'
+      {...args}
+    />
+  );
+};
