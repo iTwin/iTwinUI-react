@@ -1,12 +1,39 @@
 [
   {
-    "file": "css",
     "replace": "rotate(0deg)",
     "with": "rotate(360deg)"
   },
   {
-    "file": "css",
     "replace": "var(--iui-xl)",
     "with": "var(--iui-size-xl)"
+  },
+  {
+    "replace": "var(--iui-m)",
+    "with": "var(--iui-size-m)"
+  },
+  {
+    "replace": "var(--iui-color-foreground-primary)",
+    "with": "var(--iui-color-border-accent)"
+  },
+  {
+    "replace": "var(--iui-icons-color-actionable)",
+    "with": "var(--iui-color-icon)"
+  },
+  {
+    "replace": "data-iui-theme=\"dark\"",
+    "with": "",
+    "type": "suggestion",
+    "description": "You could consider to use ThemeProvider to change the theme for all the descendants"
+  },
+  {
+    "replace": "$iui-component-padding-vertical|$iui-component-padding-horizontal",
+    "with": "var(--iui-size-s)",
+    "description": "We discontinued sass variables in favor of css variables. Can see this PR for reasons for this change or this Bentley UX Tuesday video for more details."
+  },
+  {
+    "replace": "@include theme-variables('*');",
+    "with": "",
+    "type": "suggestion",
+    "description": "We discontinued the @theme-variables mixin in favor of using the ThemeProvider component"
   }
 ]
