@@ -41,8 +41,6 @@ export const LineChange = (props: LineChangeProps) => {
   );
 
   const getRemoveLine = () => {
-    console.log('debug', matchLine);
-
     return (
       <Code className='line-remove'>
         {matchLine.line.substring(0, matchLine.line.indexOf(matchLine.replace))}

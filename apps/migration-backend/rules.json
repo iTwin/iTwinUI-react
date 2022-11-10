@@ -31,9 +31,36 @@
     "description": "We discontinued sass variables in favor of css variables. Can see this PR for reasons for this change or this Bentley UX Tuesday video for more details."
   },
   {
-    "replace": "@include theme-variables('*');",
+    "replace": "iui-cell",
+    "with": "iui-table-cell"
+  },
+  {
+    "replace": "iui-cell-end-icon",
+    "with": "iui-table-cell-end-icon"
+  },
+  {
+    "replace": "iui-active",
     "with": "",
-    "type": "suggestion",
-    "description": "We discontinued the @theme-variables mixin in favor of using the ThemeProvider component"
+    "type": "manual",
+    "description": "The `.iui-active` has been replaced with the data-iui-active"
+  },
+  {
+    "replace": "iui-name-label",
+    "with": "iui-tile-name-label"
+  },
+  {
+    "replace": ".iui-active",
+    "with": "",
+    "type": "manual",
+    "description": "To override this class in css, you would now have to use `&[aria-current]`"
+  },
+  {
+    "replace": "iui-user-icon",
+    "with": "iui-avatar",
+    "description": "UserIcon has been renamed (deprecated) to Avatar"
+  },
+  {
+    "replace": "iui-left",
+    "with": "iui-page-header-left"
   }
 ]
