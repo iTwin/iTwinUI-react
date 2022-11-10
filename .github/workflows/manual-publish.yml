@@ -2,14 +2,8 @@ name: manual-publish
 
 on:
   workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Which npm tag to publish to?'
-        required: true
-        type: choice
-        default: dev
-        options:
-          - dev
+  push:
+    branches: [greta/dev-release]
 
 jobs:
   publish:
