@@ -45,7 +45,7 @@ export const LineChange = (props: LineChangeProps) => {
 
     return (
       <Code className='line-remove'>
-        {/* {matchLine.line.substring(0, matchLine.line.indexOf(matchLine.replace))} */}
+        {matchLine.line.substring(0, matchLine.line.indexOf(matchLine.replace))}
         <strong className='code-remove'>{matchLine.replace}</strong>
       </Code>
     );
@@ -54,7 +54,7 @@ export const LineChange = (props: LineChangeProps) => {
   const getAddLine = () => {
     return (
       <Code className='line-add'>
-        {/* {matchLine.line.substring(0, matchLine.line.indexOf(matchLine.replace))} */}
+        {matchLine.line.substring(0, matchLine.line.indexOf(matchLine.replace))}
         <strong className='code-add'>{matchLine.with}</strong>
       </Code>
     );
