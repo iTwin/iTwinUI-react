@@ -32,7 +32,7 @@ describe('Table', () => {
     'With Paginator',
     'Zebra Striped Rows',
     'Status And Cell Icons',
-    'Table Header',
+    'Grouped Header',
   ];
 
   tests.forEach((testName) => {

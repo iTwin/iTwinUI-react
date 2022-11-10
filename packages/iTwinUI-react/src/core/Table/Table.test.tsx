@@ -4427,7 +4427,7 @@ it('should navigate through table filtering with the keyboard', async () => {
   );
 });
 
-it('should render table with table header', () => {
+it('should render table with grouped header', () => {
   const { container } = renderComponent({
     columns: [
       {

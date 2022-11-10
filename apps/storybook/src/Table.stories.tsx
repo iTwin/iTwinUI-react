@@ -3586,7 +3586,7 @@ StatusAndCellIcons.args = {
   selectionMode: 'multi',
 };
 
-export const TableHeader: Story<Partial<TableProps>> = (args) => {
+export const GroupedHeader: Story<Partial<TableProps>> = (args) => {
   const onClickHandler = (
     props: CellProps<{ name: string; description: string }>,
   ) => action(props.row.original.name)();
