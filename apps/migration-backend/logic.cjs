@@ -73,6 +73,7 @@ const getLineMatches = async (fileName) => {
 const getFileMatches = async (fileNames) => {
   const fileMatches = [];
   const fileExtensions = [];
+  let numFilesScanned = 0;
 
   for (const fileName of fileNames) {
     const fileExtension = fileName.split('.').pop();
@@ -100,6 +101,7 @@ const getFileMatches = async (fileNames) => {
       continue;
     }
 
+    numFilesScanned++;
     const fileMatch = await getLineMatches(fileName);
 
     // Push only if at least one match is found in the file
@@ -109,7 +111,10 @@ const getFileMatches = async (fileNames) => {
   }
 
   console.log(fileMatches);
-  console.log('getFileMatches request complete: ', fileExtensions);
+  console.log(
+    `getFileMatches request complete (${numFilesScanned} files scanned): `,
+    fileExtensions,
+  );
 
   return fileMatches;
 };
