@@ -23,11 +23,11 @@ import { InputGroup } from '../InputGroup';
 import { Radio } from '../Radio';
 import {
   SvgChevronRight,
-  SvgDeveloper,
-  SvgPlaceholder,
+  SvgMore,
+  SvgClose,
   SvgSortUp,
   SvgSortDown,
-} from '@itwin/itwinui-icons-react';
+} from '../utils';
 import { DefaultCell, EditableCell } from './cells';
 import { TablePaginator } from './TablePaginator';
 import * as UseOverflow from '../utils/hooks/useOverflow';
@@ -1736,13 +1736,14 @@ it('should expand correctly', async () => {
   });
   const {
     container: { firstChild: expanderIcon },
-  } = render(<SvgChevronRight className='iui-button-icon' aria-hidden />);
+  } = render(<SvgChevronRight />);
 
-  expect(
-    container.querySelectorAll(
-      '.iui-button[data-iui-variant="borderless"] > .iui-button-icon',
-    )[0],
-  ).toEqual(expanderIcon);
+  const buttonIcons = container.querySelectorAll(
+    '.iui-button[data-iui-variant="borderless"] > .iui-button-icon',
+  );
+
+  expect(buttonIcons[0]).toHaveAttribute('aria-hidden', 'true');
+  expect(buttonIcons[0].querySelector('svg')).toEqual(expanderIcon);
 
   await act(async () => {
     await userEvent.click(container.querySelectorAll('.iui-button')[0]);
@@ -2538,6 +2539,33 @@ it('should change page size', async () => {
   );
 });
 
+it('should render number of rows selected for paginator', async () => {
+  const { container } = renderComponent({
+    data: mockedSubRowsData(),
+    pageSize: 2,
+    paginatorRenderer: (props) => <TablePaginator {...props} />,
+    isSelectable: true,
+  });
+
+  await expandAll(container);
+
+  const rowCheckboxes = container.querySelectorAll(
+    '.iui-table-body .iui-table-row .iui-checkbox',
+  );
+
+  expect(container.querySelector('.iui-left span')).toBeNull();
+
+  fireEvent.click(rowCheckboxes[1]); // selects row 1.1
+  expect(container.querySelector('.iui-left span')?.textContent).toBe(
+    '1 row selected',
+  );
+
+  fireEvent.click(rowCheckboxes[2]); // selects rows 1.2, 1.2.1, and 1.2.2
+  expect(container.querySelector('.iui-left span')?.textContent).toBe(
+    '4 rows selected',
+  );
+});
+
 it('should handle resize by increasing width of current column and decreasing the next ones', () => {
   jest
     .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
@@ -3019,7 +3047,7 @@ it('should handle table resize only when some columns were resized', () => {
       triggerResize = onResize;
       return [
         jest.fn(),
-        ({ disconnect: jest.fn() } as unknown) as ResizeObserver,
+        { disconnect: jest.fn() } as unknown as ResizeObserver,
       ];
     });
   const columns: Column<TestDataType>[] = [
@@ -3149,7 +3177,7 @@ it('should resize current and closest column when table width would decrease whe
       triggerResize = onResize;
       return [
         jest.fn(),
-        ({ disconnect: jest.fn() } as unknown) as ResizeObserver,
+        { disconnect: jest.fn() } as unknown as ResizeObserver,
       ];
     });
   const columns: Column<TestDataType>[] = [
@@ -3219,7 +3247,7 @@ it('should resize last and closest column on the left when table width would dec
       triggerResize = onResize;
       return [
         jest.fn(),
-        ({ disconnect: jest.fn() } as unknown) as ResizeObserver,
+        { disconnect: jest.fn() } as unknown as ResizeObserver,
       ];
     });
   const columns: Column<TestDataType>[] = [
@@ -3674,9 +3702,8 @@ it('should render action column with column manager', async () => {
   });
 
   expect(container.querySelectorAll('[role="columnheader"]').length).toBe(3);
-  const actionColumn = container.querySelectorAll<HTMLInputElement>(
-    '.iui-slot',
-  );
+  const actionColumn =
+    container.querySelectorAll<HTMLInputElement>('.iui-slot');
   expect(
     actionColumn[0].firstElementChild?.className.includes('iui-button'),
   ).toBeTruthy();
@@ -3799,9 +3826,8 @@ it('should hide column when deselected in column manager', async () => {
 
   const columnManager = container.querySelector('.iui-button') as HTMLElement;
   await userEvent.click(columnManager);
-  const columnManagerColumns = document.querySelectorAll<HTMLLIElement>(
-    '.iui-menu-item',
-  );
+  const columnManagerColumns =
+    document.querySelectorAll<HTMLLIElement>('.iui-menu-item');
   await userEvent.click(columnManagerColumns[1]);
 
   headerCells = container.querySelectorAll<HTMLDivElement>(
@@ -3845,9 +3871,8 @@ it('should be disabled in column manager if `disableToggleVisibility` is true', 
   const columnManager = container.querySelector('.iui-button') as HTMLElement;
 
   await userEvent.click(columnManager);
-  const columnManagerColumns = document.querySelectorAll<HTMLLIElement>(
-    '.iui-menu-item',
-  );
+  const columnManagerColumns =
+    document.querySelectorAll<HTMLLIElement>('.iui-menu-item');
   expect(columnManagerColumns[0]).toHaveAttribute('aria-disabled', 'true');
 
   expect(
@@ -4606,7 +4631,7 @@ it('should render start and end cell icons', () => {
           Header: 'Name',
           accessor: 'name',
           cellRenderer: (props) => {
-            return <DefaultCell {...props} startIcon={<SvgPlaceholder />} />;
+            return <DefaultCell {...props} startIcon={<SvgClose />} />;
           },
         },
         {
@@ -4614,7 +4639,7 @@ it('should render start and end cell icons', () => {
           Header: 'description',
           accessor: 'description',
           cellRenderer: (props) => {
-            return <DefaultCell {...props} endIcon={<SvgDeveloper />} />;
+            return <DefaultCell {...props} endIcon={<SvgMore />} />;
           },
         },
       ],
@@ -4625,11 +4650,11 @@ it('should render start and end cell icons', () => {
   });
 
   const {
-    container: { firstChild: placeholderIcon },
-  } = render(<SvgPlaceholder />);
+    container: { firstChild: closeIcon },
+  } = render(<SvgClose />);
   const {
-    container: { firstChild: developerIcon },
-  } = render(<SvgDeveloper />);
+    container: { firstChild: moreIcon },
+  } = render(<SvgMore />);
 
   const row = container.querySelector(
     '.iui-table-body .iui-table-row',
@@ -4640,13 +4665,13 @@ it('should render start and end cell icons', () => {
     '.iui-table-cell-start-icon',
   ) as HTMLDivElement;
   expect(startIcon).toBeTruthy();
-  expect(startIcon.querySelector('svg')).toEqual(placeholderIcon);
+  expect(startIcon.querySelector('svg')).toEqual(closeIcon);
 
   const endIcon = cells[1].querySelector(
     '.iui-table-cell-end-icon',
   ) as HTMLDivElement;
   expect(endIcon).toBeTruthy();
-  expect(endIcon.querySelector('svg')).toEqual(developerIcon);
+  expect(endIcon.querySelector('svg')).toEqual(moreIcon);
 });
 
 it.each(['positive', 'warning', 'negative'] as const)(
@@ -4705,6 +4730,23 @@ it.each(['positive', 'warning', 'negative'] as const)(
     expect(rows[1]).not.toHaveAttribute('data-iui-status', rowStatus);
   },
 );
+
+it('should render row with loading status', () => {
+  const { container } = renderComponent({
+    rowProps: (row) => {
+      return {
+        isLoading: row.index === 0 ? true : undefined,
+      };
+    },
+  });
+
+  const tableBody = container.querySelector(
+    '.iui-table-body',
+  ) as HTMLDivElement;
+  const rows = tableBody.querySelectorAll('.iui-table-row');
+  expect(rows[0]).toHaveClass(`iui-loading`);
+  expect(rows[1]).not.toHaveClass(`iui-loading`);
+});
 
 it('should navigate through table sorting with the keyboard', async () => {
   const onSort = jest.fn();

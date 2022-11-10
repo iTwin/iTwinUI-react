@@ -5,8 +5,6 @@
 import React from 'react';
 import cx from 'classnames';
 import '@itwin/itwinui-css/css/table.css';
-import SvgChevronLeft from '@itwin/itwinui-icons-react/cjs/icons/ChevronLeft';
-import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import { IconButton, Button, DropdownButton } from '../Buttons';
 import { ProgressRadial } from '../ProgressIndicators';
 import { MenuItem } from '../Menu';
@@ -16,6 +14,8 @@ import {
   useTheme,
   useOverflow,
   useContainerWidth,
+  SvgChevronLeft,
+  SvgChevronRight,
 } from '../utils';
 import { TablePaginatorRendererProps } from './Table';
 
@@ -114,6 +114,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
     totalRowsCount,
     pageSize,
     onPageChange,
+    totalSelectedRowsCount = 0,
     focusActivationMode = 'manual',
     isLoading = false,
     size = 'default',
@@ -282,7 +283,15 @@ export const TablePaginator = (props: TablePaginatorProps) => {
       ref={paginatorResizeRef}
       {...rest}
     >
-      <div className='iui-left' />
+      <div className='iui-left'>
+        {totalSelectedRowsCount > 0 && (
+          <span>
+            {`${totalSelectedRowsCount} ${
+              totalSelectedRowsCount === 1 ? 'row' : 'rows'
+            } selected`}
+          </span>
+        )}
+      </div>
       {showPagesList && (
         <div className='iui-center' ref={overflowRef}>
           <IconButton
