@@ -38,7 +38,7 @@ const readFileGetLines = async (fileName) => {
   return fileContents.split('\n');
 };
 
-const getRuleMatches = async (fileName) => {
+const getLineMatches = async (fileName) => {
   const matches = [];
 
   const rulesFileContents = await readFile(`${__dirname}/rules.json`);
@@ -49,18 +49,34 @@ const getRuleMatches = async (fileName) => {
     for (const rule of rules) {
       if (line.indexOf(rule.replace) !== -1) {
         matches.push({
-          file_name: fileName,
           line_number: lineNumber + 1,
           line: line,
           replace: rule.replace,
           with: rule.with,
+          type: rule.type,
+          description: rule.description,
         });
       }
     }
   }
 
-  console.log(matches);
-  return matches;
+  const matchObject = {
+    fileName: 'fileName',
+    matchLines: matches,
+  };
+  console.log(matchObject);
+  return matchObject;
+};
+
+const getFileMatches = (fileNames) => {
+  const fileMatches = [];
+
+  for (const fileName of fileNames) {
+    const fileMatch = getLineMatches(fileName);
+    fileMatches.push(fileMatch);
+  }
+
+  return fileMatches;
 };
 
 const getAllFilesAndFolders = () => {
@@ -116,8 +132,8 @@ const filesString = `./public/robots.txt
 // );
 // console.log(__filename, __dirname);
 
-getRuleMatches(
+getLineMatches(
   `/home/rohan/Documents/iTwinUI-react/apps/migration/src/App.css`,
 );
 
-exports.getRuleMatches = getRuleMatches;
+exports.getRuleMatches = getLineMatches;
