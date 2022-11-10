@@ -49,6 +49,7 @@ const getLineMatches = async (fileName) => {
 
   const rulesFileContents = await readFile(`${__dirname}/rules.json`);
   const rules = JSON.parse(rulesFileContents);
+  console.log(`Number of rules: ${rules.length}`);
   const fileLines = await readFileGetLines(fileName);
 
   for (const [lineNumber, line] of fileLines.entries()) {
