@@ -52,12 +52,6 @@ export const FileCard = (props: FileCardProps) => {
       {file.matchLines.map((matchLine) => {
         return <LineChange matchLine={matchLine} />;
       })}
-      {file.matchLines.map((matchLine) => {
-        return <LineChange matchLine={matchLine} />;
-      })}
-      {file.matchLines.map((matchLine) => {
-        return <LineChange matchLine={matchLine} />;
-      })}
     </ExpandableBlock>
   );
 };
