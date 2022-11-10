@@ -47,7 +47,9 @@ const mockIntersection = (element: Element) => {
   intersectionCallbacks.get(element)?.();
 };
 
-const columns = (onViewClick: () => void = jest.fn()) => [
+const columns = (
+  onViewClick: () => void = jest.fn(),
+): Column<TestDataType>[] => [
   {
     id: 'name',
     Header: 'Name',
@@ -71,6 +73,7 @@ const columns = (onViewClick: () => void = jest.fn()) => [
 type TestDataType = {
   name: string;
   description: string;
+  accessor?: string;
   subRows?: TestDataType[];
   booleanValue?: boolean;
 };
@@ -118,7 +121,7 @@ const mockedSubRowsData = () => [
 ];
 
 function renderComponent(
-  initialsProps?: Partial<TableProps<TestDataType>>,
+  initialsProps?: Partial<TableProps>,
   onViewClick?: () => void,
   renderContainer?: HTMLElement,
 ) {
@@ -1130,7 +1133,7 @@ it('should show message and active filter icon when there is no data after manua
 });
 
 it('should not filter if global filter is not set', async () => {
-  const mockedColumns = [
+  const mockedColumns: Column<TestDataType>[] = [
     {
       id: 'name',
       Header: 'Name',
@@ -1160,7 +1163,7 @@ it('should not filter if global filter is not set', async () => {
 });
 
 it('should update rows when global filter changes', async () => {
-  const mockedColumns = [
+  const mockedColumns: Column<TestDataType>[] = [
     {
       id: 'name',
       Header: 'Name',
@@ -1299,7 +1302,7 @@ it('should filter rows with both global and column filters', async () => {
 });
 
 it('should show empty filtered table content with global filter', async () => {
-  const mockedColumns = [
+  const mockedColumns: Column<TestDataType>[] = [
     {
       id: 'name',
       Header: 'Name',
@@ -1349,7 +1352,7 @@ it('should show empty filtered table content with global filter', async () => {
 });
 
 it('should not show empty filtered table content when global filter is empty', async () => {
-  const mockedColumns = [
+  const mockedColumns: Column<typeof data[number]>[] = [
     {
       id: 'name',
       Header: 'Name',
@@ -1399,7 +1402,7 @@ it('should not show empty filtered table content when global filter is empty', a
 });
 
 it('should disable global filter column with disableGlobalFilter', async () => {
-  const mockedColumns = [
+  const mockedColumns: Column<TestDataType>[] = [
     {
       id: 'name',
       Header: 'Name',
@@ -1447,7 +1450,7 @@ it('should disable global filter column with disableGlobalFilter', async () => {
 });
 
 it('should not global filter with manualGlobalFilter', async () => {
-  const mockedColumns = [
+  const mockedColumns: Column<TestDataType>[] = [
     {
       id: 'name',
       Header: 'Name',
@@ -3778,29 +3781,6 @@ it('should render selectable rows without select column', async () => {
   expect(rows[1]).toHaveAttribute('aria-selected', 'true');
   expect(rows[2]).not.toHaveAttribute('aria-selected', 'true');
   expect(onRowClick).toHaveBeenCalledTimes(3);
-});
-
-it('should not throw on headless table', () => {
-  const columns: Column<TestDataType>[] = [
-    {
-      id: 'name',
-      Header: 'Name',
-      accessor: 'name',
-    },
-    {
-      id: 'description',
-      Header: 'Description',
-      accessor: 'description',
-    },
-  ];
-  const { container } = renderComponent({
-    columns,
-  });
-
-  expect(
-    container.querySelector('.iui-table-header .iui-table-row'),
-  ).toBeFalsy();
-  expect(container.querySelector('.iui-table-body')).toBeTruthy();
 });
 
 it('should scroll to selected item in non-virtualized table', async () => {
