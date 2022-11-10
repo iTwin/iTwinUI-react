@@ -18,7 +18,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
 
       - run: yarn install
-      - run: yarn build
+      - run: yarn build --filter=@itwin/itwinui-react
 
       - run: npm publish --access public --tag dev
         working-directory: './packages/iTwinUI-react'
