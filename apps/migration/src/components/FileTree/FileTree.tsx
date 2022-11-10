@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { NodeData, Tree, TreeNode } from '@itwin/itwinui-react';
-import SvgAdd from '@itwin/itwinui-icons-react/cjs/icons/Add';
+// import SvgAdd from '@itwin/itwinui-icons-react/cjs/icons/Add';
 
 import React from 'react';
 
@@ -87,7 +87,7 @@ export const FileTree = () => {
               label={node.label}
               sublabel={node.sublabel}
               onExpanded={onNodeExpanded}
-              icon={<SvgAdd />}
+              // icon={<SvgAdd />}
               {...rest}
             />
           ),

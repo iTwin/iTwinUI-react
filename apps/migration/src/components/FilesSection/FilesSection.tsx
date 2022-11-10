@@ -2,17 +2,16 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import './App.scss';
-import { FileTree } from './components/FileTree/FileTree';
-import { FilesSection } from './components/FilesSection/FilesSection';
+import React from 'react';
+import './FilesSection.scss';
+import { FileCard } from './components/FileCard/FileCard';
 
-function App() {
+export const FilesSection = () => {
   return (
-    <div className='App'>
-      <FileTree />
-      <FilesSection />
-    </div>
+    <span className='FilesSection'>
+      {[...Array(5)].map((_, index) => {
+        return <FileCard />;
+      })}
+    </span>
   );
-}
-
-export default App;
+};
