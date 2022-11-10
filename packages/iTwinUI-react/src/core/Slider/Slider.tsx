@@ -198,8 +198,8 @@ export type SliderProps = {
  * <Slider values={[10, 20, 30, 40]} min={0} max={60} setFocus
  *   thumbMode='allow-crossing' />
  */
-export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
-  (props, ref) => {
+export const Slider = React.forwardRef(
+  (props: SliderProps, ref: React.RefObject<HTMLDivElement>) => {
     const {
       min = 0,
       max = 100,
@@ -334,16 +334,21 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
 
     // function called by Thumb keyboard processing
     const onThumbValueChanged = React.useCallback(
-      (index: number, value: number) => {
-        if (currentValues[index] === value) {
+      (index: number, value: number, keyboardReleased: boolean) => {
+        if (currentValues[index] === value && !keyboardReleased) {
           return;
         }
-        const newValues = [...currentValues];
-        newValues[index] = value;
-        setCurrentValues(newValues);
-        onChange?.(newValues);
+
+        if (keyboardReleased) {
+          onChange?.(currentValues); // currentValues since key up should not change value but only stop continuous value selection
+        } else {
+          const newValues = [...currentValues]; // newValues since key down should change value
+          newValues[index] = value;
+          onUpdate?.(newValues);
+          setCurrentValues(newValues);
+        }
       },
-      [currentValues, onChange],
+      [currentValues, onUpdate, onChange],
     );
 
     const onThumbActivated = React.useCallback((index: number) => {

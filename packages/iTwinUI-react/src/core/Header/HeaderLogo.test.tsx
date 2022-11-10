@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import SvgPlaceholder from '@itwin/itwinui-icons-react/cjs/icons/Placeholder';
+import { SvgMore as SvgPlaceholder } from '../utils';
 
 import HeaderLogo from './HeaderLogo';
 
@@ -13,18 +13,20 @@ it('renders default correctly', () => {
     <HeaderLogo logo={<SvgPlaceholder />}>Application</HeaderLogo>,
   );
 
-  const root = container.querySelector('.iui-header-logo') as HTMLDivElement;
+  const root = container.querySelector('.iui-header-brand') as HTMLDivElement;
   expect(root).toBeTruthy();
   expect(root.getAttribute('role')).toBeNull();
 
   const {
     container: { firstChild: placeholderIcon },
-  } = render(<SvgPlaceholder className='iui-header-button-icon' />);
-  expect(container.querySelector('.iui-header-button-icon')).toEqual(
+  } = render(<SvgPlaceholder className='iui-header-brand-icon' />);
+  expect(container.querySelector('.iui-header-brand-icon')).toEqual(
     placeholderIcon,
   );
 
-  const label = container.querySelector('.iui-label') as HTMLSpanElement;
+  const label = container.querySelector(
+    '.iui-header-brand-label',
+  ) as HTMLSpanElement;
   expect(label.textContent).toEqual('Application');
 });
 
@@ -36,7 +38,7 @@ it('renders with onClick correctly', () => {
     </HeaderLogo>,
   );
 
-  const root = container.querySelector('.iui-header-logo') as HTMLDivElement;
+  const root = container.querySelector('.iui-header-brand') as HTMLDivElement;
   expect(root).toBeTruthy();
   expect(root.getAttribute('role')).toBe('button');
   root.click();
@@ -52,7 +54,7 @@ it('handles keypress with onClick correctly', () => {
     </HeaderLogo>,
   );
 
-  const root = container.querySelector('.iui-header-logo') as HTMLDivElement;
+  const root = container.querySelector('.iui-header-brand') as HTMLDivElement;
   expect(root).toBeTruthy();
   expect(root.getAttribute('role')).toBe('button');
 
@@ -70,26 +72,28 @@ it('renders with no children correctly', () => {
   const { container } = render(<HeaderLogo logo={<SvgPlaceholder />} />);
 
   const logo = container.querySelector(
-    '.iui-header-button-icon:only-child',
+    '.iui-header-brand-icon:only-child',
   ) as HTMLDivElement;
   expect(logo).toBeTruthy();
 
-  const label = container.querySelector('.iui-label') as HTMLSpanElement;
+  const label = container.querySelector(
+    '.iui-header-brand-label',
+  ) as HTMLSpanElement;
   expect(label).toBeNull();
 });
 
 it('trashes wrong logo type (JS only)', () => {
   const { container } = render(
-    <HeaderLogo logo={('myLogo' as unknown) as JSX.Element}>
+    <HeaderLogo logo={'myLogo' as unknown as JSX.Element}>
       Application
     </HeaderLogo>,
   );
 
-  const root = container.querySelector('.iui-header-logo') as HTMLDivElement;
+  const root = container.querySelector('.iui-header-brand') as HTMLDivElement;
   expect(root).toBeTruthy();
 
   const label = container.querySelector(
-    '.iui-label:only-child',
+    '.iui-header-brand-label:only-child',
   ) as HTMLSpanElement;
   expect(label).toBeTruthy();
 });

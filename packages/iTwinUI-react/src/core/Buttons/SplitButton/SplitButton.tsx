@@ -8,10 +8,12 @@ import { Button, ButtonProps } from '../Button';
 import { IconButton } from '../IconButton';
 import { DropdownMenu } from '../../DropdownMenu';
 import { Placement } from 'tippy.js';
-import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
-import SvgCaretUpSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretUpSmall';
-
-import { PolymorphicForwardRefComponent, useTheme } from '../../utils';
+import {
+  SvgCaretDownSmall,
+  SvgCaretUpSmall,
+  PolymorphicForwardRefComponent,
+  useTheme,
+} from '../../utils';
 import '@itwin/itwinui-css/css/button.css';
 
 export type SplitButtonProps = ButtonProps & {
@@ -81,41 +83,37 @@ export const SplitButton: SplitButtonComponent = React.forwardRef(
 
     return (
       <span
-        className={cx(className, 'iui-button-split-menu', {
+        className={cx(className, 'iui-button-split', {
           'iui-disabled': props.disabled,
         })}
         style={style}
         title={title}
         ref={ref}
       >
-        <div>
-          <Button
+        <Button
+          styleType={styleType}
+          size={size}
+          onClick={onClick}
+          ref={forwardedRef}
+          {...rest}
+        >
+          {children}
+        </Button>
+        <DropdownMenu
+          placement={menuPlacement}
+          menuItems={menuItems}
+          style={{ minWidth: menuWidth }}
+          onShow={React.useCallback(() => setIsMenuOpen(true), [])}
+          onHide={React.useCallback(() => setIsMenuOpen(false), [])}
+        >
+          <IconButton
             styleType={styleType}
             size={size}
-            onClick={onClick}
-            ref={forwardedRef}
-            {...rest}
+            disabled={props.disabled}
           >
-            {children}
-          </Button>
-        </div>
-        <div>
-          <DropdownMenu
-            placement={menuPlacement}
-            menuItems={menuItems}
-            style={{ minWidth: menuWidth }}
-            onShow={React.useCallback(() => setIsMenuOpen(true), [])}
-            onHide={React.useCallback(() => setIsMenuOpen(false), [])}
-          >
-            <IconButton
-              styleType={styleType}
-              size={size}
-              disabled={props.disabled}
-            >
-              {isMenuOpen ? <SvgCaretUpSmall /> : <SvgCaretDownSmall />}
-            </IconButton>
-          </DropdownMenu>
-        </div>
+            {isMenuOpen ? <SvgCaretUpSmall /> : <SvgCaretDownSmall />}
+          </IconButton>
+        </DropdownMenu>
       </span>
     );
   },

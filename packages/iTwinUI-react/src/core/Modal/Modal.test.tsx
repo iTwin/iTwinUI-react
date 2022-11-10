@@ -24,7 +24,9 @@ function assertBaseElement(
   expect(title).toBeTruthy();
   expect(title.textContent).toEqual('Modal Title');
 
-  const closeButton = dialog.querySelector('.iui-button.iui-borderless');
+  const closeButton = dialog.querySelector(
+    '.iui-button[data-iui-variant="borderless"]',
+  );
   expect(!!closeButton).toBe(isDismissible);
 
   expect(dialog.textContent).toContain('Body');
@@ -200,12 +202,12 @@ it('should work with portal container properly', () => {
 
   let container = document.querySelector('body > #test-id') as HTMLElement;
   expect(container).toBeTruthy();
-  expect(container.children.length).toBe(1);
+  expect(container.children.length).toBe(2);
 
   renderComponent({ modalRootId: 'test-id' });
   container = document.querySelector('body > #test-id') as HTMLElement;
   // 2 modals under the same container
-  expect(container.children.length).toBe(2);
+  expect(container.children.length).toBe(3);
 });
 
 it('should reset body overflow on closing and unmounting', () => {

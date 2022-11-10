@@ -4,8 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
-import { StatusIconMap } from '../utils';
-import { SvgPlaceholder } from '@itwin/itwinui-icons-react';
+import { StatusIconMap, SvgMore as SvgPlaceholder } from '../utils';
 
 import { ExpandableBlock } from './ExpandableBlock';
 
@@ -132,9 +131,8 @@ it.each(['positive', 'negative', 'warning', 'informational'] as const)(
 
     const {
       container: { firstChild: statusIcon },
-    } = render(
-      StatusIconMap[status]({ className: `iui-status-icon iui-${status}` }),
-    );
+    } = render(StatusIconMap[status]({ className: `iui-status-icon` }));
+    (statusIcon as HTMLElement).setAttribute('data-iui-icon-color', status);
     expect(container.querySelector('.iui-status-icon')).toEqual(statusIcon);
   },
 );

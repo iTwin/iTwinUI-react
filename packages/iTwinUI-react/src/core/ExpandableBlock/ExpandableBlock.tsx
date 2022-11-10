@@ -2,7 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import cx from 'classnames';
 import React from 'react';
 
@@ -11,6 +10,7 @@ import {
   useTheme,
   StatusIconMap,
   WithCSSTransition,
+  SvgChevronRight,
 } from '../utils';
 import '@itwin/itwinui-css/css/expandable-block.css';
 
@@ -137,11 +137,8 @@ export const ExpandableBlock = (props: ExpandableBlockProps) => {
         </span>
         {icon &&
           React.cloneElement(icon, {
-            className: cx(
-              'iui-status-icon',
-              { [`iui-${status}`]: !!status },
-              icon.props.className,
-            ),
+            className: cx('iui-status-icon', icon.props.className),
+            'data-iui-icon-color': status,
           })}
       </div>
       <WithCSSTransition in={expanded}>

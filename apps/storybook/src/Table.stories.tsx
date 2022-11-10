@@ -35,6 +35,8 @@ import {
   SelectionColumn,
   ExpanderColumn,
   Input,
+  Radio,
+  ProgressRadial,
 } from '@itwin/itwinui-react';
 import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
@@ -1030,9 +1032,11 @@ export const RowInViewport: Story<Partial<TableProps>> = (args) => {
         Open{' '}
         <Anchor
           onClick={() =>
-            (parent.document.querySelector(
-              '[id^="tabbutton-actions"]',
-            ) as HTMLButtonElement)?.click()
+            (
+              parent.document.querySelector(
+                '[id^="tabbutton-actions"]',
+              ) as HTMLButtonElement
+            )?.click()
           }
         >
           Actions
@@ -1226,6 +1230,75 @@ export const NoData: Story<Partial<TableProps>> = (args) => {
 
 NoData.args = {
   data: [],
+};
+
+export const InitialState: Story<Partial<TableProps>> = (args) => {
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Table',
+        columns: [
+          {
+            id: 'name',
+            Header: 'Name',
+            accessor: 'name',
+            Filter: tableFilters.TextFilter(),
+          },
+          {
+            id: 'description',
+            Header: 'Description',
+            accessor: 'description',
+            maxWidth: 200,
+          },
+        ],
+      },
+    ],
+    [],
+  );
+
+  const data = useMemo(
+    () => [
+      { name: 'Name17', description: 'Description17' },
+      { name: 'Name18', description: 'Description18' },
+      { name: 'Name19', description: 'Description19' },
+      { name: 'Name20', description: 'Description20' },
+      { name: 'Name21', description: 'Description21' },
+      { name: 'Name22', description: 'Description22' },
+    ],
+    [],
+  );
+
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      emptyTableContent='No data.'
+      isSelectable
+      initialState={{
+        filters: [{ id: 'name', value: '1' }],
+        selectedRowIds: { '0': true, '1': true, '4': true, '5': true },
+      }}
+      {...args}
+    />
+  );
+};
+
+InitialState.args = {
+  data: [
+    { name: 'Name17', description: 'Description17' },
+    { name: 'Name18', description: 'Description18' },
+    { name: 'Name19', description: 'Description19' },
+    { name: 'Name20', description: 'Description20' },
+    { name: 'Name21', description: 'Description21' },
+    { name: 'Name22', description: 'Description22' },
+  ],
+  initialState: {
+    filters: [{ id: 'name', value: '1' }],
+    selectedRowIds: { '0': true, '1': true, '4': true, '5': true },
+  },
+};
+InitialState.argTypes = {
+  initialState: { table: { disable: false } },
 };
 
 export const ControlledState: Story<Partial<TableProps>> = (args) => {
@@ -2136,15 +2209,41 @@ export const ResizableColumns: Story<Partial<TableProps>> = (args) => {
     [],
   );
 
+  const [columnResizeMode, setColumnResizeMode] =
+    React.useState<TableProps['columnResizeMode']>('fit');
+
   return (
-    <Table
-      columns={columns}
-      data={data}
-      emptyTableContent='No data.'
-      isResizable
-      isSortable
-      {...args}
-    />
+    <>
+      <InputGroup
+        label='Resize mode'
+        displayStyle='inline'
+        style={{ marginBottom: 12 }}
+      >
+        <Radio
+          name='choice'
+          value='fit'
+          onChange={() => setColumnResizeMode('fit')}
+          label='fit'
+          checked={columnResizeMode === 'fit'}
+        />
+        <Radio
+          name='choice'
+          value='expand'
+          onChange={() => setColumnResizeMode('expand')}
+          label='expand'
+          checked={columnResizeMode === 'expand'}
+        />
+      </InputGroup>
+      <Table
+        columns={columns}
+        data={data}
+        emptyTableContent='No data.'
+        isResizable
+        isSortable
+        {...args}
+        columnResizeMode={columnResizeMode}
+      />
+    </>
   );
 };
 
@@ -3531,7 +3630,13 @@ export const StatusAndCellIcons: Story<Partial<TableProps>> = (args) => {
               <DefaultCell
                 {...props}
                 startIcon={props.cellProps.row.original.startIcon}
-                endIcon={props.cellProps.row.original.endIcon}
+                endIcon={
+                  props.cellProps.row.original.isLoading ? (
+                    <ProgressRadial value={40} />
+                  ) : (
+                    props.cellProps.row.original.endIcon
+                  )
+                }
               />
             ),
           },
@@ -3567,6 +3672,12 @@ export const StatusAndCellIcons: Story<Partial<TableProps>> = (args) => {
 
   const data = useMemo(
     () => [
+      {
+        name: 'alfa.mp3',
+        modified: 'Just now',
+        size: '76 KB',
+        isLoading: true,
+      },
       {
         name: 'beta.mp3',
         modified: 'Just now',
@@ -3609,11 +3720,13 @@ export const StatusAndCellIcons: Story<Partial<TableProps>> = (args) => {
         size: string;
         startIcon: JSX.Element;
         endIcon: JSX.Element;
-        status: 'positive' | 'negative' | 'warning' | undefined;
+        status?: 'positive' | 'negative' | 'warning';
+        isLoading?: boolean;
       }>,
     ) => {
       return {
         status: row.original.status,
+        isLoading: row.original.isLoading,
       };
     },
     [],

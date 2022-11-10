@@ -46,25 +46,16 @@ export const IconButton: IconButtonComponent = React.forwardRef(
     return (
       <Element
         ref={ref}
-        className={cx(
-          'iui-button',
-          `iui-${styleType}`,
-          {
-            [`iui-${size}`]: !!size,
-            'iui-active': isActive,
-          },
-          className,
-        )}
+        className={cx('iui-button', className)}
+        data-iui-variant={styleType !== 'default' ? styleType : undefined}
+        data-iui-size={size}
+        data-iui-active={isActive}
         type={type}
         {...rest}
       >
-        {React.cloneElement(children as JSX.Element, {
-          className: cx(
-            'iui-button-icon',
-            (children as JSX.Element).props.className,
-          ),
-          'aria-hidden': true,
-        })}
+        <span className='iui-button-icon' aria-hidden>
+          {children}
+        </span>
       </Element>
     );
   },

@@ -6,7 +6,7 @@ import cx from 'classnames';
 import React from 'react';
 import { ProgressRadial } from '../ProgressIndicators';
 import { useMergedRefs, useTheme } from '../utils';
-import '@itwin/itwinui-css/css/inputs.css';
+import '@itwin/itwinui-css/css/checkbox.css';
 
 export type CheckboxProps = {
   /**
@@ -36,20 +36,6 @@ export type CheckboxProps = {
    * @default false
    */
   isLoading?: boolean;
-  /**
-   * Custom CSS class name for the checkmark element.
-   *
-   * @deprecated As of 1.32.0, this is applied on the actual checkbox `<input>` element.
-   * The checkmark has been moved into a pseudo-element.
-   */
-  checkmarkClassName?: string;
-  /**
-   * Custom CSS Style for the checkmark element.
-   *
-   * @deprecated As of 1.32.0, this is applied on the actual checkbox `<input>` element.
-   * The checkmark has been moved into a pseudo-element.
-   */
-  checkmarkStyle?: React.CSSProperties;
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'>;
 
 /**
@@ -64,8 +50,8 @@ export type CheckboxProps = {
  * <Checkbox label='Negative Checkbox' status='negative' />
  * <Checkbox label='Visibility Checkbox' variant='eyeball' />
  */
-export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
-  (props, ref) => {
+export const Checkbox = React.forwardRef(
+  (props: CheckboxProps, ref: React.RefObject<HTMLInputElement>) => {
     const {
       className,
       disabled = false,
@@ -76,8 +62,6 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
       setFocus,
       isLoading = false,
       style,
-      checkmarkClassName,
-      checkmarkStyle,
       ...rest
     } = props;
 
@@ -111,9 +95,8 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
               'iui-loading': isLoading,
             },
             className && { [className]: !label },
-            checkmarkClassName,
           )}
-          style={{ ...(!label && style), ...checkmarkStyle }}
+          style={!label ? style : undefined}
           disabled={disabled || isLoading}
           type='checkbox'
           ref={refs}

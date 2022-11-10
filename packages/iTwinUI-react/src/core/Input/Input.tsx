@@ -5,7 +5,7 @@
 import cx from 'classnames';
 import React from 'react';
 import { useMergedRefs, useTheme } from '../utils';
-import '@itwin/itwinui-css/css/inputs.css';
+import '@itwin/itwinui-css/css/input.css';
 
 export type InputProps = {
   /**
@@ -26,8 +26,8 @@ export type InputProps = {
  * <Input disabled />
  * <Input size='small' />
  */
-export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  (props, ref) => {
+export const Input = React.forwardRef(
+  (props: InputProps, ref: React.RefObject<HTMLInputElement>) => {
     const { setFocus = false, size, className, ...rest } = props;
     useTheme();
     const inputRef = React.useRef<HTMLInputElement>(null);
@@ -41,7 +41,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <input
-        className={cx('iui-input', { [`iui-${size}`]: !!size }, className)}
+        className={cx('iui-input', className)}
+        data-iui-size={size}
         ref={refs}
         {...rest}
       />
