@@ -12,9 +12,16 @@ import SvgUndo from '@itwin/itwinui-icons-react/cjs/icons/Undo';
 import './LineChange.scss';
 import React from 'react';
 import Tippy from '@tippyjs/react';
-import 'tippy.js/dist/tippy.css'; // optional
+import 'tippy.js/dist/tippy.css';
+import { MatchLine } from '../../../../../../data-types/file_types';
 
-export const LineChange = () => {
+export type LineChangeProps = {
+  matchLine: MatchLine;
+};
+
+export const LineChange = (props: LineChangeProps) => {
+  const { matchLine } = props;
+
   const [isChanged, setIsChanged] = React.useState(false);
 
   const StatusIcon = () => (
@@ -33,25 +40,45 @@ export const LineChange = () => {
     </Tippy>
   );
 
+  const getRemoveLine = () => {
+    return (
+      <Code className='line-remove'>
+        {matchLine.line.substring(0, matchLine.line.indexOf(matchLine.replace))}
+        <strong className='code-remove'>{matchLine.replace}</strong>;
+      </Code>
+    );
+  };
+
+  const getAddLine = () => {
+    return (
+      <Code className='line-add'>
+        {matchLine.line.substring(0, matchLine.line.indexOf(matchLine.replace))}
+        <strong className='code-add'>{matchLine.with}</strong>;
+      </Code>
+    );
+  };
+
   return (
     <span className='LineChange'>
       <span className='header'>
         {/* <Avatar image={<SvgCheckmark className='icon' />} /> */}
         <StatusIcon />
-        <Text className='line-number'>123:35</Text>
+        <Text className='line-number'>{matchLine.line_number}</Text>
         <Text className='description'>
-          Variable name changed from <Code>var(--iui-xl)</Code> to{' '}
-          <Code>var(--iui-size-xl)</Code>.
+          Variable name changed from <Code>{matchLine.replace}</Code> to{' '}
+          <Code>{matchLine.with}</Code>.
         </Text>
       </span>
 
       <span className='code'>
-        <Code className='line-remove'>
+        {/* <Code className='line-remove'>
           --padding-l: <strong className='code-remove'>var(--iui-xl)</strong>;
         </Code>
         <Code className='line-add'>
           --padding-l: <strong className='code-add'>var(--iui-size-xl)</strong>;
-        </Code>
+        </Code> */}
+        {getRemoveLine()}
+        {getAddLine()}
       </span>
     </span>
   );
