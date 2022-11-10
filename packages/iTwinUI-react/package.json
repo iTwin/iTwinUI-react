@@ -5,16 +5,23 @@
   "license": "MIT",
   "main": "cjs/index.js",
   "module": "esm/index.js",
-  "typings": "cjs/index.d.ts",
+  "types": "cjs/index.d.ts",
   "exports": {
     ".": {
-      "import": "./esm/index.js",
-      "require": "./cjs/index.js"
+      "import": {
+        "types": "./esm/index.d.ts",
+        "default": "./esm/index.js"
+      },
+      "require": {
+        "types": "./cjs/index.d.ts",
+        "default": "./cjs/index.js"
+      }
     },
-    "./cjs/": "./cjs/",
-    "./esm/": "./esm/",
+    "./cjs": "./cjs/index.js",
+    "./esm": "./esm/index.js",
     "./cjs/core/utils": "./cjs/core/utils/index.js",
-    "./esm/core/utils": "./esm/core/utils/index.js"
+    "./esm/core/utils": "./esm/core/utils/index.js",
+    "./*": "./*"
   },
   "files": [
     "cjs",
