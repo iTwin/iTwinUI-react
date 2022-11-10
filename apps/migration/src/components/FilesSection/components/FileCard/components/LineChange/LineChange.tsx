@@ -64,10 +64,7 @@ export const LineChange = (props: LineChangeProps) => {
         {/* <Avatar image={<SvgCheckmark className='icon' />} /> */}
         <StatusIcon />
         <Text className='line-number'>{matchLine.line_number}</Text>
-        <Text className='description'>
-          Variable name changed from <Code>{matchLine.replace}</Code> to{' '}
-          <Code>{matchLine.with}</Code>.
-        </Text>
+        <Text className='description'>{matchLine.description}</Text>
       </span>
 
       <span className='code'>
