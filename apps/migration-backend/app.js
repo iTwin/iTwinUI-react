@@ -30,11 +30,16 @@
 // });
 
 import Express from 'express';
+import { getAllFilesAndFolders } from './logic.js';
 
 const app = Express();
 
 app.get('/', (req, res) => {
   res.send('Hello world');
+});
+
+app.get('/files', async (req, res) => {
+  res.send(await getAllFilesAndFolders());
 });
 
 app.listen(5000, () => console.log('Running on port 5000'));
