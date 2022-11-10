@@ -2,6 +2,13 @@ name: manual-publish
 
 on:
   workflow_dispatch:
+    tag:
+      description: 'Which npm tag to publish to?'
+      required: true
+      type: choice
+      default: dev
+      options:
+        - dev
 
 jobs:
   publish:
