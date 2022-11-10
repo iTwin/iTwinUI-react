@@ -41,10 +41,12 @@ export const LineChange = (props: LineChangeProps) => {
   );
 
   const getRemoveLine = () => {
+    console.log('debug', matchLine);
+
     return (
       <Code className='line-remove'>
-        {matchLine.line.substring(0, matchLine.line.indexOf(matchLine.replace))}
-        <strong className='code-remove'>{matchLine.replace}</strong>;
+        {/* {matchLine.line.substring(0, matchLine.line.indexOf(matchLine.replace))} */}
+        <strong className='code-remove'>{matchLine.replace}</strong>
       </Code>
     );
   };
@@ -52,8 +54,8 @@ export const LineChange = (props: LineChangeProps) => {
   const getAddLine = () => {
     return (
       <Code className='line-add'>
-        {matchLine.line.substring(0, matchLine.line.indexOf(matchLine.replace))}
-        <strong className='code-add'>{matchLine.with}</strong>;
+        {/* {matchLine.line.substring(0, matchLine.line.indexOf(matchLine.replace))} */}
+        <strong className='code-add'>{matchLine.with}</strong>
       </Code>
     );
   };

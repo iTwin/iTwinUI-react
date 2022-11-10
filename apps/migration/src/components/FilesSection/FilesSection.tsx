@@ -10,7 +10,9 @@ export const FilesSection = () => {
   const [matches, setMatches] = React.useState([]);
 
   const getMatches = async () => {
-    const response = await fetch(`/matches`, {
+    console.log('getMatches() called');
+
+    const response = await fetch(`/all_matches`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     });
@@ -29,8 +31,8 @@ export const FilesSection = () => {
       {/* {[...Array(5)].map((_, index) => {
         return <FileCard />;
       })} */}
-      {matches.map((m) => (
-        <FileCard file={{ fileName: 'App.css', matchLines: [m] }} />
+      {matches.map((fileMatches, index) => (
+        <FileCard key={index} file={fileMatches} />
       ))}
     </span>
   );

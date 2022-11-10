@@ -6,19 +6,7 @@ import { Anchor, ExpandableBlock, Surface, Text } from '@itwin/itwinui-react';
 import './FileCard.scss';
 import SvgStatusSuccess from '@itwin/itwinui-icons-react/cjs/icons/StatusSuccess';
 import { LineChange } from './components/LineChange/LineChange';
-
-export type MatchLine = {
-  fileName: string;
-  line_number: number;
-  line: string;
-  replace: string;
-  with: string;
-};
-
-export type MatchFile = {
-  fileName: string;
-  matchLines: MatchLine[];
-};
+import { MatchFile, MatchLine } from '../../../../data-types/file_types';
 
 export type FileCardProps = {
   file: MatchFile;
@@ -49,8 +37,8 @@ export const FileCard = (props: FileCardProps) => {
       {/* {[...Array(5)].map(() => {
         return <LineChange />;
       })} */}
-      {file.matchLines.map((matchLine) => {
-        return <LineChange matchLine={matchLine} />;
+      {file.matchLines.map((matchLine, index) => {
+        return <LineChange key={index} matchLine={matchLine} />;
       })}
     </ExpandableBlock>
   );

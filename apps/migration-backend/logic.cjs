@@ -34,7 +34,7 @@ const readFile = (fileName) => {
 
 const readFileGetLines = async (fileName) => {
   const fileContents = await readFile(fileName);
-  console.log(fileContents.split('\n').length);
+  // console.log(fileContents.split('\n').length);
   return fileContents.split('\n');
 };
 
@@ -61,20 +61,29 @@ const getLineMatches = async (fileName) => {
   }
 
   const matchObject = {
-    fileName: 'fileName',
+    fileName: fileName,
     matchLines: matches,
   };
-  console.log(matchObject);
+  if (matches.length > 0) {
+    console.log(matchObject);
+  }
   return matchObject;
 };
 
-const getFileMatches = (fileNames) => {
+const getFileMatches = async (fileNames) => {
   const fileMatches = [];
 
   for (const fileName of fileNames) {
-    const fileMatch = getLineMatches(fileName);
-    fileMatches.push(fileMatch);
+    const fileMatch = await getLineMatches(fileName);
+
+    // Push only if at least one match is found in the file
+    if (fileMatch.matchLines.length > 0) {
+      fileMatches.push(fileMatch);
+    }
   }
+
+  console.log(fileMatches);
+  console.log('getFileMatches request complete');
 
   return fileMatches;
 };
@@ -136,4 +145,5 @@ getLineMatches(
   `/home/rohan/Documents/iTwinUI-react/apps/migration/src/App.css`,
 );
 
-exports.getRuleMatches = getLineMatches;
+exports.getLineMatches = getLineMatches;
+exports.getFileMatches = getFileMatches;
