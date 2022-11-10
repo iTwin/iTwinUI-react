@@ -58,6 +58,8 @@ app.get('/matches', async (req, res) => {
 });
 
 app.get('/all_matches', async (req, res) => {
+  const startTime = performance.now();
+
   res.send(
     // `${await getRuleMatches(
     //   `/home/rohan/Documents/iTwinUI-react/apps/migration/src/App.css`,
@@ -2066,11 +2068,13 @@ app.get('/all_matches', async (req, res) => {
 /home/rohan/Documents/Bentley/Repos/ApimDevPortal/integration-tests/tsconfig.json
 /home/rohan/Documents/Bentley/Repos/ApimDevPortal/.vscode/launch.json
 /home/rohan/Documents/Bentley/Repos/ApimDevPortal/.vscode/settings.json
-/home/rohan/Documents/Bentley/Repos/ApimDevPortal/tsconfig.json
-        `.split('\n'),
+/home/rohan/Documents/Bentley/Repos/ApimDevPortal/tsconfig.json`.split('\n'),
       ),
     ),
   );
+
+  const endTime = performance.now();
+  console.log(`Call to doSomething took ${endTime - startTime} milliseconds`);
 });
 
 app.listen(5000, () => console.log('Running on port 5000'));
