@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { ErrorPage, ErrorPageType } from './ErrorPage';
 import {
@@ -131,7 +131,7 @@ describe(ErrorPage, () => {
   }[];
 
   defaultTests.forEach((test) => {
-    it(`displays ${test.errorType} error with default message`, async () => {
+    it(`displays ${test.errorType} error with default message`, () => {
       const { container } = render(<ErrorPage errorType={test.errorType} />);
       screen.getByText(test.errorName);
 
@@ -139,11 +139,10 @@ describe(ErrorPage, () => {
         container: { firstChild: illustration },
       } = render(test.illustration);
 
-      await waitFor(() =>
-        expect(
-          container.querySelector('.iui-non-ideal-state-illustration'),
-        ).toEqual(illustration),
-      );
+      expect(
+        container.querySelector('.iui-non-ideal-state-illustration')
+          ?.firstElementChild,
+      ).toEqual(illustration);
     });
   });
 
