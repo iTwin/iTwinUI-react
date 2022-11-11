@@ -25,6 +25,7 @@ export type NonIdealStateProps = {
   /**
    * Secondary text to explain the error
    * Can include html in order to provide a hyperlink
+   * E.g. `Please visit <a href="https://www.bentley.com/help">our support page</a> for help.`
    */
   description?: React.ReactNode;
 
