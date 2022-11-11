@@ -52,18 +52,49 @@ const getLineMatches = async (fileName) => {
   // console.log(`Number of rules: ${rules.length}`);
   const fileLines = await readFileGetLines(fileName);
 
-  for (const [lineNumber, line] of fileLines.entries()) {
+  let lineMatches;
+  for (const [lineIndex, line] of fileLines.entries()) {
     for (const rule of rules) {
-      if (line.indexOf(rule.replace) !== -1) {
+      lineMatches = line.match(new RegExp(rule.replace, 'g'));
+      if (lineMatches == null) {
+        continue;
+      }
+
+      for (const lineMatch of lineMatches) {
         matches.push({
-          line_number: lineNumber + 1,
+          line_number: lineIndex + 1,
           line: line,
-          replace: rule.replace,
+          replace: lineMatch,
           with: rule.with,
           type: rule.type,
           description: rule.description,
         });
       }
+      // }
+
+      // while ((match = new RegExp(rule.replace, "g").exec(str)) != null) {
+      //   console.log('match found at ' + match.index);
+
+      //   matches.push({
+      //     line_number: lineNumber + 1,
+      //     line: line,
+      //     replace: rule.replace,
+      //     with: rule.with,
+      //     type: rule.type,
+      //     description: rule.description,
+      //   });
+      // }
+
+      // if (line.indexOf(rule.replace) !== -1) {
+      //   matches.push({
+      //     line_number: lineNumber + 1,
+      //     line: line,
+      //     replace: rule.replace,
+      //     with: rule.with,
+      //     type: rule.type,
+      //     description: rule.description,
+      //   });
+      // }
     }
   }
 
