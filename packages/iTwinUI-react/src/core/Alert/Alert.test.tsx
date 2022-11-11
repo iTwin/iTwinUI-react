@@ -49,9 +49,7 @@ it('takes a className and style correctly', () => {
     </Alert>,
   );
 
-  const alert = container.querySelector(
-    '.iui-alert-informational',
-  ) as HTMLElement;
+  const alert = container.querySelector('.iui-alert') as HTMLElement;
   expect(alert).toBeTruthy();
   expect(alert.className).toContain('custom-alert');
   expect(alert.style.width).toBe('100px');
@@ -63,17 +61,17 @@ it('renders sticky alert correctly', () => {
     <Alert isSticky>This is sticky alert.</Alert>,
   );
 
-  const alert = container.querySelector(
-    '.iui-alert-informational.iui-sticky',
-  ) as HTMLElement;
+  const alert = container.querySelector('.iui-alert') as HTMLElement;
   expect(alert).toBeTruthy();
   expect(alert).toHaveAttribute('data-iui-variant', 'sticky');
   getByText('This is sticky alert.');
 });
 
-(['informational', 'positive', 'warning', 'negative'] as Array<
-  'informational' | 'positive' | 'warning' | 'negative'
->).forEach((type) => {
+(
+  ['informational', 'positive', 'warning', 'negative'] as Array<
+    'informational' | 'positive' | 'warning' | 'negative'
+  >
+).forEach((type) => {
   it(`renders ${type} correctly`, () => {
     const closeMock = jest.fn();
     const { container, getByText } = render(
