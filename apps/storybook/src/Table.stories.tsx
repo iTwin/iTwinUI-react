@@ -982,9 +982,11 @@ export const RowInViewport: Story<Partial<TableProps>> = (args) => {
         Open{' '}
         <Anchor
           onClick={() =>
-            (parent.document.querySelector(
-              '[id^="tabbutton-actions"]',
-            ) as HTMLButtonElement)?.click()
+            (
+              parent.document.querySelector(
+                '[id^="tabbutton-actions"]',
+              ) as HTMLButtonElement
+            )?.click()
           }
         >
           Actions
@@ -2095,9 +2097,8 @@ export const ResizableColumns: Story<Partial<TableProps>> = (args) => {
     [],
   );
 
-  const [columnResizeMode, setColumnResizeMode] = React.useState<
-    TableProps['columnResizeMode']
-  >('fit');
+  const [columnResizeMode, setColumnResizeMode] =
+    React.useState<TableProps['columnResizeMode']>('fit');
 
   return (
     <>
@@ -3583,59 +3584,4 @@ export const StatusAndCellIcons: Story<Partial<TableProps>> = (args) => {
 StatusAndCellIcons.args = {
   isSelectable: true,
   selectionMode: 'multi',
-};
-
-export const GroupedHeader: Story<Partial<TableProps>> = (args) => {
-  const onClickHandler = (
-    props: CellProps<{ name: string; description: string }>,
-  ) => action(props.row.original.name)();
-
-  const columns = useMemo(
-    () => [
-      {
-        Header: 'Table Name',
-        columns: [
-          {
-            id: 'name',
-            Header: 'Name',
-            accessor: 'name',
-          },
-          {
-            id: 'description',
-            Header: 'Description',
-            accessor: 'description',
-            maxWidth: 200,
-          },
-          {
-            id: 'click-me',
-            Header: 'Click',
-            width: 100,
-            Cell: (props: CellProps<{ name: string; description: string }>) => {
-              const onClick = () => onClickHandler(props);
-              return <Anchor onClick={onClick}>Click me!</Anchor>;
-            },
-          },
-        ],
-      },
-    ],
-    [],
-  );
-
-  const data = useMemo(
-    () => [
-      { name: 'Name1', description: 'Description1' },
-      { name: 'Name2', description: 'Description2' },
-      { name: 'Name3', description: 'Description3' },
-    ],
-    [],
-  );
-
-  return (
-    <Table
-      columns={columns}
-      data={data}
-      emptyTableContent='No data.'
-      {...args}
-    />
-  );
 };
