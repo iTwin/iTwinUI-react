@@ -22,107 +22,87 @@ describe(ErrorPage, () => {
     {
       errorType: '300',
       errorName: 'Redirect',
-      illustration: (
-        <SvgRedirect className='iui-non-ideal-state-illustration' />
-      ),
+      illustration: <SvgRedirect />,
     },
     {
       errorType: '301',
       errorName: 'Redirect',
-      illustration: (
-        <SvgRedirect className='iui-non-ideal-state-illustration' />
-      ),
+      illustration: <SvgRedirect />,
     },
     {
       errorType: '302',
       errorName: 'Redirect',
-      illustration: (
-        <SvgRedirect className='iui-non-ideal-state-illustration' />
-      ),
+      illustration: <SvgRedirect />,
     },
     {
       errorType: '303',
       errorName: 'Redirect',
-      illustration: (
-        <SvgRedirect className='iui-non-ideal-state-illustration' />
-      ),
+      illustration: <SvgRedirect />,
     },
     {
       errorType: '304',
       errorName: 'Redirect',
-      illustration: (
-        <SvgRedirect className='iui-non-ideal-state-illustration' />
-      ),
+      illustration: <SvgRedirect />,
     },
     {
       errorType: '305',
       errorName: 'Redirect',
-      illustration: (
-        <SvgRedirect className='iui-non-ideal-state-illustration' />
-      ),
+      illustration: <SvgRedirect />,
     },
     {
       errorType: '307',
       errorName: 'Redirect',
-      illustration: (
-        <SvgRedirect className='iui-non-ideal-state-illustration' />
-      ),
+      illustration: <SvgRedirect />,
     },
     {
       errorType: '308',
       errorName: 'Redirect',
-      illustration: (
-        <SvgRedirect className='iui-non-ideal-state-illustration' />
-      ),
+      illustration: <SvgRedirect />,
     },
     {
       errorType: '401',
       errorName: 'Unauthorized',
-      illustration: <Svg401 className='iui-non-ideal-state-illustration' />,
+      illustration: <Svg401 />,
     },
     {
       errorType: '403',
       errorName: 'Forbidden',
-      illustration: <Svg403 className='iui-non-ideal-state-illustration' />,
+      illustration: <Svg403 />,
     },
     {
       errorType: '404',
       errorName: 'Page not found',
-      illustration: <Svg404 className='iui-non-ideal-state-illustration' />,
+      illustration: <Svg404 />,
     },
     {
       errorType: '408',
       errorName: 'Timed out',
-      illustration: (
-        <SvgTimedOut className='iui-non-ideal-state-illustration' />
-      ),
+      illustration: <SvgTimedOut />,
     },
     {
       errorType: '500',
       errorName: 'Internal server error',
-      illustration: <Svg500 className='iui-non-ideal-state-illustration' />,
+      illustration: <Svg500 />,
     },
     {
       errorType: '502',
       errorName: 'Bad gateway',
-      illustration: <Svg502 className='iui-non-ideal-state-illustration' />,
+      illustration: <Svg502 />,
     },
     {
       errorType: '503',
       errorName: 'Service unavailable',
-      illustration: <Svg503 className='iui-non-ideal-state-illustration' />,
+      illustration: <Svg503 />,
     },
     {
       errorType: '504',
       errorName: 'Timed out',
-      illustration: (
-        <SvgTimedOut className='iui-non-ideal-state-illustration' />
-      ),
+      illustration: <SvgTimedOut />,
     },
     {
       errorType: 'generic',
       errorName: 'Error',
-      illustration: <SvgError className='iui-non-ideal-state-illustration' />,
+      illustration: <SvgError />,
     },
   ] as {
     errorType: ErrorPageType;

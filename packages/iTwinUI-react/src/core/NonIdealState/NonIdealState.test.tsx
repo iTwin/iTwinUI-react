@@ -8,31 +8,30 @@ import { NonIdealState } from './NonIdealState';
 
 it(`displays correctly`, () => {
   const props = {
-    svg: <div>svg</div>,
+    svg: 'svg',
     heading: 'heading',
     description: 'description',
-    actions: <div>actions</div>,
+    actions: 'actions',
+    'data-test': 'non-ideal-state-test',
   };
 
   const { container } = render(<NonIdealState {...props} />);
 
-  expect(container.querySelector('.iui-non-ideal-state')).toBeTruthy();
-  expect(screen.getByText(props.heading)).toBeTruthy();
-  expect(screen.getByText(props.description)).toBeTruthy();
+  expect(container.querySelector('.iui-non-ideal-state')).toHaveAttribute(
+    'data-test',
+    'non-ideal-state-test',
+  );
 
-  expect(
-    container.querySelector('.iui-non-ideal-state-illustration'),
-  ).toHaveTextContent('svg');
-
-  expect(
-    container.querySelector('.iui-non-ideal-state-title'),
-  ).toHaveTextContent('heading');
-
-  expect(
-    container.querySelector('.iui-non-ideal-state-description'),
-  ).toHaveTextContent('description');
-
-  expect(
-    container.querySelector('.iui-non-ideal-state-actions'),
-  ).toHaveTextContent('actions');
+  expect(screen.getByText(props.svg)).toHaveClass(
+    'iui-non-ideal-state-illustration',
+  );
+  expect(screen.getByText(props.heading)).toHaveClass(
+    'iui-non-ideal-state-title',
+  );
+  expect(screen.getByText(props.description)).toHaveClass(
+    'iui-non-ideal-state-description',
+  );
+  expect(screen.getByText(props.actions)).toHaveClass(
+    'iui-non-ideal-state-actions',
+  );
 });
