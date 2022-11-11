@@ -59,8 +59,8 @@ export const NonIdealState = (props: NonIdealStateProps): JSX.Element => {
 
   return (
     <div className={cx('iui-non-ideal-state', className)} {...rest}>
-      {heading && <div className='iui-non-ideal-state-illustration'>{svg}</div>}
-      <div className='iui-non-ideal-state-title'>{heading}</div>
+      <div className='iui-non-ideal-state-illustration'>{svg}</div>
+      {heading && <div className='iui-non-ideal-state-title'>{heading}</div>}
       {description && (
         <div className='iui-non-ideal-state-description'>{description}</div>
       )}
