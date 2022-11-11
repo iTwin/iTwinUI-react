@@ -287,7 +287,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
         {totalSelectedRowsCount > 0 && (
           <span>
             {`${totalSelectedRowsCount} ${
-              totalSelectedRowsCount === 1 ? 'row' : 'rows'
+              totalSelectedRowsCount === 1 ? 'row' : 'rows' // LOCALIZE THIS
             } selected`}
           </span>
         )}
