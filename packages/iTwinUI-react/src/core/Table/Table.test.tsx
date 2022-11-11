@@ -694,10 +694,10 @@ it('should display correct sort icons for ascending first', async () => {
   });
   const {
     container: { firstChild: sortUpIcon },
-  } = render(<SvgSortUp className='iui-icon iui-table-sort' aria-hidden />);
+  } = render(<SvgSortUp className='iui-table-sort' aria-hidden />);
   const {
     container: { firstChild: sortDownIcon },
-  } = render(<SvgSortDown className='iui-icon iui-table-sort' aria-hidden />);
+  } = render(<SvgSortDown className='iui-table-sort' aria-hidden />);
   const nameHeader = container.querySelector(
     '.iui-table-header .iui-table-cell',
   ) as HTMLDivElement;
@@ -742,10 +742,10 @@ it('should display correct sort icons for descending first', async () => {
   });
   const {
     container: { firstChild: sortUpIcon },
-  } = render(<SvgSortUp className='iui-icon iui-table-sort' aria-hidden />);
+  } = render(<SvgSortUp className='iui-table-sort' aria-hidden />);
   const {
     container: { firstChild: sortDownIcon },
-  } = render(<SvgSortDown className='iui-icon iui-table-sort' aria-hidden />);
+  } = render(<SvgSortDown className='iui-table-sort' aria-hidden />);
   const nameHeader = container.querySelector(
     '.iui-table-header .iui-table-cell',
   ) as HTMLDivElement;
@@ -2840,7 +2840,7 @@ it('should handle table resize only when some columns were resized', () => {
       triggerResize = onResize;
       return [
         jest.fn(),
-        { disconnect: jest.fn() } as unknown as ResizeObserver,
+        ({ disconnect: jest.fn() } as unknown) as ResizeObserver,
       ];
     });
   const columns: Column<TestDataType>[] = [
@@ -2960,7 +2960,7 @@ it('should resize current and closest column when table width would decrease whe
       triggerResize = onResize;
       return [
         jest.fn(),
-        { disconnect: jest.fn() } as unknown as ResizeObserver,
+        ({ disconnect: jest.fn() } as unknown) as ResizeObserver,
       ];
     });
   const columns: Column<TestDataType>[] = [
@@ -3025,7 +3025,7 @@ it('should resize last and closest column on the left when table width would dec
       triggerResize = onResize;
       return [
         jest.fn(),
-        { disconnect: jest.fn() } as unknown as ResizeObserver,
+        ({ disconnect: jest.fn() } as unknown) as ResizeObserver,
       ];
     });
   const columns: Column<TestDataType>[] = [
@@ -3445,8 +3445,9 @@ it('should render action column with column manager', async () => {
   });
 
   expect(container.querySelectorAll('[role="columnheader"]').length).toBe(3);
-  const actionColumn =
-    container.querySelectorAll<HTMLInputElement>('.iui-slot');
+  const actionColumn = container.querySelectorAll<HTMLInputElement>(
+    '.iui-slot',
+  );
   expect(
     actionColumn[0].firstElementChild?.className.includes('iui-button'),
   ).toBeTruthy();
@@ -3559,8 +3560,9 @@ it('should hide column when deselected in column manager', async () => {
 
   const columnManager = container.querySelector('.iui-button') as HTMLElement;
   await userEvent.click(columnManager);
-  const columnManagerColumns =
-    document.querySelectorAll<HTMLLIElement>('.iui-menu-item');
+  const columnManagerColumns = document.querySelectorAll<HTMLLIElement>(
+    '.iui-menu-item',
+  );
   await userEvent.click(columnManagerColumns[1]);
 
   headerCells = container.querySelectorAll<HTMLDivElement>(
@@ -3599,8 +3601,9 @@ it('should be disabled in column manager if `disableToggleVisibility` is true', 
   const columnManager = container.querySelector('.iui-button') as HTMLElement;
 
   await userEvent.click(columnManager);
-  const columnManagerColumns =
-    document.querySelectorAll<HTMLLIElement>('.iui-menu-item');
+  const columnManagerColumns = document.querySelectorAll<HTMLLIElement>(
+    '.iui-menu-item',
+  );
   expect(columnManagerColumns[0]).toHaveAttribute('aria-disabled', 'true');
 
   expect(
@@ -3694,17 +3697,22 @@ it('should add disabled column', () => {
   const isCellDisabled = (rowData: TestDataType) => rowData.name === 'Name2';
   const columns: Column<TestDataType>[] = [
     {
-      id: 'name',
-      Header: 'Name',
-      accessor: 'name',
-      cellRenderer: (props) => (
-        <DefaultCell {...props} isDisabled={isCellDisabled} />
-      ),
-    },
-    {
-      id: 'description',
-      Header: 'Description',
-      accessor: 'description',
+      Header: 'Table',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          cellRenderer: (props) => (
+            <DefaultCell {...props} isDisabled={isCellDisabled} />
+          ),
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+      ],
     },
   ];
   const { container } = renderComponent({
@@ -3723,17 +3731,22 @@ it('should show column enabled when whole row is disabled', () => {
   const isRowDisabled = (rowData: TestDataType) => rowData.name === 'Name2';
   const columns: Column<TestDataType>[] = [
     {
-      id: 'name',
-      Header: 'Name',
-      accessor: 'name',
-      cellRenderer: (props) => (
-        <DefaultCell {...props} isDisabled={isCellDisabled} />
-      ),
-    },
-    {
-      id: 'description',
-      Header: 'Description',
-      accessor: 'description',
+      Header: 'Table',
+      columns: [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+          cellRenderer: (props) => (
+            <DefaultCell {...props} isDisabled={isCellDisabled} />
+          ),
+        },
+        {
+          id: 'description',
+          Header: 'Description',
+          accessor: 'description',
+        },
+      ],
     },
   ];
   const { container } = renderComponent({
@@ -3782,6 +3795,32 @@ it('should render selectable rows without select column', async () => {
   expect(rows[1]).toHaveAttribute('aria-selected', 'true');
   expect(rows[2]).not.toHaveAttribute('aria-selected', 'true');
   expect(onRowClick).toHaveBeenCalledTimes(3);
+});
+
+it('should not throw on headless table', () => {
+  const columns: Column<TestDataType>[] = [
+    {
+      id: 'name',
+      Header: 'Name',
+      accessor: 'name',
+      cellRenderer: (props) => (
+        <DefaultCell {...props} isDisabled={isCellDisabled} />
+      ),
+    },
+    {
+      id: 'description',
+      Header: 'Description',
+      accessor: 'description',
+    },
+  ];
+  const { container } = renderComponent({
+    columns,
+  });
+
+  expect(
+    container.querySelector('.iui-table-header .iui-table-row'),
+  ).toBeFalsy();
+  expect(container.querySelector('.iui-table-body')).toBeTruthy();
 });
 
 it('should scroll to selected item in non-virtualized table', async () => {
