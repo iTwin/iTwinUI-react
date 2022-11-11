@@ -5,6 +5,7 @@
 import React from 'react';
 import './FilesSection.scss';
 import { FileCard } from './components/FileCard/FileCard';
+import { ProgressRadial } from '@itwin/itwinui-react';
 
 export const FilesSection = () => {
   const [matches, setMatches] = React.useState([]);
@@ -31,9 +32,13 @@ export const FilesSection = () => {
       {/* {[...Array(5)].map((_, index) => {
         return <FileCard />;
       })} */}
-      {matches.map((fileMatches, index) => (
-        <FileCard key={index} file={fileMatches} />
-      ))}
+      {matches.length > 0 ? (
+        matches.map((fileMatches, index) => (
+          <FileCard key={index} file={fileMatches} />
+        ))
+      ) : (
+        <ProgressRadial indeterminate />
+      )}
     </span>
   );
 };
