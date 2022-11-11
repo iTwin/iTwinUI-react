@@ -3694,22 +3694,17 @@ it('should add disabled column', () => {
   const isCellDisabled = (rowData: TestDataType) => rowData.name === 'Name2';
   const columns: Column<TestDataType>[] = [
     {
-      Header: 'Table',
-      columns: [
-        {
-          id: 'name',
-          Header: 'Name',
-          accessor: 'name',
-          cellRenderer: (props) => (
-            <DefaultCell {...props} isDisabled={isCellDisabled} />
-          ),
-        },
-        {
-          id: 'description',
-          Header: 'Description',
-          accessor: 'description',
-        },
-      ],
+      id: 'name',
+      Header: 'Name',
+      accessor: 'name',
+      cellRenderer: (props) => (
+        <DefaultCell {...props} isDisabled={isCellDisabled} />
+      ),
+    },
+    {
+      id: 'description',
+      Header: 'Description',
+      accessor: 'description',
     },
   ];
   const { container } = renderComponent({
@@ -3728,22 +3723,17 @@ it('should show column enabled when whole row is disabled', () => {
   const isRowDisabled = (rowData: TestDataType) => rowData.name === 'Name2';
   const columns: Column<TestDataType>[] = [
     {
-      Header: 'Table',
-      columns: [
-        {
-          id: 'name',
-          Header: 'Name',
-          accessor: 'name',
-          cellRenderer: (props) => (
-            <DefaultCell {...props} isDisabled={isCellDisabled} />
-          ),
-        },
-        {
-          id: 'description',
-          Header: 'Description',
-          accessor: 'description',
-        },
-      ],
+      id: 'name',
+      Header: 'Name',
+      accessor: 'name',
+      cellRenderer: (props) => (
+        <DefaultCell {...props} isDisabled={isCellDisabled} />
+      ),
+    },
+    {
+      id: 'description',
+      Header: 'Description',
+      accessor: 'description',
     },
   ];
   const { container } = renderComponent({
