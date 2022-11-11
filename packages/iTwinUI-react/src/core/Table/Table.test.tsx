@@ -3794,32 +3794,6 @@ it('should render selectable rows without select column', async () => {
   expect(onRowClick).toHaveBeenCalledTimes(3);
 });
 
-it('should not throw on headless table', () => {
-  const columns: Column<TestDataType>[] = [
-    {
-      id: 'name',
-      Header: 'Name',
-      accessor: 'name',
-      cellRenderer: (props) => (
-        <DefaultCell {...props} isDisabled={isCellDisabled} />
-      ),
-    },
-    {
-      id: 'description',
-      Header: 'Description',
-      accessor: 'description',
-    },
-  ];
-  const { container } = renderComponent({
-    columns,
-  });
-
-  expect(
-    container.querySelector('.iui-table-header .iui-table-row'),
-  ).toBeFalsy();
-  expect(container.querySelector('.iui-table-body')).toBeTruthy();
-});
-
 it('should scroll to selected item in non-virtualized table', async () => {
   let scrolledElement: HTMLElement | null = null;
   jest
