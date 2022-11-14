@@ -1,16 +1,17 @@
 <style>
-  .light .sidebar-item[data-selected='true'] {
-    background-color: #e4f3fc !important;
-    color: #0071b8 !important;
+  .light {
+    --active-bg: #e4f3fc;
+    --active-fg: #0071b8;
   }
-  .light .sidebar-item[data-selected='true'] svg {
-    color: #0071b8 !important;
+  .dark {
+    --active-bg: #384652;
+    --active-fg: #94befa;
   }
-  .dark .sidebar-item[data-selected='true'] {
-    background-color: #384652 !important;
-    color: #94befa !important;
+  .sidebar-item[data-selected='true'] {
+    background-color: var(--active-bg) !important;
+    color: var(--active-fg) !important;
   }
-  .dark .sidebar-item[data-selected='true'] svg {
-    color: #94befa !important;
+  .sidebar-item[data-selected='true'] svg {
+    color: var(--active-fg) !important;
   }
 </style>

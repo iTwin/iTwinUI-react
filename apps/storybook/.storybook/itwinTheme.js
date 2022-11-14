@@ -15,7 +15,7 @@ export const lightTheme = create({
   colorSecondary: '#0071B8', // --iui-color-background-accent
 
   // UI
-  appBg: '#FFFFFF', // --iui-color-background-backdrop
+  appBg: '#FFFFFF', // --iui-color-background
   appContentBg: '#FFFFFF', // --iui-color-background
   appBorderColor: '#b3bcc1', // --iui-color-border
   appBorderRadius: 9,
@@ -50,7 +50,7 @@ export const darkTheme = create({
   colorSecondary: '#94befa', // --iui-color-text-accent
 
   // UI
-  appBg: '#333c41', // --iui-color-background-backdrop
+  appBg: '#333c41', // --iui-color-background
   appContentBg: '#333c41', // --iui-color-background
   appBorderColor: '#49555d', // --iui-color-border
   appBorderRadius: 9,
