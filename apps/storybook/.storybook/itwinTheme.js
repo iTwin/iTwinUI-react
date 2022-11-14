@@ -47,7 +47,7 @@ export const darkTheme = create({
   brandImage: itwinImageDark,
 
   colorPrimary: '#0071B8', // --iui-color-background-accent
-  colorSecondary: '#0071B8', // --iui-color-background-accent
+  colorSecondary: '#94befa', // --iui-color-text-accent
 
   // UI
   appBg: '#242b2e', // --iui-color-background-backdrop
@@ -66,7 +66,7 @@ export const darkTheme = create({
 
   // Toolbar default and active colors
   barTextColor: '#dbdbdb', //--iui-color-text
-  barSelectedColor: '#e4f3fc', // --iui-color-background-informational-muted
+  barSelectedColor: '#94befa', // --iui-color-text-accent
   barBg: '#333c41', // --iui-color-background
 
   // Form colors
