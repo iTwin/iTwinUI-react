@@ -1,5 +1,44 @@
 # Changelog
 
+## [2.0.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.48.1...v2.0.0) (2022-11-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* Add `NonIdealState` and deprecate `ErrorPage` (#924)
+* Remove dependency on itwinui-icons (#917)
+* **Checkbox, Radio:** Remove deprecated `checkmarkClassName` and `checkmarkStyle` (#855)
+* **Tabs:** Remove deprecated `HorizontalTab` and `HorizontalTabProps` (#852)
+* **Alert:** Remove deprecated `onClick` prop (#851)
+* Update itwinui-css to 1.0.0.dev.10 (#733)
+
+### What's new
+
+* Add `NonIdealState` and deprecate `ErrorPage` ([#924](https://www.github.com/iTwin/iTwinUI-react/issues/924)) ([88cafdb](https://www.github.com/iTwin/iTwinUI-react/commit/88cafdbcf2dd9af3ef9605fa676d2775ed59d7cb))
+* **Alert:** Remove deprecated `onClick` prop ([#851](https://www.github.com/iTwin/iTwinUI-react/issues/851)) ([f307fe9](https://www.github.com/iTwin/iTwinUI-react/commit/f307fe9448d0bf793885ddc0e5399cb8cd9dcadb))
+* **Alert:** Use `data-iui-status` ([#923](https://www.github.com/iTwin/iTwinUI-react/issues/923)) ([0eabcf5](https://www.github.com/iTwin/iTwinUI-react/commit/0eabcf5a8f532fe9fbfcbcb467c78aabe8e0629e))
+* **Avatar, AvatarGroup:** Deprecate `UserIcon`/`UserIconGroup`, replace with `Avatar`/`AvatarGroup` ([#902](https://www.github.com/iTwin/iTwinUI-react/issues/902)) ([4001bd1](https://www.github.com/iTwin/iTwinUI-react/commit/4001bd12aa9021fdcbb3e49c271eec10ec853a83))
+* **Checkbox, Radio:** Remove deprecated `checkmarkClassName` and `checkmarkStyle` ([#855](https://www.github.com/iTwin/iTwinUI-react/issues/855)) ([5c339be](https://www.github.com/iTwin/iTwinUI-react/commit/5c339beddd117bdf5a834b96dff65d4fd67d5255))
+* Remove dependency on itwinui-icons ([#917](https://www.github.com/iTwin/iTwinUI-react/issues/917)) ([a598632](https://www.github.com/iTwin/iTwinUI-react/commit/a5986322e46bd8146754ed963503fdafff5c2061))
+* **Table:** Add row loading state ([#871](https://www.github.com/iTwin/iTwinUI-react/issues/871)) ([22ac046](https://www.github.com/iTwin/iTwinUI-react/commit/22ac04661baba29fbfda49f9c2cb49176b26d7cb))
+* **Table:** Row selection count for paginator ([#837](https://www.github.com/iTwin/iTwinUI-react/issues/837)) ([e43148a](https://www.github.com/iTwin/iTwinUI-react/commit/e43148af9fc6250cf2470d258831a3ef8d33e582))
+* **Tabs:** Deprecate `HorizontalTabs`, `VerticalTabs` to use `Tabs` ([#908](https://www.github.com/iTwin/iTwinUI-react/issues/908)) ([f7e205e](https://www.github.com/iTwin/iTwinUI-react/commit/f7e205e9679169701bc52942ee7adf53679b8336))
+* **Tabs:** Remove deprecated `HorizontalTab` and `HorizontalTabProps` ([#852](https://www.github.com/iTwin/iTwinUI-react/issues/852)) ([31ddeae](https://www.github.com/iTwin/iTwinUI-react/commit/31ddeaed3dc5919f69edb1bd9580d766fabc35c2))
+* **Tile:** Add status and loading state ([#872](https://www.github.com/iTwin/iTwinUI-react/issues/872)) ([2fcb41f](https://www.github.com/iTwin/iTwinUI-react/commit/2fcb41f5c41a8a32d32a3312edecf8e2b646033e))
+* **Typography:** Deprecate Headline, Leading, Small, Subheading, Title, Body ([#914](https://www.github.com/iTwin/iTwinUI-react/issues/914)) ([30d6c02](https://www.github.com/iTwin/iTwinUI-react/commit/30d6c026a3a8e058418d25d382d030d68cbf20ff))
+* Update itwinui-css to 1.0.0.dev.10 ([#733](https://www.github.com/iTwin/iTwinUI-react/issues/733)) ([a5bb553](https://www.github.com/iTwin/iTwinUI-react/commit/a5bb5538b4533bb7d7ae72322345479b19543513))
+* **Wizard:** Deprecate `Wizard` to use `Stepper`/`WorkflowDiagram` ([#905](https://www.github.com/iTwin/iTwinUI-react/issues/905)) ([8d16db3](https://www.github.com/iTwin/iTwinUI-react/commit/8d16db3350b60c548a7389d4a9ea0b95b3f9d6bd))
+
+
+### Fixes
+
+* Add exports field ([#845](https://www.github.com/iTwin/iTwinUI-react/issues/845)) ([f58ca09](https://www.github.com/iTwin/iTwinUI-react/commit/f58ca09ae2301a10bc1a3d242c6feddccffea209))
+* Append popover elements to scoped root ([#901](https://www.github.com/iTwin/iTwinUI-react/issues/901)) ([f06c68e](https://www.github.com/iTwin/iTwinUI-react/commit/f06c68eb65d4709027e24eab31dcaa1c0a465f81))
+* **Button:** Remove `cloneElement()` ([#895](https://www.github.com/iTwin/iTwinUI-react/issues/895)) ([02efe1b](https://www.github.com/iTwin/iTwinUI-react/commit/02efe1b188aa15611ddfa5197749a453a774f9df))
+* **Header:** Change `iui-slim` to `data-iui-size: slim` ([#919](https://www.github.com/iTwin/iTwinUI-react/issues/919)) ([9d5da75](https://www.github.com/iTwin/iTwinUI-react/commit/9d5da75442678956fd9e693b7f1527004c81f8a3))
+* **Table:** First level header is no longer required ([#935](https://www.github.com/iTwin/iTwinUI-react/issues/935)) ([83d5cfe](https://www.github.com/iTwin/iTwinUI-react/commit/83d5cfe93980b628c79ec3951d05663a054699fc))
+* **Table:** Remove generic from `columns` type ([#940](https://www.github.com/iTwin/iTwinUI-react/issues/940)) ([b63d00a](https://www.github.com/iTwin/iTwinUI-react/commit/b63d00a33e97c3ed013eb9a115e714a8a78402b7))
+
 ### [1.48.1](https://www.github.com/iTwin/iTwinUI-react/compare/v1.48.0...v1.48.1) (2022-10-24)
 
 ### Fixes
