@@ -94,6 +94,11 @@ declare module 'react-table' {
       // UseRowStateOptions<D>,
       UseSortByOptions<D> {
     /**
+     * List of columns.
+     */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    columns: Array<Column<any>>;
+    /**
      * Table data list.
      * Must be memoized.
      *
