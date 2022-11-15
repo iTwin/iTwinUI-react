@@ -96,8 +96,7 @@ declare module 'react-table' {
     /**
      * List of columns.
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    columns: Array<Column<any>>;
+    columns: Array<Column<any>>; // eslint-disable-line @typescript-eslint/no-explicit-any
     /**
      * Table data list.
      * Must be memoized.
