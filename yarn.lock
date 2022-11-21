@@ -1972,7 +1972,6 @@
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@itwin/itwinui-variables/-/itwinui-variables-1.0.0.tgz#e108778511efbfda6197eed1b3b6a1e3fd19402c"
   integrity sha512-f78S401k1romzL6jgJuNZTe8P0/PCtrKUDVZwMsIJHLlgwyMKGR7nqDWQBV03tY2/TF/qMLt9S96Tej4f1Xrtg==
-
 "@jest/console@^28.1.0":
   version "28.1.0"
   resolved "https://registry.yarnpkg.com/@jest/console/-/console-28.1.0.tgz#db78222c3d3b0c1db82f1b9de51094c2aaff2176"
