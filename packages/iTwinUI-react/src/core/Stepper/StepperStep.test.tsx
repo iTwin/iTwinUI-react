@@ -45,13 +45,10 @@ describe('Stepper step (default)', () => {
     // Correct title
     const title = getByText('First step');
     expect(title.className).toBe('iui-stepper-step-name');
-    expect(title.className).toBe('iui-stepper-step-name');
     // Circle
     const circle = getByText('1');
     expect(circle.className).toBe('iui-stepper-circle');
-    expect(circle.className).toBe('iui-stepper-circle');
     // Main track content
-    expect(container.querySelector('.iui-stepper-track-content')).toBeTruthy();
     expect(container.querySelector('.iui-stepper-track-content')).toBeTruthy();
   });
 
@@ -88,10 +85,8 @@ describe('Stepper step (default)', () => {
     // Correct title
     const title = getByText('Second step');
     expect(title.className).toBe('iui-stepper-step-name');
-    expect(title.className).toBe('iui-stepper-step-name');
     // Circle
     const circle = getByText('2');
-    expect(circle.className).toBe('iui-stepper-circle');
     expect(circle.className).toBe('iui-stepper-circle');
     // Main track content
     expect(container.querySelector('.iui-stepper-track-content')).toBeTruthy();
