@@ -6,9 +6,14 @@ import React from 'react';
 import cx from 'classnames';
 import { DropdownMenu } from '../DropdownMenu';
 import { MenuItem, MenuItemProps } from '../Menu/MenuItem';
-import { PopoverProps, PopoverInstance, CommonProps, useTheme } from '../utils';
-import '@itwin/itwinui-css/css/inputs.css';
-import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
+import {
+  PopoverProps,
+  PopoverInstance,
+  CommonProps,
+  useTheme,
+  SvgCaretDownSmall,
+} from '../utils';
+import '@itwin/itwinui-css/css/select.css';
 import SelectTag from './SelectTag';
 import SelectTagContainer from './SelectTagContainer';
 
