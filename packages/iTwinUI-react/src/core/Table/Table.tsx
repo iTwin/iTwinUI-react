@@ -186,7 +186,11 @@ export type TableProps<
    * Use with `manualFilters` to handle filtering yourself e.g. filter in server-side.
    * Must be memoized.
    */
-  onFilter?: (filters: TableFilterValue<T>[], state: TableState<T>) => void;
+  onFilter?: (
+    filters: TableFilterValue<T>[],
+    state: TableState<T>,
+    filteredData?: Row<T>[],
+  ) => void;
   /**
    * Value used for global filtering.
    * Use with `globalFilter` and/or `manualGlobalFilter` to handle filtering yourself e.g. filter in server-side.
