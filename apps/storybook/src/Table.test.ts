@@ -17,6 +17,7 @@ describe('Table', () => {
     'Expandable Subrows',
     'Filters',
     'Global Filter',
+    'Initial State',
     'Full',
     'Full 2',
     'Horizontal Scroll',
@@ -44,12 +45,12 @@ describe('Table', () => {
           break;
         }
         case 'Customized Columns': {
-          cy.get('.iui-row-expander').last().click();
+          cy.get('.iui-table-row-expander').last().click();
           break;
         }
         case 'Expandable':
         case 'Expandable Subrows': {
-          cy.get('.iui-row-expander').first().click();
+          cy.get('.iui-table-row-expander').first().click();
           break;
         }
         case 'Editable': {
@@ -57,7 +58,7 @@ describe('Table', () => {
           break;
         }
         case 'Filters': {
-          cy.get('.iui-filter-button').first().click({ force: true }); // force because the button is hidden
+          cy.get('.iui-table-filter-button').first().click({ force: true }); // force because the button is hidden
           break;
         }
         case 'Global Filter': {

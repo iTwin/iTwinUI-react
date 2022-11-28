@@ -18,7 +18,8 @@ export const getContainer = (
   if (container == null && !!ownerDocument) {
     container = ownerDocument.createElement('div');
     container.setAttribute('id', containerId);
-    ownerDocument.body.appendChild(container);
+    const root = ownerDocument.querySelector('.iui-root') ?? ownerDocument.body;
+    root.appendChild(container);
   }
   return container;
 };

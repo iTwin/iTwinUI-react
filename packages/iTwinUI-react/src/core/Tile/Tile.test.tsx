@@ -9,7 +9,7 @@ import { Tile } from './Tile';
 import { Badge } from '../Badge';
 import { Button, IconButton } from '../Buttons';
 import { MenuItem } from '../Menu';
-import SvgPlaceholder from '@itwin/itwinui-icons-react/cjs/icons/Placeholder';
+import { SvgClose as SvgPlaceholder } from '../utils';
 import userEvent from '@testing-library/user-event';
 
 it('should render in its most basic state', () => {
@@ -226,4 +226,24 @@ it('should propagate misc props correctly', () => {
 it('should render actionable tile', () => {
   const { container } = render(<Tile isActionable name='test-name' />);
   expect(container.querySelector('.iui-tile.iui-actionable')).toBeTruthy();
+});
+
+it.each(['positive', 'warning', 'negative'] as const)(
+  'should render tile with %s status',
+  (status) => {
+    const { container } = render(<Tile status={status} name='test-name' />);
+    expect(container.querySelector(`.iui-tile.iui-${status}`)).toBeTruthy();
+  },
+);
+
+it('should render tile with loading status', () => {
+  const { container } = render(<Tile isLoading={true} name='test-name' />);
+  expect(container.querySelector(`.iui-tile.iui-loading`)).toBeTruthy();
+});
+
+it('should render tile with disabled status', () => {
+  const { container } = render(<Tile isDisabled={true} name='test-name' />);
+  const tile = container.querySelector(`.iui-tile`) as HTMLElement;
+  expect(tile).toBeTruthy();
+  expect(tile).toHaveAttribute('aria-disabled', 'true');
 });

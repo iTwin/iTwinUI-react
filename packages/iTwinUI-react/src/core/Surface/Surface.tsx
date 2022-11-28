@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { CommonProps, useTheme, getWindow } from '../utils';
+import { CommonProps, useTheme } from '../utils';
 import '@itwin/itwinui-css/css/surface.css';
 
 /**
@@ -12,25 +12,26 @@ import '@itwin/itwinui-css/css/surface.css';
  */
 const getSurfaceElevationValue = (elevation: SurfaceProps['elevation']) => {
   switch (elevation) {
-    case 1:
-      return '0 1px 5px rgba(0, 0, 0, 0.25)';
-    case 2:
-      return '0 1px 10px rgba(0, 0, 0, 0.25)';
-    case 3:
-      return '0 3px 14px rgba(0, 0, 0, 0.25)';
-    case 4:
-      return '0 6px 30px rgba(0, 0, 0, 0.25)';
-    case 5:
-      return '0 9px 46px rgba(0, 0, 0, 0.25)';
-    default:
+    case 0:
       return 'none';
+    case 1:
+      return 'var(--iui-shadow-1)';
+    case 2:
+      return 'var(--iui-shadow-2)';
+    case 3:
+      return 'var(--iui-shadow-3)';
+    case 4:
+      return 'var(--iui-shadow-4)';
+    case 5:
+      return 'var(--iui-shadow-5)';
+    default:
+      return '';
   }
 };
 
 export type SurfaceProps = {
   /**
    * Sets the elevation of the surface
-   * @default 0
    */
   elevation?: 0 | 1 | 2 | 3 | 4 | 5;
   /**
@@ -45,23 +46,15 @@ export type SurfaceProps = {
  * <Surface>Surface Content</Surface>
  * <Surface elevation={2}>Surface Content</Surface>
  */
-export const Surface = React.forwardRef<HTMLDivElement, SurfaceProps>(
-  (props, ref) => {
-    const { elevation = 0, className, style, children, ...rest } = props;
+export const Surface = React.forwardRef(
+  (props: SurfaceProps, ref: React.RefObject<HTMLDivElement>) => {
+    const { elevation, className, style, children, ...rest } = props;
     useTheme();
 
-    const _style = getWindow()?.CSS?.supports?.(
-      `--iui-surface-elevation: ${getSurfaceElevationValue(elevation)}`,
-    )
-      ? {
-          '--iui-surface-elevation': getSurfaceElevationValue(elevation),
-          ...style,
-        }
-      : {
-          boxShadow: getSurfaceElevationValue(elevation),
-          ...style,
-        };
-
+    const _style = {
+      '--iui-surface-elevation': getSurfaceElevationValue(elevation),
+      ...style,
+    };
     return (
       <div
         className={cx('iui-surface', className)}

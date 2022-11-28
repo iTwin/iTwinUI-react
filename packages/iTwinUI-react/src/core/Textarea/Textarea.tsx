@@ -6,7 +6,7 @@ import cx from 'classnames';
 import React from 'react';
 
 import { useMergedRefs, useTheme } from '../utils';
-import '@itwin/itwinui-css/css/inputs.css';
+import '@itwin/itwinui-css/css/input.css';
 
 export type TextareaProps = {
   /**
@@ -22,8 +22,8 @@ export type TextareaProps = {
  * <Textarea setFocus={true} placeholder='This is a textarea' />
  * <Textarea disabled={true} placeholder='This is a disabled textarea' />
  */
-export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  (props, ref) => {
+export const Textarea = React.forwardRef(
+  (props: TextareaProps, ref: React.RefObject<HTMLTextAreaElement>) => {
     const { className, rows = 3, setFocus = false, ...rest } = props;
 
     useTheme();
@@ -39,7 +39,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 
     return (
       <textarea
-        className={cx('iui-textarea', className)}
+        className={cx('iui-input', className)}
         rows={rows}
         ref={refs}
         {...rest}

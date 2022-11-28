@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
+import { SvgChevronRight } from '../utils';
 import { Cell, CellProps } from 'react-table';
 import { IconButton } from '../Buttons';
 
@@ -26,7 +26,7 @@ export const SubRowExpander = <T extends Record<string, unknown>>(
       ) : (
         <IconButton
           style={{ marginRight: 8 }}
-          className='iui-row-expander'
+          className='iui-table-row-expander'
           styleType='borderless'
           size='small'
           onClick={(e) => {

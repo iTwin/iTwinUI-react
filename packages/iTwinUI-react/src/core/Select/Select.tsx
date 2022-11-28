@@ -12,9 +12,9 @@ import {
   CommonProps,
   useTheme,
   useOverflow,
+  SvgCaretDownSmall,
 } from '../utils';
-import '@itwin/itwinui-css/css/inputs.css';
-import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
+import '@itwin/itwinui-css/css/select.css';
 import SelectTag from './SelectTag';
 
 const isMultipleEnabled = <T,>(
@@ -357,7 +357,6 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
         style={{
           minWidth,
           maxWidth: `min(${minWidth * 2}px, 90vw)`,
-          maxHeight: 315,
           ...menuStyle,
         }}
         role='listbox'
@@ -378,8 +377,8 @@ export const Select = <T,>(props: SelectProps<T>): JSX.Element => {
             'iui-placeholder':
               (!selectedItems || selectedItems.length === 0) && !!placeholder,
             'iui-disabled': disabled,
-            [`iui-${size}`]: !!size,
           })}
+          data-iui-size={size}
           onClick={() => !disabled && toggle()}
           onKeyDown={(e) => !disabled && onKeyDown(e, toggle)}
           tabIndex={!disabled ? 0 : undefined}
