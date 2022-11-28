@@ -1717,11 +1717,11 @@ export const Localized: Story<Partial<TableProps>> = (args) => {
             isLoading
               ? `${startIndex}-${endIndex} localized`
               : `${startIndex}-${endIndex} of localized ${totalRows}`,
-          previousPage: '',
-          nextPage: '',
+          previousPage: 'Previous localized page',
+          nextPage: 'Next localized page',
           goToPageLabel: (page: number) => `Go to localized page ${page}`,
           rowsPerPageLabel: 'Rows per localized page',
-          rowsSelectedLabel: (totalSelectedRowsCount) =>
+          rowsSelectedLabel: (totalSelectedRowsCount: number) =>
             `${totalSelectedRowsCount} localized ${
               totalSelectedRowsCount === 1 ? 'row' : 'rows'
             } selected`,
@@ -1734,7 +1734,7 @@ export const Localized: Story<Partial<TableProps>> = (args) => {
   return (
     <>
       <Table
-        emptyTableContent='No data.'
+        emptyTableContent='No localized data.'
         isSelectable
         isSortable
         {...args}
