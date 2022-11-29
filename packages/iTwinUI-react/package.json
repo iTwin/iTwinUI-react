@@ -57,7 +57,7 @@
     "lint": "eslint \"**/*.{js,ts,tsx}\" --max-warnings=0",
     "lint:fix": "yarn lint --fix && node ../configs/copyrightLinter.js --fix \"*/**/*.{js,ts,tsx}\"",
     "copy-files": "cpy \"../../{README,LICENSE}.md\" .",
-    "dev": "concurrently \"tsup --watch\" \"tsc -p tsconfig.esm.json --emitDeclarationOnly --watch\"",
+    "dev": "yarn clean:build && concurrently \"node esbuild.mjs\" \"node esbuild.mjs --cjs\" \"tsc -p tsconfig.esm.json --emitDeclarationOnly --watch\"",
     "createComponent": "node ../../scripts/createComponent.js"
   },
   "dependencies": {
@@ -100,7 +100,6 @@
     "ts-jest": "^28.0.2",
     "ts-loader": "^9.2.8",
     "ts-node": "^8.0.2",
-    "tsup": "^6.5.0",
     "typescript": "^4.4.3"
   },
   "peerDependencies": {

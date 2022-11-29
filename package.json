@@ -25,6 +25,7 @@
     "configs": "*",
     "cpy-cli": "^3.1.1",
     "cross-env": "^7.0.3",
+    "esbuild": "^0.15.16",
     "husky": "8",
     "lint-staged": "12",
     "rimraf": "^3.0.2",
