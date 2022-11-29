@@ -7,8 +7,7 @@
   "files": [
     "copyrightLinter.js",
     "eslint-preset.js",
-    "prettier-config.js",
-    "tsconfig.base.json"
+    "prettier-config.js"
   ],
   "scripts": {
     "clean": "rimraf .turbo && rimraf node_modules"

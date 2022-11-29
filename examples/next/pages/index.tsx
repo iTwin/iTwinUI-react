@@ -4,8 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import { Button } from '@itwin/itwinui-react';
 
-const App = () => {
-  return <Button>Hello world</Button>;
-};
-
-export default App;
+export default function Home() {
+  return (
+    <>
+      <Button>Hello world</Button>
+    </>
+  );
+}

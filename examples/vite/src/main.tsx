@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import './main.css';
 import styled from '@emotion/styled';
 import { useTheme } from '@itwin/itwinui-react';
 import App from './App';
@@ -40,7 +39,7 @@ const Shell = () => {
 };
 
 const Main = styled.main`
-  margin: 2rem 1rem;
+  padding: 2rem 1rem;
 `;
 
 const ThemeButton = styled.button`
