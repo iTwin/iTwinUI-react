@@ -3,17 +3,15 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { SelectOption } from '../Select';
-import SelectTag from '../Select/SelectTag';
 import SelectTagContainer from '../Select/SelectTagContainer';
 
-type ComboBoxMultipleContainerProps<T> = {
-  selectedItems?: SelectOption<T>[];
+type ComboBoxMultipleContainerProps = {
+  selectedItems?: JSX.Element[];
 };
 
 export const ComboBoxMultipleContainer = React.forwardRef(
-  <T,>(
-    { selectedItems = [] }: ComboBoxMultipleContainerProps<T>,
+  (
+    { selectedItems = [] }: ComboBoxMultipleContainerProps,
     ref: React.RefObject<HTMLDivElement>,
   ) => {
     return (
@@ -23,9 +21,7 @@ export const ComboBoxMultipleContainer = React.forwardRef(
           right: 'unset',
         }}
         ref={ref}
-        tags={selectedItems.map((item) => (
-          <SelectTag key={item.label} label={item.label} />
-        ))}
+        tags={selectedItems}
       />
     );
   },

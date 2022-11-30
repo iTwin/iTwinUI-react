@@ -7,6 +7,7 @@ import cx from 'classnames';
 import { InputProps } from '../Input';
 import { MenuExtraContent } from '../Menu';
 import { SelectOption } from '../Select';
+import SelectTag from '../Select/SelectTag';
 import { Text } from '../Typography';
 import {
   useTheme,
@@ -16,7 +17,6 @@ import {
   InputContainerProps,
   mergeRefs,
   useLatestRef,
-  useContainerWidth,
 } from '../utils';
 import 'tippy.js/animations/shift-away.css';
 import {
@@ -31,7 +31,6 @@ import { ComboBoxInput } from './ComboBoxInput';
 import { ComboBoxInputContainer } from './ComboBoxInputContainer';
 import { ComboBoxMenu } from './ComboBoxMenu';
 import { ComboBoxMenuItem } from './ComboBoxMenuItem';
-import { ComboBoxMultipleContainer } from './ComboBoxMultipleContainer';
 
 // Type guard for user onChange
 const isSingleOnChange = <T,>(
@@ -211,11 +210,15 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   // Get indices of selected elements in options array when we have selected values.
   const getSelectedIndexes = React.useCallback(() => {
-    if (multiple && Array.isArray(valueProp)) {
+    if (multiple) {
       const indexArray: number[] = [];
-      valueProp.forEach((value) => {
-        indexArray.push(options.findIndex((option) => option.value === value));
-      });
+      if (Array.isArray(valueProp)) {
+        valueProp.forEach((value) => {
+          indexArray.push(
+            options.findIndex((option) => option.value === value),
+          );
+        });
+      }
       return indexArray;
     } else {
       return options.findIndex((option) => option.value === valueProp);
@@ -309,15 +312,25 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
 
   // When the value prop changes, update the selected index/indices
   React.useEffect(() => {
-    if (multiple && Array.isArray(valueProp)) {
-      const indexes = valueProp.map((value) => {
-        return options.findIndex((option) => option.value === value);
-      });
-      dispatch({
-        type: 'multiselect',
-        value: indexes.filter((index) => index !== -1), // Add available options
-      });
+    if (multiple) {
+      if (Array.isArray(valueProp)) {
+        // If user provided array of selected values
+        const indexes = valueProp.map((value) => {
+          return options.findIndex((option) => option.value === value);
+        });
+        dispatch({
+          type: 'multiselect',
+          value: indexes.filter((index) => index !== -1), // Add available options
+        });
+      } else {
+        // if user provided one value or undefined
+        dispatch({
+          type: 'multiselect',
+          value: [], // Add empty list
+        });
+      }
     } else {
+      console.log('dispatch select', valueProp);
       dispatch({
         type: 'select',
         value: options.findIndex((option) => option.value === valueProp),
@@ -470,8 +483,6 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     [emptyStateMessage],
   );
 
-  const [tagContainerWidthRef, tagContainerWidth] = useContainerWidth();
-
   return (
     <ComboBoxRefsContext.Provider
       value={{ inputRef, menuRef, toggleButtonRef, optionsExtraInfoRef }}
@@ -493,25 +504,20 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
           <ComboBoxInputContainer disabled={inputProps?.disabled} {...rest}>
             <>
               <ComboBoxInput
-                style={
-                  multiple
-                    ? {
-                        paddingLeft: tagContainerWidth + 18,
-                      }
-                    : {}
-                }
                 value={inputValue}
                 {...inputProps}
                 onChange={handleOnInput}
+                selectTags={
+                  Array.isArray(selected)
+                    ? selected.map((index) => {
+                        const item = optionsRef.current[index];
+                        return (
+                          <SelectTag key={item.label} label={item.label} />
+                        );
+                      })
+                    : undefined
+                }
               />
-              {multiple && Array.isArray(selected) && (
-                <ComboBoxMultipleContainer
-                  ref={tagContainerWidthRef}
-                  selectedItems={(selected as number[]).map(
-                    (index) => optionsRef.current[index],
-                  )}
-                />
-              )}
             </>
             <ComboBoxEndIcon disabled={inputProps?.disabled} isOpen={isOpen} />
           </ComboBoxInputContainer>

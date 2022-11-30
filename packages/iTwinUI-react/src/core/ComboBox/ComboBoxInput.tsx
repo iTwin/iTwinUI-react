@@ -4,18 +4,24 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { Input, InputProps } from '../Input';
-import { useSafeContext, useMergedRefs } from '../utils';
+import { useSafeContext, useMergedRefs, useContainerWidth } from '../utils';
+import { ComboBoxMultipleContainer } from './ComboBoxMultipleContainer';
 import {
   ComboBoxStateContext,
   ComboBoxActionContext,
   ComboBoxRefsContext,
 } from './helpers';
 
-type ComboBoxInputProps = InputProps;
+type ComboBoxInputProps = { selectTags?: JSX.Element[] } & InputProps;
 
 export const ComboBoxInput = React.forwardRef(
   (props: ComboBoxInputProps, forwardedRef: React.Ref<HTMLInputElement>) => {
-    const { onKeyDown: onKeyDownProp, onFocus: onFocusProp, ...rest } = props;
+    const {
+      onKeyDown: onKeyDownProp,
+      onFocus: onFocusProp,
+      selectTags,
+      ...rest
+    } = props;
 
     const {
       isOpen,
@@ -26,9 +32,8 @@ export const ComboBoxInput = React.forwardRef(
       onChangeHandler,
     } = useSafeContext(ComboBoxStateContext);
     const dispatch = useSafeContext(ComboBoxActionContext);
-    const { inputRef, menuRef, optionsExtraInfoRef } = useSafeContext(
-      ComboBoxRefsContext,
-    );
+    const { inputRef, menuRef, optionsExtraInfoRef } =
+      useSafeContext(ComboBoxRefsContext);
     const refs = useMergedRefs(inputRef, forwardedRef);
 
     const focusedIndexRef = React.useRef(focusedIndex ?? -1);
@@ -59,9 +64,8 @@ export const ComboBoxInput = React.forwardRef(
             }
 
             if (focusedIndexRef.current === -1) {
-              const currentElement = menuRef.current?.querySelector(
-                '[data-iui-index]',
-              );
+              const currentElement =
+                menuRef.current?.querySelector('[data-iui-index]');
               return dispatch({
                 type: 'focus',
                 value: Number(
@@ -189,24 +193,41 @@ export const ComboBoxInput = React.forwardRef(
       [dispatch, onFocusProp],
     );
 
+    const [tagContainerWidthRef, tagContainerWidth] = useContainerWidth();
+
     return (
-      <Input
-        ref={refs}
-        onKeyDown={handleKeyDown}
-        onFocus={handleFocus}
-        aria-activedescendant={
-          isOpen && focusedIndex != undefined && focusedIndex > -1
-            ? getIdFromIndex(focusedIndex)
-            : undefined
-        }
-        role='combobox'
-        aria-controls={isOpen ? `${id}-list` : undefined}
-        aria-autocomplete='list'
-        spellCheck={false}
-        autoCapitalize='none'
-        autoCorrect='off'
-        {...rest}
-      />
+      <>
+        <Input
+          ref={refs}
+          onKeyDown={handleKeyDown}
+          onFocus={handleFocus}
+          aria-activedescendant={
+            isOpen && focusedIndex != undefined && focusedIndex > -1
+              ? getIdFromIndex(focusedIndex)
+              : undefined
+          }
+          role='combobox'
+          aria-controls={isOpen ? `${id}-list` : undefined}
+          aria-autocomplete='list'
+          spellCheck={false}
+          autoCapitalize='none'
+          autoCorrect='off'
+          style={
+            multiple
+              ? {
+                  paddingLeft: tagContainerWidth + 18,
+                }
+              : {}
+          }
+          {...rest}
+        />
+        {multiple && selectTags && (
+          <ComboBoxMultipleContainer
+            ref={tagContainerWidthRef}
+            selectedItems={selectTags}
+          />
+        )}
+      </>
     );
   },
 );
