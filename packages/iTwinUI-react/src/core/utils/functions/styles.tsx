@@ -13,9 +13,8 @@ export const getTranslateValues = (element: HTMLElement | null | undefined) => {
     return [];
   }
 
-  const transformValue = getComputedStyle(element).getPropertyValue(
-    'transform',
-  );
+  const transformValue =
+    getComputedStyle(element).getPropertyValue('transform');
   const matrix = new DOMMatrix(transformValue);
 
   return [matrix.m41, matrix.m42];
