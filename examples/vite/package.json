@@ -23,5 +23,10 @@
     "typescript": "^4.5.4",
     "vite": "^3.1.0"
   },
+  "lint-staged": {
+    "*.{tsx,ts,jsx,js}": [
+      "prettier --write"
+    ]
+  },
   "prettier": "configs/prettier-config"
 }

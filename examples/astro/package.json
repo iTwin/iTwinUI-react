@@ -14,7 +14,15 @@
     "@astrojs/react": "^1.2.2",
     "@itwin/itwinui-react": "*",
     "astro": "1.6.3",
+    "prettier": "^2.8.0",
+    "prettier-plugin-astro": "^0.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
-  }
+  },
+  "lint-staged": {
+    "*.{tsx,ts,jsx,js}": [
+      "prettier --write"
+    ]
+  },
+  "prettier": "configs/prettier-astro-config.js"
 }
