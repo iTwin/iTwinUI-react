@@ -3,13 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import {
-  fireEvent,
-  render,
-  screen,
-  act,
-  prettyDOM,
-} from '@testing-library/react';
+import { fireEvent, render, screen, act } from '@testing-library/react';
 import { ComboBox, ComboBoxProps } from './ComboBox';
 import { SvgCaretDownSmall } from '../utils';
 import { MenuItem } from '../Menu';
@@ -758,8 +752,6 @@ it('should select multiple options', async () => {
     '.iui-input-container',
   ) as HTMLDivElement;
   await userEvent.tab();
-  console.log(prettyDOM(container));
-  expect(container.querySelector('.iui-menu')).toBeTruthy();
   await userEvent.click(screen.getByText('Item 1'));
   await userEvent.click(screen.getByText('Item 2'));
   await userEvent.click(screen.getByText('Item 3'));
@@ -874,7 +866,7 @@ it('should handle keyboard navigation when multiple is enabled', async () => {
   // select 0
   await userEvent.keyboard('{Enter}');
   items = document.querySelectorAll('.iui-menu-item');
-  expect(mockOnChange).toHaveBeenCalledWith(0, 'added');
+  expect(mockOnChange).toHaveBeenCalledWith([0], { type: 'added', value: 0 });
   expect(document.querySelector('.iui-menu')).toBeVisible();
 
   // filter and focus item 2
@@ -891,7 +883,10 @@ it('should handle keyboard navigation when multiple is enabled', async () => {
 
   // select 2
   await userEvent.keyboard('{Enter}');
-  expect(mockOnChange).toHaveBeenCalledWith(2, 'added');
+  expect(mockOnChange).toHaveBeenCalledWith([0, 2], {
+    type: 'added',
+    value: 2,
+  });
   expect(document.querySelector('.iui-menu')).toBeVisible();
 
   // close
@@ -910,7 +905,7 @@ it('should handle keyboard navigation when multiple is enabled', async () => {
 
   await act(async () => void (await userEvent.keyboard('{ArrowDown}')));
   await userEvent.keyboard('{Enter}');
-  expect(mockOnChange).toHaveBeenCalledWith(2, 'removed');
+  expect(mockOnChange).toHaveBeenCalledWith([0], { type: 'removed', value: 2 });
 
   // close
   await userEvent.tab();
