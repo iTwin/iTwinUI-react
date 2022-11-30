@@ -21,7 +21,7 @@ export default defineConfig({
     rehypePlugins: [rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }], rehypeToc],
   },
   vite: {
-    server: { open: true },
+    server: { open: true, port: 1700 },
     ssr: {
       noExternal: [
         '@fontsource/noto-sans',
