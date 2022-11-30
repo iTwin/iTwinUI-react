@@ -865,6 +865,7 @@ it('should filter table', async () => {
   expect(onFilter).toHaveBeenCalledWith(
     [{ fieldType: 'text', filterType: 'text', id: 'name', value: '2' }],
     expect.objectContaining({ filters: [{ id: 'name', value: '2' }] }),
+    expect.any(Object),
   );
 });
 
@@ -982,6 +983,7 @@ it('should clear filter', async () => {
   expect(onFilter).toHaveBeenCalledWith(
     [],
     expect.objectContaining({ filters: [] }),
+    expect.any(Object),
   );
 });
 
@@ -1013,6 +1015,7 @@ it('should not filter table when manualFilters flag is on', async () => {
   expect(onFilter).toHaveBeenCalledWith(
     [{ fieldType: 'text', filterType: 'text', id: 'name', value: '2' }],
     expect.objectContaining({ filters: [{ id: 'name', value: '2' }] }),
+    expect.any(Object),
   );
 });
 
@@ -4424,5 +4427,6 @@ it('should navigate through table filtering with the keyboard', async () => {
   expect(onFilter).toHaveBeenCalledWith(
     [{ fieldType: 'text', filterType: 'text', id: 'name', value: '2' }],
     expect.objectContaining({ filters: [{ id: 'name', value: '2' }] }),
+    expect.any(Object),
   );
 });
