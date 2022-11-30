@@ -13,6 +13,7 @@ import {
   StatusMessage,
   SelectOption,
   MenuItemSkeleton,
+  Button,
 } from '@itwin/itwinui-react';
 import { SvgCamera } from '@itwin/itwinui-icons-react';
 
@@ -327,19 +328,30 @@ Basic.argTypes = {
 
 export const Controlled: Story<Partial<ComboBoxProps<string>>> = (args) => {
   const options = React.useMemo(() => countriesList, []);
-  const [countryValue, setCountryValue] = React.useState('CA');
+  const [countryValue, setCountryValue] = React.useState<string | undefined>(
+    'CA',
+  );
+
+  const userChange = (value: string | undefined) => {
+    console.log('user change called', value);
+    setCountryValue(value);
+  };
 
   return (
-    <ComboBox
-      options={options}
-      inputProps={{ placeholder: 'Select a country' }}
-      value={countryValue}
-      onChange={(value: string) => {
-        action(value)();
-        setCountryValue(value);
-      }}
-      {...args}
-    />
+    <>
+      <ComboBox
+        options={options}
+        inputProps={{ placeholder: 'Select a country' }}
+        value={countryValue}
+        onChange={(value: string) => {
+          action(value)();
+          userChange(value);
+        }}
+        {...args}
+      />
+      <Button onClick={() => userChange('LT')}>LT</Button>
+      <Button onClick={() => userChange(undefined)}>undefined</Button>
+    </>
   );
 };
 Controlled.args = { ...Basic.args, value: 'CA' };
@@ -578,22 +590,28 @@ Virtualized.argTypes = {
 
 export const MultipleSelect: Story<Partial<ComboBoxProps<string>>> = (args) => {
   const options = React.useMemo(() => countriesList, []);
-  const [selectedOptions, setSelectedOptions] = React.useState<string[]>([]);
+  const [selectedOptions, setSelectedOptions] = React.useState<
+    string[] | undefined
+  >(['CA']);
 
   return (
-    <ComboBox
-      options={options}
-      inputProps={{ placeholder: 'Select a country' }}
-      onChange={(
-        selected: string[],
-        event: { value: string; type: 'added' | 'removed' },
-      ) => {
-        action(event.value + ' ' + event.type ?? '')();
-        setSelectedOptions(selected);
-      }}
-      multiple={true}
-      value={selectedOptions}
-      {...args}
-    />
+    <>
+      <ComboBox
+        options={options}
+        inputProps={{ placeholder: 'Select a country' }}
+        onChange={(
+          selected: string[],
+          event: { value: string; type: 'added' | 'removed' },
+        ) => {
+          action(event.value + ' ' + event.type ?? '')();
+          setSelectedOptions(selected);
+        }}
+        multiple={true}
+        value={selectedOptions}
+        {...args}
+      />
+      <Button onClick={() => setSelectedOptions(undefined)}>undefined</Button>
+      <Button onClick={() => setSelectedOptions(['CA'])}>Canada</Button>
+    </>
   );
 };
