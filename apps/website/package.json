@@ -32,5 +32,6 @@
     "rehype-slug": "^5.0.1",
     "sass": "^1.55.0",
     "snarkdown": "2.0.0"
-  }
+  },
+  "prettier": "configs/prettier-astro-config.js"
 }
