@@ -4,11 +4,14 @@
  *--------------------------------------------------------------------------------------------*/
 import esbuild from 'esbuild';
 import fg from 'fast-glob';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 const isCjs = process.argv.length > 2 && process.argv[2] === '--cjs';
 
 const entryPoints = fg.sync(['src/**/*.{ts,tsx}'], {
   ignore: ['src/**/*.test.{ts,tsx}'],
+  cwd: dirname(fileURLToPath(import.meta.url)),
 });
 
 esbuild
