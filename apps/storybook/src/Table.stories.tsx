@@ -498,11 +498,22 @@ export const Filters: Story<Partial<TableProps>> = (args) => {
   );
 
   const onFilter = React.useCallback(
-    (filters: TableFilterValue<TableStoryDataType>[], state: TableState) => {
+    (
+      filters: TableFilterValue<TableStoryDataType>[],
+      state: TableState,
+      rows: Row<{ name: string; description: string }>[],
+    ) => {
+      // rowInfo is used due to JSON errors when displaying row data
+      let rowInfo = '[';
+      rows.forEach((row) => {
+        rowInfo += `{\"name\":\"${row.original.name}\",\"description\":\"${row.original.description}\"},`;
+      });
+      rowInfo = rowInfo.slice(0, rowInfo.length - 1);
+      rowInfo += ']';
       action(
         `Filter changed. Filters: ${JSON.stringify(
           filters,
-        )}, State: ${JSON.stringify(state)}`,
+        )}, State: ${JSON.stringify(state)}, Rows: ${rowInfo}`,
       )();
     },
     [],

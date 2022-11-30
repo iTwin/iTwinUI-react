@@ -462,7 +462,7 @@ export const Table = <
           onSort?.(newState);
           break;
         case TableActions.setFilter:
-          onFilterHandler(newState, action, previousState, instance, onFilter);
+          onFilterHandler(newState, action, previousState, instance);
           break;
         case TableActions.toggleRowExpanded:
         case TableActions.toggleAllRowsExpanded:
@@ -656,6 +656,20 @@ export const Table = <
   React.useEffect(() => {
     setPageSize(pageSize);
   }, [pageSize, setPageSize]);
+
+  const previousFilteredRows = React.useRef(instance?.filteredRows);
+  React.useEffect(() => {
+    if (previousFilteredRows.current === instance?.filteredRows) {
+      return;
+    } else {
+      previousFilteredRows.current = instance?.filteredRows;
+      onFilter?.(
+        state.filters as TableFilterValue<T>[],
+        state,
+        instance?.filteredRows,
+      );
+    }
+  }, [state, instance?.filteredRows, onFilter]);
 
   const paginatorRendererProps: TablePaginatorRendererProps = React.useMemo(
     () => ({
