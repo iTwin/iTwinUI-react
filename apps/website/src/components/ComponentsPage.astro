@@ -1,0 +1,125 @@
+---
+const docsPages = (await Astro.glob('../pages/docs/*.mdx')).map(({ url, frontmatter }) => ({
+  url,
+  title: frontmatter.title,
+  description: frontmatter.description,
+  icon: frontmatter.icon,
+  group: frontmatter.group,
+}));
+
+const componentPages = docsPages.filter((page) => page.group && page.group !== 'main');
+---
+
+<main class='card-list'>
+  {
+    componentPages.map((page) => (
+      <div class='card'>
+        <a href={page.url}>
+          {page.icon}
+          <h1>{page.title}</h1>
+          <p>{page.description}</p>
+        </a>
+      </div>
+    ))
+  }
+</main>
+
+<style lang='scss'>
+  .card-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .card {
+    display: flex;
+    flex: 1 0 30%;
+    flex-direction: column;
+    gap: 0.5rem;
+    background: var(--color-background-1);
+  }
+
+  .card a {
+    height: 100%;
+    text-decoration: none;
+    padding: var(--space-2);
+  }
+
+  .card h1 {
+    font-size: var(--type-0);
+    color: var(--color-text);
+  }
+
+  .card p {
+    font-size: var(--type--1);
+    color: var(--color-subtext);
+  }
+
+  .main-color {
+    fill: #fff;
+  }
+
+  .highlight-color {
+    fill: #83a4ff;
+  }
+
+  .extra-color {
+    fill: #e1e1e1;
+  }
+
+  .opacity-background {
+    opacity: 0.1;
+  }
+
+  .opacity-light {
+    opacity: 0.2;
+  }
+
+  .opacity-light-medium {
+    opacity: 0.3;
+  }
+
+  .opacity-medium {
+    opacity: 0.4;
+  }
+
+  .opacity-heavy {
+    opacity: 0.5;
+  }
+
+  .opacity-heavier {
+    opacity: 0.6;
+  }
+
+  .stroke-line {
+    fill: none;
+    opacity: 0.4;
+    stroke: #fff;
+    stroke-linecap: round;
+    stroke-miterlimit: 10;
+    stroke-width: 3px;
+
+    &.light {
+      opacity: 0.1;
+    }
+
+    &.title-line {
+      stroke-width: 4px;
+    }
+
+    &.highlight {
+      opacity: 1;
+      stroke: #83a4ff;
+    }
+
+    &.square-cap {
+      stroke-width: 2px;
+      stroke-linecap: square;
+    }
+
+    &.symbol {
+      stroke-width: 2px;
+      stroke-linejoin: round;
+    }
+  }
+</style>
