@@ -23,5 +23,6 @@
     "*.{tsx,ts,jsx,js}": [
       "prettier --write"
     ]
-  }
+  },
+  "prettier": "configs/prettier-config.js"
 }
