@@ -2,6 +2,7 @@
 import Global from '~/pages/_global.astro';
 import Header from '~/components/Header.astro';
 import LeftSidebar from '~/components/LeftSidebar.astro';
+import EditPageLink from '~/components/EditPageLink.astro';
 
 const { content = {} } = Astro.props;
 const currentPage = new URL(Astro.request.url).pathname;
@@ -13,12 +14,15 @@ const currentPage = new URL(Astro.request.url).pathname;
   <div class='content-wrapper' id='article'>
     <h1 id='overview'>{content.title}</h1>
     <slot />
+    <hr class='bottom-divider' />
+    <EditPageLink page={currentPage} />
   </div>
 </Global>
 
 <style lang='scss'>
   body {
     display: grid;
+    align-items: start;
     grid-template: 'header header' auto 'sidebar content' 1fr / auto 1fr;
 
     @media (max-width: 50em) {
@@ -41,6 +45,13 @@ const currentPage = new URL(Astro.request.url).pathname;
     }
   }
 
+  .bottom-divider {
+    all: unset;
+    border-top: 1px solid var(--color-line-1);
+    inline-size: 100%;
+    margin-block: var(--space-3) var(--space-5);
+  }
+
   :where(.content-wrapper) {
     --_content-width: min(100%, 70ch);
     grid-area: content;
@@ -54,6 +65,7 @@ const currentPage = new URL(Astro.request.url).pathname;
     align-items: start;
     justify-content: center;
     padding: var(--space-7);
+    padding-block-end: calc(2 * var(--space-7));
     grid-template: 'h1' auto 'toc' auto 'main' 1fr / var(--_content-width);
 
     @media (min-width: 1300px) {

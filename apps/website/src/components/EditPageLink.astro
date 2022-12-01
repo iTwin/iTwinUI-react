@@ -1,0 +1,33 @@
+---
+import EditIcon from '~/icons/EditIcon.astro';
+
+type Props = { page: string };
+const { page } = Astro.props;
+
+const githubEditUrl = `https://github.com/iTwin/iTwinUI-react/edit/main/apps/website/src/pages/${page}.mdx`;
+---
+
+<a href={githubEditUrl}>
+  <EditIcon aria-hidden='true' />Edit this page on GitHub
+</a>
+
+<style lang='scss'>
+  a {
+    margin-inline-start: auto;
+    text-underline-offset: 0.5ex;
+    text-decoration-thickness: 0.5px;
+    transition: opacity 0.2s;
+    opacity: 0.8;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    :global(svg) {
+      width: 1em;
+      height: 1em;
+      vertical-align: middle;
+      margin-inline-end: var(--space-1);
+    }
+  }
+</style>
