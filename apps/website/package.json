@@ -6,7 +6,8 @@
     "dev": "cross-env NODE_ENV=development astro dev",
     "start": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "clean": "rimraf .turbo && rimraf node_modules && rimraf dist"
   },
   "dependencies": {
     "@astrojs/mdx": "^0.11.5",
