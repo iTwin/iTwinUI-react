@@ -13,9 +13,8 @@ const componentPages = docsPages.filter((page) => page.group && page.group !== '
 <main class='card-list'>
   {
     componentPages.map((page) => (
-      <div class='card'>
+      <div class='card' id={page.title}>
         <a href={page.url}>
-          {page.icon}
           <h1>{page.title}</h1>
           <p>{page.description}</p>
         </a>
@@ -28,15 +27,21 @@ const componentPages = docsPages.filter((page) => page.group && page.group !== '
   .card-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: var(--space-5);
+    margin-top: var(--space-5);
   }
 
   .card {
+    height: 200px;
     display: flex;
     flex: 1 0 30%;
     flex-direction: column;
     gap: 0.5rem;
     background: var(--color-background-1);
+
+    &:where(:hover, :focus) {
+      box-shadow: 0 0 10px var(--color-highlight-1), 0 0 20px var(--color-highlight-2);
+    }
   }
 
   .card a {
@@ -48,11 +53,16 @@ const componentPages = docsPages.filter((page) => page.group && page.group !== '
   .card h1 {
     font-size: var(--type-0);
     color: var(--color-text);
+    margin-bottom: var(--space-1);
   }
 
   .card p {
     font-size: var(--type--1);
     color: var(--color-subtext);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .main-color {
