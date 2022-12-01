@@ -333,7 +333,6 @@ export const Controlled: Story<Partial<ComboBoxProps<string>>> = (args) => {
   );
 
   const userChange = (value: string | undefined) => {
-    console.log('user change called', value);
     setCountryValue(value);
   };
 
@@ -342,12 +341,12 @@ export const Controlled: Story<Partial<ComboBoxProps<string>>> = (args) => {
       <ComboBox
         options={options}
         inputProps={{ placeholder: 'Select a country' }}
+        {...args}
         value={countryValue}
         onChange={(value: string) => {
           action(value)();
           userChange(value);
         }}
-        {...args}
       />
       <Button onClick={() => userChange('LT')}>LT</Button>
       <Button onClick={() => userChange(undefined)}>undefined</Button>

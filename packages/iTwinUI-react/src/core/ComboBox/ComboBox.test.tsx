@@ -12,7 +12,7 @@ import userEvent from '@testing-library/user-event';
 
 const renderComponent = (props?: Partial<ComboBoxProps<number>>) => {
   return render(
-    <ComboBox
+    <ComboBox<number>
       options={[
         { label: 'Item 0', value: 0 },
         { label: 'Item 1', value: 1 },
