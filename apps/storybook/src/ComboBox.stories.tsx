@@ -580,7 +580,7 @@ export const MultipleSelect: Story<Partial<ComboBoxProps<string>>> = (args) => {
   const options = React.useMemo(() => countriesList, []);
   const [selectedOptions, setSelectedOptions] = React.useState<
     string[] | undefined
-  >(['CA', 'US']);
+  >(['CA', 'AX']);
 
   return (
     <ComboBox

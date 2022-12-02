@@ -24,8 +24,7 @@ describe('ComboBox', () => {
       if (testName === 'Multiple Select') {
         cy.get('.iui-menu-item').then((els) => {
           const items = Array.from(els, (el) => el);
-          items[0].click();
-          items[1].click();
+          items[3].click();
         });
       }
       cy.compareSnapshot(`${testName} (Open)`);
