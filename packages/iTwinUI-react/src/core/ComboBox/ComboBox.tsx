@@ -32,6 +32,7 @@ import { ComboBoxInputContainer } from './ComboBoxInputContainer';
 import { ComboBoxMenu } from './ComboBoxMenu';
 import { ComboBoxMenuItem } from './ComboBoxMenuItem';
 
+// Type guard for enabling multiple
 const isMultipleEnabled = <T,>(
   variable: (T | undefined) | (T[] | undefined),
   multiple: boolean,

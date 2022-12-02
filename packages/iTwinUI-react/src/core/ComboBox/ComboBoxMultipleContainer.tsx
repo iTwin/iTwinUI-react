@@ -14,16 +14,7 @@ export const ComboBoxMultipleContainer = React.forwardRef(
     { selectedItems = [] }: ComboBoxMultipleContainerProps,
     ref: React.RefObject<HTMLDivElement>,
   ) => {
-    return (
-      <SelectTagContainer
-        style={{
-          maxWidth: `70%`,
-          right: 'unset',
-        }}
-        ref={ref}
-        tags={selectedItems}
-      />
-    );
+    return <SelectTagContainer ref={ref} tags={selectedItems} />;
   },
 );
 

@@ -4,13 +4,15 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { fireEvent, render, screen, act } from '@testing-library/react';
-import { ComboBox, ComboBoxProps } from './ComboBox';
+import { ComboBox, ComboboxMultipleTypeProps, ComboBoxProps } from './ComboBox';
 import { SvgCaretDownSmall } from '../utils';
 import { MenuItem } from '../Menu';
 import { StatusMessage } from '../StatusMessage';
 import userEvent from '@testing-library/user-event';
 
-const renderComponent = (props?: Partial<ComboBoxProps<number>>) => {
+const renderComponent = (
+  props?: Partial<ComboBoxProps<number>> & ComboboxMultipleTypeProps<number>,
+) => {
   return render(
     <ComboBox<number>
       options={[
