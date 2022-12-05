@@ -349,24 +349,22 @@ it('should handle checkbox clicks', async () => {
 it('should handle row clicks', async () => {
   const onSelect = jest.fn();
   const onRowClick = jest.fn();
-  const user = userEvent.setup();
-  const data = mockedData(10);
-
   const { container, getByText } = renderComponent({
     isSelectable: true,
     onSelect,
     onRowClick,
-    data,
   });
 
   expect(screen.queryByText('Header name')).toBeFalsy();
   const rows = container.querySelectorAll('.iui-table-body .iui-table-row');
   expect(rows.length).toBe(3);
 
+  const user = userEvent.setup();
+
   // Shift click test #1
   // By default, when no row is selected before shift click, start selecting from first row to clicked row
   await user.keyboard('[ShiftLeft>]'); // Press Shift (without releasing it)
-  await user.click(getByText(data[1].name)); // [shiftKey: true]
+  await user.click(getByText(mockedData()[1].name)); // [shiftKey: true]
 
   expect(rows[0]).toHaveAttribute('aria-selected', 'true');
   expect(rows[1]).toHaveAttribute('aria-selected', 'true');
@@ -411,7 +409,7 @@ it('should handle row clicks', async () => {
   // When a row is clicked before shift click (lastSelectedRowId), selection starts from that row and ends at the currently clicked row
   // But if the startIndex > endIndex, then startIndex and endIndex are swapped
   await user.keyboard('[/ControlLeft][ShiftLeft>]'); // Release Ctrl and Press Shift (without releasing it)
-  await user.click(getByText(data[0].name)); // Perform a click with `shiftKey: true`
+  await user.click(getByText(mockedData()[0].name)); // Perform a click with `shiftKey: true`
 
   expect(rows[0]).toHaveAttribute('aria-selected', 'true');
   expect(rows[1]).toHaveAttribute('aria-selected', 'true');
