@@ -7,7 +7,9 @@ import fg from 'fast-glob';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
-const isCjs = process.argv.length > 2 && process.argv[2] === '--cjs';
+const argsList = process.argv.length > 2 ? process.argv.slice(2) : [];
+const isCjs = argsList.includes('--cjs');
+const shouldWatch = argsList.includes('--watch');
 
 const entryPoints = fg.sync(['src/**/*.{ts,tsx}'], {
   ignore: ['src/**/*.test.{ts,tsx}'],
@@ -20,7 +22,7 @@ esbuild
     bundle: false,
     format: isCjs ? 'cjs' : 'esm',
     outdir: isCjs ? 'cjs' : 'esm',
-    watch: true,
+    watch: shouldWatch,
     write: true,
     logLevel: 'info',
   })
