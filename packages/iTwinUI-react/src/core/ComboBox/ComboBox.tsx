@@ -17,6 +17,7 @@ import {
   InputContainerProps,
   mergeRefs,
   useLatestRef,
+  useIsomorphicLayoutEffect,
 } from '../utils';
 import 'tippy.js/animations/shift-away.css';
 import {
@@ -246,7 +247,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     },
   );
 
-  React.useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     // When the dropdown opens
     if (isOpen) {
       inputRef.current?.focus(); // Focus the input
