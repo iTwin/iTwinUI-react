@@ -2,7 +2,6 @@
 
 ### [2.0.1](https://www.github.com/iTwin/iTwinUI-react/compare/v2.0.0...v2.0.1) (2022-12-05)
 
-
 ### Fixes
 
 * **useTheme:** Exit early if theme is already set on body ([#963](https://www.github.com/iTwin/iTwinUI-react/issues/963)) ([29033d4](https://www.github.com/iTwin/iTwinUI-react/commit/29033d488bc6cefb3ea064305898ade85475e2ff))
@@ -12,7 +11,6 @@
 * Fixed css warnings about `start` vs `flex-start` through base itwinui-css update ([#962](https://www.github.com/iTwin/iTwinUI-react/issues/962))
 
 ## [2.0.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.48.1...v2.0.0) (2022-11-15)
-
 
 Welcome to the v2 release of iTwinUI-react. 🎉
 
@@ -61,7 +59,6 @@ We have also taken this opportunity to deprecate a few more things while not rem
 * **Tile:** Add status and loading state ([#872](https://www.github.com/iTwin/iTwinUI-react/issues/872)) ([2fcb41f](https://www.github.com/iTwin/iTwinUI-react/commit/2fcb41f5c41a8a32d32a3312edecf8e2b646033e))
 
 If you're interested in more details about every signle change, check out a full diff in [`v1.48.1..v2.0.0`](https://www.github.com/iTwin/iTwinUI-react/compare/v1.48.1...v2.0.0).
-
 
 ## 1.X
 
