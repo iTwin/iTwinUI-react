@@ -1,6 +1,6 @@
 {
   "name": "@itwin/itwinui-react",
-  "version": "1.48.1",
+  "version": "2.0.1",
   "author": "Bentley Systems",
   "license": "MIT",
   "main": "cjs/index.js",
@@ -46,8 +46,8 @@
     "ux"
   ],
   "scripts": {
-    "build": "yarn clean:build && yarn copy-files && tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
-    "build:watch": "yarn clean:build && yarn copy-files && concurrently \"tsc -p tsconfig.cjs.json --watch\" \"tsc -p tsconfig.esm.json --watch\"",
+    "build": "yarn clean:build && tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
+    "build:watch": "yarn clean:build && concurrently \"tsc -p tsconfig.cjs.json --watch\" \"tsc -p tsconfig.esm.json --watch\"",
     "clean:build": "yarn clean:coverage && rimraf esm && rimraf cjs",
     "clean:coverage": "rimraf coverage",
     "clean": "rimraf .turbo && yarn clean:coverage && yarn clean:build && rimraf node_modules",
@@ -56,14 +56,13 @@
     "format": "prettier --config .prettierrc **/*.{tsx,ts,js} --ignore-path .gitignore --write",
     "lint": "eslint \"**/*.{js,ts,tsx}\" --max-warnings=0",
     "lint:fix": "yarn lint --fix && node ../configs/copyrightLinter.js --fix \"*/**/*.{js,ts,tsx}\"",
-    "copy-files": "cpy \"../../{README,LICENSE}.md\" .",
     "dev": "yarn build:watch",
     "createComponent": "node ../../scripts/createComponent.js"
   },
   "dependencies": {
-    "@itwin/itwinui-css": "dev",
-    "@itwin/itwinui-illustrations-react": "dev",
-    "@itwin/itwinui-variables": "dev",
+    "@itwin/itwinui-css": "^1.1.0",
+    "@itwin/itwinui-illustrations-react": "^2.0.0",
+    "@itwin/itwinui-variables": "^1.0.0",
     "@tippyjs/react": "^4.2.6",
     "@types/react-table": "^7.0.18",
     "classnames": "^2.2.6",

@@ -1,5 +1,5 @@
 {
-  "name": "itwinui-playground",
+  "name": "vite-playground",
   "private": true,
   "version": "0.0.0",
   "scripts": {
@@ -22,6 +22,11 @@
     "configs": "*",
     "typescript": "^4.5.4",
     "vite": "^3.1.0"
+  },
+  "lint-staged": {
+    "*.{tsx,ts,jsx,js}": [
+      "prettier --write"
+    ]
   },
   "prettier": "configs/prettier-config"
 }
