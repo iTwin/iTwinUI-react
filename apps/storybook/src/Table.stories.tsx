@@ -501,11 +501,11 @@ export const Filters: Story<Partial<TableProps>> = (args) => {
     (
       filters: TableFilterValue<TableStoryDataType>[],
       state: TableState,
-      rows: Row<{ name: string; description: string }>[],
+      filteredData: Row<{ name: string; description: string }>[],
     ) => {
       // rowInfo is used due to JSON errors when displaying row data
       let rowInfo = '[';
-      rows.forEach((row) => {
+      filteredData.forEach((row) => {
         rowInfo += `{\"name\":\"${row.original.name}\",\"description\":\"${row.original.description}\"},`;
       });
       rowInfo = rowInfo.slice(0, rowInfo.length - 1);
