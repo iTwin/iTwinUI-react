@@ -504,7 +504,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
             minWidth,
             isOpen,
             focusedIndex,
-            onChangeHandler: onClickHandler,
+            onClickHandler,
             enableVirtualization,
             filteredOptions,
             getMenuItem,

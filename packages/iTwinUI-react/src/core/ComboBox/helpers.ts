@@ -80,7 +80,7 @@ type ComboBoxStateContextProps<T = unknown> = {
   minWidth: number;
   enableVirtualization: boolean;
   filteredOptions: SelectOption<T>[];
-  onChangeHandler?: (prop: number) => void;
+  onClickHandler?: (prop: number) => void;
   getMenuItem: (option: SelectOption<T>, filteredIndex?: number) => JSX.Element;
   focusedIndex?: number;
   multiple?: boolean;

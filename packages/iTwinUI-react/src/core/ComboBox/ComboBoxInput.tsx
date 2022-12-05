@@ -29,7 +29,7 @@ export const ComboBoxInput = React.forwardRef(
       focusedIndex,
       enableVirtualization,
       multiple,
-      onChangeHandler,
+      onClickHandler,
     } = useSafeContext(ComboBoxStateContext);
     const dispatch = useSafeContext(ComboBoxActionContext);
     const { inputRef, menuRef, optionsExtraInfoRef } =
@@ -150,12 +150,12 @@ export const ComboBoxInput = React.forwardRef(
             if (isOpen) {
               if (multiple) {
                 if (focusedIndexRef.current > -1) {
-                  onChangeHandler?.(focusedIndexRef.current);
+                  onClickHandler?.(focusedIndexRef.current);
                 } else {
                   dispatch({ type: 'close' });
                 }
               } else {
-                onChangeHandler?.(focusedIndexRef.current);
+                onClickHandler?.(focusedIndexRef.current);
                 dispatch({ type: 'close' });
               }
             } else {
@@ -179,7 +179,7 @@ export const ComboBoxInput = React.forwardRef(
         isOpen,
         menuRef,
         multiple,
-        onChangeHandler,
+        onClickHandler,
         onKeyDownProp,
         optionsExtraInfoRef,
       ],
