@@ -25,10 +25,15 @@ import {
   useGlobalFilter,
 } from 'react-table';
 import { ProgressRadial } from '../ProgressIndicators';
-import { useTheme, CommonProps, useResizeObserver } from '../utils';
+import {
+  useTheme,
+  CommonProps,
+  useResizeObserver,
+  SvgSortDown,
+  SvgSortUp,
+  useIsomorphicLayoutEffect,
+} from '../utils';
 import '@itwin/itwinui-css/css/table.css';
-import SvgSortDown from '@itwin/itwinui-icons-react/cjs/icons/SortDown';
-import SvgSortUp from '@itwin/itwinui-icons-react/cjs/icons/SortUp';
 import { getCellStyle, getStickyStyle } from './utils';
 import { TableRowMemoized } from './TableRowMemoized';
 import { FilterToggle, TableFilterValue } from './filters';
@@ -91,6 +96,10 @@ export type TablePaginatorRendererProps = {
    * @default false
    */
   isLoading?: boolean;
+  /**
+   * Total number of rows selected (for mutli-selection mode only)
+   */
+  totalSelectedRowsCount?: number;
 };
 
 /**
@@ -98,7 +107,7 @@ export type TablePaginatorRendererProps = {
  * columns and data must be memoized.
  */
 export type TableProps<
-  T extends Record<string, unknown> = Record<string, unknown>
+  T extends Record<string, unknown> = Record<string, unknown>,
 > = Omit<TableOptions<T>, 'disableSortBy'> & {
   /**
    * Flag whether data is loading.
@@ -198,10 +207,9 @@ export type TableProps<
    * Function that should return custom props passed to the each row.
    * Must be memoized.
    */
-  rowProps?: (
-    row: Row<T>,
-  ) => React.ComponentPropsWithRef<'div'> & {
+  rowProps?: (row: Row<T>) => React.ComponentPropsWithRef<'div'> & {
     status?: 'positive' | 'warning' | 'negative';
+    isLoading?: boolean;
   };
   /**
    * Modify the density of the table (adjusts the row height).
@@ -280,11 +288,10 @@ export type TableProps<
 } & Omit<CommonProps, 'title'>;
 
 // Original type for some reason is missing sub-columns
-type ColumnType<
-  T extends Record<string, unknown> = Record<string, unknown>
-> = Column<T> & {
-  columns: ColumnType[];
-};
+type ColumnType<T extends Record<string, unknown> = Record<string, unknown>> =
+  Column<T> & {
+    columns: ColumnType[];
+  };
 const flattenColumns = (columns: ColumnType[]): ColumnType[] => {
   const flatColumns: ColumnType[] = [];
   columns.forEach((column) => {
@@ -300,30 +307,25 @@ const flattenColumns = (columns: ColumnType[]): ColumnType[] => {
  * Table based on [react-table](https://react-table.tanstack.com/docs/api/overview).
  * @example
  * const columns = React.useMemo(() => [
- *  {
- *    Header: 'Header name',
- *    columns: [
- *      {
- *        id: 'name',
- *        Header: 'Name',
- *        accessor: 'name',
- *        width: 90,
- *      },
- *      {
- *        id: 'description',
- *        Header: 'description',
- *        accessor: 'description',
- *        maxWidth: 200,
- *      },
- *      {
- *        id: 'view',
- *        Header: 'view',
- *        Cell: () => {
- *          return <span onClick={onViewClick}>View</span>
- *        },
- *      },
- *    ],
- *  },
+ *   {
+ *     id: 'name',
+ *     Header: 'Name',
+ *     accessor: 'name',
+ *     width: 90,
+ *   },
+ *   {
+ *     id: 'description',
+ *     Header: 'description',
+ *     accessor: 'description',
+ *     maxWidth: 200,
+ *   },
+ *   {
+ *     id: 'view',
+ *     Header: 'view',
+ *     Cell: () => {
+ *       return <span onClick={onViewClick}>View</span>
+ *     },
+ *   },
  * ], [onViewClick])
  * const data = [
  *  { name: 'Name1', description: 'Description1' },
@@ -339,7 +341,7 @@ const flattenColumns = (columns: ColumnType[]): ColumnType[] => {
  * />
  */
 export const Table = <
-  T extends Record<string, unknown> = Record<string, unknown>
+  T extends Record<string, unknown> = Record<string, unknown>,
 >(
   props: TableProps<T>,
 ): JSX.Element => {
@@ -583,7 +585,6 @@ export const Table = <
     visibleColumns,
     setGlobalFilter,
   } = instance;
-
   const ariaDataAttributes = Object.entries(rest).reduce(
     (result, [key, value]) => {
       if (key.startsWith('data-') || key.startsWith('aria-')) {
@@ -663,6 +664,8 @@ export const Table = <
       isLoading,
       onPageChange: gotoPage,
       onPageSizeChange: setPageSize,
+      totalSelectedRowsCount:
+        selectionMode === 'single' ? 0 : instance.selectedFlatRows.length, // 0 when selectionMode = 'single' since totalSelectedRowCount is for multi-selection mode only
     }),
     [
       density,
@@ -672,6 +675,8 @@ export const Table = <
       setPageSize,
       state.pageIndex,
       state.pageSize,
+      instance.selectedFlatRows,
+      selectionMode,
     ],
   );
 
@@ -689,9 +694,8 @@ export const Table = <
       // Update column widths when table was resized
       flatHeaders.forEach((header) => {
         if (columnRefs.current[header.id]) {
-          header.resizeWidth = columnRefs.current[
-            header.id
-          ].getBoundingClientRect().width;
+          header.resizeWidth =
+            columnRefs.current[header.id].getBoundingClientRect().width;
         }
       });
 
@@ -707,14 +711,13 @@ export const Table = <
   const [resizeRef] = useResizeObserver(onTableResize);
 
   // Flexbox handles columns resize so we take new column widths before browser repaints.
-  React.useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (state.isTableResizing) {
       const newColumnWidths: Record<string, number> = {};
       flatHeaders.forEach((column) => {
         if (columnRefs.current[column.id]) {
-          newColumnWidths[column.id] = columnRefs.current[
-            column.id
-          ].getBoundingClientRect().width;
+          newColumnWidths[column.id] =
+            columnRefs.current[column.id].getBoundingClientRect().width;
         }
       });
       dispatch({ type: tableResizeEndAction, columnWidths: newColumnWidths });
@@ -821,28 +824,33 @@ export const Table = <
         data-iui-size={density === 'default' ? undefined : density}
         {...ariaDataAttributes}
       >
-        <div
-          className='iui-table-header-wrapper'
-          ref={headerRef}
-          onScroll={() => {
-            if (headerRef.current && bodyRef.current) {
-              bodyRef.current.scrollLeft = headerRef.current.scrollLeft;
-              updateStickyState();
-            }
-          }}
-        >
-          <div className='iui-table-header'>
-            {headerGroups.slice(1).map((headerGroup: HeaderGroup<T>) => {
-              const headerGroupProps = headerGroup.getHeaderGroupProps({
-                className: 'iui-table-row',
-              });
-              return (
-                <div {...headerGroupProps} key={headerGroupProps.key}>
+        {headerGroups.map((headerGroup: HeaderGroup<T>) => {
+          // There may be a better solution for this, but for now I'm filtering out the placeholder cells using header.id
+          headerGroup.headers = headerGroup.headers.filter(
+            (header) =>
+              !header.id.includes('iui-table-checkbox-selector_placeholder') &&
+              !header.id.includes('iui-table-expander_placeholder'),
+          );
+          const headerGroupProps = headerGroup.getHeaderGroupProps({
+            className: 'iui-table-row',
+          });
+          return (
+            <div
+              className='iui-table-header-wrapper'
+              ref={headerRef}
+              onScroll={() => {
+                if (headerRef.current && bodyRef.current) {
+                  bodyRef.current.scrollLeft = headerRef.current.scrollLeft;
+                  updateStickyState();
+                }
+              }}
+              key={headerGroupProps.key}
+            >
+              <div className='iui-table-header'>
+                <div {...headerGroupProps}>
                   {headerGroup.headers.map((column, index) => {
-                    const {
-                      onClick,
-                      ...restSortProps
-                    } = column.getSortByToggleProps();
+                    const { onClick, ...restSortProps } =
+                      column.getSortByToggleProps();
                     const columnProps = column.getHeaderProps({
                       ...restSortProps,
                       className: cx(
@@ -869,7 +877,8 @@ export const Table = <
                         ref={(el) => {
                           if (el) {
                             columnRefs.current[column.id] = el;
-                            column.resizeWidth = el.getBoundingClientRect().width;
+                            column.resizeWidth =
+                              el.getBoundingClientRect().width;
                           }
                         }}
                         onMouseDown={() => {
@@ -901,12 +910,12 @@ export const Table = <
                                 {column.isSortedDesc ||
                                 (!column.isSorted && column.sortDescFirst) ? (
                                   <SvgSortDown
-                                    className='iui-icon iui-table-sort'
+                                    className='iui-table-sort'
                                     aria-hidden
                                   />
                                 ) : (
                                   <SvgSortUp
-                                    className='iui-icon iui-table-sort'
+                                    className='iui-table-sort'
                                     aria-hidden
                                   />
                                 )}
@@ -941,10 +950,10 @@ export const Table = <
                     );
                   })}
                 </div>
-              );
-            })}
-          </div>
-        </div>
+              </div>
+            </div>
+          );
+        })}
         <div
           {...getTableBodyProps({
             className: cx('iui-table-body', {

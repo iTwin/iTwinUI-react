@@ -4,9 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { Transition } from 'react-transition-group';
-import SvgCloseSmall from '@itwin/itwinui-icons-react/cjs/icons/CloseSmall';
 import cx from 'classnames';
-import { useTheme, getWindow, StatusIconMap, CommonProps } from '../utils';
+import { getWindow, StatusIconMap, CommonProps, SvgCloseSmall } from '../utils';
 import '@itwin/itwinui-css/css/toast.css';
 import { IconButton } from '../Buttons';
 
@@ -91,7 +90,6 @@ export const Toast = (props: ToastProps) => {
     placementPosition = 'top',
   } = props;
 
-  useTheme();
   const closeTimeout = React.useRef(0);
 
   const [visible, setVisible] = React.useState(isVisible);

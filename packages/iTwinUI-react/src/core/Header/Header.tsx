@@ -2,13 +2,11 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import SvgMoreVertical from '@itwin/itwinui-icons-react/cjs/icons/MoreVertical';
-
 import cx from 'classnames';
 import React from 'react';
 import { IconButton } from '../Buttons';
 
-import { useTheme, CommonProps } from '../utils';
+import { useTheme, CommonProps, SvgMoreVertical } from '../utils';
 import '@itwin/itwinui-css/css/header.css';
 import { DropdownMenu } from '../DropdownMenu';
 
@@ -38,8 +36,12 @@ export type HeaderProps = {
    */
   breadcrumbs?: React.ReactNode;
   /**
-   * Content displayed to the left of the user icon
+   * Content displayed to the left of the `menuItems`
    * (expects array of `IconButton`, potentially wrapped in a `DropdownMenu`)
+   *
+   * Since v2, `userIcon` is deprecated.
+   * The new recommendation is to add `Avatar` (Called `UserIcon` before v2) to the end of `actions`.
+   * `Avatar` can be wrapped in `IconButton` and `DropdownMenu` if needed.
    * @example
    * [
    *  <IconButton><SvgNotification /></IconButton>,
@@ -47,6 +49,11 @@ export type HeaderProps = {
    *   <IconButton>
    *    <SvgHelpCircularHollow />
    *   </IconButton>
+   *  </DropdownMenu>,
+   *  <DropdownMenu menuItems={...}>
+   *    <IconButton styleType='borderless'>
+   *      <Avatar ... />
+   *    </IconButton>
    *  </DropdownMenu>
    * ]
    */
@@ -56,7 +63,10 @@ export type HeaderProps = {
    */
   children?: React.ReactNode;
   /**
+   * @deprecated Since v2, add your `UserIcon` (called `Avatar` since v2) to the end of `actions` itself
+   *
    * User icon
+   *
    * It's size and transition will be handled between slim/not slim state of the
    * Header
    * (expects `UserIcon`, can be wrapped in `IconButton` and `DropdownMenu` if needed)
@@ -106,15 +116,13 @@ const defaultTranslations: HeaderTranslations = {
  *    <IconButton>
  *     <SvgHelpCircularHollow />
  *    </IconButton>
- *   </DropdownMenu>
- *  ]}
- *  userIcon={
+ *   </DropdownMenu>,
  *   <DropdownMenu menuItems={...}>
  *    <IconButton styleType='borderless'>
- *     <UserIcon ... />
+ *     <Avatar ... />
  *    </IconButton>
  *   </DropdownMenu>
- *  }
+ *  ]}
  *  isSlim
  * />
  */
@@ -135,7 +143,8 @@ export const Header = (props: HeaderProps) => {
   const headerTranslations = { ...defaultTranslations, ...translatedStrings };
   return (
     <header
-      className={cx('iui-page-header', { 'iui-slim': isSlim }, className)}
+      className={cx('iui-page-header', className)}
+      data-iui-size={isSlim ? 'slim' : undefined}
       {...rest}
     >
       <div className='iui-page-header-left'>

@@ -5,6 +5,18 @@
 export { Alert } from './Alert';
 export type { AlertProps } from './Alert';
 
+export { Avatar, UserIcon } from './Avatar';
+export type {
+  AvatarProps,
+  StatusTitles,
+  AvatarStatus,
+  UserIconProps,
+  UserIconStatus,
+} from './Avatar';
+
+export { AvatarGroup, UserIconGroup } from './AvatarGroup';
+export type { AvatarGroupProps, UserIconGroupProps } from './AvatarGroup';
+
 export { Backdrop } from './Backdrop';
 export type { BackdropProps } from './Backdrop';
 
@@ -71,12 +83,13 @@ export type {
 export { DropdownMenu } from './DropdownMenu';
 export type { DropdownMenuProps } from './DropdownMenu';
 
-export { ErrorPage } from './ErrorPage';
+export { ErrorPage, NonIdealState } from './NonIdealState';
 export type {
   ErrorPageProps,
   ErrorPageType,
   ErrorTypeTranslations,
-} from './ErrorPage';
+  NonIdealStateProps,
+} from './NonIdealState';
 
 export { ExpandableBlock } from './ExpandableBlock';
 export type { ExpandableBlockProps } from './ExpandableBlock';
@@ -98,7 +111,7 @@ export type {
   HeaderLogoProps,
 } from './Header';
 
-export { VerticalTabs, Tab, HorizontalTabs } from './Tabs';
+export { VerticalTabs, Tabs, Tab, HorizontalTabs } from './Tabs';
 export type { VerticalTabsProps, TabProps, HorizontalTabsProps } from './Tabs';
 
 export {
@@ -285,19 +298,16 @@ export type {
   TextProps,
 } from './Typography';
 
-export { UserIcon } from './UserIcon';
-export type { UserIconProps, StatusTitles, UserIconStatus } from './UserIcon';
-
-export { UserIconGroup } from './UserIconGroup';
-export type { UserIconGroupProps } from './UserIconGroup';
-
-export { Wizard } from './Wizard';
+export { Wizard, Stepper, WorkflowDiagram } from './Stepper';
 export type {
   WizardProps,
   StepProperties,
   WizardType,
   WizardLocalization,
-} from './Wizard';
+  StepperProps,
+  StepperLocalization,
+  WorkflowDiagramProps,
+} from './Stepper';
 
 export {
   getUserColor,
