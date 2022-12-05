@@ -1,5 +1,15 @@
 # Changelog
 
+### [2.0.1](https://www.github.com/iTwin/iTwinUI-react/compare/v2.0.0...v2.0.1) (2022-12-05)
+
+
+### Fixes
+
+* **ModalButtonBar, ModalContent:** Wrap `DialogButtonBar` and `DialogContent` instead of directly assigning ([#961](https://www.github.com/iTwin/iTwinUI-react/issues/961)) ([0881e92](https://www.github.com/iTwin/iTwinUI-react/commit/0881e92f037b7ce717f05742014ac2d6dd8c580d))
+* Replace all instances of `useLayoutEffect` with `useIsomorphicLayoutEffect` ([#964](https://www.github.com/iTwin/iTwinUI-react/issues/964)) ([15b0389](https://www.github.com/iTwin/iTwinUI-react/commit/15b038934e55d3f61631113d91f2952127426c1d))
+* **Table:** Added localization for selected rows count ([#945](https://www.github.com/iTwin/iTwinUI-react/issues/945)) ([71f2326](https://www.github.com/iTwin/iTwinUI-react/commit/71f232605237e0095ebe0bff4cf01d241c143c49))
+* **useTheme:** Exit early if theme is set on body ([#963](https://www.github.com/iTwin/iTwinUI-react/issues/963)) ([29033d4](https://www.github.com/iTwin/iTwinUI-react/commit/29033d488bc6cefb3ea064305898ade85475e2ff))
+
 ## [2.0.0](https://www.github.com/iTwin/iTwinUI-react/compare/v1.48.1...v2.0.0) (2022-11-15)
 
 Welcome to the v2 release of iTwinUI-react. 🎉
