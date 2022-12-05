@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html class="iui-theme-dark astro-WGBIEITG" dir="ltr" lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="color-scheme" content="dark">
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico" sizes="any">
+    <link rel="sitemap" href="/sitemap.xml">
+    <link rel="stylesheet" href="/prism-night-owl.css">
+
+    <!--
+      This is intentionally inlined to avoid FOUC
+      TODO: investigate if this is possible to remove.
+    -->
+    <script>
+      const theme = localStorage.getItem('theme');
+      if (
+        theme === 'dark' ||
+        (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)
+      ) {
+        document.documentElement.dataset.theme = 'dark';
+      } else {
+        document.documentElement.dataset.theme = 'light';
+      }
+    </script>
+
+    <title>Getting started | iTwinUI</title>
+
+<!-- Page Metadata -->
+<link rel="canonical" href="https://www.itwinui.com">
+<meta name="description" content="Get started with iTwinUI">
+
+<!-- OpenGraph Tags -->
+<meta property="og:title" content="Getting started | iTwinUI">
+<meta property="og:description" content="Get started with iTwinUI">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itwinui.com">
+<meta property="og:locale" content="en-us">
+<meta property="og:image" content="http://localhost:3000/docs/og-image.png">
+<meta property="og:image:alt" content="iTwinUI logo">
+<meta property="og:site_name" content="Getting started | iTwinUI">
+
+<!-- Twitter Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Getting started | iTwinUI">
+<meta name="twitter:description" content="Get started with iTwinUI">
+<meta name="twitter:image" content="http://localhost:3000/docs/twitter-image.png">
+
+
+    <!-- Resets -->
+    
+
+    <!-- Variables -->
+    
+
+    <!-- Page layout, etc -->
+    
+  <link rel="stylesheet" href="/assets/variables.6f44dedd.css" />
+<link rel="stylesheet" href="/assets/variables.fa26a0a4.css" />
+<link rel="stylesheet" href="/assets/Typography.da1a067d.css" />
+<link rel="stylesheet" href="/assets/Typography.e255cc51.css" /><script type="module" src="/hoisted.0df18ec5.js"></script></head>
+
+  <body class="astro-WGBIEITG">
+    <header class="header astro-SH5MZNM6 astro-I5DPVZAD">
+  <a class="visually-hidden astro-SMHSHOHO" href="#article">
+  
+    <span class="astro-SMHSHOHO">Skip to Content</span>
+  
+</a>
+
+
+
+  <sidebar-toggle class="astro-ITBZD34H">
+  <button type="button" aria-controls="main-navigation-list" aria-expanded="false" id="sidebar-toggle" aria-label="Toggle sidebar" class="astro-ITBZD34H">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" class="astro-ITBZD34H">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" class="astro-ITBZD34H"></path>
+    </svg>
+  </button>
+</sidebar-toggle>
+
+
+
+
+
+  <a href="/" class="logo astro-I5DPVZAD">
+    <span class="visually-hidden">
+  iTwinUI home
+</span>
+
+
+    <svg width="133.6" height="32" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 133.60001 32" fill="currentColor" class="astro-I5DPVZAD">
+      <path d="M42,7.5c0,1-.79999,1.79999-1.79999,1.79999-.5,0-.90002-.20001-1.29999-.5-.30005-.39996-.5-.79999-.5-1.29999,0-1,.79999-1.79999,1.79999-1.79999s1.79999,.79999,1.79999,1.79999Zm-3.5,18.20001h3.29999V11.5h-3.29999v14.20001ZM26.90002,7.04999L15.47998,.35999c-.40997-.23999-.88-.37-1.34998-.37-.47003,0-.94,.13-1.35999,.37L1.38,7.03998c-.84998,.5-1.38,1.42004-1.38,2.40002v13.39001c0,.63995,.21997,1.25,.60999,1.72998,.21002,.27002,.46002,.48999,.76001,.66998l.28998,.17004,.68005,.39996,5.46997,3.23004h.01001c.17999,.07996,.38,.12,.58002,.12,.56,0,1.06-.31,1.33997-.80005,.31-.54999,.26001-1.20996-.08997-1.69995-.08002-.13-.18005-.24005-.30005-.34003l-.17999-.12-5.65997-3.31-.29004-.16998c-.06995-.05005-.12-.13-.12-.21002l-.01996-12.69c0-.08002,.03998-.15997,.12-.21002L13.96997,3.26001c.03003-.03003,.08002-.04004,.13-.04004,.04004,0,.09003,.01001,.13,.04004l10.80005,6.29999c.06995,.04999,.12,.13,.12,.22003l.01996,12.66998c0,.08997-.03998,.16998-.12,.20996l-9.37,5.55005v-9.89001c0-.96002-.51001-1.85004-1.33002-2.34003l-2.14996-1.29999c-.23999-.14001-.52002-.21997-.79999-.21997-.55005,0-1.06,.29999-1.33002,.76996-.44,.73999-.20001,1.70001,.53998,2.15002l1.84003,1.08002c.08002,.04999,.13,.13995,.13,.21997v10.85999c0,.86005,.42999,1.62,1.15997,2.05005,.35999,.20996,.76001,.31995,1.16003,.31995,.39996,0,.81-.10999,1.17999-.31995l10.82001-6.38c.83997-.49005,1.35999-1.39001,1.35999-2.35004V9.41998c0-.96997-.52002-1.87-1.35999-2.37Zm-12.77435,5.81775c1.12439,0,2.03949-.92468,2.03949-2.0611,0-1.1369-.9151-2.06152-2.03949-2.06152-1.12494,0-2.04004,.92462-2.04004,2.06152,0,1.13641,.9151,2.0611,2.04004,2.0611ZM58.40002,6.29999h-15v2.90002h5.79999V25.59998h3.39996V9.20001h5.80005v-2.90002Zm75.19995,2.60004v14.19995c0,2.30005-1.89996,4.10004-4.19995,4.10004h-20.40002c-2.29999,0-4.20001-1.79999-4.20001-4.10004V8.90002c0-2.30005,1.90002-4.10004,4.20001-4.10004h20.40002c2.29999,0,4.19995,1.79999,4.19995,4.10004Zm-12.19995,1.5c0-.70001-.5-1.20001-1.20001-1.20001s-1.20001,.5-1.20001,1.20001v7.29999c0,1.70001-1.39996,3.09998-3.09998,3.09998s-3.10004-1.39996-3.10004-3.09998v-7.29999c0-.70001-.5-1.20001-1.20001-1.20001-.69995,0-1.19995,.5-1.19995,1.20001v7.5c0,2.89996,2.10004,4.89996,5.5,4.89996s5.5-2,5.5-4.89996v-7.5Zm6.5,0c0-.70001-.5-1.20001-1.20001-1.20001s-1.20001,.5-1.20001,1.20001v11.19995c0,.70001,.5,1.20001,1.20001,1.20001s1.20001-.5,1.20001-1.20001V10.40002Zm-55.60004,12h-.09998l-2.79999-10.90002h-3.20001l-2.79999,10.90002h-.10004l-2.39996-10.90002h-3.40002l3.90002,14.20001h3.5l2.79999-10.40002h.09998l2.79999,10.40002h3.5l3.90002-14.20001h-3.29999l-2.40002,10.90002Zm21.29999-11.20001c-1.89996-.10004-3.69995,.89996-4.5,2.70001h-.09998v-2.40002h-3.20001l.10004,14.20001h3.29999v-8.60004c.09998-1.69995,1.5-3,3.20001-3,1.89996,0,2.79999,1.10004,2.79999,3.10004v8.5h3.29999v-9.20001c0-3.29999-1.79999-5.29999-4.90002-5.29999Zm-12.29999-5.5c-1,0-1.79999,.79999-1.79999,1.79999,0,.5,.20001,.90002,.5,1.29999,.40002,.29999,.79999,.5,1.29999,.5,1,0,1.80005-.79999,1.80005-1.79999s-.80005-1.79999-1.80005-1.79999Zm-1.59998,20h3.29999V11.5h-3.40002l.10004,14.20001Z" class="astro-I5DPVZAD"></path>
+    </svg>
+  </a>
+
+  <nav aria-label="Global site" class="astro-I5DPVZAD">
+    
+
+    <a href="https://www.github.com/iTwin/iTwinUI-react" class="github-link astro-I5DPVZAD">
+      <span class="visually-hidden">
+  GitHub
+</span>
+
+
+
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" class="astro-I5DPVZAD"><path d="M12.026 2a9.975 9.975 0 0 0-3.153 19.439c.5.09.679-.217.679-.481c0-.237-.008-.865-.011-1.7c-2.775.6-3.361-1.338-3.361-1.338a2.635 2.635 0 0 0-1.107-1.459c-.9-.619.069-.605.069-.605c.64.088 1.205.467 1.527 1.028a2.124 2.124 0 0 0 2.9.829c.046-.506.272-.979.635-1.334c-2.214-.251-4.542-1.107-4.542-4.93a3.865 3.865 0 0 1 1.026-2.671a3.588 3.588 0 0 1 .1-2.64s.837-.269 2.742 1.021a9.439 9.439 0 0 1 4.992 0c1.906-1.291 2.742-1.021 2.742-1.021c.37.835.405 1.78.1 2.64a3.84 3.84 0 0 1 1.024 2.675c0 3.833-2.33 4.675-4.552 4.922c.48.49.725 1.162.675 1.846c0 1.334-.012 2.41-.012 2.737c0 .267.178.577.687.479A9.975 9.975 0 0 0 12.026 2Z" class="astro-I5DPVZAD"></path>
+      </svg>
+    </a>
+  </nav>
+</header>
+
+<left-sidebar class="sidebar astro-SH5MZNM6">
+  <aside aria-label="Main navigation" class="astro-MTJ55Q3X">
+    <nav aria-labelledby="grid-left" class="astro-CYX52GOS">
+  <ul class="nav-groups astro-CYX52GOS" id="main-navigation-list">
+    <li class="nav-link astro-CYX52GOS">
+          <a href="/docs" aria-current="page" class="astro-CYX52GOS">
+            Getting started
+          </a>
+        </li><li class="nav-link astro-CYX52GOS">
+          <a href="/docs/variables" aria-current="false" class="astro-CYX52GOS">
+            Variables
+          </a>
+        </li>
+    <li class="astro-CYX52GOS">
+          <div class="nav-group astro-CYX52GOS">
+            <h2 class="nav-group-title astro-CYX52GOS">components</h2>
+            <ul class="astro-CYX52GOS">
+              <li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/alert" aria-current="false" class="astro-CYX52GOS">
+                    Alert
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/avatar" aria-current="false" class="astro-CYX52GOS">
+                    Avatar
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/badge" aria-current="false" class="astro-CYX52GOS">
+                    Badge
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/breadcrumbs" aria-current="false" class="astro-CYX52GOS">
+                    Breadcrumbs
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/carousel" aria-current="false" class="astro-CYX52GOS">
+                    Carousel
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/colorpicker" aria-current="false" class="astro-CYX52GOS">
+                    Color picker
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/combobox" aria-current="false" class="astro-CYX52GOS">
+                    ComboBox
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/datepicker" aria-current="false" class="astro-CYX52GOS">
+                    DatePicker
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/dialog" aria-current="false" class="astro-CYX52GOS">
+                    Dialog
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/dropdownmenu" aria-current="false" class="astro-CYX52GOS">
+                    DropdownMenu
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/expandableblock" aria-current="false" class="astro-CYX52GOS">
+                    Expandable block
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/fileupload" aria-current="false" class="astro-CYX52GOS">
+                    File upload
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/footer" aria-current="false" class="astro-CYX52GOS">
+                    Footer
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/header" aria-current="false" class="astro-CYX52GOS">
+                    Header
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/informationpanel" aria-current="false" class="astro-CYX52GOS">
+                    Information panel
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/nonidealstate" aria-current="false" class="astro-CYX52GOS">
+                    Non ideal state
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/progresslinear" aria-current="false" class="astro-CYX52GOS">
+                    Progress linear
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/progressradial" aria-current="false" class="astro-CYX52GOS">
+                    Progress radial
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/sidenavigation" aria-current="false" class="astro-CYX52GOS">
+                    Side navigation
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/stepper" aria-current="false" class="astro-CYX52GOS">
+                    Stepper
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/surface" aria-current="false" class="astro-CYX52GOS">
+                    Surface
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/table" aria-current="false" class="astro-CYX52GOS">
+                    Table
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/tabs" aria-current="false" class="astro-CYX52GOS">
+                    Tabs
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/tag" aria-current="false" class="astro-CYX52GOS">
+                    Tag
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/tile" aria-current="false" class="astro-CYX52GOS">
+                    Tile
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/toast" aria-current="false" class="astro-CYX52GOS">
+                    Toast
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/tooltip" aria-current="false" class="astro-CYX52GOS">
+                    Tooltip
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/tree" aria-current="false" class="astro-CYX52GOS">
+                    Tree
+                  </a>
+                </li>
+            </ul>
+          </div>
+        </li><li class="astro-CYX52GOS">
+          <div class="nav-group astro-CYX52GOS">
+            <h2 class="nav-group-title astro-CYX52GOS">buttons</h2>
+            <ul class="astro-CYX52GOS">
+              <li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/button" aria-current="false" class="astro-CYX52GOS">
+                    Button
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/buttongroup" aria-current="false" class="astro-CYX52GOS">
+                    Button group
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/dropdownbutton" aria-current="false" class="astro-CYX52GOS">
+                    Dropdown button
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/iconbutton" aria-current="false" class="astro-CYX52GOS">
+                    Icon button
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/ideasbutton" aria-current="false" class="astro-CYX52GOS">
+                    Ideas button
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/splitbutton" aria-current="false" class="astro-CYX52GOS">
+                    Split button
+                  </a>
+                </li>
+            </ul>
+          </div>
+        </li><li class="astro-CYX52GOS">
+          <div class="nav-group astro-CYX52GOS">
+            <h2 class="nav-group-title astro-CYX52GOS">inputs</h2>
+            <ul class="astro-CYX52GOS">
+              <li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/checkbox" aria-current="false" class="astro-CYX52GOS">
+                    Checkbox
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/fieldset" aria-current="false" class="astro-CYX52GOS">
+                    Fieldset
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/input" aria-current="false" class="astro-CYX52GOS">
+                    Input
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/inputgroup" aria-current="false" class="astro-CYX52GOS">
+                    Input group
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/labeledinput" aria-current="false" class="astro-CYX52GOS">
+                    Labeled Input
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/labeledselect" aria-current="false" class="astro-CYX52GOS">
+                    Labeled Select
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/labeledtextarea" aria-current="false" class="astro-CYX52GOS">
+                    Labeled Textarea
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/radio" aria-current="false" class="astro-CYX52GOS">
+                    Radio
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/radiotile" aria-current="false" class="astro-CYX52GOS">
+                    Radio Tile
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/select" aria-current="false" class="astro-CYX52GOS">
+                    Select
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/slider" aria-current="false" class="astro-CYX52GOS">
+                    Slider
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/textarea" aria-current="false" class="astro-CYX52GOS">
+                    Text Area
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/toggleswitch" aria-current="false" class="astro-CYX52GOS">
+                    Toggle Switch
+                  </a>
+                </li>
+            </ul>
+          </div>
+        </li><li class="astro-CYX52GOS">
+          <div class="nav-group astro-CYX52GOS">
+            <h2 class="nav-group-title astro-CYX52GOS">typography</h2>
+            <ul class="astro-CYX52GOS">
+              <li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/Typography" aria-current="false" class="astro-CYX52GOS">
+                    Typography
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/anchor" aria-current="false" class="astro-CYX52GOS">
+                    Anchor
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/blockquote" aria-current="false" class="astro-CYX52GOS">
+                    Blockquote
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/code" aria-current="false" class="astro-CYX52GOS">
+                    Code
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/keyboardkeys" aria-current="false" class="astro-CYX52GOS">
+                    Keyboard keys
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/label" aria-current="false" class="astro-CYX52GOS">
+                    Label
+                  </a>
+                </li><li class="nav-link astro-CYX52GOS">
+                  <a href="/docs/text" aria-current="false" class="astro-CYX52GOS">
+                    Text
+                  </a>
+                </li>
+            </ul>
+          </div>
+        </li>
+  </ul>
+</nav>
+
+
+  </aside>
+  <div class="sidebar-backdrop astro-MTJ55Q3X" aria-hidden="true"></div>
+</left-sidebar>
+
+
+
+<div class="content-wrapper astro-SH5MZNM6" id="article">
+    <h1 id="overview" class="astro-SH5MZNM6">Getting started</h1>
+    <main><h2 id="installation"><a href="#installation">Installation</a></h2>
+<pre class="language-shell"><code class="language-shell"><span class="token function">npm</span> <span class="token function">install</span> @itwin/itwinui-react</code></pre>
+<pre class="language-shell"><code class="language-shell"><span class="token function">yarn</span> <span class="token function">add</span> @itwin/itwinui-react</code></pre>
+<h2 id="usage"><a href="#usage">Usage</a></h2>
+<p>Import the component you want and start using it!</p>
+<pre class="language-jsx"><code class="language-jsx"><span class="token keyword">import</span> <span class="token punctuation">{</span> Button <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&#39;@itwin/itwinui-react&#39;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> <span class="token function-variable function">App</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token class-name">Button</span></span><span class="token punctuation">&gt;</span></span><span class="token plain-text">Hello!</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span><span class="token class-name">Button</span></span><span class="token punctuation">&gt;</span></span><span class="token punctuation">;</span></code></pre>
+<h2 id="theming"><a href="#theming">Theming</a></h2>
+<p>By default, all components use the light theme but we also provide support for switching to dark theme in two different ways:</p>
+<ul>
+<li>
+<p>Use ThemeProvider in your root component where you can pass one of the following values:</p>
+<ul>
+<li>light (default)</li>
+<li>dark</li>
+<li>os (which respects the color scheme of the operating system)</li>
+</ul>
+</li>
+</ul>
+<pre class="language-jsx"><code class="language-jsx"><span class="token keyword">import</span> <span class="token punctuation">{</span> ThemeProvider <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&#39;@itwin/itwinui-react&#39;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> <span class="token function-variable function">App</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">(</span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span></span><span class="token punctuation">&gt;</span></span><span class="token plain-text">
+    </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token class-name">ThemeProvider</span></span> <span class="token attr-name">theme</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&#39;</span>dark<span class="token punctuation">&#39;</span></span> <span class="token punctuation">/&gt;</span></span><span class="token plain-text">
+    // Your code goes here.
+  </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<ul>
+<li>The useTheme hook also provides the same functionality as ThemeProvider.</li>
+</ul>
+<pre class="language-jsx"><code class="language-jsx"><span class="token keyword">import</span> <span class="token punctuation">{</span> useTheme <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&#39;@itwin/itwinui-react&#39;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> <span class="token function-variable function">App</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token function">useTheme</span><span class="token punctuation">(</span><span class="token string">&#39;dark&#39;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span></span><span class="token punctuation">&gt;</span></span><span class="token plain-text">/* Your code goes here.*/</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span></span><span class="token punctuation">&gt;</span></span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>
+<p><em>Note: You only need to use one of these methods, and it only needs to be done once.</em></p></main>
+  </div>
+
+    <!--
+      Scrollable a11y code helper.
+      TODO: remove the need for this script by creating a CodeBlock component.
+    -->
+    <script>
+      Array.from(document.getElementsByTagName('pre')).forEach((element) => {
+        element.setAttribute('tabindex', '0');
+      });
+    </script>
+  </body>
+</html>
+
+
+
