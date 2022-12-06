@@ -77,14 +77,9 @@ export const ThemeProvider = React.forwardRef((props, ref) => {
   const shouldApplyDark = theme === 'dark' || (theme === 'os' && prefersDark);
   const shouldApplyHC = themeOptions?.highContrast ?? prefersHighContrast;
 
-  const contextValue = React.useMemo(
-    () => ({ theme, themeOptions, rootRef }),
-    [theme, themeOptions],
-  );
-
   // only provide context if wrapped around children
   return hasChildren ? (
-    <ThemeContext.Provider value={contextValue}>
+    <ThemeContext.Provider value={{ theme, themeOptions, rootRef }}>
       <Element
         className={cx('iui-root', className)}
         data-iui-theme={shouldApplyDark ? 'dark' : 'light'}
