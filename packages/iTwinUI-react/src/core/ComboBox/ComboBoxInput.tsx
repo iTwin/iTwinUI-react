@@ -149,6 +149,7 @@ export const ComboBoxInput = React.forwardRef(
             event.preventDefault();
             if (isOpen) {
               if (multiple) {
+                // Keep menu open when multiselect is enabled and user selects and item
                 if (focusedIndexRef.current > -1) {
                   onClickHandler?.(focusedIndexRef.current);
                 } else {

@@ -38,7 +38,7 @@ const isMultipleEnabled = <T,>(
   variable: (T | undefined) | (T[] | undefined),
   multiple: boolean,
 ): variable is T[] | undefined => {
-  return multiple;
+  return multiple && (Array.isArray(variable) || variable === undefined);
 };
 
 // Type guard for user onChange
@@ -226,10 +226,8 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
     if (isMultipleEnabled(valueProp, multiple)) {
       const indexArray: number[] = [];
       valueProp?.forEach((value) => {
-          indexArray.push(
-            options.findIndex((option) => option.value === value),
-          );
-        });
+        indexArray.push(options.findIndex((option) => option.value === value));
+      });
       return indexArray;
     } else {
       return options.findIndex((option) => option.value === valueProp);
