@@ -212,13 +212,7 @@ export const ComboBoxInput = React.forwardRef(
           spellCheck={false}
           autoCapitalize='none'
           autoCorrect='off'
-          style={
-            multiple
-              ? {
-                  paddingLeft: tagContainerWidth + 18,
-                }
-              : {}
-          }
+          style={multiple ? { paddingLeft: tagContainerWidth + 18 } : {}}
           {...rest}
         />
         {multiple && selectTags && (
