@@ -11,6 +11,7 @@ import {
   Resizer,
   useMergedRefs,
   useTheme,
+  useIsomorphicLayoutEffect,
 } from '../utils';
 import '@itwin/itwinui-css/css/dialog.css';
 import { DialogContextProps, useDialogContext } from './DialogContext';
@@ -78,6 +79,7 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
 
     const dialogRef = React.useRef<HTMLDivElement>(null);
     const refs = useMergedRefs(dialogRef, ref);
+    const hasBeenResized = React.useRef(false);
 
     // Focuses dialog when opened and brings back focus to the previously focused element when closed.
     const previousFocusedElement = React.useRef<HTMLElement | null>();
@@ -155,7 +157,7 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
     );
 
     // Prevents dialog from moving when window is being resized
-    React.useLayoutEffect(() => {
+    useIsomorphicLayoutEffect(() => {
       if (!isDraggable || !isOpen) {
         return;
       }
@@ -209,6 +211,12 @@ export const DialogMain = React.forwardRef<HTMLDivElement, DialogMainProps>(
           <Resizer
             elementRef={dialogRef}
             containerRef={dialogContext.dialogRootRef}
+            onResizeStart={() => {
+              if (!hasBeenResized.current) {
+                hasBeenResized.current = true;
+                setResizeStyle({ maxWidth: '100%' });
+              }
+            }}
             onResizeEnd={setResizeStyle}
           />
         )}

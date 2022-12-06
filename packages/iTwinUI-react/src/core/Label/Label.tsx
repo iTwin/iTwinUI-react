@@ -5,7 +5,7 @@
 import React from 'react';
 import cx from 'classnames';
 import { useTheme } from '../utils';
-import '@itwin/itwinui-css/css/inputs.css';
+import '@itwin/itwinui-css/css/utils.css';
 
 type LabelOwnProps<T extends React.ElementType = 'label'> = {
   /**
@@ -27,10 +27,9 @@ type LabelOwnProps<T extends React.ElementType = 'label'> = {
   required?: boolean;
 };
 
-export type LabelProps<
-  T extends React.ElementType = 'label'
-> = LabelOwnProps<T> &
-  Omit<React.ComponentPropsWithoutRef<T>, keyof LabelOwnProps<T>>;
+export type LabelProps<T extends React.ElementType = 'label'> =
+  LabelOwnProps<T> &
+    Omit<React.ComponentPropsWithoutRef<T>, keyof LabelOwnProps<T>>;
 
 /**
  * A standalone label to be used with input components (using `htmlFor`).

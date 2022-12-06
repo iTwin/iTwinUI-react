@@ -15,22 +15,28 @@ it('should render in its most basic state', () => {
   );
   expect(container.querySelector('.iui-page-header')).toBeTruthy();
   expect(
-    container.querySelector('.iui-page-header > .iui-left:first-child'),
-  ).toBeTruthy();
-  expect(
     container.querySelector(
-      '.iui-page-header > .iui-left > .app-title-container:first-child',
+      '.iui-page-header > .iui-page-header-left:first-child',
     ),
   ).toBeTruthy();
   expect(
     container.querySelector(
-      '.iui-page-header > .iui-left > .iui-divider:nth-child(2)',
+      '.iui-page-header > .iui-page-header-left > .app-title-container:first-child',
+    ),
+  ).toBeTruthy();
+  expect(
+    container.querySelector(
+      '.iui-page-header > .iui-page-header-left > .iui-page-header-divider:nth-child(2)',
     ),
   ).toBeNull();
   expect(
-    container.querySelector('.iui-page-header > .iui-right:last-child'),
+    container.querySelector(
+      '.iui-page-header > .iui-page-header-right:last-child',
+    ),
   ).toBeTruthy();
-  expect(container.querySelector('.iui-page-header > .iui-center')).toBeNull();
+  expect(
+    container.querySelector('.iui-page-header > .iui-page-header-center'),
+  ).toBeNull();
 });
 
 it('renders isSlim correctly', () => {
@@ -38,7 +44,8 @@ it('renders isSlim correctly', () => {
     <Header appLogo={<div>AppTitle</div>} isSlim={true} />,
   );
 
-  expect(container.querySelector('.iui-page-header.iui-slim')).toBeTruthy();
+  const header = container.querySelector('.iui-page-header');
+  expect(header).toHaveAttribute('data-iui-size', 'slim');
 });
 
 it('renders breadcrumbs correctly', () => {
@@ -49,7 +56,9 @@ it('renders breadcrumbs correctly', () => {
     />,
   );
 
-  const breadcrumbs = container.querySelector('.iui-left > :nth-child(3)');
+  const breadcrumbs = container.querySelector(
+    '.iui-page-header-left > :nth-child(3)',
+  );
   expect(breadcrumbs).toBeTruthy();
   expect(breadcrumbs?.textContent).toEqual('BreadcrumbContent');
 });
@@ -60,7 +69,7 @@ it('renders children correctly', () => {
   );
 
   const center = container.querySelector(
-    '.iui-center:nth-child(2):nth-last-child(2)',
+    '.iui-page-header-center:nth-child(2):nth-last-child(2)',
   );
   expect(center).toBeTruthy();
   expect(center?.textContent).toEqual('ChildContent');
@@ -74,21 +83,25 @@ it('renders actions alone correctly', () => {
     />,
   );
 
-  const actions = container.querySelector('.iui-right > :first-child');
+  const actions = container.querySelector(
+    '.iui-page-header-right > :first-child',
+  );
   expect(actions).toBeTruthy();
   expect(actions?.textContent).toEqual('ActionsContent');
 });
-it('renders userIcon alone correctly', () => {
+it('renders avatar alone correctly', () => {
   const { container } = render(
     <Header
       appLogo={<div>AppTitle</div>}
-      userIcon={<div>UserIconContent</div>}
+      actions={[<div key='1'>AvatarContent</div>]}
     />,
   );
 
-  const userIcon = container.querySelector('.iui-right > :first-child');
-  expect(userIcon).toBeTruthy();
-  expect(userIcon?.textContent).toEqual('UserIconContent');
+  const avatar = container.querySelector(
+    '.iui-page-header-right > :first-child',
+  );
+  expect(avatar).toBeTruthy();
+  expect(avatar?.textContent).toEqual('AvatarContent');
 });
 it('renders moreMenu alone correctly', async () => {
   // Summarized, as this is partly based on DropdownMenu, which is tested independently.
@@ -117,7 +130,7 @@ it('renders moreMenu alone correctly', async () => {
     />,
   );
   const button = container.querySelector(
-    '.iui-right > .iui-button.iui-borderless:last-child',
+    '.iui-page-header-right > .iui-button[data-iui-variant="borderless"]:last-child',
   ) as HTMLButtonElement;
   expect(button).toBeTruthy();
   expect(button.getAttribute('aria-label')).toEqual('More options');
@@ -155,7 +168,7 @@ it('renders translatedStrings correctly', () => {
   );
 
   const button = container.querySelector(
-    '.iui-right > .iui-button.iui-borderless:last-child',
+    '.iui-page-header-right > .iui-button[data-iui-variant="borderless"]:last-child',
   ) as HTMLButtonElement;
   expect(button).toBeTruthy();
   expect(button.getAttribute('aria-label')).toEqual('MockOptions');
@@ -165,19 +178,25 @@ it('renders multiple right items in the correct order', () => {
   const { container } = render(
     <Header
       appLogo={<div>AppTitle</div>}
-      actions={[<div key='1'>ActionsContent</div>]}
-      userIcon={<div>UserIconContent</div>}
+      actions={[
+        <div key='1'>ActionsContent</div>,
+        <div key='2'>AvatarContent</div>,
+      ]}
       menuItems={() => []}
     />,
   );
-  const actions = container.querySelector('.iui-right > :first-child');
+  const actions = container.querySelector(
+    '.iui-page-header-right > :first-child',
+  );
   expect(actions).toBeTruthy();
   expect(actions?.textContent).toEqual('ActionsContent');
-  const userIcon = container.querySelector('.iui-right > :nth-child(2)');
-  expect(userIcon).toBeTruthy();
-  expect(userIcon?.textContent).toEqual('UserIconContent');
+  const avatar = container.querySelector(
+    '.iui-page-header-right > :nth-child(2)',
+  );
+  expect(avatar).toBeTruthy();
+  expect(avatar?.textContent).toEqual('AvatarContent');
   const moreMenu = container.querySelector(
-    '.iui-right > .iui-button.iui-borderless:last-child',
+    '.iui-page-header-right > .iui-button[data-iui-variant="borderless"]:last-child',
   ) as HTMLButtonElement;
   expect(moreMenu).toBeTruthy();
 });

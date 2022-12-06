@@ -11,33 +11,33 @@ export const lightTheme = create({
   brandTitle: 'iTwinUI',
   brandImage: itwinImage,
 
-  colorPrimary: '#008BE1',
-  colorSecondary: '#008BE1',
+  colorPrimary: '#0071B8', // --iui-color-background-accent
+  colorSecondary: '#0071B8', // --iui-color-background-accent
 
   // UI
-  appBg: '#EEF0F3',
-  appContentBg: '#F8F9FB',
-  appBorderColor: '#C7CCD1',
+  appBg: '#FFFFFF', // --iui-color-background
+  appContentBg: '#FFFFFF', // --iui-color-background
+  appBorderColor: '#b3bcc1', // --iui-color-border
   appBorderRadius: 9,
 
   // Typography
   fontBase:
-    '"Open Sans", BlinkMacSystemFont, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, system-ui, sans-serif',
+    '"Noto Sans", "Open Sans", BlinkMacSystemFont, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, system-ui, sans-serif',
   fontCode:
-    '"SF Mono", SFMono-Regular, ui-monospace, "DejaVu Sans Mono", Menlo, Consolas, monospace',
+    '"Noto Sans Mono", ui-monospace, "SF Mono", SFMono-Regular, "DejaVu Sans Mono", Menlo, Consolas, monospace',
 
   // Text colors
-  textColor: 'rgba(000,000,000,0.8)',
+  textColor: '#242424', //--iui-color-text
 
   // Toolbar default and active colors
-  barTextColor: 'rgba(000,000,000,0.8)',
-  barSelectedColor: '#008BE1',
-  barBg: '#F8F9FB',
+  barTextColor: '#242424', //--iui-color-text
+  barSelectedColor: '#0071B8', // --iui-color-background-accent
+  barBg: '#FFFFFF', // --iui-color-background
 
   // Form colors
-  inputBg: '#FFFFFF',
-  inputBorder: 'rgba(000,000,000,0.4)',
-  inputTextColor: 'rgba(000,000,000,0.8)',
+  inputBg: '#FFFFFF', // --iui-color-background
+  inputBorder: '#b3bcc1', // --iui-color-border
+  inputTextColor: '#242424', //--iui-color-text
   inputBorderRadius: 3,
 });
 
@@ -46,32 +46,32 @@ export const darkTheme = create({
   brandTitle: 'iTwinUI',
   brandImage: itwinImageDark,
 
-  colorPrimary: '#A5D7F5',
-  colorSecondary: '#A5D7F5',
+  colorPrimary: '#0071B8', // --iui-color-background-accent
+  colorSecondary: '#94befa', // --iui-color-text-accent
 
   // UI
-  appBg: '#2D373C',
-  appContentBg: '#5A6973', // background-1
-  appBorderColor: '#2D373C',
+  appBg: '#333c41', // --iui-color-background
+  appContentBg: '#333c41', // --iui-color-background
+  appBorderColor: '#49555d', // --iui-color-border
   appBorderRadius: 9,
 
   // Typography
   fontBase:
-    '"Open Sans", BlinkMacSystemFont, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, system-ui, sans-serif',
+    '"Noto Sans", "Open Sans", BlinkMacSystemFont, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, system-ui, sans-serif',
   fontCode:
-    '"SF Mono", SFMono-Regular, ui-monospace, "DejaVu Sans Mono", Menlo, Consolas, monospace',
+    '"Noto Sans Mono", ui-monospace, "SF Mono", SFMono-Regular, "DejaVu Sans Mono", Menlo, Consolas, monospace',
 
   // Text colors
-  textColor: 'rgba(255,255,255,0.85)',
+  textColor: '#dbdbdb', //--iui-color-text
 
   // Toolbar default and active colors
-  barTextColor: 'rgba(255,255,255,0.85)',
-  barSelectedColor: '#A5D7F5',
-  barBg: '#4F5D65',
+  barTextColor: '#dbdbdb', //--iui-color-text
+  barSelectedColor: '#94befa', // --iui-color-text-accent
+  barBg: '#333c41', // --iui-color-background
 
   // Form colors
-  inputBg: '#5A6973',
-  inputBorder: 'rgba(255,255,255,0.45)',
-  inputTextColor: 'rgba(255,255,255,0.85)',
+  inputBg: '#333c41', // --iui-color-background
+  inputBorder: '#49555d', // --iui-color-border
+  inputTextColor: '#dbdbdb', //--iui-color-text
   inputBorderRadius: 3,
 });

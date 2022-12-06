@@ -20,16 +20,11 @@ type ComboBoxMenuProps = Omit<MenuProps, 'onClick'> &
 
 const VirtualizedComboBoxMenu = React.forwardRef(
   (
-    { children, style, ...rest }: ComboBoxMenuProps,
+    { children, className, style, ...rest }: ComboBoxMenuProps,
     forwardedRef: React.Ref<HTMLUListElement>,
   ) => {
-    const {
-      minWidth,
-      id,
-      filteredOptions,
-      getMenuItem,
-      focusedIndex,
-    } = useSafeContext(ComboBoxStateContext);
+    const { minWidth, id, filteredOptions, getMenuItem, focusedIndex } =
+      useSafeContext(ComboBoxStateContext);
     const { menuRef } = useSafeContext(ComboBoxRefsContext);
 
     const virtualItemRenderer = React.useCallback(
@@ -69,7 +64,6 @@ const VirtualizedComboBoxMenu = React.forwardRef(
       () => ({
         minWidth,
         maxWidth: `min(${minWidth * 2}px, 90vw)`,
-        maxHeight: 315,
       }),
       [minWidth],
     );
@@ -86,6 +80,7 @@ const VirtualizedComboBoxMenu = React.forwardRef(
             setFocus={false}
             role='listbox'
             ref={mergeRefs(menuRef, innerProps.ref, forwardedRef)}
+            className={cx('iui-scroll', className)}
             style={innerProps.style}
           >
             {visibleChildren}
@@ -99,9 +94,8 @@ const VirtualizedComboBoxMenu = React.forwardRef(
 export const ComboBoxMenu = React.forwardRef(
   (props: ComboBoxMenuProps, forwardedRef: React.Ref<HTMLUListElement>) => {
     const { className, style, ...rest } = props;
-    const { minWidth, id, enableVirtualization } = useSafeContext(
-      ComboBoxStateContext,
-    );
+    const { minWidth, id, enableVirtualization } =
+      useSafeContext(ComboBoxStateContext);
     const { menuRef } = useSafeContext(ComboBoxRefsContext);
 
     const refs = useMergedRefs(menuRef, forwardedRef);
@@ -110,7 +104,6 @@ export const ComboBoxMenu = React.forwardRef(
       () => ({
         minWidth,
         maxWidth: `min(${minWidth * 2}px, 90vw)`,
-        maxHeight: 315,
       }),
       [minWidth],
     );

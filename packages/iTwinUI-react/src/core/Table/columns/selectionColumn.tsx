@@ -17,11 +17,8 @@ export const SELECTION_CELL_ID = 'iui-table-checkbox-selector';
  *   return rowData.name === 'Name1';
  * }, []);
  * const columns = useMemo(() => [
- *   Header: 'Table',
- *   columns: [
- *     SelectionColumn({ isDisabled: isCheckboxDisabled }),
- *     // Rest of your columns
- *    ],
+ *   SelectionColumn({ isDisabled: isCheckboxDisabled }),
+ *   // Rest of your columns
  * ], [isCheckboxDisabled]);
  */
 export const SelectionColumn = <T extends Record<string, unknown>>(
@@ -43,6 +40,7 @@ export const SelectionColumn = <T extends Record<string, unknown>>(
     cellClassName: 'iui-slot',
     Header: ({
       getToggleAllRowsSelectedProps,
+      toggleAllRowsSelected,
       rows,
       initialRows,
       state,
@@ -51,16 +49,19 @@ export const SelectionColumn = <T extends Record<string, unknown>>(
       const checked = initialRows.every(
         (row) => state.selectedRowIds[row.id] || isDisabled?.(row.original),
       );
+      const indeterminate =
+        !checked && Object.keys(state.selectedRowIds).length > 0;
       return (
         <Checkbox
           {...getToggleAllRowsSelectedProps()}
           style={{}} // Removes pointer cursor as we have it in CSS and it is also showing pointer when disabled
           title='' // Removes default title that comes from react-table
           checked={checked && !disabled}
-          indeterminate={
-            !checked && Object.keys(state.selectedRowIds).length > 0
-          }
+          indeterminate={indeterminate}
           disabled={disabled}
+          onChange={() =>
+            toggleAllRowsSelected(!rows.some((row) => row.isSelected))
+          }
         />
       );
     },

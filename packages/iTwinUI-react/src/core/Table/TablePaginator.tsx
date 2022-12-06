@@ -5,8 +5,6 @@
 import React from 'react';
 import cx from 'classnames';
 import '@itwin/itwinui-css/css/table.css';
-import SvgChevronLeft from '@itwin/itwinui-icons-react/cjs/icons/ChevronLeft';
-import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import { IconButton, Button, DropdownButton } from '../Buttons';
 import { ProgressRadial } from '../ProgressIndicators';
 import { MenuItem } from '../Menu';
@@ -16,6 +14,8 @@ import {
   useTheme,
   useOverflow,
   useContainerWidth,
+  SvgChevronLeft,
+  SvgChevronRight,
 } from '../utils';
 import { TablePaginatorRendererProps } from './Table';
 
@@ -34,6 +34,10 @@ const defaultLocalization = {
   nextPage: 'Next page',
   goToPageLabel: (page: number) => `Go to page ${page}`,
   rowsPerPageLabel: 'Rows per page',
+  rowsSelectedLabel: (totalSelectedRowsCount: number) =>
+    `${totalSelectedRowsCount} ${
+      totalSelectedRowsCount === 1 ? 'row' : 'rows'
+    } selected`,
 } as const;
 
 export type TablePaginatorProps = {
@@ -95,6 +99,12 @@ export type TablePaginatorProps = {
      * @default 'Rows per page'
      */
     rowsPerPageLabel?: string | null;
+    /**
+     * Function that returns a label shown in the bottom left to notify how many rows are selected.
+     * Only used if multi-selection mode is enabled.
+     * @default (totalSelectedRowsCount: number) => `${totalSelectedRowsCount} ${totalSelectedRowsCount === 1 ? 'row' : 'rows'} selected`;
+     */
+    rowsSelectedLabel?: (totalSelectedRowsCount: number) => string;
   };
 } & TablePaginatorRendererProps &
   Omit<CommonProps, 'title'>;
@@ -114,6 +124,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
     totalRowsCount,
     pageSize,
     onPageChange,
+    totalSelectedRowsCount = 0,
     focusActivationMode = 'manual',
     isLoading = false,
     size = 'default',
@@ -145,8 +156,9 @@ export const TablePaginator = (props: TablePaginatorProps) => {
     // Checking `needFocus.current` prevents from focusing page when clicked on previous/next page.
     if (isMounted.current && needFocus.current) {
       const buttonToFocus = Array.from(
-        pageListRef.current?.querySelectorAll('.iui-paginator-page-button') ??
-          [],
+        pageListRef.current?.querySelectorAll(
+          '.iui-table-paginator-page-button',
+        ) ?? [],
       ).find((el) => el.textContent?.trim() === (focusedIndex + 1).toString());
       (buttonToFocus as HTMLButtonElement | undefined)?.focus();
       needFocus.current = false;
@@ -160,10 +172,10 @@ export const TablePaginator = (props: TablePaginatorProps) => {
     (index: number, tabIndex = index === focusedIndex ? 0 : -1) => (
       <button
         key={index}
-        className={cx('iui-paginator-page-button', {
-          'iui-active': index === currentPage,
-          'iui-paginator-page-button-small': buttonSize === 'small',
+        className={cx('iui-table-paginator-page-button', {
+          'iui-table-paginator-page-button-small': buttonSize === 'small',
         })}
+        data-iui-active={index === currentPage}
         onClick={() => onPageChange(index)}
         aria-current={index === currentPage}
         aria-label={localization.goToPageLabel(index + 1)}
@@ -251,8 +263,8 @@ export const TablePaginator = (props: TablePaginatorProps) => {
 
   const ellipsis = (
     <span
-      className={cx('iui-paginator-ellipsis', {
-        'iui-paginator-ellipsis-small': size === 'small',
+      className={cx('iui-table-paginator-ellipsis', {
+        'iui-table-paginator-ellipsis-small': size === 'small',
       })}
     >
       …
@@ -277,11 +289,15 @@ export const TablePaginator = (props: TablePaginatorProps) => {
 
   return (
     <div
-      className={cx('iui-paginator', className)}
+      className={cx('iui-table-paginator', className)}
       ref={paginatorResizeRef}
       {...rest}
     >
-      <div className='iui-left' />
+      <div className='iui-left'>
+        {totalSelectedRowsCount > 0 && (
+          <span>{localization.rowsSelectedLabel(totalSelectedRowsCount)}</span>
+        )}
+      </div>
       {showPagesList && (
         <div className='iui-center' ref={overflowRef}>
           <IconButton
@@ -294,7 +310,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
             <SvgChevronLeft />
           </IconButton>
           <span
-            className='iui-paginator-pages-group'
+            className='iui-table-paginator-pages-group'
             onKeyDown={onKeyDown}
             ref={pageListRef}
           >
@@ -346,7 +362,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
           <>
             {localization.rowsPerPageLabel !== null &&
               paginatorWidth >= 1024 && (
-                <span className='iui-paginator-page-size-label'>
+                <span className='iui-table-paginator-page-size-label'>
                   {localization.rowsPerPageLabel}
                 </span>
               )}

@@ -37,9 +37,8 @@ type ButtonOwnProps = {
   children?: React.ReactNode;
 };
 
-export type ButtonProps<
-  T extends React.ElementType = 'button'
-> = PolymorphicComponentProps<T, ButtonOwnProps>;
+export type ButtonProps<T extends React.ElementType = 'button'> =
+  PolymorphicComponentProps<T, ButtonOwnProps>;
 
 type ButtonComponent = PolymorphicForwardRefComponent<'button', ButtonOwnProps>;
 
@@ -71,29 +70,26 @@ export const Button: ButtonComponent = React.forwardRef((props, ref) => {
   return (
     <Element
       ref={ref}
-      className={cx(
-        'iui-button',
-        `iui-${styleType}`,
-        {
-          [`iui-${size}`]: !!size,
-        },
-        className,
-      )}
+      className={cx('iui-button', className)}
+      data-iui-variant={styleType !== 'default' ? styleType : undefined}
+      data-iui-size={size}
       style={style}
       type={type}
       {...rest}
     >
-      {startIcon &&
-        React.cloneElement(startIcon, {
-          className: cx('iui-button-icon', startIcon.props.className),
-        })}
+      {startIcon && (
+        <span className='iui-button-icon' aria-hidden>
+          {startIcon}
+        </span>
+      )}
 
-      {children && <span className='iui-button-label'>{children}</span>}
+      {children && <span>{children}</span>}
 
-      {endIcon &&
-        React.cloneElement(endIcon, {
-          className: cx('iui-button-icon', endIcon.props.className),
-        })}
+      {endIcon && (
+        <span className='iui-button-icon' aria-hidden>
+          {endIcon}
+        </span>
+      )}
     </Element>
   );
 });

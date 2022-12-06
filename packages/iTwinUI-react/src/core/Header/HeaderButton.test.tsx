@@ -4,9 +4,11 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import { render } from '@testing-library/react';
-import SvgPlaceholder from '@itwin/itwinui-icons-react/cjs/icons/Placeholder';
-import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
-import SvgCaretUpSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretUpSmall';
+import {
+  SvgMore as SvgPlaceholder,
+  SvgCaretDownSmall,
+  SvgCaretUpSmall,
+} from '../utils';
 
 import HeaderButton from './HeaderButton';
 import { MenuItem } from '../Menu';
@@ -14,20 +16,16 @@ import userEvent from '@testing-library/user-event';
 
 it('should render in its most basic state', () => {
   const { container } = render(<HeaderButton name='MockName' />);
-  expect(
-    container.querySelector('.iui-button-label > :first-child'),
-  ).toBeTruthy();
+  expect(container.querySelector('span > :first-child')).toBeTruthy();
 });
 
 it('should render default button correctly', () => {
   const { container } = render(<HeaderButton name={<div>MockName</div>} />);
 
-  const root = container.querySelector(
-    '.iui-header-button:not(.iui-dropdown).iui-borderless',
-  );
+  const root = container.querySelector('.iui-header-breadcrumb-button');
   expect(root).toBeTruthy();
 
-  const name = container.querySelector('.iui-button-label > div:only-child');
+  const name = container.querySelector('span > div:only-child');
   expect(name).toBeTruthy();
   expect(name?.textContent).toEqual('MockName');
 });
@@ -37,12 +35,12 @@ it('should render description correctly', () => {
     <HeaderButton name='MockName' description='MockDescription' />,
   );
 
-  const name = container.querySelector('.iui-button-label > :first-child');
+  const name = container.querySelector('span > :first-child');
   expect(name).toBeTruthy();
   expect(name?.textContent).toEqual('MockName');
 
   const description = container.querySelector(
-    '.iui-button-label > .iui-description:last-child',
+    'span > .iui-header-breadcrumb-button-text-sublabel:last-child',
   );
   expect(description).toBeTruthy();
   expect(description?.textContent).toEqual('MockDescription');
@@ -53,7 +51,7 @@ it('should render isActive correctly', () => {
     <HeaderButton name='MockName' isActive={true} />,
   );
 
-  const activeButton = container.querySelector('.iui-header-button.iui-active');
+  const activeButton = container.querySelector('.iui-header-breadcrumb-item');
   expect(activeButton).toBeTruthy();
   expect(activeButton?.getAttribute('aria-current')).toEqual('location');
 });
@@ -87,11 +85,13 @@ it('should render split button correctly', async () => {
   );
 
   const splitButton = container.querySelector(
-    '.iui-header-split-button',
+    '.iui-header-breadcrumb-button-wrapper',
   ) as HTMLButtonElement;
   expect(splitButton).toBeTruthy();
 
-  const innerButtons = splitButton.querySelectorAll('.iui-borderless');
+  const innerButtons = splitButton.querySelectorAll(
+    '.iui-header-breadcrumb-button',
+  );
   expect(innerButtons.length).toBe(2);
 
   await userEvent.click(innerButtons[0] as HTMLButtonElement);
@@ -100,7 +100,7 @@ it('should render split button correctly', async () => {
   await userEvent.click(innerButtons[1] as HTMLButtonElement);
   const menu = document.querySelector('.iui-menu') as HTMLUListElement;
   expect(menu).toBeTruthy();
-  expect(document.querySelectorAll('li')).toHaveLength(3);
+  expect(menu.querySelectorAll('li')).toHaveLength(3);
   const menuItem = menu.querySelector('li') as HTMLLIElement;
   expect(menuItem).toBeTruthy();
   await userEvent.click(menuItem);
@@ -114,10 +114,8 @@ it('should render startIcon correctly', () => {
 
   const {
     container: { firstChild: placeholderIcon },
-  } = render(
-    <SvgPlaceholder className='iui-button-icon iui-header-button-icon' />,
-  );
-  expect(container.querySelector('.iui-header-button-icon')).toEqual(
+  } = render(<SvgPlaceholder className='iui-header-breadcrumb-button-icon' />);
+  expect(container.querySelector('.iui-header-breadcrumb-button-icon')).toEqual(
     placeholderIcon,
   );
 });
@@ -150,16 +148,23 @@ it('should render menuItems correctly', async () => {
   );
 
   const button = container.querySelector(
-    '.iui-header-dropdown-button',
+    '.iui-header-breadcrumb-button',
   ) as HTMLButtonElement;
   expect(button).toBeTruthy();
 
   const {
     container: { firstChild: downArrow },
-  } = render(<SvgCaretDownSmall className='iui-button-icon' aria-hidden />);
-  expect(container.querySelector('.iui-button-icon:last-child')).toEqual(
-    downArrow,
+  } = render(
+    <SvgCaretDownSmall
+      className='iui-header-breadcrumb-button-dropdown-icon'
+      aria-hidden
+    />,
   );
+  expect(
+    container.querySelector(
+      '.iui-header-breadcrumb-button-dropdown-icon:last-child',
+    ),
+  ).toEqual(downArrow);
 
   let menu = document.querySelector('.iui-menu') as HTMLUListElement;
   expect(menu).toBeFalsy();
@@ -168,10 +173,17 @@ it('should render menuItems correctly', async () => {
 
   const {
     container: { firstChild: upArrow },
-  } = render(<SvgCaretUpSmall className='iui-button-icon' aria-hidden />);
-  expect(container.querySelector('.iui-button-icon:last-child')).toEqual(
-    upArrow,
+  } = render(
+    <SvgCaretUpSmall
+      className='iui-header-breadcrumb-button-dropdown-icon'
+      aria-hidden
+    />,
   );
+  expect(
+    container.querySelector(
+      '.iui-header-breadcrumb-button-dropdown-icon:last-child',
+    ),
+  ).toEqual(upArrow);
 
   const tippy = document.querySelector('[data-tippy-root]') as HTMLElement;
   expect(tippy.style.visibility).toEqual('visible');
@@ -179,7 +191,7 @@ it('should render menuItems correctly', async () => {
   menu = document.querySelector('.iui-menu') as HTMLUListElement;
   expect(menu).toBeTruthy();
 
-  expect(document.querySelectorAll('li')).toHaveLength(3);
+  expect(menu.querySelectorAll('li')).toHaveLength(3);
 
   const menuItem = menu.querySelector('li') as HTMLLIElement;
   expect(menuItem).toBeTruthy();
@@ -187,9 +199,11 @@ it('should render menuItems correctly', async () => {
 
   expect(tippy).not.toBeVisible();
 
-  expect(container.querySelector('.iui-button-icon:last-child')).toEqual(
-    downArrow,
-  );
+  expect(
+    container.querySelector(
+      '.iui-header-breadcrumb-button-dropdown-icon:last-child',
+    ),
+  ).toEqual(downArrow);
 
   expect(itemOneOnClick).toHaveBeenCalled();
 });
@@ -200,7 +214,7 @@ it('should support polymorphic `as` prop', () => {
   );
 
   const anchor = container.querySelector('a') as HTMLAnchorElement;
-  expect(anchor).toHaveClass('iui-header-button');
+  expect(anchor).toHaveClass('iui-header-breadcrumb-button');
   expect(anchor).toHaveTextContent('Name');
   expect(anchor.href).toEqual('https://example.com/');
 });

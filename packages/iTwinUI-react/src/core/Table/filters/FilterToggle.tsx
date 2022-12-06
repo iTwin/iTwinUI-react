@@ -2,13 +2,17 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import SvgFilterHollow from '@itwin/itwinui-icons-react/cjs/icons/FilterHollow';
-import SvgFilter from '@itwin/itwinui-icons-react/cjs/icons/Filter';
 import React from 'react';
 import cx from 'classnames';
 import { HeaderGroup } from 'react-table';
 import '@itwin/itwinui-css/css/table.css';
-import { useTheme, Popover, StylingProps } from '../../utils';
+import {
+  useTheme,
+  Popover,
+  StylingProps,
+  SvgFilterHollow,
+  SvgFilter,
+} from '../../utils';
 import { IconButton } from '../../Buttons';
 
 export type FilterToggleProps<T extends Record<string, unknown>> = {
@@ -56,7 +60,7 @@ export const FilterToggle = <T extends Record<string, unknown>>(
           <IconButton
             styleType='borderless'
             isActive={isVisible || isColumnFiltered}
-            className={cx('iui-filter-button', className)}
+            className={cx('iui-table-filter-button', className)}
             onClick={(e) => {
               setIsVisible((v) => !v);
               // Prevents from triggering sort

@@ -16,10 +16,9 @@ import { TableCell } from './TableCell';
  */
 export const TableRow = <T extends Record<string, unknown>>(props: {
   row: Row<T>;
-  rowProps?: (
-    row: Row<T>,
-  ) => React.ComponentPropsWithRef<'div'> & {
+  rowProps?: (row: Row<T>) => React.ComponentPropsWithRef<'div'> & {
     status?: 'positive' | 'warning' | 'negative';
+    isLoading?: boolean;
   };
   isLast: boolean;
   onRowInViewport: React.MutableRefObject<((rowData: T) => void) | undefined>;
@@ -75,21 +74,22 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
   });
 
   const userRowProps = rowProps?.(row) ?? {};
-  const { status, ...restUserRowProps } = userRowProps;
+  const { status, isLoading, ...restUserRowProps } = userRowProps;
   const mergedProps = {
     ...row.getRowProps({ style: { flex: `0 0 auto`, minWidth: '100%' } }),
     ...restUserRowProps,
     ...{
       className: cx(
-        'iui-row',
+        'iui-table-row',
         {
-          'iui-selected': row.isSelected,
-          'iui-row-expanded': row.isExpanded && subComponent,
-          'iui-disabled': isDisabled,
-          [`iui-${status}`]: !!status,
+          'iui-table-row-expanded': row.isExpanded && subComponent,
+          'iui-loading': isLoading,
         },
         userRowProps?.className,
       ),
+      'aria-selected': row.isSelected || undefined,
+      'aria-disabled': isDisabled || undefined,
+      'data-iui-status': status,
     },
   };
 
@@ -122,9 +122,8 @@ export const TableRow = <T extends Record<string, unknown>>(props: {
       {subComponent && (
         <WithCSSTransition in={row.isExpanded}>
           <div
-            className={cx('iui-row', 'iui-expanded-content', {
-              'iui-disabled': isDisabled,
-            })}
+            className={cx('iui-table-row', 'iui-table-expanded-content')}
+            aria-disabled={isDisabled}
           >
             {subComponent(row)}
           </div>

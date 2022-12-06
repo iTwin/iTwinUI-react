@@ -8,11 +8,31 @@ import {
   useTheme,
   useMergedRefs,
   getBoundedValue,
-  getWindow,
   useContainerWidth,
+  useIsomorphicLayoutEffect,
 } from '../utils';
 import '@itwin/itwinui-css/css/tabs.css';
 import { Tab } from './Tab';
+
+type TabsOrientationProps =
+  | {
+      /**
+       * Orientation of the tabs.
+       * @default 'horizontal'
+       */
+      orientation?: 'horizontal';
+      /**
+       * Type of the tabs.
+       *
+       * If `orientation = 'vertical'`, `pill` is not applicable.
+       * @default 'default'
+       */
+      type?: 'default' | 'borderless' | 'pill';
+    }
+  | {
+      orientation: 'vertical';
+      type?: 'default' | 'borderless';
+    };
 
 export type TabsProps = {
   /**
@@ -40,16 +60,6 @@ export type TabsProps = {
    */
   color?: 'blue' | 'green';
   /**
-   * Type of the tabs.
-   * @default 'default'
-   */
-  type?: 'default' | 'borderless' | 'pill';
-  /**
-   * Orientation of the tabs.
-   * @default 'horizontal'
-   */
-  orientation?: 'horizontal' | 'vertical';
-  /**
    * Custom CSS class name for tabs.
    */
   tabsClassName?: string;
@@ -65,9 +75,16 @@ export type TabsProps = {
    * Content inside the tab panel.
    */
   children?: React.ReactNode;
-};
+} & TabsOrientationProps;
 
+/**
+ * @deprecated Since v2, use `TabProps` with `Tabs`
+ */
 export type HorizontalTabsProps = Omit<TabsProps, 'orientation'>;
+
+/**
+ * @deprecated Since v2, use `TabProps` with `Tabs`
+ */
 export type VerticalTabsProps = Omit<TabsProps, 'orientation' | 'type'> & {
   type?: 'default' | 'borderless';
 };
@@ -81,6 +98,9 @@ export type VerticalTabsProps = Omit<TabsProps, 'orientation' | 'type'> & {
  *   <Tab label='Label 3' />,
  * ];
  * <Tabs labels={tabs} />
+ *
+ * @example
+ * <Tabs orientation='vertical' labels={tabs} />
  *
  * @example
  * const tabsWithSublabels = [
@@ -123,7 +143,7 @@ export const Tabs = (props: TabsProps) => {
       ? getBoundedValue(activeIndex, 0, labels.length - 1)
       : 0,
   );
-  React.useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (activeIndex != null && currentActiveIndex !== activeIndex) {
       setCurrentActiveIndex(getBoundedValue(activeIndex, 0, labels.length - 1));
     }
@@ -131,7 +151,7 @@ export const Tabs = (props: TabsProps) => {
 
   // CSS custom properties to place the active stripe
   const [stripeProperties, setStripeProperties] = React.useState({});
-  React.useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (type !== 'default' && tablistRef.current != undefined) {
       const activeTab = tablistRef.current.children[
         currentActiveIndex
@@ -160,7 +180,7 @@ export const Tabs = (props: TabsProps) => {
   }, [focusedIndex]);
 
   const [hasSublabel, setHasSublabel] = React.useState(false); // used for setting size
-  React.useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     setHasSublabel(
       type !== 'pill' && // pill tabs should never have sublabels
         !!tablistRef.current?.querySelector('.iui-tab-description'), // check directly for the sublabel class
@@ -239,8 +259,6 @@ export const Tabs = (props: TabsProps) => {
     }
   };
 
-  const isIE = !getWindow()?.CSS?.supports?.('--stripe-width', '100px');
-
   return (
     <div
       className={cx('iui-tabs-wrapper', `iui-${orientation}`, wrapperClassName)}
@@ -252,8 +270,7 @@ export const Tabs = (props: TabsProps) => {
           `iui-${type}`,
           {
             'iui-green': color === 'green',
-            'iui-animated': type !== 'default' && !isIE,
-            'iui-not-animated': isIE,
+            'iui-animated': type !== 'default',
             'iui-large': hasSublabel,
           },
           tabsClassName,
@@ -310,6 +327,8 @@ export const Tabs = (props: TabsProps) => {
 };
 
 /**
+ * @deprecated Since v2, directly use `Tabs` with `orientation: 'horizontal'`
+ *
  * Tabs organize and allow navigation between groups of content that are related and at the same level of hierarchy.
  * @example
  * const tabs = [
@@ -324,12 +343,14 @@ export const HorizontalTabs = (props: HorizontalTabsProps) => (
 );
 
 /**
+ * @deprecated Since v2, directly use `Tabs` with `orientation: 'vertical'`
+ *
  * Tabs organize and allow navigation between groups of content that are related and at the same level of hierarchy.
  * @example
  * const tabs = [
  *   <Tab label='Label 1' sublabel='First tab' />,
  *   <Tab label='Label 2' sublabel='Active tab' />,
- *   <Tab label='Label 3'  sublabel='Disabled tab' disabled icon={<SvgPlaceholder />} />,
+ *   <Tab label='Label 3' sublabel='Disabled tab' disabled icon={<SvgPlaceholder />} />,
  * ];
  * <VerticalTabs labels={tabs} activeIndex={1}>Tabpanel content</VerticalTabs>
  */

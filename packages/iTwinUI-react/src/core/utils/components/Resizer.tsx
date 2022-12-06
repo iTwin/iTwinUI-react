@@ -16,6 +16,11 @@ export type ResizerProps = {
    */
   containerRef?: React.RefObject<HTMLElement>;
   /**
+   * Callback that is being called on resize start.
+   * Useful to set state, style, or other properties when resizing is started.
+   */
+  onResizeStart?: () => void;
+  /**
    * Callback that is being called on resize end.
    * Useful to preserve state if element is being closed.
    */
@@ -35,7 +40,9 @@ export type ResizerProps = {
  * );
  */
 export const Resizer = (props: ResizerProps) => {
-  const { elementRef, containerRef, onResizeEnd } = props;
+  const { elementRef, containerRef, onResizeStart, onResizeEnd } = props;
+
+  const isResizing = React.useRef(false);
 
   const onResizePointerDown = (event: React.PointerEvent<HTMLElement>) => {
     if (!elementRef.current || event.button !== 0) {
@@ -48,10 +55,8 @@ export const Resizer = (props: ResizerProps) => {
     const [initialTranslateX, initialTranslateY] = getTranslateValues(
       elementRef.current,
     );
-    const {
-      width: initialWidth,
-      height: initialHeight,
-    } = elementRef.current.getBoundingClientRect();
+    const { width: initialWidth, height: initialHeight } =
+      elementRef.current.getBoundingClientRect();
 
     let width = `${initialWidth}px`;
     let height = `${initialHeight}px`;
@@ -72,6 +77,11 @@ export const Resizer = (props: ResizerProps) => {
     const onResizePointerMove = (event: PointerEvent) => {
       if (!elementRef.current) {
         return;
+      }
+
+      if (!isResizing.current) {
+        isResizing.current = true;
+        onResizeStart?.();
       }
 
       const containerRect = containerRef?.current?.getBoundingClientRect();
@@ -181,7 +191,9 @@ export const Resizer = (props: ResizerProps) => {
       () => {
         document.removeEventListener('pointermove', onResizePointerMove);
         if (elementRef.current) {
-          elementRef.current.ownerDocument.body.style.userSelect = originalUserSelect;
+          elementRef.current.ownerDocument.body.style.userSelect =
+            originalUserSelect;
+          isResizing.current = false;
           onResizeEnd?.({
             width,
             height,

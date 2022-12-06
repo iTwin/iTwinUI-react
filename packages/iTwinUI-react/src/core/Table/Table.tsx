@@ -25,10 +25,15 @@ import {
   useGlobalFilter,
 } from 'react-table';
 import { ProgressRadial } from '../ProgressIndicators';
-import { useTheme, CommonProps, useResizeObserver } from '../utils';
+import {
+  useTheme,
+  CommonProps,
+  useResizeObserver,
+  SvgSortDown,
+  SvgSortUp,
+  useIsomorphicLayoutEffect,
+} from '../utils';
 import '@itwin/itwinui-css/css/table.css';
-import SvgSortDown from '@itwin/itwinui-icons-react/cjs/icons/SortDown';
-import SvgSortUp from '@itwin/itwinui-icons-react/cjs/icons/SortUp';
 import { getCellStyle, getStickyStyle } from './utils';
 import { TableRowMemoized } from './TableRowMemoized';
 import { FilterToggle, TableFilterValue } from './filters';
@@ -91,6 +96,10 @@ export type TablePaginatorRendererProps = {
    * @default false
    */
   isLoading?: boolean;
+  /**
+   * Total number of rows selected (for mutli-selection mode only)
+   */
+  totalSelectedRowsCount?: number;
 };
 
 /**
@@ -98,7 +107,7 @@ export type TablePaginatorRendererProps = {
  * columns and data must be memoized.
  */
 export type TableProps<
-  T extends Record<string, unknown> = Record<string, unknown>
+  T extends Record<string, unknown> = Record<string, unknown>,
 > = Omit<TableOptions<T>, 'disableSortBy'> & {
   /**
    * Flag whether data is loading.
@@ -145,12 +154,10 @@ export type TableProps<
   onSort?: (state: TableState<T>) => void;
   /**
    * Callback function when scroll reaches bottom. Can be used for lazy-loading the data.
-   * If you want to use it in older browsers e.g. IE, then you need to have IntersectionObserver polyfill.
    */
   onBottomReached?: () => void;
   /**
    * Callback function when row is in viewport.
-   * If you want to use it in older browsers e.g. IE, then you need to have IntersectionObserver polyfill.
    */
   onRowInViewport?: (rowData: T) => void;
   /**
@@ -200,10 +207,9 @@ export type TableProps<
    * Function that should return custom props passed to the each row.
    * Must be memoized.
    */
-  rowProps?: (
-    row: Row<T>,
-  ) => React.ComponentPropsWithRef<'div'> & {
+  rowProps?: (row: Row<T>) => React.ComponentPropsWithRef<'div'> & {
     status?: 'positive' | 'warning' | 'negative';
+    isLoading?: boolean;
   };
   /**
    * Modify the density of the table (adjusts the row height).
@@ -233,8 +239,6 @@ export type TableProps<
   /**
    * Flag whether columns are resizable.
    * In order to disable resizing for specific column, set `disableResizing: true` for that column.
-   *
-   * If you want to use it in older browsers e.g. IE, then you need to have `ResizeObserver` polyfill.
    * @default false
    */
   isResizable?: boolean;
@@ -284,11 +288,10 @@ export type TableProps<
 } & Omit<CommonProps, 'title'>;
 
 // Original type for some reason is missing sub-columns
-type ColumnType<
-  T extends Record<string, unknown> = Record<string, unknown>
-> = Column<T> & {
-  columns: ColumnType[];
-};
+type ColumnType<T extends Record<string, unknown> = Record<string, unknown>> =
+  Column<T> & {
+    columns: ColumnType[];
+  };
 const flattenColumns = (columns: ColumnType[]): ColumnType[] => {
   const flatColumns: ColumnType[] = [];
   columns.forEach((column) => {
@@ -304,30 +307,25 @@ const flattenColumns = (columns: ColumnType[]): ColumnType[] => {
  * Table based on [react-table](https://react-table.tanstack.com/docs/api/overview).
  * @example
  * const columns = React.useMemo(() => [
- *  {
- *    Header: 'Header name',
- *    columns: [
- *      {
- *        id: 'name',
- *        Header: 'Name',
- *        accessor: 'name',
- *        width: 90,
- *      },
- *      {
- *        id: 'description',
- *        Header: 'description',
- *        accessor: 'description',
- *        maxWidth: 200,
- *      },
- *      {
- *        id: 'view',
- *        Header: 'view',
- *        Cell: () => {
- *          return <span onClick={onViewClick}>View</span>
- *        },
- *      },
- *    ],
- *  },
+ *   {
+ *     id: 'name',
+ *     Header: 'Name',
+ *     accessor: 'name',
+ *     width: 90,
+ *   },
+ *   {
+ *     id: 'description',
+ *     Header: 'description',
+ *     accessor: 'description',
+ *     maxWidth: 200,
+ *   },
+ *   {
+ *     id: 'view',
+ *     Header: 'view',
+ *     Cell: () => {
+ *       return <span onClick={onViewClick}>View</span>
+ *     },
+ *   },
  * ], [onViewClick])
  * const data = [
  *  { name: 'Name1', description: 'Description1' },
@@ -343,7 +341,7 @@ const flattenColumns = (columns: ColumnType[]): ColumnType[] => {
  * />
  */
 export const Table = <
-  T extends Record<string, unknown> = Record<string, unknown>
+  T extends Record<string, unknown> = Record<string, unknown>,
 >(
   props: TableProps<T>,
 ): JSX.Element => {
@@ -588,7 +586,6 @@ export const Table = <
     visibleColumns,
     setGlobalFilter,
   } = instance;
-
   const ariaDataAttributes = Object.entries(rest).reduce(
     (result, [key, value]) => {
       if (key.startsWith('data-') || key.startsWith('aria-')) {
@@ -667,6 +664,8 @@ export const Table = <
       isLoading,
       onPageChange: gotoPage,
       onPageSizeChange: setPageSize,
+      totalSelectedRowsCount:
+        selectionMode === 'single' ? 0 : instance.selectedFlatRows.length, // 0 when selectionMode = 'single' since totalSelectedRowCount is for multi-selection mode only
     }),
     [
       density,
@@ -676,6 +675,8 @@ export const Table = <
       setPageSize,
       state.pageIndex,
       state.pageSize,
+      instance.selectedFlatRows,
+      selectionMode,
     ],
   );
 
@@ -693,9 +694,8 @@ export const Table = <
       // Update column widths when table was resized
       flatHeaders.forEach((header) => {
         if (columnRefs.current[header.id]) {
-          header.resizeWidth = columnRefs.current[
-            header.id
-          ].getBoundingClientRect().width;
+          header.resizeWidth =
+            columnRefs.current[header.id].getBoundingClientRect().width;
         }
       });
 
@@ -711,14 +711,13 @@ export const Table = <
   const [resizeRef] = useResizeObserver(onTableResize);
 
   // Flexbox handles columns resize so we take new column widths before browser repaints.
-  React.useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (state.isTableResizing) {
       const newColumnWidths: Record<string, number> = {};
       flatHeaders.forEach((column) => {
         if (columnRefs.current[column.id]) {
-          newColumnWidths[column.id] = columnRefs.current[
-            column.id
-          ].getBoundingClientRect().width;
+          newColumnWidths[column.id] =
+            columnRefs.current[column.id].getBoundingClientRect().width;
         }
       });
       dispatch({ type: tableResizeEndAction, columnWidths: newColumnWidths });
@@ -816,48 +815,50 @@ export const Table = <
         }}
         id={id}
         {...getTableProps({
-          className: cx(
-            'iui-table',
-            { [`iui-${density}`]: density !== 'default' },
-            className,
-          ),
+          className: cx('iui-table', className),
           style: {
             minWidth: 0, // Overrides the min-width set by the react-table but when we support horizontal scroll it is not needed
             ...style,
           },
         })}
+        data-iui-size={density === 'default' ? undefined : density}
         {...ariaDataAttributes}
       >
-        <div
-          className='iui-table-header-wrapper'
-          ref={headerRef}
-          onScroll={() => {
-            if (headerRef.current && bodyRef.current) {
-              bodyRef.current.scrollLeft = headerRef.current.scrollLeft;
-              updateStickyState();
-            }
-          }}
-        >
-          <div className='iui-table-header'>
-            {headerGroups.slice(1).map((headerGroup: HeaderGroup<T>) => {
-              const headerGroupProps = headerGroup.getHeaderGroupProps({
-                className: 'iui-row',
-              });
-              return (
-                <div {...headerGroupProps} key={headerGroupProps.key}>
+        {headerGroups.map((headerGroup: HeaderGroup<T>) => {
+          // There may be a better solution for this, but for now I'm filtering out the placeholder cells using header.id
+          headerGroup.headers = headerGroup.headers.filter(
+            (header) =>
+              !header.id.includes('iui-table-checkbox-selector_placeholder') &&
+              !header.id.includes('iui-table-expander_placeholder'),
+          );
+          const headerGroupProps = headerGroup.getHeaderGroupProps({
+            className: 'iui-table-row',
+          });
+          return (
+            <div
+              className='iui-table-header-wrapper'
+              ref={headerRef}
+              onScroll={() => {
+                if (headerRef.current && bodyRef.current) {
+                  bodyRef.current.scrollLeft = headerRef.current.scrollLeft;
+                  updateStickyState();
+                }
+              }}
+              key={headerGroupProps.key}
+            >
+              <div className='iui-table-header'>
+                <div {...headerGroupProps}>
                   {headerGroup.headers.map((column, index) => {
-                    const {
-                      onClick,
-                      ...restSortProps
-                    } = column.getSortByToggleProps();
+                    const { onClick, ...restSortProps } =
+                      column.getSortByToggleProps();
                     const columnProps = column.getHeaderProps({
                       ...restSortProps,
                       className: cx(
-                        'iui-cell',
+                        'iui-table-cell',
                         {
                           'iui-actionable': column.canSort,
                           'iui-sorted': column.isSorted,
-                          'iui-cell-sticky': !!column.sticky,
+                          'iui-table-cell-sticky': !!column.sticky,
                         },
                         column.columnClassName,
                       ),
@@ -876,7 +877,8 @@ export const Table = <
                         ref={(el) => {
                           if (el) {
                             columnRefs.current[column.id] = el;
-                            column.resizeWidth = el.getBoundingClientRect().width;
+                            column.resizeWidth =
+                              el.getBoundingClientRect().width;
                           }
                         }}
                         onMouseDown={() => {
@@ -889,6 +891,12 @@ export const Table = <
                             isHeaderDirectClick.current = false;
                           }
                         }}
+                        tabIndex={showSortButton(column) ? 0 : undefined}
+                        onKeyDown={(e) => {
+                          if (e.key == 'Enter' && showSortButton(column)) {
+                            column.toggleSortBy();
+                          }
+                        }}
                       >
                         {column.render('Header')}
                         {(showFilterButton(column) ||
@@ -898,16 +906,16 @@ export const Table = <
                               <FilterToggle column={column} />
                             )}
                             {showSortButton(column) && (
-                              <div className='iui-cell-end-icon'>
+                              <div className='iui-table-cell-end-icon'>
                                 {column.isSortedDesc ||
                                 (!column.isSorted && column.sortDescFirst) ? (
                                   <SvgSortDown
-                                    className='iui-icon iui-sort'
+                                    className='iui-table-sort'
                                     aria-hidden
                                   />
                                 ) : (
                                   <SvgSortUp
-                                    className='iui-icon iui-sort'
+                                    className='iui-table-sort'
                                     aria-hidden
                                   />
                                 )}
@@ -921,31 +929,31 @@ export const Table = <
                             columnResizeMode === 'expand') && (
                             <div
                               {...column.getResizerProps()}
-                              className='iui-resizer'
+                              className='iui-table-resizer'
                             >
-                              <div className='iui-resizer-bar' />
+                              <div className='iui-table-resizer-bar' />
                             </div>
                           )}
                         {enableColumnReordering &&
                           !column.disableReordering && (
-                            <div className='iui-reorder-bar' />
+                            <div className='iui-table-reorder-bar' />
                           )}
                         {column.sticky === 'left' &&
                           state.sticky.isScrolledToRight && (
-                            <div className='iui-cell-shadow-right' />
+                            <div className='iui-table-cell-shadow-right' />
                           )}
                         {column.sticky === 'right' &&
                           state.sticky.isScrolledToLeft && (
-                            <div className='iui-cell-shadow-left' />
+                            <div className='iui-table-cell-shadow-left' />
                           )}
                       </div>
                     );
                   })}
                 </div>
-              );
-            })}
-          </div>
-        </div>
+              </div>
+            </div>
+          );
+        })}
         <div
           {...getTableBodyProps({
             className: cx('iui-table-body', {
@@ -961,6 +969,9 @@ export const Table = <
             }
           }}
           tabIndex={-1}
+          aria-multiselectable={
+            (isSelectable && selectionMode === 'multi') || undefined
+          }
         >
           {data.length !== 0 && (
             <>
@@ -981,8 +992,11 @@ export const Table = <
             </div>
           )}
           {isLoading && data.length !== 0 && (
-            <div className='iui-row'>
-              <div className='iui-cell' style={{ justifyContent: 'center' }}>
+            <div className='iui-table-row'>
+              <div
+                className='iui-table-cell'
+                style={{ justifyContent: 'center' }}
+              >
                 <ProgressRadial
                   indeterminate={true}
                   size='small'

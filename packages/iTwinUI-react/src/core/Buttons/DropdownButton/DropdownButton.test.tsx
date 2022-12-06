@@ -7,8 +7,7 @@ import { render } from '@testing-library/react';
 
 import { DropdownButton, DropdownButtonProps } from './DropdownButton';
 import { MenuItem } from '../../Menu';
-import SvgCaretDownSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretDownSmall';
-import SvgCaretUpSmall from '@itwin/itwinui-icons-react/cjs/icons/CaretUpSmall';
+import { SvgCaretDownSmall, SvgCaretUpSmall } from '../../utils';
 import userEvent from '@testing-library/user-event';
 
 function renderComponent(props?: Partial<DropdownButtonProps>) {
@@ -34,7 +33,9 @@ function renderComponent(props?: Partial<DropdownButtonProps>) {
 
 it('should render in its most basic state', () => {
   const { container } = renderComponent();
-  expect(container.querySelector('.iui-button.iui-dropdown')).toBeTruthy();
+  expect(
+    container.querySelector('.iui-button.iui-button-dropdown'),
+  ).toBeTruthy();
   expect(container.querySelector('.iui-button-icon')).toBeTruthy();
 });
 
@@ -46,17 +47,32 @@ it('should update icon when menu opens or closes', async () => {
 
   const {
     container: { firstChild: downArrow },
-  } = render(<SvgCaretDownSmall className='iui-button-icon' aria-hidden />);
-  expect(container.querySelector('.iui-button-icon')).toEqual(downArrow);
+  } = render(<SvgCaretDownSmall aria-hidden />);
+
+  let buttonIcon = container.querySelector('.iui-button-icon');
+  let svg = buttonIcon?.querySelector('svg');
+
+  expect(buttonIcon).toHaveAttribute('aria-hidden', 'true');
+  expect(svg).toEqual(downArrow);
 
   await userEvent.click(button);
   const {
     container: { firstChild: upArrow },
-  } = render(<SvgCaretUpSmall className='iui-button-icon' aria-hidden />);
-  expect(container.querySelector('.iui-button-icon')).toEqual(upArrow);
+  } = render(<SvgCaretUpSmall aria-hidden />);
+
+  buttonIcon = container.querySelector('.iui-button-icon');
+  svg = buttonIcon?.querySelector('svg');
+
+  expect(buttonIcon).toHaveAttribute('aria-hidden', 'true');
+  expect(svg).toEqual(upArrow);
 
   await userEvent.click(button);
-  expect(container.querySelector('.iui-button-icon')).toEqual(downArrow);
+
+  buttonIcon = container.querySelector('.iui-button-icon');
+  svg = buttonIcon?.querySelector('svg');
+
+  expect(buttonIcon).toHaveAttribute('aria-hidden', 'true');
+  expect(svg).toEqual(downArrow);
 });
 
 it('should work with menu items', async () => {
@@ -86,5 +102,7 @@ it('should work with menu items', async () => {
 
 it('should render borderless button correctly', () => {
   const { container } = renderComponent({ styleType: 'borderless' });
-  expect(container.querySelector('.iui-button.iui-borderless')).toBeTruthy();
+  const button = container.querySelector('.iui-button') as HTMLButtonElement;
+  expect(button).toBeTruthy();
+  expect(button).toHaveAttribute('data-iui-variant', 'borderless');
 });
