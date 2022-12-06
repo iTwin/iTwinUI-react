@@ -48,7 +48,6 @@
   "scripts": {
     "build": "yarn clean:build && tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
     "build:watch": "concurrently \"tsc -p tsconfig.cjs.json --watch\" \"tsc -p tsconfig.esm.json --watch\"",
-    "build:types": "tsc -p tsconfig.esm.json --emitDeclarationOnly",
     "clean:build": "rimraf esm && rimraf cjs",
     "clean:coverage": "rimraf coverage",
     "clean": "rimraf .turbo && yarn clean:coverage && yarn clean:build && rimraf node_modules",
@@ -57,7 +56,7 @@
     "format": "prettier --config .prettierrc **/*.{tsx,ts,js} --ignore-path .gitignore --write",
     "lint": "eslint \"**/*.{js,ts,tsx}\" --max-warnings=0",
     "lint:fix": "yarn lint --fix && node ../configs/copyrightLinter.js --fix \"*/**/*.{js,ts,tsx}\"",
-    "dev": "yarn clean:build && node esbuild.mjs && node esbuild.mjs --cjs && yarn build:types && yarn build:watch",
+    "dev": "yarn clean:build && node esbuild.mjs && node esbuild.mjs --cjs && yarn build:watch",
     "createComponent": "node ../../scripts/createComponent.js"
   },
   "dependencies": {
