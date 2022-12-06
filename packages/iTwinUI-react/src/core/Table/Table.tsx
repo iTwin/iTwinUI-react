@@ -622,7 +622,6 @@ export const Table = <
           dispatch({
             type: shiftRowSelectedAction,
             id: row.id,
-            ctrlPressed: event.ctrlKey,
           });
         } else if (
           !row.isSelected &&
