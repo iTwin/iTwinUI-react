@@ -78,7 +78,7 @@ export type ComboboxMultipleTypeProps<T> =
   | {
       multiple: true;
       value?: T[];
-      onChange?: (value: T[], event?: MultipleOnChangeProps<T>) => void;
+      onChange?: (value: T[], event: MultipleOnChangeProps<T>) => void;
     };
 
 export type ComboBoxProps<T> = {
