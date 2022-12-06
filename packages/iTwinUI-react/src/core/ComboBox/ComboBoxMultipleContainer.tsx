@@ -6,7 +6,7 @@ import React from 'react';
 import SelectTagContainer from '../Select/SelectTagContainer';
 
 type ComboBoxMultipleContainerProps = {
-  selectedItems?: JSX.Element[];
+  selectedItems?: React.ReactNode[];
 } & Omit<React.ComponentPropsWithoutRef<'div'>, 'children'>;
 
 export const ComboBoxMultipleContainer = React.forwardRef(
