@@ -7,7 +7,7 @@ import fg from 'fast-glob';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
-const argsList = process.argv.length > 2 ? process.argv.slice(2) : [];
+const argsList = process.argv.slice(2);
 const isCjs = argsList.includes('--cjs');
 const shouldWatch = argsList.includes('--watch');
 
