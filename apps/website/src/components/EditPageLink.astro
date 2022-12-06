@@ -1,13 +1,13 @@
 ---
 import EditIcon from '~/icons/EditIcon.astro';
 
-type Props = { page: string };
-const { page } = Astro.props;
+type Props = { page: string } & astroHTML.JSX.AnchorHTMLAttributes;
+const { page, ...rest } = Astro.props;
 
 const githubEditUrl = `https://github.com/iTwin/iTwinUI-react/edit/main/apps/website/src/pages/${page}.mdx`;
 ---
 
-<a href={githubEditUrl}>
+<a href={githubEditUrl} {...rest}>
   <EditIcon aria-hidden='true' />Edit this page on GitHub
 </a>
 
