@@ -6,6 +6,7 @@ import React from 'react';
 import { ThemeContext } from '../../ThemeProvider/ThemeProvider';
 import { getDocument, getWindow } from '../functions';
 import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
+import { useIsThemeAlreadySet } from './useIsThemeAlreadySet';
 import '@itwin/itwinui-css/css/global.css';
 import '@itwin/itwinui-variables/index.css';
 
@@ -54,10 +55,10 @@ export const useTheme = (
 ) => {
   const themeContext = React.useContext(ThemeContext);
   const ownerDocument = themeOptions?.ownerDocument ?? getDocument();
+  const isThemeAlreadySet = useIsThemeAlreadySet(ownerDocument);
 
   useIsomorphicLayoutEffect(() => {
-    // exit early if theme was already set by provider or is present on <body>
-    if (themeContext || !ownerDocument || ownerDocument.body.dataset.iuiTheme) {
+    if (!ownerDocument || isThemeAlreadySet) {
       return;
     }
 
