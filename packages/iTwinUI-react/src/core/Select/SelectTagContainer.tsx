@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { useTheme, CommonProps, useOverflow, useMergedRefs } from '../utils';
+import { useTheme, useOverflow, useMergedRefs } from '../utils';
 import SelectTag from './SelectTag';
 
 export type SelectTagContainerProps = {
@@ -12,7 +12,7 @@ export type SelectTagContainerProps = {
    * Select tags.
    */
   tags: React.ReactNode[];
-} & Omit<CommonProps, 'title'>;
+} & Omit<React.ComponentPropsWithoutRef<'div'>, 'children'>;
 
 /**
  */
