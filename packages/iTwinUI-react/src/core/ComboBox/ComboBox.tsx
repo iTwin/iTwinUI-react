@@ -225,8 +225,7 @@ export const ComboBox = <T,>(props: ComboBoxProps<T>) => {
   const getSelectedIndexes = React.useCallback(() => {
     if (isMultipleEnabled(valueProp, multiple)) {
       const indexArray: number[] = [];
-      valueProp &&
-        valueProp.forEach((value) => {
+      valueProp?.forEach((value) => {
           indexArray.push(
             options.findIndex((option) => option.value === value),
           );
