@@ -144,7 +144,7 @@ const Root = React.forwardRef((props, forwardedRef) => {
     <Element
       className={cx(
         'iui-root',
-        { 'iui-root-bg': shouldApplyBackground },
+        { 'iui-root-background': shouldApplyBackground },
         className,
       )}
       data-iui-theme={shouldApplyDark ? 'dark' : 'light'}
