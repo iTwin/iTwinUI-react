@@ -2,8 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import React from 'react';
-import { ThemeContext } from '../../ThemeProvider/ThemeProvider';
 import { getDocument, getWindow } from '../functions';
 import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
 import { useIsThemeAlreadySet } from './useIsThemeAlreadySet';
@@ -53,7 +51,6 @@ export const useTheme = (
   theme?: UseThemeProps['theme'],
   themeOptions?: UseThemeProps['themeOptions'],
 ) => {
-  const themeContext = React.useContext(ThemeContext);
   const ownerDocument = themeOptions?.ownerDocument ?? getDocument();
   const isThemeAlreadySet = useIsThemeAlreadySet(ownerDocument);
 
@@ -82,7 +79,7 @@ export const useTheme = (
         return;
       }
     }
-  }, [theme, themeContext, themeOptions?.highContrast, ownerDocument]);
+  }, [theme, themeOptions?.highContrast, ownerDocument]);
 };
 
 /**
