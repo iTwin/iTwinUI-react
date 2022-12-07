@@ -67,6 +67,8 @@ export const onToggleHandler = <T extends Record<string, unknown>>(
   isRowDisabled?: (rowData: T) => boolean,
 ) => {
   onSelectHandler(newState, instance, onSelect, isRowDisabled);
+
+  // Toggling a row (ctrl click or checkbox click) updates the lastSelectedRowId
   newState.lastSelectedRowId = action.id;
 };
 
