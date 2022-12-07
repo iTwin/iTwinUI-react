@@ -7,7 +7,7 @@ import { action } from '@storybook/addon-actions';
 import { Story, Meta } from '@storybook/react';
 import { Button, ButtonProps, NotificationMarker } from '@itwin/itwinui-react';
 import SvgAdd from '@itwin/itwinui-icons-react/cjs/icons/Add';
-import { SvgNotification } from '@itwin/itwinui-icons-react';
+import { SvgEmail } from '@itwin/itwinui-icons-react';
 
 export default {
   title: 'Buttons/Button',
@@ -93,8 +93,8 @@ export const WithNotification: Story<ButtonProps> = (args) => {
     <Button
       onClick={action('clicked')}
       startIcon={
-        <NotificationMarker enabled>
-          <SvgNotification />
+        <NotificationMarker status='negative'>
+          <SvgEmail />
         </NotificationMarker>
       }
       {...args}
