@@ -57,7 +57,7 @@ const onSelectHandler = <T extends Record<string, unknown>>(
 };
 
 /**
- * Handles selection when toggled row (Ctrl click or checkbox click)
+ * Handles selection when toggling a row (Ctrl click or checkbox click)
  */
 export const onToggleHandler = <T extends Record<string, unknown>>(
   newState: TableState<T>,
