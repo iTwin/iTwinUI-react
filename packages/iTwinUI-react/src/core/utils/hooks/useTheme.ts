@@ -75,14 +75,14 @@ export const useTheme = (
       case 'light':
       case 'dark':
       case 'os': {
-        cleanups.push(() =>
+        cleanups.push(
           handleTheme(theme, ownerDocument, themeOptions?.highContrast),
         );
       }
       default: {
         // set light theme by default
         if (ownerDocument.documentElement.dataset.iuiTheme == null) {
-          cleanups.push(() =>
+          cleanups.push(
             handleTheme('light', ownerDocument, themeOptions?.highContrast),
           );
         }
