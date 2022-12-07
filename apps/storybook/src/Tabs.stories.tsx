@@ -5,7 +5,8 @@
 import SvgStar from '@itwin/itwinui-icons-react/cjs/icons/Star';
 import { Meta, Story } from '@storybook/react/';
 import React from 'react';
-import { Tab, Tabs, TabsProps } from '@itwin/itwinui-react';
+import { Tab } from '@itwin/itwinui-react';
+import { Tabs, TabsProps } from '@itwin/itwinui-react/esm/core/Tabs/Tabs';
 
 export default {
   title: 'Core/Tabs',
