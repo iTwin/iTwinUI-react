@@ -59,7 +59,7 @@
     "dev": "yarn clean:build && concurrently \"yarn dev:swc\" \"yarn dev:swc:cjs\" \"yarn dev:types\"",
     "dev:swc": "swc src -d esm --ignore \"**/*.test.*\" --watch",
     "dev:swc:cjs": "swc src -d cjs --ignore \"**/*.test.*\" --watch -C module.type=commonjs",
-    "dev:types": "concurrently \"tsc -p tsconfig.cjs.json --emitDeclarationOnly --watch\" \"tsc -p tsconfig.esm.json --emitDeclarationOnly --watch\"",
+    "dev:types": "concurrently \"tsc -p tsconfig.cjs.json --emitDeclarationOnly --watch --preserveWatchOutput\" \"tsc -p tsconfig.esm.json --emitDeclarationOnly --watch --preserveWatchOutput\"",
     "createComponent": "node ../../scripts/createComponent.js"
   },
   "dependencies": {
