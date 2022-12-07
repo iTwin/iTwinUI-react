@@ -56,7 +56,10 @@
     "format": "prettier --config .prettierrc **/*.{tsx,ts,js} --ignore-path .gitignore --write",
     "lint": "eslint \"**/*.{js,ts,tsx}\" --max-warnings=0",
     "lint:fix": "yarn lint --fix && node ../configs/copyrightLinter.js --fix \"*/**/*.{js,ts,tsx}\"",
-    "dev": "yarn clean:build && node esbuild.mjs && node esbuild.mjs --cjs && yarn build:watch",
+    "dev": "yarn clean:build && concurrently \"yarn dev:swc\" \"yarn dev:swc:cjs\" \"yarn dev:types\"",
+    "dev:swc": "swc src -d esm --ignore \"**/*.test.*\" --watch",
+    "dev:swc:cjs": "swc src -d cjs --ignore \"**/*.test.*\" --watch -C module.type=commonjs",
+    "dev:types": "concurrently \"tsc -p tsconfig.cjs.json --emitDeclarationOnly --watch\" \"tsc -p tsconfig.esm.json --emitDeclarationOnly --watch\"",
     "createComponent": "node ../../scripts/createComponent.js"
   },
   "dependencies": {
@@ -72,6 +75,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
+    "@swc/cli": "^0.1.57",
+    "@swc/core": "^1.3.21",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.2.0",
     "@testing-library/user-event": "^14.1.1",
