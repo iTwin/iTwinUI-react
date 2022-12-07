@@ -138,7 +138,7 @@ const Root = React.forwardRef((props, forwardedRef) => {
   const shouldApplyHC = themeOptions?.highContrast ?? prefersHighContrast;
   const isThemeAlreadySet = useIsThemeAlreadySet(ref.current?.ownerDocument);
   const shouldApplyBackground =
-    themeOptions?.applyBackground ?? !isThemeAlreadySet;
+    themeOptions?.applyBackground ?? !isThemeAlreadySet.current;
 
   return (
     <Element
