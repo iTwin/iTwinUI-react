@@ -62,34 +62,26 @@ export const useTheme = (
       return;
     }
 
-    const originalBodyClass = ownerDocument.body.className;
     ownerDocument.body.classList.toggle('iui-root', true);
-
-    const cleanups = [
-      () => {
-        ownerDocument.body.className = originalBodyClass;
-      },
-    ];
 
     switch (theme) {
       case 'light':
       case 'dark':
       case 'os': {
-        cleanups.push(
-          handleTheme(theme, ownerDocument, themeOptions?.highContrast),
-        );
+        return handleTheme(theme, ownerDocument, themeOptions?.highContrast);
       }
       default: {
         // set light theme by default
         if (ownerDocument.documentElement.dataset.iuiTheme == null) {
-          cleanups.push(
-            handleTheme('light', ownerDocument, themeOptions?.highContrast),
+          return handleTheme(
+            'light',
+            ownerDocument,
+            themeOptions?.highContrast,
           );
         }
+        return;
       }
     }
-
-    return () => cleanups.forEach((cleanup) => cleanup());
   }, [theme, themeContext, themeOptions?.highContrast, ownerDocument]);
 };
 
