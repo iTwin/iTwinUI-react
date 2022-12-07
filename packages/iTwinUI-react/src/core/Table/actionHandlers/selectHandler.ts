@@ -121,6 +121,8 @@ export const onShiftSelectHandler = <T extends Record<string, unknown>>(
     endIndex = temp;
   }
 
+  // If ctrl + shift click, do not lose previous selection
+  // If shift click, start new selection
   const selectedRowIds: Record<string, boolean> = !!action.ctrlPressed
     ? state.selectedRowIds
     : {};
