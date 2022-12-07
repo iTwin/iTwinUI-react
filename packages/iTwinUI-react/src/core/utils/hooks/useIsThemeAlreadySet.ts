@@ -14,7 +14,9 @@ import { getDocument } from '../functions';
  */
 export const useIsThemeAlreadySet = (ownerDocument = getDocument()) => {
   const parentContext = React.useContext(ThemeContext);
-  const isThemeAlreadySet = React.useRef(!!parentContext);
+  const isThemeAlreadySet = React.useRef(
+    !!parentContext || !!ownerDocument?.body.dataset.iuiTheme,
+  );
 
   useIsomorphicLayoutEffect(() => {
     if (
