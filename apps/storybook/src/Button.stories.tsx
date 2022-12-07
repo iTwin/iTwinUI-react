@@ -5,8 +5,9 @@
 import React from 'react';
 import { action } from '@storybook/addon-actions';
 import { Story, Meta } from '@storybook/react';
-import { Button, ButtonProps } from '@itwin/itwinui-react';
+import { Button, ButtonProps, NotificationMarker } from '@itwin/itwinui-react';
 import SvgAdd from '@itwin/itwinui-icons-react/cjs/icons/Add';
+import { SvgNotification } from '@itwin/itwinui-icons-react';
 
 export default {
   title: 'Buttons/Button',
@@ -85,6 +86,27 @@ WithIcon.args = {
   children: 'New',
   styleType: 'high-visibility',
   startIcon: <SvgAdd />,
+};
+
+export const WithNotification: Story<ButtonProps> = (args) => {
+  return (
+    <Button
+      onClick={action('clicked')}
+      startIcon={
+        <NotificationMarker enabled>
+          <SvgNotification />
+        </NotificationMarker>
+      }
+      {...args}
+    >
+      {args.children}
+    </Button>
+  );
+};
+
+WithNotification.args = {
+  children: 'Inbox',
+  styleType: 'default',
 };
 
 export const AsLink: Story<ButtonProps<'a'>> = (args) => {
