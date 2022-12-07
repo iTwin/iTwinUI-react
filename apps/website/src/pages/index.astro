@@ -8,6 +8,7 @@ import AccessibleIcon from '~/icons/AccessibleIcon.astro';
 import NoFussIcon from '~/icons/NoFussIcon.astro';
 import EvolvingIcon from '~/icons/EvolvingIcon.astro';
 import ConsistentIcon from '~/icons/ConsistentIcon.astro';
+import MoreIcon from '~/icons/MoreIcon.astro';
 import NorthernLights from '~/components/NorthernLights.astro';
 import CopyCommandButton from '~/components/CopyCommandButton.astro';
 import AlertDemo from '~/demos/Alert.demo';
@@ -45,13 +46,13 @@ const currentPage = new URL(Astro.request.url).pathname;
         <div class='demo-wrapper'>
           <div class='demo-box'><AlertDemo client:only='react' /></div>
           <h3>Alert</h3>
-          <p>A small box to quickly grab user attention and communicate a brief message</p>
+          <p>A small box to quickly grab user attention and communicate a brief message.</p>
         </div>
 
         <div class='demo-wrapper'>
           <div class='demo-box'><DialogDemo client:only='react' /></div>
           <h3>Dialog</h3>
-          <p>Provides the foundation for building modals and modeless dialogs</p>
+          <p>Provides the foundation for building modals and modeless dialogs.</p>
         </div>
 
         <div class='demo-wrapper'>
@@ -70,6 +71,13 @@ const currentPage = new URL(Astro.request.url).pathname;
           <div class='demo-box'><ComboBoxDemo client:only='react' /></div>
           <h3>ComboBox</h3>
           <p>Allows typing a value to filter and choose from the options in dropdown list.</p>
+        </div>
+        <div class='demo-wrapper'>
+          <div class='demo-box demo-box-muted'>
+            <a class='discover-more' href='/docs/components'
+              >Discover more components <MoreIcon />
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -236,11 +244,15 @@ const currentPage = new URL(Astro.request.url).pathname;
     .demo-box {
       color-scheme: dark !important;
       width: 350px;
-      min-height: 350px;
+      height: 350px;
       display: flex;
       justify-content: center;
       align-items: center;
       background: var(--color-sandbox-gradient);
+    }
+    .demo-box-muted {
+      background: transparent;
+      border: 1px solid var(--color-subtext);
     }
     .colored-text {
       color: var(--color-highlight-1);
@@ -360,6 +372,15 @@ const currentPage = new URL(Astro.request.url).pathname;
       align-self: center;
       fill: var(--color-highlight-1);
       height: 96px;
+    }
+
+    .discover-more {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      width: 100%;
+      height: 100%;
     }
 
     footer {
