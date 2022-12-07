@@ -58,30 +58,38 @@ export const useTheme = (
   const isThemeAlreadySet = useIsThemeAlreadySet(ownerDocument);
 
   useIsomorphicLayoutEffect(() => {
-    if (!ownerDocument || isThemeAlreadySet) {
+    if (!ownerDocument || isThemeAlreadySet.current) {
       return;
     }
 
+    const originalBodyClass = ownerDocument.body.className;
     ownerDocument.body.classList.toggle('iui-root', true);
+
+    const cleanups = [
+      () => {
+        ownerDocument.body.className = originalBodyClass;
+      },
+    ];
 
     switch (theme) {
       case 'light':
       case 'dark':
       case 'os': {
-        return handleTheme(theme, ownerDocument, themeOptions?.highContrast);
+        cleanups.push(() =>
+          handleTheme(theme, ownerDocument, themeOptions?.highContrast),
+        );
       }
       default: {
         // set light theme by default
         if (ownerDocument.documentElement.dataset.iuiTheme == null) {
-          return handleTheme(
-            'light',
-            ownerDocument,
-            themeOptions?.highContrast,
+          cleanups.push(() =>
+            handleTheme('light', ownerDocument, themeOptions?.highContrast),
           );
         }
-        return;
       }
     }
+
+    return () => cleanups.forEach((cleanup) => cleanup());
   }, [theme, themeContext, themeOptions?.highContrast, ownerDocument]);
 };
 

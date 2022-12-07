@@ -8,19 +8,17 @@ import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
 import { getDocument } from '../functions';
 
 /**
- * Hook that returns true if one of the following is true:
- * - There is a parent `ThemeProvider` in the tree
+ * Hook that returns a boolean ref which is true if either:
+ * - There is a parent `ThemeProvider` in the tree, or
  * - The <body> element has data-iui-theme attribute or iui-root class
  */
 export const useIsThemeAlreadySet = (ownerDocument = getDocument()) => {
   const parentContext = React.useContext(ThemeContext);
-  const [isThemeAlreadySet, setIsThemeAlreadySet] = React.useState(
-    () => !!parentContext,
-  );
+  const isThemeAlreadySet = React.useRef(!!parentContext);
 
   useIsomorphicLayoutEffect(() => {
     if (parentContext) {
-      setIsThemeAlreadySet(true);
+      isThemeAlreadySet.current = true;
       return;
     }
 
@@ -29,7 +27,7 @@ export const useIsThemeAlreadySet = (ownerDocument = getDocument()) => {
       (ownerDocument.body.dataset.iuiTheme ||
         ownerDocument.body.classList.contains('iui-root'))
     ) {
-      setIsThemeAlreadySet(true);
+      isThemeAlreadySet.current = true;
     }
   }, [parentContext, ownerDocument]);
 
