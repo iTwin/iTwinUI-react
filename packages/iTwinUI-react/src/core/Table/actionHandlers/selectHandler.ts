@@ -5,7 +5,7 @@
 import { ActionType, Row, TableInstance, TableState } from 'react-table';
 
 /**
- * Handles selection when clicked on a checkbox.
+ * Handles subrow selection and validation. Selecting a row and calling this method automatically selects all the subrows that can be selected
  */
 const onSelectHandler = <T extends Record<string, unknown>>(
   newState: TableState<T>,
@@ -56,6 +56,9 @@ const onSelectHandler = <T extends Record<string, unknown>>(
   onSelect?.(selectedData, newState);
 };
 
+/**
+ * Handles selection when toggled row (Ctrl click or checkbox click)
+ */
 export const onToggleHandler = <T extends Record<string, unknown>>(
   newState: TableState<T>,
   action: ActionType,
