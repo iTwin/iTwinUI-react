@@ -1,9 +1,11 @@
 ---
+import ComponentIcon from './ComponentIcon.astro';
+
 const docsPages = (await Astro.glob('../pages/docs/*.mdx')).map(({ url, frontmatter }) => ({
   url,
   title: frontmatter.title,
   description: frontmatter.description,
-  icon: frontmatter.icon,
+  thumbnail: frontmatter.thumbnail,
   group: frontmatter.group,
 }));
 
@@ -13,39 +15,38 @@ const componentPages = docsPages.filter((page) => page.group && page.group !== '
 <main class='card-list'>
   {
     componentPages.map((page) => (
-      <div class='card' id={page.title}>
-        <a href={page.url}>
+      <a href={page.url} id={page.title} class='card'>
+        <ComponentIcon icon={page.thumbnail} />
+        <div>
           <h1>{page.title}</h1>
           <p>{page.description}</p>
-        </a>
-      </div>
+        </div>
+      </a>
     ))
   }
 </main>
 
 <style lang='scss'>
   .card-list {
-    display: flex;
-    flex-wrap: wrap;
+    --_iui-grid-item-min-width: 256px;
+    display: grid;
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(min(100%, var(--_iui-grid-item-min-width)), 1fr)
+    );
     gap: var(--space-5);
     margin-top: var(--space-5);
   }
 
   .card {
-    height: 200px;
     display: flex;
-    flex: 1 0 30%;
+    flex: 1 0 20%;
     flex-direction: column;
     gap: 0.5rem;
     background: var(--color-background-1);
-
     &:where(:hover, :focus) {
       box-shadow: 0 0 10px var(--color-highlight-1), 0 0 20px var(--color-highlight-2);
     }
-  }
-
-  .card a {
-    height: 100%;
     text-decoration: none;
     padding: var(--space-2);
   }
@@ -63,73 +64,5 @@ const componentPages = docsPages.filter((page) => page.group && page.group !== '
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
-  }
-
-  .main-color {
-    fill: #fff;
-  }
-
-  .highlight-color {
-    fill: #83a4ff;
-  }
-
-  .extra-color {
-    fill: #e1e1e1;
-  }
-
-  .opacity-background {
-    opacity: 0.1;
-  }
-
-  .opacity-light {
-    opacity: 0.2;
-  }
-
-  .opacity-light-medium {
-    opacity: 0.3;
-  }
-
-  .opacity-medium {
-    opacity: 0.4;
-  }
-
-  .opacity-heavy {
-    opacity: 0.5;
-  }
-
-  .opacity-heavier {
-    opacity: 0.6;
-  }
-
-  .stroke-line {
-    fill: none;
-    opacity: 0.4;
-    stroke: #fff;
-    stroke-linecap: round;
-    stroke-miterlimit: 10;
-    stroke-width: 3px;
-
-    &.light {
-      opacity: 0.1;
-    }
-
-    &.title-line {
-      stroke-width: 4px;
-    }
-
-    &.highlight {
-      opacity: 1;
-      stroke: #83a4ff;
-    }
-
-    &.square-cap {
-      stroke-width: 2px;
-      stroke-linecap: square;
-    }
-
-    &.symbol {
-      stroke-width: 2px;
-      stroke-linejoin: round;
-    }
   }
 </style>

@@ -1,0 +1,102 @@
+---
+import { renderJSX } from 'astro/dist/runtime/server';
+import fs from 'node:fs';
+
+export type Props = {
+  /** name of the file to read code example from, should be located in ~/examples folder */
+  icon: string;
+};
+
+const { icon } = Astro.props;
+
+// baseUrl refers to project root
+const baseUrl = import.meta.env.PROD
+  ? new URL('..', import.meta.url).href
+  : new URL('../../', import.meta.url);
+
+let code = '';
+
+if (icon) {
+  const codePath = new URL(`./src/icons/component-icons/${icon}.astro`, baseUrl);
+  code = await fs.promises.readFile(codePath, 'utf8');
+}
+
+// const componentName = icon.split('.')[0];
+// const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+---
+
+<div class='thumbnail' set:html={code} />
+
+<style lang='scss' is:global>
+  .thumbnail svg {
+    height: calc(var(--space-6) * 7);
+    width: 100%;
+  }
+  .main-color {
+    fill: #fff;
+  }
+
+  .highlight-color {
+    fill: #83a4ff;
+  }
+
+  .extra-color {
+    fill: #e1e1e1;
+  }
+
+  .opacity-background {
+    opacity: 0.1;
+  }
+
+  .opacity-light {
+    opacity: 0.2;
+  }
+
+  .opacity-light-medium {
+    opacity: 0.3;
+  }
+
+  .opacity-medium {
+    opacity: 0.4;
+  }
+
+  .opacity-heavy {
+    opacity: 0.5;
+  }
+
+  .opacity-heavier {
+    opacity: 0.6;
+  }
+
+  .stroke-line {
+    fill: none;
+    opacity: 0.4;
+    stroke: #fff;
+    stroke-linecap: round;
+    stroke-miterlimit: 10;
+    stroke-width: 3px;
+
+    &.light {
+      opacity: 0.1;
+    }
+
+    &.title-line {
+      stroke-width: 4px;
+    }
+
+    &.highlight {
+      opacity: 1;
+      stroke: #83a4ff;
+    }
+
+    &.square-cap {
+      stroke-width: 2px;
+      stroke-linecap: square;
+    }
+
+    &.symbol {
+      stroke-width: 2px;
+      stroke-linejoin: round;
+    }
+  }
+</style>
