@@ -5,8 +5,6 @@
 import React from 'react';
 import cx from 'classnames';
 import '@itwin/itwinui-css/css/table.css';
-import SvgChevronLeft from '@itwin/itwinui-icons-react/cjs/icons/ChevronLeft';
-import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
 import { IconButton, Button, DropdownButton } from '../Buttons';
 import { ProgressRadial } from '../ProgressIndicators';
 import { MenuItem } from '../Menu';
@@ -16,6 +14,8 @@ import {
   useTheme,
   useOverflow,
   useContainerWidth,
+  SvgChevronLeft,
+  SvgChevronRight,
 } from '../utils';
 import { TablePaginatorRendererProps } from './Table';
 
@@ -34,6 +34,10 @@ const defaultLocalization = {
   nextPage: 'Next page',
   goToPageLabel: (page: number) => `Go to page ${page}`,
   rowsPerPageLabel: 'Rows per page',
+  rowsSelectedLabel: (totalSelectedRowsCount: number) =>
+    `${totalSelectedRowsCount} ${
+      totalSelectedRowsCount === 1 ? 'row' : 'rows'
+    } selected`,
 } as const;
 
 export type TablePaginatorProps = {
@@ -95,6 +99,12 @@ export type TablePaginatorProps = {
      * @default 'Rows per page'
      */
     rowsPerPageLabel?: string | null;
+    /**
+     * Function that returns a label shown in the bottom left to notify how many rows are selected.
+     * Only used if multi-selection mode is enabled.
+     * @default (totalSelectedRowsCount: number) => `${totalSelectedRowsCount} ${totalSelectedRowsCount === 1 ? 'row' : 'rows'} selected`;
+     */
+    rowsSelectedLabel?: (totalSelectedRowsCount: number) => string;
   };
 } & TablePaginatorRendererProps &
   Omit<CommonProps, 'title'>;
@@ -285,11 +295,7 @@ export const TablePaginator = (props: TablePaginatorProps) => {
     >
       <div className='iui-left'>
         {totalSelectedRowsCount > 0 && (
-          <span>
-            {`${totalSelectedRowsCount} ${
-              totalSelectedRowsCount === 1 ? 'row' : 'rows'
-            } selected`}
-          </span>
+          <span>{localization.rowsSelectedLabel(totalSelectedRowsCount)}</span>
         )}
       </div>
       {showPagesList && (

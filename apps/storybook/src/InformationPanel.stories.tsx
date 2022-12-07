@@ -52,17 +52,12 @@ export const Basic: Story<InformationPanelProps> = (args) => {
 
   const columns = React.useMemo(
     () => [
+      { id: 'name', Header: 'Name', accessor: 'name' },
       {
-        Header: 'Table',
-        columns: [
-          { id: 'name', Header: 'Name', accessor: 'name' },
-          {
-            Header: 'Details',
-            Cell: ({ row: { index } }: CellProps<{ name: string }>) => (
-              <Button onClick={() => setOpenRowIndex(index)}>Details</Button>
-            ),
-          },
-        ],
+        Header: 'Details',
+        Cell: ({ row: { index } }: CellProps<{ name: string }>) => (
+          <Button onClick={() => setOpenRowIndex(index)}>Details</Button>
+        ),
       },
     ],
     [],
@@ -138,17 +133,12 @@ export const Horizontal: Story<InformationPanelProps> = (args) => {
 
   const columns = React.useMemo(
     () => [
+      { id: 'name', Header: 'Name', accessor: 'name' },
       {
-        Header: 'Table',
-        columns: [
-          { id: 'name', Header: 'Name', accessor: 'name' },
-          {
-            Header: 'Details',
-            Cell: ({ row: { index } }: CellProps<{ name: string }>) => (
-              <Button onClick={() => setOpenRowIndex(index)}>Details</Button>
-            ),
-          },
-        ],
+        Header: 'Details',
+        Cell: ({ row: { index } }: CellProps<{ name: string }>) => (
+          <Button onClick={() => setOpenRowIndex(index)}>Details</Button>
+        ),
       },
     ],
     [],
@@ -218,19 +208,12 @@ export const CustomActions: Story<InformationPanelProps> = (args) => {
 
   const columns = React.useMemo(
     () => [
+      { id: 'name', Header: 'Name', accessor: 'name' },
       {
-        Header: 'Table',
-        columns: [
-          { id: 'name', Header: 'Name', accessor: 'name' },
-          {
-            Header: 'Details',
-            Cell: ({ row }: CellProps<{ name: string; info: string }>) => (
-              <Button onClick={() => setOpenRowIndex(row.index)}>
-                Details
-              </Button>
-            ),
-          },
-        ],
+        Header: 'Details',
+        Cell: ({ row }: CellProps<{ name: string; info: string }>) => (
+          <Button onClick={() => setOpenRowIndex(row.index)}>Details</Button>
+        ),
       },
     ],
     [],
@@ -320,7 +303,7 @@ export const CustomWidth: Story<InformationPanelProps> = (args) => {
     <InformationPanelWrapper style={{ height: '80vh', width: '90%' }}>
       <div
         style={{
-          backgroundColor: 'var(--iui-color-background-4)',
+          backgroundColor: 'var(--iui-color-background-disabled)',
           padding: 16,
           height: '100%',
           boxSizing: 'border-box',

@@ -2,10 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import SvgCloseSmall from '@itwin/itwinui-icons-react/cjs/icons/CloseSmall';
 import cx from 'classnames';
 import React from 'react';
-import { CommonProps, useTheme, StatusIconMap } from '../utils';
+import { CommonProps, useTheme, StatusIconMap, SvgCloseSmall } from '../utils';
 import '@itwin/itwinui-css/css/alert.css';
 
 export type AlertProps = {
@@ -71,7 +70,9 @@ export const Alert = (props: AlertProps) => {
 
   return (
     <div
-      className={cx(`iui-alert-${type}`, { 'iui-sticky': isSticky }, className)}
+      className={cx('iui-alert', className)}
+      data-iui-status={type}
+      data-iui-variant={isSticky ? 'sticky' : undefined}
       style={style}
       {...rest}
     >

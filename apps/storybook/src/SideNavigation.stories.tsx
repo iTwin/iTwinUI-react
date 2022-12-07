@@ -21,7 +21,6 @@ import {
   Text,
   IconButton,
   Anchor,
-  NotificationMarker,
 } from '@itwin/itwinui-react';
 
 export default {
@@ -51,24 +50,10 @@ export const Basic: Story<SideNavigationProps> = (args) => {
     <SideNavigation
       {...args}
       items={[
-        <SidenavButton
-          startIcon={
-            <NotificationMarker status='negative' pulsing={true}>
-              <SvgHome />
-            </NotificationMarker>
-          }
-          key={0}
-        >
+        <SidenavButton startIcon={<SvgHome />} key={0}>
           Home
         </SidenavButton>,
-        <SidenavButton
-          startIcon={
-            <NotificationMarker status='positive'>
-              <SvgFlag />
-            </NotificationMarker>
-          }
-          key={1}
-        >
+        <SidenavButton startIcon={<SvgFlag />} key={1}>
           Issues
         </SidenavButton>,
         <SidenavButton startIcon={<SvgFolderOpened />} key={2} disabled>
@@ -76,14 +61,7 @@ export const Basic: Story<SideNavigationProps> = (args) => {
         </SidenavButton>,
       ]}
       secondaryItems={[
-        <SidenavButton
-          startIcon={
-            <NotificationMarker status='warning'>
-              <SvgSettings />
-            </NotificationMarker>
-          }
-          key={3}
-        >
+        <SidenavButton startIcon={<SvgSettings />} key={3}>
           Settings
         </SidenavButton>,
       ]}
@@ -189,7 +167,7 @@ export const Submenu: Story<SideNavigationProps> = (args) => {
       />
       <div
         style={{
-          background: 'var(--iui-color-background-5)',
+          background: 'var(--iui-color-background-disabled)',
           padding: 16,
           flexGrow: 1,
           display: 'grid',

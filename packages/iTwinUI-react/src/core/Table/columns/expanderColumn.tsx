@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import SvgChevronRight from '@itwin/itwinui-icons-react/cjs/icons/ChevronRight';
+import { SvgChevronRight } from '../../utils';
 import { CellProps, CellRendererProps, Row } from 'react-table';
 import { IconButton } from '../../Buttons';
 import { DefaultCell } from '../cells';
@@ -29,11 +29,8 @@ export const EXPANDER_CELL_ID = 'iui-table-expander';
  *   return rowData.name === 'Name2';
  * }, []);
  * const columns = useMemo(() => [
- *   Header: 'Table',
- *   columns: [
- *     ExpanderColumn({ subComponent, isDisabled: isExpanderDisabled }),
- *     // Rest of your columns
- *   ],
+ *   ExpanderColumn({ subComponent, isDisabled: isExpanderDisabled }),
+ *   // Rest of your columns
  * ], [isExpanderDisabled, subComponent]);
  */
 export const ExpanderColumn = <T extends Record<string, unknown>>(

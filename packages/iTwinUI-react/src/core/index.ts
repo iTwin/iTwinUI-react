@@ -83,12 +83,13 @@ export type {
 export { DropdownMenu } from './DropdownMenu';
 export type { DropdownMenuProps } from './DropdownMenu';
 
-export { ErrorPage } from './ErrorPage';
+export { ErrorPage, NonIdealState } from './NonIdealState';
 export type {
   ErrorPageProps,
   ErrorPageType,
   ErrorTypeTranslations,
-} from './ErrorPage';
+  NonIdealStateProps,
+} from './NonIdealState';
 
 export { ExpandableBlock } from './ExpandableBlock';
 export type { ExpandableBlockProps } from './ExpandableBlock';
@@ -167,9 +168,6 @@ export type {
   ModalButtonBarProps,
   ModalContentProps,
 } from './Modal';
-
-export { NotificationMarker } from './NotificationMarker';
-export type { NotificationMarkerProps } from './NotificationMarker';
 
 export { ProgressLinear, ProgressRadial } from './ProgressIndicators';
 export type {

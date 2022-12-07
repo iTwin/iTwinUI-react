@@ -4,20 +4,37 @@
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
 import cx from 'classnames';
-import { useTheme, useMediaQuery } from '../utils';
+import { useTheme, useMediaQuery, useMergedRefs } from '../utils';
 import type {
   PolymorphicComponentProps,
   PolymorphicForwardRefComponent,
   ThemeOptions,
   ThemeType,
-  UseThemeProps,
 } from '../utils';
 import '@itwin/itwinui-css/css/global.css';
 import '@itwin/itwinui-variables/index.css';
 
-export type ThemeProviderProps<
-  T extends React.ElementType = 'div'
-> = PolymorphicComponentProps<T, UseThemeProps>;
+export type ThemeProviderProps<T extends React.ElementType = 'div'> =
+  PolymorphicComponentProps<T, ThemeProviderOwnProps>;
+
+type ThemeProviderOwnProps = {
+  /**
+   * Theme to be applied. Can be 'light' or 'dark' or 'os'.
+   *
+   * Note that 'os' will respect the system preference on client but will fallback to 'light'
+   * in SSR environments because it is not possible detect system preference on the server.
+   * This can cause a flash of incorrect theme on first render.
+   *
+   * @default 'light'
+   */
+  theme?: ThemeType;
+} & (
+  | {
+      themeOptions?: Pick<ThemeOptions, 'highContrast'>;
+      children: Required<React.ReactNode>;
+    }
+  | { themeOptions?: ThemeOptions; children?: undefined }
+);
 
 /**
  * This component provides global styles and applies theme to the entire tree
@@ -49,6 +66,9 @@ export const ThemeProvider = React.forwardRef((props, ref) => {
     ...rest
   } = props;
 
+  const rootRef = React.useRef<HTMLElement>(null);
+  const mergedRefs = useMergedRefs(rootRef, ref);
+
   const hasChildren = React.Children.count(children) > 0;
   const parentContext = React.useContext(ThemeContext);
   const prefersDark = useMediaQuery('(prefers-color-scheme: dark)');
@@ -59,12 +79,12 @@ export const ThemeProvider = React.forwardRef((props, ref) => {
 
   // only provide context if wrapped around children
   return hasChildren ? (
-    <ThemeContext.Provider value={{ theme, themeOptions }}>
+    <ThemeContext.Provider value={{ theme, themeOptions, rootRef }}>
       <Element
         className={cx('iui-root', className)}
         data-iui-theme={shouldApplyDark ? 'dark' : 'light'}
         data-iui-contrast={shouldApplyHC ? 'high' : 'default'}
-        ref={ref}
+        ref={mergedRefs}
         {...rest}
       >
         {children}
@@ -77,7 +97,7 @@ export const ThemeProvider = React.forwardRef((props, ref) => {
       themeOptions={themeOptions ?? parentContext?.themeOptions}
     />
   );
-}) as PolymorphicForwardRefComponent<'div', UseThemeProps>;
+}) as PolymorphicForwardRefComponent<'div', ThemeProviderOwnProps>;
 
 export default ThemeProvider;
 
@@ -85,11 +105,12 @@ export const ThemeContext = React.createContext<
   | {
       theme?: ThemeType;
       themeOptions?: ThemeOptions;
+      rootRef: React.RefObject<HTMLElement>;
     }
   | undefined
 >(undefined);
 
-const ThemeLogicWrapper = ({ theme, themeOptions }: UseThemeProps) => {
+const ThemeLogicWrapper = ({ theme, themeOptions }: ThemeProviderOwnProps) => {
   useTheme(theme, themeOptions);
   return <></>;
 };
