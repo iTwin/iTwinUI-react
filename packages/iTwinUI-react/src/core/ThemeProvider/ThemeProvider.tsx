@@ -61,9 +61,11 @@ type ThemeProviderOwnProps = Pick<RootProps, 'theme'> &
  * that it is wrapping around. The `theme` prop is optional and defaults to the
  * light theme.
  *
- * If you want to theme the entire app, you should use this component at the root.
+ * If you want to theme the entire app, you should use this component at the root. You can also
+ * use this component to apply a different theme to only a part of the tree.
  *
- * You can also use this component to apply a different theme to only a part of the tree.
+ * By default, the topmost `ThemeProvider` in the tree will apply the recommended
+ * `background-color`. You can override this behavior using `themeOptions.applyBackground`.
  *
  * @example
  * <ThemeProvider theme='os'>
@@ -73,6 +75,11 @@ type ThemeProviderOwnProps = Pick<RootProps, 'theme'> &
  * @example
  * <ThemeProvider as='body'>
  *   <App />
+ * </ThemeProvider>
+ *
+ * @example
+ * <ThemeProvider theme='dark' themeOptions={{ applyBackground: false }}>
+ *  <App />
  * </ThemeProvider>
  */
 export const ThemeProvider = React.forwardRef((props, ref) => {
