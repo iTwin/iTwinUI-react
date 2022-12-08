@@ -179,6 +179,7 @@ const setFilter = async (container: HTMLElement, value: string) => {
   ) as HTMLInputElement;
   expect(filterInput).toBeVisible();
 
+  await userEvent.clear(filterInput);
   await userEvent.type(filterInput, value);
   await userEvent.click(screen.getByText('Filter'));
 
@@ -1028,6 +1029,28 @@ it('should clear filter', async () => {
       }),
     ]),
   );
+});
+
+it('should not trigger onFilter when the same filter is applied', async () => {
+  const onFilter = jest.fn();
+  const mockedColumns = [
+    {
+      id: 'name',
+      Header: 'Name',
+      accessor: 'name',
+      Filter: tableFilters.TextFilter(),
+      fieldType: 'text',
+    },
+  ];
+  const { container } = renderComponent({ columns: mockedColumns, onFilter });
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  const rows = container.querySelectorAll('.iui-table-body .iui-table-row');
+  expect(rows.length).toBe(3);
+
+  await setFilter(container, '2');
+  await setFilter(container, '2');
+  expect(onFilter).toHaveBeenCalledTimes(1);
 });
 
 it('should not filter table when manualFilters flag is on', async () => {
