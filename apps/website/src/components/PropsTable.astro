@@ -35,7 +35,7 @@ const docgenResults = componentPath.endsWith('.tsx')
     }) as DocumentationObject[])
   : docgenTsParse(componentPath);
 
-const { props } = [...docgenResults].find((docs) => docs['displayName'] === componentName);
+const { props } = [...(docgenResults || [])].find((docs) => docs['displayName'] === componentName);
 ---
 
 <div class='wrapper'>
