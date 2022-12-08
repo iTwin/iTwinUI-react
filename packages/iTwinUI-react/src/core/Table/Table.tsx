@@ -465,18 +465,13 @@ export const Table = <
           onSort?.(newState);
           break;
         case TableActions.setFilter:
-          // Check to see if filters have changed
-          const previousFilter = previousState.filters.find(
-            (f) => f.id === action.columnId,
+          currentFilter.current = onFilterHandler(
+            newState,
+            action,
+            previousState,
+            currentFilter.current,
+            instance,
           );
-          if (previousFilter?.value != action.filterValue) {
-            currentFilter.current = onFilterHandler(
-              newState,
-              action,
-              previousState,
-              instance,
-            );
-          }
           break;
         case TableActions.toggleRowExpanded:
         case TableActions.toggleAllRowsExpanded:
@@ -672,9 +667,7 @@ export const Table = <
   }, [pageSize, setPageSize]);
 
   React.useEffect(() => {
-    if (previousFilter.current === currentFilter.current) {
-      return;
-    } else {
+    if (previousFilter.current !== currentFilter.current) {
       previousFilter.current = currentFilter.current;
       onFilter?.(currentFilter.current, state, instance?.filteredRows);
     }
