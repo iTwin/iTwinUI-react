@@ -669,9 +669,9 @@ export const Table = <
   React.useEffect(() => {
     if (previousFilter.current !== currentFilter.current) {
       previousFilter.current = currentFilter.current;
-      onFilter?.(currentFilter.current, state, instance?.filteredRows);
+      onFilter?.(currentFilter.current, state, instance.filteredRows);
     }
-  }, [state, instance?.filteredRows, onFilter]);
+  }, [state, instance.filteredRows, onFilter]);
 
   const paginatorRendererProps: TablePaginatorRendererProps = React.useMemo(
     () => ({
