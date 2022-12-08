@@ -626,7 +626,7 @@ export const Table = <
           });
         } else if (
           !row.isSelected &&
-          (selectionMode === 'single' || !event.ctrlKey)
+          (selectionMode === 'single' || !(event.ctrlKey || event.metaKey))
         ) {
           dispatch({
             type: singleRowSelectedAction,
