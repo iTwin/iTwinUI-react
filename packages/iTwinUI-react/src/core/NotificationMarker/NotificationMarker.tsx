@@ -25,7 +25,8 @@ export type NotificationMarkerProps = {
   status?: 'primary' | 'positive' | 'warning' | 'negative' | 'white';
   /**
    * Adds a pulse effect to the notification.
-   * WARNING: Avoid overuse of this prop.
+   *
+   * **WARNING**: Avoid overuse of this prop.
    * @default false
    */
   pulsing?: boolean;
