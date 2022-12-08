@@ -90,23 +90,65 @@ WithIcon.args = {
 
 export const WithNotification: Story<ButtonProps> = (args) => {
   return (
-    <Button
-      onClick={action('clicked')}
-      startIcon={
-        <NotificationMarker status='negative'>
-          <SvgEmail />
-        </NotificationMarker>
-      }
-      {...args}
-    >
-      {args.children}
-    </Button>
+    <div style={{ display: 'flex', gap: '10px' }}>
+      <Button
+        onClick={action('clicked')}
+        startIcon={
+          <NotificationMarker status='white'>
+            <SvgEmail />
+          </NotificationMarker>
+        }
+        styleType='high-visibility'
+        {...args}
+      >
+        {args.children}
+      </Button>
+      <Button
+        onClick={action('clicked')}
+        startIcon={
+          <NotificationMarker status='white'>
+            <SvgEmail />
+          </NotificationMarker>
+        }
+        styleType='cta'
+        {...args}
+      >
+        {args.children}
+      </Button>
+      <Button
+        onClick={action('clicked')}
+        startIcon={
+          <NotificationMarker>
+            <SvgEmail />
+          </NotificationMarker>
+        }
+        styleType='default'
+        {...args}
+      >
+        {args.children}
+      </Button>
+      <Button
+        onClick={action('clicked')}
+        startIcon={
+          <NotificationMarker>
+            <SvgEmail />
+          </NotificationMarker>
+        }
+        styleType='borderless'
+        {...args}
+      >
+        {args.children}
+      </Button>
+    </div>
   );
 };
 
 WithNotification.args = {
   children: 'Inbox',
-  styleType: 'default',
+};
+
+WithIcon.argTypes = {
+  styleType: { control: false },
 };
 
 export const AsLink: Story<ButtonProps<'a'>> = (args) => {
