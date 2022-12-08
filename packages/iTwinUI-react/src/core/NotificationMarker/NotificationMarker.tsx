@@ -15,13 +15,14 @@ export type NotificationMarkerProps = {
   /**
    * Status of notification
    *
-   * 'primary' = blue,
-   * 'positive' = green,
-   * 'warning' = orange,
-   * 'negative' = red,
+   * - 'primary' = blue,
+   * - 'positive' = green,
+   * - 'warning' = orange,
+   * - 'negative' = red,
+   * - 'white' = white (useful for notifications in buttons with `style` = `high-visibility` | `cta`),
    * @default 'primary'
    */
-  status?: 'primary' | 'positive' | 'warning' | 'negative';
+  status?: 'primary' | 'positive' | 'warning' | 'negative' | 'white';
   /**
    * Adds a pulse effect to the notification.
    * WARNING: Avoid overuse of this prop.
