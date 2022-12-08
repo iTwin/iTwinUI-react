@@ -506,7 +506,7 @@ export const Filters: Story<Partial<TableProps>> = (args) => {
       // rowInfo is used due to JSON errors when displaying row data
       let rowInfo = '[';
       filteredData.forEach((row) => {
-        rowInfo += `{\"name\":\"${row.original.name}\",\"description\":\"${row.original.description}\"},`;
+        rowInfo += `${JSON.stringify(row.original)},`;
       });
       rowInfo = rowInfo.slice(0, rowInfo.length - 1);
       rowInfo += ']';
