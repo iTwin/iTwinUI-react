@@ -609,6 +609,8 @@ export const Table = <
   const onRowClickHandler = React.useCallback(
     (event: React.MouseEvent, row: Row<T>) => {
       const isDisabled = isRowDisabled?.(row.original);
+      const ctrlPressed = event.ctrlKey || event.metaKey;
+
       if (!isDisabled) {
         onRowClick?.(event, row);
       }
@@ -626,7 +628,7 @@ export const Table = <
           });
         } else if (
           !row.isSelected &&
-          (selectionMode === 'single' || !(event.ctrlKey || event.metaKey))
+          (selectionMode === 'single' || ctrlPressed)
         ) {
           dispatch({
             type: singleRowSelectedAction,
