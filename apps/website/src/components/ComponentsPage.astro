@@ -27,6 +27,10 @@ const componentPages = docsPages.filter((page) => page.group && page.group !== '
 </main>
 
 <style lang='scss'>
+  :root {
+    --_content-width: min(100%, 1100px);
+  }
+
   .card-list {
     --_iui-grid-item-min-width: 256px;
     display: grid;
@@ -48,21 +52,21 @@ const componentPages = docsPages.filter((page) => page.group && page.group !== '
       box-shadow: 0 0 10px var(--color-highlight-1), 0 0 20px var(--color-highlight-2);
     }
     text-decoration: none;
-    padding: var(--space-2);
-  }
+    padding: var(--space-3);
 
-  .card h1 {
-    font-size: var(--type-0);
-    color: var(--color-text);
-    margin-bottom: var(--space-1);
-  }
+    h1 {
+      font-size: var(--type-0);
+      color: var(--color-text);
+      margin-bottom: var(--space-1);
+    }
 
-  .card p {
-    font-size: var(--type--1);
-    color: var(--color-subtext);
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    p {
+      font-size: var(--type--1);
+      color: var(--color-subtext);
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
   }
 </style>

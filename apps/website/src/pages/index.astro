@@ -381,6 +381,11 @@ const currentPage = new URL(Astro.request.url).pathname;
       gap: var(--space-2);
       width: 100%;
       height: 100%;
+      transition: box-shadow var(--transition-speed) ease;
+
+      &:hover {
+        box-shadow: 0 0 5px var(--color-highlight-1), 0 0 10px var(--color-highlight-2);
+      }
     }
 
     footer {
