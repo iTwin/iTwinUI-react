@@ -596,16 +596,16 @@ export const Table = <
   React.useEffect(() => {
     // console.log('instance.state.columnOrder', instance.state.columnOrder);
     instance.setColumnOrder([]);
-    console.log('COLUMN ORDER RESET');
+    // console.log('COLUMN ORDER RESET');
   }, [columns, instance]);
 
-  console.log(
-    'headerGroups',
-    headerGroups[0].headers.map((c) => c.id),
-    columns.map((c) => c.id),
-    allColumns.map((c) => c.id),
-    instance.flatHeaders.map((c) => c.id),
-  );
+  // console.log(
+  //   'headerGroups',
+  //   headerGroups[0].headers.map((c) => c.id),
+  //   columns.map((c) => c.id),
+  //   allColumns.map((c) => c.id),
+  //   instance.flatHeaders.map((c) => c.id),
+  // );
 
   const ariaDataAttributes = Object.entries(rest).reduce(
     (result, [key, value]) => {
