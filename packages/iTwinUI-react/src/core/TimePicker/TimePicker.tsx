@@ -666,10 +666,6 @@ type VirtualizedTimePickerColumnProps<T = Date> = {
 } & ClassNameProps &
   Omit<TimePickerColumnProps<T>, 'valueRenderer'>;
 
-// const VirtualizedTimePickerColumn = <T,>(
-//   props: VirtualizedTimePickerColumnProps<T>,
-// ): JSX.Element => {
-
 const VirtualizedTimePickerColumn = <T,>(
   props: VirtualizedTimePickerColumnProps<T>,
 ): JSX.Element => {
@@ -744,15 +740,28 @@ const VirtualizedTimePickerColumn = <T,>(
     return -1;
   };
 
-  const { visibleChildren } = useVirtualization({
+  const { outerProps, innerProps, visibleChildren } = useVirtualization({
     itemsLength: data.length,
     itemRenderer: virtualizedItemRenderer,
     scrollToIndex: currentDateIndex(),
   });
 
   return (
-    <div className={className}>
-      <ol>{visibleChildren}</ol>
+    <div style={{ overflow: 'auto' }}>
+      <div
+        {...{
+          ...outerProps,
+          className: cx(className, outerProps.className),
+          style: {
+            overflow: 'hidden',
+            ...outerProps.style,
+          },
+        }}
+      >
+        <ol {...innerProps} ref={innerProps.ref}>
+          {visibleChildren}
+        </ol>
+      </div>
     </div>
   );
 };
