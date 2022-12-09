@@ -62,6 +62,7 @@ const VirtualizedComboBoxMenu = React.forwardRef(
     const surfaceStyles = {
       minWidth,
       maxWidth: `min(${minWidth * 2}px, 90vw)`,
+      // max-height must be on the outermost element for virtual scroll
       maxHeight: 'calc((var(--iui-component-height) - 1px) * 8.5)',
       overflowY: isOverflowOverlaySupported ? 'overlay' : 'auto',
       ...style,
