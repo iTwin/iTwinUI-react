@@ -56,24 +56,24 @@ const VirtualizedComboBoxMenu = React.forwardRef(
       scrollToIndex: focusedVisibleIndex,
     });
 
-    const overflowY = getWindow()?.CSS?.supports?.('overflow-x: overlay')
-      ? { overflowY: 'overlay' }
-      : { overflowY: 'auto' };
+    const isOverflowOverlaySupported =
+      getWindow()?.CSS?.supports?.('overflow: overlay');
 
-    const styles = React.useMemo(
-      () => ({
-        minWidth,
-        maxWidth: `min(${minWidth * 2}px, 90vw)`,
-      }),
-      [minWidth],
-    );
+    const surfaceStyles = {
+      minWidth,
+      maxWidth: `min(${minWidth * 2}px, 90vw)`,
+      maxHeight: 323,
+      overflowY: isOverflowOverlaySupported ? 'overlay' : 'auto',
+      ...style,
+    } as React.CSSProperties;
+
+    const menuStyles = {
+      ...innerProps.style,
+      '--iui-menu-max-height': 'unset',
+    } as React.CSSProperties;
 
     return (
-      <Surface
-        elevation={1}
-        style={{ ...styles, ...(overflowY as React.CSSProperties), ...style }}
-        {...rest}
-      >
+      <Surface style={surfaceStyles} {...rest}>
         <div {...outerProps}>
           <Menu
             id={`${id}-list`}
@@ -81,7 +81,7 @@ const VirtualizedComboBoxMenu = React.forwardRef(
             role='listbox'
             ref={mergeRefs(menuRef, innerProps.ref, forwardedRef)}
             className={cx('iui-scroll', className)}
-            style={innerProps.style}
+            style={menuStyles}
           >
             {visibleChildren}
           </Menu>
