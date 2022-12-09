@@ -16,8 +16,8 @@ const thumbnail = allThumbnails.find(({ file }) => file.endsWith(`${icon}.astro`
 <thumbnail.default class='thumbnail' />
 
 <style lang='scss' is:global>
-  .thumbnail svg {
-    height: calc(var(--space-6) * 7);
+  .thumbnail {
+    height: calc(var(--space-6) * 6);
     width: 100%;
   }
   .main-color {

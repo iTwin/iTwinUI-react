@@ -14,18 +14,24 @@ const componentPages = docsPages.filter((page) => page.group && page.group !== '
 ---
 
 <Layout content={{ title: 'Components' }}
-  ><main class='card-list'>
-    {
-      componentPages.map((page) => (
-        <a href={page.url} id={page.title} class='card'>
-          <ComponentIcon icon={page.thumbnail} />
-          <div>
-            <h1>{page.title}</h1>
-            <p>{page.description}</p>
-          </div>
-        </a>
-      ))
-    }
+  ><main>
+    <ul class='card-list'>
+      {
+        componentPages.map((page) => (
+          <li class='card'>
+            <div class='image'>
+              <ComponentIcon icon={page.thumbnail} />
+            </div>
+            <div class='text'>
+              <h2>
+                <a href={page.url}>{page.title}</a>
+              </h2>
+              <p>{page.description}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
   </main>
 </Layout>
 
@@ -43,9 +49,11 @@ const componentPages = docsPages.filter((page) => page.group && page.group !== '
     );
     gap: var(--space-5);
     margin-top: var(--space-5);
+    padding: 0;
   }
 
   .card {
+    position: relative;
     display: flex;
     flex: 1 0 20%;
     flex-direction: column;
@@ -54,22 +62,35 @@ const componentPages = docsPages.filter((page) => page.group && page.group !== '
     &:where(:hover, :focus) {
       box-shadow: 0 0 10px var(--color-highlight-1), 0 0 20px var(--color-highlight-2);
     }
-    text-decoration: none;
     padding: var(--space-3);
+  }
 
-    h1 {
-      font-size: var(--type-0);
-      color: var(--color-text);
-      margin-bottom: var(--space-1);
-    }
+  a {
+    color: var(--color-text);
+    text-decoration: none;
 
-    p {
-      font-size: var(--type--1);
-      color: var(--color-subtext);
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
     }
+  }
+
+  h2 {
+    font-size: var(--type-0);
+    color: var(--color-text);
+    margin-bottom: var(--space-1);
+  }
+
+  p {
+    font-size: var(--type--1);
+    color: var(--color-subtext);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 </style>
