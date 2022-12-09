@@ -117,11 +117,7 @@ const defaultGetDragAndDropProps =
         return;
       }
 
-      instance.setColumnOrder(() => {
-        // console.log('prev', prev);
-        // return prev;
-        return reorderColumns(columnIds, srcIndex, dstIndex);
-      });
+      instance.setColumnOrder(reorderColumns(columnIds, srcIndex, dstIndex));
       instance.dispatch({
         type: REORDER_ACTIONS.columnDragEnd,
         columnIndex: -1,

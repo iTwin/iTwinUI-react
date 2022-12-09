@@ -596,6 +596,7 @@ export const Table = <
   React.useEffect(() => {
     // console.log('instance.state.columnOrder', instance.state.columnOrder);
     instance.setColumnOrder([]);
+    // console.log('HERE');
     // console.log('COLUMN ORDER RESET');
   }, [columns, instance]);
 
