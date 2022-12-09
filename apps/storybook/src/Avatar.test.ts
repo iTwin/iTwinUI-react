@@ -17,7 +17,7 @@ describe('Avatar', () => {
       const id = Cypress.storyId(storyPath, testName);
       cy.visit('iframe', { qs: { id } });
 
-      // Hide images if present to avoid testing variations
+      // Hide images if present to avoid uncertainties in testing
       if (testName == 'With Image') {
         cy.get('img').hide();
       }

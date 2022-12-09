@@ -29,7 +29,7 @@ describe('ComboBox', () => {
         });
       }
 
-      // Hide images if present to avoid testing variations
+      // Hide images if present to avoid uncertainties in testing
       if (testName === 'Disabled') {
         cy.get('img.iui-icon').hide();
       }
