@@ -9,23 +9,11 @@ export type Props = {
 
 const { icon } = Astro.props;
 
-// baseUrl refers to project root
-const baseUrl = import.meta.env.PROD
-  ? new URL('..', import.meta.url).href
-  : new URL('../../', import.meta.url);
-
-let code = '';
-
-if (icon) {
-  const codePath = new URL(`./src/icons/component-icons/${icon}.astro`, baseUrl);
-  code = await fs.promises.readFile(codePath, 'utf8');
-}
-
-// const componentName = icon.split('.')[0];
-// const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+const allThumbnails = await Astro.glob('../icons/component-icons/*.astro');
+const thumbnail = allThumbnails.find(({ file }) => file.endsWith(`${icon}.astro`));
 ---
 
-<div class='thumbnail' set:html={code} />
+<thumbnail.default class='thumbnail' />
 
 <style lang='scss' is:global>
   .thumbnail svg {
