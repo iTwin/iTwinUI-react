@@ -24,14 +24,13 @@ export const ComboBoxMenuItem = React.memo(
         icon,
         badge,
         className,
-        role = 'menuitem',
+        role = 'option',
         index,
         ...rest
       } = props;
 
-      const { focusedIndex, enableVirtualization } = useSafeContext(
-        ComboBoxStateContext,
-      );
+      const { focusedIndex, enableVirtualization } =
+        useSafeContext(ComboBoxStateContext);
 
       const focusRef = (el: HTMLLIElement | null) => {
         if (!enableVirtualization && focusedIndex === index) {

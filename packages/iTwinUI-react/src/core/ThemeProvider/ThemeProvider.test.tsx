@@ -110,6 +110,21 @@ describe('When rendering an element (with children)', () => {
     expect(element2).toHaveClass('iui-root');
     expect(element2).toHaveAttribute('data-iui-theme', 'light');
   });
+
+  it('should apply iui-root-background to the topmost ThemeProvider', () => {
+    const { container } = render(
+      <ThemeProvider data-test='outer'>
+        Hello from the outside
+        <ThemeProvider data-test='inner'>Hello from the inside</ThemeProvider>
+      </ThemeProvider>,
+    );
+
+    const outerRoot = container.querySelector('[data-test="outer"]');
+    expect(outerRoot).toHaveClass('iui-root-background');
+
+    const innerRoot = container.querySelector('[data-test="inner"]');
+    expect(innerRoot).not.toHaveClass('iui-root-background');
+  });
 });
 
 describe('Fallback (without children)', () => {
@@ -292,5 +307,17 @@ describe('Fallback (without children)', () => {
     expect(document.documentElement.dataset.iuiTheme).toBeUndefined();
     expect(document.documentElement.dataset.iuiContrast).toBeUndefined();
     expect(document.body.classList).not.toContain('iui-root');
+  });
+
+  it('should not modify root if <body> has theme', () => {
+    render(
+      <body data-iui-theme='dark'>
+        <ThemeProvider theme='light' />
+      </body>,
+      { container: document.documentElement },
+    );
+    expect(document.documentElement.dataset.iuiTheme).toBeUndefined();
+    expect(document.documentElement.dataset.iuiContrast).toBeUndefined();
+    expect(document.body.dataset.iuiTheme).toEqual('dark');
   });
 });

@@ -5,7 +5,7 @@
 import React from 'react';
 import cx from 'classnames';
 import { CarouselContext } from './CarouselContext';
-import { getWindow, useMergedRefs } from '../utils';
+import { getWindow, useMergedRefs, useIsomorphicLayoutEffect } from '../utils';
 
 /**
  * `CarouselSlider` is the scrollable list that should consist of `CarouselSlide` components.
@@ -21,12 +21,8 @@ export const CarouselSlider = React.forwardRef<
     throw new Error('CarouselSlider must be used within Carousel');
   }
 
-  const {
-    setSlideCount,
-    idPrefix,
-    scrollToSlide,
-    isManuallyUpdating,
-  } = context;
+  const { setSlideCount, idPrefix, scrollToSlide, isManuallyUpdating } =
+    context;
 
   const items = React.useMemo(
     () =>
@@ -41,7 +37,7 @@ export const CarouselSlider = React.forwardRef<
     [children, idPrefix],
   ) as React.ReactNode[];
 
-  React.useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     setSlideCount(items.length);
   }, [items.length, setSlideCount]);
 

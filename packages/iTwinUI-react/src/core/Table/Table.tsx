@@ -31,6 +31,7 @@ import {
   useResizeObserver,
   SvgSortDown,
   SvgSortUp,
+  useIsomorphicLayoutEffect,
 } from '../utils';
 import '@itwin/itwinui-css/css/table.css';
 import { getCellStyle, getStickyStyle } from './utils';
@@ -50,7 +51,7 @@ import {
 import {
   onExpandHandler,
   onFilterHandler,
-  onSelectHandler,
+  onToggleHandler,
   onShiftSelectHandler,
   onSingleSelectHandler,
   onTableResizeEnd,
@@ -489,8 +490,9 @@ export const Table = <
         case TableActions.toggleRowSelected:
         case TableActions.toggleAllRowsSelected:
         case TableActions.toggleAllPageRowsSelected: {
-          onSelectHandler(
+          onToggleHandler(
             newState,
+            action,
             instance,
             onSelect,
             // If it has manual selection column, then we can't check whether row is disabled
@@ -608,6 +610,8 @@ export const Table = <
   const onRowClickHandler = React.useCallback(
     (event: React.MouseEvent, row: Row<T>) => {
       const isDisabled = isRowDisabled?.(row.original);
+      const ctrlPressed = event.ctrlKey || event.metaKey;
+
       if (!isDisabled) {
         onRowClick?.(event, row);
       }
@@ -621,10 +625,11 @@ export const Table = <
           dispatch({
             type: shiftRowSelectedAction,
             id: row.id,
+            ctrlPressed: ctrlPressed,
           });
         } else if (
           !row.isSelected &&
-          (selectionMode === 'single' || !event.ctrlKey)
+          (selectionMode === 'single' || !ctrlPressed)
         ) {
           dispatch({
             type: singleRowSelectedAction,
@@ -709,7 +714,7 @@ export const Table = <
   const [resizeRef] = useResizeObserver(onTableResize);
 
   // Flexbox handles columns resize so we take new column widths before browser repaints.
-  React.useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (state.isTableResizing) {
       const newColumnWidths: Record<string, number> = {};
       flatHeaders.forEach((column) => {
