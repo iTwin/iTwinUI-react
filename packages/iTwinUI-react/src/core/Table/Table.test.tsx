@@ -3330,7 +3330,7 @@ it.each([
 
     rerender(
       <Table
-        // Passing any new array (e.g. reverse of columns) to columns should reset columnOrder
+        // Passing any new columns array (e.g. reverse of columns) should reset columnOrder
         columns={mockColumnsReverse}
         data={mockedData()}
         emptyTableContent='Empty table'
@@ -3342,7 +3342,7 @@ it.each([
     );
 
     // Column order should be equal to same order as the latest passed columns (mockColumnsReverse)
-    // Since columnOrder should reset whenever a new array is passed to columns
+    // Since columnOrder should reset whenever a new columns array is passed
     container
       .querySelectorAll<HTMLDivElement>('.iui-table-header .iui-table-cell')
       .forEach((cell, index) =>
