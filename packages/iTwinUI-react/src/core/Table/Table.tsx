@@ -386,6 +386,11 @@ export const Table = <
     ...rest
   } = props;
 
+  // console.log(
+  //   'Table.tsx: columns',
+  //   columns.map((c) => c.id),
+  // );
+
   useTheme();
 
   const ownerDocument = React.useRef<Document | undefined>();
@@ -586,6 +591,22 @@ export const Table = <
     visibleColumns,
     setGlobalFilter,
   } = instance;
+
+  // Reset the column order whenever new columns are passed
+  React.useEffect(() => {
+    // console.log('instance.state.columnOrder', instance.state.columnOrder);
+    instance.setColumnOrder([]);
+    console.log('COLUMN ORDER RESET');
+  }, [columns, instance]);
+
+  console.log(
+    'headerGroups',
+    headerGroups[0].headers.map((c) => c.id),
+    columns.map((c) => c.id),
+    allColumns.map((c) => c.id),
+    instance.flatHeaders.map((c) => c.id),
+  );
+
   const ariaDataAttributes = Object.entries(rest).reduce(
     (result, [key, value]) => {
       if (key.startsWith('data-') || key.startsWith('aria-')) {
@@ -824,6 +845,8 @@ export const Table = <
         data-iui-size={density === 'default' ? undefined : density}
         {...ariaDataAttributes}
       >
+        {/* {/* */}
+        {/* START */}
         {headerGroups.map((headerGroup: HeaderGroup<T>) => {
           // There may be a better solution for this, but for now I'm filtering out the placeholder cells using header.id
           headerGroup.headers = headerGroup.headers.filter(
@@ -834,6 +857,14 @@ export const Table = <
           const headerGroupProps = headerGroup.getHeaderGroupProps({
             className: 'iui-table-row',
           });
+
+          // console.log(
+          //   'Table.tsx: headerGroup.headers',
+          //   headerGroup.columns?.map((h) => h.id),
+          //   headerGroup.headers.map((h) => h.id),
+          //   // headerGroup..map((h) => h.id),
+          // );
+
           return (
             <div
               className='iui-table-header-wrapper'
@@ -954,6 +985,9 @@ export const Table = <
             </div>
           );
         })}
+
+        {/* END */}
+
         <div
           {...getTableBodyProps({
             className: cx('iui-table-body', {

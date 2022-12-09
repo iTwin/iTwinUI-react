@@ -74,6 +74,9 @@ const defaultGetDragAndDropProps =
       const newTableColumns = [...tableColumns];
       const [removed] = newTableColumns.splice(srcIndex, 1);
       newTableColumns.splice(dstIndex, 0, removed);
+
+      console.log('reorderColumns', tableColumns, newTableColumns);
+
       return newTableColumns;
     };
 
@@ -99,6 +102,14 @@ const defaultGetDragAndDropProps =
       setOnDragColumnStyle(event);
 
       const columnIds = instance.flatHeaders.map((x) => x.id);
+
+      console.log(
+        'onDrop',
+        instance.columns.map((c) => c.id),
+        instance.flatHeaders.map((c) => c.id),
+        instance.headers.map((c) => c.id),
+      );
+
       const srcIndex = instance.state.columnReorderStartIndex;
       const dstIndex = columnIds.findIndex((x) => x === header.id);
 
@@ -106,7 +117,11 @@ const defaultGetDragAndDropProps =
         return;
       }
 
-      instance.setColumnOrder(reorderColumns(columnIds, srcIndex, dstIndex));
+      instance.setColumnOrder((prev) => {
+        console.log('prev', prev);
+        // return prev;
+        return reorderColumns(columnIds, srcIndex, dstIndex);
+      });
       instance.dispatch({
         type: REORDER_ACTIONS.columnDragEnd,
         columnIndex: -1,
