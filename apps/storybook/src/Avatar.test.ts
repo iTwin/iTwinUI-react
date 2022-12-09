@@ -16,6 +16,7 @@ describe('Avatar', () => {
     it(testName, function () {
       const id = Cypress.storyId(storyPath, testName);
       cy.visit('iframe', { qs: { id } });
+      cy.wait(2000);
       cy.compareSnapshot(testName);
     });
   });
