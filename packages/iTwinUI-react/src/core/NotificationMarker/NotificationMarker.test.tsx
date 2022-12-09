@@ -58,9 +58,9 @@ it('should display notification circle only when enabled', () => {
     </NotificationMarker>,
   );
   const notificationMarker = container.querySelector('span');
-  expect(notificationMarker).toHaveClass('iui-notification-marker');
-  expect(notificationMarker).toHaveAttribute('data-iui-variant', 'negative');
-  expect(notificationMarker).toHaveAttribute('data-iui-urgent', 'true');
+  expect(notificationMarker).not.toHaveClass('iui-notification-marker');
+  expect(notificationMarker).not.toHaveAttribute('data-iui-variant');
+  expect(notificationMarker).not.toHaveAttribute('data-iui-urgent');
   expect(notificationMarker).toHaveTextContent('🔔');
 });
 
