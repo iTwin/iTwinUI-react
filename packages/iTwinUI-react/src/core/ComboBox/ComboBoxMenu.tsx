@@ -18,6 +18,9 @@ import { ComboBoxStateContext, ComboBoxRefsContext } from './helpers';
 type ComboBoxMenuProps = Omit<MenuProps, 'onClick'> &
   React.ComponentPropsWithoutRef<'ul'>;
 
+const isOverflowOverlaySupported = () =>
+  getWindow()?.CSS?.supports?.('overflow: overlay');
+
 const VirtualizedComboBoxMenu = React.forwardRef(
   (
     { children, className, style, ...rest }: ComboBoxMenuProps,
@@ -56,15 +59,12 @@ const VirtualizedComboBoxMenu = React.forwardRef(
       scrollToIndex: focusedVisibleIndex,
     });
 
-    const isOverflowOverlaySupported =
-      getWindow()?.CSS?.supports?.('overflow: overlay');
-
     const surfaceStyles = {
       minWidth,
       maxWidth: `min(${minWidth * 2}px, 90vw)`,
       // max-height must be on the outermost element for virtual scroll
       maxHeight: 'calc((var(--iui-component-height) - 1px) * 8.5)',
-      overflowY: isOverflowOverlaySupported ? 'overlay' : 'auto',
+      overflowY: isOverflowOverlaySupported() ? 'overlay' : 'auto',
       ...style,
     } as React.CSSProperties;
 
