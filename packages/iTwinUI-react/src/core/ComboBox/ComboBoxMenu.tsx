@@ -67,11 +67,6 @@ const VirtualizedComboBoxMenu = React.forwardRef(
       ...style,
     } as React.CSSProperties;
 
-    const menuStyles = {
-      ...innerProps.style,
-      '--iui-menu-max-height': 'unset',
-    } as React.CSSProperties;
-
     return (
       <Surface style={surfaceStyles} {...rest}>
         <div {...outerProps}>
@@ -80,8 +75,8 @@ const VirtualizedComboBoxMenu = React.forwardRef(
             setFocus={false}
             role='listbox'
             ref={mergeRefs(menuRef, innerProps.ref, forwardedRef)}
-            className={cx('iui-scroll', className)}
-            style={menuStyles}
+            className={className}
+            style={innerProps.style}
           >
             {visibleChildren}
           </Menu>
