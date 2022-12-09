@@ -16,7 +16,12 @@ describe('Avatar', () => {
     it(testName, function () {
       const id = Cypress.storyId(storyPath, testName);
       cy.visit('iframe', { qs: { id } });
-      cy.wait(2000);
+
+      // Hide images if present to avoid testing variations
+      if (testName == 'With Image') {
+        cy.get('img').hide();
+      }
+
       cy.compareSnapshot(testName);
     });
   });

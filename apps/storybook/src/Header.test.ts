@@ -10,6 +10,16 @@ describe('Header', () => {
     it(testName, function () {
       const id = Cypress.storyId(storyPath, testName);
       cy.visit('iframe', { qs: { id } });
+
+      // Hide images if present to avoid testing variations
+      if (
+        testName === 'Basic' ||
+        testName === 'Center Content' ||
+        testName === 'Full'
+      ) {
+        cy.get('img').hide();
+      }
+
       cy.compareSnapshot(testName);
     });
   });

@@ -13,6 +13,8 @@ describe('ComboBox', () => {
     'With Message',
     'With Status',
     'Multiple Select',
+    'Disabled',
+    'Loading',
   ];
 
   tests.forEach((testName) => {
@@ -27,6 +29,12 @@ describe('ComboBox', () => {
           items[3].click();
         });
       }
+
+      // Hide images if present to avoid testing variations
+      if (testName === 'Disabled' || testName === 'Loading') {
+        cy.get('img.iui-icon').hide();
+      }
+
       cy.compareSnapshot(`${testName} (Open)`);
     });
   });
