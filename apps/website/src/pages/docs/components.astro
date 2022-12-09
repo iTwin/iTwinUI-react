@@ -1,7 +1,8 @@
 ---
-import ComponentIcon from './ComponentIcon.astro';
+import Layout from './_layout.astro';
+import ComponentIcon from '../../components/ComponentIcon.astro';
 
-const docsPages = (await Astro.glob('../pages/docs/*.mdx')).map(({ url, frontmatter }) => ({
+const docsPages = (await Astro.glob('./*.mdx')).map(({ url, frontmatter }) => ({
   url,
   title: frontmatter.title,
   description: frontmatter.description,
@@ -12,19 +13,21 @@ const docsPages = (await Astro.glob('../pages/docs/*.mdx')).map(({ url, frontmat
 const componentPages = docsPages.filter((page) => page.group && page.group !== 'main');
 ---
 
-<main class='card-list'>
-  {
-    componentPages.map((page) => (
-      <a href={page.url} id={page.title} class='card'>
-        <ComponentIcon icon={page.thumbnail} />
-        <div>
-          <h1>{page.title}</h1>
-          <p>{page.description}</p>
-        </div>
-      </a>
-    ))
-  }
-</main>
+<Layout content={{ title: 'Components' }}
+  ><main class='card-list'>
+    {
+      componentPages.map((page) => (
+        <a href={page.url} id={page.title} class='card'>
+          <ComponentIcon icon={page.thumbnail} />
+          <div>
+            <h1>{page.title}</h1>
+            <p>{page.description}</p>
+          </div>
+        </a>
+      ))
+    }
+  </main>
+</Layout>
 
 <style lang='scss'>
   :root {
