@@ -611,13 +611,6 @@ export const Table = <
       const isDisabled = isRowDisabled?.(row.original);
       const ctrlPressed = event.ctrlKey || event.metaKey;
 
-      console.log(
-        'onRowClickHandler',
-        event.ctrlKey,
-        event.shiftKey,
-        event.metaKey,
-      );
-
       if (!isDisabled) {
         onRowClick?.(event, row);
       }
