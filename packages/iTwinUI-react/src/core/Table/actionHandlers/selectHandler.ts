@@ -5,7 +5,9 @@
 import { ActionType, Row, TableInstance, TableState } from 'react-table';
 
 /**
- * Handles subrow selection and validation. Selecting a row and calling this method automatically selects all the subrows that can be selected
+ * Handles subrow selection and validation.
+ * - Subrow selection: Selecting a row and calling this method automatically selects all the subrows that can be selected
+ * - Validation: Ensures that any disabled/unselectable row/subrow is not selected
  */
 const onSelectHandler = <T extends Record<string, unknown>>(
   newState: TableState<T>,
