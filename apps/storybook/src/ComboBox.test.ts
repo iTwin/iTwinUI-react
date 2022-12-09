@@ -14,7 +14,6 @@ describe('ComboBox', () => {
     'With Status',
     'Multiple Select',
     'Disabled',
-    'Loading',
   ];
 
   tests.forEach((testName) => {
@@ -31,7 +30,7 @@ describe('ComboBox', () => {
       }
 
       // Hide images if present to avoid testing variations
-      if (testName === 'Disabled' || testName === 'Loading') {
+      if (testName === 'Disabled') {
         cy.get('img.iui-icon').hide();
       }
 
