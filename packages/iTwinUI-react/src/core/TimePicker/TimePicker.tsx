@@ -8,7 +8,7 @@ import {
   useTheme,
   ClassNameProps,
   StylingProps,
-  VirtualScroll,
+  useVirtualization,
 } from '../utils';
 import '@itwin/itwinui-css/css/time-picker.css';
 
@@ -448,7 +448,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
   return (
     <div className={cx('iui-time-picker', className)} {...rest}>
       {useCombinedRenderer ? (
-        <TimePickerColumn
+        <VirtualizedTimePickerColumn
           data={time}
           isSameFocused={(val) =>
             isSameTime(
@@ -524,6 +524,44 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
   );
 };
 
+const scrollIntoView = (ref: HTMLLIElement | null, isSame: boolean) => {
+  isSame && ref?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+};
+
+const handleTimeKeyDown = (
+  event: React.KeyboardEvent<HTMLLIElement>,
+  maxValue: number,
+  onFocus: (value: number) => void,
+  onSelect: (value: number) => void,
+  currentValue: number,
+  needFocus: React.MutableRefObject<boolean>,
+) => {
+  switch (event.key) {
+    case 'ArrowDown':
+      if (currentValue + 1 > maxValue) {
+        break;
+      }
+      onFocus(currentValue + 1);
+      needFocus.current = true;
+      event.preventDefault();
+      break;
+    case 'ArrowUp':
+      if (currentValue - 1 < 0) {
+        break;
+      }
+      onFocus(currentValue - 1);
+      needFocus.current = true;
+      event.preventDefault();
+      break;
+    case 'Enter':
+    case ' ':
+    case 'Spacebar':
+      onSelect(currentValue);
+      event.preventDefault();
+      break;
+  }
+};
+
 type TimePickerColumnProps<T = Date> = {
   /**
    * Data to render in column.
@@ -552,12 +590,7 @@ type TimePickerColumnProps<T = Date> = {
   /**
    * What value to display in every cell.
    */
-  valueRenderer: (value: T, precision?: Precision) => React.ReactNode;
-  /**
-   * Precision of the time.
-   * @default 'minutes'
-   */
-  precision?: Precision;
+  valueRenderer: (value: T) => React.ReactNode;
 } & ClassNameProps;
 
 const TimePickerColumn = <T,>(props: TimePickerColumnProps<T>): JSX.Element => {
@@ -569,7 +602,6 @@ const TimePickerColumn = <T,>(props: TimePickerColumnProps<T>): JSX.Element => {
     isSameSelected,
     setFocus = false,
     valueRenderer,
-    precision = 'minutes',
     className = 'iui-time',
   } = props;
   const needFocus = React.useRef(setFocus);
@@ -582,42 +614,86 @@ const TimePickerColumn = <T,>(props: TimePickerColumnProps<T>): JSX.Element => {
     }
   });
 
-  const scrollIntoView = (ref: HTMLLIElement | null, isSame: boolean) => {
-    isSame && ref?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-  };
+  return (
+    <div className={className}>
+      <ol>
+        {data.map((value, index) => {
+          const isSameFocus = isSameFocused(value);
+          return (
+            <li
+              onKeyDown={(event) => {
+                handleTimeKeyDown(
+                  event,
+                  data.length - 1,
+                  (index) => onFocusChange(data[index]),
+                  (index) => onSelectChange(data[index]),
+                  index,
+                  needFocus,
+                );
+              }}
+              className={cx({
+                'iui-selected': isSameSelected(value),
+              })}
+              key={index}
+              tabIndex={isSameFocus ? 0 : undefined}
+              ref={(ref) => {
+                scrollIntoView(ref, isSameFocus);
+                needFocus.current && isSameFocus && ref?.focus();
+              }}
+              onClick={() => {
+                onSelectChange(value);
+              }}
+            >
+              {valueRenderer(value)}
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+  );
+};
 
-  const handleTimeKeyDown = (
-    event: React.KeyboardEvent<HTMLLIElement>,
-    maxValue: number,
-    onFocus: (value: number) => void,
-    onSelect: (value: number) => void,
-    currentValue: number,
-  ) => {
-    switch (event.key) {
-      case 'ArrowDown':
-        if (currentValue + 1 > maxValue) {
-          break;
-        }
-        onFocus(currentValue + 1);
-        needFocus.current = true;
-        event.preventDefault();
-        break;
-      case 'ArrowUp':
-        if (currentValue - 1 < 0) {
-          break;
-        }
-        onFocus(currentValue - 1);
-        needFocus.current = true;
-        event.preventDefault();
-        break;
-      case 'Enter':
-      case ' ':
-      case 'Spacebar':
-        onSelect(currentValue);
-        event.preventDefault();
-        break;
+type VirtualizedTimePickerColumnProps<T = Date> = {
+  /**
+   * What value to display in every cell.
+   */
+  valueRenderer: (value: T, precision: Precision) => React.ReactNode;
+  /**
+   * Precision of the time.
+   * @default 'minutes'
+   */
+  precision: Precision;
+} & ClassNameProps &
+  Omit<TimePickerColumnProps<T>, 'valueRenderer'>;
+
+// const VirtualizedTimePickerColumn = <T,>(
+//   props: VirtualizedTimePickerColumnProps<T>,
+// ): JSX.Element => {
+
+const VirtualizedTimePickerColumn = <T,>(
+  props: VirtualizedTimePickerColumnProps<T>,
+): JSX.Element => {
+  const {
+    data,
+    onFocusChange,
+    onSelectChange,
+    isSameFocused,
+    isSameSelected,
+    setFocus = false,
+    valueRenderer,
+    precision = 'minutes',
+    className = 'iui-time',
+  } = props;
+
+  const needFocus = React.useRef(setFocus);
+
+  // Used to focus row only when changed (keyboard navigation)
+  // e.g. without this on every rerender it would be focused
+  React.useEffect(() => {
+    if (needFocus.current) {
+      needFocus.current = false;
     }
-  };
+  });
 
   const virtualizedItemRenderer = React.useCallback(
     (index: number) => {
@@ -632,6 +708,7 @@ const TimePickerColumn = <T,>(props: TimePickerColumnProps<T>): JSX.Element => {
               (index) => onFocusChange(data[index]),
               (index) => onSelectChange(data[index]),
               index,
+              needFocus,
             );
           }}
           className={cx({
@@ -667,48 +744,15 @@ const TimePickerColumn = <T,>(props: TimePickerColumnProps<T>): JSX.Element => {
     return -1;
   };
 
+  const { visibleChildren } = useVirtualization({
+    itemsLength: data.length,
+    itemRenderer: virtualizedItemRenderer,
+    scrollToIndex: currentDateIndex(),
+  });
+
   return (
     <div className={className}>
-      <ol>
-        {data.length > 500 ? ( // around 500 is when rendering becomes slow
-          <VirtualScroll
-            itemsLength={data.length}
-            itemRenderer={virtualizedItemRenderer}
-            scrollToIndex={currentDateIndex()}
-          />
-        ) : (
-          data.map((value, index) => {
-            const isSameFocus = isSameFocused(value);
-            return (
-              <li
-                onKeyDown={(event) => {
-                  handleTimeKeyDown(
-                    event,
-                    data.length - 1,
-                    (index) => onFocusChange(data[index]),
-                    (index) => onSelectChange(data[index]),
-                    index,
-                  );
-                }}
-                className={cx({
-                  'iui-selected': isSameSelected(value),
-                })}
-                key={index}
-                tabIndex={isSameFocus ? 0 : undefined}
-                ref={(ref) => {
-                  scrollIntoView(ref, isSameFocus);
-                  needFocus.current && isSameFocus && ref?.focus();
-                }}
-                onClick={() => {
-                  onSelectChange(value);
-                }}
-              >
-                {valueRenderer(value, precision)}
-              </li>
-            );
-          })
-        )}
-      </ol>
+      <ol>{visibleChildren}</ol>
     </div>
   );
 };
