@@ -146,7 +146,15 @@ export const Alert = ({
   ...
 ```
 
-### Import individual icons directly from the cjs module
+### Import icons
+
+* #### In `packages/itwinui-react`, import from `src/core/utils`
+```jsx
+// Good
+import { SvgClose, SvgInfo} from '../utils';
+```
+
+* #### In other modules, import individual icons directly from the cjs module
 
 ```jsx
 // Good
