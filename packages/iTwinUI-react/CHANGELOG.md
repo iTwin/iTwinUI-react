@@ -4,9 +4,10 @@
 
 ### What's new
 
-* **Combobox:** Add multi-select option ([#830](https://www.github.com/iTwin/iTwinUI-react/issues/830)) ([ced7588](https://www.github.com/iTwin/iTwinUI-react/commit/ced7588acee5273e83c0b0d05a732f260997b9bb))
-* **Table:** Ctrl + Shift click keeps previous selection & also shift clicks ([#888](https://www.github.com/iTwin/iTwinUI-react/issues/888)) ([13edfb5](https://www.github.com/iTwin/iTwinUI-react/commit/13edfb5ecc62de284ac03cc2fc27b8a41b4f7b61))
-* **ThemeProvider:** Add `applyBackground` to `themeOptions` ([#974](https://www.github.com/iTwin/iTwinUI-react/issues/974)) ([13cff7f](https://www.github.com/iTwin/iTwinUI-react/commit/13cff7fab356e1015e2e7c361f15c6a7c8fe4d6b))
+* **Combobox:** Add support for multi-selection through `multiple` prop ([#830](https://www.github.com/iTwin/iTwinUI-react/issues/830)) ([ced7588](https://www.github.com/iTwin/iTwinUI-react/commit/ced7588acee5273e83c0b0d05a732f260997b9bb))
+* **ThemeProvider:** Add `applyBackground` to `themeOptions` prop. ([#974](https://www.github.com/iTwin/iTwinUI-react/issues/974)) ([13cff7f](https://www.github.com/iTwin/iTwinUI-react/commit/13cff7fab356e1015e2e7c361f15c6a7c8fe4d6b))
+  * Defaults to true for the topmost ThemeProvider in the tree.
+* **Table:** Ctrl + Shift click now keeps previous selection & also shift clicks ([#888](https://www.github.com/iTwin/iTwinUI-react/issues/888)) ([13edfb5](https://www.github.com/iTwin/iTwinUI-react/commit/13edfb5ecc62de284ac03cc2fc27b8a41b4f7b61))
 
 ### Fixes
 
