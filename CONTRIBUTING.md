@@ -160,7 +160,7 @@ apps/storybook/src/**Alert.test.tsx**
 
 #### In `packages/iTwinUI-react`:
 
-* Manually add the `<svg>` component to `utils/icons` and `utils/index.ts`
+* Manually add the `<svg>` component to `utils/icons` and `utils/icons/index.ts`
 * Import it from `utils`
 
 e.g.
