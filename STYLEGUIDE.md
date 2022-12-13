@@ -146,9 +146,7 @@ export const Alert = ({
   ...
 ```
 
-### Import icons
-
-* #### In `packages/iTwinUI-react`, import icons collectively from `src/core/utils`
+### In `packages/iTwinUI-react`, import icons collectively from `src/core/utils`
 ```jsx
 // Good
 import { SvgClose, SvgInfoCircular} from '../utils';
@@ -158,25 +156,6 @@ import { SvgClose, SvgInfoCircular} from '../utils';
 // Bad (separate imports)
 import { SvgClose} from '../utils/icons/SvgClose';
 import { SvgInfoCircular} from '../utils/icons/SvgInfoCircular';
-```
-
-* #### In other modules, import icons collectively from `@itwin/itwinui-icons-react`
-
-```jsx
-// Good
-import { SvgClose, SvgInfo } from '@itwin/itwinui-icons-react';
-```
-
-```jsx
-// Bad (using cjs/esm)
-import SvgClose from '@itwin/itwinui-icons-react/cjs/icons/Close';
-import SvgInfo from '@itwin/itwinui-icons-react/esm/icons/Close';
-```
-
-```jsx
-// Bad (separate imports)
-import SvgClose from '@itwin/itwinui-icons-react/cjs/icons/Close';
-import SvgInfo from '@itwin/itwinui-icons-react/cjs/icons/Info';
 ```
 
 ### Use `getDocument`, `getWindow` instead of direct access
