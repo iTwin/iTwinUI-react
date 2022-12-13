@@ -12,7 +12,7 @@ export type NonIdealStateProps = {
    * An svg component, preferably from @itwin/itwinui-illustrations-react.
    *
    * @example
-   * import { Svg404 } from '@itwin/itwinui-illustrations-react';
+   * import Svg404 from '@itwin/itwinui-illustrations-react/cjs/illustrations/404';
    * <NonIdealState svg={<Svg404 />} heading='Not found' />
    */
   svg: React.ReactNode;

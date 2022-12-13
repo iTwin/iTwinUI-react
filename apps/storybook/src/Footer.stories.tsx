@@ -10,7 +10,7 @@ import {
   FooterElement,
   FooterProps,
 } from '@itwin/itwinui-react';
-import { SvgSmileyHappyHollow } from '@itwin/itwinui-icons-react';
+import SvgSmileyHappyHollow from '@itwin/itwinui-icons-react/cjs/icons/SmileyHappyHollow';
 
 export default {
   title: 'Core/Footer',

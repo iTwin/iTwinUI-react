@@ -6,7 +6,7 @@ import { Story, Meta } from '@storybook/react';
 import React from 'react';
 import { CellProps } from 'react-table';
 import { action } from '@storybook/addon-actions';
-import { SvgEdit } from '@itwin/itwinui-icons-react';
+import SvgEdit from '@itwin/itwinui-icons-react/cjs/icons/Edit';
 import {
   InformationPanel,
   InformationPanelProps,

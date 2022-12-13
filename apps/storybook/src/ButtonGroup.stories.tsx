@@ -13,14 +13,13 @@ import {
   MenuItem,
   Text,
 } from '@itwin/itwinui-react';
-import {
-  SvgAdd,
-  SvgDelete,
-  SvgEdit,
-  SvgUndo,
-  SvgPlaceholder,
-  SvgMore,
-} from '@itwin/itwinui-icons-react';
+import SvgAdd from '@itwin/itwinui-icons-react/cjs/icons/Add';
+import SvgDelete from '@itwin/itwinui-icons-react/cjs/icons/Delete';
+import SvgEdit from '@itwin/itwinui-icons-react/cjs/icons/Edit';
+import SvgUndo from '@itwin/itwinui-icons-react/cjs/icons/Undo';
+import SvgPlaceholder from '@itwin/itwinui-icons-react/cjs/icons/Placeholder';
+import SvgMore from '@itwin/itwinui-icons-react/cjs/icons/More';
+
 import { Meta, Story } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 

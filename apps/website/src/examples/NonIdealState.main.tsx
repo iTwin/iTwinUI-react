@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import * as React from 'react';
 import { NonIdealState, Button } from '@itwin/itwinui-react';
-import { Svg404 } from '@itwin/itwinui-illustrations-react';
+import Svg404 from '@itwin/itwinui-illustrations-react/cjs/illustrations/404';
 
 export default () => {
   return (

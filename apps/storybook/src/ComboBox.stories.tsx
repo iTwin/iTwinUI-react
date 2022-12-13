@@ -14,7 +14,7 @@ import {
   SelectOption,
   MenuItemSkeleton,
 } from '@itwin/itwinui-react';
-import { SvgCamera } from '@itwin/itwinui-icons-react';
+import SvgCamera from '@itwin/itwinui-icons-react/cjs/icons/Camera';
 
 export default {
   component: ComboBox,

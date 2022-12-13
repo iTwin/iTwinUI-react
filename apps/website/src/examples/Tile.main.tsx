@@ -4,7 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 import * as React from 'react';
 import { Tile, TagContainer, Tag, MenuItem, IconButton } from '@itwin/itwinui-react';
-import { SvgStar, SvgInfo, SvgPlaceholder } from '@itwin/itwinui-icons-react';
+import SvgStar from '@itwin/itwinui-icons-react/cjs/icons/Star';
+import SvgInfo from '@itwin/itwinui-icons-react/cjs/icons/Info';
+import SvgPlaceholder from '@itwin/itwinui-icons-react/cjs/icons/Placeholder';
 
 export default () => {
   return (

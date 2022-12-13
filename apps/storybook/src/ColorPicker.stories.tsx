@@ -18,7 +18,7 @@ import {
 } from '@itwin/itwinui-react';
 import { Popover } from '@itwin/itwinui-react/esm/core/utils';
 import { action } from '@storybook/addon-actions';
-import { SvgSwap } from '@itwin/itwinui-icons-react';
+import SvgSwap from '@itwin/itwinui-icons-react/cjs/icons/Swap';
 
 export default {
   component: ColorPicker,

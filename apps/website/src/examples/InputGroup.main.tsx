@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import * as React from 'react';
 import { InputGroup, Surface, ToggleSwitch } from '@itwin/itwinui-react';
-import { SvgCheckmark } from '@itwin/itwinui-icons-react';
+import SvgCheckmark from '@itwin/itwinui-icons-react/cjs/icons/Checkmark';
 
 export default () => {
   const [option1, setOption1] = React.useState(true);

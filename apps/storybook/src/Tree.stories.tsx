@@ -14,7 +14,7 @@ import {
   ProgressRadial,
 } from '@itwin/itwinui-react';
 import { action } from '@storybook/addon-actions';
-import { SvgPlaceholder } from '@itwin/itwinui-icons-react';
+import SvgPlaceholder from '@itwin/itwinui-icons-react/cjs/icons/Placeholder';
 
 export default {
   component: Tree,

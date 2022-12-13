@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import * as React from 'react';
 import { NodeData, Tree, TreeNode } from '@itwin/itwinui-react';
-import { SvgPlaceholder } from '@itwin/itwinui-icons-react';
+import SvgPlaceholder from '@itwin/itwinui-icons-react/cjs/icons/Placeholder';
 
 export default () => {
   type StoryData = {

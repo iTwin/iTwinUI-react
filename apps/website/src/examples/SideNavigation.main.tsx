@@ -4,7 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import * as React from 'react';
 import { SidenavButton, SideNavigation } from '@itwin/itwinui-react';
-import { SvgHome, SvgFlag, SvgFolderOpened, SvgSettings } from '@itwin/itwinui-icons-react';
+import SvgHome from '@itwin/itwinui-icons-react/cjs/icons/Home';
+import SvgFlag from '@itwin/itwinui-icons-react/cjs/icons/Flag';
+import SvgFolderOpened from '@itwin/itwinui-icons-react/cjs/icons/FolderOpened';
+import SvgSettings from '@itwin/itwinui-icons-react/cjs/icons/Settings';
 
 export default () => {
   const [activeIndex, setActiveIndex] = React.useState<number>(0);
