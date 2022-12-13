@@ -18,7 +18,7 @@ describe('Avatar', () => {
       cy.visit('iframe', { qs: { id } });
 
       // Hide images if present to avoid uncertainties in testing
-      if (testName == 'With Image') {
+      if (testName === 'With Image') {
         cy.get('img').hide();
       }
 
