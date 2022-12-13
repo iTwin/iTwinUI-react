@@ -31,7 +31,7 @@ describe('ComboBox', () => {
 
       // Hide images if present to avoid uncertainties in testing
       if (testName === 'Disabled') {
-        cy.get('img.iui-icon').hide();
+        cy.get('img').hide();
       }
 
       cy.compareSnapshot(`${testName} (Open)`);
