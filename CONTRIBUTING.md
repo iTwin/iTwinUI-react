@@ -165,7 +165,7 @@ apps/storybook/src/**Alert.test.tsx**
 
 e.g.
 ```tsx
-import { SvgClose, SvgInfoCircular} from '../utils';
+import { SvgClose, SvgInfoCircular } from '../utils';
 ```
 
 #### In other modules:
