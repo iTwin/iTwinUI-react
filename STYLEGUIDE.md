@@ -148,7 +148,7 @@ export const Alert = ({
 
 ### Import icons
 
-* #### In `packages/itwinui-react`, combine icon imports together from `src/core/utils`
+* #### In `packages/iTwinUI-react`, import icons collectively from `src/core/utils`
 ```jsx
 // Good
 import { SvgClose, SvgInfoCircular} from '../utils';
@@ -160,27 +160,23 @@ import { SvgClose} from '../utils/icons/SvgClose';
 import { SvgInfoCircular} from '../utils/icons/SvgInfoCircular';
 ```
 
-* #### In other modules, import individual icons directly from the cjs module
+* #### In other modules, import icons collectively from `@itwin/itwinui-icons-react`
 
 ```jsx
 // Good
+import { SvgClose, SvgInfo } from '@itwin/itwinui-icons-react';
+```
+
+```jsx
+// Bad (using cjs/esm)
+import SvgClose from '@itwin/itwinui-icons-react/cjs/icons/Close';
+import SvgInfo from '@itwin/itwinui-icons-react/esm/icons/Close';
+```
+
+```jsx
+// Bad (separate imports)
 import SvgClose from '@itwin/itwinui-icons-react/cjs/icons/Close';
 import SvgInfo from '@itwin/itwinui-icons-react/cjs/icons/Info';
-```
-
-```jsx
-// Bad (using barrel)
-import { SvgClose } from '@itwin/itwinui-icons-react';
-```
-
-```jsx
-// Bad (using esm)
-import SvgClose from '@itwin/itwinui-icons-react/esm/icons/Close';
-```
-
-```jsx
-// Bad (combining imports)
-import { SvgClose, SvgInfo } from '@itwin/itwinui-icons-react/cjs/icons';
 ```
 
 ### Use `getDocument`, `getWindow` instead of direct access
