@@ -17,10 +17,11 @@ import {
   Input,
   Tooltip,
 } from '@itwin/itwinui-react';
-
-import SvgChevronRightDouble from '@itwin/itwinui-icons-react/cjs/icons/ChevronRightDouble';
-import SvgFolder from '@itwin/itwinui-icons-react/cjs/icons/Folder';
-import SvgMoreSmall from '@itwin/itwinui-icons-react/cjs/icons/MoreSmall';
+import {
+  SvgChevronRightDouble,
+  SvgFolder,
+  SvgMoreSmall,
+} from '@itwin/itwinui-icons-react';
 
 export default {
   component: Breadcrumbs,

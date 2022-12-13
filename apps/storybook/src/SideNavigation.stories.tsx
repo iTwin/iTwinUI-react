@@ -2,11 +2,13 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import SvgFlag from '@itwin/itwinui-icons-react/cjs/icons/Flag';
-import SvgFolderOpened from '@itwin/itwinui-icons-react/cjs/icons/FolderOpened';
-import SvgHome from '@itwin/itwinui-icons-react/cjs/icons/Home';
-import SvgPlaceholder from '@itwin/itwinui-icons-react/cjs/icons/Placeholder';
-import SvgSettings from '@itwin/itwinui-icons-react/cjs/icons/Settings';
+import {
+  SvgFlag,
+  SvgFolderOpened,
+  SvgHome,
+  SvgPlaceholder,
+  SvgSettings,
+} from '@itwin/itwinui-icons-react';
 import { useState } from '@storybook/addons';
 import { Story, Meta } from '@storybook/react';
 import React from 'react';

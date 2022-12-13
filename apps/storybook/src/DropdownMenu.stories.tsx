@@ -15,11 +15,13 @@ import {
   Select,
   Text,
 } from '@itwin/itwinui-react';
-import SvgClipboard from '@itwin/itwinui-icons-react/cjs/icons/Clipboard';
-import SvgCrop from '@itwin/itwinui-icons-react/cjs/icons/Crop';
-import SvgMore from '@itwin/itwinui-icons-react/cjs/icons/More';
-import SvgMove from '@itwin/itwinui-icons-react/cjs/icons/Move';
-import SvgPlaceholder from '@itwin/itwinui-icons-react/cjs/icons/Placeholder';
+import {
+  SvgClipboard,
+  SvgCrop,
+  SvgMore,
+  SvgMove,
+  SvgPlaceholder,
+} from '@itwin/itwinui-icons-react';
 import { useState } from '@storybook/addons';
 
 export default {

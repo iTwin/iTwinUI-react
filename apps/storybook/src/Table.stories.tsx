@@ -41,12 +41,14 @@ import {
 import { Story, Meta } from '@storybook/react';
 import { useMemo, useState } from '@storybook/addons';
 import { action } from '@storybook/addon-actions';
-import SvgDetails from '@itwin/itwinui-icons-react/cjs/icons/Details';
-import SvgMore from '@itwin/itwinui-icons-react/cjs/icons/More';
-import SvgSoundLoud from '@itwin/itwinui-icons-react/cjs/icons/SoundLoud';
-import SvgStatusError from '@itwin/itwinui-icons-react/cjs/icons/StatusError';
-import SvgStatusSuccess from '@itwin/itwinui-icons-react/cjs/icons/StatusSuccess';
-import SvgStatusWarning from '@itwin/itwinui-icons-react/cjs/icons/StatusWarning';
+import {
+  SvgDetails,
+  SvgMore,
+  SvgSoundLoud,
+  SvgStatusError,
+  SvgStatusSuccess,
+  SvgStatusWarning,
+} from '@itwin/itwinui-icons-react';
 
 export default {
   title: 'Core/Table',

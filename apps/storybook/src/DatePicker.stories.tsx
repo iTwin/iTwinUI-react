@@ -12,7 +12,7 @@ import {
   DatePickerProps,
   generateLocalizedStrings,
 } from '@itwin/itwinui-react';
-import SvgCalendar from '@itwin/itwinui-icons-react/cjs/icons/Calendar';
+import { SvgCalendar } from '@itwin/itwinui-icons-react';
 
 export default {
   title: 'Core/DatePicker',
