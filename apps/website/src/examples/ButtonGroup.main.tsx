@@ -4,10 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import * as React from 'react';
 import { ButtonGroup, IconButton } from '@itwin/itwinui-react';
-import SvgAdd from '@itwin/itwinui-icons-react/cjs/icons/Add';
-import SvgEdit from '@itwin/itwinui-icons-react/cjs/icons/Edit';
-import SvgDelete from '@itwin/itwinui-icons-react/cjs/icons/Delete';
-import SvgUndo from '@itwin/itwinui-icons-react/cjs/icons/Undo';
+import { SvgAdd, SvgEdit, SvgDelete, SvgUndo } from '@itwin/itwinui-icons-react';
 
 export default () => {
   return (

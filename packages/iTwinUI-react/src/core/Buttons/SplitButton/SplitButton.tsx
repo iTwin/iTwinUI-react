@@ -9,15 +9,11 @@ import { IconButton } from '../IconButton';
 import { DropdownMenu } from '../../DropdownMenu';
 import { Placement } from 'tippy.js';
 import {
-  // SvgCaretDownSmall,
-  // SvgCaretUpSmall,
+  SvgCaretDownSmall,
+  SvgCaretUpSmall,
   PolymorphicForwardRefComponent,
   useTheme,
 } from '../../utils';
-
-import { SvgCaretDownSmall } from '../../utils/icons/SvgCaretDownSmall';
-import { SvgCaretUpSmall } from '../../utils/icons/SvgCaretUpSmall';
-
 import '@itwin/itwinui-css/css/button.css';
 
 export type SplitButtonProps = ButtonProps & {

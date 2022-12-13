@@ -4,8 +4,7 @@ import styled from '@emotion/styled';
 import { ThemeProvider } from '@itwin/itwinui-react';
 import App from './App';
 import { css, Global } from '@emotion/react';
-import SvgMoon from '@itwin/itwinui-icons-react/cjs/icons/Moon';
-import SvgSun from '@itwin/itwinui-icons-react/cjs/icons/Sun';
+import { SvgMoon, SvgSun } from '@itwin/itwinui-icons-react';
 
 const Shell = () => {
   const [theme, setTheme] = React.useState<'light' | 'dark'>(() =>
