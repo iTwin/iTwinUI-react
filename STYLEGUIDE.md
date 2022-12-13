@@ -146,18 +146,6 @@ export const Alert = ({
   ...
 ```
 
-### In `packages/iTwinUI-react`, import icons collectively from `src/core/utils`
-```jsx
-// Good
-import { SvgClose, SvgInfoCircular} from '../utils';
-```
-
-```jsx
-// Bad (separate imports)
-import { SvgClose} from '../utils/icons/SvgClose';
-import { SvgInfoCircular} from '../utils/icons/SvgInfoCircular';
-```
-
 ### Use `getDocument`, `getWindow` instead of direct access
 
 ```jsx
