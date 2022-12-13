@@ -10,15 +10,17 @@ import {
   NonIdealState,
   NonIdealStateProps,
 } from '@itwin/itwinui-react';
-import Svg401 from '@itwin/itwinui-illustrations-react/cjs/illustrations/401';
-import Svg403 from '@itwin/itwinui-illustrations-react/cjs/illustrations/403';
-import Svg404 from '@itwin/itwinui-illustrations-react/cjs/illustrations/404';
-import Svg500 from '@itwin/itwinui-illustrations-react/cjs/illustrations/500';
-import Svg502 from '@itwin/itwinui-illustrations-react/cjs/illustrations/502';
-import Svg503 from '@itwin/itwinui-illustrations-react/cjs/illustrations/503';
-import SvgError from '@itwin/itwinui-illustrations-react/cjs/illustrations/Error';
-import SvgRedirect from '@itwin/itwinui-illustrations-react/cjs/illustrations/Redirect';
-import SvgTimedOut from '@itwin/itwinui-illustrations-react/cjs/illustrations/TimedOut';
+import {
+  Svg401,
+  Svg403,
+  Svg404,
+  Svg500,
+  Svg502,
+  Svg503,
+  SvgError,
+  SvgRedirect,
+  SvgTimedOut,
+} from '@itwin/itwinui-illustrations-react';
 import { action } from '@storybook/addon-actions';
 
 export default {

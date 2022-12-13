@@ -183,29 +183,6 @@ import SvgClose from '@itwin/itwinui-icons-react/esm/icons/Close';
 import { SvgClose, SvgInfo } from '@itwin/itwinui-icons-react/cjs/icons';
 ```
 
-### Import individual illustrations directly from the cjs module
-
-```jsx
-// Good
-import Svg503 from '@itwin/itwinui-illustrations-react/cjs/illustrations/503';
-import SvgError from '@itwin/itwinui-illustrations-react/cjs/illustrations/Error';
-```
-
-```jsx
-// Bad (using barrel)
-import { Svg503 } from '@itwin/itwinui-illustrations-react';
-```
-
-```jsx
-// Bad (using esm)
-import Svg503 from '@itwin/itwinui-illustrations-react/esm/illustrations/503';
-```
-
-```jsx
-// Bad (combining imports)
-import { Svg503, SvgError } from '@itwin/itwinui-illustrations-react/cjs/illustrations';
-```
-
 ### Use `getDocument`, `getWindow` instead of direct access
 
 ```jsx
