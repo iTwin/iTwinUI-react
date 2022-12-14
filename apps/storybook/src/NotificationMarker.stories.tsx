@@ -11,7 +11,7 @@ import {
   Button,
   IconButton,
 } from '@itwin/itwinui-react';
-import { SvgEmail, SvgNotification } from '@itwin/itwinui-icons-react';
+import { SvgNotification } from '@itwin/itwinui-icons-react';
 import { action } from '@storybook/addon-actions';
 
 export default {
@@ -68,17 +68,8 @@ export const WithButtons: Story<NotificationMarkerProps> = (args) => {
         </NotificationMarker>
       </IconButton>
 
-      <Button
-        onClick={action('clicked')}
-        startIcon={
-          <NotificationMarker {...args}>
-            <SvgEmail />
-          </NotificationMarker>
-        }
-        styleType='borderless'
-        {...args}
-      >
-        Inbox
+      <Button onClick={action('clicked')} styleType='borderless' {...args}>
+        <NotificationMarker {...args}>Inbox</NotificationMarker>
       </Button>
     </>
   );
