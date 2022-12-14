@@ -2,15 +2,15 @@
 import Layout from './_layout.astro';
 import ComponentIcon from '../../components/ComponentIcon.astro';
 
-const docsPages = (await Astro.glob('./*.mdx')).map(({ url, frontmatter }) => ({
-  url,
-  title: frontmatter.title,
-  description: frontmatter.description,
-  thumbnail: frontmatter.thumbnail,
-  group: frontmatter.group,
-}));
-
-const componentPages = docsPages.filter((page) => page.group && page.group !== 'main');
+const componentPages = (await Astro.glob('./*.mdx'))
+  .map(({ url, frontmatter }) => ({
+    url,
+    title: frontmatter.title,
+    description: frontmatter.description,
+    thumbnail: frontmatter.thumbnail,
+    group: frontmatter.group,
+  }))
+  .filter((page) => page.group);
 ---
 
 <Layout content={{ title: 'Components' }}
@@ -59,6 +59,7 @@ const componentPages = docsPages.filter((page) => page.group && page.group !== '
     flex-direction: column;
     gap: 0.5rem;
     background: var(--color-background-1);
+    border-radius: var(--border-radius-1);
     &:where(:hover, :focus) {
       box-shadow: 0 0 10px var(--color-highlight-1), 0 0 20px var(--color-highlight-2);
     }
