@@ -8,8 +8,11 @@ import {
   Text,
   NotificationMarker,
   NotificationMarkerProps,
+  Button,
+  IconButton,
 } from '@itwin/itwinui-react';
-import { SvgNotification } from '@itwin/itwinui-icons-react';
+import { SvgEmail, SvgNotification } from '@itwin/itwinui-icons-react';
+import { action } from '@storybook/addon-actions';
 
 export default {
   component: NotificationMarker,
@@ -63,12 +66,43 @@ Basic.argTypes = {
   },
 };
 
+export const WithButtons: Story<NotificationMarkerProps> = (args) => {
+  return (
+    <>
+      <IconButton styleType='borderless'>
+        <NotificationMarker {...args}>
+          <SvgNotification />
+        </NotificationMarker>
+      </IconButton>
+
+      <Button
+        onClick={action('clicked')}
+        startIcon={
+          <NotificationMarker {...args}>
+            <SvgEmail />
+          </NotificationMarker>
+        }
+        styleType='borderless'
+        {...args}
+      >
+        Inbox
+      </Button>
+    </>
+  );
+};
+
+WithButtons.args = {
+  status: 'primary',
+};
+
 export const Pulsing: Story<NotificationMarkerProps> = (args) => {
   return (
     <>
-      <NotificationMarker status='primary' {...args}>
-        <SvgNotification width={16} height={16} fill='currentColor' />
-      </NotificationMarker>
+      <IconButton styleType='borderless'>
+        <NotificationMarker status='primary' {...args}>
+          <SvgNotification />
+        </NotificationMarker>
+      </IconButton>
 
       <NotificationMarker status='primary' {...args}>
         <Text style={{ fontWeight: '700' }}>URGENT</Text>
@@ -85,18 +119,27 @@ Pulsing.args = {
 export const Status: Story<NotificationMarkerProps> = (args) => {
   return (
     <>
-      <NotificationMarker status='primary' {...args}>
-        <SvgNotification width={16} height={16} fill='currentColor' />
-      </NotificationMarker>
-      <NotificationMarker status='positive' {...args}>
-        <SvgNotification width={16} height={16} fill='currentColor' />
-      </NotificationMarker>
-      <NotificationMarker status='warning' {...args}>
-        <SvgNotification width={16} height={16} fill='currentColor' />
-      </NotificationMarker>
-      <NotificationMarker status='negative' {...args}>
-        <SvgNotification width={16} height={16} fill='currentColor' />
-      </NotificationMarker>
+      <IconButton styleType='borderless'>
+        <NotificationMarker status='primary' {...args}>
+          <SvgNotification />
+        </NotificationMarker>
+      </IconButton>
+      <IconButton styleType='borderless'>
+        <NotificationMarker status='positive' {...args}>
+          <SvgNotification />
+        </NotificationMarker>
+      </IconButton>
+      <IconButton styleType='borderless'>
+        <NotificationMarker status='warning' {...args}>
+          <SvgNotification />
+        </NotificationMarker>
+      </IconButton>
+      <IconButton styleType='borderless'>
+        <NotificationMarker status='negative' {...args}>
+          <SvgNotification />
+        </NotificationMarker>
+      </IconButton>
+
       <NotificationMarker status='primary' {...args}>
         Primary
       </NotificationMarker>
