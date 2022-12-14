@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from 'react';
-import { CommonProps, useTheme } from '../utils';
+import { useTheme } from '../utils';
 import cx from 'classnames';
 import '@itwin/itwinui-css/css/utils.css';
 
@@ -41,7 +41,7 @@ export type NotificationMarkerProps = {
    * </NotificationMarker>
    */
   enabled?: boolean;
-} & Omit<CommonProps, 'title'>;
+} & React.ComponentProps<'span'>;
 
 /**
  * A small notification circle to the top-right of the passed children prop.
@@ -53,33 +53,31 @@ export type NotificationMarkerProps = {
  * @example
  * <NotificationMarker status='positive' pulsing={true}>Live</NotificationMarker>
  */
-export const NotificationMarker = (props: NotificationMarkerProps) => {
-  const {
-    className,
-    children,
-    status = 'primary',
-    pulsing = false,
-    enabled = true,
-    ...rest
-  } = props;
-  useTheme();
+// export const NotificationMarker = (props: NotificationMarkerProps) => {
+export const NotificationMarker = React.forwardRef(
+  (props: NotificationMarkerProps, ref: React.Ref<HTMLSpanElement>) => {
+    const {
+      className,
+      children,
+      status = 'primary',
+      pulsing = false,
+      enabled = true,
+      ...rest
+    } = props;
+    useTheme();
 
-  const notificationAttributes = enabled
-    ? {
-        'data-iui-variant': status,
-        'data-iui-urgent': pulsing,
-      }
-    : {};
-
-  return (
-    <span
-      className={cx({ 'iui-notification-marker': enabled }, className)}
-      {...notificationAttributes}
-      {...rest}
-    >
-      {children}
-    </span>
-  );
-};
+    return (
+      <span
+        ref={ref}
+        className={cx({ 'iui-notification-marker': enabled }, className)}
+        data-iui-variant={enabled && status}
+        data-iui-urgent={enabled && pulsing}
+        {...rest}
+      >
+        {children}
+      </span>
+    );
+  },
+);
 
 export default NotificationMarker;
