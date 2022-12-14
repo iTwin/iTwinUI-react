@@ -25,7 +25,7 @@ export default {
     style: { control: { disable: true } },
     status: {
       control: 'radio',
-      options: ['primary', 'positive', 'warning', 'negative'],
+      options: ['primary', 'positive', 'warning', 'negative', 'white'],
     },
   },
   title: 'Core/NotificationMarker',
