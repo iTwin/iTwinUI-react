@@ -7,8 +7,7 @@ export type Props = {
   title: React.ReactNode;
   description?: React.ReactNode;
   image?: string;
-  className?: string;
-};
+} & astroHTML.JSX.LiHTMLAttributes;
 
 const { url, title, description, image, className } = Astro.props;
 ---
