@@ -82,77 +82,77 @@ const currentPage = new URL(Astro.request.url).pathname;
         </div>
       </div>
     </div>
-  </main>
 
-  <div class='centered-content'>
-    <h2 class='highlight-text'>Why iTwinUI?</h2>
-    <div class='column-content'>
-      <div class='text-with-icon'>
-        <ConsistentIcon class='icon' />
-        <div>
-          <h3 class='colored-text'>Consistent</h3>
-          <p>
-            Our components and layouts library was designed specifically for apps within the iTwin
-            space. It allows creating seamless front-end environments consistent with the iTwin
-            experience.
-          </p>
+    <div class='centered-content'>
+      <h2 class='highlight-text'>Why iTwinUI?</h2>
+      <div class='column-content'>
+        <div class='text-with-icon'>
+          <ConsistentIcon class='icon' />
+          <div>
+            <h3 class='colored-text'>Consistent</h3>
+            <p>
+              Our components and layouts library was designed specifically for apps within the iTwin
+              space. It allows creating seamless front-end environments consistent with the iTwin
+              experience.
+            </p>
+          </div>
         </div>
-      </div>
-      <div class='text-with-icon'>
-        <AccessibleIcon class='icon' />
-        <div>
-          <h3 class='colored-text'>Accessible</h3>
-          <p>
-            The web is for everyone. All our components were designed with accessibility in mind for
-            an inclusive, comfortable experience that leaves no one behind.
-          </p>
+        <div class='text-with-icon'>
+          <AccessibleIcon class='icon' />
+          <div>
+            <h3 class='colored-text'>Accessible</h3>
+            <p>
+              The web is for everyone. All our components were designed with accessibility in mind
+              for an inclusive, comfortable experience that leaves no one behind.
+            </p>
+          </div>
         </div>
-      </div>
-      <div class='text-with-icon'>
-        <NoFussIcon class='icon' />
-        <div>
-          <h3 class='colored-text'>No fuss</h3>
-          <p>
-            Skip the brainstorming sessions. Our components and layouts are entirely ready-to-use,
-            so you can focus on getting things done.
-          </p>
+        <div class='text-with-icon'>
+          <NoFussIcon class='icon' />
+          <div>
+            <h3 class='colored-text'>No fuss</h3>
+            <p>
+              Skip the brainstorming sessions. Our components and layouts are entirely ready-to-use,
+              so you can focus on getting things done.
+            </p>
+          </div>
         </div>
-      </div>
-      <div class='text-with-icon'>
-        <EvolvingIcon class='icon' />
-        <div>
-          <h3 class='colored-text'>Evolving</h3>
-          <p>
-            iTwinUI is maintained daily and frequently updated by its supporting team, so you always
-            have access to the latest version of our assets.
-          </p>
+        <div class='text-with-icon'>
+          <EvolvingIcon class='icon' />
+          <div>
+            <h3 class='colored-text'>Evolving</h3>
+            <p>
+              iTwinUI is maintained daily and frequently updated by its supporting team, so you
+              always have access to the latest version of our assets.
+            </p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class='centered-content'>
-    <h2 class='highlight-text'>Our library</h2>
-    <div class='library-list'>
-      <Card
-        title='Components'
-        description=' See our extensive library of pre-coded components. You can view live demos of how they behave in their environment to determine if they are the right fit.'
-        url='/docs'
-        class='library-item'
-      />
-      <Card
-        title='Layouts'
-        description='Full-page layouts built for maximizing your efficiency when you need it the most.'
-        url='https://itwin.github.io/iTwinUI-layouts/'
-        class='library-item'
-      />
-      <Card
-        title='Icons'
-        description='Hundreds of flexible, flat-styled icons in SVG format, allowing for infinite scalability with zero quality loss.'
-        url='https://itwin.github.io/iTwinUI-icons/'
-        class='library-item'
-      />
+    <div class='centered-content'>
+      <h2 class='highlight-text'>Our library</h2>
+      <div class='library-list'>
+        <Card
+          title='Components'
+          description=' See our extensive library of pre-coded components. You can view live demos of how they behave in their environment to determine if they are the right fit.'
+          url='/docs'
+          class='library-item'
+        />
+        <Card
+          title='Layouts'
+          description='Full-page layouts built for maximizing your efficiency when you need it the most.'
+          url='https://itwin.github.io/iTwinUI-layouts/'
+          class='library-item'
+        />
+        <Card
+          title='Icons'
+          description='Hundreds of flexible, flat-styled icons in SVG format, allowing for infinite scalability with zero quality loss.'
+          url='https://itwin.github.io/iTwinUI-icons/'
+          class='library-item'
+        />
+      </div>
     </div>
-  </div>
+  </main>
 
   <footer>© 2022 Bentley Systems, Inc</footer>
 
@@ -160,6 +160,9 @@ const currentPage = new URL(Astro.request.url).pathname;
     body {
       display: grid;
       grid-template: 'header' auto 'main' 1fr / 100%;
+    }
+    main > * {
+      max-width: 1200px;
     }
     .hero-box {
       display: grid;
@@ -368,9 +371,7 @@ const currentPage = new URL(Astro.request.url).pathname;
         padding: var(--space-5);
       }
     }
-    main > * {
-      max-width: 1200px;
-    }
+
     .icon {
       align-self: center;
       fill: var(--color-highlight-1);
