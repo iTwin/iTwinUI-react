@@ -4,6 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 describe('Button', () => {
   const storyPath = 'Buttons/Button';
+
+  // WithNotification is intentionally left out.
+  // This is because it uses IconButton/Button that causes visual testing bugs/fails.
   const tests = [
     'Default',
     'High Visibility',

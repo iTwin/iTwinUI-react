@@ -4,6 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 describe('NotificationMarker', () => {
   const storyPath = 'Core/NotificationMarker';
+
+  // WithButtons, Pulsing, Status are intentionally left out.
+  // This is because they all use IconButton/Button that cause visual testing bugs/fails.
   const tests = ['Basic'];
 
   tests.forEach((testName) => {
