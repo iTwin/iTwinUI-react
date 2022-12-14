@@ -655,10 +655,29 @@ export const Table = <
     setPageSize(pageSize);
   }, [pageSize, setPageSize]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const lastPassedColumns: React.MutableRefObject<Column<any>[] | null> =
+    React.useRef(null);
+
   // Reset the column order whenever new columns are passed
   // This is to avoid the old columnOrder from affecting the new columns' columnOrder
   React.useEffect(() => {
-    instance.setColumnOrder([]);
+    // Check if columns has changed (by value)
+    if (JSON.stringify(lastPassedColumns.current) !== JSON.stringify(columns)) {
+      console.log('COLUMN ORDER RESET');
+      instance.setColumnOrder([]);
+    }
+    console.log(
+      'UPDATING lastPassedColumns BEFORE',
+      lastPassedColumns.current,
+      columns,
+    );
+    lastPassedColumns.current = columns;
+    console.log(
+      'UPDATING lastPassedColumns AFTER',
+      lastPassedColumns.current,
+      columns,
+    );
   }, [columns, instance]);
 
   const paginatorRendererProps: TablePaginatorRendererProps = React.useMemo(
