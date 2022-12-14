@@ -676,8 +676,7 @@ export const Table = <
     }
   }, [state, instance.filteredRows, onFilter]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const lastPassedColumns: React.MutableRefObject<Column<any>[] | null> =
+  const lastPassedColumns: React.MutableRefObject<Column<T>[] | null> =
     React.useRef(null);
 
   // Reset the column order whenever new columns are passed
