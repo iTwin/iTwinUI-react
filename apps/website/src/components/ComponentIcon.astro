@@ -19,73 +19,73 @@ const thumbnail = allThumbnails.find(({ file }) => file.endsWith(`${icon}.astro`
   .thumbnail {
     height: calc(var(--space-6) * 6);
     width: 100%;
-  }
 
-  .main-color {
-    fill: #fff;
-  }
+    .main-color {
+      fill: #fff;
+    }
 
-  .highlight-color {
-    fill: var(--color-highlight-4);
-  }
+    .highlight-color {
+      fill: var(--color-highlight-4);
+    }
 
-  .extra-color {
-    fill: #e1e1e1;
-  }
+    .extra-color {
+      fill: #e1e1e1;
+    }
 
-  .opacity-background {
-    opacity: 0.1;
-  }
-
-  .opacity-light {
-    opacity: 0.2;
-  }
-
-  .opacity-light-medium {
-    opacity: 0.3;
-  }
-
-  .opacity-medium {
-    opacity: 0.4;
-  }
-
-  .opacity-heavy {
-    opacity: 0.5;
-  }
-
-  .opacity-heavier {
-    opacity: 0.6;
-  }
-
-  .stroke-line {
-    fill: none;
-    opacity: 0.4;
-    stroke: #fff;
-    stroke-linecap: round;
-    stroke-miterlimit: 10;
-    stroke-width: 3px;
-
-    &.light {
+    .opacity-background {
       opacity: 0.1;
     }
 
-    &.title-line {
-      stroke-width: 4px;
+    .opacity-light {
+      opacity: 0.2;
     }
 
-    &.highlight {
-      opacity: 1;
-      stroke: var(--color-highlight-4);
+    .opacity-light-medium {
+      opacity: 0.3;
     }
 
-    &.square-cap {
-      stroke-width: 2px;
-      stroke-linecap: square;
+    .opacity-medium {
+      opacity: 0.4;
     }
 
-    &.symbol {
-      stroke-width: 2px;
-      stroke-linejoin: round;
+    .opacity-heavy {
+      opacity: 0.5;
+    }
+
+    .opacity-heavier {
+      opacity: 0.6;
+    }
+
+    .stroke-line {
+      fill: none;
+      opacity: 0.4;
+      stroke: #fff;
+      stroke-linecap: round;
+      stroke-miterlimit: 10;
+      stroke-width: 3px;
+
+      &.light {
+        opacity: 0.1;
+      }
+
+      &.title-line {
+        stroke-width: 4px;
+      }
+
+      &.highlight {
+        opacity: 1;
+        stroke: var(--color-highlight-4);
+      }
+
+      &.square-cap {
+        stroke-width: 2px;
+        stroke-linecap: square;
+      }
+
+      &.symbol {
+        stroke-width: 2px;
+        stroke-linejoin: round;
+      }
     }
   }
 </style>
