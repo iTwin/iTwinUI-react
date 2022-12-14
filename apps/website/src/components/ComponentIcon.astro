@@ -13,50 +13,50 @@ const allThumbnails = await Astro.glob('../icons/component-icons/*.astro');
 const thumbnail = allThumbnails.find(({ file }) => file.endsWith(`${icon}.astro`));
 ---
 
-<thumbnail.default class='thumbnail' />
+<thumbnail.default class='component-thumbnail' />
 
-<style lang='scss' is:global>
-  .thumbnail {
+<style lang='scss'>
+  :where(.component-thumbnail) {
     height: calc(var(--space-6) * 6);
     width: 100%;
 
-    .main-color {
+    :global(.main-color) {
       fill: #fff;
     }
 
-    .highlight-color {
+    :global(.highlight-color) {
       fill: var(--color-highlight-4);
     }
 
-    .extra-color {
+    :global(.extra-color) {
       fill: #e1e1e1;
     }
 
-    .opacity-background {
+    :global(.opacity-background) {
       opacity: 0.1;
     }
 
-    .opacity-light {
+    :global(.opacity-light) {
       opacity: 0.2;
     }
 
-    .opacity-light-medium {
+    :global(.opacity-light-medium) {
       opacity: 0.3;
     }
 
-    .opacity-medium {
+    :global(.opacity-medium) {
       opacity: 0.4;
     }
 
-    .opacity-heavy {
+    :global(.opacity-heavy) {
       opacity: 0.5;
     }
 
-    .opacity-heavier {
+    :global(.opacity-heavier) {
       opacity: 0.6;
     }
 
-    .stroke-line {
+    :global(.stroke-line) {
       fill: none;
       opacity: 0.4;
       stroke: #fff;
