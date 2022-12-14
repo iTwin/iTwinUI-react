@@ -70,8 +70,9 @@ export const NotificationMarker = React.forwardRef(
       <span
         ref={ref}
         className={cx({ 'iui-notification-marker': enabled }, className)}
-        data-iui-variant={enabled && status}
-        data-iui-urgent={enabled && pulsing}
+        // Exclude data attributes when enabled = false
+        data-iui-variant={enabled ? status : null}
+        data-iui-urgent={enabled ? pulsing : null}
         {...rest}
       >
         {children}
