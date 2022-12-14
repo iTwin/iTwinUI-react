@@ -1,0 +1,81 @@
+---
+import React from 'react';
+import ComponentIcon from './ComponentIcon.astro';
+
+export type Props = {
+  url: string;
+  title: React.ReactNode;
+  description?: React.ReactNode;
+  image?: string;
+  className?: string;
+};
+
+const { url, title, description, image, className } = Astro.props;
+---
+
+<li class={`card ${className}`}>
+  {
+    image && (
+      <div class='image'>
+        <ComponentIcon icon={image} />
+      </div>
+    )
+  }
+  <div class='text'>
+    <h2>
+      <a href={url}>{title}</a>
+    </h2>
+    {description && <p>{description}</p>}
+  </div>
+</li>
+
+<style lang='scss'>
+  .card {
+    position: relative;
+    display: flex;
+    flex: 1 0 20%;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border-radius: var(--border-radius-1);
+
+    transition: box-shadow var(--transition-speed) ease;
+
+    &:where(:hover, :focus-within) {
+      box-shadow: 0 0 10px var(--color-highlight-1), 0 0 20px var(--color-highlight-2);
+    }
+  }
+  a {
+    color: var(--color-text);
+    text-decoration: none;
+
+    &:where(:focus) {
+      outline: none;
+      text-decoration: none;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+  }
+
+  h2 {
+    font-size: var(--type-1);
+    color: var(--color-text);
+    margin-bottom: var(--space-1);
+  }
+
+  p {
+    font-size: var(--type-0);
+    color: var(--color-subtext);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

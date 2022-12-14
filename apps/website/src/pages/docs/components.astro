@@ -1,6 +1,7 @@
 ---
 import Layout from './_layout.astro';
 import ComponentIcon from '../../components/ComponentIcon.astro';
+import Card from '../../components/Card.astro';
 
 const componentPages = (await Astro.glob('./*.mdx'))
   .map(({ url, frontmatter }) => ({
@@ -18,17 +19,13 @@ const componentPages = (await Astro.glob('./*.mdx'))
     <ul class='card-list'>
       {
         componentPages.map((page) => (
-          <li class='card'>
-            <div class='image'>
-              <ComponentIcon icon={page.thumbnail} />
-            </div>
-            <div class='text'>
-              <h2>
-                <a href={page.url}>{page.title}</a>
-              </h2>
-              <p>{page.description}</p>
-            </div>
-          </li>
+          <Card
+            title={page.title}
+            description={page.description}
+            url={page.url}
+            image={page.thumbnail}
+            className='card-background'
+          />
         ))
       }
     </ul>
@@ -52,46 +49,7 @@ const componentPages = (await Astro.glob('./*.mdx'))
     padding: 0;
   }
 
-  .card {
-    position: relative;
-    display: flex;
-    flex: 1 0 20%;
-    flex-direction: column;
-    gap: 0.5rem;
+  .card-background {
     background: var(--color-background-1);
-    border-radius: var(--border-radius-1);
-    &:where(:hover, :focus) {
-      box-shadow: 0 0 10px var(--color-highlight-1), 0 0 20px var(--color-highlight-2);
-    }
-    padding: var(--space-3);
-  }
-
-  a {
-    color: var(--color-text);
-    text-decoration: none;
-
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-    }
-  }
-
-  h2 {
-    font-size: var(--type-0);
-    color: var(--color-text);
-    margin-bottom: var(--space-1);
-  }
-
-  p {
-    font-size: var(--type--1);
-    color: var(--color-subtext);
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
   }
 </style>

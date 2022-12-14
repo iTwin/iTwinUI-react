@@ -16,6 +16,7 @@ import DialogDemo from '~/demos/Dialog.demo';
 import ComboBoxDemo from '~/demos/ComboBox.demo';
 import SliderDemo from '~/demos/Slider.demo';
 import FieldsetDemo from '~/demos/Fieldset.demo';
+import Card from '~/components/Card.astro';
 
 const currentPage = new URL(Astro.request.url).pathname;
 ---
@@ -74,9 +75,11 @@ const currentPage = new URL(Astro.request.url).pathname;
         </div>
         <div class='demo-wrapper'>
           <div class='demo-box demo-box-muted'>
-            <a class='discover-more' href='/docs/components'
-              >Discover more components <RightArrowIcon />
-            </a>
+            <Card
+              title='Discover more components'
+              url='/docs/components'
+              className='discover-more'
+            />
           </div>
         </div>
       </div>
@@ -131,30 +134,24 @@ const currentPage = new URL(Astro.request.url).pathname;
     <div class='centered-content'>
       <h2 class='highlight-text'>Our library</h2>
       <div class='library-list'>
-        <a class='library-item' href='/docs'>
-          <div>
-            <h3>Components</h3>
-            <p>
-              See our extensive library of pre-coded components. You can view live demos of how they
-              behave in their environment to determine if they are the right fit.
-            </p>
-          </div>
-        </a>
-        <a class='library-item' href='https://itwin.github.io/iTwinUI-layouts/' target='_blank'>
-          <div>
-            <h3>Layouts</h3>
-            <p>Full-page layouts built for maximizing your efficiency when you need it the most.</p>
-          </div>
-        </a>
-        <a class='library-item' href='https://itwin.github.io/iTwinUI-icons/' target='_blank'>
-          <div>
-            <h3>Icons</h3>
-            <p>
-              Hundreds of flexible, flat-styled icons in SVG format, allowing for infinite
-              scalability with zero quality loss.
-            </p>
-          </div>
-        </a>
+        <Card
+          title='Components'
+          description=' See our extensive library of pre-coded components. You can view live demos of how they behave in their environment to determine if they are the right fit.'
+          url='/docs'
+          className='library-item'
+        />
+        <Card
+          title='Layouts'
+          description='Full-page layouts built for maximizing your efficiency when you need it the most.'
+          url='https://itwin.github.io/iTwinUI-layouts/'
+          className='library-item'
+        />
+        <Card
+          title='Icons'
+          description='Hundreds of flexible, flat-styled icons in SVG format, allowing for infinite scalability with zero quality loss.'
+          url='https://itwin.github.io/iTwinUI-icons/'
+          className='library-item'
+        />
       </div>
     </div>
   </main>
@@ -283,7 +280,6 @@ const currentPage = new URL(Astro.request.url).pathname;
     }
 
     .main-button:hover,
-    .library-item:hover,
     .join-us:hover {
       box-shadow: 0 0 10px var(--color-highlight-1), 0 0 20px var(--color-highlight-2);
     }
@@ -323,10 +319,18 @@ const currentPage = new URL(Astro.request.url).pathname;
     }
     .library-item {
       padding: var(--space-5);
-      text-align: start;
-      border: 1px solid var(--color-text);
       border-radius: var(--border-radius-1);
+      box-shadow: 0 0 1px var(--color-highlight-1), 0 0 10px var(--color-highlight-2);
+      outline: 1px solid transparent;
+      display: flex;
+      gap: var(--space-3);
+      align-items: center;
+      color: var(--color-text);
       transition: box-shadow var(--transition-speed) ease;
+
+      &:where(:hover, :focus-within) {
+        box-shadow: 0 0 10px var(--color-highlight-1), 0 0 20px var(--color-highlight-2);
+      }
     }
     h1 {
       font-size: calc(var(--type-3) * 1.5);
