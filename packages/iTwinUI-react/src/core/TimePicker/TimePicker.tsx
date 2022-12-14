@@ -174,7 +174,8 @@ export type TimePickerProps = {
   /**
    * Custom combined time renderer.
    * Default returns time in `HH:MM:SS` format
-   * @default (date: Date, precision: Precision) => {
+   * @default
+   * (date: Date, precision: Precision) => {
    *   let dateString = '';
    *   switch (precision) {
    *     case 'seconds':
@@ -183,9 +184,9 @@ export type TimePickerProps = {
    *        dateString = ':' + date.getMinutes().toLocaleString(undefined, { minimumIntegerDigits: 2 }) + dateString;
    *      case 'hours':
    *        dateString = date.getHours().toLocaleString(undefined, { minimumIntegerDigits: 2 }) + dateString;
-   *    }
-   *    return dateString;
    *   }
+   *   return dateString;
+   * }
    */
   combinedRenderer?: (date: Date, precision: Precision) => React.ReactNode;
 } & StylingProps;

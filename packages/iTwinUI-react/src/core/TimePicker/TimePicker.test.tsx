@@ -493,9 +493,6 @@ describe('Virtualized TimePicker', () => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     heightsMock.mockImplementation(function (this: Record<string, any>) {
-      if (Object.values(this)[0].memoizedProps.id === 'scroller') {
-        return { height: 400 } as DOMRect;
-      }
       return { height: 40 } as DOMRect;
     });
   });
@@ -611,7 +608,7 @@ describe('Virtualized TimePicker', () => {
     expect(selectedTime.textContent).toBe('03');
   });
 
-  xit('should navigate with keyboard in combined renderer', () => {
+  it('should navigate with keyboard in combined renderer', () => {
     const onClick = jest.fn();
     const { container } = render(
       <TimePicker
@@ -657,7 +654,7 @@ describe('Virtualized TimePicker', () => {
     expect(onClick).toHaveBeenCalledWith(new Date(2020, 1, 1, 22, 11, 44));
   });
 
-  xit('should navigate with keyboard in combined renderer (12 hours)', () => {
+  it('should navigate with keyboard in combined renderer (12 hours)', () => {
     const onClick = jest.fn();
     const { container } = render(
       <TimePicker
