@@ -9,7 +9,7 @@ export type Props = {
   image?: string;
 } & astroHTML.JSX.LiHTMLAttributes;
 
-const { url, title, description, image, className } = Astro.props;
+const { url, title, description, image, class: className, ...rest } = Astro.props;
 ---
 
 <li class={`card ${className}`}>
