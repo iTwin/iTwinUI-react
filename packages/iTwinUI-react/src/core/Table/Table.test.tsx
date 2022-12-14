@@ -3429,12 +3429,12 @@ it.each([
         expect(cell.textContent).toBe(resultingColumns[index]),
       );
 
-    // New columns array to trigger below test
-    const mockColumnsReverse = [...mockColumns.reverse()];
+    // New columns array contents to trigger below test
+    const mockColumnsReverse = [...mockColumns].reverse();
 
     rerender(
       <Table
-        // Passing any new columns array (e.g. reverse of columns) should reset columnOrder
+        // Passing any new columns array contents (e.g. reverse of columns) should reset columnOrder
         columns={mockColumnsReverse}
         data={mockedData()}
         emptyTableContent='Empty table'
@@ -3445,8 +3445,8 @@ it.each([
       />,
     );
 
-    // Column order should be equal to same order as the latest passed columns (mockColumnsReverse)
-    // Since columnOrder should reset whenever a new columns array is passed
+    // Column order should be equal to same order as the latest passed columns contents (mockColumnsReverse)
+    // Since columnOrder should reset whenever columns contents change
     container
       .querySelectorAll<HTMLDivElement>('.iui-table-header .iui-table-cell')
       .forEach((cell, index) =>
