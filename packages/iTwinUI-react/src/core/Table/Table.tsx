@@ -676,8 +676,7 @@ export const Table = <
     }
   }, [state, instance.filteredRows, onFilter]);
 
-  const lastPassedColumns: React.MutableRefObject<Column<T>[] | null> =
-    React.useRef(null);
+  const lastPassedColumns = React.useRef([] as Column<T>[]);
 
   // Reset the column order whenever new columns are passed
   // This is to avoid the old columnOrder from affecting the new columns' columnOrder
