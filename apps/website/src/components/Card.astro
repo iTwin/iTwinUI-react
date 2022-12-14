@@ -2,10 +2,10 @@
 import React from 'react';
 import ComponentIcon from './ComponentIcon.astro';
 
-export type Props = {
+type Props = {
   url: string;
-  title: React.ReactNode;
-  description?: React.ReactNode;
+  title: string;
+  description?: string;
   image?: string;
 } & astroHTML.JSX.LiHTMLAttributes;
 
