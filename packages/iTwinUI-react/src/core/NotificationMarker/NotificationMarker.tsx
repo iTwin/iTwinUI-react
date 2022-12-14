@@ -53,7 +53,6 @@ export type NotificationMarkerProps = {
  * @example
  * <NotificationMarker status='positive' pulsing={true}>Live</NotificationMarker>
  */
-// export const NotificationMarker = (props: NotificationMarkerProps) => {
 export const NotificationMarker = React.forwardRef(
   (props: NotificationMarkerProps, ref: React.Ref<HTMLSpanElement>) => {
     const {
@@ -70,7 +69,6 @@ export const NotificationMarker = React.forwardRef(
       <span
         ref={ref}
         className={cx({ 'iui-notification-marker': enabled }, className)}
-        // Exclude data attributes when enabled = false
         data-iui-variant={enabled ? status : null}
         data-iui-urgent={enabled ? pulsing : null}
         {...rest}
