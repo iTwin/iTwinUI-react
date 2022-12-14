@@ -57,13 +57,6 @@ export const Basic: Story<NotificationMarkerProps> = (args) => {
 
 Basic.args = {
   status: 'primary',
-  children: <SvgNotification />,
-};
-
-Basic.argTypes = {
-  children: {
-    control: false,
-  },
 };
 
 export const WithButtons: Story<NotificationMarkerProps> = (args) => {
