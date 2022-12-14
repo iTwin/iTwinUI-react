@@ -179,6 +179,7 @@ const setFilter = async (container: HTMLElement, value: string) => {
   ) as HTMLInputElement;
   expect(filterInput).toBeVisible();
 
+  await userEvent.clear(filterInput);
   await userEvent.type(filterInput, value);
   await userEvent.click(screen.getByText('Filter'));
 
@@ -350,7 +351,7 @@ it('should handle row clicks', async () => {
   const onSelect = jest.fn();
   const onRowClick = jest.fn();
   const user = userEvent.setup();
-  const data = mockedData(5);
+  const data = mockedData(8);
 
   const { container, getByText } = renderComponent({
     isSelectable: true,
@@ -361,24 +362,24 @@ it('should handle row clicks', async () => {
 
   expect(screen.queryByText('Header name')).toBeFalsy();
   const rows = container.querySelectorAll('.iui-table-body .iui-table-row');
-  expect(rows.length).toBe(5);
+  expect(rows.length).toBe(8);
 
   // Shift click special case test #1
   // By default, when no row is selected before shift click, start selecting from first row to clicked row
   await user.keyboard('{Shift>}'); // Hold Shift
-  await user.click(getByText(data[2].name));
+  await user.click(getByText(data[1].name));
 
   expect(rows[0]).toHaveAttribute('aria-selected', 'true');
   expect(rows[1]).toHaveAttribute('aria-selected', 'true');
-  expect(rows[2]).toHaveAttribute('aria-selected', 'true');
+  expect(rows[2]).not.toHaveAttribute('aria-selected');
   expect(rows[3]).not.toHaveAttribute('aria-selected');
   expect(onSelect).toHaveBeenCalledTimes(1);
   expect(onRowClick).toHaveBeenCalledTimes(1);
 
   await user.keyboard('{/Shift}'); // Release Shift
-  await userEvent.click(getByText(data[1].name)); // Deselect; lastSelectedRowId = undefined -> 1
+  await userEvent.click(getByText(data[2].name)); // Select; lastSelectedRowId = undefined -> 2
 
-  expect(rows[0]).toHaveAttribute('aria-selected', 'true');
+  expect(rows[0]).not.toHaveAttribute('aria-selected');
   expect(rows[1]).not.toHaveAttribute('aria-selected');
   expect(rows[2]).toHaveAttribute('aria-selected', 'true');
   expect(rows[3]).not.toHaveAttribute('aria-selected');
@@ -394,16 +395,16 @@ it('should handle row clicks', async () => {
 
   expect(rows[0]).toHaveAttribute('aria-selected', 'true');
   expect(rows[1]).toHaveAttribute('aria-selected', 'true');
-  expect(rows[2]).not.toHaveAttribute('aria-selected');
+  expect(rows[2]).toHaveAttribute('aria-selected', 'true');
   expect(rows[3]).not.toHaveAttribute('aria-selected');
   expect(onSelect).toHaveBeenCalledTimes(3);
   expect(onRowClick).toHaveBeenCalledTimes(3);
 
   await user.keyboard('{/Shift}{Control>}'); // Release Shift & Hold Control
-  await user.click(getByText(data[3].name)); // lastSelectedRowId = 1 -> 3 (Ctrl click updates lastSelectedRowId)
+  await user.click(getByText(data[3].name)); // lastSelectedRowId = 2 -> 3 (Ctrl click updates lastSelectedRowId)
   expect(rows[0]).toHaveAttribute('aria-selected', 'true');
   expect(rows[1]).toHaveAttribute('aria-selected', 'true');
-  expect(rows[2]).not.toHaveAttribute('aria-selected');
+  expect(rows[2]).toHaveAttribute('aria-selected', 'true');
   expect(rows[3]).toHaveAttribute('aria-selected', 'true');
   expect(onSelect).toHaveBeenCalledTimes(4);
   expect(onRowClick).toHaveBeenCalledTimes(4);
@@ -422,7 +423,7 @@ it('should handle row clicks', async () => {
   const checkboxes = container.querySelectorAll<HTMLInputElement>(
     '.iui-table-body .iui-checkbox',
   );
-  expect(checkboxes.length).toBe(5);
+  expect(checkboxes.length).toBe(8);
 
   await user.keyboard('{/Shift}'); // Release Shift
   await user.click(checkboxes[1]); // lastSelectedRowId = 3 -> 1 (Checkbox click updates lastSelectedRowId)
@@ -445,6 +446,60 @@ it('should handle row clicks', async () => {
   expect(rows[4]).not.toHaveAttribute('aria-selected');
   expect(onSelect).toHaveBeenCalledTimes(7);
   expect(onRowClick).toHaveBeenCalledTimes(6);
+
+  await user.keyboard('{/Shift}'); // Release Shift
+  await userEvent.click(getByText(data[2].name)); // Deselect; lastSelectedRowId = 1 -> 2
+
+  expect(rows[0]).not.toHaveAttribute('aria-selected');
+  expect(rows[1]).toHaveAttribute('aria-selected', 'true');
+  expect(rows[2]).not.toHaveAttribute('aria-selected');
+  expect(rows[3]).toHaveAttribute('aria-selected', 'true');
+  expect(rows[4]).not.toHaveAttribute('aria-selected');
+  expect(onSelect).toHaveBeenCalledTimes(8);
+  expect(onRowClick).toHaveBeenCalledTimes(7);
+
+  await user.keyboard('{Shift>}'); // Hold Shift
+  await user.click(getByText(data[0].name));
+
+  expect(rows[0]).toHaveAttribute('aria-selected', 'true');
+  expect(rows[1]).toHaveAttribute('aria-selected', 'true');
+  expect(rows[2]).toHaveAttribute('aria-selected', 'true');
+  expect(rows[3]).not.toHaveAttribute('aria-selected');
+  expect(rows[4]).not.toHaveAttribute('aria-selected');
+  expect(onSelect).toHaveBeenCalledTimes(9);
+  expect(onRowClick).toHaveBeenCalledTimes(8);
+
+  await user.keyboard('{/Shift}{Control>}'); // Release Shift and Hold Control
+  await user.click(getByText(data[4].name)); // lastSelectedRowId = 2 -> 4 (Ctrl click updates lastSelectedRowId)
+  await user.keyboard('{Control>}'); // Keep holding Control
+  await user.click(getByText(data[7].name)); // lastSelectedRowId = 4 -> 7 (Ctrl click updates lastSelectedRowId)
+
+  expect(rows[0]).toHaveAttribute('aria-selected', 'true');
+  expect(rows[1]).toHaveAttribute('aria-selected', 'true');
+  expect(rows[2]).toHaveAttribute('aria-selected', 'true');
+  expect(rows[3]).not.toHaveAttribute('aria-selected');
+  expect(rows[4]).toHaveAttribute('aria-selected', 'true');
+  expect(rows[5]).not.toHaveAttribute('aria-selected');
+  expect(rows[6]).not.toHaveAttribute('aria-selected');
+  expect(rows[7]).toHaveAttribute('aria-selected', 'true');
+  expect(onSelect).toHaveBeenCalledTimes(11);
+  expect(onRowClick).toHaveBeenCalledTimes(10);
+
+  // Ctrl + Shift click test
+  // Previous selection (0, 1, 2, 4) should be preserved and added to new shift click selection (7 to 5)
+  await user.keyboard('{Control>}{Shift>}'); // Hold Ctrl and Shift
+  await user.click(getByText(data[5].name));
+
+  expect(rows[0]).toHaveAttribute('aria-selected', 'true');
+  expect(rows[1]).toHaveAttribute('aria-selected', 'true');
+  expect(rows[2]).toHaveAttribute('aria-selected', 'true');
+  expect(rows[3]).not.toHaveAttribute('aria-selected');
+  expect(rows[4]).toHaveAttribute('aria-selected', 'true');
+  expect(rows[5]).toHaveAttribute('aria-selected', 'true');
+  expect(rows[6]).toHaveAttribute('aria-selected', 'true');
+  expect(rows[7]).toHaveAttribute('aria-selected', 'true');
+  expect(onSelect).toHaveBeenCalledTimes(12);
+  expect(onRowClick).toHaveBeenCalledTimes(11);
 });
 
 it('should handle sub-rows shift click selection', async () => {
@@ -894,6 +949,11 @@ it('should filter table', async () => {
   expect(onFilter).toHaveBeenCalledWith(
     [{ fieldType: 'text', filterType: 'text', id: 'name', value: '2' }],
     expect.objectContaining({ filters: [{ id: 'name', value: '2' }] }),
+    expect.arrayContaining([
+      expect.objectContaining({
+        values: expect.objectContaining({ name: 'Name2' }),
+      }),
+    ]),
   );
 });
 
@@ -1011,7 +1071,40 @@ it('should clear filter', async () => {
   expect(onFilter).toHaveBeenCalledWith(
     [],
     expect.objectContaining({ filters: [] }),
+    expect.arrayContaining([
+      expect.objectContaining({
+        values: expect.objectContaining({ name: 'Name1' }),
+      }),
+      expect.objectContaining({
+        values: expect.objectContaining({ name: 'Name2' }),
+      }),
+      expect.objectContaining({
+        values: expect.objectContaining({ name: 'Name3' }),
+      }),
+    ]),
   );
+});
+
+it('should not trigger onFilter when the same filter is applied', async () => {
+  const onFilter = jest.fn();
+  const mockedColumns = [
+    {
+      id: 'name',
+      Header: 'Name',
+      accessor: 'name',
+      Filter: tableFilters.TextFilter(),
+      fieldType: 'text',
+    },
+  ];
+  const { container } = renderComponent({ columns: mockedColumns, onFilter });
+
+  expect(screen.queryByText('Header name')).toBeFalsy();
+  const rows = container.querySelectorAll('.iui-table-body .iui-table-row');
+  expect(rows.length).toBe(3);
+
+  await setFilter(container, '2');
+  await setFilter(container, '2');
+  expect(onFilter).toHaveBeenCalledTimes(1);
 });
 
 it('should not filter table when manualFilters flag is on', async () => {
@@ -1042,6 +1135,17 @@ it('should not filter table when manualFilters flag is on', async () => {
   expect(onFilter).toHaveBeenCalledWith(
     [{ fieldType: 'text', filterType: 'text', id: 'name', value: '2' }],
     expect.objectContaining({ filters: [{ id: 'name', value: '2' }] }),
+    expect.arrayContaining([
+      expect.objectContaining({
+        values: expect.objectContaining({ name: 'Name1' }),
+      }),
+      expect.objectContaining({
+        values: expect.objectContaining({ name: 'Name2' }),
+      }),
+      expect.objectContaining({
+        values: expect.objectContaining({ name: 'Name3' }),
+      }),
+    ]),
   );
 });
 
@@ -4469,5 +4573,10 @@ it('should navigate through table filtering with the keyboard', async () => {
   expect(onFilter).toHaveBeenCalledWith(
     [{ fieldType: 'text', filterType: 'text', id: 'name', value: '2' }],
     expect.objectContaining({ filters: [{ id: 'name', value: '2' }] }),
+    expect.arrayContaining([
+      expect.objectContaining({
+        values: expect.objectContaining({ name: 'Name2' }),
+      }),
+    ]),
   );
 });
