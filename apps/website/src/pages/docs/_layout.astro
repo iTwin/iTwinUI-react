@@ -23,7 +23,7 @@ const currentPage = new URL(Astro.request.url).pathname;
 
 <style lang='scss'>
   :root {
-    --_content-width: min(100%, 70ch);
+    --_content-width: var(--content-width, min(100%, 70ch));
   }
 
   body {

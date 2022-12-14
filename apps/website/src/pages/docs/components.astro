@@ -1,6 +1,5 @@
 ---
 import Layout from './_layout.astro';
-import ComponentIcon from '../../components/ComponentIcon.astro';
 import Card from '../../components/Card.astro';
 
 const componentPages = (await Astro.glob('./*.mdx'))
@@ -34,7 +33,7 @@ const componentPages = (await Astro.glob('./*.mdx'))
 
 <style lang='scss'>
   :root {
-    --_content-width: min(100%, 1100px);
+    --content-width: min(100%, 1100px);
   }
 
   .card-list {
