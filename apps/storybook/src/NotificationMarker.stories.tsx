@@ -62,13 +62,13 @@ Basic.args = {
 export const WithButtons: Story<NotificationMarkerProps> = (args) => {
   return (
     <>
-      <IconButton styleType='borderless'>
+      <IconButton styleType='borderless' onClick={action('clicked')}>
         <NotificationMarker {...args}>
           <SvgNotification />
         </NotificationMarker>
       </IconButton>
 
-      <Button onClick={action('clicked')} styleType='borderless' {...args}>
+      <Button styleType='borderless' onClick={action('clicked')}>
         <NotificationMarker {...args}>Inbox</NotificationMarker>
       </Button>
     </>
@@ -82,7 +82,7 @@ WithButtons.args = {
 export const Pulsing: Story<NotificationMarkerProps> = (args) => {
   return (
     <>
-      <IconButton styleType='borderless'>
+      <IconButton styleType='borderless' onClick={action('clicked')}>
         <NotificationMarker status='primary' {...args}>
           <SvgNotification />
         </NotificationMarker>
@@ -103,22 +103,22 @@ Pulsing.args = {
 export const Status: Story<NotificationMarkerProps> = (args) => {
   return (
     <>
-      <IconButton styleType='borderless'>
+      <IconButton styleType='borderless' onClick={action('clicked')}>
         <NotificationMarker status='primary' {...args}>
           <SvgNotification />
         </NotificationMarker>
       </IconButton>
-      <IconButton styleType='borderless'>
+      <IconButton styleType='borderless' onClick={action('clicked')}>
         <NotificationMarker status='positive' {...args}>
           <SvgNotification />
         </NotificationMarker>
       </IconButton>
-      <IconButton styleType='borderless'>
+      <IconButton styleType='borderless' onClick={action('clicked')}>
         <NotificationMarker status='warning' {...args}>
           <SvgNotification />
         </NotificationMarker>
       </IconButton>
-      <IconButton styleType='borderless'>
+      <IconButton styleType='borderless' onClick={action('clicked')}>
         <NotificationMarker status='negative' {...args}>
           <SvgNotification />
         </NotificationMarker>
