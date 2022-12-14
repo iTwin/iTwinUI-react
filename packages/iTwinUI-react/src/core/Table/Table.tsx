@@ -662,22 +662,11 @@ export const Table = <
   // Reset the column order whenever new columns are passed
   // This is to avoid the old columnOrder from affecting the new columns' columnOrder
   React.useEffect(() => {
-    // Check if columns has changed (by value)
+    // Check if columns have changed (by value)
     if (JSON.stringify(lastPassedColumns.current) !== JSON.stringify(columns)) {
-      console.log('COLUMN ORDER RESET');
       instance.setColumnOrder([]);
     }
-    console.log(
-      'UPDATING lastPassedColumns BEFORE',
-      lastPassedColumns.current,
-      columns,
-    );
     lastPassedColumns.current = columns;
-    console.log(
-      'UPDATING lastPassedColumns AFTER',
-      lastPassedColumns.current,
-      columns,
-    );
   }, [columns, instance]);
 
   const paginatorRendererProps: TablePaginatorRendererProps = React.useMemo(
