@@ -324,6 +324,7 @@ export const useVirtualization = (props: VirtualScrollProps) => {
   }, [onScroll, removeScrollListener]);
 
   useIsomorphicLayoutEffect(() => {
+    console.log('IIIIIIIIIIIIIIIIIS MOUNTED? ' + isMounted);
     if (!isMounted) {
       return;
     }
@@ -334,6 +335,7 @@ export const useVirtualization = (props: VirtualScrollProps) => {
       return;
     }
 
+    console.log('scrolltoindex: ' + scrollToIndex);
     // if `scrollToIndex` is not visible, scroll to it
     if (
       scrollToIndex > visibleIndex.current.end ||
@@ -348,6 +350,9 @@ export const useVirtualization = (props: VirtualScrollProps) => {
         scrollableContainer.scrollTo({ top: 0 });
         return;
       }
+      console.log(
+        'scrollablecontainer: ' + scrollableContainer.children[0].className,
+      );
       // If go down: add to the existing scrollTop needed height
       // If go up: calculate the exact scroll top
       scrollableContainer.scrollTo({

@@ -5,6 +5,8 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
+import { act } from 'react-dom/test-utils';
+import * as UseResizeObserver from '../utils/hooks/useResizeObserver';
 import { MeridiemType, TimePicker } from './TimePicker';
 
 it('should display passed time', () => {
@@ -461,446 +463,490 @@ it('should show values using custom renderers', () => {
   expect(getByText('After', { selector: '.iui-period li' })).toBeTruthy();
 });
 
-it('should display passed time in combined renderer', () => {
-  const { container } = render(
-    <TimePicker date={new Date(2020, 0, 5, 11, 55)} useCombinedRenderer />,
+describe('Virtualized TimePicker', () => {
+  // to return correct values for container 'scroller' and children
+  const heightsMock = jest.spyOn(
+    HTMLElement.prototype,
+    'getBoundingClientRect',
   );
-  expect(container.querySelector('.iui-time-picker')).toBeTruthy();
-  const selectedTime = container.querySelector(
-    '.iui-time .iui-selected',
-  ) as HTMLElement;
-  expect(selectedTime).toBeTruthy();
-  expect(selectedTime.textContent).toBe('11:55');
-});
+  let triggerResize: (size: DOMRectReadOnly) => void = jest.fn();
 
-it('should return selected time in combined renderer (seconds)', async () => {
-  const onClick = jest.fn();
-  const { container, getByText } = render(
-    <TimePicker
-      date={new Date(2020, 5, 5, 14, 21, 33)}
-      useCombinedRenderer
-      precision='seconds'
-      onChange={onClick}
-    />,
-  );
-  let selectedTime = container.querySelector(
-    '.iui-time .iui-selected',
-  ) as HTMLElement;
-  expect(selectedTime.textContent).toBe('14:21:33');
-  const newTime = getByText('22:09:22', {
-    selector: '.iui-time li',
+  beforeAll(() => {
+    jest
+      .spyOn(UseResizeObserver, 'useResizeObserver')
+      .mockImplementation((onResize) => {
+        triggerResize = onResize;
+        console.log('onResize -------');
+        return [
+          jest.fn(),
+          { disconnect: jest.fn() } as unknown as ResizeObserver,
+        ];
+      });
   });
-  await userEvent.click(newTime);
-  expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 22, 9, 22));
-  selectedTime = container.querySelector(
-    '.iui-time .iui-selected',
-  ) as HTMLElement;
-  expect(selectedTime.textContent).toBe('22:09:22');
-}, 50000);
 
-it('should return selected time in combined renderer (minutes)', async () => {
-  const onClick = jest.fn();
-  const { container, getByText } = render(
-    <TimePicker
-      date={new Date(2020, 5, 5, 14, 21, 33)}
-      useCombinedRenderer
-      onChange={onClick}
-    />,
-  );
-  let selectedTime = container.querySelector(
-    '.iui-time .iui-selected',
-  ) as HTMLElement;
-  expect(selectedTime.textContent).toBe('14:21');
-  const newTime = getByText('10:45', {
-    selector: '.iui-time li',
+  afterAll(() => {
+    jest.clearAllMocks();
   });
-  await userEvent.click(newTime);
-  expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 10, 45, 0));
-  selectedTime = container.querySelector(
-    '.iui-time .iui-selected',
-  ) as HTMLElement;
-  expect(selectedTime.textContent).toBe('10:45');
-});
 
-it('should return selected time in combined renderer (hours)', async () => {
-  const onClick = jest.fn();
-  const { container, getByText } = render(
-    <TimePicker
-      date={new Date(2020, 5, 5, 14, 21, 33)}
-      useCombinedRenderer
-      precision='hours'
-      onChange={onClick}
-    />,
-  );
-  let selectedTime = container.querySelector(
-    '.iui-time .iui-selected',
-  ) as HTMLElement;
-  expect(selectedTime.textContent).toBe('14');
-  const newTime = getByText('02', {
-    selector: '.iui-time li',
+  it.only('should display passed time in combined renderer', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    heightsMock.mockImplementation(function (this: Record<string, any>) {
+      console.log(
+        '!!!!!!!!!!!!!!!!!' + Object.values(this)[0].memoizedProps.id,
+      );
+      if (Object.values(this)[0].memoizedProps.id === 'scroller') {
+        console.log('400 -------');
+        return { height: 400 } as DOMRect;
+      }
+      console.log('40 -------');
+      return { height: 40 } as DOMRect;
+    });
+    const { container } = render(
+      <div style={{ overflow: 'auto', height: 400 }} id='scroller'>
+        <TimePicker date={new Date(2020, 0, 5, 11, 55)} useCombinedRenderer />
+      </div>,
+    );
+    act(() => triggerResize({ height: 400 } as DOMRectReadOnly));
+    const selectedTime = container.querySelector(
+      '.iui-time .iui-selected',
+    ) as HTMLElement;
+    expect(selectedTime).toBeTruthy();
+    expect(selectedTime.textContent).toBe('11:55');
   });
-  await userEvent.click(newTime);
-  expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 2, 0, 0));
-  selectedTime = container.querySelector(
-    '.iui-time .iui-selected',
-  ) as HTMLElement;
-  expect(selectedTime.textContent).toBe('02');
-});
 
-it('should navigate with keyboard in combined renderer', () => {
-  const onClick = jest.fn();
-  const { container } = render(
-    <TimePicker
-      date={new Date(2020, 1, 1, 22, 11, 45)}
-      onChange={onClick}
-      setFocusHour
-      useCombinedRenderer
-      precision='seconds'
-    />,
-  );
-  let selectedTime = container.querySelector(
-    '.iui-time .iui-selected',
-  ) as HTMLElement;
-  expect(selectedTime.textContent).toBe('22:11:45');
-  expect(document.activeElement).toEqual(selectedTime);
+  it('should return selected time in combined renderer (seconds)', async () => {
+    const onClick = jest.fn();
+    const { container, getByText } = render(
+      <TimePicker
+        date={new Date(2020, 5, 5, 14, 21, 33)}
+        useCombinedRenderer
+        precision='seconds'
+        onChange={onClick}
+      />,
+    );
+    let selectedTime = container.querySelector(
+      '.iui-time .iui-selected',
+    ) as HTMLElement;
+    expect(selectedTime.textContent).toBe('14:21:33');
+    const newTime = getByText('22:09:22', {
+      selector: '.iui-time li',
+    });
+    await userEvent.click(newTime);
+    expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 22, 9, 22));
+    selectedTime = container.querySelector(
+      '.iui-time .iui-selected',
+    ) as HTMLElement;
+    expect(selectedTime.textContent).toBe('22:09:22');
+  }, 50000);
 
-  // go down
-  fireEvent.keyDown(selectedTime, { key: 'ArrowDown' });
-  let nextTime = selectedTime.nextElementSibling as Element;
-  expect(nextTime.textContent).toBe('22:11:46');
-  expect(document.activeElement).toEqual(nextTime);
+  it('should return selected time in combined renderer (minutes)', async () => {
+    const onClick = jest.fn();
+    const { container, getByText } = render(
+      <TimePicker
+        date={new Date(2020, 5, 5, 14, 21, 33)}
+        useCombinedRenderer
+        onChange={onClick}
+      />,
+    );
+    let selectedTime = container.querySelector(
+      '.iui-time .iui-selected',
+    ) as HTMLElement;
+    expect(selectedTime.textContent).toBe('14:21');
+    const newTime = getByText('10:45', {
+      selector: '.iui-time li',
+    });
+    await userEvent.click(newTime);
+    expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 10, 45, 0));
+    selectedTime = container.querySelector(
+      '.iui-time .iui-selected',
+    ) as HTMLElement;
+    expect(selectedTime.textContent).toBe('10:45');
+  });
 
-  // go up
-  fireEvent.keyDown(nextTime as Node, { key: 'ArrowUp' });
-  expect(document.activeElement).toEqual(selectedTime);
+  it('should return selected time in combined renderer (hours)', async () => {
+    const onClick = jest.fn();
+    const { container, getByText } = render(
+      <TimePicker
+        date={new Date(2020, 5, 5, 14, 21, 33)}
+        useCombinedRenderer
+        precision='hours'
+        onChange={onClick}
+      />,
+    );
+    let selectedTime = container.querySelector(
+      '.iui-time .iui-selected',
+    ) as HTMLElement;
+    expect(selectedTime.textContent).toBe('14');
+    const newTime = getByText('02', {
+      selector: '.iui-time li',
+    });
+    await userEvent.click(newTime);
+    expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 2, 0, 0));
+    selectedTime = container.querySelector(
+      '.iui-time .iui-selected',
+    ) as HTMLElement;
+    expect(selectedTime.textContent).toBe('02');
+  });
 
-  // go up
-  fireEvent.keyDown(selectedTime, { key: 'ArrowUp' });
-  nextTime = selectedTime.previousElementSibling as Element;
-  expect(nextTime.textContent).toBe('22:11:44');
-  expect(document.activeElement).toEqual(nextTime);
+  it('should navigate with keyboard in combined renderer', () => {
+    const onClick = jest.fn();
+    const { container } = render(
+      <TimePicker
+        date={new Date(2020, 1, 1, 22, 11, 45)}
+        onChange={onClick}
+        setFocusHour
+        useCombinedRenderer
+        precision='seconds'
+      />,
+    );
+    let selectedTime = container.querySelector(
+      '.iui-time .iui-selected',
+    ) as HTMLElement;
+    expect(selectedTime.textContent).toBe('22:11:45');
+    expect(document.activeElement).toEqual(selectedTime);
 
-  // select
-  fireEvent.keyDown(nextTime as Node, { key: 'Enter' });
-  selectedTime = container.querySelector(
-    '.iui-time .iui-selected',
-  ) as HTMLElement;
-  expect(selectedTime.textContent).toBe('22:11:44');
-  expect(document.activeElement).toEqual(selectedTime);
-  expect(onClick).toHaveBeenCalledWith(new Date(2020, 1, 1, 22, 11, 44));
-});
+    // go down
+    fireEvent.keyDown(selectedTime, { key: 'ArrowDown' });
+    let nextTime = selectedTime.nextElementSibling as Element;
+    expect(nextTime.textContent).toBe('22:11:46');
+    expect(document.activeElement).toEqual(nextTime);
 
-it('should navigate with keyboard in combined renderer (12 hours)', () => {
-  const onClick = jest.fn();
-  const { container } = render(
-    <TimePicker
-      date={new Date(2020, 1, 1, 22, 11, 45)}
-      onChange={onClick}
-      setFocusHour
-      useCombinedRenderer
-      precision='seconds'
-      use12Hours
-    />,
-  );
-  let selectedTime = container.querySelector(
-    '.iui-time .iui-selected',
-  ) as HTMLElement;
-  expect(selectedTime.textContent).toBe('10:11:45');
-  expect(document.activeElement).toEqual(selectedTime);
+    // go up
+    fireEvent.keyDown(nextTime as Node, { key: 'ArrowUp' });
+    expect(document.activeElement).toEqual(selectedTime);
 
-  // go down
-  fireEvent.keyDown(selectedTime, { key: 'ArrowDown' });
-  let nextTime = selectedTime.nextElementSibling as Element;
-  expect(nextTime.textContent).toBe('10:11:46');
-  expect(document.activeElement).toEqual(nextTime);
+    // go up
+    fireEvent.keyDown(selectedTime, { key: 'ArrowUp' });
+    nextTime = selectedTime.previousElementSibling as Element;
+    expect(nextTime.textContent).toBe('22:11:44');
+    expect(document.activeElement).toEqual(nextTime);
 
-  // go up
-  fireEvent.keyDown(nextTime as Node, { key: 'ArrowUp' });
-  expect(document.activeElement).toEqual(selectedTime);
+    // select
+    fireEvent.keyDown(nextTime as Node, { key: 'Enter' });
+    selectedTime = container.querySelector(
+      '.iui-time .iui-selected',
+    ) as HTMLElement;
+    expect(selectedTime.textContent).toBe('22:11:44');
+    expect(document.activeElement).toEqual(selectedTime);
+    expect(onClick).toHaveBeenCalledWith(new Date(2020, 1, 1, 22, 11, 44));
+  });
 
-  // go up
-  fireEvent.keyDown(selectedTime, { key: 'ArrowUp' });
-  nextTime = selectedTime.previousElementSibling as Element;
-  expect(nextTime.textContent).toBe('10:11:44');
-  expect(document.activeElement).toEqual(nextTime);
+  it('should navigate with keyboard in combined renderer (12 hours)', () => {
+    const onClick = jest.fn();
+    const { container } = render(
+      <TimePicker
+        date={new Date(2020, 1, 1, 22, 11, 45)}
+        onChange={onClick}
+        setFocusHour
+        useCombinedRenderer
+        precision='seconds'
+        use12Hours
+      />,
+    );
+    let selectedTime = container.querySelector(
+      '.iui-time .iui-selected',
+    ) as HTMLElement;
+    expect(selectedTime.textContent).toBe('10:11:45');
+    expect(document.activeElement).toEqual(selectedTime);
 
-  // select
-  fireEvent.keyDown(nextTime as Node, { key: 'Enter' });
-  selectedTime = container.querySelector(
-    '.iui-time .iui-selected',
-  ) as HTMLElement;
-  expect(selectedTime.textContent).toBe('10:11:44');
-  expect(document.activeElement).toEqual(selectedTime);
-  expect(onClick).toHaveBeenCalledWith(new Date(2020, 1, 1, 22, 11, 44));
+    // go down
+    fireEvent.keyDown(selectedTime, { key: 'ArrowDown' });
+    let nextTime = selectedTime.nextElementSibling as Element;
+    expect(nextTime.textContent).toBe('10:11:46');
+    expect(document.activeElement).toEqual(nextTime);
 
-  // go to meridiem
-  let selectedMeridiem = container.querySelector(
-    '.iui-period .iui-selected',
-  ) as HTMLElement;
-  selectedMeridiem.focus();
-  expect(selectedMeridiem.textContent).toBe('PM');
-  expect(document.activeElement).toEqual(selectedMeridiem);
+    // go up
+    fireEvent.keyDown(nextTime as Node, { key: 'ArrowUp' });
+    expect(document.activeElement).toEqual(selectedTime);
 
-  // go up
-  fireEvent.keyDown(selectedMeridiem, { key: 'ArrowUp' });
-  const meridiemAM = selectedMeridiem.previousElementSibling as Element;
-  expect(meridiemAM.textContent).toBe('AM');
-  expect(document.activeElement).toEqual(meridiemAM);
+    // go up
+    fireEvent.keyDown(selectedTime, { key: 'ArrowUp' });
+    nextTime = selectedTime.previousElementSibling as Element;
+    expect(nextTime.textContent).toBe('10:11:44');
+    expect(document.activeElement).toEqual(nextTime);
 
-  // select
-  fireEvent.keyDown(meridiemAM, { key: ' ' });
-  selectedMeridiem = container.querySelector(
-    '.iui-period .iui-selected',
-  ) as HTMLElement;
-  expect(meridiemAM.textContent).toBe('AM');
-  expect(document.activeElement).toEqual(meridiemAM);
-  expect(onClick).toHaveBeenCalledWith(new Date(2020, 1, 1, 10, 11, 44));
-});
+    // select
+    fireEvent.keyDown(nextTime as Node, { key: 'Enter' });
+    selectedTime = container.querySelector(
+      '.iui-time .iui-selected',
+    ) as HTMLElement;
+    expect(selectedTime.textContent).toBe('10:11:44');
+    expect(document.activeElement).toEqual(selectedTime);
+    expect(onClick).toHaveBeenCalledWith(new Date(2020, 1, 1, 22, 11, 44));
 
-it('should show 24 hours in combined renderer (seconds)', async () => {
-  const onClick = jest.fn();
-  const { container, getByText } = render(
-    <TimePicker
-      date={new Date(2020, 5, 5, 14, 21, 33)}
-      useCombinedRenderer
-      precision='seconds'
-      onChange={onClick}
-    />,
-  );
-  expect(container.querySelectorAll('.iui-time').length).toBe(1);
-  expect(container.querySelector('.iui-period')).toBeFalsy();
-  expect(container.querySelectorAll('.iui-time li').length).toBe(24 * 60 * 60);
-  // select new time
-  let selectedTime = container.querySelector(
-    '.iui-time .iui-selected',
-  ) as HTMLElement;
-  expect(selectedTime.textContent).toBe('14:21:33');
-  selectedTime = getByText('11:45:52');
-  await userEvent.click(selectedTime);
-  expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 11, 45, 52));
-}, 50000);
+    // go to meridiem
+    let selectedMeridiem = container.querySelector(
+      '.iui-period .iui-selected',
+    ) as HTMLElement;
+    selectedMeridiem.focus();
+    expect(selectedMeridiem.textContent).toBe('PM');
+    expect(document.activeElement).toEqual(selectedMeridiem);
 
-it('should show 24 hours in combined renderer (minutes)', async () => {
-  const onClick = jest.fn();
-  const { container, getByText } = render(
-    <TimePicker
-      date={new Date(2020, 5, 5, 14, 21, 33)}
-      useCombinedRenderer
-      onChange={onClick}
-    />,
-  );
-  expect(container.querySelectorAll('.iui-time').length).toBe(1);
-  expect(container.querySelector('.iui-period')).toBeFalsy();
-  expect(container.querySelectorAll('.iui-time li').length).toBe(24 * 60);
-  // select new time
-  let selectedTime = container.querySelector(
-    '.iui-time .iui-selected',
-  ) as HTMLElement;
-  expect(selectedTime.textContent).toBe('14:21');
-  selectedTime = getByText('05:09');
-  await userEvent.click(selectedTime);
-  expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 5, 9, 0));
-});
+    // go up
+    fireEvent.keyDown(selectedMeridiem, { key: 'ArrowUp' });
+    const meridiemAM = selectedMeridiem.previousElementSibling as Element;
+    expect(meridiemAM.textContent).toBe('AM');
+    expect(document.activeElement).toEqual(meridiemAM);
 
-it('should show 24 hours in combined renderer (hours)', async () => {
-  const onClick = jest.fn();
-  const { container, getByText } = render(
-    <TimePicker
-      date={new Date(2020, 5, 5, 14, 21, 33)}
-      useCombinedRenderer
-      precision='hours'
-      onChange={onClick}
-    />,
-  );
-  expect(container.querySelectorAll('.iui-time').length).toBe(1);
-  expect(container.querySelector('.iui-period')).toBeFalsy();
-  expect(container.querySelectorAll('.iui-time li').length).toBe(24);
-  // select new time
-  let selectedTime = container.querySelector(
-    '.iui-time .iui-selected',
-  ) as HTMLElement;
-  expect(selectedTime.textContent).toBe('14');
-  selectedTime = getByText('19');
-  await userEvent.click(selectedTime);
-  expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 19, 0, 0));
-});
+    // select
+    fireEvent.keyDown(meridiemAM, { key: ' ' });
+    selectedMeridiem = container.querySelector(
+      '.iui-period .iui-selected',
+    ) as HTMLElement;
+    expect(meridiemAM.textContent).toBe('AM');
+    expect(document.activeElement).toEqual(meridiemAM);
+    expect(onClick).toHaveBeenCalledWith(new Date(2020, 1, 1, 10, 11, 44));
+  });
 
-it('should show 12 hours in combined renderer (seconds)', async () => {
-  const onClick = jest.fn();
-  const { container, getByText } = render(
-    <TimePicker
-      date={new Date(2020, 5, 5, 14, 21, 33)}
-      useCombinedRenderer
-      precision='seconds'
-      onChange={onClick}
-      use12Hours
-    />,
-  );
-  expect(container.querySelectorAll('.iui-time').length).toBe(1);
-  expect(container.querySelectorAll('.iui-period').length).toBe(1);
-  expect(container.querySelectorAll('.iui-time li').length).toBe(12 * 60 * 60);
-  expect(container.querySelectorAll('.iui-period li').length).toBe(2);
-  // select different meridiem
-  let selectedMeridiem = container.querySelector(
-    '.iui-period .iui-selected',
-  ) as HTMLElement;
-  expect(selectedMeridiem.textContent).toBe('PM');
-  selectedMeridiem = getByText('AM');
-  await userEvent.click(selectedMeridiem);
-  expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 2, 21, 33));
-  // select new time
-  let selectedTime = container.querySelector(
-    '.iui-time .iui-selected',
-  ) as HTMLElement;
-  expect(selectedTime.textContent).toBe('02:21:33');
-  selectedTime = getByText('09:30:07');
-  await userEvent.click(selectedTime);
-  expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 9, 30, 7));
-  // select different meridiem
-  selectedMeridiem = container.querySelector(
-    '.iui-period .iui-selected',
-  ) as HTMLElement;
-  expect(selectedMeridiem.textContent).toBe('AM');
-  selectedMeridiem = getByText('PM');
-  await userEvent.click(selectedMeridiem);
-  expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 21, 30, 7));
-}, 50000);
+  it('should show 24 hours in combined renderer (seconds)', async () => {
+    const onClick = jest.fn();
+    const { container, getByText } = render(
+      <TimePicker
+        date={new Date(2020, 5, 5, 14, 21, 33)}
+        useCombinedRenderer
+        precision='seconds'
+        onChange={onClick}
+      />,
+    );
+    expect(container.querySelectorAll('.iui-time').length).toBe(1);
+    expect(container.querySelector('.iui-period')).toBeFalsy();
+    expect(container.querySelectorAll('.iui-time li').length).toBe(
+      24 * 60 * 60,
+    );
+    // select new time
+    let selectedTime = container.querySelector(
+      '.iui-time .iui-selected',
+    ) as HTMLElement;
+    expect(selectedTime.textContent).toBe('14:21:33');
+    selectedTime = getByText('11:45:52');
+    await userEvent.click(selectedTime);
+    expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 11, 45, 52));
+  }, 50000);
 
-it('should show 12 hours in combined renderer (minutes)', async () => {
-  const onClick = jest.fn();
-  const { container, getByText } = render(
-    <TimePicker
-      date={new Date(2020, 5, 5, 14, 21, 33)}
-      useCombinedRenderer
-      onChange={onClick}
-      use12Hours
-    />,
-  );
-  expect(container.querySelectorAll('.iui-time').length).toBe(1);
-  expect(container.querySelectorAll('.iui-period').length).toBe(1);
-  expect(container.querySelectorAll('.iui-time li').length).toBe(12 * 60);
-  expect(container.querySelectorAll('.iui-period li').length).toBe(2);
-  // select different meridiem
-  let selectedMeridiem = container.querySelector(
-    '.iui-period .iui-selected',
-  ) as HTMLElement;
-  expect(selectedMeridiem.textContent).toBe('PM');
-  selectedMeridiem = getByText('AM');
-  await userEvent.click(selectedMeridiem);
-  expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 2, 21, 0));
-  // select new time
-  let selectedTime = container.querySelector(
-    '.iui-time .iui-selected',
-  ) as HTMLElement;
-  expect(selectedTime.textContent).toBe('02:21');
-  selectedTime = getByText('12:17');
-  await userEvent.click(selectedTime);
-  expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 0, 17, 0));
-  // select different meridiem
-  selectedMeridiem = container.querySelector(
-    '.iui-period .iui-selected',
-  ) as HTMLElement;
-  expect(selectedMeridiem.textContent).toBe('AM');
-  selectedMeridiem = getByText('PM');
-  await userEvent.click(selectedMeridiem);
-  expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 12, 17, 0));
-});
+  it('should show 24 hours in combined renderer (minutes)', async () => {
+    const onClick = jest.fn();
+    const { container, getByText } = render(
+      <TimePicker
+        date={new Date(2020, 5, 5, 14, 21, 33)}
+        useCombinedRenderer
+        onChange={onClick}
+      />,
+    );
+    expect(container.querySelectorAll('.iui-time').length).toBe(1);
+    expect(container.querySelector('.iui-period')).toBeFalsy();
+    expect(container.querySelectorAll('.iui-time li').length).toBe(24 * 60);
+    // select new time
+    let selectedTime = container.querySelector(
+      '.iui-time .iui-selected',
+    ) as HTMLElement;
+    expect(selectedTime.textContent).toBe('14:21');
+    selectedTime = getByText('05:09');
+    await userEvent.click(selectedTime);
+    expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 5, 9, 0));
+  });
 
-it('should show 12 hours in combined renderer (hours)', async () => {
-  const onClick = jest.fn();
-  const { container, getByText } = render(
-    <TimePicker
-      date={new Date(2020, 5, 5, 14, 21, 33)}
-      useCombinedRenderer
-      precision='hours'
-      onChange={onClick}
-      use12Hours
-    />,
-  );
-  expect(container.querySelectorAll('.iui-time').length).toBe(1);
-  expect(container.querySelectorAll('.iui-period').length).toBe(1);
-  expect(container.querySelectorAll('.iui-time li').length).toBe(12);
-  expect(container.querySelectorAll('.iui-period li').length).toBe(2);
-  // select different meridiem
-  let selectedMeridiem = container.querySelector(
-    '.iui-period .iui-selected',
-  ) as HTMLElement;
-  expect(selectedMeridiem.textContent).toBe('PM');
-  selectedMeridiem = getByText('AM');
-  await userEvent.click(selectedMeridiem);
-  expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 2, 0, 0));
-  // select new time
-  let selectedTime = container.querySelector(
-    '.iui-time .iui-selected',
-  ) as HTMLElement;
-  expect(selectedTime.textContent).toBe('02');
-  selectedTime = getByText('04');
-  await userEvent.click(selectedTime);
-  expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 4, 0, 0));
-  // select different meridiem
-  selectedMeridiem = container.querySelector(
-    '.iui-period .iui-selected',
-  ) as HTMLElement;
-  expect(selectedMeridiem.textContent).toBe('AM');
-  selectedMeridiem = getByText('PM');
-  await userEvent.click(selectedMeridiem);
-  expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 16, 0, 0));
-});
+  it('should show 24 hours in combined renderer (hours)', async () => {
+    const onClick = jest.fn();
+    const { container, getByText } = render(
+      <TimePicker
+        date={new Date(2020, 5, 5, 14, 21, 33)}
+        useCombinedRenderer
+        precision='hours'
+        onChange={onClick}
+      />,
+    );
+    expect(container.querySelectorAll('.iui-time').length).toBe(1);
+    expect(container.querySelector('.iui-period')).toBeFalsy();
+    expect(container.querySelectorAll('.iui-time li').length).toBe(24);
+    // select new time
+    let selectedTime = container.querySelector(
+      '.iui-time .iui-selected',
+    ) as HTMLElement;
+    expect(selectedTime.textContent).toBe('14');
+    selectedTime = getByText('19');
+    await userEvent.click(selectedTime);
+    expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 19, 0, 0));
+  });
 
-it('should show values with applied steps in combined renderer', async () => {
-  const onClick = jest.fn();
-  const { container, getByText } = render(
-    <TimePicker
-      date={new Date(2020, 5, 5, 9, 10, 40)}
-      useCombinedRenderer
-      precision='seconds'
-      onChange={onClick}
-      hourStep={3}
-      minuteStep={10}
-      secondStep={20}
-    />,
-  );
-  expect(container.querySelectorAll('.iui-time li').length).toBe(
-    (24 / 3) * (60 / 10) * (60 / 20),
-  );
-  // select new time
-  let selectedTime = container.querySelector(
-    '.iui-time .iui-selected',
-  ) as HTMLElement;
-  expect(selectedTime.textContent).toBe('09:10:40');
-  selectedTime = getByText('12:50:20', { selector: '.iui-time li' });
-  await userEvent.click(selectedTime);
-  expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 12, 50, 20));
-  // select new time
-  selectedTime = container.querySelector(
-    '.iui-time .iui-selected',
-  ) as HTMLElement;
-  expect(selectedTime.textContent).toBe('12:50:20');
-  selectedTime = getByText('03:40:00', { selector: '.iui-time li' });
-  await userEvent.click(selectedTime);
-  expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 3, 40, 0));
-  // times should not exist
-  expect(
-    screen.queryByText('03:40:10', { selector: '.iui-time li' }),
-  ).toBeNull();
-  expect(
-    screen.queryByText('03:15:00', { selector: '.iui-time li' }),
-  ).toBeNull();
-  expect(
-    screen.queryByText('11:40:00', { selector: '.iui-time li' }),
-  ).toBeNull();
-});
+  it('should show 12 hours in combined renderer (seconds)', async () => {
+    const onClick = jest.fn();
+    const { container, getByText } = render(
+      <TimePicker
+        date={new Date(2020, 5, 5, 14, 21, 33)}
+        useCombinedRenderer
+        precision='seconds'
+        onChange={onClick}
+        use12Hours
+      />,
+    );
+    expect(container.querySelectorAll('.iui-time').length).toBe(1);
+    expect(container.querySelectorAll('.iui-period').length).toBe(1);
+    expect(container.querySelectorAll('.iui-time li').length).toBe(
+      12 * 60 * 60,
+    );
+    expect(container.querySelectorAll('.iui-period li').length).toBe(2);
+    // select different meridiem
+    let selectedMeridiem = container.querySelector(
+      '.iui-period .iui-selected',
+    ) as HTMLElement;
+    expect(selectedMeridiem.textContent).toBe('PM');
+    selectedMeridiem = getByText('AM');
+    await userEvent.click(selectedMeridiem);
+    expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 2, 21, 33));
+    // select new time
+    let selectedTime = container.querySelector(
+      '.iui-time .iui-selected',
+    ) as HTMLElement;
+    expect(selectedTime.textContent).toBe('02:21:33');
+    selectedTime = getByText('09:30:07');
+    await userEvent.click(selectedTime);
+    expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 9, 30, 7));
+    // select different meridiem
+    selectedMeridiem = container.querySelector(
+      '.iui-period .iui-selected',
+    ) as HTMLElement;
+    expect(selectedMeridiem.textContent).toBe('AM');
+    selectedMeridiem = getByText('PM');
+    await userEvent.click(selectedMeridiem);
+    expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 21, 30, 7));
+  }, 50000);
 
-it('should show values using custom combined renderer', () => {
-  const { getByText } = render(
-    <TimePicker
-      date={new Date(2020, 5, 5, 9, 10, 40)}
-      precision='seconds'
-      useCombinedRenderer
-      combinedRenderer={(date: Date) => (
-        <>{`${date.getHours()}h ${date.getMinutes()}m ${date.getSeconds()}s`}</>
-      )}
-    />,
-  );
-  expect(getByText('9h 10m 40s', { selector: '.iui-time li' })).toBeTruthy();
+  it('should show 12 hours in combined renderer (minutes)', async () => {
+    const onClick = jest.fn();
+    const { container, getByText } = render(
+      <TimePicker
+        date={new Date(2020, 5, 5, 14, 21, 33)}
+        useCombinedRenderer
+        onChange={onClick}
+        use12Hours
+      />,
+    );
+    expect(container.querySelectorAll('.iui-time').length).toBe(1);
+    expect(container.querySelectorAll('.iui-period').length).toBe(1);
+    expect(container.querySelectorAll('.iui-time li').length).toBe(12 * 60);
+    expect(container.querySelectorAll('.iui-period li').length).toBe(2);
+    // select different meridiem
+    let selectedMeridiem = container.querySelector(
+      '.iui-period .iui-selected',
+    ) as HTMLElement;
+    expect(selectedMeridiem.textContent).toBe('PM');
+    selectedMeridiem = getByText('AM');
+    await userEvent.click(selectedMeridiem);
+    expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 2, 21, 0));
+    // select new time
+    let selectedTime = container.querySelector(
+      '.iui-time .iui-selected',
+    ) as HTMLElement;
+    expect(selectedTime.textContent).toBe('02:21');
+    selectedTime = getByText('12:17');
+    await userEvent.click(selectedTime);
+    expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 0, 17, 0));
+    // select different meridiem
+    selectedMeridiem = container.querySelector(
+      '.iui-period .iui-selected',
+    ) as HTMLElement;
+    expect(selectedMeridiem.textContent).toBe('AM');
+    selectedMeridiem = getByText('PM');
+    await userEvent.click(selectedMeridiem);
+    expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 12, 17, 0));
+  });
+
+  it('should show 12 hours in combined renderer (hours)', async () => {
+    const onClick = jest.fn();
+    const { container, getByText } = render(
+      <TimePicker
+        date={new Date(2020, 5, 5, 14, 21, 33)}
+        useCombinedRenderer
+        precision='hours'
+        onChange={onClick}
+        use12Hours
+      />,
+    );
+    expect(container.querySelectorAll('.iui-time').length).toBe(1);
+    expect(container.querySelectorAll('.iui-period').length).toBe(1);
+    expect(container.querySelectorAll('.iui-time li').length).toBe(12);
+    expect(container.querySelectorAll('.iui-period li').length).toBe(2);
+    // select different meridiem
+    let selectedMeridiem = container.querySelector(
+      '.iui-period .iui-selected',
+    ) as HTMLElement;
+    expect(selectedMeridiem.textContent).toBe('PM');
+    selectedMeridiem = getByText('AM');
+    await userEvent.click(selectedMeridiem);
+    expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 2, 0, 0));
+    // select new time
+    let selectedTime = container.querySelector(
+      '.iui-time .iui-selected',
+    ) as HTMLElement;
+    expect(selectedTime.textContent).toBe('02');
+    selectedTime = getByText('04');
+    await userEvent.click(selectedTime);
+    expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 4, 0, 0));
+    // select different meridiem
+    selectedMeridiem = container.querySelector(
+      '.iui-period .iui-selected',
+    ) as HTMLElement;
+    expect(selectedMeridiem.textContent).toBe('AM');
+    selectedMeridiem = getByText('PM');
+    await userEvent.click(selectedMeridiem);
+    expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 16, 0, 0));
+  });
+
+  it('should show values with applied steps in combined renderer', async () => {
+    const onClick = jest.fn();
+    const { container, getByText } = render(
+      <TimePicker
+        date={new Date(2020, 5, 5, 9, 10, 40)}
+        useCombinedRenderer
+        precision='seconds'
+        onChange={onClick}
+        hourStep={3}
+        minuteStep={10}
+        secondStep={20}
+      />,
+    );
+    expect(container.querySelectorAll('.iui-time li').length).toBe(
+      (24 / 3) * (60 / 10) * (60 / 20),
+    );
+    // select new time
+    let selectedTime = container.querySelector(
+      '.iui-time .iui-selected',
+    ) as HTMLElement;
+    expect(selectedTime.textContent).toBe('09:10:40');
+    selectedTime = getByText('12:50:20', { selector: '.iui-time li' });
+    await userEvent.click(selectedTime);
+    expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 12, 50, 20));
+    // select new time
+    selectedTime = container.querySelector(
+      '.iui-time .iui-selected',
+    ) as HTMLElement;
+    expect(selectedTime.textContent).toBe('12:50:20');
+    selectedTime = getByText('03:40:00', { selector: '.iui-time li' });
+    await userEvent.click(selectedTime);
+    expect(onClick).toHaveBeenCalledWith(new Date(2020, 5, 5, 3, 40, 0));
+    // times should not exist
+    expect(
+      screen.queryByText('03:40:10', { selector: '.iui-time li' }),
+    ).toBeNull();
+    expect(
+      screen.queryByText('03:15:00', { selector: '.iui-time li' }),
+    ).toBeNull();
+    expect(
+      screen.queryByText('11:40:00', { selector: '.iui-time li' }),
+    ).toBeNull();
+  });
+
+  it('should show values using custom combined renderer', () => {
+    const { getByText } = render(
+      <TimePicker
+        date={new Date(2020, 5, 5, 9, 10, 40)}
+        precision='seconds'
+        useCombinedRenderer
+        combinedRenderer={(date: Date) => (
+          <>{`${date.getHours()}h ${date.getMinutes()}m ${date.getSeconds()}s`}</>
+        )}
+      />,
+    );
+    expect(getByText('9h 10m 40s', { selector: '.iui-time li' })).toBeTruthy();
+  });
 });
