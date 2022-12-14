@@ -187,7 +187,11 @@ export type TableProps<
    * Use with `manualFilters` to handle filtering yourself e.g. filter in server-side.
    * Must be memoized.
    */
-  onFilter?: (filters: TableFilterValue<T>[], state: TableState<T>) => void;
+  onFilter?: (
+    filters: TableFilterValue<T>[],
+    state: TableState<T>,
+    filteredData?: Row<T>[],
+  ) => void;
   /**
    * Value used for global filtering.
    * Use with `globalFilter` and/or `manualGlobalFilter` to handle filtering yourself e.g. filter in server-side.
@@ -447,6 +451,8 @@ export const Table = <
     enableUserSelect,
   ]);
 
+  const previousFilter = React.useRef([] as TableFilterValue<T>[]);
+  const currentFilter = React.useRef(previousFilter.current);
   const tableStateReducer = React.useCallback(
     (
       newState: TableState<T>,
@@ -459,7 +465,13 @@ export const Table = <
           onSort?.(newState);
           break;
         case TableActions.setFilter:
-          onFilterHandler(newState, action, previousState, instance, onFilter);
+          currentFilter.current = onFilterHandler(
+            newState,
+            action,
+            previousState,
+            currentFilter.current,
+            instance,
+          );
           break;
         case TableActions.toggleRowExpanded:
         case TableActions.toggleAllRowsExpanded:
@@ -519,7 +531,6 @@ export const Table = <
       hasManualSelectionColumn,
       isRowDisabled,
       onExpand,
-      onFilter,
       onSelect,
       onSort,
       stateReducer,
@@ -610,6 +621,8 @@ export const Table = <
   const onRowClickHandler = React.useCallback(
     (event: React.MouseEvent, row: Row<T>) => {
       const isDisabled = isRowDisabled?.(row.original);
+      const ctrlPressed = event.ctrlKey || event.metaKey;
+
       if (!isDisabled) {
         onRowClick?.(event, row);
       }
@@ -623,10 +636,11 @@ export const Table = <
           dispatch({
             type: shiftRowSelectedAction,
             id: row.id,
+            ctrlPressed: ctrlPressed,
           });
         } else if (
           !row.isSelected &&
-          (selectionMode === 'single' || !event.ctrlKey)
+          (selectionMode === 'single' || !ctrlPressed)
         ) {
           dispatch({
             type: singleRowSelectedAction,
@@ -654,6 +668,13 @@ export const Table = <
   React.useEffect(() => {
     setPageSize(pageSize);
   }, [pageSize, setPageSize]);
+
+  React.useEffect(() => {
+    if (previousFilter.current !== currentFilter.current) {
+      previousFilter.current = currentFilter.current;
+      onFilter?.(currentFilter.current, state, instance.filteredRows);
+    }
+  }, [state, instance.filteredRows, onFilter]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const lastPassedColumns: React.MutableRefObject<Column<any>[] | null> =
