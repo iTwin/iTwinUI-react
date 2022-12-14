@@ -12,7 +12,6 @@ import {
   IconButton,
 } from '@itwin/itwinui-react';
 import { SvgNotification } from '@itwin/itwinui-icons-react';
-import { action } from '@storybook/addon-actions';
 
 export default {
   component: NotificationMarker,
@@ -62,13 +61,13 @@ Basic.args = {
 export const WithButtons: Story<NotificationMarkerProps> = (args) => {
   return (
     <>
-      <IconButton styleType='borderless' onClick={action('clicked')}>
+      <IconButton styleType='borderless'>
         <NotificationMarker {...args}>
           <SvgNotification />
         </NotificationMarker>
       </IconButton>
 
-      <Button styleType='borderless' onClick={action('clicked')}>
+      <Button styleType='borderless'>
         <NotificationMarker {...args}>Inbox</NotificationMarker>
       </Button>
     </>
@@ -82,7 +81,7 @@ WithButtons.args = {
 export const Pulsing: Story<NotificationMarkerProps> = (args) => {
   return (
     <>
-      <IconButton styleType='borderless' onClick={action('clicked')}>
+      <IconButton styleType='borderless'>
         <NotificationMarker status='primary' {...args}>
           <SvgNotification />
         </NotificationMarker>
@@ -103,22 +102,22 @@ Pulsing.args = {
 export const Status: Story<NotificationMarkerProps> = (args) => {
   return (
     <>
-      <IconButton styleType='borderless' onClick={action('clicked')}>
+      <IconButton styleType='borderless'>
         <NotificationMarker status='primary' {...args}>
           <SvgNotification />
         </NotificationMarker>
       </IconButton>
-      <IconButton styleType='borderless' onClick={action('clicked')}>
+      <IconButton styleType='borderless'>
         <NotificationMarker status='positive' {...args}>
           <SvgNotification />
         </NotificationMarker>
       </IconButton>
-      <IconButton styleType='borderless' onClick={action('clicked')}>
+      <IconButton styleType='borderless'>
         <NotificationMarker status='warning' {...args}>
           <SvgNotification />
         </NotificationMarker>
       </IconButton>
-      <IconButton styleType='borderless' onClick={action('clicked')}>
+      <IconButton styleType='borderless'>
         <NotificationMarker status='negative' {...args}>
           <SvgNotification />
         </NotificationMarker>
