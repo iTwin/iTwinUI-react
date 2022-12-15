@@ -16,7 +16,6 @@ import DialogDemo from '~/demos/Dialog.demo';
 import ComboBoxDemo from '~/demos/ComboBox.demo';
 import SliderDemo from '~/demos/Slider.demo';
 import FieldsetDemo from '~/demos/Fieldset.demo';
-import Card from '~/components/Card.astro';
 
 const currentPage = new URL(Astro.request.url).pathname;
 ---
@@ -131,26 +130,32 @@ const currentPage = new URL(Astro.request.url).pathname;
     </div>
     <div class='centered-content'>
       <h2 class='highlight-text'>Our library</h2>
-      <div class='library-list'>
-        <Card
-          title='Components'
-          description=' See our extensive library of pre-coded components. You can view live demos of how they behave in their environment to determine if they are the right fit.'
-          url='/docs'
-          class='library-item'
-        />
-        <Card
-          title='Layouts'
-          description='Full-page layouts built for maximizing your efficiency when you need it the most.'
-          url='https://itwin.github.io/iTwinUI-layouts/'
-          class='library-item'
-        />
-        <Card
-          title='Icons'
-          description='Hundreds of flexible, flat-styled icons in SVG format, allowing for infinite scalability with zero quality loss.'
-          url='https://itwin.github.io/iTwinUI-icons/'
-          class='library-item'
-        />
-      </div>
+      <ul class='library-list'>
+        <li class='library-item'>
+          <h3>
+            <a href='/docs'>Components</a>
+          </h3>
+          <p>
+            See our extensive library of pre-coded components. You can view live demos of how they
+            behave in their environment to determine if they are the right fit.
+          </p>
+        </li>
+        <li class='library-item'>
+          <h3>
+            <a href='https://itwin.github.io/iTwinUI-layouts/'>Layouts</a>
+          </h3>
+          <p>Full-page layouts built for maximizing your efficiency when you need it the most.</p>
+        </li>
+        <li class='library-item'>
+          <h3>
+            <a href='/https://itwin.github.io/iTwinUI-icons/'>Icons</a>
+          </h3>
+          <p>
+            Hundreds of flexible, flat-styled icons in SVG format, allowing for infinite scalability
+            with zero quality loss.
+          </p>
+        </li>
+      </ul>
     </div>
   </main>
 
@@ -320,17 +325,36 @@ const currentPage = new URL(Astro.request.url).pathname;
       grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
     }
     .library-item {
+      position: relative;
+      display: flex;
+      flex: 1 0 20%;
+      flex-direction: column;
       padding: var(--space-5);
       border-radius: var(--border-radius-1);
       outline: 1px solid var(--color-subtext);
-      display: flex;
       gap: var(--space-3);
-      align-items: center;
+      align-items: start;
       color: var(--color-text);
       transition: box-shadow var(--transition-speed) ease;
 
       &:where(:hover, :focus-within) {
         box-shadow: 0 0 10px var(--color-highlight-1), 0 0 20px var(--color-highlight-2);
+      }
+
+      a {
+        color: var(--color-text);
+        text-decoration: none;
+
+        &:where(:focus) {
+          outline: none;
+          text-decoration: none;
+        }
+
+        &::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+        }
       }
     }
     h1 {

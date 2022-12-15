@@ -12,7 +12,7 @@ import '@fontsource/noto-sans/800.css';
 const { content = {} } = Astro.props;
 ---
 
-<html class='iui-theme-dark' dir={content.dir ?? 'ltr'} lang={content.lang ?? 'en-us'}>
+<html dir={content.dir ?? 'ltr'} lang={content.lang ?? 'en-us'}>
   <head>
     <meta charset='utf-8' />
     <meta name='viewport' content='width=device-width' />
@@ -217,7 +217,7 @@ const { content = {} } = Astro.props;
     </style>
   </head>
 
-  <body>
+  <body data-iui-theme='dark'>
     <slot />
 
     <!--
