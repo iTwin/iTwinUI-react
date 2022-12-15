@@ -681,7 +681,6 @@ const VirtualizedTimePickerColumn = <T,>(
     precision = 'minutes',
     className = 'iui-time',
   } = props;
-
   const needFocus = React.useRef(setFocus);
 
   // Used to focus row only when changed (keyboard navigation)
@@ -713,6 +712,10 @@ const VirtualizedTimePickerColumn = <T,>(
           })}
           key={index}
           tabIndex={isSameFocus ? 0 : undefined}
+          ref={(ref) => {
+            scrollIntoView(ref, isSameFocus);
+            needFocus.current && isSameFocus && ref?.focus();
+          }}
           onClick={() => {
             onSelectChange(value);
           }}
