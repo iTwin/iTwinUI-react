@@ -6,8 +6,8 @@ export type Props = {
 
 const { icon } = Astro.props;
 
-const allThumbnails = await Astro.glob('../icons/component-icons/*.astro');
-const thumbnail = allThumbnails.find(({ file }) => file.endsWith(`${icon}.astro`));
+const allThumbnails = await Astro.glob('../icons/thumbnails/*.astro');
+const thumbnail = allThumbnails.find(({ file }) => file.endsWith(`${icon}Thumbnail.astro`));
 ---
 
 <thumbnail.default class='component-thumbnail' />
