@@ -12,13 +12,7 @@ const { url, title, description, image, class: className, ...rest } = Astro.prop
 ---
 
 <li class:list={['card', className]} {...rest}>
-  {
-    image && (
-      <div class='image'>
-        <ComponentIcon icon={image} />
-      </div>
-    )
-  }
+  {image && <ComponentIcon icon={image} />}
   <div class='text'>
     <h2>
       <a href={url}>{title}</a>
@@ -36,12 +30,6 @@ const { url, title, description, image, class: className, ...rest } = Astro.prop
     gap: var(--space-3);
     padding: var(--space-3);
     border-radius: var(--border-radius-1);
-
-    transition: box-shadow var(--transition-speed) ease;
-
-    &:where(:hover, :focus-within) {
-      box-shadow: 0 0 10px var(--color-highlight-1), 0 0 20px var(--color-highlight-2);
-    }
   }
   a {
     color: var(--color-text);
@@ -59,18 +47,9 @@ const { url, title, description, image, class: className, ...rest } = Astro.prop
     }
   }
 
-  h2 {
-    font-size: var(--type-1);
-    color: var(--color-text);
-    margin-bottom: var(--space-1);
-  }
-
-  p {
-    font-size: var(--type-0);
-    color: var(--color-subtext);
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
   }
 </style>
