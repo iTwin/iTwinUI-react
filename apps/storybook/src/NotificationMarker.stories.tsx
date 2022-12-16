@@ -169,7 +169,8 @@ Status.decorators = [
       style={{
         display: 'grid',
         placeItems: 'start',
-        gap: '20px',
+        rowGap: '20px',
+        columnGap: '30px',
         gridTemplateColumns: 'fit-content(1px) auto',
         alignItems: 'center',
       }}
