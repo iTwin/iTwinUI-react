@@ -67,13 +67,15 @@ export const Basic: Story<TimePickerProps> = (args) => {
         id='time-input'
       />
       {opened && (
-        <TimePicker
-          {...rest}
-          date={currentDate}
-          onChange={onChange}
-          setFocusHour={setFocusHour}
-          use12Hours={use12Hours}
-        />
+        <div>
+          <TimePicker
+            {...rest}
+            date={currentDate}
+            onChange={onChange}
+            setFocusHour={setFocusHour}
+            use12Hours={use12Hours}
+          />
+        </div>
       )}
     </>
   );
@@ -137,16 +139,18 @@ export const CustomRenderers: Story<TimePickerProps> = (args) => {
         id='time-input'
       />
       {opened && (
-        <TimePicker
-          {...rest}
-          date={currentDate}
-          onChange={onChange}
-          setFocusHour={setFocusHour}
-          use12Hours={use12Hours}
-          hourRenderer={hourRenderer}
-          minuteRenderer={minuteRenderer}
-          meridiemRenderer={meridiemRenderer}
-        />
+        <div>
+          <TimePicker
+            {...rest}
+            date={currentDate}
+            onChange={onChange}
+            setFocusHour={setFocusHour}
+            use12Hours={use12Hours}
+            hourRenderer={hourRenderer}
+            minuteRenderer={minuteRenderer}
+            meridiemRenderer={meridiemRenderer}
+          />
+        </div>
       )}
     </>
   );
@@ -219,18 +223,20 @@ export const Combined: Story<TimePickerProps> = (args) => {
         id='time-input'
       />
       {opened && (
-        <TimePicker
-          {...rest}
-          date={currentDate}
-          onChange={onChange}
-          setFocusHour={setFocusHour}
-          useCombinedRenderer={useCombinedRenderer}
-          precision={precision}
-          hourStep={hourStep}
-          minuteStep={minuteStep}
-          secondStep={secondStep}
-          use12Hours={use12Hours}
-        />
+        <div>
+          <TimePicker
+            {...rest}
+            date={currentDate}
+            onChange={onChange}
+            setFocusHour={setFocusHour}
+            useCombinedRenderer={useCombinedRenderer}
+            precision={precision}
+            hourStep={hourStep}
+            minuteStep={minuteStep}
+            secondStep={secondStep}
+            use12Hours={use12Hours}
+          />
+        </div>
       )}
     </>
   );
