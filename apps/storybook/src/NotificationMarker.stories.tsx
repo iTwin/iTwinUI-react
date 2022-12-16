@@ -102,39 +102,57 @@ Pulsing.args = {
 export const Status: Story<NotificationMarkerProps> = (args) => {
   return (
     <>
+      <NotificationMarker status='primary' {...args}>
+        Primary
+      </NotificationMarker>
       <IconButton styleType='borderless'>
         <NotificationMarker status='primary' {...args}>
           <SvgNotification />
         </NotificationMarker>
       </IconButton>
+
+      <NotificationMarker status='positive' {...args}>
+        Positive
+      </NotificationMarker>
       <IconButton styleType='borderless'>
         <NotificationMarker status='positive' {...args}>
           <SvgNotification />
         </NotificationMarker>
       </IconButton>
+
+      <NotificationMarker status='warning' {...args}>
+        Warning
+      </NotificationMarker>
       <IconButton styleType='borderless'>
         <NotificationMarker status='warning' {...args}>
           <SvgNotification />
         </NotificationMarker>
       </IconButton>
+
+      <NotificationMarker status='negative' {...args}>
+        Negative
+      </NotificationMarker>
       <IconButton styleType='borderless'>
         <NotificationMarker status='negative' {...args}>
           <SvgNotification />
         </NotificationMarker>
       </IconButton>
 
-      <NotificationMarker status='primary' {...args}>
-        Primary
+      <NotificationMarker status='white' {...args}>
+        White
       </NotificationMarker>
-      <NotificationMarker status='positive' {...args}>
-        Positive
-      </NotificationMarker>
-      <NotificationMarker status='warning' {...args}>
-        Warning
-      </NotificationMarker>
-      <NotificationMarker status='negative' {...args}>
-        Negative
-      </NotificationMarker>
+      <div style={{ display: 'flex', columnGap: '10px' }}>
+        <IconButton styleType='high-visibility'>
+          <NotificationMarker status='white' {...args}>
+            <SvgNotification />
+          </NotificationMarker>
+        </IconButton>
+        <IconButton styleType='cta'>
+          <NotificationMarker status='white' {...args}>
+            <SvgNotification />
+          </NotificationMarker>
+        </IconButton>
+      </div>
     </>
   );
 };
@@ -144,3 +162,19 @@ Status.argTypes = {
     control: false,
   },
 };
+
+Status.decorators = [
+  (Story) => (
+    <div
+      style={{
+        display: 'grid',
+        placeItems: 'start',
+        gap: '20px',
+        gridTemplateColumns: 'fit-content(1px) auto',
+        alignItems: 'center',
+      }}
+    >
+      <Story />
+    </div>
+  ),
+];
