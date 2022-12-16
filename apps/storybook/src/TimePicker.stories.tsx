@@ -91,23 +91,16 @@ export const CustomRenderers: Story<TimePickerProps> = (args) => {
     date = new Date(2021, 4, 11, 14, 55, 22),
     setFocusHour = true,
     use12Hours = false,
-    hourRenderer = (date: Date) => (
-      <>
-        {date.getHours() === 1
-          ? `${date.getHours()} hr`
-          : `${date.getHours()} hrs`}
-      </>
-    ),
-    minuteRenderer = (date: Date) => (
-      <>
-        {date.getMinutes() === 1
-          ? `${date.getMinutes()} min`
-          : `${date.getMinutes()} mins`}
-      </>
-    ),
-    meridiemRenderer = (meridiem: MeridiemType) => (
-      <>{meridiem === 'AM' ? 'Before' : 'After'}</>
-    ),
+    hourRenderer = (date: Date) =>
+      date.getHours() === 1
+        ? `${date.getHours()} hr`
+        : `${date.getHours()} hrs`,
+    minuteRenderer = (date: Date) =>
+      date.getMinutes() === 1
+        ? `${date.getMinutes()} min`
+        : `${date.getMinutes()} mins`,
+    meridiemRenderer = (meridiem: MeridiemType) =>
+      meridiem === 'AM' ? 'Before' : 'After',
     ...rest
   } = args;
   const [opened, setOpened] = React.useState(false);
@@ -159,30 +152,21 @@ export const CustomRenderers: Story<TimePickerProps> = (args) => {
 CustomRenderers.args = {
   date: new Date(2021, 4, 11, 14, 55, 22),
   setFocusHour: true,
-  hourRenderer: (date: Date) => (
-    <>
-      {date.getHours() === 1
-        ? `${date.getHours()} hr`
-        : `${date.getHours()} hrs`}
-    </>
-  ),
-  minuteRenderer: (date: Date) => (
-    <>
-      {date.getMinutes() === 1
-        ? `${date.getMinutes()} min`
-        : `${date.getMinutes()} mins`}
-    </>
-  ),
-  meridiemRenderer: (meridiem: MeridiemType) => (
-    <>{meridiem === 'AM' ? 'Before' : 'After'}</>
-  ),
+  hourRenderer: (date: Date) =>
+    date.getHours() === 1 ? `${date.getHours()} hr` : `${date.getHours()} hrs`,
+  minuteRenderer: (date: Date) =>
+    date.getMinutes() === 1
+      ? `${date.getMinutes()} min`
+      : `${date.getMinutes()} mins`,
+  meridiemRenderer: (meridiem: MeridiemType) =>
+    meridiem === 'AM' ? 'Before' : 'After',
 };
 
 export const Combined: Story<TimePickerProps> = (args) => {
   const {
     date = new Date(2021, 4, 11, 14, 55, 30),
     setFocusHour = true,
-    precision = 'seconds',
+    precision = 'minutes',
     hourStep = 1,
     minuteStep = 1,
     secondStep = 15,
@@ -245,7 +229,7 @@ export const Combined: Story<TimePickerProps> = (args) => {
 Combined.args = {
   date: new Date(2021, 4, 11, 14, 55, 30),
   setFocusHour: true,
-  precision: 'seconds',
+  precision: 'minutes',
   hourStep: 1,
   minuteStep: 1,
   secondStep: 15,

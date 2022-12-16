@@ -484,7 +484,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
             setFocus={setFocusHour}
             valueRenderer={hourRenderer}
           />
-          {precision != 'hours' && (
+          {precision !== 'hours' && (
             <TimePickerColumn
               data={minutes}
               isSameFocused={(val) => isSameMinute(val, focusedTime)}
@@ -494,7 +494,7 @@ export const TimePicker = (props: TimePickerProps): JSX.Element => {
               valueRenderer={minuteRenderer}
             />
           )}
-          {precision == 'seconds' && (
+          {precision === 'seconds' && (
             <TimePickerColumn
               data={seconds}
               isSameFocused={(val) => isSameSecond(val, focusedTime)}
