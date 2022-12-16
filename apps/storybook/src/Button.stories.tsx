@@ -147,7 +147,7 @@ WithNotification.args = {
   children: 'Inbox',
 };
 
-WithIcon.argTypes = {
+WithNotification.argTypes = {
   styleType: { control: false },
 };
 
