@@ -1,19 +1,22 @@
 # Changelog
 
-## [2.2.0](https://www.github.com/iTwin/iTwinUI-react/compare/v2.1.0...v2.2.0) (2022-12-16)
+## [2.2.0](https://www.github.com/iTwin/iTwinUI-react/compare/v2.1.0...v2.2.0) (2022-12-19)
 
+### What's new
+
+* **NotificationMarker:** Add new `NotificationMarker` component ([#829](https://www.github.com/iTwin/iTwinUI-react/issues/829)) ([6a0a6c3](https://www.github.com/iTwin/iTwinUI-react/commit/6a0a6c3913a0d5ca51f9835f517bdac36236e8c9))
+* **Table:** `onFilter` gets filtered rows ([#958](https://www.github.com/iTwin/iTwinUI-react/issues/958)) ([84bc9e9](https://www.github.com/iTwin/iTwinUI-react/commit/84bc9e9dd957ed7e87ef9f3fc617c83c74127a5f))
+* **Timepicker:** Add combined time column ([#844](https://www.github.com/iTwin/iTwinUI-react/issues/844)) ([86050eb](https://www.github.com/iTwin/iTwinUI-react/commit/86050eb6d971437f287d13dbf9935d8dafbbb281))
 
 ### Fixes
 
 * **Table:** Reset `columnOrder` when `columns` changes ([#983](https://www.github.com/iTwin/iTwinUI-react/issues/983)) ([4f184f6](https://www.github.com/iTwin/iTwinUI-react/commit/4f184f6caf37545a0008e6b9cd5d218bd218fdbd))
+
+### 2.1.1 (2022-12-16)
+
+### Fixes
+
 * Use `import type` instead of `import { type }` ([#996](https://www.github.com/iTwin/iTwinUI-react/issues/996)) ([03b0ac2](https://www.github.com/iTwin/iTwinUI-react/commit/03b0ac2accdcf2f2d63ee8e3f5e98c551dcceace))
-
-
-### What's new
-
-* **NotificationMarker:** Add `NotificationMarker` component ([#829](https://www.github.com/iTwin/iTwinUI-react/issues/829)) ([6a0a6c3](https://www.github.com/iTwin/iTwinUI-react/commit/6a0a6c3913a0d5ca51f9835f517bdac36236e8c9))
-* **Table:** `onFilter` gets filtered rows ([#958](https://www.github.com/iTwin/iTwinUI-react/issues/958)) ([84bc9e9](https://www.github.com/iTwin/iTwinUI-react/commit/84bc9e9dd957ed7e87ef9f3fc617c83c74127a5f))
-* **Timepicker:** Add combined time column ([#844](https://www.github.com/iTwin/iTwinUI-react/issues/844)) ([86050eb](https://www.github.com/iTwin/iTwinUI-react/commit/86050eb6d971437f287d13dbf9935d8dafbbb281))
 
 ## [2.1.0](https://www.github.com/iTwin/iTwinUI-react/compare/v2.0.2...v2.1.0) (2022-12-12)
 
