@@ -16,7 +16,7 @@
 
 ### Fixes
 
-* Use `import type` instead of `import { type }` ([#996](https://www.github.com/iTwin/iTwinUI-react/issues/996)) ([03b0ac2](https://www.github.com/iTwin/iTwinUI-react/commit/03b0ac2accdcf2f2d63ee8e3f5e98c551dcceace))
+* Use `import type` instead of `import { type }` for supporting older typescript versions ([#996](https://www.github.com/iTwin/iTwinUI-react/issues/996)) 
 
 ## [2.1.0](https://www.github.com/iTwin/iTwinUI-react/compare/v2.0.2...v2.1.0) (2022-12-12)
 
