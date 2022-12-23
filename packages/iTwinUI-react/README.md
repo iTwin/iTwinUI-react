@@ -1,3 +1,6 @@
+| ⚠️ The code for iTwinUI-react has been moved into [iTwin/iTwinUI](https://github.com/iTwin/iTwinUI). This repo will no longer be updated. |
+| --- |
+
 <p align="center">
   <picture>
     <source
