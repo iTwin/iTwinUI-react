@@ -7,6 +7,7 @@ import { addParameters } from '@storybook/react';
 import { themes } from '@storybook/theming';
 import React from 'react';
 import { lightTheme, darkTheme } from './itwinTheme';
+import { V1Note } from './V1Note';
 
 // get an instance to the communication channel for the manager and preview
 const channel = addons.getChannel();
@@ -99,6 +100,6 @@ export const decorators = [
       }
     }, [highContrast]);
 
-    return Story(); // builder-vite does not allow JSX here so we call Story as a function
+    return [Story(), V1Note()]; // builder-vite does not allow JSX here so we call Story as a function
   },
 ];
